@@ -1,4 +1,4 @@
-package epicurius.server
+package epicurius
 
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
