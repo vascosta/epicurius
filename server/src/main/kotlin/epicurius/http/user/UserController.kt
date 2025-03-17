@@ -1,0 +1,34 @@
+package epicurius.http.user
+
+import UserService
+import epicurius.http.user.models.LoginInputModel
+import epicurius.http.user.models.SignUpInputModel
+import epicurius.http.utils.Uris
+import jakarta.servlet.http.HttpServletResponse
+import jakarta.validation.Valid
+import org.springframework.http.ResponseEntity
+import org.springframework.web.bind.annotation.RequestBody
+import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RestController
+
+@RestController
+@RequestMapping(Uris.PREFIX)
+class UserController(val userService: UserService) {
+
+    @RequestMapping(Uris.User.SIGNUP)
+    fun signUp(
+        @Valid @RequestBody body: SignUpInputModel,
+        response: HttpServletResponse
+    ): ResponseEntity<*> {
+        userService.createUser(body.username, body.email, body.country, body.password)
+        return ResponseEntity.ok().build<Unit>()
+    }
+
+    @RequestMapping(Uris.User.LOGIN)
+    fun login(@Valid @RequestBody body: LoginInputModel, response: HttpServletResponse): ResponseEntity<*> {
+        val token = userService.login(body.username, body.email, body.password)
+        response.addHeader("Authorization", token)
+        return ResponseEntity.ok().build<Unit>()
+    }
+
+}
