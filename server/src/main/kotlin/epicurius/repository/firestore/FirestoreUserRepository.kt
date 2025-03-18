@@ -6,9 +6,14 @@ import com.google.cloud.firestore.Firestore
 class FirestoreUserRepository(private val firestore: Firestore):UserFirestoreRepository {
     override fun addFollowing(username: String, usernameToFollow: String) {
         firestore.runTransaction { transaction ->
-
+            val userRef = firestore.collection(FOLLOWERS_AND_FOLLOWING_COLLECTION).document(username)
+            val userSnapshot = transaction.get(userRef).get()
             val userToFollow = firestore.collection(FOLLOWERS_AND_FOLLOWING_COLLECTION).document(usernameToFollow)
             val userToFollowSnapshot = transaction.get(userToFollow).get()
+
+            if (!userSnapshot.exists()) {
+                throw IllegalStateException("$username not found")
+            }
 
             if (!userToFollowSnapshot.exists()) {
                 throw IllegalStateException("$usernameToFollow not found")
@@ -27,9 +32,6 @@ class FirestoreUserRepository(private val firestore: Firestore):UserFirestoreRep
                 if (!followers.contains(username)) {
                     transaction.update(userToFollow, "followers", followers + username)
                 }
-
-                val userRef = firestore.collection(FOLLOWERS_AND_FOLLOWING_COLLECTION).document(username)
-                val userSnapshot = transaction.get(userRef).get()
 
                 val following = userSnapshot.get("following") as List<String>
                 if (!following.contains(usernameToFollow)) {
