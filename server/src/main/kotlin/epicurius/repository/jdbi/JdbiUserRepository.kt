@@ -1,5 +1,6 @@
 package epicurius.repository.jdbi
 
+import User
 import UserRepository
 import org.jdbi.v3.core.Handle
 import org.jdbi.v3.core.kotlin.mapTo
@@ -25,15 +26,28 @@ class JdbiUserRepository(
         return userId
     }
 
-    override fun checkIfUserExists(username: String?, email: String?): Boolean =
+    override fun getUserFromTokenHash(tokenHash: String): User {
+        return handle.createQuery(
+            """
+                SELECT * FROM users 
+                WHERE token_hash = :token_hash
+            """
+        )
+            .bind("token_hash", tokenHash)
+            .mapTo<User>()
+            .one()
+    }
+
+    override fun checkIfUserExists(username: String?, email: String?, tokenHash: String?): Boolean =
         handle.createQuery(
             """
                 SELECT COUNT (*) FROM users 
-                WHERE username = :username OR email = :email
+                WHERE username = :username OR email = :email OR token_hash = :token_hash
             """
         )
             .bind("name", username)
             .bind("email", email)
+            .bind("token_hash", tokenHash)
             .mapTo<Int>()
             .one() == 1
 

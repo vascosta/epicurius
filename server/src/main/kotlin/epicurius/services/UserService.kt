@@ -1,20 +1,22 @@
+package epicurius.services
+
+import epicurius.domain.AuthenticatedUser
 import epicurius.domain.UserDomain
 import epicurius.repository.transaction.TransactionManager
 import org.springframework.stereotype.Component
 import java.util.Locale
 
-
 @Component
 class UserService(
     private val tm: TransactionManager,
-    private val domain: UserDomain
+    private val userDomain: UserDomain
 ) {
     // retornar token, inicio de sessao
     fun createUser(username: String, email: String, country: String, passwordHash: String): Int {
-        checkIfUserExists(username, email)
-        checkIfCountryIsValid(country)
-        val local = Locale("", country)
-        val acronym = local.country
+        if (checkIfUserExists(username, email)) throw IllegalArgumentException("User already exists")
+        if (!checkIfCountryIsValid(country)) throw IllegalArgumentException("Invalid country")
+        //val local = Locale("", country)
+        val acronym = ""//local.country
 
         return tm.run {
             return@run it.userRepository.createUser(username, email, acronym, passwordHash)
@@ -22,38 +24,45 @@ class UserService(
     }
 
     fun login(username: String?, email: String?, password: String): String {
-        checkIfUserExists(username, email)
-        checkIfUserIsLoggedIn(username, email)
+        if (!checkIfUserExists(username, email)) throw IllegalArgumentException("User not found")
+        if (checkIfUserIsLoggedIn(username, email)) throw IllegalArgumentException("User already logged in")
+        // get user
+        //if (!userDomain.verifyPassword()) throw IllegalArgumentException("Invalid password")
         return createToken(username, email)
     }
 
-    private fun createToken(username: String?, email: String?): String {
-        checkIfUserExists(username, email)
-        checkIfUserIsLoggedIn(username, email)
-        val token = domain.generateTokenValue()
+    fun logout(username: String) {
+        deleteToken(username)
+    }
 
-        tm.run {
-            it.tokenRepository.createToken(token, username, email)
+    fun getAuthenticatedUser(token: String): AuthenticatedUser? {
+        val tokenHash = userDomain.hashToken(token)
+        if (!checkIfUserExists(tokenHash = tokenHash)) return null
+        return tm.run {
+            val user = it.userRepository.getUserFromTokenHash(tokenHash)
+            AuthenticatedUser(user, token)
         }
+    }
+
+    private fun createToken(username: String?, email: String?): String {
+        if (!checkIfUserExists(username, email)) throw IllegalArgumentException("User not found")
+        if (checkIfUserIsLoggedIn(username, email)) throw IllegalArgumentException("User already logged in")
+
+        val token = userDomain.generateTokenValue()
+        tm.run { it.tokenRepository.createToken(token, username, email) }
         return token
     }
 
-    private fun checkIfUserExists(name: String?, email: String?) {
-        tm.run {
-            if (it.userRepository.checkIfUserExists(name, email))
-                throw IllegalArgumentException("User already exists")
-        }
+    private fun deleteToken(username: String) {
+        tm.run { it.tokenRepository.deleteToken(username) }
     }
 
-    private fun checkIfUserIsLoggedIn(username: String?, email: String?) {
-        tm.run {
-            if (it.userRepository.checkIfUserIsLoggedIn(username, email))
-                throw IllegalArgumentException("User already logged in")
-        }
-    }
+    private fun checkIfUserExists(name: String? = null, email: String? = null, tokenHash: String? = null): Boolean =
+        tm.run { it.userRepository.checkIfUserExists(name, email, tokenHash) }
 
-    private fun checkIfCountryIsValid(country: String) {
-        if (country !in Locale.getISOCountries())
-            throw IllegalArgumentException("Invalid country")
-    }
+    private fun checkIfUserIsLoggedIn(username: String?, email: String?): Boolean =
+        tm.run { it.userRepository.checkIfUserIsLoggedIn(username, email) }
+
+    private fun checkIfCountryIsValid(country: String): Boolean = country in Locale.getISOCountries()
+
 }

@@ -7,5 +7,6 @@ object Uris {
     object User {
         const val SIGNUP = "/signup"
         const val LOGIN = "/login"
+        const val LOGOUT = "/logout"
     }
 }

@@ -25,12 +25,12 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-validation")
 
     // JDBI
-    implementation("org.jdbi:jdbi3-core:3.37.1")
-    implementation("org.jdbi:jdbi3-kotlin:3.37.1")
-    implementation("org.jdbi:jdbi3-postgres:3.37.1")
-    implementation("org.postgresql:postgresql:42.5.4")
+    implementation("org.jdbi:jdbi3-core:3.46.0")
+    implementation("org.jdbi:jdbi3-kotlin:3.46.0")
+    implementation("org.jdbi:jdbi3-postgres:3.46.0")
+    implementation("org.postgresql:postgresql:42.7.2")
 
-    implementation("org.springframework.security:spring-security-core:6.0.2")
+    implementation("org.springframework.security:spring-security-core:6.3.5")
 
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")

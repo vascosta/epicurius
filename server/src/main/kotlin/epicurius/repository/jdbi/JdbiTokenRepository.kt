@@ -19,4 +19,16 @@ class JdbiTokenRepository(
             .bind("email", email)
             .execute()
     }
+
+    override fun deleteToken(username: String) {
+        handle.createUpdate(
+            """
+            UPDATE User
+            SET token_hash = NULL
+            WHERE username = :username
+            """
+        )
+            .bind("username", username)
+            .execute()
+    }
 }

@@ -1,6 +1,7 @@
 package epicurius.http.user
 
-import UserService
+import epicurius.services.UserService
+import epicurius.domain.AuthenticatedUser
 import epicurius.http.user.models.LoginInputModel
 import epicurius.http.user.models.SignUpInputModel
 import epicurius.http.utils.Uris
@@ -28,6 +29,13 @@ class UserController(val userService: UserService) {
     fun login(@Valid @RequestBody body: LoginInputModel, response: HttpServletResponse): ResponseEntity<*> {
         val token = userService.login(body.username, body.email, body.password)
         response.addHeader("Authorization", token)
+        return ResponseEntity.ok().build<Unit>()
+    }
+
+    @RequestMapping(Uris.User.LOGOUT)
+    fun logout(authenticatedUser: AuthenticatedUser, response: HttpServletResponse): ResponseEntity<*> {
+        userService.logout(authenticatedUser.user.username)
+        response.addHeader("Authorization", "")
         return ResponseEntity.ok().build<Unit>()
     }
 
