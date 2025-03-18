@@ -1,13 +1,11 @@
 package epicurius.repository.jdbi
 
 import User
-import UserRepository
+import UserPostgresRepository
 import org.jdbi.v3.core.Handle
 import org.jdbi.v3.core.kotlin.mapTo
 
-class JdbiUserRepository(
-    private val handle: Handle
-) : UserRepository {
+class JdbiUserRepository(private val handle: Handle) : UserPostgresRepository {
     override fun createUser(username: String, email: String, country: String, passwordHash: String): Int {
         val userId = handle.createQuery(
             """

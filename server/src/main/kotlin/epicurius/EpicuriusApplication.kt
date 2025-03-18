@@ -1,5 +1,8 @@
 package epicurius
 
+import com.google.auth.oauth2.GoogleCredentials
+import com.google.cloud.firestore.Firestore
+import com.google.cloud.firestore.FirestoreOptions
 import epicurius.domain.token.Sha256TokenEncoder
 import epicurius.http.pipeline.authentication.AuthenticatedUserArgumentResolver
 import epicurius.http.pipeline.authentication.AuthenticationInterceptor
@@ -24,6 +27,17 @@ class EpicuriusApplication {
                 setURL(Environment.getDbUrl())
             }
         ).configure()
+    }
+
+    @Bean
+    fun firestore(): Firestore {
+        val serviceAccount = Environment.getFirestoreServiceAccount()
+
+        val options = FirestoreOptions.newBuilder()
+            .setCredentials(GoogleCredentials.fromStream(serviceAccount))
+            .build()
+
+        return options.service
     }
 
     @Bean

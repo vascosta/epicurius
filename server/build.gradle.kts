@@ -30,6 +30,8 @@ dependencies {
     implementation("org.jdbi:jdbi3-postgres:3.46.0")
     implementation("org.postgresql:postgresql:42.7.2")
 
+    implementation("com.google.firebase:firebase-admin:9.2.0")
+
     implementation("org.springframework.security:spring-security-core:6.3.5")
 
 

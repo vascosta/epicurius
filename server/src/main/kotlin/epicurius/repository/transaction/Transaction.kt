@@ -1,9 +1,9 @@
 package epicurius.repository.transaction
 
 import TokenRepository
-import UserRepository
+import UserPostgresRepository
 
 interface Transaction {
-    val userRepository: UserRepository
+    val userRepository: UserPostgresRepository
     val tokenRepository: TokenRepository
 }

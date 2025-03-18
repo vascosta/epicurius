@@ -1,5 +1,5 @@
 
-interface UserRepository {
+interface UserPostgresRepository {
 
     fun createUser(username: String, email: String, country: String, passwordHash:String): Int
     fun getUser(username: String?, email: String?): User

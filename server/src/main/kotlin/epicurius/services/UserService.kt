@@ -3,12 +3,14 @@ package epicurius.services
 import epicurius.domain.AuthenticatedUser
 import epicurius.domain.UserDomain
 import epicurius.repository.transaction.TransactionManager
+import epicurius.repository.transaction.firestore.FirestoreManager
 import org.springframework.stereotype.Component
 import java.util.Locale
 
 @Component
 class UserService(
     private val tm: TransactionManager,
+    private val fs: FirestoreManager,
     private val userDomain: UserDomain
 ) {
     // retornar token, inicio de sessao
@@ -33,6 +35,10 @@ class UserService(
 
     fun logout(username: String) {
         deleteToken(username)
+    }
+
+    fun follow(username: String, usernameToFollow: String) {
+        fs.userRepository.addFollowing(username, usernameToFollow)
     }
 
     fun getAuthenticatedUser(token: String): AuthenticatedUser? {
