@@ -9,7 +9,7 @@ class JdbiTokenRepository(
     override fun createToken(tokenHash: String, username: String?, email: String?) {
         handle.createUpdate(
             """
-            UPDATED User
+            UPDATED dbo.user
             SET token_hash = :token_hash
             WHERE username = :username OR email = :email
             """
@@ -23,7 +23,7 @@ class JdbiTokenRepository(
     override fun deleteToken(username: String) {
         handle.createUpdate(
             """
-            UPDATE User
+            UPDATE dbo.user
             SET token_hash = NULL
             WHERE username = :username
             """

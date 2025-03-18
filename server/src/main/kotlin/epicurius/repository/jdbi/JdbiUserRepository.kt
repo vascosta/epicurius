@@ -11,7 +11,7 @@ class JdbiUserRepository(
     override fun createUser(username: String, email: String, country: String, passwordHash: String): Int {
         val userId = handle.createQuery(
             """
-               insert into user(username, email, password_hash, country, privacy)
+               insert into dbo.user(username, email, password_hash, country, privacy)
                values (:username, :email, :password_hash, :country, :privacy)
             """
         )
@@ -26,10 +26,22 @@ class JdbiUserRepository(
         return userId
     }
 
+    override fun getUser(username: String?, email: String?): User {
+        return handle.createQuery(
+            """
+                SELECT * FROM dbo.users 
+                WHERE username = :username OR email = :email
+            """
+        )
+            .bind("username", username)
+            .mapTo<User>()
+            .one()
+    }
+
     override fun getUserFromTokenHash(tokenHash: String): User {
         return handle.createQuery(
             """
-                SELECT * FROM users 
+                SELECT * FROM dbo.users 
                 WHERE token_hash = :token_hash
             """
         )
@@ -41,7 +53,7 @@ class JdbiUserRepository(
     override fun checkIfUserExists(username: String?, email: String?, tokenHash: String?): Boolean =
         handle.createQuery(
             """
-                SELECT COUNT (*) FROM users 
+                SELECT COUNT (*) FROM dbo.users 
                 WHERE username = :username OR email = :email OR token_hash = :token_hash
             """
         )
@@ -54,7 +66,7 @@ class JdbiUserRepository(
     override fun checkIfUserIsLoggedIn(username: String?, email: String?): Boolean =
         handle.createQuery(
             """
-                SELECT COUNT (*) FROM users 
+                SELECT COUNT (*) FROM dbo.users 
                 WHERE (username = :username OR email = :email) AND token_hash IS NOT NULL
             """
         )

@@ -1,5 +1,6 @@
 package epicurius.repository
 
+import epicurius.Environment
 import epicurius.domain.UserDomain
 import epicurius.domain.token.Sha256TokenEncoder
 import epicurius.repository.jdbi.JdbiUserRepository
@@ -11,7 +12,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 open class RepositoryTest {
     private val jdbi = Jdbi.create(
         PGSimpleDataSource().apply {
-            setURL("")
+            setURL(Environment.getDbUrl())
         }
     ).configure()
 

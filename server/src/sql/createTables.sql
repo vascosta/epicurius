@@ -1,4 +1,6 @@
-create table user(
+create schema dbo
+
+create table dbo.user(
     id serial primary key,
     username varchar(25) unique not null ,
     email varchar(40) unique not null,
@@ -8,7 +10,7 @@ create table user(
     privacy boolean not null,
     intolerances integer[] not null,
     diet integer[] not null,
-    profile_picture varchar(80)
+    profile_picture_name varchar(80)
 );
 
 --create table recipe(

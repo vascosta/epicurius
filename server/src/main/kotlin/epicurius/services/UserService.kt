@@ -26,8 +26,8 @@ class UserService(
     fun login(username: String?, email: String?, password: String): String {
         if (!checkIfUserExists(username, email)) throw IllegalArgumentException("User not found")
         if (checkIfUserIsLoggedIn(username, email)) throw IllegalArgumentException("User already logged in")
-        // get user
-        //if (!userDomain.verifyPassword()) throw IllegalArgumentException("Invalid password")
+        val user = tm.run { it.userRepository.getUser(username, email) }
+        if (!userDomain.verifyPassword(password, user.passwordHash)) throw IllegalArgumentException("Invalid password")
         return createToken(username, email)
     }
 

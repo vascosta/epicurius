@@ -1,12 +1,12 @@
-
-
 data class User(
     val id: Int,
     val username: String,
     val email: String,
-    val country: String,
-    val diet: Array<String>,
-    val intolerances: Array<String>,
-    val privacy: Boolean,
     val passwordHash: String,
+    val tokenHash: String?,
+    val country: String,
+    val privacy: Boolean,
+    val intolerances: Array<String>,
+    val diet: Array<String>,
+    val profilePictureName: String?
 )

@@ -2,6 +2,7 @@
 interface UserRepository {
 
     fun createUser(username: String, email: String, country: String, passwordHash:String): Int
+    fun getUser(username: String?, email: String?): User
     fun getUserFromTokenHash(tokenHash: String): User
 
     fun checkIfUserExists(username: String?, email: String?, tokenHash: String?): Boolean

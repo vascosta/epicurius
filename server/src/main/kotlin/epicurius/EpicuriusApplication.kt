@@ -21,7 +21,7 @@ class EpicuriusApplication {
     fun jdbi(): Jdbi {
         return Jdbi.create(
             PGSimpleDataSource().apply {
-                setURL("")
+                setURL(Environment.getDbUrl())
             }
         ).configure()
     }
