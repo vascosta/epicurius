@@ -2,6 +2,7 @@ package epicurius.repository.firestore
 
 import UserFirestoreRepository
 import com.google.cloud.firestore.Firestore
+import epicurius.domain.exceptions.UserNotFound
 
 class FirestoreUserRepository(private val firestore: Firestore):UserFirestoreRepository {
     override fun createUserFollowersAndFollowing(username: String, privacy: Boolean) {
@@ -24,11 +25,11 @@ class FirestoreUserRepository(private val firestore: Firestore):UserFirestoreRep
             val userToFollowSnapshot = transaction.get(userToFollow).get()
 
             if (!userSnapshot.exists()) {
-                throw IllegalStateException("$username not found")
+                throw UserNotFound(username)
             }
 
             if (!userToFollowSnapshot.exists()) {
-                throw IllegalStateException("$usernameToFollow not found")
+                throw UserNotFound(usernameToFollow)
             }
 
             val privacy = userToFollowSnapshot.get("privacy") as Boolean
@@ -49,6 +50,33 @@ class FirestoreUserRepository(private val firestore: Firestore):UserFirestoreRep
                 if (!following.contains(usernameToFollow)) {
                     transaction.update(userRef, "following", following + usernameToFollow)
                 }
+            }
+        }
+    }
+
+    override fun removeFollowing(username: String, usernameToUnfollow: String) {
+        firestore.runTransaction { transaction ->
+            val userRef = firestore.collection(FOLLOWERS_AND_FOLLOWING_COLLECTION).document(username)
+            val userSnapshot = transaction.get(userRef).get()
+            val userToUnfollow = firestore.collection(FOLLOWERS_AND_FOLLOWING_COLLECTION).document(usernameToUnfollow)
+            val userToUnfollowSnapshot = transaction.get(userToUnfollow).get()
+
+            if (!userSnapshot.exists()) {
+                throw UserNotFound(username)
+            }
+
+            if (!userToUnfollowSnapshot.exists()) {
+                throw UserNotFound(usernameToUnfollow)
+            }
+
+            val following = userSnapshot.get("following") as List<String>
+            if (following.contains(usernameToUnfollow)) {
+                transaction.update(userRef, "following", following - usernameToUnfollow)
+            }
+
+            val followers = userToUnfollowSnapshot.get("followers") as List<String>
+            if (followers.contains(username)) {
+                transaction.update(userToUnfollow, "followers", followers - username)
             }
         }
     }

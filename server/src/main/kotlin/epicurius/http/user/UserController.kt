@@ -49,6 +49,12 @@ class UserController(val userService: UserService) {
         return ResponseEntity.ok().build<Unit>()
     }
 
+    @PostMapping(Uris.User.UNFOLLOW)
+    fun unfollow(authenticatedUser: AuthenticatedUser, @PathVariable usernameToUnfollow: String): ResponseEntity<*> {
+        userService.unfollow(authenticatedUser.user.username, usernameToUnfollow)
+        return ResponseEntity.ok().build<Unit>()
+    }
+
     @PostMapping(Uris.User.RESET_PASSWORD)
     fun resetPassword(
         authenticatedUser: AuthenticatedUser,

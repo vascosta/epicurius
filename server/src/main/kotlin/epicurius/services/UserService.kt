@@ -4,7 +4,7 @@ import epicurius.domain.AuthenticatedUser
 import epicurius.domain.CountriesDomain
 import epicurius.domain.UserDomain
 import epicurius.domain.exceptions.InvalidCountry
-import epicurius.domain.exceptions.InvalidPassword
+import epicurius.domain.exceptions.IncorrectPassword
 import epicurius.domain.exceptions.PasswordsDoNotMatch
 import epicurius.domain.exceptions.UserAlreadyExits
 import epicurius.domain.exceptions.UserAlreadyLoggedIn
@@ -32,11 +32,11 @@ class UserService(
     }
 
     fun login(username: String?, email: String?, password: String): String {
-        if (!checkIfUserExists(username, email)) throw UserNotFound()
+        if (!checkIfUserExists(username, email)) throw UserNotFound(username)
         if (checkIfUserIsLoggedIn(username, email)) throw UserAlreadyLoggedIn()
 
         val user = tm.run { it.userRepository.getUser(username, email) }
-        if (!userDomain.verifyPassword(password, user.passwordHash)) throw InvalidPassword()
+        if (!userDomain.verifyPassword(password, user.passwordHash)) throw IncorrectPassword()
         return createToken(username, email)
     }
 
@@ -46,6 +46,10 @@ class UserService(
 
     fun follow(username: String, usernameToFollow: String) {
         fs.userRepository.addFollowing(username, usernameToFollow)
+    }
+
+    fun unfollow(username: String, usernameToUnfollow: String) {
+        fs.userRepository.removeFollowing(username, usernameToUnfollow)
     }
 
     fun resetPassword(username: String, newPassword: String, confirmPassword: String) {
@@ -67,7 +71,7 @@ class UserService(
     }
 
     private fun createToken(username: String?, email: String?): String {
-        if (!checkIfUserExists(username, email)) throw UserNotFound()
+        if (!checkIfUserExists(username, email)) throw UserNotFound(username)
         if (checkIfUserIsLoggedIn(username, email)) throw UserAlreadyLoggedIn()
 
         val token = userDomain.generateTokenValue()
