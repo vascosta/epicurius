@@ -16,15 +16,14 @@ class UserService(
     private val countriesDomain: CountriesDomain
 ) {
     fun createUser(username: String, email: String, country: String, password: String): String {
-        checkIfUserExists(username, email)
+        if (checkIfUserExists(username, email)) throw IllegalArgumentException("User already exists")
         if (!countriesDomain.checkIfCodeIsValid(country)) throw IllegalArgumentException("Invalid Country")
         val passwordHash = userDomain.encodePassword(password)
 
-        tm.run {
+        return tm.run {
             it.userRepository.createUser(username, email, country, passwordHash)
+            createToken(username, email)
         }
-
-        return createToken(username, email)
     }
 
     fun login(username: String?, email: String?, password: String): String {
@@ -57,7 +56,8 @@ class UserService(
         if (checkIfUserIsLoggedIn(username, email)) throw IllegalArgumentException("User already logged in")
 
         val token = userDomain.generateTokenValue()
-        tm.run { it.tokenRepository.createToken(token, username, email) }
+        val hashedToken = userDomain.hashToken(token)
+        tm.run { it.tokenRepository.createToken(hashedToken, username, email) }
         return token
     }
 

@@ -1,10 +1,9 @@
 create schema dbo
 
 create table dbo.user(
-    id serial primary key,
     username varchar(25) unique not null ,
     email varchar(40) unique not null,
-    password_hash varchar(20) not null,
+    password_hash varchar(80) not null,
     token_hash varchar(80) unique,
     country varchar(5) not null,
     privacy boolean not null,

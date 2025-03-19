@@ -9,6 +9,7 @@ import jakarta.servlet.http.HttpServletResponse
 import jakarta.validation.Valid
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.PathVariable
+import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
@@ -17,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController
 @RequestMapping(Uris.PREFIX)
 class UserController(val userService: UserService) {
 
-    @RequestMapping(Uris.User.SIGNUP)
+    @PostMapping(Uris.User.SIGNUP)
     fun signUp(
         @Valid @RequestBody body: SignUpInputModel,
         response: HttpServletResponse
@@ -27,21 +28,21 @@ class UserController(val userService: UserService) {
         return ResponseEntity.ok().build<Unit>()
     }
 
-    @RequestMapping(Uris.User.LOGIN)
+    @PostMapping(Uris.User.LOGIN)
     fun login(@Valid @RequestBody body: LoginInputModel, response: HttpServletResponse): ResponseEntity<*> {
         val token = userService.login(body.username, body.email, body.password)
         response.addHeader("Authorization", token)
         return ResponseEntity.ok().build<Unit>()
     }
 
-    @RequestMapping(Uris.User.LOGOUT)
+    @PostMapping(Uris.User.LOGOUT)
     fun logout(authenticatedUser: AuthenticatedUser, response: HttpServletResponse): ResponseEntity<*> {
         userService.logout(authenticatedUser.user.username)
         response.addHeader("Authorization", "")
         return ResponseEntity.ok().build<Unit>()
     }
 
-    @RequestMapping(Uris.User.FOLLOW)
+    @PostMapping(Uris.User.FOLLOW)
     fun follow(authenticatedUser: AuthenticatedUser, @PathVariable usernameToFollow: String): ResponseEntity<*> {
         userService.follow(authenticatedUser.user.username, usernameToFollow)
         return ResponseEntity.ok().build<Unit>()
