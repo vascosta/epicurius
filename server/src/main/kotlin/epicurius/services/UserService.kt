@@ -3,7 +3,12 @@ package epicurius.services
 import epicurius.domain.AuthenticatedUser
 import epicurius.domain.CountriesDomain
 import epicurius.domain.UserDomain
-import epicurius.domain.exceptions.UserException
+import epicurius.domain.exceptions.InvalidCountry
+import epicurius.domain.exceptions.InvalidPassword
+import epicurius.domain.exceptions.PasswordsDoNotMatch
+import epicurius.domain.exceptions.UserAlreadyExits
+import epicurius.domain.exceptions.UserAlreadyLoggedIn
+import epicurius.domain.exceptions.UserNotFound
 import epicurius.repository.transaction.TransactionManager
 import epicurius.repository.transaction.firestore.FirestoreManager
 import org.springframework.stereotype.Component
@@ -17,7 +22,7 @@ class UserService(
 ) {
     fun createUser(username: String, email: String, country: String, password: String): String {
         if (checkIfUserExists(username, email)) throw UserAlreadyExits()
-        if (!countriesDomain.checkIfCodeIsValid(country)) throw UserException.InvalidCountry()
+        if (!countriesDomain.checkIfCodeIsValid(country)) throw InvalidCountry()
         val passwordHash = userDomain.encodePassword(password)
 
         tm.run { it.userRepository.createUser(username, email, country, passwordHash) }
@@ -27,11 +32,11 @@ class UserService(
     }
 
     fun login(username: String?, email: String?, password: String): String {
-        if (!checkIfUserExists(username, email)) throw UserException.UserNotFound()
-        if (checkIfUserIsLoggedIn(username, email)) throw UserException.UserAlreadyLoggedIn()
+        if (!checkIfUserExists(username, email)) throw UserNotFound()
+        if (checkIfUserIsLoggedIn(username, email)) throw UserAlreadyLoggedIn()
 
         val user = tm.run { it.userRepository.getUser(username, email) }
-        if (!userDomain.verifyPassword(password, user.passwordHash)) throw UserException.InvalidPassword()
+        if (!userDomain.verifyPassword(password, user.passwordHash)) throw InvalidPassword()
         return createToken(username, email)
     }
 
@@ -41,6 +46,15 @@ class UserService(
 
     fun follow(username: String, usernameToFollow: String) {
         fs.userRepository.addFollowing(username, usernameToFollow)
+    }
+
+    fun resetPassword(username: String, newPassword: String, confirmPassword: String) {
+        if (!checkIfPasswordsMatch(newPassword, confirmPassword)) throw PasswordsDoNotMatch()
+        val passwordHash = userDomain.encodePassword(newPassword)
+
+        tm.run {
+            it.userRepository.resetPassword(username, passwordHash)
+        }
     }
 
     fun getAuthenticatedUser(token: String): AuthenticatedUser? {
@@ -53,8 +67,8 @@ class UserService(
     }
 
     private fun createToken(username: String?, email: String?): String {
-        if (!checkIfUserExists(username, email)) throw UserException.UserNotFound()
-        if (checkIfUserIsLoggedIn(username, email)) throw UserException.UserAlreadyLoggedIn()
+        if (!checkIfUserExists(username, email)) throw UserNotFound()
+        if (checkIfUserIsLoggedIn(username, email)) throw UserAlreadyLoggedIn()
 
         val token = userDomain.generateTokenValue()
         val tokenHash = userDomain.hashToken(token)
@@ -71,4 +85,6 @@ class UserService(
 
     private fun checkIfUserIsLoggedIn(username: String?, email: String?): Boolean =
         tm.run { it.userRepository.checkIfUserIsLoggedIn(username, email) }
+
+    private fun checkIfPasswordsMatch(password: String, confirmPassword: String): Boolean = password == confirmPassword
 }

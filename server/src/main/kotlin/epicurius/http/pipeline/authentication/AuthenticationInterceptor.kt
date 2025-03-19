@@ -6,7 +6,7 @@ import jakarta.servlet.http.HttpServletResponse
 import org.springframework.stereotype.Component
 import org.springframework.web.method.HandlerMethod
 import org.springframework.web.servlet.HandlerInterceptor
-import epicurius.domain.exceptions.UserException.UnauthorizedException
+import epicurius.domain.exceptions.UnauthorizedException
 
 @Component
 class AuthenticationInterceptor(

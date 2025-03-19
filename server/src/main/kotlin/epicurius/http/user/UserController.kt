@@ -3,6 +3,7 @@ package epicurius.http.user
 import epicurius.services.UserService
 import epicurius.domain.AuthenticatedUser
 import epicurius.http.user.models.LoginInputModel
+import epicurius.http.user.models.ResetPasswordInputModel
 import epicurius.http.user.models.SignUpInputModel
 import epicurius.http.utils.Uris
 import jakarta.servlet.http.HttpServletResponse
@@ -45,6 +46,15 @@ class UserController(val userService: UserService) {
     @PostMapping(Uris.User.FOLLOW)
     fun follow(authenticatedUser: AuthenticatedUser, @PathVariable usernameToFollow: String): ResponseEntity<*> {
         userService.follow(authenticatedUser.user.username, usernameToFollow)
+        return ResponseEntity.ok().build<Unit>()
+    }
+
+    @PostMapping(Uris.User.RESET_PASSWORD)
+    fun resetPassword(
+        authenticatedUser: AuthenticatedUser,
+        @Valid @RequestBody body: ResetPasswordInputModel
+    ): ResponseEntity<*> {
+        userService.resetPassword(authenticatedUser.user.username, body.newPassword, body.confirmPassword)
         return ResponseEntity.ok().build<Unit>()
     }
 }

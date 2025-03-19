@@ -1,10 +1,9 @@
 package epicurius.domain.exceptions
 
-sealed class UserException(msg: String) : Exception(msg) {
-    class UnauthorizedException(msg: String) : UserException(msg)
-    class UserAlreadyExits : UserException("User already exists")
-    class UserNotFound : UserException("User not found")
-    class UserAlreadyLoggedIn : UserException("User is already logged in")
-    class InvalidCountry : UserException("Invalid country")
-    class InvalidPassword : UserException("Invalid password")
-}
+class UnauthorizedException(msg: String) : Exception(msg)
+class UserAlreadyExits : Exception("User already exists")
+class UserNotFound : Exception("User not found")
+class UserAlreadyLoggedIn : Exception("User is already logged in")
+class InvalidCountry : Exception("Invalid country")
+class InvalidPassword : Exception("Invalid password")
+class PasswordsDoNotMatch : Exception("Passwords don't match")

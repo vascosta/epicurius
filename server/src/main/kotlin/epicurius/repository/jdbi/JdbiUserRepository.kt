@@ -48,6 +48,19 @@ class JdbiUserRepository(private val handle: Handle) : UserPostgresRepository {
             .one()
     }
 
+    override fun resetPassword(username: String, passwordHash: String) {
+        handle.createUpdate(
+            """
+                UPDATE dbo.user
+                WHERE username = :username
+                SET password_hash = :password_hash
+            """
+        )
+            .bind("username", username)
+            .bind("password_hash", passwordHash)
+            .execute()
+    }
+
     override fun checkIfUserExists(username: String?, email: String?, tokenHash: String?): Boolean =
         handle.createQuery(
             """
