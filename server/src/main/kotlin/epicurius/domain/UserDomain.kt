@@ -11,11 +11,9 @@ class UserDomain(
     private val passwordEncoder: PasswordEncoder,
     private val tokenEncoder: TokenEncoder
 ) {
-
     fun encodePassword(password: String): String = passwordEncoder.encode(password)
 
     fun verifyPassword(password: String, hashedPassword: String) = passwordEncoder.matches(password, hashedPassword)
-    
 
     fun generateTokenValue(): String =
         ByteArray(TOKEN_SIZE_IN_BYTES).let { byteArray ->

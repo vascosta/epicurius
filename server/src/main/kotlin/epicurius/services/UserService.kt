@@ -1,6 +1,7 @@
 package epicurius.services
 
 import epicurius.domain.AuthenticatedUser
+import epicurius.domain.CountriesDomain
 import epicurius.domain.UserDomain
 import epicurius.repository.transaction.TransactionManager
 import epicurius.repository.transaction.firestore.FirestoreManager
@@ -11,18 +12,19 @@ import java.util.Locale
 class UserService(
     private val tm: TransactionManager,
     private val fs: FirestoreManager,
-    private val userDomain: UserDomain
+    private val userDomain: UserDomain,
+    private val countriesDomain: CountriesDomain
 ) {
-    // retornar token, inicio de sessao
-    fun createUser(username: String, email: String, country: String, passwordHash: String): Int {
-        if (checkIfUserExists(username, email)) throw IllegalArgumentException("User already exists")
-        if (!checkIfCountryIsValid(country)) throw IllegalArgumentException("Invalid country")
-        //val local = Locale("", country)
-        val acronym = ""//local.country
+    fun createUser(username: String, email: String, country: String, password: String): String {
+        checkIfUserExists(username, email)
+        if (!countriesDomain.checkIfCodeIsValid(country)) throw IllegalArgumentException("Invalid Country")
+        val passwordHash = userDomain.encodePassword(password)
 
-        return tm.run {
-            return@run it.userRepository.createUser(username, email, acronym, passwordHash)
+        tm.run {
+            it.userRepository.createUser(username, email, country, passwordHash)
         }
+
+        return createToken(username, email)
     }
 
     fun login(username: String?, email: String?, password: String): String {

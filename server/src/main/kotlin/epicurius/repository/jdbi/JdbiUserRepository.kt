@@ -6,11 +6,11 @@ import org.jdbi.v3.core.Handle
 import org.jdbi.v3.core.kotlin.mapTo
 
 class JdbiUserRepository(private val handle: Handle) : UserPostgresRepository {
-    override fun createUser(username: String, email: String, country: String, passwordHash: String): Int {
-        val userId = handle.createQuery(
+    override fun createUser(username: String, email: String, country: String, passwordHash: String){
+        handle.createQuery(
             """
-               insert into dbo.user(username, email, password_hash, country, privacy)
-               values (:username, :email, :password_hash, :country, :privacy)
+               INSERT INTO dbo.user(username, email, password_hash, country, privacy)
+               VALUES (:username, :email, :password_hash, :country, :privacy)
             """
         )
             .bind("username", username)
@@ -18,10 +18,6 @@ class JdbiUserRepository(private val handle: Handle) : UserPostgresRepository {
             .bind("password_hash", passwordHash)
             .bind("country", country)
             .bind("privacy", false)
-            .mapTo<Int>()
-            .one()
-
-        return userId
     }
 
     override fun getUser(username: String?, email: String?): User {

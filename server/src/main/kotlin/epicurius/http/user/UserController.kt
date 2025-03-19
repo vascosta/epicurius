@@ -22,7 +22,8 @@ class UserController(val userService: UserService) {
         @Valid @RequestBody body: SignUpInputModel,
         response: HttpServletResponse
     ): ResponseEntity<*> {
-        userService.createUser(body.username, body.email, body.country, body.password)
+        val token = userService.createUser(body.username, body.email, body.country, body.password)
+        response.addHeader("Authorization", token)
         return ResponseEntity.ok().build<Unit>()
     }
 
