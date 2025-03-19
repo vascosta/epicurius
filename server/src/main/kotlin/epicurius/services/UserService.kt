@@ -3,10 +3,10 @@ package epicurius.services
 import epicurius.domain.AuthenticatedUser
 import epicurius.domain.CountriesDomain
 import epicurius.domain.UserDomain
+import epicurius.domain.exceptions.UserException
 import epicurius.repository.transaction.TransactionManager
 import epicurius.repository.transaction.firestore.FirestoreManager
 import org.springframework.stereotype.Component
-import java.util.Locale
 
 @Component
 class UserService(
@@ -16,8 +16,8 @@ class UserService(
     private val countriesDomain: CountriesDomain
 ) {
     fun createUser(username: String, email: String, country: String, password: String): String {
-        if (checkIfUserExists(username, email)) throw IllegalArgumentException("User already exists")
-        if (!countriesDomain.checkIfCodeIsValid(country)) throw IllegalArgumentException("Invalid Country")
+        if (checkIfUserExists(username, email)) throw UserException.UserAlreadyExits()
+        if (!countriesDomain.checkIfCodeIsValid(country)) throw UserException.InvalidCountry()
         val passwordHash = userDomain.encodePassword(password)
 
         return tm.run {
@@ -27,10 +27,10 @@ class UserService(
     }
 
     fun login(username: String?, email: String?, password: String): String {
-        if (!checkIfUserExists(username, email)) throw IllegalArgumentException("User not found")
-        if (checkIfUserIsLoggedIn(username, email)) throw IllegalArgumentException("User already logged in")
+        if (!checkIfUserExists(username, email)) throw UserException.UserNotFound()
+        if (checkIfUserIsLoggedIn(username, email)) throw UserException.UserAlreadyLoggedIn()
         val user = tm.run { it.userRepository.getUser(username, email) }
-        if (!userDomain.verifyPassword(password, user.passwordHash)) throw IllegalArgumentException("Invalid password")
+        if (!userDomain.verifyPassword(password, user.passwordHash)) throw UserException.InvalidPassword()
         return createToken(username, email)
     }
 
@@ -52,8 +52,8 @@ class UserService(
     }
 
     private fun createToken(username: String?, email: String?): String {
-        if (!checkIfUserExists(username, email)) throw IllegalArgumentException("User not found")
-        if (checkIfUserIsLoggedIn(username, email)) throw IllegalArgumentException("User already logged in")
+        if (!checkIfUserExists(username, email)) throw UserException.UserNotFound()
+        if (checkIfUserIsLoggedIn(username, email)) throw UserException.UserAlreadyLoggedIn()
 
         val token = userDomain.generateTokenValue()
         val hashedToken = userDomain.hashToken(token)
@@ -70,7 +70,4 @@ class UserService(
 
     private fun checkIfUserIsLoggedIn(username: String?, email: String?): Boolean =
         tm.run { it.userRepository.checkIfUserIsLoggedIn(username, email) }
-
-    private fun checkIfCountryIsValid(country: String): Boolean = country in Locale.getISOCountries()
-
 }
