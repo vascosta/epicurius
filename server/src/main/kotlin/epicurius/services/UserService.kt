@@ -16,19 +16,20 @@ class UserService(
     private val countriesDomain: CountriesDomain
 ) {
     fun createUser(username: String, email: String, country: String, password: String): String {
-        if (checkIfUserExists(username, email)) throw UserException.UserAlreadyExits()
+        if (checkIfUserExists(username, email)) throw UserAlreadyExits()
         if (!countriesDomain.checkIfCodeIsValid(country)) throw UserException.InvalidCountry()
         val passwordHash = userDomain.encodePassword(password)
 
-        return tm.run {
-            it.userRepository.createUser(username, email, country, passwordHash)
-            createToken(username, email)
-        }
+        tm.run { it.userRepository.createUser(username, email, country, passwordHash) }
+        fs.userRepository.createUserFollowersAndFollowing(username, false)
+
+        return createToken(username, email)
     }
 
     fun login(username: String?, email: String?, password: String): String {
         if (!checkIfUserExists(username, email)) throw UserException.UserNotFound()
         if (checkIfUserIsLoggedIn(username, email)) throw UserException.UserAlreadyLoggedIn()
+
         val user = tm.run { it.userRepository.getUser(username, email) }
         if (!userDomain.verifyPassword(password, user.passwordHash)) throw UserException.InvalidPassword()
         return createToken(username, email)
@@ -56,8 +57,8 @@ class UserService(
         if (checkIfUserIsLoggedIn(username, email)) throw UserException.UserAlreadyLoggedIn()
 
         val token = userDomain.generateTokenValue()
-        val hashedToken = userDomain.hashToken(token)
-        tm.run { it.tokenRepository.createToken(hashedToken, username, email) }
+        val tokenHash = userDomain.hashToken(token)
+        tm.run { it.tokenRepository.createToken(tokenHash, username, email) }
         return token
     }
 

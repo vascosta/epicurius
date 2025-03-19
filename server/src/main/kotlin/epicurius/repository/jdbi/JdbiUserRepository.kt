@@ -17,7 +17,7 @@ class JdbiUserRepository(private val handle: Handle) : UserPostgresRepository {
             .bind("email", email)
             .bind("password_hash", passwordHash)
             .bind("country", country)
-            .bind("privacy", false)
+            .bind("privacy", false) // user is created with a public profile
             .bind("intolerances", emptyArray<Int>())
             .bind("diet", emptyArray<Int>())
             .execute()

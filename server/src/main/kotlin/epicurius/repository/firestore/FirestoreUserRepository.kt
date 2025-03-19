@@ -4,6 +4,18 @@ import UserFirestoreRepository
 import com.google.cloud.firestore.Firestore
 
 class FirestoreUserRepository(private val firestore: Firestore):UserFirestoreRepository {
+    override fun createUserFollowersAndFollowing(username: String, privacy: Boolean) {
+        val user = hashMapOf(
+            "followers" to emptyList<String>(),
+            "following" to emptyList<String>(),
+            "followingRequests" to emptyList<String>(),
+            "privacy" to privacy
+        )
+
+        firestore.collection(FOLLOWERS_AND_FOLLOWING_COLLECTION).document(username)
+            .set(user).get()
+    }
+
     override fun addFollowing(username: String, usernameToFollow: String) {
         firestore.runTransaction { transaction ->
             val userRef = firestore.collection(FOLLOWERS_AND_FOLLOWING_COLLECTION).document(username)

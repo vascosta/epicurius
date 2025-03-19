@@ -24,7 +24,7 @@ class EpicuriusApplication {
     fun jdbi(): Jdbi {
         return Jdbi.create(
             PGSimpleDataSource().apply {
-                setURL(Environment.getDbUrl())
+                setURL(Environment.getPostgresDbUrl())
             }
         ).configure()
     }
@@ -35,6 +35,7 @@ class EpicuriusApplication {
 
         val options = FirestoreOptions.newBuilder()
             .setCredentials(GoogleCredentials.fromStream(serviceAccount))
+            .setDatabaseId(Environment.getFirestoreDatabaseId())
             .build()
 
         return options.service
