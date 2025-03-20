@@ -12,8 +12,8 @@ object Environment {
 
     fun getFirestoreDatabaseTestId() = "epicurius-database-test"
 
-    fun getPostgresDbUrl() = "jdbc:postgresql://localhost/postgres?user=postgres&password=postgres"
-    //fun getDbUrl() = "jdbc:postgresql://localhost/postgres?user=postgres&password=PS"
+    //fun getPostgresDbUrl() = "jdbc:postgresql://localhost/postgres?user=postgres&password=postgres"
+    fun getPostgresDbUrl() = "jdbc:postgresql://localhost/postgres?user=postgres&password=PS"
     //System.getenv(POSTGRES_DATABASE_URL) ?: throw Exception("Missing environment variable 'POSTGRES_DATABASE_URL'")
 
     fun getFirestoreServiceAccount() = FileInputStream("src/main/resources/epicurius-credentials.json")

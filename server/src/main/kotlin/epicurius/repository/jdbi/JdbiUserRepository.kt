@@ -2,6 +2,7 @@ package epicurius.repository.jdbi
 
 import User
 import UserPostgresRepository
+import epicurius.domain.Intolerance
 import org.jdbi.v3.core.Handle
 import org.jdbi.v3.core.kotlin.mapTo
 
@@ -52,13 +53,41 @@ class JdbiUserRepository(private val handle: Handle) : UserPostgresRepository {
         handle.createUpdate(
             """
                 UPDATE dbo.user
-                WHERE username = :username
                 SET password_hash = :password_hash
+                WHERE username = :username
             """
         )
             .bind("username", username)
             .bind("password_hash", passwordHash)
             .execute()
+    }
+
+    override fun addIntolerances(username: String, intolerancesIdx: List<Int>) {
+        handle.createUpdate(
+            """
+                UPDATE dbo.user
+                SET intolerances = :intolerances
+                WHERE username = :username
+            """
+        )
+            .bind("username", username)
+            .bind("intolerances", intolerancesIdx.toTypedArray())
+            .execute()
+    }
+
+    override fun getIntolerances(username: String): List<Intolerance> {
+        val intolerancesIdx = handle.createQuery(
+                """
+                    SELECT intolerances
+                    FROM dbo.user
+                    WHERE username = :username
+                """
+            )
+                .bind("username", username)
+                .mapTo<Array<Int>>()
+                .one()
+
+        return intolerancesIdx.map { Intolerance.entries[it] }
     }
 
     override fun checkIfUserExists(username: String?, email: String?, tokenHash: String?): Boolean =
