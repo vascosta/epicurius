@@ -1,36 +1,19 @@
 package epicurius.repository
 
-import epicurius.repository.transaction.firestore.FirestoreManager
-import epicurius.repository.transaction.jdbi.JdbiTransactionManager
+import epicurius.utils.createTestUser
 import org.junit.jupiter.api.BeforeAll
-import java.util.UUID
 
 open class RepositoryTest: EpicuriusTest() {
 
     companion object {
-        private val tm = JdbiTransactionManager(jdbi)
-        private val fs = FirestoreManager(firestore)
-
-        lateinit var testUser: Pair<String, String>
-        lateinit var testUser2: Pair<String, String>
+        lateinit var publicTestUser: Pair<String, String>
+        lateinit var privateTestUser: Pair<String, String>
 
         @JvmStatic
         @BeforeAll
         fun setupDB() {
-            testUser = createTestUser(false)
-            testUser2 = createTestUser(true)
-        }
-
-        private fun createTestUser(privacy: Boolean): Pair<String, String> {
-            val username = "test${Math.random()}"
-            val email = "$username@email.com"
-            val country = "PT"
-            val passwordHash = usersDomain.encodePassword(UUID.randomUUID().toString())
-
-            tm.run { it.userRepository.createUser(username, email, country, passwordHash) }
-            fs.userRepository.createUserFollowersAndFollowing(username, privacy)
-
-            return Pair(username, email)
+            publicTestUser = createTestUser(tm, fs, false)
+            privateTestUser = createTestUser(tm, fs, true)
         }
 
         fun createUser(username: String, email: String, country: String, passwordHash: String) =

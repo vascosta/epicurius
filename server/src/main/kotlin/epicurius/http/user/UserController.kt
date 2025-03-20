@@ -3,6 +3,7 @@ package epicurius.http.user
 import epicurius.services.UserService
 import epicurius.domain.AuthenticatedUser
 import epicurius.http.user.models.IntolerancesInputModel
+import epicurius.http.user.models.GetUserOutputModel
 import epicurius.http.user.models.LoginInputModel
 import epicurius.http.user.models.ResetPasswordInputModel
 import epicurius.http.user.models.SignUpInputModel
@@ -43,6 +44,11 @@ class UserController(val userService: UserService) {
         userService.logout(authenticatedUser.user.username)
         response.addHeader("Authorization", "")
         return ResponseEntity.ok().build<Unit>()
+    }
+
+    @GetMapping(Uris.User.USER)
+    fun getUser(authenticatedUser: AuthenticatedUser): ResponseEntity<*> {
+        return ResponseEntity.ok(GetUserOutputModel(authenticatedUser.user))
     }
 
     @PostMapping(Uris.User.FOLLOW)

@@ -4,9 +4,12 @@ import com.google.auth.oauth2.GoogleCredentials
 import com.google.cloud.firestore.Firestore
 import com.google.cloud.firestore.FirestoreOptions
 import epicurius.Environment
+import epicurius.domain.CountriesDomain
 import epicurius.domain.UserDomain
 import epicurius.domain.token.Sha256TokenEncoder
 import epicurius.repository.jdbi.utils.configure
+import epicurius.repository.transaction.firestore.FirestoreManager
+import epicurius.repository.transaction.jdbi.JdbiTransactionManager
 import org.jdbi.v3.core.Jdbi
 import org.postgresql.ds.PGSimpleDataSource
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
@@ -14,17 +17,21 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 open class EpicuriusTest {
 
     companion object {
-        val jdbi = Jdbi.create(
+        private val jdbi = Jdbi.create(
             PGSimpleDataSource().apply {
                 setURL(Environment.getPostgresDbUrl())
             }
         ).configure()
 
-        val firestore = getFirestoreService()
+        private val firestore = getFirestoreService()
+
+        val tm = JdbiTransactionManager(jdbi)
+        val fs = FirestoreManager(firestore)
 
         private val tokenEncoder = Sha256TokenEncoder()
         private val passwordEncoder = BCryptPasswordEncoder()
         val usersDomain = UserDomain(passwordEncoder, tokenEncoder)
+        val countriesDomain = CountriesDomain()
 
         private fun getFirestoreService(): Firestore {
             val serviceAccount = Environment.getFirestoreServiceAccount()

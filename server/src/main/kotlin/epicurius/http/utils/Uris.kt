@@ -8,6 +8,7 @@ object Uris {
         const val SIGNUP = "/signup"
         const val LOGIN = "/login"
         const val LOGOUT = "/logout"
+        const val USER = "/user"
         const val FOLLOW = "/follow/{usernameToFollow}"
         const val UNFOLLOW = "/unfollow/{usernameToUnfollow}"
         const val RESET_PASSWORD = "/reset"

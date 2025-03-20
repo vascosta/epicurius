@@ -32,6 +32,10 @@ class UserService(
         return createToken(username, email)
     }
 
+    fun getUser(username: String?, email: String?): AuthenticatedUser? {
+        TODO()
+    }
+
     fun login(username: String?, email: String?, password: String): String {
         if (!checkIfUserExists(username, email)) throw UserNotFound(username)
         if (checkIfUserIsLoggedIn(username, email)) throw UserAlreadyLoggedIn()
