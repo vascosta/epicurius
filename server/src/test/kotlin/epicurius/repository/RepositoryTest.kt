@@ -1,5 +1,6 @@
 package epicurius.repository
 
+import epicurius.EpicuriusTest
 import epicurius.utils.createTestUser
 import org.junit.jupiter.api.BeforeAll
 

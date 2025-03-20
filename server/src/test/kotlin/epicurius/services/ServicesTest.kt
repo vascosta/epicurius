@@ -1,13 +1,13 @@
 package epicurius.services
 
-import epicurius.repository.EpicuriusTest
+import epicurius.EpicuriusTest
 import epicurius.utils.createTestUser
 import org.junit.jupiter.api.BeforeAll
 
 open class ServicesTest: EpicuriusTest() {
 
     companion object {
-        val userService = UserService(tm, fs, usersDomain, countriesDomain)
+        private val userService = UserService(tm, fs, usersDomain, countriesDomain)
 
         lateinit var publicTestUser: Pair<String, String>
         lateinit var privateTestUser: Pair<String, String>
@@ -21,8 +21,9 @@ open class ServicesTest: EpicuriusTest() {
 
         fun createUser(username: String, email: String, country: String, passwordHash: String) =
             userService.createUser(username, email, country, passwordHash)
-        fun getUserByName(username: String) = userService.getUser(username, null)
-        fun getUserByEmail(email: String) = userService.getUser(null, email)
+        fun getAuthenticatedUser(token: String) = userService.getAuthenticatedUser(token)
+        fun login(username: String?, email: String?, password: String) = userService.login(username, email, password)
+        fun logout(username: String) = userService.logout(username)
         fun follow(username: String, usernameToFollow: String) = userService.follow(username, usernameToFollow)
 
     }

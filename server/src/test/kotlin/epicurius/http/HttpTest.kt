@@ -1,7 +1,7 @@
 package epicurius.http
 
 import epicurius.http.user.models.GetUserOutputModel
-import epicurius.repository.EpicuriusTest
+import epicurius.EpicuriusTest
 import epicurius.utils.createTestUser
 import org.junit.jupiter.api.BeforeAll
 import org.springframework.boot.test.context.SpringBootTest

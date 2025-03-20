@@ -1,9 +1,8 @@
-package epicurius.repository
+package epicurius
 
 import com.google.auth.oauth2.GoogleCredentials
 import com.google.cloud.firestore.Firestore
 import com.google.cloud.firestore.FirestoreOptions
-import epicurius.Environment
 import epicurius.domain.CountriesDomain
 import epicurius.domain.UserDomain
 import epicurius.domain.token.Sha256TokenEncoder

@@ -1,6 +1,6 @@
 package epicurius.utils
 
-import epicurius.repository.EpicuriusTest
+import epicurius.EpicuriusTest
 import epicurius.repository.transaction.TransactionManager
 import epicurius.repository.transaction.firestore.FirestoreManager
 import java.util.*
