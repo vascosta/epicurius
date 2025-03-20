@@ -1,6 +1,7 @@
 package epicurius.services
 
 import epicurius.EpicuriusTest
+import epicurius.utils.UserTest
 import epicurius.utils.createTestUser
 import org.junit.jupiter.api.BeforeAll
 
@@ -9,14 +10,16 @@ open class ServicesTest: EpicuriusTest() {
     companion object {
         private val userService = UserService(tm, fs, usersDomain, countriesDomain)
 
-        lateinit var publicTestUser: Pair<String, String>
-        lateinit var privateTestUser: Pair<String, String>
+        lateinit var publicTestUser: UserTest
+        lateinit var privateTestUser: UserTest
 
         @JvmStatic
         @BeforeAll
         fun setupDB() {
             publicTestUser = createTestUser(tm, fs, false)
             privateTestUser = createTestUser(tm, fs, true)
+            println(publicTestUser.username)
+            println(privateTestUser.username)
         }
 
         fun createUser(username: String, email: String, country: String, passwordHash: String) =

@@ -1,14 +1,15 @@
 package epicurius.repository
 
 import epicurius.EpicuriusTest
+import epicurius.utils.UserTest
 import epicurius.utils.createTestUser
 import org.junit.jupiter.api.BeforeAll
 
 open class RepositoryTest: EpicuriusTest() {
 
     companion object {
-        lateinit var publicTestUser: Pair<String, String>
-        lateinit var privateTestUser: Pair<String, String>
+        lateinit var publicTestUser: UserTest
+        lateinit var privateTestUser: UserTest
 
         @JvmStatic
         @BeforeAll
