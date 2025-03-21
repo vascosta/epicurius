@@ -1,15 +1,16 @@
 package epicurius.utils
 
 import epicurius.EpicuriusTest.Companion.usersDomain
+import epicurius.domain.UserDomain.Companion.MAX_PASSWORD_LENGTH
 import epicurius.repository.transaction.TransactionManager
 import epicurius.repository.transaction.firestore.FirestoreManager
 import java.util.*
 
 fun createTestUser(tm: TransactionManager, fs: FirestoreManager, privacy: Boolean): UserTest {
-    val username = "test${Math.random()}"
+    val username = generateRandomUsername()
     val email = "$username@email.com"
     val country = "PT"
-    val password = UUID.randomUUID().toString()
+    val password = generateSecurePassword()
     val passwordHash = usersDomain.encodePassword(password)
 
     tm.run { it.userRepository.createUser(username, email, country, passwordHash) }
@@ -17,3 +18,7 @@ fun createTestUser(tm: TransactionManager, fs: FirestoreManager, privacy: Boolea
 
     return UserTest(username, email, password)
 }
+
+fun generateRandomUsername() = "test${Math.random()}".replace(".", "")
+
+fun generateSecurePassword() = ("P" + UUID.randomUUID().toString()).take(MAX_PASSWORD_LENGTH)
