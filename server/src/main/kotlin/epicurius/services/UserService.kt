@@ -62,15 +62,13 @@ class UserService(
         }
     }
 
-    fun addIntolerances(username: String, intolerances: List<Intolerance>) {
+    fun updateIntolerances(username: String, intolerances: List<Intolerance>) {
         val intolerancesIdx = intolerances.map { Intolerance.entries.indexOf(it) }
 
         tm.run {
-            it.userRepository.addIntolerances(username, intolerancesIdx)
+            it.userRepository.updateIntolerances(username, intolerancesIdx)
         }
     }
-
-    fun getIntolerances(username: String): List<Intolerance> = tm.run { it.userRepository.getIntolerances(username) }
 
     fun getAuthenticatedUser(token: String): AuthenticatedUser? {
         val tokenHash = userDomain.hashToken(token)

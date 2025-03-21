@@ -13,4 +13,10 @@ enum class Intolerance {
     SULFITE,
     TREE_NUT,
     WHEAT;
+
+    companion object {
+        fun fromInt(value: Int): Intolerance {
+            return Intolerance.entries.getOrNull(value) ?: throw IllegalArgumentException("Invalid Id")
+        }
+    }
 }

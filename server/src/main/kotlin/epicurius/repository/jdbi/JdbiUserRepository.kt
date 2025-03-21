@@ -62,7 +62,7 @@ class JdbiUserRepository(private val handle: Handle) : UserPostgresRepository {
             .execute()
     }
 
-    override fun addIntolerances(username: String, intolerancesIdx: List<Int>) {
+    override fun updateIntolerances(username: String, intolerancesIdx: List<Int>) {
         handle.createUpdate(
             """
                 UPDATE dbo.user
@@ -73,21 +73,6 @@ class JdbiUserRepository(private val handle: Handle) : UserPostgresRepository {
             .bind("username", username)
             .bind("intolerances", intolerancesIdx.toTypedArray())
             .execute()
-    }
-
-    override fun getIntolerances(username: String): List<Intolerance> {
-        val intolerancesIdx = handle.createQuery(
-                """
-                    SELECT intolerances
-                    FROM dbo.user
-                    WHERE username = :username
-                """
-            )
-                .bind("username", username)
-                .mapTo<Array<Int>>()
-                .one()
-
-        return intolerancesIdx.map { Intolerance.entries[it] }
     }
 
     override fun checkIfUserExists(username: String?, email: String?, tokenHash: String?): Boolean =

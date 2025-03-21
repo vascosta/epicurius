@@ -73,17 +73,17 @@ class UserController(val userService: UserService) {
     }
 
     @PostMapping(Uris.User.ADD_INTOLERANCES)
-    fun addIntolerances(
+    fun updateIntolerances(
         authenticatedUser: AuthenticatedUser,
         @Valid @RequestBody body: IntolerancesInputModel
     ): ResponseEntity<*> {
-        userService.addIntolerances(authenticatedUser.user.username, body.intolerances)
+        userService.updateIntolerances(authenticatedUser.user.username, body.intolerances)
         return ResponseEntity.ok().build<Unit>()
     }
 
     @GetMapping(Uris.User.GET_INTOLERANCES)
     fun getIntolerances(authenticatedUser: AuthenticatedUser): ResponseEntity<*> {
-        val intolerances = userService.getIntolerances(authenticatedUser.user.username)
+        val intolerances = authenticatedUser.user.intolerances
         return ResponseEntity.ok().body(intolerances)
     }
 }

@@ -1,3 +1,6 @@
+import epicurius.domain.Diet
+import epicurius.domain.Intolerance
+
 data class User(
     val username: String,
     val email: String,
@@ -5,7 +8,7 @@ data class User(
     val tokenHash: String?,
     val country: String,
     val privacy: Boolean,
-    val intolerances: Array<String>,
-    val diet: Array<String>,
+    val intolerances: List<Intolerance>,
+    val diet: List<Diet>,
     val profilePictureName: String?
 )
