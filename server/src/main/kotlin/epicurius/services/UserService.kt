@@ -1,9 +1,9 @@
 package epicurius.services
 
-import epicurius.domain.AuthenticatedUser
+import epicurius.domain.user.AuthenticatedUser
 import epicurius.domain.CountriesDomain
 import epicurius.domain.Intolerance
-import epicurius.domain.UserDomain
+import epicurius.domain.user.UserDomain
 import epicurius.domain.exceptions.InvalidCountry
 import epicurius.domain.exceptions.IncorrectPassword
 import epicurius.domain.exceptions.PasswordsDoNotMatch
@@ -32,6 +32,31 @@ class UserService(
         return createToken(username, email)
     }
 
+    fun getAuthenticatedUser(token: String): AuthenticatedUser? {
+        val tokenHash = userDomain.hashToken(token)
+        if (!checkIfUserExists(tokenHash = tokenHash)) return null
+        return tm.run {
+            val user = it.userRepository.getUserFromTokenHash(tokenHash)
+            AuthenticatedUser(user, token)
+        }
+    }
+
+    fun getFollowers(username: String) {
+
+    }
+
+    fun getFollowing(username: String) {
+
+    }
+
+    fun getFollowingRequests(username: String) {
+
+    }
+
+    fun getProfilePicture(username: String) { }
+
+    fun addProfilePicture() { }
+
     fun login(username: String?, email: String?, password: String): String {
         if (!checkIfUserExists(username, email)) throw UserNotFound(username)
         if (checkIfUserIsLoggedIn(username, email)) throw UserAlreadyLoggedIn()
@@ -41,12 +66,24 @@ class UserService(
         return createToken(username, email)
     }
 
-    fun logout(username: String) {
-        deleteToken(username)
-    }
-
     fun follow(username: String, usernameToFollow: String) {
         fs.userRepository.addFollowing(username, usernameToFollow)
+    }
+
+    fun updateIntolerances(username: String, intolerances: List<Intolerance>) {
+        val intolerancesIdx = intolerances.map { Intolerance.entries.indexOf(it) }
+
+        tm.run {
+            it.userRepository.updateIntolerances(username, intolerancesIdx)
+        }
+    }
+
+    fun updateProfilePicture() { }
+
+    fun removeProfilePicture() { }
+
+    fun logout(username: String) {
+        deleteToken(username)
     }
 
     fun unfollow(username: String, usernameToUnfollow: String) {
@@ -59,23 +96,6 @@ class UserService(
 
         tm.run {
             it.userRepository.resetPassword(username, passwordHash)
-        }
-    }
-
-    fun updateIntolerances(username: String, intolerances: List<Intolerance>) {
-        val intolerancesIdx = intolerances.map { Intolerance.entries.indexOf(it) }
-
-        tm.run {
-            it.userRepository.updateIntolerances(username, intolerancesIdx)
-        }
-    }
-
-    fun getAuthenticatedUser(token: String): AuthenticatedUser? {
-        val tokenHash = userDomain.hashToken(token)
-        if (!checkIfUserExists(tokenHash = tokenHash)) return null
-        return tm.run {
-            val user = it.userRepository.getUserFromTokenHash(tokenHash)
-            AuthenticatedUser(user, token)
         }
     }
 

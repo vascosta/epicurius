@@ -6,8 +6,7 @@ import com.google.cloud.firestore.FirestoreOptions
 import epicurius.domain.token.Sha256TokenEncoder
 import epicurius.http.pipeline.authentication.AuthenticatedUserArgumentResolver
 import epicurius.http.pipeline.authentication.AuthenticationInterceptor
-import epicurius.repository.jdbi.configureWithAppRequirements
-import epicurius.repository.jdbi.utils.configure
+import epicurius.repository.jdbi.utils.configureWithAppRequirements
 import org.jdbi.v3.core.Jdbi
 import org.postgresql.ds.PGSimpleDataSource
 import org.springframework.boot.autoconfigure.SpringBootApplication

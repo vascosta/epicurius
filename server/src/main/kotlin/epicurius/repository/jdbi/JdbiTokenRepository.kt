@@ -3,9 +3,7 @@ package epicurius.repository.jdbi
 import TokenRepository
 import org.jdbi.v3.core.Handle
 
-class JdbiTokenRepository(
-    private val handle: Handle
-) : TokenRepository {
+class JdbiTokenRepository(private val handle: Handle) : TokenRepository {
     override fun createToken(tokenHash: String, username: String?, email: String?) {
         handle.createUpdate(
             """

@@ -1,6 +1,6 @@
 package epicurius.http.pipeline.authentication
 
-import epicurius.domain.AuthenticatedUser
+import epicurius.domain.user.AuthenticatedUser
 import jakarta.servlet.http.HttpServletRequest
 import org.springframework.core.MethodParameter
 import org.springframework.stereotype.Component

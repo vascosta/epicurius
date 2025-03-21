@@ -1,5 +1,5 @@
-package epicurius.domain
+package epicurius.domain.user
 
-import User
+import epicurius.domain.user.User
 
 data class AuthenticatedUser(val user: User, val token: String)

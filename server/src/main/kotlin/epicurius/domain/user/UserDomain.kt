@@ -1,4 +1,4 @@
-package epicurius.domain
+package epicurius.domain.user
 
 import epicurius.domain.token.TokenEncoder
 import org.springframework.security.crypto.password.PasswordEncoder

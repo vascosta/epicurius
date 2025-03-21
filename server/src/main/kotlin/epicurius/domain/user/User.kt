@@ -1,3 +1,5 @@
+package epicurius.domain.user
+
 import epicurius.domain.Diet
 import epicurius.domain.Intolerance
 

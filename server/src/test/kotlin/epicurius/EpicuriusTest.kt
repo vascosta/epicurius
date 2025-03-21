@@ -4,9 +4,9 @@ import com.google.auth.oauth2.GoogleCredentials
 import com.google.cloud.firestore.Firestore
 import com.google.cloud.firestore.FirestoreOptions
 import epicurius.domain.CountriesDomain
-import epicurius.domain.UserDomain
 import epicurius.domain.token.Sha256TokenEncoder
-import epicurius.repository.jdbi.utils.configure
+import epicurius.domain.user.UserDomain
+import epicurius.repository.jdbi.utils.configureWithAppRequirements
 import epicurius.repository.transaction.firestore.FirestoreManager
 import epicurius.repository.transaction.jdbi.JdbiTransactionManager
 import org.jdbi.v3.core.Jdbi
@@ -20,7 +20,7 @@ open class EpicuriusTest {
             PGSimpleDataSource().apply {
                 setURL(Environment.getPostgresDbUrl())
             }
-        ).configure()
+        ).configureWithAppRequirements()
 
         private val firestore = getFirestoreService()
 

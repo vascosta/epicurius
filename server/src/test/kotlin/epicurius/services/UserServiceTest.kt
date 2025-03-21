@@ -107,4 +107,14 @@ class UserServiceTest: ServicesTest() {
         val authenticatedUser = getAuthenticatedUser(userToken)
         assertNull(authenticatedUser)
     }
+
+//    @Test
+//    fun `follow a public user successfully`() {
+//        // given an existing user
+//        val user = privateTestUser
+//
+//        // when following a public user
+//        val publicUser = publicTestUser
+//        follow(user.username, publicTestUser.username)
+//    }
 }

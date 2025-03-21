@@ -1,7 +1,7 @@
 package epicurius.http.user
 
 import epicurius.services.UserService
-import epicurius.domain.AuthenticatedUser
+import epicurius.domain.user.AuthenticatedUser
 import epicurius.http.user.models.IntolerancesInputModel
 import epicurius.http.user.models.GetUserOutputModel
 import epicurius.http.user.models.LoginInputModel
@@ -11,16 +11,22 @@ import epicurius.http.utils.Uris
 import jakarta.servlet.http.HttpServletResponse
 import jakarta.validation.Valid
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PathVariable
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping(Uris.PREFIX)
 class UserController(val userService: UserService) {
+
+    @GetMapping(Uris.User.USER)
+    fun getUser(authenticatedUser: AuthenticatedUser): ResponseEntity<*> {
+        return ResponseEntity.ok().body(GetUserOutputModel(authenticatedUser.user))
+    }
+
+    @GetMapping(Uris.User.GET_INTOLERANCES)
+    fun getIntolerances(authenticatedUser: AuthenticatedUser): ResponseEntity<*> {
+        val intolerances = authenticatedUser.user.intolerances
+        return ResponseEntity.ok().body(intolerances)
+    }
 
     @PostMapping(Uris.User.SIGNUP)
     fun signUp(
@@ -46,9 +52,10 @@ class UserController(val userService: UserService) {
         return ResponseEntity.ok().build<Unit>()
     }
 
-    @GetMapping(Uris.User.USER)
-    fun getUser(authenticatedUser: AuthenticatedUser): ResponseEntity<*> {
-        return ResponseEntity.ok(GetUserOutputModel(authenticatedUser.user))
+    @PostMapping(Uris.User.FOLLOWERS)
+    fun getFollowers(authenticatedUser: AuthenticatedUser): ResponseEntity<*> {
+        val followers = userService.getFollowers(authenticatedUser.user.username)
+        return ResponseEntity.ok().body(followers)
     }
 
     @PostMapping(Uris.User.FOLLOW)
@@ -63,16 +70,7 @@ class UserController(val userService: UserService) {
         return ResponseEntity.ok().build<Unit>()
     }
 
-    @PostMapping(Uris.User.RESET_PASSWORD)
-    fun resetPassword(
-        authenticatedUser: AuthenticatedUser,
-        @Valid @RequestBody body: ResetPasswordInputModel
-    ): ResponseEntity<*> {
-        userService.resetPassword(authenticatedUser.user.username, body.newPassword, body.confirmPassword)
-        return ResponseEntity.ok().build<Unit>()
-    }
-
-    @PostMapping(Uris.User.ADD_INTOLERANCES)
+    @PutMapping(Uris.User.ADD_INTOLERANCES)
     fun updateIntolerances(
         authenticatedUser: AuthenticatedUser,
         @Valid @RequestBody body: IntolerancesInputModel
@@ -81,9 +79,12 @@ class UserController(val userService: UserService) {
         return ResponseEntity.ok().build<Unit>()
     }
 
-    @GetMapping(Uris.User.GET_INTOLERANCES)
-    fun getIntolerances(authenticatedUser: AuthenticatedUser): ResponseEntity<*> {
-        val intolerances = authenticatedUser.user.intolerances
-        return ResponseEntity.ok().body(intolerances)
+    @PostMapping(Uris.User.RESET_PASSWORD)
+    fun resetPassword(
+        authenticatedUser: AuthenticatedUser,
+        @Valid @RequestBody body: ResetPasswordInputModel
+    ): ResponseEntity<*> {
+        userService.resetPassword(authenticatedUser.user.username, body.newPassword, body.confirmPassword)
+        return ResponseEntity.ok().build<Unit>()
     }
 }

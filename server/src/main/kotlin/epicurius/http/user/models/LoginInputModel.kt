@@ -1,8 +1,8 @@
 package epicurius.http.user.models
 
-import epicurius.domain.UserDomain
-import epicurius.domain.UserDomain.Companion.MAX_PASSWORD_LENGTH
-import epicurius.domain.UserDomain.Companion.MIN_PASSWORD_LENGTH
+import epicurius.domain.user.UserDomain
+import epicurius.domain.user.UserDomain.Companion.MAX_PASSWORD_LENGTH
+import epicurius.domain.user.UserDomain.Companion.MIN_PASSWORD_LENGTH
 import epicurius.http.utils.Regex
 import jakarta.validation.constraints.Email
 import jakarta.validation.constraints.NotBlank

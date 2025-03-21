@@ -3,6 +3,7 @@ package epicurius.repository.firestore
 import UserFirestoreRepository
 import com.google.cloud.firestore.Firestore
 import epicurius.domain.exceptions.UserNotFound
+import epicurius.domain.user.SocialUser
 
 class FirestoreUserRepository(private val firestore: Firestore):UserFirestoreRepository {
     override fun createUserFollowersAndFollowing(username: String, privacy: Boolean) {
@@ -17,6 +18,19 @@ class FirestoreUserRepository(private val firestore: Firestore):UserFirestoreRep
             .set(user).get()
     }
 
+    override fun getFollowers(username: String): List<SocialUser> {
+        TODO("Not yet implemented")
+    }
+
+    override fun getFollowing(username: String): List<SocialUser> {
+        TODO("Not yet implemented")
+    }
+
+    override fun getFollowRequests(username: String): List<SocialUser> {
+        TODO("Not yet implemented")
+    }
+
+    // fix (use SocialUser)
     override fun addFollowing(username: String, usernameToFollow: String) {
         firestore.runTransaction { transaction ->
             val userRef = firestore.collection(FOLLOWERS_AND_FOLLOWING_COLLECTION).document(username)
@@ -54,6 +68,7 @@ class FirestoreUserRepository(private val firestore: Firestore):UserFirestoreRep
         }
     }
 
+    // fix (use SocialUser)
     override fun removeFollowing(username: String, usernameToUnfollow: String) {
         firestore.runTransaction { transaction ->
             val userRef = firestore.collection(FOLLOWERS_AND_FOLLOWING_COLLECTION).document(username)

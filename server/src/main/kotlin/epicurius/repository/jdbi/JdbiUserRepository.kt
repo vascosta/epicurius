@@ -2,7 +2,6 @@ package epicurius.repository.jdbi
 
 import User
 import UserPostgresRepository
-import epicurius.domain.Intolerance
 import org.jdbi.v3.core.Handle
 import org.jdbi.v3.core.kotlin.mapTo
 
@@ -49,17 +48,17 @@ class JdbiUserRepository(private val handle: Handle) : UserPostgresRepository {
             .one()
     }
 
-    override fun resetPassword(username: String, passwordHash: String) {
-        handle.createUpdate(
+    override fun getProfilePictureName(username: String): String {
+        return handle.createQuery(
             """
-                UPDATE dbo.user
-                SET password_hash = :password_hash
+                SELECT profile_picture_name
+                FROM dbo.user
                 WHERE username = :username
             """
         )
             .bind("username", username)
-            .bind("password_hash", passwordHash)
-            .execute()
+            .mapTo<String>()
+            .one()
     }
 
     override fun updateIntolerances(username: String, intolerancesIdx: List<Int>) {
@@ -72,6 +71,19 @@ class JdbiUserRepository(private val handle: Handle) : UserPostgresRepository {
         )
             .bind("username", username)
             .bind("intolerances", intolerancesIdx.toTypedArray())
+            .execute()
+    }
+
+    override fun resetPassword(username: String, passwordHash: String) {
+        handle.createUpdate(
+            """
+                UPDATE dbo.user
+                SET password_hash = :password_hash
+                WHERE username = :username
+            """
+        )
+            .bind("username", username)
+            .bind("password_hash", passwordHash)
             .execute()
     }
 
