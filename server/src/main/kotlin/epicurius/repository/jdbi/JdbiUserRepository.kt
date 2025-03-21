@@ -1,7 +1,7 @@
 package epicurius.repository.jdbi
 
-import User
 import UserPostgresRepository
+import epicurius.domain.user.User
 import org.jdbi.v3.core.Handle
 import org.jdbi.v3.core.kotlin.mapTo
 
@@ -71,6 +71,19 @@ class JdbiUserRepository(private val handle: Handle) : UserPostgresRepository {
         )
             .bind("username", username)
             .bind("intolerances", intolerancesIdx.toTypedArray())
+            .execute()
+    }
+
+    override fun updateDiet(username: String, dietIdx: List<Int>) {
+        handle.createUpdate(
+            """
+                UPDATE dbo.user
+                SET diet = :diet
+                WHERE username = :username
+            """
+        )
+            .bind("username", username)
+            .bind("diet", dietIdx.toTypedArray())
             .execute()
     }
 

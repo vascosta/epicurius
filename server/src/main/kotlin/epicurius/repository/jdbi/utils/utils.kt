@@ -1,6 +1,7 @@
 package epicurius.repository.jdbi.utils
 
-import User
+import epicurius.domain.user.User
+import epicurius.repository.mappers.DietListMapper
 import epicurius.repository.mappers.IntoleranceListMapper
 import epicurius.repository.mappers.UserMapper
 import org.jdbi.v3.core.Jdbi
@@ -12,8 +13,9 @@ fun Jdbi.configureWithAppRequirements(): Jdbi {
     installPlugin(PostgresPlugin())
 
     registerColumnMapper(IntoleranceListMapper())
+    registerColumnMapper(DietListMapper())
 
-    registerRowMapper(User::class.java, UserMapper(IntoleranceListMapper()))
+    registerRowMapper(User::class.java, UserMapper(IntoleranceListMapper(), DietListMapper()))
 
     return this
 }

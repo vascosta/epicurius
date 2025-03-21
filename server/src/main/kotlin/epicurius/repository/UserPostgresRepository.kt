@@ -1,3 +1,4 @@
+import epicurius.domain.user.User
 
 interface UserPostgresRepository {
 
@@ -6,6 +7,7 @@ interface UserPostgresRepository {
     fun getUser(username: String?, email: String?): User
     fun getUserFromTokenHash(tokenHash: String): User
     fun getProfilePictureName(username: String): String
+    fun updateDiet(username: String, dietIdx: List<Int>)
 
     fun resetPassword(username: String, passwordHash: String)
 

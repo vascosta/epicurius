@@ -2,6 +2,7 @@ package epicurius.services
 
 import epicurius.domain.user.AuthenticatedUser
 import epicurius.domain.CountriesDomain
+import epicurius.domain.Diet
 import epicurius.domain.Intolerance
 import epicurius.domain.user.UserDomain
 import epicurius.domain.exceptions.InvalidCountry
@@ -70,15 +71,40 @@ class UserService(
         fs.userRepository.addFollowing(username, usernameToFollow)
     }
 
-    fun updateIntolerances(username: String, intolerances: List<Intolerance>) {
-        val intolerancesIdx = intolerances.map { Intolerance.entries.indexOf(it) }
+    fun updateIntolerances(
+        username: String,
+        userIntolerances: List<Intolerance>,
+        newIntolerances: List<Intolerance>
+    ) {
+        if (userIntolerances == newIntolerances) return
+
+        val intolerancesIdx = userIntolerances.map { Intolerance.entries.indexOf(it) }
 
         tm.run {
             it.userRepository.updateIntolerances(username, intolerancesIdx)
         }
     }
 
+    fun updateDiet(username: String, userDiets: List<Diet>, newDiets: List<Diet>) {
+        if (userDiets == newDiets) return
+
+        val dietIdx = newDiets.map { Diet.entries.indexOf(it) }
+
+        tm.run {
+            it.userRepository.updateDiet(username, dietIdx)
+        }
+    }
+
     fun updateProfilePicture() { }
+
+    fun resetPassword(username: String, newPassword: String, confirmPassword: String) {
+        if (!checkIfPasswordsMatch(newPassword, confirmPassword)) throw PasswordsDoNotMatch()
+        val passwordHash = userDomain.encodePassword(newPassword)
+
+        tm.run {
+            it.userRepository.resetPassword(username, passwordHash)
+        }
+    }
 
     fun removeProfilePicture() { }
 
@@ -88,15 +114,6 @@ class UserService(
 
     fun unfollow(username: String, usernameToUnfollow: String) {
         fs.userRepository.removeFollowing(username, usernameToUnfollow)
-    }
-
-    fun resetPassword(username: String, newPassword: String, confirmPassword: String) {
-        if (!checkIfPasswordsMatch(newPassword, confirmPassword)) throw PasswordsDoNotMatch()
-        val passwordHash = userDomain.encodePassword(newPassword)
-
-        tm.run {
-            it.userRepository.resetPassword(username, passwordHash)
-        }
     }
 
     private fun createToken(username: String?, email: String?): String {

@@ -2,8 +2,11 @@ package epicurius.http.user
 
 import epicurius.services.UserService
 import epicurius.domain.user.AuthenticatedUser
+import epicurius.http.user.models.DietInputModel
+import epicurius.http.user.models.DietOutputModel
 import epicurius.http.user.models.IntolerancesInputModel
 import epicurius.http.user.models.GetUserOutputModel
+import epicurius.http.user.models.IntolerancesOutputModel
 import epicurius.http.user.models.LoginInputModel
 import epicurius.http.user.models.ResetPasswordInputModel
 import epicurius.http.user.models.SignUpInputModel
@@ -25,14 +28,17 @@ class UserController(val userService: UserService) {
     @GetMapping(Uris.User.GET_INTOLERANCES)
     fun getIntolerances(authenticatedUser: AuthenticatedUser): ResponseEntity<*> {
         val intolerances = authenticatedUser.user.intolerances
-        return ResponseEntity.ok().body(intolerances)
+        return ResponseEntity.ok().body(IntolerancesOutputModel(intolerances))
+    }
+
+    @GetMapping(Uris.User.GET_DIET)
+    fun getDiet(authenticatedUser: AuthenticatedUser): ResponseEntity<*> {
+        val diet = authenticatedUser.user.diet
+        return ResponseEntity.ok().body(DietOutputModel(diet))
     }
 
     @PostMapping(Uris.User.SIGNUP)
-    fun signUp(
-        @Valid @RequestBody body: SignUpInputModel,
-        response: HttpServletResponse
-    ): ResponseEntity<*> {
+    fun signUp(@Valid @RequestBody body: SignUpInputModel, response: HttpServletResponse): ResponseEntity<*> {
         val token = userService.createUser(body.username, body.email, body.country, body.password)
         response.addHeader("Authorization", token)
         return ResponseEntity.ok().build<Unit>()
@@ -70,21 +76,34 @@ class UserController(val userService: UserService) {
         return ResponseEntity.ok().build<Unit>()
     }
 
-    @PutMapping(Uris.User.ADD_INTOLERANCES)
-    fun updateIntolerances(
-        authenticatedUser: AuthenticatedUser,
-        @Valid @RequestBody body: IntolerancesInputModel
-    ): ResponseEntity<*> {
-        userService.updateIntolerances(authenticatedUser.user.username, body.intolerances)
-        return ResponseEntity.ok().build<Unit>()
-    }
-
     @PostMapping(Uris.User.RESET_PASSWORD)
     fun resetPassword(
         authenticatedUser: AuthenticatedUser,
         @Valid @RequestBody body: ResetPasswordInputModel
     ): ResponseEntity<*> {
         userService.resetPassword(authenticatedUser.user.username, body.newPassword, body.confirmPassword)
+        return ResponseEntity.ok().build<Unit>()
+    }
+
+    @PutMapping(Uris.User.UPDATE_INTOLERANCES)
+    fun updateIntolerances(
+        authenticatedUser: AuthenticatedUser,
+        @Valid @RequestBody body: IntolerancesInputModel
+    ): ResponseEntity<*> {
+        userService.updateIntolerances(
+            authenticatedUser.user.username,
+            authenticatedUser.user.intolerances,
+            body.intolerances
+        )
+        return ResponseEntity.ok().build<Unit>()
+    }
+
+    @PutMapping(Uris.User.UPDATE_DIET)
+    fun updateDiet(
+        authenticatedUser: AuthenticatedUser,
+        @Valid @RequestBody body: DietInputModel
+    ): ResponseEntity<*> {
+        userService.updateDiet(authenticatedUser.user.username, authenticatedUser.user.diet, body.diet)
         return ResponseEntity.ok().build<Unit>()
     }
 }

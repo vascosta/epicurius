@@ -12,4 +12,10 @@ enum class Diet(name: String) {
     PRIMAL("Primal"),
     LOW_FODMAP("Low FODMAP"),
     WHOLE30("Whole30");
+
+    companion object {
+        fun fromInt(value: Int): Diet {
+            return Diet.entries.getOrNull(value) ?: throw IllegalArgumentException("Invalid Id")
+        }
+    }
 }
