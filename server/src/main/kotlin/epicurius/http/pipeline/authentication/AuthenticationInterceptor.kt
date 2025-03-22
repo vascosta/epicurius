@@ -37,5 +37,6 @@ class AuthenticationInterceptor(
 
     companion object {
         const val AUTHORIZATION_HEADER = "Authorization"
+        const val WWW_AUTHENTICATE_HEADER = "WWW-Authenticate"
     }
 }
