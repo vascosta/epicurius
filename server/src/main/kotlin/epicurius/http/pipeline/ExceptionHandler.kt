@@ -91,31 +91,31 @@ class ExceptionHandler {
             status = HttpStatus.BAD_REQUEST
         )
 
-    @ExceptionHandler(
-        value = [
-            //add
-        ]
-    )
-    fun handleUnauthorized(request: HttpServletRequest, ex: Exception): ResponseEntity<*> {
-        return ex.handle(
-            request = request,
-            status = HttpStatus.UNAUTHORIZED,
-            headers = HttpHeaders().apply {
-                set(WWW_AUTHENTICATE_HEADER, SCHEME)
-            }
+    /*    @ExceptionHandler(
+            value = [
+                //add
+            ]
         )
-    }
+        fun handleUnauthorized(request: HttpServletRequest, ex: Exception): ResponseEntity<*> {
+            return ex.handle(
+                request = request,
+                status = HttpStatus.UNAUTHORIZED,
+                headers = HttpHeaders().apply {
+                    set(WWW_AUTHENTICATE_HEADER, SCHEME)
+                }
+            )
+        }
 
-    @ExceptionHandler(
-        value = [
-            //ADD
-        ]
-    )
-    fun handleForbidden(request: HttpServletRequest, ex: Exception): ResponseEntity<Problem> =
-        ex.handle(
-            request = request,
-            status = HttpStatus.FORBIDDEN
+        @ExceptionHandler(
+            value = [
+                //ADD
+            ]
         )
+        fun handleForbidden(request: HttpServletRequest, ex: Exception): ResponseEntity<Problem> =
+            ex.handle(
+                request = request,
+                status = HttpStatus.FORBIDDEN
+            )*/
 
     @ExceptionHandler(
         value = [

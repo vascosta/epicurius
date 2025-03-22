@@ -8,7 +8,7 @@ import java.util.*
 
 fun createTestUser(tm: TransactionManager, fs: FirestoreManager, privacy: Boolean): UserTest {
     val username = generateRandomUsername()
-    val email = "$username@email.com"
+    val email = generateEmail(username)
     val country = "PT"
     val password = generateSecurePassword()
     val passwordHash = usersDomain.encodePassword(password)
@@ -20,5 +20,6 @@ fun createTestUser(tm: TransactionManager, fs: FirestoreManager, privacy: Boolea
 }
 
 fun generateRandomUsername() = "test${Math.random()}".replace(".", "")
+fun generateEmail(username: String) = "$username@email.com"
 
 fun generateSecurePassword() = ("P" + UUID.randomUUID().toString()).take(MAX_PASSWORD_LENGTH)

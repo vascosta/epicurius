@@ -6,6 +6,7 @@ import epicurius.domain.exceptions.IncorrectPassword
 import epicurius.domain.exceptions.UserAlreadyLoggedIn
 import epicurius.domain.exceptions.UserNotFound
 import epicurius.http.user.models.UpdateUserInputModel
+import epicurius.utils.generateEmail
 import epicurius.utils.generateRandomUsername
 import epicurius.utils.generateSecurePassword
 import org.junit.jupiter.api.Assertions.assertFalse
@@ -23,7 +24,7 @@ class UserServiceTest: ServicesTest() {
     fun `Create new user and retrieve it successfully`() {
         // given user required information
         val username = generateRandomUsername()
-        val email = "$username@email.com"
+        val email = generateEmail(username)
         val country = "PT"
         val password = generateSecurePassword()
 
@@ -31,7 +32,7 @@ class UserServiceTest: ServicesTest() {
         val token = createUser(username, email, country, password)
 
         // when getting the authenticated user
-        val userByName = getAuthenticatedUser(token)?.user
+        val userByName = getAuthenticatedUser(token)?.userInfo
 
         // then the user is retrieved successfully
         assertNotNull(userByName)
@@ -57,9 +58,9 @@ class UserServiceTest: ServicesTest() {
         // then the user is logged in successfully
         val authenticatedUser = getAuthenticatedUser(userToken)
         assertNotNull(authenticatedUser)
-        assertEquals(user.username, authenticatedUser.user.username)
-        assertEquals(user.email, authenticatedUser.user.email)
-        assertTrue(usersDomain.verifyPassword(user.password, authenticatedUser.user.passwordHash))
+        assertEquals(user.username, authenticatedUser.userInfo.username)
+        assertEquals(user.email, authenticatedUser.userInfo.email)
+        assertTrue(usersDomain.verifyPassword(user.password, authenticatedUser.userInfo.passwordHash))
     }
 
     @Test
@@ -74,9 +75,9 @@ class UserServiceTest: ServicesTest() {
         // then the user is logged in successfully
         val authenticatedUser = getAuthenticatedUser(userToken)
         assertNotNull(authenticatedUser)
-        assertEquals(user.username, authenticatedUser.user.username)
-        assertEquals(user.email, authenticatedUser.user.email)
-        assertTrue(usersDomain.verifyPassword(user.password, authenticatedUser.user.passwordHash))
+        assertEquals(user.username, authenticatedUser.userInfo.username)
+        assertEquals(user.email, authenticatedUser.userInfo.email)
+        assertTrue(usersDomain.verifyPassword(user.password, authenticatedUser.userInfo.passwordHash))
     }
 
     @Test
@@ -109,7 +110,7 @@ class UserServiceTest: ServicesTest() {
     fun `try to login with an already logged in user and throws UserAlreadyLoggedIn Exception`() {
         // given an existing logged in user
         val username = generateRandomUsername()
-        val email = "$username@email.com"
+        val email = generateEmail(username)
         val country = "PT"
         val password = generateSecurePassword()
         val passwordHash = usersDomain.encodePassword(password)
@@ -125,7 +126,7 @@ class UserServiceTest: ServicesTest() {
     fun `logout a user successfully`() {
         // given an existing logged in user
         val username = generateRandomUsername()
-        val email = "$username@email.com"
+        val email = generateEmail(username)
         val country = "PT"
         val password = generateSecurePassword()
         val passwordHash = usersDomain.encodePassword(password)
@@ -143,7 +144,7 @@ class UserServiceTest: ServicesTest() {
     fun `Reset password successfully`() {
         // given user required information
         val username = generateRandomUsername()
-        val email = "$username@email.com"
+        val email = generateEmail(username)
         val country = "PT"
         val password = generateSecurePassword()
 
@@ -160,17 +161,17 @@ class UserServiceTest: ServicesTest() {
         // then the password is reset successfully
         val authenticatedUser = getAuthenticatedUser(userToken)
         assertNotNull(authenticatedUser)
-        assertEquals(authenticatedUser.user.username, username)
-        assertEquals(authenticatedUser.user.email, email)
-        assertTrue(usersDomain.verifyPassword(newPassword, authenticatedUser.user.passwordHash))
-        assertFalse(usersDomain.verifyPassword(password, authenticatedUser.user.passwordHash))
+        assertEquals(authenticatedUser.userInfo.username, username)
+        assertEquals(authenticatedUser.userInfo.email, email)
+        assertTrue(usersDomain.verifyPassword(newPassword, authenticatedUser.userInfo.passwordHash))
+        assertFalse(usersDomain.verifyPassword(password, authenticatedUser.userInfo.passwordHash))
     }
 
     @Test
     fun `Update user profile successfully`() {
         // given user required information
         val username = generateRandomUsername()
-        val email = "$username@email.com"
+        val email = generateEmail(username)
         val country = "PT"
         val password = generateSecurePassword()
         val passwordHash = usersDomain.encodePassword(password)
@@ -201,7 +202,7 @@ class UserServiceTest: ServicesTest() {
         )
 
         // when getting the user by name
-        val user = getAuthenticatedUser(token)?.user
+        val user = getAuthenticatedUser(token)?.userInfo
 
         // then the user profile is updated successfully
         assertNotNull(user)

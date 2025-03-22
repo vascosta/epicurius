@@ -24,15 +24,35 @@ class HttpTest: EpicuriusTest() {
             .expectStatus().isCreated
             .expectBody<String>()
             .returnResult()
-            .responseHeaders["Authorization"]?.first()
+            .responseHeaders["Authorization"]?.first()?.substringAfter("Bearer ")
 
-    fun getUser() =
+    fun getUser(token: String) =
         client.get().uri(api("/user"))
+            .header("Authorization", "Bearer $token")
             .exchange()
             .expectStatus().isOk
             .expectBody<GetUserOutputModel>()
             .returnResult()
             .responseBody
+
+    fun login(username: String? = null, email: String? = null, password: String) =
+        client.post().uri(api("/login"))
+                .bodyValue(mapOf("username" to username, "email" to email, "password" to password))
+                .exchange()
+                .expectStatus().isOk
+                .expectBody<Unit>()
+                .returnResult()
+                .responseHeaders["Authorization"]?.first()?.substringAfter("Bearer ")
+
+    fun logout(token: String) =
+        client.post().uri(api("/logout"))
+            .header("Authorization", "Bearer $token")
+            .exchange()
+            .expectStatus().isOk
+            .expectBody<Unit>()
+            .returnResult()
+            .responseHeaders["Authorization"]?.first()
+
     companion object {
 
         lateinit var publicTestUser: UserTest

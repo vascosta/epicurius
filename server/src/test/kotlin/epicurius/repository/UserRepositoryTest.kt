@@ -3,6 +3,7 @@ package epicurius.repository
 import epicurius.domain.Diet
 import epicurius.domain.Intolerance
 import epicurius.services.models.UpdateUserModel
+import epicurius.utils.generateEmail
 import epicurius.utils.generateRandomUsername
 import epicurius.utils.generateSecurePassword
 import org.junit.jupiter.api.Assertions.assertNull
@@ -18,7 +19,7 @@ class UserRepositoryTest: RepositoryTest() {
     fun `Create new user and retrieve it successfully`() {
         // given user required information
         val username = generateRandomUsername()
-        val email = "$username@email.com"
+        val email = generateEmail(username)
         val country = "PT"
         val passwordHash = usersDomain.encodePassword(generateSecurePassword())
 
@@ -43,7 +44,7 @@ class UserRepositoryTest: RepositoryTest() {
     fun `Reset password successfully`() {
         // given user required information
         val username = generateRandomUsername()
-        val email = "$username@email.com"
+        val email = generateEmail(username)
         val country = "PT"
         val password = generateSecurePassword()
         val passwordHash = usersDomain.encodePassword(password)
@@ -70,7 +71,7 @@ class UserRepositoryTest: RepositoryTest() {
     fun `Update user profile successfully`() {
         // given user required information
         val username = generateRandomUsername()
-        val email = "$username@email.com"
+        val email = generateEmail(username)
         val country = "PT"
         val password = generateSecurePassword()
         val passwordHash = usersDomain.encodePassword(password)

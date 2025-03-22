@@ -19,8 +19,6 @@ open class ServicesTest: EpicuriusTest() {
         fun setupDB() {
             publicTestUser = createTestUser(tm, fs, false)
             privateTestUser = createTestUser(tm, fs, true)
-            println(publicTestUser.username)
-            println(privateTestUser.username)
         }
 
         fun createUser(username: String, email: String, country: String, passwordHash: String) =
