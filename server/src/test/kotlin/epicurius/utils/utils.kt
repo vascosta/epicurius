@@ -1,7 +1,7 @@
 package epicurius.utils
 
 import epicurius.EpicuriusTest.Companion.usersDomain
-import epicurius.domain.UserDomain.Companion.MAX_PASSWORD_LENGTH
+import epicurius.domain.user.UserDomain.Companion.MAX_PASSWORD_LENGTH
 import epicurius.repository.transaction.TransactionManager
 import epicurius.repository.transaction.firestore.FirestoreManager
 import java.util.*

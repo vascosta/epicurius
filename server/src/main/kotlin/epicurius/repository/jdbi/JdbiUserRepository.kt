@@ -120,7 +120,7 @@ class JdbiUserRepository(private val handle: Handle) : UserPostgresRepository {
         userUpdate.username?.let { bindings["username"] = it }
         userUpdate.email?.let { bindings["email"] = it }
         userUpdate.country?.let {  bindings["country"] = it }
-        userUpdate.password?.let { bindings["password_hash"] = it }
+        userUpdate.passwordHash?.let { bindings["password_hash"] = it }
         userUpdate.privacy?.let { bindings["privacy"] = it }
         userUpdate.intolerances?.let { bindings["intolerances"] = it.toTypedArray() }
         userUpdate.diet?.let { bindings["diet"] = it.toTypedArray() }

@@ -1,8 +1,12 @@
 package epicurius.services
 
+import epicurius.domain.Diet
+import epicurius.domain.Intolerance
 import epicurius.domain.exceptions.IncorrectPassword
 import epicurius.domain.exceptions.UserAlreadyLoggedIn
 import epicurius.domain.exceptions.UserNotFound
+import epicurius.http.user.models.UpdateUserInputModel
+import org.junit.jupiter.api.Assertions.assertFalse
 import java.util.*
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -13,6 +17,32 @@ import kotlin.test.assertTrue
 
 
 class UserServiceTest: ServicesTest() {
+
+    @Test
+    fun `Create new user and retrieve it successfully`() {
+        // given user required information
+        val username = "test${Math.random()}"
+        val email = "$username@email.com"
+        val country = "PT"
+        val password = UUID.randomUUID().toString()
+
+        // when creating a user
+        val token = createUser(username, email, country, password)
+
+        // when getting the authenticated user
+        val userByName = getAuthenticatedUser(token)?.user
+
+        // then the user is retrieved successfully
+        assertNotNull(userByName)
+        assertEquals(userByName.username, username)
+        assertEquals(userByName.email, email)
+        assertEquals(userByName.country, country)
+        assertTrue(usersDomain.verifyPassword(password, userByName.passwordHash))
+        assertEquals(userByName.privacy, false)
+        assertEquals(userByName.intolerances, emptyList())
+        assertEquals(userByName.diet, emptyList())
+        assertNull(userByName.profilePictureName)
+    }
 
     @Test
     fun `login a user by name successfully`() {
@@ -106,6 +136,81 @@ class UserServiceTest: ServicesTest() {
         // then the user is logged out successfully
         val authenticatedUser = getAuthenticatedUser(userToken)
         assertNull(authenticatedUser)
+    }
+
+    @Test
+    fun `Reset password successfully`() {
+        // given user required information
+        val username = "test${Math.random()}"
+        val email = "$username@email.com"
+        val country = "PT"
+        val password = UUID.randomUUID().toString()
+
+        // when creating a user with a random password
+        createUser(username, email, country, password)
+
+        // when resetting the password
+        val newPassword = UUID.randomUUID().toString()
+        resetPassword(email, newPassword, newPassword)
+
+        // when logging in with the new password
+        val userToken = login(null, email, newPassword)
+
+        // then the password is reset successfully
+        val authenticatedUser = getAuthenticatedUser(userToken)
+        assertNotNull(authenticatedUser)
+        assertEquals(authenticatedUser.user.username, username)
+        assertEquals(authenticatedUser.user.email, email)
+        assertTrue(usersDomain.verifyPassword(newPassword, authenticatedUser.user.passwordHash))
+        assertFalse(usersDomain.verifyPassword(password, authenticatedUser.user.passwordHash))
+    }
+
+    @Test
+    fun `Update user profile successfully`() {
+        // given user required information
+        val username = "test${Math.random()}"
+        val email = "$username@email.com"
+        val country = "PT"
+        val password = UUID.randomUUID().toString()
+        val passwordHash = usersDomain.encodePassword(password)
+
+        // when creating a user
+        val token = createUser(username, email, country, passwordHash)
+
+        // when updating the user profile
+        val newUsername = "test${Math.random()}"
+        val newEmail = "$newUsername@email.com"
+        val newCountry = "ES"
+        val newPassword = UUID.randomUUID().toString()
+        val newPrivacy = true
+        val newIntolerances = listOf(Intolerance.GLUTEN)
+        val newDiet = listOf(Diet.VEGAN)
+
+        updateProfile(
+            username, UpdateUserInputModel(
+                username = newUsername,
+                email = newEmail,
+                country = newCountry,
+                password = newPassword,
+                confirmPassword = newPassword,
+                privacy = newPrivacy,
+                intolerances = newIntolerances,
+                diet = newDiet
+            )
+        )
+
+        // when getting the user by name
+        val user = getAuthenticatedUser(token)?.user
+
+        // then the user profile is updated successfully
+        assertNotNull(user)
+        assertEquals(user.username, newUsername)
+        assertEquals(user.email, newEmail)
+        assertEquals(user.country, newCountry)
+        assertTrue(usersDomain.verifyPassword(newPassword, user.passwordHash))
+        assertEquals(user.privacy, newPrivacy)
+        assertEquals(user.intolerances, newIntolerances)
+        assertEquals(user.diet, newDiet)
     }
 
 //    @Test

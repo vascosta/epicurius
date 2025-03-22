@@ -11,11 +11,11 @@ import org.springframework.test.web.reactive.server.WebTestClient
 import org.springframework.test.web.reactive.server.expectBody
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-open class HttpTest: EpicuriusTest() {
+class HttpTest: EpicuriusTest() {
     @LocalServerPort
     var port: Int = 0
     val client = WebTestClient.bindToServer().baseUrl(api("/")).build()
-    private fun api(path: String): String = "http://localhost:$port/api$path"
+    final fun api(path: String): String = "http://localhost:$port/api$path"
 
     fun createUser(username: String, email: String, country: String, passwordHash: String) =
         client.post().uri(api("/signup"))
