@@ -13,6 +13,7 @@ import kotlin.test.assertNotEquals
 
 class UserRepositoryTest: RepositoryTest() {
 
+    // add get by email
     @Test
     fun `Create new user and retrieve it successfully`() {
         // given user required information

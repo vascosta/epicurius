@@ -1,5 +1,5 @@
 interface TokenRepository {
 
-    fun createToken(tokenHash: String, username: String?, email: String?)
+    fun createToken(tokenHash: String, username: String? = null, email: String? = null)
     fun deleteToken(username: String? = null, email: String? = null)
 }

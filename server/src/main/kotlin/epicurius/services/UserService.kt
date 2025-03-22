@@ -125,7 +125,7 @@ class UserService(
         fs.userRepository.removeFollowing(username, usernameToUnfollow)
     }
 
-    private fun createToken(username: String?, email: String?): String {
+    private fun createToken(username: String? = null, email: String? = null): String {
         if (!checkIfUserExists(username, email)) throw UserNotFound(username)
         if (checkIfUserIsLoggedIn(username, email)) throw UserAlreadyLoggedIn()
 
@@ -142,7 +142,7 @@ class UserService(
     private fun checkIfUserExists(name: String? = null, email: String? = null, tokenHash: String? = null): Boolean =
         tm.run { it.userRepository.checkIfUserExists(name, email, tokenHash) }
 
-    private fun checkIfUserIsLoggedIn(username: String?, email: String?): Boolean =
+    private fun checkIfUserIsLoggedIn(username: String? = null, email: String? = null): Boolean =
         tm.run { it.userRepository.checkIfUserIsLoggedIn(username, email) }
 
     private fun checkIfPasswordsMatch(password: String, confirmPassword: String): Boolean = password == confirmPassword
