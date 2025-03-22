@@ -15,9 +15,8 @@ object Uris {
         const val FOLLOWING_REQUESTS = "/following/requests"
         const val UNFOLLOW = "/unfollow/{usernameToUnfollow}"
         const val RESET_PASSWORD = "/reset"
-        const val UPDATE_INTOLERANCES = "/intolerances/add"
         const val GET_INTOLERANCES = "/intolerances/get"
-        const val UPDATE_DIET = "/diet/add"
         const val GET_DIET = "/diet/get"
+        const val UPDATE_PROFILE = "/profile/update"
     }
 }

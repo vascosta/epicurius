@@ -2,14 +2,13 @@ package epicurius.http.user
 
 import epicurius.services.UserService
 import epicurius.domain.user.AuthenticatedUser
-import epicurius.http.user.models.DietInputModel
 import epicurius.http.user.models.DietOutputModel
-import epicurius.http.user.models.IntolerancesInputModel
 import epicurius.http.user.models.GetUserOutputModel
 import epicurius.http.user.models.IntolerancesOutputModel
 import epicurius.http.user.models.LoginInputModel
 import epicurius.http.user.models.ResetPasswordInputModel
 import epicurius.http.user.models.SignUpInputModel
+import epicurius.http.user.models.UpdateUserInputModel
 import epicurius.http.utils.Uris
 import jakarta.servlet.http.HttpServletResponse
 import jakarta.validation.Valid
@@ -76,7 +75,7 @@ class UserController(val userService: UserService) {
         return ResponseEntity.ok().build<Unit>()
     }
 
-    @PostMapping(Uris.User.RESET_PASSWORD)
+    @PutMapping(Uris.User.RESET_PASSWORD)
     fun resetPassword(
         authenticatedUser: AuthenticatedUser,
         @Valid @RequestBody body: ResetPasswordInputModel
@@ -85,25 +84,12 @@ class UserController(val userService: UserService) {
         return ResponseEntity.ok().build<Unit>()
     }
 
-    @PutMapping(Uris.User.UPDATE_INTOLERANCES)
-    fun updateIntolerances(
+    @PutMapping(Uris.User.UPDATE_PROFILE)
+    fun updateProfile(
         authenticatedUser: AuthenticatedUser,
-        @Valid @RequestBody body: IntolerancesInputModel
+        @Valid @RequestBody body: UpdateUserInputModel
     ): ResponseEntity<*> {
-        userService.updateIntolerances(
-            authenticatedUser.user.username,
-            authenticatedUser.user.intolerances,
-            body.intolerances
-        )
-        return ResponseEntity.ok().build<Unit>()
-    }
-
-    @PutMapping(Uris.User.UPDATE_DIET)
-    fun updateDiet(
-        authenticatedUser: AuthenticatedUser,
-        @Valid @RequestBody body: DietInputModel
-    ): ResponseEntity<*> {
-        userService.updateDiet(authenticatedUser.user.username, authenticatedUser.user.diet, body.diet)
+        userService.updateProfile(authenticatedUser.user.username, body)
         return ResponseEntity.ok().build<Unit>()
     }
 }

@@ -11,8 +11,10 @@ import epicurius.domain.exceptions.PasswordsDoNotMatch
 import epicurius.domain.exceptions.UserAlreadyExits
 import epicurius.domain.exceptions.UserAlreadyLoggedIn
 import epicurius.domain.exceptions.UserNotFound
+import epicurius.http.user.models.UpdateUserInputModel
 import epicurius.repository.transaction.TransactionManager
 import epicurius.repository.transaction.firestore.FirestoreManager
+import epicurius.services.models.UpdateUserModel
 import org.springframework.stereotype.Component
 
 @Component
@@ -71,27 +73,34 @@ class UserService(
         fs.userRepository.addFollowing(username, usernameToFollow)
     }
 
-    fun updateIntolerances(
-        username: String,
-        userIntolerances: List<Intolerance>,
-        newIntolerances: List<Intolerance>
-    ) {
-        if (userIntolerances == newIntolerances) return
+    fun updateProfile(username: String, userUpdate: UpdateUserInputModel) {
+        userUpdate.username?.let { if (checkIfUserExists(name = it)) throw UserAlreadyExits() }
 
-        val intolerancesIdx = userIntolerances.map { Intolerance.entries.indexOf(it) }
+        userUpdate.email?.let { if (checkIfUserExists(email = it)) throw UserAlreadyExits() }
 
-        tm.run {
-            it.userRepository.updateIntolerances(username, intolerancesIdx)
+        userUpdate.country?.let { if (!countriesDomain.checkIfCodeIsValid(it)) throw InvalidCountry() }
+
+        if (userUpdate.password != null) {
+            if (userUpdate.confirmPassword == null ||
+                !checkIfPasswordsMatch(userUpdate.password, userUpdate.confirmPassword)
+            ) {
+                throw PasswordsDoNotMatch()
+            }
         }
-    }
-
-    fun updateDiet(username: String, userDiets: List<Diet>, newDiets: List<Diet>) {
-        if (userDiets == newDiets) return
-
-        val dietIdx = newDiets.map { Diet.entries.indexOf(it) }
 
         tm.run {
-            it.userRepository.updateDiet(username, dietIdx)
+            it.userRepository.updateProfile(
+                username,
+                UpdateUserModel(
+                    userUpdate.username,
+                    userUpdate.email,
+                    userUpdate.country,
+                    userUpdate.password?.let { userDomain.encodePassword(it) },
+                    userUpdate.privacy,
+                    userUpdate.intolerances?.map { intolerance ->  Intolerance.entries.indexOf(intolerance) },
+                    userUpdate.diet?.map { diet -> Diet.entries.indexOf(diet) }
+                )
+            )
         }
     }
 

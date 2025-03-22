@@ -2,6 +2,8 @@ package epicurius.repository.jdbi
 
 import UserPostgresRepository
 import epicurius.domain.user.User
+import epicurius.domain.user.UserDomain
+import epicurius.services.models.UpdateUserModel
 import org.jdbi.v3.core.Handle
 import org.jdbi.v3.core.kotlin.mapTo
 
@@ -61,30 +63,18 @@ class JdbiUserRepository(private val handle: Handle) : UserPostgresRepository {
             .one()
     }
 
-    override fun updateIntolerances(username: String, intolerancesIdx: List<Int>) {
-        handle.createUpdate(
-            """
-                UPDATE dbo.user
-                SET intolerances = :intolerances
-                WHERE username = :username
-            """
-        )
-            .bind("username", username)
-            .bind("intolerances", intolerancesIdx.toTypedArray())
-            .execute()
-    }
+    override fun updateProfile(username: String, userUpdate: UpdateUserModel) {
+        val bindings = getBindingMap(userUpdate)
 
-    override fun updateDiet(username: String, dietIdx: List<Int>) {
-        handle.createUpdate(
-            """
-                UPDATE dbo.user
-                SET diet = :diet
-                WHERE username = :username
-            """
-        )
-            .bind("username", username)
-            .bind("diet", dietIdx.toTypedArray())
-            .execute()
+        val sqlQuery = getUpdateUserQuery(bindings)
+
+        val updateQuery =
+            handle.createUpdate(sqlQuery)
+                .bind("previousUsername", username)
+
+        bindings.forEach { (key, value) -> updateQuery.bind(key, value) }
+
+        updateQuery.execute()
     }
 
     override fun resetPassword(username: String, passwordHash: String) {
@@ -124,4 +114,28 @@ class JdbiUserRepository(private val handle: Handle) : UserPostgresRepository {
             .bind("email", email)
             .mapTo<Int>()
             .one() == 1
+
+    private fun getBindingMap(userUpdate: UpdateUserModel): Map<String, Any> {
+        val bindings = mutableMapOf<String, Any>()
+
+        userUpdate.username?.let { bindings["username"] = it }
+        userUpdate.email?.let { bindings["email"] = it }
+        userUpdate.country?.let {  bindings["country"] = it }
+        userUpdate.password?.let { bindings["password_hash"] = it }
+        userUpdate.privacy?.let { bindings["privacy"] = it }
+        userUpdate.intolerances?.let { bindings["intolerances"] = it.toTypedArray() }
+        userUpdate.diet?.let { bindings["diet"] = it.toTypedArray() }
+
+        return bindings
+    }
+
+    private fun getUpdateUserQuery(bindingsMap: Map<String, Any>): String {
+        val updates = bindingsMap.entries.map { bindingName -> "${bindingName.key} = :${bindingName.key}" }
+
+        return """
+                UPDATE dbo.user 
+                SET ${updates.joinToString(", ")} 
+                WHERE username = :previousUsername
+               """
+    }
 }

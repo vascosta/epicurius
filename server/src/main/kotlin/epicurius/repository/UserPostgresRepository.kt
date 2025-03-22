@@ -1,4 +1,5 @@
 import epicurius.domain.user.User
+import epicurius.services.models.UpdateUserModel
 
 interface UserPostgresRepository {
 
@@ -7,11 +8,10 @@ interface UserPostgresRepository {
     fun getUser(username: String?, email: String?): User
     fun getUserFromTokenHash(tokenHash: String): User
     fun getProfilePictureName(username: String): String
-    fun updateDiet(username: String, dietIdx: List<Int>)
 
     fun resetPassword(username: String, passwordHash: String)
 
-    fun updateIntolerances(username: String, intolerancesIdx: List<Int>)
+    fun updateProfile(username:String, userUpdate: UpdateUserModel)
 
     fun checkIfUserExists(username: String?, email: String?, tokenHash: String?): Boolean
     fun checkIfUserIsLoggedIn(username: String?, email: String?): Boolean
