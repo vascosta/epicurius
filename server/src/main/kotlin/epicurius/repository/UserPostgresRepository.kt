@@ -9,8 +9,7 @@ interface UserPostgresRepository {
     fun getUserFromTokenHash(tokenHash: String): User
     fun getProfilePictureName(username: String): String
 
-    fun resetPassword(username: String, passwordHash: String)
-
+    fun resetPassword(email: String, passwordHash: String)
     fun updateProfile(username:String, userUpdate: UpdateUserModel)
 
     fun checkIfUserExists(username: String?, email: String?, tokenHash: String?): Boolean

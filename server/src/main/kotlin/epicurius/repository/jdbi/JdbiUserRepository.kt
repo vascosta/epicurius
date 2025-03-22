@@ -2,7 +2,6 @@ package epicurius.repository.jdbi
 
 import UserPostgresRepository
 import epicurius.domain.user.User
-import epicurius.domain.user.UserDomain
 import epicurius.services.models.UpdateUserModel
 import org.jdbi.v3.core.Handle
 import org.jdbi.v3.core.kotlin.mapTo
@@ -77,15 +76,15 @@ class JdbiUserRepository(private val handle: Handle) : UserPostgresRepository {
         updateQuery.execute()
     }
 
-    override fun resetPassword(username: String, passwordHash: String) {
+    override fun resetPassword(email: String, passwordHash: String) {
         handle.createUpdate(
             """
                 UPDATE dbo.user
                 SET password_hash = :password_hash
-                WHERE username = :username
+                WHERE email = :email
             """
         )
-            .bind("username", username)
+            .bind("email", email)
             .bind("password_hash", passwordHash)
             .execute()
     }

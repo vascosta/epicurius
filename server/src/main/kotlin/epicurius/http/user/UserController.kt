@@ -77,10 +77,9 @@ class UserController(val userService: UserService) {
 
     @PutMapping(Uris.User.RESET_PASSWORD)
     fun resetPassword(
-        authenticatedUser: AuthenticatedUser,
         @Valid @RequestBody body: ResetPasswordInputModel
     ): ResponseEntity<*> {
-        userService.resetPassword(authenticatedUser.user.username, body.newPassword, body.confirmPassword)
+        userService.resetPassword(body.email, body.newPassword, body.confirmPassword)
         return ResponseEntity.ok().build<Unit>()
     }
 

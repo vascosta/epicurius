@@ -18,15 +18,16 @@ class JdbiTokenRepository(private val handle: Handle) : TokenRepository {
             .execute()
     }
 
-    override fun deleteToken(username: String) {
+    override fun deleteToken(username: String?, email: String?) {
         handle.createUpdate(
             """
             UPDATE dbo.user
             SET token_hash = NULL
-            WHERE username = :username
+            WHERE username = :username OR email = :email
             """
         )
             .bind("username", username)
+            .bind("email", email)
             .execute()
     }
 }

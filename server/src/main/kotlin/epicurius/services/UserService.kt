@@ -106,19 +106,20 @@ class UserService(
 
     fun updateProfilePicture() { }
 
-    fun resetPassword(username: String, newPassword: String, confirmPassword: String) {
+    fun resetPassword(email: String, newPassword: String, confirmPassword: String) {
         if (!checkIfPasswordsMatch(newPassword, confirmPassword)) throw PasswordsDoNotMatch()
         val passwordHash = userDomain.encodePassword(newPassword)
 
         tm.run {
-            it.userRepository.resetPassword(username, passwordHash)
+            it.userRepository.resetPassword(email, passwordHash)
+            deleteToken(email = email)
         }
     }
 
     fun removeProfilePicture() { }
 
     fun logout(username: String) {
-        deleteToken(username)
+        deleteToken(username = username)
     }
 
     fun unfollow(username: String, usernameToUnfollow: String) {
@@ -135,8 +136,8 @@ class UserService(
         return token
     }
 
-    private fun deleteToken(username: String) {
-        tm.run { it.tokenRepository.deleteToken(username) }
+    private fun deleteToken(username: String? = null, email: String? = null) {
+        tm.run { it.tokenRepository.deleteToken(username, email) }
     }
 
     private fun checkIfUserExists(name: String? = null, email: String? = null, tokenHash: String? = null): Boolean =
