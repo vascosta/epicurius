@@ -6,6 +6,8 @@ import epicurius.domain.exceptions.IncorrectPassword
 import epicurius.domain.exceptions.UserAlreadyLoggedIn
 import epicurius.domain.exceptions.UserNotFound
 import epicurius.http.user.models.UpdateUserInputModel
+import epicurius.utils.generateRandomUsername
+import epicurius.utils.generateSecurePassword
 import org.junit.jupiter.api.Assertions.assertFalse
 import java.util.*
 import kotlin.test.Test
@@ -15,16 +17,15 @@ import kotlin.test.assertNotNull
 import kotlin.test.assertNull
 import kotlin.test.assertTrue
 
-
 class UserServiceTest: ServicesTest() {
 
     @Test
     fun `Create new user and retrieve it successfully`() {
         // given user required information
-        val username = "test${Math.random()}"
+        val username = generateRandomUsername()
         val email = "$username@email.com"
         val country = "PT"
-        val password = UUID.randomUUID().toString()
+        val password = generateSecurePassword()
 
         // when creating a user
         val token = createUser(username, email, country, password)
@@ -107,10 +108,10 @@ class UserServiceTest: ServicesTest() {
     @Test
     fun `try to login with an already logged in user and throws UserAlreadyLoggedIn Exception`() {
         // given an existing logged in user
-        val username = "test${Math.random()}"
+        val username = generateRandomUsername()
         val email = "$username@email.com"
         val country = "PT"
-        val password = UUID.randomUUID().toString()
+        val password = generateSecurePassword()
         val passwordHash = usersDomain.encodePassword(password)
         createUser(username, email, country, passwordHash)
 
@@ -123,10 +124,10 @@ class UserServiceTest: ServicesTest() {
     @Test
     fun `logout a user successfully`() {
         // given an existing logged in user
-        val username = "test${Math.random()}"
+        val username = generateRandomUsername()
         val email = "$username@email.com"
         val country = "PT"
-        val password = UUID.randomUUID().toString()
+        val password = generateSecurePassword()
         val passwordHash = usersDomain.encodePassword(password)
         val userToken = createUser(username, email, country, passwordHash)
 
@@ -141,10 +142,10 @@ class UserServiceTest: ServicesTest() {
     @Test
     fun `Reset password successfully`() {
         // given user required information
-        val username = "test${Math.random()}"
+        val username = generateRandomUsername()
         val email = "$username@email.com"
         val country = "PT"
-        val password = UUID.randomUUID().toString()
+        val password = generateSecurePassword()
 
         // when creating a user with a random password
         createUser(username, email, country, password)
@@ -168,20 +169,20 @@ class UserServiceTest: ServicesTest() {
     @Test
     fun `Update user profile successfully`() {
         // given user required information
-        val username = "test${Math.random()}"
+        val username = generateRandomUsername()
         val email = "$username@email.com"
         val country = "PT"
-        val password = UUID.randomUUID().toString()
+        val password = generateSecurePassword()
         val passwordHash = usersDomain.encodePassword(password)
 
         // when creating a user
         val token = createUser(username, email, country, passwordHash)
 
         // when updating the user profile
-        val newUsername = "test${Math.random()}"
+        val newUsername = generateRandomUsername()
         val newEmail = "$newUsername@email.com"
         val newCountry = "ES"
-        val newPassword = UUID.randomUUID().toString()
+        val newPassword = generateSecurePassword()
         val newPrivacy = true
         val newIntolerances = listOf(Intolerance.GLUTEN)
         val newDiet = listOf(Diet.VEGAN)

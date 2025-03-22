@@ -74,11 +74,10 @@ class UserService(
     }
 
     fun updateProfile(username: String, userUpdate: UpdateUserInputModel) {
-        userUpdate.username?.let { if (checkIfUserExists(name = it)) throw UserAlreadyExits() }
+        if (checkIfUserExists(userUpdate.username, userUpdate.email)) throw UserAlreadyExits()
 
-        userUpdate.email?.let { if (checkIfUserExists(email = it)) throw UserAlreadyExits() }
-
-        userUpdate.country?.let { if (!countriesDomain.checkIfCodeIsValid(it)) throw InvalidCountry() }
+        if (userUpdate.country != null)
+            if (!countriesDomain.checkIfCodeIsValid(userUpdate.country)) throw InvalidCountry()
 
         if (userUpdate.password != null) {
             if (userUpdate.confirmPassword == null ||

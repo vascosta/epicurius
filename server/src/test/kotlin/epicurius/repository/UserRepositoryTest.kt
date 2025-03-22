@@ -3,6 +3,8 @@ package epicurius.repository
 import epicurius.domain.Diet
 import epicurius.domain.Intolerance
 import epicurius.services.models.UpdateUserModel
+import epicurius.utils.generateRandomUsername
+import epicurius.utils.generateSecurePassword
 import org.junit.jupiter.api.Assertions.assertNull
 import java.util.*
 import kotlin.test.Test
@@ -14,10 +16,10 @@ class UserRepositoryTest: RepositoryTest() {
     @Test
     fun `Create new user and retrieve it successfully`() {
         // given user required information
-        val username = "test${Math.random()}"
+        val username = generateRandomUsername()
         val email = "$username@email.com"
         val country = "PT"
-        val passwordHash = usersDomain.encodePassword(UUID.randomUUID().toString())
+        val passwordHash = usersDomain.encodePassword(generateSecurePassword())
 
         // when creating a user
         createUser(username, email, country, passwordHash)
@@ -39,10 +41,10 @@ class UserRepositoryTest: RepositoryTest() {
     @Test
     fun `Reset password successfully`() {
         // given user required information
-        val username = "test${Math.random()}"
+        val username = generateRandomUsername()
         val email = "$username@email.com"
         val country = "PT"
-        val password = UUID.randomUUID().toString()
+        val password = generateSecurePassword()
         val passwordHash = usersDomain.encodePassword(password)
 
         // when creating a user
@@ -66,20 +68,20 @@ class UserRepositoryTest: RepositoryTest() {
     @Test
     fun `Update user profile successfully`() {
         // given user required information
-        val username = "test${Math.random()}"
+        val username = generateRandomUsername()
         val email = "$username@email.com"
         val country = "PT"
-        val password = UUID.randomUUID().toString()
+        val password = generateSecurePassword()
         val passwordHash = usersDomain.encodePassword(password)
 
         // when creating a user
         createUser(username, email, country, passwordHash)
 
         // when updating the user profile
-        val newUsername = "test${Math.random()}"
+        val newUsername = generateRandomUsername()
         val newEmail = "$newUsername@email.com"
         val newCountry = "ES"
-        val newPassword = UUID.randomUUID().toString()
+        val newPassword = generateSecurePassword()
         val newPasswordHash = usersDomain.encodePassword(newPassword)
         val newPrivacy = true
         val newIntolerances = listOf(Intolerance.GLUTEN)

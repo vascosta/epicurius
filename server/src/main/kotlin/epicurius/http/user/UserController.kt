@@ -24,13 +24,13 @@ class UserController(val userService: UserService) {
         return ResponseEntity.ok().body(GetUserOutputModel(authenticatedUser.user))
     }
 
-    @GetMapping(Uris.User.GET_INTOLERANCES)
+    @GetMapping(Uris.User.INTOLERANCES)
     fun getIntolerances(authenticatedUser: AuthenticatedUser): ResponseEntity<*> {
         val intolerances = authenticatedUser.user.intolerances
         return ResponseEntity.ok().body(IntolerancesOutputModel(intolerances))
     }
 
-    @GetMapping(Uris.User.GET_DIET)
+    @GetMapping(Uris.User.DIET)
     fun getDiet(authenticatedUser: AuthenticatedUser): ResponseEntity<*> {
         val diet = authenticatedUser.user.diet
         return ResponseEntity.ok().body(DietOutputModel(diet))
@@ -83,7 +83,7 @@ class UserController(val userService: UserService) {
         return ResponseEntity.ok().build<Unit>()
     }
 
-    @PutMapping(Uris.User.UPDATE_PROFILE)
+    @PutMapping(Uris.User.USER_PROFILE)
     fun updateProfile(
         authenticatedUser: AuthenticatedUser,
         @Valid @RequestBody body: UpdateUserInputModel

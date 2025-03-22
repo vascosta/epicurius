@@ -1,5 +1,7 @@
 package epicurius.http
 
+import epicurius.utils.generateRandomUsername
+import epicurius.utils.generateSecurePassword
 import org.springframework.test.web.reactive.server.expectBody
 import java.util.*
 import kotlin.test.Test
@@ -9,10 +11,10 @@ class UserControllerTest: HttpTest() {
     @Test
     fun `Create new user and retrieve it successfully`() {
         // given user required information
-        val username = "test${UUID.randomUUID().toString().take(8)}"
+        val username = generateRandomUsername()
         val email = "$username@email.com"
         val country = "PT"
-        val password = "P" + UUID.randomUUID().toString().take(10)
+        val password = generateSecurePassword()
 
         // when creating a user
         client.post().uri(api("/signup"))
