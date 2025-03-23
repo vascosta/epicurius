@@ -1,3 +1,5 @@
+import epicurius.domain.FollowingStatus
+import epicurius.domain.user.SocialUser
 import epicurius.domain.user.User
 import epicurius.services.models.UpdateUserModel
 
@@ -7,8 +9,10 @@ interface UserPostgresRepository {
 
     fun getUser(username: String? = null, email: String? = null, tokenHash: String? = null): User?
     fun getProfilePictureName(username: String): String
+    fun getFollowers(userId: Int): List<SocialUser>
+    fun getFollowing(userId: Int): List<SocialUser>
 
-    fun followUser(userId: Int, userIdToFollow: Int)
+    fun followUser(userId: Int, userIdToFollow: Int, status: Int)
     fun resetPassword(email: String, passwordHash: String)
     fun updateProfile(username:String, userUpdate: UpdateUserModel)
 

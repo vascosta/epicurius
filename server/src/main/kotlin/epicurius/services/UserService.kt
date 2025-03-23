@@ -3,6 +3,7 @@ package epicurius.services
 import epicurius.domain.user.AuthenticatedUser
 import epicurius.domain.CountriesDomain
 import epicurius.domain.Diet
+import epicurius.domain.FollowingStatus
 import epicurius.domain.Intolerance
 import epicurius.domain.user.UserDomain
 import epicurius.domain.exceptions.InvalidCountry
@@ -11,6 +12,7 @@ import epicurius.domain.exceptions.PasswordsDoNotMatch
 import epicurius.domain.exceptions.UserAlreadyExists
 import epicurius.domain.exceptions.UserAlreadyLoggedIn
 import epicurius.domain.exceptions.UserNotFound
+import epicurius.domain.user.SocialUser
 import epicurius.domain.user.User
 import epicurius.http.user.models.input.UpdateUserInputModel
 import epicurius.repository.transaction.TransactionManager
@@ -50,13 +52,8 @@ class UserService(
         return AuthenticatedUser(user, token)
     }
 
-    fun getFollowers(username: String) {
-
-    }
-
-    fun getFollowing(username: String) {
-
-    }
+    fun getFollowers(userId: Int) = tm.run { it.userRepository.getFollowers(userId) }
+    fun getFollowing(userId: Int) = tm.run { it.userRepository.getFollowing(userId) }
 
     fun getFollowingRequests(username: String) {
 
@@ -77,8 +74,9 @@ class UserService(
     fun follow(userId: Int, usernameToFollow: String) {
         val userToFollow = checkIfUserExists(username = usernameToFollow) ?: throw UserNotFound(usernameToFollow)
         checkIfUserIsAlreadyFollowing(userId, userToFollow.id)
+        val followingStatus = if (userToFollow.privacy) FollowingStatus.PENDING else FollowingStatus.ACCEPTED
         tm.run {
-            it.userRepository.followUser(userId, userToFollow.id)
+            it.userRepository.followUser(userId, userToFollow.id, followingStatus.ordinal)
         }
     }
 

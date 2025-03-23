@@ -1,6 +1,8 @@
 package epicurius.repository.jdbi
 
 import UserPostgresRepository
+import epicurius.domain.FollowingStatus
+import epicurius.domain.user.SocialUser
 import epicurius.domain.user.User
 import epicurius.services.models.UpdateUserModel
 import org.jdbi.v3.core.Handle
@@ -51,6 +53,34 @@ class JdbiUserRepository(private val handle: Handle) : UserPostgresRepository {
             .one()
     }
 
+    override fun getFollowers(userId: Int): List<SocialUser> {
+        return handle.createQuery(
+            """
+                SELECT u.username, u.profile_picture_name
+                FROM dbo.user u
+                JOIN dbo.followers f ON u.id = f.follower_id
+                WHERE f.user_id = :user_id
+            """
+        )
+            .bind("user_id", userId)
+            .mapTo<SocialUser>()
+            .list()
+    }
+
+    override fun getFollowing(userId: Int): List<SocialUser> {
+        return handle.createQuery(
+            """
+                SELECT u.username, u.profile_picture_name
+                FROM dbo.user u
+                JOIN dbo.followers f ON u.id = f.user_id
+                WHERE f.follower_id = :user_id
+            """
+        )
+            .bind("user_id", userId)
+            .mapTo<SocialUser>()
+            .list()
+    }
+
     override fun updateProfile(username: String, userUpdate: UpdateUserModel) {
         handle.createUpdate(
             """
@@ -91,15 +121,16 @@ class JdbiUserRepository(private val handle: Handle) : UserPostgresRepository {
             .execute()
     }
 
-    override fun followUser(userId: Int, userIdToFollow: Int) {
+    override fun followUser(userId: Int, userIdToFollow: Int, status: Int) {
         handle.createUpdate(
             """
-                INSERT INTO dbo.followers(user_id, follower_id)
-                VALUES (:user_id, :follower_id)
+                INSERT INTO dbo.followers(user_id, follower_id, status)
+                VALUES (:user_id, :follower_id, :status)
             """
         )
-            .bind("user_id", userId)
-            .bind("follower_id", userIdToFollow)
+            .bind("user_id", userIdToFollow)
+            .bind("follower_id", userId)
+            .bind("status", status)
             .execute()
     }
 

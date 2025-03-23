@@ -9,6 +9,7 @@ import epicurius.http.user.models.input.LoginInputModel
 import epicurius.http.user.models.input.ResetPasswordInputModel
 import epicurius.http.user.models.input.SignUpInputModel
 import epicurius.http.user.models.input.UpdateUserInputModel
+import epicurius.http.user.models.output.GetFollowersOutputModel
 import epicurius.http.utils.Uris
 import jakarta.servlet.http.HttpServletResponse
 import jakarta.validation.Valid
@@ -39,8 +40,14 @@ class UserController(val userService: UserService) {
 
     @GetMapping(Uris.User.FOLLOWERS)
     fun getFollowers(authenticatedUser: AuthenticatedUser): ResponseEntity<*> {
-        val followers = userService.getFollowers(authenticatedUser.userInfo.username)
-        return ResponseEntity.ok().body(followers)
+        val followers = userService.getFollowers(authenticatedUser.userInfo.id)
+        return ResponseEntity.ok().body(GetFollowersOutputModel(followers))
+    }
+
+    @GetMapping(Uris.User.FOLLOWING)
+    fun getFollowing(authenticatedUser: AuthenticatedUser): ResponseEntity<*> {
+        val following = userService.getFollowing(authenticatedUser.userInfo.id)
+        return ResponseEntity.ok().body(following)
     }
 
     @PostMapping(Uris.User.SIGNUP)
