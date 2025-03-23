@@ -21,8 +21,8 @@ open class ServicesTest: EpicuriusTest() {
             privateTestUser = createTestUser(tm)
         }
 
-        fun createUser(username: String, email: String, country: String, passwordHash: String) =
-            userService.createUser(username, email, country, passwordHash)
+        fun createUser(username: String, email: String, country: String, password: String, confirmPassword: String) =
+            userService.createUser(username, email, country, password, confirmPassword)
 
         fun getAuthenticatedUser(token: String) = userService.getAuthenticatedUser(token)
 

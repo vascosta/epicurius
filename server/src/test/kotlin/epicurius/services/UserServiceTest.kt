@@ -3,6 +3,9 @@ package epicurius.services
 import epicurius.domain.Diet
 import epicurius.domain.Intolerance
 import epicurius.domain.exceptions.IncorrectPassword
+import epicurius.domain.exceptions.InvalidCountry
+import epicurius.domain.exceptions.PasswordsDoNotMatch
+import epicurius.domain.exceptions.UserAlreadyExists
 import epicurius.domain.exceptions.UserAlreadyLoggedIn
 import epicurius.domain.exceptions.UserNotFound
 import epicurius.http.user.models.input.UpdateUserInputModel
@@ -21,7 +24,7 @@ import kotlin.test.assertTrue
 class UserServiceTest: ServicesTest() {
 
     @Test
-    fun `Create new user and retrieve it successfully`() {
+    fun `create new user and retrieve it successfully`() {
         // given user required information
         val username = generateRandomUsername()
         val email = generateEmail(username)
@@ -29,7 +32,7 @@ class UserServiceTest: ServicesTest() {
         val password = generateSecurePassword()
 
         // when creating a user
-        val token = createUser(username, email, country, password)
+        val token = createUser(username, email, country, password, password)
 
         // when getting the authenticated user
         val userByName = getAuthenticatedUser(token)?.userInfo
@@ -44,6 +47,60 @@ class UserServiceTest: ServicesTest() {
         assertEquals(userByName.intolerances, emptyList())
         assertEquals(userByName.diet, emptyList())
         assertNull(userByName.profilePictureName)
+    }
+
+    @Test
+    fun `try to create user with an existing username or email and throws UserAlreadyExists Exception`() {
+        // given an existing user and a different username and email
+        val user1 = publicTestUser
+        val username = generateRandomUsername()
+        val email = generateEmail(username)
+
+        // when creating a user with an existing username
+        // then the user cannot be created and throws UserAlreadyExists Exception
+        assertFailsWith<UserAlreadyExists> {
+            createUser(user1.username, email, "PT", user1.password, user1.password)
+        }
+
+        // when creating a user with an existing email
+        // then the user cannot be created and throws UserAlreadyExists Exception
+        assertFailsWith<UserAlreadyExists> {
+            createUser(username, user1.email, "PT", user1.password, user1.password)
+        }
+
+        // when creating a user with an existing username and email
+        // then the user cannot be created and throws UserAlreadyExists Exception
+        assertFailsWith<UserAlreadyExists> {
+            createUser(user1.username, user1.email, "PT", user1.password, user1.password)
+        }
+    }
+
+    @Test
+    fun `try to create user with an invalid country and throws InvalidCountry Exception`() {
+        // given an invalid country
+        val username = generateRandomUsername()
+        val email = generateEmail(username)
+        val country = "XX"
+        val password = generateSecurePassword()
+
+        // when creating a user with an invalid country
+        // then the user cannot be created and throws InvalidCountry Exception
+        assertFailsWith<InvalidCountry> { createUser(username, email, country, password, password) }
+    }
+
+    @Test
+    fun `try to create user with different passwords and throws PasswordsDoNotMatch Exception`() {
+        // given a different password and confirm password
+        val username = generateRandomUsername()
+        val email = generateEmail(username)
+        val country = "PT"
+        val password = generateSecurePassword()
+
+        // when creating a user with different passwords
+        // then the user cannot be created and throws PasswordsDoNotMatch Exception
+        assertFailsWith<PasswordsDoNotMatch> {
+            createUser(username, email, country, password, generateSecurePassword())
+        }
     }
 
     @Test
@@ -113,8 +170,7 @@ class UserServiceTest: ServicesTest() {
         val email = generateEmail(username)
         val country = "PT"
         val password = generateSecurePassword()
-        val passwordHash = usersDomain.encodePassword(password)
-        createUser(username, email, country, passwordHash)
+        createUser(username, email, country, password, password)
 
         // when logging in
         // then the user is cannot be logged in and throws UserAlreadyLoggedIn Exception
@@ -129,8 +185,7 @@ class UserServiceTest: ServicesTest() {
         val email = generateEmail(username)
         val country = "PT"
         val password = generateSecurePassword()
-        val passwordHash = usersDomain.encodePassword(password)
-        val userToken = createUser(username, email, country, passwordHash)
+        val userToken = createUser(username, email, country, password, password)
 
         // when logging out
         logout(username)
@@ -141,7 +196,7 @@ class UserServiceTest: ServicesTest() {
     }
 
     @Test
-    fun `Reset password successfully`() {
+    fun `reset password successfully`() {
         // given user required information
         val username = generateRandomUsername()
         val email = generateEmail(username)
@@ -149,7 +204,7 @@ class UserServiceTest: ServicesTest() {
         val password = generateSecurePassword()
 
         // when creating a user with a random password
-        createUser(username, email, country, password)
+        createUser(username, email, country, password, password)
 
         // when resetting the password
         val newPassword = UUID.randomUUID().toString()
@@ -168,16 +223,27 @@ class UserServiceTest: ServicesTest() {
     }
 
     @Test
-    fun `Update user profile successfully`() {
+    fun `try to reset password with different passwords and throws PasswordsDoNotMatch Exception`() {
+        // given an existing user
+        val user = publicTestUser
+
+        // when resetting the password with different passwords
+        // then the password cannot be reset and throws PasswordsDoNotMatch Exception
+        assertFailsWith<PasswordsDoNotMatch> {
+            resetPassword(user.email, UUID.randomUUID().toString(), UUID.randomUUID().toString())
+        }
+    }
+
+    @Test
+    fun `update user profile successfully`() {
         // given user required information
         val username = generateRandomUsername()
         val email = generateEmail(username)
         val country = "PT"
         val password = generateSecurePassword()
-        val passwordHash = usersDomain.encodePassword(password)
 
         // when creating a user
-        val token = createUser(username, email, country, passwordHash)
+        val token = createUser(username, email, country, password, password)
 
         // when updating the user profile
         val newUsername = generateRandomUsername()
@@ -214,6 +280,78 @@ class UserServiceTest: ServicesTest() {
         assertEquals(user.intolerances, newIntolerances)
         assertEquals(user.diet, newDiet)
     }
+
+    @Test
+    fun `try to update user profile with existing username or email and throws UserAlreadyExists Exception`() {
+        // given two existing users
+        val user1 = publicTestUser
+        val user2 = privateTestUser
+
+        // when updating the user profile with an existing username
+        // then the user profile cannot be updated and throws UserAlreadyExists Exception
+        assertFailsWith<UserAlreadyExists> {
+            updateProfile(
+                user1.username, UpdateUserInputModel(
+                    username = user2.username
+                )
+            )
+        }
+
+        // when updating the user profile with an existing email
+        // then the user profile cannot be updated and throws UserAlreadyExists Exception
+        assertFailsWith<UserAlreadyExists> {
+            updateProfile(
+                user1.username, UpdateUserInputModel(
+                    email = user2.email
+                )
+            )
+        }
+
+        // when updating the user profile with an existing username and email
+        // then the user profile cannot be updated and throws UserAlreadyExists Exception
+        assertFailsWith<UserAlreadyExists> {
+            updateProfile(
+                user1.username, UpdateUserInputModel(
+                    username = user2.username,
+                    email = user2.email
+                )
+            )
+        }
+    }
+
+    @Test
+    fun `try to update user profile with an invalid country and throws InvalidCountry Exception`() {
+        // given an existing user
+        val user = publicTestUser
+
+        // when updating the user profile with an invalid country
+        // then the user profile cannot be updated and throws InvalidCountry Exception
+        assertFailsWith<InvalidCountry> {
+            updateProfile(
+                user.username, UpdateUserInputModel(
+                    country = "XX"
+                )
+            )
+        }
+    }
+
+    @Test
+    fun `try to update user profile with different passwords and throws PasswordsDoNotMatch Exception`() {
+        // given an existing user
+        val user = publicTestUser
+
+        // when updating the user profile with different passwords
+        // then the user profile cannot be updated and throws PasswordsDoNotMatch Exception
+        assertFailsWith<PasswordsDoNotMatch> {
+            updateProfile(
+                user.username, UpdateUserInputModel(
+                    password = UUID.randomUUID().toString(),
+                    confirmPassword = UUID.randomUUID().toString()
+                )
+            )
+        }
+    }
+
 
 //    @Test
 //    fun `follow a public user successfully`() {

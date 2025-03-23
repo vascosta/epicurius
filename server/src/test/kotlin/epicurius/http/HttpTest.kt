@@ -1,7 +1,8 @@
 package epicurius.http
 
-import epicurius.http.user.models.output.GetUserOutputModel
 import epicurius.EpicuriusTest
+import epicurius.http.user.models.output.GetUserOutputModel
+import epicurius.http.utils.Uris
 import epicurius.utils.UserTest
 import epicurius.utils.createTestUser
 import org.junit.jupiter.api.BeforeAll
@@ -17,9 +18,17 @@ class HttpTest: EpicuriusTest() {
     val client = WebTestClient.bindToServer().baseUrl(api("/")).build()
     final fun api(path: String): String = "http://localhost:$port/api$path"
 
-    fun createUser(username: String, email: String, country: String, passwordHash: String) =
-        client.post().uri(api("/signup"))
-            .bodyValue(mapOf("username" to username, "email" to email, "country" to country, "password" to passwordHash))
+    fun createUser(username: String, email: String, country: String, password: String) =
+        client.post().uri(api(Uris.User.SIGNUP))
+            .bodyValue(
+                mapOf(
+                    "username" to username,
+                    "email" to email,
+                    "password" to password,
+                    "confirmPassword" to password,
+                    "country" to country
+                    )
+            )
             .exchange()
             .expectStatus().isCreated
             .expectBody<String>()
@@ -27,7 +36,7 @@ class HttpTest: EpicuriusTest() {
             .responseHeaders["Authorization"]?.first()?.substringAfter("Bearer ")
 
     fun getUser(token: String) =
-        client.get().uri(api("/user"))
+        client.get().uri(api(Uris.User.USER))
             .header("Authorization", "Bearer $token")
             .exchange()
             .expectStatus().isOk
@@ -36,19 +45,19 @@ class HttpTest: EpicuriusTest() {
             .responseBody
 
     fun login(username: String? = null, email: String? = null, password: String) =
-        client.post().uri(api("/login"))
-                .bodyValue(mapOf("username" to username, "email" to email, "password" to password))
-                .exchange()
-                .expectStatus().isOk
-                .expectBody<Unit>()
-                .returnResult()
-                .responseHeaders["Authorization"]?.first()?.substringAfter("Bearer ")
+        client.post().uri(api(Uris.User.LOGIN))
+            .bodyValue(mapOf("username" to username, "email" to email, "password" to password))
+            .exchange()
+            .expectStatus().isNoContent
+            .expectBody<Unit>()
+            .returnResult()
+            .responseHeaders["Authorization"]?.first()?.substringAfter("Bearer ")
 
     fun logout(token: String) =
-        client.post().uri(api("/logout"))
+        client.post().uri(api(Uris.User.LOGOUT))
             .header("Authorization", "Bearer $token")
             .exchange()
-            .expectStatus().isOk
+            .expectStatus().isNoContent
             .expectBody<Unit>()
             .returnResult()
             .responseHeaders["Authorization"]?.first()

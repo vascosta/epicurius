@@ -21,7 +21,6 @@ class UserRepositoryTest: RepositoryTest() {
     ** Postgres Tests
     */
 
-    // add get by email
     @Test
     fun `Create new user and retrieve it successfully`() {
         // given user required information
@@ -46,6 +45,20 @@ class UserRepositoryTest: RepositoryTest() {
         assertEquals(userByName.intolerances, emptyList())
         assertEquals(userByName.diet, emptyList())
         assertNull(userByName.profilePictureName)
+
+        // when getting the user by email
+        val userByEmail = getUserByEmail(email)
+
+        // then the user is retrieved successfully
+        assertNotNull(userByEmail)
+        assertEquals(userByEmail.username, username)
+        assertEquals(userByEmail.email, email)
+        assertEquals(userByEmail.country, country)
+        assertEquals(userByEmail.passwordHash, passwordHash)
+        assertEquals(userByEmail.privacy, false)
+        assertEquals(userByEmail.intolerances, emptyList())
+        assertEquals(userByEmail.diet, emptyList())
+        assertNull(userByEmail.profilePictureName)
     }
 
     @Test
