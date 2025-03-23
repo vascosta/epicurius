@@ -1,7 +1,9 @@
 package epicurius.repository
 
 import epicurius.domain.Diet
+import epicurius.domain.FollowingStatus
 import epicurius.domain.Intolerance
+import epicurius.domain.user.SocialUser
 import epicurius.services.models.UpdateUserModel
 import epicurius.utils.generateEmail
 import epicurius.utils.generateRandomUsername
@@ -238,20 +240,23 @@ class UserRepositoryTest: RepositoryTest() {
         assertFalse(userExistsByEmail)
     }
 
-    /*
-    ** Firestore Tests
-    */
-
-/*    @Test
-    fun `Follow a public user successfully`() {
+    @Test
+    fun `Follow a public user and then retrieve its followers and following successfully`() {
         // given two users
         val publicUser = publicTestUser
         val privateUser = privateTestUser
 
         // when following a public user
-        follow(SocialUser(publicUser.username, null), SocialUser(privateUser.username, null))
+        follow(privateUser.id, publicUser.id, FollowingStatus.ACCEPTED.ordinal)
 
         // then the user is followed successfully
-
-    }*/
+        val publicUserFollowers = getFollowers(publicUser.id)
+        val privateUserFollowing = getFollowing(privateUser.id)
+        assertTrue(publicUserFollowers.isNotEmpty())
+        assertTrue(privateUserFollowing.isNotEmpty())
+        assertEquals(publicUserFollowers.size, 1)
+        assertEquals(privateUserFollowing.size, 1)
+        assertTrue(publicUserFollowers.contains(SocialUser(privateUser.username, privateUser.profilePictureName)))
+        assertTrue(privateUserFollowing.contains(SocialUser(publicUser.username, publicUser.profilePictureName)))
+    }
 }

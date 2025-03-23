@@ -3,7 +3,7 @@ package epicurius.http
 import epicurius.EpicuriusTest
 import epicurius.http.user.models.output.GetUserOutputModel
 import epicurius.http.utils.Uris
-import epicurius.utils.UserTest
+import epicurius.domain.user.User
 import epicurius.utils.createTestUser
 import org.junit.jupiter.api.BeforeAll
 import org.springframework.boot.test.context.SpringBootTest
@@ -64,8 +64,8 @@ class HttpTest: EpicuriusTest() {
 
     companion object {
 
-        lateinit var publicTestUser: UserTest
-        lateinit var privateTestUser: UserTest
+        lateinit var publicTestUser: User
+        lateinit var privateTestUser: User
 
         @JvmStatic
         @BeforeAll

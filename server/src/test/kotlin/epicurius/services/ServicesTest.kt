@@ -1,8 +1,8 @@
 package epicurius.services
 
 import epicurius.EpicuriusTest
+import epicurius.domain.user.User
 import epicurius.http.user.models.input.UpdateUserInputModel
-import epicurius.utils.UserTest
 import epicurius.utils.createTestUser
 import org.junit.jupiter.api.BeforeAll
 
@@ -11,8 +11,8 @@ open class ServicesTest: EpicuriusTest() {
     companion object {
         private val userService = UserService(tm, fs, usersDomain, countriesDomain)
 
-        lateinit var publicTestUser: UserTest
-        lateinit var privateTestUser: UserTest
+        lateinit var publicTestUser: User
+        lateinit var privateTestUser: User
 
         @JvmStatic
         @BeforeAll

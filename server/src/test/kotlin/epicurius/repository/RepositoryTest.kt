@@ -1,16 +1,16 @@
 package epicurius.repository
 
 import epicurius.EpicuriusTest
+import epicurius.domain.user.User
 import epicurius.services.models.UpdateUserModel
-import epicurius.utils.UserTest
 import epicurius.utils.createTestUser
 import org.junit.jupiter.api.BeforeAll
 
 open class RepositoryTest: EpicuriusTest() {
 
     companion object {
-        lateinit var publicTestUser: UserTest
-        lateinit var privateTestUser: UserTest
+        lateinit var publicTestUser: User
+        lateinit var privateTestUser: User
 
         @JvmStatic
         @BeforeAll
@@ -28,9 +28,11 @@ open class RepositoryTest: EpicuriusTest() {
         fun getUserByName(username: String) = tm.run { it.userRepository.getUser(username) }
         fun getUserByEmail(email: String) = tm.run { it.userRepository.getUser(email = email) }
         fun getUserByTokenHash(tokenHash: String) = tm.run { it.userRepository.getUser(tokenHash = tokenHash) }
+        fun getFollowers(userId: Int) = tm.run { it.userRepository.getFollowers(userId) }
+        fun getFollowing(userId: Int) = tm.run { it.userRepository.getFollowing(userId) }
 
-        fun follow(userId: Int, userIdToFollow: Int) =
-            tm.run { it.userRepository.followUser(userId, userIdToFollow) }
+        fun follow(userId: Int, userIdToFollow: Int, status: Int) =
+            tm.run { it.userRepository.followUser(userId, userIdToFollow, status) }
 
         fun resetPassword(email: String, passwordHash: String) =
             tm.run { it.userRepository.resetPassword(email, passwordHash) }

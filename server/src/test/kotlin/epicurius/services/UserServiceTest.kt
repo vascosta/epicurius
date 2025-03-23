@@ -52,26 +52,31 @@ class UserServiceTest: ServicesTest() {
     @Test
     fun `try to create user with an existing username or email and throws UserAlreadyExists Exception`() {
         // given an existing user and a different username and email
-        val user1 = publicTestUser
         val username = generateRandomUsername()
         val email = generateEmail(username)
+        val country = "PT"
+        val password = generateSecurePassword()
+        val randomUsername = generateRandomUsername()
+        val randomEmail= generateEmail(username)
+
+        createUser(username, email, country, password, password)
 
         // when creating a user with an existing username
         // then the user cannot be created and throws UserAlreadyExists Exception
         assertFailsWith<UserAlreadyExists> {
-            createUser(user1.username, email, "PT", user1.password, user1.password)
+            createUser(username, randomEmail, "PT", password, password)
         }
 
         // when creating a user with an existing email
         // then the user cannot be created and throws UserAlreadyExists Exception
         assertFailsWith<UserAlreadyExists> {
-            createUser(username, user1.email, "PT", user1.password, user1.password)
+            createUser(randomUsername, email, "PT", password, password)
         }
 
         // when creating a user with an existing username and email
         // then the user cannot be created and throws UserAlreadyExists Exception
         assertFailsWith<UserAlreadyExists> {
-            createUser(user1.username, user1.email, "PT", user1.password, user1.password)
+            createUser(username, email, "PT", password, password)
         }
     }
 
@@ -106,35 +111,45 @@ class UserServiceTest: ServicesTest() {
     @Test
     fun `login a user by name successfully`() {
         // given an existing user logged out
-        val user = publicTestUser
-        logout(user.username)
+        val username = generateRandomUsername()
+        val email = generateEmail(username)
+        val country = "PT"
+        val password = generateSecurePassword()
 
-        // when logging in
-        val userToken = login(user.username, null, user.password)
+        createUser(username, email, country, password, password)
+        logout(username)
+
+        // when logging in by name
+        val userToken = login(username, null, password)
 
         // then the user is logged in successfully
         val authenticatedUser = getAuthenticatedUser(userToken)
         assertNotNull(authenticatedUser)
-        assertEquals(user.username, authenticatedUser.userInfo.username)
-        assertEquals(user.email, authenticatedUser.userInfo.email)
-        assertTrue(usersDomain.verifyPassword(user.password, authenticatedUser.userInfo.passwordHash))
+        assertEquals(username, authenticatedUser.userInfo.username)
+        assertEquals(email, authenticatedUser.userInfo.email)
+        assertTrue(usersDomain.verifyPassword(password, authenticatedUser.userInfo.passwordHash))
     }
 
     @Test
     fun `login a user by email successfully`() {
         // given an existing user logged out
-        val user = publicTestUser
-        logout(user.username)
+        val username = generateRandomUsername()
+        val email = generateEmail(username)
+        val country = "PT"
+        val password = generateSecurePassword()
 
-        // when logging in
-        val userToken = login(null, user.email, user.password)
+        createUser(username, email, country, password, password)
+        logout(username)
+
+        // when logging in by email
+        val userToken = login(null, email, password)
 
         // then the user is logged in successfully
         val authenticatedUser = getAuthenticatedUser(userToken)
         assertNotNull(authenticatedUser)
-        assertEquals(user.username, authenticatedUser.userInfo.username)
-        assertEquals(user.email, authenticatedUser.userInfo.email)
-        assertTrue(usersDomain.verifyPassword(user.password, authenticatedUser.userInfo.passwordHash))
+        assertEquals(username, authenticatedUser.userInfo.username)
+        assertEquals(email, authenticatedUser.userInfo.email)
+        assertTrue(usersDomain.verifyPassword(password, authenticatedUser.userInfo.passwordHash))
     }
 
     @Test
@@ -153,14 +168,19 @@ class UserServiceTest: ServicesTest() {
     @Test
     fun `try to login with an incorrect password and throws IncorrectPassword Exception`() {
         // given an existing user logged out and an incorrect password
-        val user = publicTestUser
-        logout(user.username)
+        val username = generateRandomUsername()
+        val email = generateEmail(username)
+        val country = "PT"
+        val password = generateSecurePassword()
+
+        createUser(username, email, country, password, password)
+        logout(username)
         val incorrectPassword = UUID.randomUUID().toString()
 
         // when logging in with an incorrect password
         // then the user is cannot be logged in and throws IncorrectPassword Exception
-        assertFailsWith<IncorrectPassword> { login(user.username, null, incorrectPassword) }
-        assertFailsWith<IncorrectPassword> { login(null, user.email, incorrectPassword) }
+        assertFailsWith<IncorrectPassword> { login(username, null, incorrectPassword) }
+        assertFailsWith<IncorrectPassword> { login(null, email, incorrectPassword) }
     }
 
     @Test

@@ -5,10 +5,9 @@ import epicurius.utils.generateEmail
 import epicurius.utils.generateRandomUsername
 import epicurius.utils.generateSecurePassword
 import org.springframework.test.web.reactive.server.expectBody
-import java.util.*
 import kotlin.test.Test
 import kotlin.test.assertEquals
-import kotlin.test.assertFalse
+import kotlin.test.assertNotEquals
 import kotlin.test.assertNotNull
 import kotlin.test.assertNull
 import kotlin.test.assertTrue
@@ -237,7 +236,7 @@ class UserControllerTest: HttpTest() {
         assertEquals(publicTestUser.username, authenticatedUser.user.username)
         assertEquals(publicTestUser.email, authenticatedUser.user.email)
         assertTrue(usersDomain.verifyPassword(newPassword, authenticatedUser.user.passwordHash))
-        assertFalse(usersDomain.verifyPassword(publicTestUser.password, authenticatedUser.user.passwordHash))
+        assertNotEquals(publicTestUser.passwordHash, authenticatedUser.user.passwordHash)
     }
 
     @Test
