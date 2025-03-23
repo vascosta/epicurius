@@ -1,7 +1,6 @@
 package epicurius.repository
 
 import epicurius.EpicuriusTest
-import epicurius.domain.user.SocialUser
 import epicurius.services.models.UpdateUserModel
 import epicurius.utils.UserTest
 import epicurius.utils.createTestUser

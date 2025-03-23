@@ -1,4 +1,4 @@
-package epicurius.http.user.models
+package epicurius.http.user.models.input
 
 import epicurius.domain.Diet
 import epicurius.domain.Intolerance

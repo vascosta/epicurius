@@ -2,7 +2,6 @@ package epicurius.repository
 
 import epicurius.domain.Diet
 import epicurius.domain.Intolerance
-import epicurius.domain.user.SocialUser
 import epicurius.services.models.UpdateUserModel
 import epicurius.utils.generateEmail
 import epicurius.utils.generateRandomUsername

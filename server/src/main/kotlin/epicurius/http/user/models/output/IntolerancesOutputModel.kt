@@ -1,4 +1,4 @@
-package epicurius.http.user.models
+package epicurius.http.user.models.output
 
 import epicurius.domain.Intolerance
 
