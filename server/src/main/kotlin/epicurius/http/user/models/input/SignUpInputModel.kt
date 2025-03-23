@@ -26,6 +26,11 @@ data class SignUpInputModel(
     val password: String,
 
     @field:NotBlank
+    @field:Size(min = MIN_PASSWORD_LENGTH, max = MAX_PASSWORD_LENGTH)
+    @field:Pattern(regexp = Regex.VALID_PASSWORD, message = Regex.VALID_PASSWORD_MSG)
+    val confirmPassword: String,
+
+    @field:NotBlank
     @field:Pattern(regexp = Regex.VALID_STRING, message = Regex.VALID_STRING_MSG)
     val country: String
 )

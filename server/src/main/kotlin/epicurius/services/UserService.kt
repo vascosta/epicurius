@@ -8,7 +8,7 @@ import epicurius.domain.user.UserDomain
 import epicurius.domain.exceptions.InvalidCountry
 import epicurius.domain.exceptions.IncorrectPassword
 import epicurius.domain.exceptions.PasswordsDoNotMatch
-import epicurius.domain.exceptions.UserAlreadyExits
+import epicurius.domain.exceptions.UserAlreadyExists
 import epicurius.domain.exceptions.UserAlreadyLoggedIn
 import epicurius.domain.exceptions.UserNotFound
 import epicurius.domain.user.User
@@ -27,9 +27,16 @@ class UserService(
     private val userDomain: UserDomain,
     private val countriesDomain: CountriesDomain
 ) {
-    fun createUser(username: String, email: String, country: String, password: String): String {
-        if (checkIfUserExists(username, email) != null) throw UserAlreadyExits()
+    fun createUser(
+        username: String,
+        email: String,
+        country: String,
+        password: String,
+        confirmPassword: String
+    ): String {
+        if (checkIfUserExists(username, email) != null) throw UserAlreadyExists()
         if (!countriesDomain.checkIfCodeIsValid(country)) throw InvalidCountry()
+        checkIfPasswordsMatch(password, confirmPassword)
         val passwordHash = userDomain.encodePassword(password)
 
         tm.run { it.userRepository.createUser(username, email, country, passwordHash) }
@@ -76,7 +83,7 @@ class UserService(
     }
 
     fun updateProfile(username: String, userUpdate: UpdateUserInputModel) {
-        checkIfUserExists(userUpdate.username, userUpdate.email)
+        if (checkIfUserExists(userUpdate.username, userUpdate.email) != null) throw UserAlreadyExists()
 
         if (userUpdate.country != null)
             if (!countriesDomain.checkIfCodeIsValid(userUpdate.country)) throw InvalidCountry()
@@ -95,10 +102,10 @@ class UserService(
                     userUpdate.username,
                     userUpdate.email,
                     userUpdate.country,
-                    userUpdate.password?.let { userDomain.encodePassword(it) },
+                    userUpdate.password?.let { password -> userDomain.encodePassword(password) },
                     userUpdate.privacy,
-                    userUpdate.intolerances?.map { intolerance ->  Intolerance.entries.indexOf(intolerance) },
-                    userUpdate.diet?.map { diet -> Diet.entries.indexOf(diet) }
+                    userUpdate.intolerances?.map { intolerance ->  Intolerance.toInt(intolerance) },
+                    userUpdate.diet?.map { diet -> Diet.toInt(diet) }
                 )
             )
         }

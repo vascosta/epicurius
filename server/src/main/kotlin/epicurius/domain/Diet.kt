@@ -1,21 +1,32 @@
 package epicurius.domain
 
-enum class Diet(name: String) {
-    GLUTEN_FREE("Gluten Free"),
-    KETOGENIC("Ketogenic"),
-    VEGETARIAN("Vegetarian"),
-    LACTO_VEGETARIAN("Lacto-Vegetarian"),
-    OVO_VEGETARIAN("Ovo-Vegetarian"),
-    VEGAN("Vegan"),
-    PESCETARIAN("Pescetarian"),
-    PALEO("Paleo"),
-    PRIMAL("Primal"),
-    LOW_FODMAP("Low FODMAP"),
-    WHOLE30("Whole30");
+import epicurius.domain.exceptions.InvalidDiet
+import epicurius.domain.exceptions.InvalidDietIdx
+
+enum class Diet {
+    GLUTEN_FREE,
+    KETOGENIC,
+    VEGETARIAN,
+    LACTO_VEGETARIAN,
+    OVO_VEGETARIAN,
+    VEGAN,
+    PESCETARIAN,
+    PALEO,
+    PRIMAL,
+    LOW_FODMAP,
+    WHOLE30;
 
     companion object {
         fun fromInt(value: Int): Diet {
-            return Diet.entries.getOrNull(value) ?: throw IllegalArgumentException("Invalid Id")
+            return Diet.entries.getOrNull(value) ?: throw InvalidDietIdx()
+        }
+
+        fun toInt(diet: Diet): Int {
+            val idx = Diet.entries.indexOf(diet)
+            if (idx == -1) {
+                throw InvalidDiet()
+            }
+            return idx
         }
     }
 }

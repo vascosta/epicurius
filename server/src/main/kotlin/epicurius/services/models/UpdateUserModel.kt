@@ -1,11 +1,12 @@
 package epicurius.services.models
 
 data class UpdateUserModel(
-    val username: String?,
-    val email: String?,
-    val country: String?,
-    val passwordHash: String?,
-    val privacy: Boolean?,
-    val intolerances: List<Int>?,
-    val diet: List<Int>?
+    val username: String? = null,
+    val email: String? = null,
+    val country: String? = null,
+    val passwordHash: String? = null,
+    val privacy: Boolean? = null,
+    val intolerances: List<Int>? = null,
+    val diet: List<Int>? = null,
+    val profilePictureName: String? = null
 )

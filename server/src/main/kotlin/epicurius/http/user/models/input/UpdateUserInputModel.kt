@@ -14,25 +14,25 @@ import jakarta.validation.constraints.Size
 data class UpdateUserInputModel(
     @field:Size(min = MIN_USERNAME_LENGTH, max = MAX_USERNAME_LENGTH)
     @field:Pattern(regexp = Regex.VALID_STRING, message = Regex.VALID_STRING_MSG)
-    val username: String?,
+    val username: String? = null,
 
     @field:Email
-    val email: String?,
+    val email: String? = null,
 
     @field:Pattern(regexp = Regex.VALID_STRING, message = Regex.VALID_STRING_MSG)
-    val country: String?,
+    val country: String? = null,
 
     @field:Size(min = MIN_PASSWORD_LENGTH, max = MAX_PASSWORD_LENGTH)
     @field:Pattern(regexp = Regex.VALID_PASSWORD, message = Regex.VALID_PASSWORD_MSG)
-    val password: String?,
+    val password: String? = null,
 
     @field:Size(min = MIN_PASSWORD_LENGTH, max = MAX_PASSWORD_LENGTH)
     @field:Pattern(regexp = Regex.VALID_PASSWORD, message = Regex.VALID_PASSWORD_MSG)
-    val confirmPassword: String?,
+    val confirmPassword: String? = null,
 
-    val privacy: Boolean?,
+    val privacy: Boolean? = null,
 
-    val intolerances: List<Intolerance>?,
+    val intolerances: List<Intolerance>? = null,
 
-    val diet: List<Diet>?
+    val diet: List<Diet>? = null
 )

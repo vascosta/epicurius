@@ -2,6 +2,14 @@ package epicurius.http.pipeline
 
 import com.fasterxml.jackson.core.JsonParseException
 import com.fasterxml.jackson.databind.exc.MismatchedInputException
+import epicurius.domain.exceptions.IncorrectPassword
+import epicurius.domain.exceptions.InvalidCountry
+import epicurius.domain.exceptions.InvalidDietIdx
+import epicurius.domain.exceptions.InvalidIntolerancesIdx
+import epicurius.domain.exceptions.PasswordsDoNotMatch
+import epicurius.domain.exceptions.UnauthorizedException
+import epicurius.domain.exceptions.UserAlreadyExists
+import epicurius.domain.exceptions.UserAlreadyLoggedIn
 import epicurius.domain.exceptions.UserNotFound
 import epicurius.http.pipeline.authentication.AuthenticationInterceptor.Companion.WWW_AUTHENTICATE_HEADER
 import epicurius.http.pipeline.authentication.RequestTokenProcessor.Companion.SCHEME
@@ -91,31 +99,33 @@ class ExceptionHandler {
             status = HttpStatus.BAD_REQUEST
         )
 
-    /*    @ExceptionHandler(
-            value = [
-                //add
-            ]
+    @ExceptionHandler(value = [UnauthorizedException::class])
+    fun handleUnauthorized(request: HttpServletRequest, ex: Exception): ResponseEntity<*> {
+        return ex.handle(
+            request = request,
+            status = HttpStatus.UNAUTHORIZED,
+            headers = HttpHeaders().apply {
+                set(WWW_AUTHENTICATE_HEADER, SCHEME)
+            }
         )
-        fun handleUnauthorized(request: HttpServletRequest, ex: Exception): ResponseEntity<*> {
-            return ex.handle(
-                request = request,
-                status = HttpStatus.UNAUTHORIZED,
-                headers = HttpHeaders().apply {
-                    set(WWW_AUTHENTICATE_HEADER, SCHEME)
-                }
-            )
-        }
+    }
 
-        @ExceptionHandler(
-            value = [
-                //ADD
-            ]
+    @ExceptionHandler(
+        value = [
+            UserAlreadyExists::class,
+            UserAlreadyLoggedIn::class,
+            InvalidCountry::class,
+            IncorrectPassword::class,
+            PasswordsDoNotMatch::class,
+            InvalidIntolerancesIdx::class,
+            InvalidDietIdx::class
+        ]
+    )
+    fun handleUserBadRequest(request: HttpServletRequest, ex: Exception) =
+        ex.handle(
+            request = request,
+            status = HttpStatus.BAD_REQUEST
         )
-        fun handleForbidden(request: HttpServletRequest, ex: Exception): ResponseEntity<Problem> =
-            ex.handle(
-                request = request,
-                status = HttpStatus.FORBIDDEN
-            )*/
 
     @ExceptionHandler(
         value = [
@@ -137,6 +147,20 @@ class ExceptionHandler {
             title = "Internal Server Error",
             detail = "Something went wrong, please try again later."
         ).also { ex.printStackTrace() }
+
+    /*
+
+       @ExceptionHandler(
+           value = [
+               //ADD
+           ]
+       )
+       fun handleForbidden(request: HttpServletRequest, ex: Exception): ResponseEntity<Problem> =
+           ex.handle(
+               request = request,
+               status = HttpStatus.FORBIDDEN
+           )*/
+
 
     companion object {
         const val PROBLEMS_DOCS_URI = ""

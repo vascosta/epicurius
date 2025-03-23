@@ -45,7 +45,7 @@ class UserController(val userService: UserService) {
 
     @PostMapping(Uris.User.SIGNUP)
     fun signUp(@Valid @RequestBody body: SignUpInputModel, response: HttpServletResponse): ResponseEntity<*> {
-        val token = userService.createUser(body.username, body.email, body.country, body.password)
+        val token = userService.createUser(body.username, body.email, body.country, body.password, body.confirmPassword)
         response.addHeader("Authorization", "Bearer $token")
         return ResponseEntity.created(URI.create(Uris.User.SIGNUP)).build<Unit>()
     }
@@ -54,14 +54,14 @@ class UserController(val userService: UserService) {
     fun login(@Valid @RequestBody body: LoginInputModel, response: HttpServletResponse): ResponseEntity<*> {
         val token = userService.login(body.username, body.email, body.password)
         response.addHeader("Authorization", "Bearer $token")
-        return ResponseEntity.ok().build<Unit>()
+        return ResponseEntity.noContent().build<Unit>()
     }
 
     @PostMapping(Uris.User.LOGOUT)
     fun logout(authenticatedUser: AuthenticatedUser, response: HttpServletResponse): ResponseEntity<*> {
         userService.logout(authenticatedUser.userInfo.username)
         response.addHeader("Authorization", "")
-        return ResponseEntity.ok().build<Unit>()
+        return ResponseEntity.noContent().build<Unit>()
     }
 
     @PatchMapping(Uris.User.FOLLOW)
@@ -86,9 +86,10 @@ class UserController(val userService: UserService) {
         @Valid @RequestBody body: ResetPasswordInputModel
     ): ResponseEntity<*> {
         userService.resetPassword(body.email, body.newPassword, body.confirmPassword)
-        return ResponseEntity.ok().build<Unit>()
+        return ResponseEntity.noContent().build<Unit>()
     }
 
+    // falta retornar body
     @PatchMapping(Uris.User.USER_PROFILE)
     fun updateProfile(
         authenticatedUser: AuthenticatedUser,
