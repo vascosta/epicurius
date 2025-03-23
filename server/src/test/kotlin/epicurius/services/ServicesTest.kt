@@ -1,7 +1,8 @@
 package epicurius.services
 
 import epicurius.EpicuriusTest
-import epicurius.http.user.models.UpdateUserInputModel
+import epicurius.domain.user.SocialUser
+import epicurius.http.user.models.input.UpdateUserInputModel
 import epicurius.utils.UserTest
 import epicurius.utils.createTestUser
 import org.junit.jupiter.api.BeforeAll
@@ -17,8 +18,8 @@ open class ServicesTest: EpicuriusTest() {
         @JvmStatic
         @BeforeAll
         fun setupDB() {
-            publicTestUser = createTestUser(tm, fs, false)
-            privateTestUser = createTestUser(tm, fs, true)
+            publicTestUser = createTestUser(tm)
+            privateTestUser = createTestUser(tm)
         }
 
         fun createUser(username: String, email: String, country: String, passwordHash: String) =
@@ -28,7 +29,7 @@ open class ServicesTest: EpicuriusTest() {
 
         fun login(username: String?, email: String?, password: String) = userService.login(username, email, password)
 
-        fun follow(username: String, usernameToFollow: String) = userService.follow(username, usernameToFollow)
+        fun follow(userId: Int, usernameToFollow: String) = userService.follow(userId, usernameToFollow)
 
         fun resetPassword(email: String, newPassword: String, confirmPassword: String) =
             userService.resetPassword(email, newPassword, confirmPassword)

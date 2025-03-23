@@ -1,6 +1,7 @@
 package epicurius.repository
 
 import epicurius.EpicuriusTest
+import epicurius.domain.user.SocialUser
 import epicurius.services.models.UpdateUserModel
 import epicurius.utils.UserTest
 import epicurius.utils.createTestUser
@@ -15,8 +16,8 @@ open class RepositoryTest: EpicuriusTest() {
         @JvmStatic
         @BeforeAll
         fun setupDB() {
-            publicTestUser = createTestUser(tm, fs, false)
-            privateTestUser = createTestUser(tm, fs, true)
+            publicTestUser = createTestUser(tm)
+            privateTestUser = createTestUser(tm)
         }
 
         fun createUser(username: String, email: String, country: String, passwordHash: String) =
@@ -25,12 +26,12 @@ open class RepositoryTest: EpicuriusTest() {
         fun createToken(tokenHash: String, username: String? = null, email: String? = null) =
             tm.run { it.tokenRepository.createToken(tokenHash, username, email) }
 
-        fun createUserFollowersAndFollowing(username: String, privacy: Boolean) =
-            fs.userRepository.createUserFollowersAndFollowing(username, privacy)
-
         fun getUserByName(username: String) = tm.run { it.userRepository.getUser(username) }
         fun getUserByEmail(email: String) = tm.run { it.userRepository.getUser(email = email) }
-        fun getUserByTokenHash(tokenHash: String) = tm.run { it.userRepository.getUserFromTokenHash(tokenHash) }
+        fun getUserByTokenHash(tokenHash: String) = tm.run { it.userRepository.getUser(tokenHash = tokenHash) }
+
+        fun follow(userId: Int, userIdToFollow: Int) =
+            tm.run { it.userRepository.followUser(userId, userIdToFollow) }
 
         fun resetPassword(email: String, passwordHash: String) =
             tm.run { it.userRepository.resetPassword(email, passwordHash) }
@@ -53,9 +54,6 @@ open class RepositoryTest: EpicuriusTest() {
 
         fun deleteToken(username: String? = null, email: String? = null) =
             tm.run { it.tokenRepository.deleteToken(username, email) }
-
-        fun checkIfUserExists(username: String? = null, email: String? = null, tokenHash: String? = null) =
-            tm.run { it.userRepository.checkIfUserExists(username, email, tokenHash) }
 
         fun checkIfUserIsLoggedIn(username: String? = null, email: String? = null) =
             tm.run { it.userRepository.checkIfUserIsLoggedIn(username, email) }

@@ -2,6 +2,7 @@ package epicurius.repository
 
 import epicurius.domain.Diet
 import epicurius.domain.Intolerance
+import epicurius.domain.user.SocialUser
 import epicurius.services.models.UpdateUserModel
 import epicurius.utils.generateEmail
 import epicurius.utils.generateRandomUsername
@@ -12,9 +13,14 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertNotEquals
+import kotlin.test.assertNotNull
 import kotlin.test.assertTrue
 
 class UserRepositoryTest: RepositoryTest() {
+
+    /*
+    ** Postgres Tests
+    */
 
     // add get by email
     @Test
@@ -32,6 +38,7 @@ class UserRepositoryTest: RepositoryTest() {
         val userByName = getUserByName(username)
 
         // then the user is retrieved successfully
+        assertNotNull(userByName)
         assertEquals(userByName.username, username)
         assertEquals(userByName.email, email)
         assertEquals(userByName.country, country)
@@ -63,6 +70,7 @@ class UserRepositoryTest: RepositoryTest() {
         val user = getUserByName(username)
 
         // then the password is reset successfully
+        assertNotNull(user)
         assertEquals(user.username, username)
         assertEquals(user.email, email)
         assertEquals(user.passwordHash, newPasswordHash)
@@ -107,6 +115,7 @@ class UserRepositoryTest: RepositoryTest() {
         val user = getUserByName(newUsername)
 
         // then the user profile is updated successfully
+        assertNotNull(user)
         assertEquals(user.username, newUsername)
         assertEquals(user.email, newEmail)
         assertEquals(user.country, newCountry)
@@ -130,18 +139,24 @@ class UserRepositoryTest: RepositoryTest() {
         createToken(tokenHash, username)
 
         // when checking if the user exists by name
-        val userExistsByName = checkIfUserExists(username)
+        val userExistsByName = getUserByName(username)
 
         // when checking if the user exists by email
-        val userExistsByEmail = checkIfUserExists(email = email)
+        val userExistsByEmail = getUserByEmail(email)
 
         // when checking if the user exists by token hash
-        val userExistsByTokenHash = checkIfUserExists(tokenHash = tokenHash)
+        val userExistsByTokenHash = getUserByTokenHash(tokenHash)
 
         // then the user exists
-        assertTrue(userExistsByName)
-        assertTrue(userExistsByEmail)
-        assertTrue(userExistsByTokenHash)
+        assertNotNull(userExistsByName)
+        assertNotNull(userExistsByEmail)
+        assertNotNull(userExistsByTokenHash)
+        assertEquals(userExistsByName.username, username)
+        assertEquals(userExistsByEmail.username, username)
+        assertEquals(userExistsByTokenHash.username, username)
+        assertEquals(userExistsByName.email, email)
+        assertEquals(userExistsByEmail.email, email)
+        assertEquals(userExistsByTokenHash.email, email)
     }
 
     @Test
@@ -152,18 +167,18 @@ class UserRepositoryTest: RepositoryTest() {
         val tokenHash = ""
 
         // when checking if the user exists by name
-        val userExistsByName = checkIfUserExists(username)
+        val userExistsByName = getUserByName(username)
 
         // when checking if the user exists by email
-        val userExistsByEmail = checkIfUserExists(email = email)
+        val userExistsByEmail = getUserByEmail(email)
 
         // when checking if the user exists by token hash
-        val userExistsByTokenHash = checkIfUserExists(tokenHash = tokenHash)
+        val userExistsByTokenHash = getUserByTokenHash(tokenHash)
 
         // then the user does not exist
-        assertFalse(userExistsByName)
-        assertFalse(userExistsByEmail)
-        assertFalse(userExistsByTokenHash)
+        assertNull(userExistsByName)
+        assertNull(userExistsByEmail)
+        assertNull(userExistsByTokenHash)
     }
 
     @Test
@@ -210,4 +225,21 @@ class UserRepositoryTest: RepositoryTest() {
         assertFalse(userExistsByName)
         assertFalse(userExistsByEmail)
     }
+
+    /*
+    ** Firestore Tests
+    */
+
+/*    @Test
+    fun `Follow a public user successfully`() {
+        // given two users
+        val publicUser = publicTestUser
+        val privateUser = privateTestUser
+
+        // when following a public user
+        follow(SocialUser(publicUser.username, null), SocialUser(privateUser.username, null))
+
+        // then the user is followed successfully
+
+    }*/
 }

@@ -1,6 +1,6 @@
 package epicurius.http
 
-import epicurius.http.user.models.GetUserOutputModel
+import epicurius.http.user.models.output.GetUserOutputModel
 import epicurius.EpicuriusTest
 import epicurius.utils.UserTest
 import epicurius.utils.createTestUser
@@ -61,8 +61,8 @@ class HttpTest: EpicuriusTest() {
         @JvmStatic
         @BeforeAll
         fun setupDB() {
-            publicTestUser = createTestUser(tm, fs, false)
-            privateTestUser = createTestUser(tm, fs, true)
+            publicTestUser = createTestUser(tm)
+            privateTestUser = createTestUser(tm)
         }
 
     }

@@ -7,6 +7,7 @@ import java.lang.IllegalStateException
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
+import kotlin.test.assertNotNull
 import kotlin.test.assertNull
 import kotlin.test.assertTrue
 
@@ -30,6 +31,7 @@ class TokenRepositoryTest: RepositoryTest() {
         val userFromTokenHash = getUserByTokenHash(tokenHash)
 
         // then the user is retrieved successfully
+        assertNotNull(userFromTokenHash)
         assertEquals(username, userFromTokenHash.username)
         assertEquals(email, userFromTokenHash.email)
 
@@ -37,6 +39,6 @@ class TokenRepositoryTest: RepositoryTest() {
         deleteToken(username)
 
         // then the token is deleted successfully
-        assertFailsWith<IllegalStateException> { getUserByTokenHash(tokenHash) }
+        assertNull(getUserByTokenHash(tokenHash))
     }
 }

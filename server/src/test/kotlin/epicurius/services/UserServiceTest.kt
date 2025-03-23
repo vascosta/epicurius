@@ -5,7 +5,7 @@ import epicurius.domain.Intolerance
 import epicurius.domain.exceptions.IncorrectPassword
 import epicurius.domain.exceptions.UserAlreadyLoggedIn
 import epicurius.domain.exceptions.UserNotFound
-import epicurius.http.user.models.UpdateUserInputModel
+import epicurius.http.user.models.input.UpdateUserInputModel
 import epicurius.utils.generateEmail
 import epicurius.utils.generateRandomUsername
 import epicurius.utils.generateSecurePassword
