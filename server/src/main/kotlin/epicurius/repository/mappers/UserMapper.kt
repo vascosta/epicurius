@@ -13,9 +13,10 @@ class UserMapper(
     private val dietListMapper: ColumnMapper<List<Diet>>
 ): RowMapper<User> {
     override fun map(rs: ResultSet, ctx: StatementContext): User {
-        val intoleranceList = intoleranceListMapper.map(rs, 7, ctx)
-        val dietList = dietListMapper.map(rs, 8, ctx)
+        val intoleranceList = intoleranceListMapper.map(rs, 8, ctx)
+        val dietList = dietListMapper.map(rs, 9, ctx)
         return User(
+            id = rs.getInt("id"),
             username = rs.getString("username"),
             email = rs.getString("email"),
             passwordHash = rs.getString("password_hash"),

@@ -5,13 +5,13 @@ interface UserPostgresRepository {
 
     fun createUser(username: String, email: String, country: String, passwordHash: String)
 
-    fun getUser(username: String? = null, email: String? = null): User
-    fun getUserFromTokenHash(tokenHash: String): User
+    fun getUser(username: String? = null, email: String? = null, tokenHash: String? = null): User?
     fun getProfilePictureName(username: String): String
 
+    fun followUser(userId: Int, userIdToFollow: Int)
     fun resetPassword(email: String, passwordHash: String)
     fun updateProfile(username:String, userUpdate: UpdateUserModel)
 
-    fun checkIfUserExists(username: String? = null, email: String? = null, tokenHash: String? = null): Boolean
     fun checkIfUserIsLoggedIn(username: String? = null, email: String? = null): Boolean
+    fun checkIfUserIsAlreadyFollowing(userId: Int, userIdToFollow: Int): Boolean
 }

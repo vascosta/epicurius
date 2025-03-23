@@ -24,29 +24,18 @@ class JdbiUserRepository(private val handle: Handle) : UserPostgresRepository {
             .execute()
     }
 
-    override fun getUser(username: String?, email: String?): User {
+    override fun getUser(username: String?, email: String?, tokenHash: String?): User? {
         return handle.createQuery(
             """
                 SELECT * FROM dbo.user
-                WHERE username = :username OR email = :email
+                WHERE username = :username OR email = :email OR token_hash = :token_hash
             """
         )
             .bind("username", username)
             .bind("email", email)
-            .mapTo<User>()
-            .one()
-    }
-
-    override fun getUserFromTokenHash(tokenHash: String): User {
-        return handle.createQuery(
-            """
-                SELECT * FROM dbo.user
-                WHERE token_hash = :token_hash
-            """
-        )
             .bind("token_hash", tokenHash)
             .mapTo<User>()
-            .one()
+            .firstOrNull()
     }
 
     override fun getProfilePictureName(username: String): String {
@@ -89,18 +78,17 @@ class JdbiUserRepository(private val handle: Handle) : UserPostgresRepository {
             .execute()
     }
 
-    override fun checkIfUserExists(username: String?, email: String?, tokenHash: String?): Boolean =
-        handle.createQuery(
+    override fun followUser(userId: Int, userIdToFollow: Int) {
+        handle.createUpdate(
             """
-                SELECT COUNT (*) FROM dbo.user
-                WHERE username = :username OR email = :email OR token_hash = :token_hash
+                INSERT INTO dbo.followers(user_id, follower_id)
+                VALUES (:user_id, :follower_id)
             """
         )
-            .bind("username", username)
-            .bind("email", email)
-            .bind("token_hash", tokenHash)
-            .mapTo<Int>()
-            .one() == 1
+            .bind("user_id", userId)
+            .bind("follower_id", userIdToFollow)
+            .execute()
+    }
 
     override fun checkIfUserIsLoggedIn(username: String?, email: String?): Boolean =
         handle.createQuery(
@@ -111,6 +99,18 @@ class JdbiUserRepository(private val handle: Handle) : UserPostgresRepository {
         )
             .bind("username", username)
             .bind("email", email)
+            .mapTo<Int>()
+            .one() == 1
+
+    override fun checkIfUserIsAlreadyFollowing(userId: Int, userIdToFollow: Int): Boolean =
+        handle.createQuery(
+            """
+                SELECT COUNT (*) FROM dbo.followers
+                WHERE user_id = :user_id AND follower_id = :follower_id
+            """
+        )
+            .bind("user_id", userId)
+            .bind("follower_id", userIdToFollow)
             .mapTo<Int>()
             .one() == 1
 

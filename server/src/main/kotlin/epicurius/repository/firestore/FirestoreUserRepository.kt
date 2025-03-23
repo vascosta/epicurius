@@ -2,104 +2,75 @@ package epicurius.repository.firestore
 
 import UserFirestoreRepository
 import com.google.cloud.firestore.Firestore
-import epicurius.domain.exceptions.UserNotFound
-import epicurius.domain.user.SocialUser
 
 class FirestoreUserRepository(private val firestore: Firestore):UserFirestoreRepository {
-    override fun createUserFollowersAndFollowing(username: String, privacy: Boolean) {
-        val user = hashMapOf(
-            "followers" to emptyList<String>(),
-            "following" to emptyList<String>(),
-            "followingRequests" to emptyList<String>(),
-            "privacy" to privacy
-        )
 
-        firestore.collection(FOLLOWERS_AND_FOLLOWING_COLLECTION).document(username)
-            .set(user).get()
-    }
-
-    override fun getFollowers(username: String): List<SocialUser> {
-        TODO("Not yet implemented")
-    }
-
-    override fun getFollowing(username: String): List<SocialUser> {
-        TODO("Not yet implemented")
-    }
-
-    override fun getFollowRequests(username: String): List<SocialUser> {
-        TODO("Not yet implemented")
-    }
-
-    // fix (use SocialUser)
-    override fun addFollowing(username: String, usernameToFollow: String) {
-        firestore.runTransaction { transaction ->
-            val userRef = getDocumentReference(username)
+/*    override fun addRecipeInstructions(user: Strin, usernameToFollow: SocialUser) {
+        val future: ApiFuture<Unit> = firestore.runTransaction { transaction ->
+            val userRef = getDocumentReference(FOLLOWERS_AND_FOLLOWING_COLLECTION, user.username)
             val userSnapshot = transaction.get(userRef).get()
-            val userToFollow = getDocumentReference(usernameToFollow)
+            val userToFollow = getDocumentReference(FOLLOWERS_AND_FOLLOWING_COLLECTION, usernameToFollow.username)
             val userToFollowSnapshot = transaction.get(userToFollow).get()
 
             if (!userSnapshot.exists()) {
-                throw UserNotFound(username)
+                throw UserNotFound(user.username)
             }
 
             if (!userToFollowSnapshot.exists()) {
-                throw UserNotFound(usernameToFollow)
+                throw UserNotFound(usernameToFollow.username)
             }
 
             val privacy = userToFollowSnapshot.get("privacy") as Boolean
 
             if (privacy) {
-                val followingRequests = userToFollowSnapshot.get("followingRequests") as List<String>
-                if (!followingRequests.contains(username)) {
-                    transaction.update(userToFollow, "followersRequests", followingRequests + username)
+                val followingRequests = userToFollowSnapshot.get("followersRequests") as List<Map<String, String>>
+                if (!followingRequests.any { it["username"] == user.username }) {
+                    val newRequest = mapOf(
+                        "username" to user.username,
+                        "profilePictureName" to user.profilePictureName
+                    )
+                    transaction.update(userToFollow, "followersRequests", followingRequests + newRequest)
                 }
             }
             else {
-                val followers = userToFollowSnapshot.get("followers") as List<String>
-                if (!followers.contains(username)) {
-                    transaction.update(userToFollow, "followers", followers + username)
+                val followers = userToFollowSnapshot.get("followers") as List<Map<String, String>>
+                if (!followers.any { it["username"] == user.username }) {
+                    val newFollower = mapOf(
+                        "username" to user.username,
+                        "profilePictureName" to user.profilePictureName
+                    )
+                    transaction.update(userToFollow, "followers", followers + newFollower)
                 }
 
-                val following = userSnapshot.get("following") as List<String>
-                if (!following.contains(usernameToFollow)) {
-                    transaction.update(userRef, "following", following + usernameToFollow)
+                val following = userSnapshot.get("following") as List<Map<String, String>>
+                if (!following.any { it["username"] == usernameToFollow.username }) {
+                    val newFollowing = mapOf(
+                        "username" to usernameToFollow.username,
+                        "profilePictureName" to usernameToFollow.profilePictureName
+                    )
+                    transaction.update(userRef, "following", following + newFollowing)
                 }
             }
         }
-    }
 
-    // fix (use SocialUser)
-    override fun removeFollowing(username: String, usernameToUnfollow: String) {
-        firestore.runTransaction { transaction ->
-            val userRef = getDocumentReference(username)
-            val userSnapshot = transaction.get(userRef).get()
-            val userToUnfollow = getDocumentReference(usernameToUnfollow)
-            val userToUnfollowSnapshot = transaction.get(userToUnfollow).get()
+        future.get()
+    }*/
 
-            if (!userSnapshot.exists()) {
-                throw UserNotFound(username)
-            }
+    private fun getDocumentReference(collectionName: String, name: String) =
+        firestore.collection(collectionName).document(name)
 
-            if (!userToUnfollowSnapshot.exists()) {
-                throw UserNotFound(usernameToUnfollow)
-            }
+/*    private inline fun <reified T> getSnapshotValue(snapshot: DocumentSnapshot, documentName: String) =
+        snapshot.get(documentName) as T
 
-            val following = userSnapshot.get("following") as List<String>
-            if (following.contains(usernameToUnfollow)) {
-                transaction.update(userRef, "following", following - usernameToUnfollow)
-            }
-
-            val followers = userToUnfollowSnapshot.get("followers") as List<String>
-            if (followers.contains(username)) {
-                transaction.update(userToUnfollow, "followers", followers - username)
-            }
+    private inline fun <reified T> getSnapshotValue(snapshot: DocumentSnapshot, documentName: String): T? {
+        return try {
+            snapshot.get(documentName) as? T
+        } catch (e: Exception) {
+            null
         }
-    }
-
-    private fun getDocumentReference(name: String) = firestore.collection(FOLLOWERS_AND_FOLLOWING_COLLECTION).document(name)
+    }*/
 
     companion object {
-        private const val FOLLOWERS_AND_FOLLOWING_COLLECTION = "FollowersAndFollowing"
-        private const val FRIDGE_COLLECTION = "Fridge"
+        private const val RECIPE_INSTRUCTIONS_COLLECTION = "RecipeInstructions"
     }
 }
