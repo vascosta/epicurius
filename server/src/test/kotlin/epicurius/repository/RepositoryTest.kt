@@ -51,5 +51,14 @@ open class RepositoryTest: EpicuriusTest() {
                 )
             }
 
+        fun deleteToken(username: String? = null, email: String? = null) =
+            tm.run { it.tokenRepository.deleteToken(username, email) }
+
+        fun checkIfUserExists(username: String? = null, email: String? = null, tokenHash: String? = null) =
+            tm.run { it.userRepository.checkIfUserExists(username, email, tokenHash) }
+
+        fun checkIfUserIsLoggedIn(username: String? = null, email: String? = null) =
+            tm.run { it.userRepository.checkIfUserIsLoggedIn(username, email) }
+
     }
 }

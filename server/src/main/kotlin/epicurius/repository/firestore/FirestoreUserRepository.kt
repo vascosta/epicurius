@@ -33,9 +33,9 @@ class FirestoreUserRepository(private val firestore: Firestore):UserFirestoreRep
     // fix (use SocialUser)
     override fun addFollowing(username: String, usernameToFollow: String) {
         firestore.runTransaction { transaction ->
-            val userRef = firestore.collection(FOLLOWERS_AND_FOLLOWING_COLLECTION).document(username)
+            val userRef = getDocumentReference(username)
             val userSnapshot = transaction.get(userRef).get()
-            val userToFollow = firestore.collection(FOLLOWERS_AND_FOLLOWING_COLLECTION).document(usernameToFollow)
+            val userToFollow = getDocumentReference(usernameToFollow)
             val userToFollowSnapshot = transaction.get(userToFollow).get()
 
             if (!userSnapshot.exists()) {
@@ -71,9 +71,9 @@ class FirestoreUserRepository(private val firestore: Firestore):UserFirestoreRep
     // fix (use SocialUser)
     override fun removeFollowing(username: String, usernameToUnfollow: String) {
         firestore.runTransaction { transaction ->
-            val userRef = firestore.collection(FOLLOWERS_AND_FOLLOWING_COLLECTION).document(username)
+            val userRef = getDocumentReference(username)
             val userSnapshot = transaction.get(userRef).get()
-            val userToUnfollow = firestore.collection(FOLLOWERS_AND_FOLLOWING_COLLECTION).document(usernameToUnfollow)
+            val userToUnfollow = getDocumentReference(usernameToUnfollow)
             val userToUnfollowSnapshot = transaction.get(userToUnfollow).get()
 
             if (!userSnapshot.exists()) {
@@ -96,7 +96,10 @@ class FirestoreUserRepository(private val firestore: Firestore):UserFirestoreRep
         }
     }
 
+    private fun getDocumentReference(name: String) = firestore.collection(FOLLOWERS_AND_FOLLOWING_COLLECTION).document(name)
+
     companion object {
         private const val FOLLOWERS_AND_FOLLOWING_COLLECTION = "FollowersAndFollowing"
+        private const val FRIDGE_COLLECTION = "Fridge"
     }
 }

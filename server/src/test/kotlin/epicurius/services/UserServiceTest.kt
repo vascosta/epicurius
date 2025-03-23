@@ -181,7 +181,7 @@ class UserServiceTest: ServicesTest() {
 
         // when updating the user profile
         val newUsername = generateRandomUsername()
-        val newEmail = "$newUsername@email.com"
+        val newEmail = generateEmail(newUsername)
         val newCountry = "ES"
         val newPassword = generateSecurePassword()
         val newPrivacy = true
