@@ -2,13 +2,13 @@ package epicurius.http.user
 
 import epicurius.services.UserService
 import epicurius.domain.user.AuthenticatedUser
-import epicurius.http.user.models.DietOutputModel
-import epicurius.http.user.models.GetUserOutputModel
-import epicurius.http.user.models.IntolerancesOutputModel
-import epicurius.http.user.models.LoginInputModel
-import epicurius.http.user.models.ResetPasswordInputModel
-import epicurius.http.user.models.SignUpInputModel
-import epicurius.http.user.models.UpdateUserInputModel
+import epicurius.http.user.models.output.DietOutputModel
+import epicurius.http.user.models.output.GetUserOutputModel
+import epicurius.http.user.models.output.IntolerancesOutputModel
+import epicurius.http.user.models.input.LoginInputModel
+import epicurius.http.user.models.input.ResetPasswordInputModel
+import epicurius.http.user.models.input.SignUpInputModel
+import epicurius.http.user.models.input.UpdateUserInputModel
 import epicurius.http.utils.Uris
 import jakarta.servlet.http.HttpServletResponse
 import jakarta.validation.Valid
@@ -37,6 +37,12 @@ class UserController(val userService: UserService) {
         return ResponseEntity.ok().body(DietOutputModel(diet))
     }
 
+    @GetMapping(Uris.User.FOLLOWERS)
+    fun getFollowers(authenticatedUser: AuthenticatedUser): ResponseEntity<*> {
+        val followers = userService.getFollowers(authenticatedUser.userInfo.username)
+        return ResponseEntity.ok().body(followers)
+    }
+
     @PostMapping(Uris.User.SIGNUP)
     fun signUp(@Valid @RequestBody body: SignUpInputModel, response: HttpServletResponse): ResponseEntity<*> {
         val token = userService.createUser(body.username, body.email, body.country, body.password)
@@ -58,16 +64,15 @@ class UserController(val userService: UserService) {
         return ResponseEntity.ok().build<Unit>()
     }
 
-    @GetMapping(Uris.User.FOLLOWERS)
-    fun getFollowers(authenticatedUser: AuthenticatedUser): ResponseEntity<*> {
-        val followers = userService.getFollowers(authenticatedUser.userInfo.username)
-        return ResponseEntity.ok().body(followers)
-    }
-
     @PatchMapping(Uris.User.FOLLOW)
     fun follow(authenticatedUser: AuthenticatedUser, @PathVariable usernameToFollow: String): ResponseEntity<*> {
-        userService.follow(authenticatedUser.userInfo.username, usernameToFollow)
-        return ResponseEntity.ok().build<Unit>()
+        val newFollowing = userService.follow(authenticatedUser.userInfo.id, usernameToFollow)
+
+        return if (newFollowing != null) {
+            ResponseEntity.ok().body(newFollowing)
+        } else {
+            ResponseEntity.ok().build<Unit>()
+        }
     }
 
     @PatchMapping(Uris.User.UNFOLLOW)

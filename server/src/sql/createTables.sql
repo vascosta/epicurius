@@ -1,6 +1,7 @@
 create schema dbo
 
 create table dbo.user(
+    id serial primary key,
     username varchar(25) unique not null ,
     email varchar(40) unique not null,
     password_hash varchar(80) not null,
@@ -10,6 +11,14 @@ create table dbo.user(
     intolerances integer[] not null,
     diet integer[] not null,
     profile_picture_name varchar(80)
+);
+
+create table dbo.followers(
+    user_id integer not null,
+    follower_id integer not null,
+    status integer not null,
+    foreign key (user_id) references dbo.user(id),
+    foreign key (follower_id) references dbo.user(id)
 );
 
 --create table recipe(

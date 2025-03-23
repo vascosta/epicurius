@@ -11,11 +11,14 @@ import epicurius.domain.exceptions.PasswordsDoNotMatch
 import epicurius.domain.exceptions.UserAlreadyExits
 import epicurius.domain.exceptions.UserAlreadyLoggedIn
 import epicurius.domain.exceptions.UserNotFound
-import epicurius.http.user.models.UpdateUserInputModel
+import epicurius.domain.user.User
+import epicurius.http.user.models.input.UpdateUserInputModel
 import epicurius.repository.transaction.TransactionManager
 import epicurius.repository.transaction.firestore.FirestoreManager
 import epicurius.services.models.UpdateUserModel
 import org.springframework.stereotype.Component
+import java.lang.Exception
+import java.lang.IllegalArgumentException
 
 @Component
 class UserService(
@@ -25,23 +28,19 @@ class UserService(
     private val countriesDomain: CountriesDomain
 ) {
     fun createUser(username: String, email: String, country: String, password: String): String {
-        if (checkIfUserExists(username, email)) throw UserAlreadyExits()
+        if (checkIfUserExists(username, email) != null) throw UserAlreadyExits()
         if (!countriesDomain.checkIfCodeIsValid(country)) throw InvalidCountry()
         val passwordHash = userDomain.encodePassword(password)
 
         tm.run { it.userRepository.createUser(username, email, country, passwordHash) }
-        fs.userRepository.createUserFollowersAndFollowing(username, false)
 
         return createToken(username, email)
     }
 
     fun getAuthenticatedUser(token: String): AuthenticatedUser? {
         val tokenHash = userDomain.hashToken(token)
-        if (!checkIfUserExists(tokenHash = tokenHash)) return null
-        return tm.run {
-            val user = it.userRepository.getUserFromTokenHash(tokenHash)
-            AuthenticatedUser(user, token)
-        }
+        val user = checkIfUserExists(tokenHash = tokenHash) ?: return null
+        return AuthenticatedUser(user, token)
     }
 
     fun getFollowers(username: String) {
@@ -61,30 +60,32 @@ class UserService(
     fun addProfilePicture() { }
 
     fun login(username: String?, email: String?, password: String): String {
-        if (!checkIfUserExists(username, email)) throw UserNotFound(username)
-        if (checkIfUserIsLoggedIn(username, email)) throw UserAlreadyLoggedIn()
+        val user = checkIfUserExists(username, email) ?: throw UserNotFound(username ?: email)
+        checkIfUserIsLoggedIn(username, email)
 
-        val user = tm.run { it.userRepository.getUser(username, email) }
         if (!userDomain.verifyPassword(password, user.passwordHash)) throw IncorrectPassword()
         return createToken(username, email)
     }
 
-    fun follow(username: String, usernameToFollow: String) {
-        fs.userRepository.addFollowing(username, usernameToFollow)
+    fun follow(userId: Int, usernameToFollow: String) {
+        val userToFollow = checkIfUserExists(username = usernameToFollow) ?: throw UserNotFound(usernameToFollow)
+        checkIfUserIsAlreadyFollowing(userId, userToFollow.id)
+        tm.run {
+            it.userRepository.followUser(userId, userToFollow.id)
+        }
     }
 
     fun updateProfile(username: String, userUpdate: UpdateUserInputModel) {
-        if (checkIfUserExists(userUpdate.username, userUpdate.email)) throw UserAlreadyExits()
+        checkIfUserExists(userUpdate.username, userUpdate.email)
 
         if (userUpdate.country != null)
             if (!countriesDomain.checkIfCodeIsValid(userUpdate.country)) throw InvalidCountry()
 
         if (userUpdate.password != null) {
-            if (userUpdate.confirmPassword == null ||
-                !checkIfPasswordsMatch(userUpdate.password, userUpdate.confirmPassword)
-            ) {
+            if (userUpdate.confirmPassword == null) {
                 throw PasswordsDoNotMatch()
             }
+            checkIfPasswordsMatch(userUpdate.password, userUpdate.confirmPassword)
         }
 
         tm.run {
@@ -106,7 +107,7 @@ class UserService(
     fun updateProfilePicture() { }
 
     fun resetPassword(email: String, newPassword: String, confirmPassword: String) {
-        if (!checkIfPasswordsMatch(newPassword, confirmPassword)) throw PasswordsDoNotMatch()
+        checkIfPasswordsMatch(newPassword, confirmPassword)
         val passwordHash = userDomain.encodePassword(newPassword)
 
         tm.run {
@@ -122,12 +123,12 @@ class UserService(
     }
 
     fun unfollow(username: String, usernameToUnfollow: String) {
-        fs.userRepository.removeFollowing(username, usernameToUnfollow)
+        //fs.userRepository.removeFollowing(username, usernameToUnfollow)
     }
 
     private fun createToken(username: String? = null, email: String? = null): String {
-        if (!checkIfUserExists(username, email)) throw UserNotFound(username)
-        if (checkIfUserIsLoggedIn(username, email)) throw UserAlreadyLoggedIn()
+        checkIfUserExists(username, email)
+        checkIfUserIsLoggedIn(username, email)
 
         val token = userDomain.generateTokenValue()
         val tokenHash = userDomain.hashToken(token)
@@ -139,11 +140,21 @@ class UserService(
         tm.run { it.tokenRepository.deleteToken(username, email) }
     }
 
-    private fun checkIfUserExists(name: String? = null, email: String? = null, tokenHash: String? = null): Boolean =
-        tm.run { it.userRepository.checkIfUserExists(name, email, tokenHash) }
+    private fun checkIfUserExists(username: String? = null, email: String? = null, tokenHash: String? = null): User?
+        = tm.run { it.userRepository.getUser(username, email, tokenHash) }
 
-    private fun checkIfUserIsLoggedIn(username: String? = null, email: String? = null): Boolean =
-        tm.run { it.userRepository.checkIfUserIsLoggedIn(username, email) }
+    private fun checkIfUserIsLoggedIn(username: String? = null, email: String? = null) {
+        if (tm.run { it.userRepository.checkIfUserIsLoggedIn(username, email) })
+            throw UserAlreadyLoggedIn()
+    }
 
-    private fun checkIfPasswordsMatch(password: String, confirmPassword: String): Boolean = password == confirmPassword
+    private fun checkIfUserIsAlreadyFollowing(userId: Int, userIdToFollow: Int) {
+        if (tm.run { it.userRepository.checkIfUserIsAlreadyFollowing(userId, userIdToFollow) })
+            throw IllegalArgumentException("User is already being followed by $userId")
+    }
+
+
+    private fun checkIfPasswordsMatch(password: String, confirmPassword: String) {
+        if (password != confirmPassword) throw PasswordsDoNotMatch()
+    }
 }
