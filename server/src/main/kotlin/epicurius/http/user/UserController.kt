@@ -2,14 +2,18 @@ package epicurius.http.user
 
 import epicurius.services.UserService
 import epicurius.domain.user.AuthenticatedUser
-import epicurius.http.user.models.output.DietOutputModel
+import epicurius.domain.user.UserProfile
+import epicurius.http.user.models.output.GetDietOutputModel
 import epicurius.http.user.models.output.GetUserOutputModel
-import epicurius.http.user.models.output.IntolerancesOutputModel
+import epicurius.http.user.models.output.GetIntolerancesOutputModel
 import epicurius.http.user.models.input.LoginInputModel
 import epicurius.http.user.models.input.ResetPasswordInputModel
 import epicurius.http.user.models.input.SignUpInputModel
 import epicurius.http.user.models.input.UpdateUserInputModel
+import epicurius.http.user.models.output.GetFollowRequestsOutputModel
 import epicurius.http.user.models.output.GetFollowersOutputModel
+import epicurius.http.user.models.output.GetFollowingOutputModel
+import epicurius.http.user.models.output.GetUserProfileOutputModel
 import epicurius.http.user.models.output.UpdateUserOutputModel
 import epicurius.http.utils.Uris
 import jakarta.servlet.http.HttpServletResponse
@@ -27,16 +31,36 @@ class UserController(val userService: UserService) {
         return ResponseEntity.ok().body(GetUserOutputModel(authenticatedUser.userInfo))
     }
 
+    @GetMapping(Uris.User.USER_PROFILE)
+    fun getUserProfile(
+        authenticatedUser: AuthenticatedUser,
+        @PathVariable username: String? = null
+    ): ResponseEntity<*> {
+        return if (username == null) {
+            val userProfilePicture = userService.getProfilePicture(authenticatedUser.userInfo.username)
+            val userProfile = UserProfile(
+                authenticatedUser.userInfo.username,
+                authenticatedUser.userInfo.country,
+                authenticatedUser.userInfo.privacy,
+                userProfilePicture
+            )
+            ResponseEntity.ok().body(GetUserProfileOutputModel(userProfile))
+        } else {
+            val userProfile = userService.getUserProfile(username)
+            ResponseEntity.ok().body(GetUserProfileOutputModel(userProfile))
+        }
+    }
+
     @GetMapping(Uris.User.INTOLERANCES)
     fun getIntolerances(authenticatedUser: AuthenticatedUser): ResponseEntity<*> {
         val intolerances = authenticatedUser.userInfo.intolerances
-        return ResponseEntity.ok().body(IntolerancesOutputModel(intolerances))
+        return ResponseEntity.ok().body(GetIntolerancesOutputModel(intolerances))
     }
 
     @GetMapping(Uris.User.DIET)
     fun getDiet(authenticatedUser: AuthenticatedUser): ResponseEntity<*> {
         val diet = authenticatedUser.userInfo.diet
-        return ResponseEntity.ok().body(DietOutputModel(diet))
+        return ResponseEntity.ok().body(GetDietOutputModel(diet))
     }
 
     @GetMapping(Uris.User.FOLLOWERS)
@@ -48,7 +72,13 @@ class UserController(val userService: UserService) {
     @GetMapping(Uris.User.FOLLOWING)
     fun getFollowing(authenticatedUser: AuthenticatedUser): ResponseEntity<*> {
         val following = userService.getFollowing(authenticatedUser.userInfo.id)
-        return ResponseEntity.ok().body(following)
+        return ResponseEntity.ok().body(GetFollowingOutputModel(following))
+    }
+
+    @GetMapping(Uris.User.FOLLOW_REQUESTS)
+    fun getFollowRequests(authenticatedUser: AuthenticatedUser): ResponseEntity<*> {
+        val followRequests = userService.getFollowRequests(authenticatedUser.userInfo.id)
+        return ResponseEntity.ok().body(GetFollowRequestsOutputModel(followRequests))
     }
 
     @PostMapping(Uris.User.SIGNUP)
@@ -74,15 +104,11 @@ class UserController(val userService: UserService) {
 
     @PatchMapping(Uris.User.FOLLOW)
     fun follow(authenticatedUser: AuthenticatedUser, @PathVariable usernameToFollow: String): ResponseEntity<*> {
-        val newFollowing = userService.follow(authenticatedUser.userInfo.id, usernameToFollow)
-
-        return if (newFollowing != null) {
-            ResponseEntity.ok().body(newFollowing)
-        } else {
-            ResponseEntity.ok().build<Unit>()
-        }
+        userService.follow(authenticatedUser.userInfo.id, usernameToFollow)
+        return ResponseEntity.noContent().build<Unit>()
     }
 
+    // TODO
     @PatchMapping(Uris.User.UNFOLLOW)
     fun unfollow(authenticatedUser: AuthenticatedUser, @PathVariable usernameToUnfollow: String): ResponseEntity<*> {
         userService.unfollow(authenticatedUser.userInfo.username, usernameToUnfollow)

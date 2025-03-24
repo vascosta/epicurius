@@ -4,6 +4,7 @@ import UserPostgresRepository
 import epicurius.domain.FollowingStatus
 import epicurius.domain.user.SocialUser
 import epicurius.domain.user.User
+import epicurius.domain.user.UserProfile
 import epicurius.services.models.UpdateUserModel
 import org.jdbi.v3.core.Handle
 import org.jdbi.v3.core.kotlin.mapTo
@@ -40,19 +41,6 @@ class JdbiUserRepository(private val handle: Handle) : UserPostgresRepository {
             .firstOrNull()
     }
 
-    override fun getProfilePictureName(username: String): String {
-        return handle.createQuery(
-            """
-                SELECT profile_picture_name
-                FROM dbo.user
-                WHERE username = :username
-            """
-        )
-            .bind("username", username)
-            .mapTo<String>()
-            .one()
-    }
-
     override fun getFollowers(userId: Int): List<SocialUser> {
         return handle.createQuery(
             """
@@ -77,6 +65,21 @@ class JdbiUserRepository(private val handle: Handle) : UserPostgresRepository {
             """
         )
             .bind("user_id", userId)
+            .mapTo<SocialUser>()
+            .list()
+    }
+
+    override fun getFollowRequests(userId: Int): List<SocialUser> {
+        return handle.createQuery(
+            """
+                SELECT u.username, u.profile_picture_name
+                FROM dbo.user u
+                JOIN dbo.followers f ON u.id = f.follower_id
+                WHERE f.user_id = :user_id AND f.status = :status
+            """
+        )
+            .bind("user_id", userId)
+            .bind("status", FollowingStatus.PENDING.ordinal)
             .mapTo<SocialUser>()
             .list()
     }

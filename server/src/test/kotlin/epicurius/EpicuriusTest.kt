@@ -33,7 +33,7 @@ open class EpicuriusTest {
         val countriesDomain = CountriesDomain()
 
         private fun getFirestoreService(): Firestore {
-            val serviceAccount = Environment.getFirestoreServiceAccount()
+            val serviceAccount = Environment.getGoogleServiceAccount()
 
             val options = FirestoreOptions.newBuilder()
                 .setCredentials(GoogleCredentials.fromStream(serviceAccount))

@@ -12,20 +12,21 @@ import epicurius.domain.exceptions.PasswordsDoNotMatch
 import epicurius.domain.exceptions.UserAlreadyExists
 import epicurius.domain.exceptions.UserAlreadyLoggedIn
 import epicurius.domain.exceptions.UserNotFound
-import epicurius.domain.user.SocialUser
 import epicurius.domain.user.User
+import epicurius.domain.user.UserProfile
 import epicurius.http.user.models.input.UpdateUserInputModel
 import epicurius.repository.transaction.TransactionManager
+import epicurius.repository.transaction.cloudStorage.CloudStorageManager
 import epicurius.repository.transaction.firestore.FirestoreManager
 import epicurius.services.models.UpdateUserModel
 import org.springframework.stereotype.Component
-import java.lang.Exception
 import java.lang.IllegalArgumentException
 
 @Component
 class UserService(
     private val tm: TransactionManager,
     private val fs: FirestoreManager,
+    private val cs: CloudStorageManager,
     private val userDomain: UserDomain,
     private val countriesDomain: CountriesDomain
 ) {
@@ -52,14 +53,21 @@ class UserService(
         return AuthenticatedUser(user, token)
     }
 
-    fun getFollowers(userId: Int) = tm.run { it.userRepository.getFollowers(userId) }
-    fun getFollowing(userId: Int) = tm.run { it.userRepository.getFollowing(userId) }
-
-    fun getFollowingRequests(username: String) {
-
+    fun getUserProfile(username: String): UserProfile {
+        val user = checkIfUserExists(username = username) ?: throw UserNotFound(username)
+        return if (user.profilePictureName == null) {
+            UserProfile(user.username, user.country, user.privacy, user.profilePictureName)
+        } else {
+            val userProfilePicture = getProfilePicture(username)
+            UserProfile(user.username, user.country, user.privacy, userProfilePicture)
+        }
     }
 
-    fun getProfilePicture(username: String) { }
+    fun getFollowers(userId: Int) = tm.run { it.userRepository.getFollowers(userId) }
+    fun getFollowing(userId: Int) = tm.run { it.userRepository.getFollowing(userId) }
+    fun getFollowRequests(userId: Int) = tm.run { it.userRepository.getFollowRequests(userId) }
+
+    fun getProfilePicture(username: String) = cs.userCloudStorageRepository.getProfilePicture(username)
 
     fun addProfilePicture() { }
 
@@ -120,8 +128,6 @@ class UserService(
             deleteToken(email = email)
         }
     }
-
-    fun removeProfilePicture() { }
 
     fun logout(username: String) {
         deleteToken(username = username)
