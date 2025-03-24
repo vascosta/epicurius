@@ -113,7 +113,7 @@ class UserRepositoryTest: RepositoryTest() {
         val newIntolerances = listOf(Intolerance.GLUTEN)
         val newDiet = listOf(Diet.VEGAN)
 
-        updateProfile(
+        val user = updateProfile(
             username, UpdateUserModel(
                 username = newUsername,
                 email = newEmail,
@@ -125,11 +125,7 @@ class UserRepositoryTest: RepositoryTest() {
             )
         )
 
-        // when getting the user by name
-        val user = getUserByName(newUsername)
-
         // then the user profile is updated successfully
-        assertNotNull(user)
         assertEquals(user.username, newUsername)
         assertEquals(user.email, newEmail)
         assertEquals(user.country, newCountry)

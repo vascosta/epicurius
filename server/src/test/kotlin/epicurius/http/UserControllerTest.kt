@@ -1,5 +1,8 @@
 package epicurius.http
 
+import epicurius.domain.Diet
+import epicurius.domain.Intolerance
+import epicurius.http.user.models.output.UpdateUserOutputModel
 import epicurius.http.utils.Uris
 import epicurius.utils.generateEmail
 import epicurius.utils.generateRandomUsername
@@ -272,8 +275,10 @@ class UserControllerTest: HttpTest() {
         val newEmail = generateEmail(newUsername)
         val newCountry = "ES"
         val newPassword = generateSecurePassword()
+        val newIntolerances = listOf(Intolerance.SOY)
+        val newDiets = listOf(Diet.WHOLE30)
 
-        client.patch().uri(api(Uris.User.USER_PROFILE))
+        val user = client.patch().uri(api(Uris.User.USER_PROFILE))
             .header("Authorization", "Bearer $token")
             .bodyValue(
                 mapOf(
@@ -281,20 +286,38 @@ class UserControllerTest: HttpTest() {
                     "email" to newEmail,
                     "country" to newCountry,
                     "password" to newPassword,
-                    "confirmPassword" to newPassword
+                    "confirmPassword" to newPassword,
+                    "privacy" to true,
+                    "intolerances" to newIntolerances,
+                    "diet" to newDiets
                 )
             )
             .exchange()
             .expectStatus().isOk
-            .expectBody<Unit>()
+            .expectBody<UpdateUserOutputModel>()
             .returnResult()
+            .responseBody
 
         // then the user profile is updated successfully
-        val authenticatedUser = getUser(token)
+        assertNotNull(user)
+        assertEquals(newUsername, user.username)
+        assertEquals(newEmail, user.email)
+        assertEquals(newCountry, user.country)
+        assertTrue(user.privacy)
+        assertEquals(newIntolerances, user.intolerances)
+        assertEquals(newDiets, user.diet)
+
+        // when logging out
+        logout(token)
+
+        // when logging in with the new username and password
+        val newToken = login(username = newUsername, password = newPassword)
+        assertNotNull(newToken)
+
+        // then the user is logged in successfully with the new password
+        val authenticatedUser = getUser(newToken)
         assertNotNull(authenticatedUser)
         assertEquals(newUsername, authenticatedUser.user.username)
-        assertEquals(newEmail, authenticatedUser.user.email)
-        assertEquals(newCountry, authenticatedUser.user.country)
         assertTrue(usersDomain.verifyPassword(newPassword, authenticatedUser.user.passwordHash))
     }
 

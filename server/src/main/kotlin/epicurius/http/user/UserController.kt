@@ -10,6 +10,7 @@ import epicurius.http.user.models.input.ResetPasswordInputModel
 import epicurius.http.user.models.input.SignUpInputModel
 import epicurius.http.user.models.input.UpdateUserInputModel
 import epicurius.http.user.models.output.GetFollowersOutputModel
+import epicurius.http.user.models.output.UpdateUserOutputModel
 import epicurius.http.utils.Uris
 import jakarta.servlet.http.HttpServletResponse
 import jakarta.validation.Valid
@@ -96,13 +97,22 @@ class UserController(val userService: UserService) {
         return ResponseEntity.noContent().build<Unit>()
     }
 
-    // falta retornar body
     @PatchMapping(Uris.User.USER_PROFILE)
     fun updateProfile(
         authenticatedUser: AuthenticatedUser,
         @Valid @RequestBody body: UpdateUserInputModel
     ): ResponseEntity<*> {
-        userService.updateProfile(authenticatedUser.userInfo.username, body)
-        return ResponseEntity.ok().build<Unit>()
+        val updatedUser = userService.updateProfile(authenticatedUser.userInfo.username, body)
+        return ResponseEntity.ok().body(
+            UpdateUserOutputModel(
+                updatedUser.username,
+                updatedUser.email,
+                updatedUser.country,
+                updatedUser.privacy,
+                updatedUser.intolerances,
+                updatedUser.diet,
+                updatedUser.profilePictureName
+            )
+        )
     }
 }

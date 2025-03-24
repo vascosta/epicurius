@@ -263,7 +263,7 @@ class UserServiceTest: ServicesTest() {
         val password = generateSecurePassword()
 
         // when creating a user
-        val token = createUser(username, email, country, password, password)
+        createUser(username, email, country, password, password)
 
         // when updating the user profile
         val newUsername = generateRandomUsername()
@@ -274,7 +274,7 @@ class UserServiceTest: ServicesTest() {
         val newIntolerances = listOf(Intolerance.GLUTEN)
         val newDiet = listOf(Diet.VEGAN)
 
-        updateProfile(
+        val user = updateProfile(
             username, UpdateUserInputModel(
                 username = newUsername,
                 email = newEmail,
@@ -287,11 +287,7 @@ class UserServiceTest: ServicesTest() {
             )
         )
 
-        // when getting the user by name
-        val user = getAuthenticatedUser(token)?.userInfo
-
         // then the user profile is updated successfully
-        assertNotNull(user)
         assertEquals(user.username, newUsername)
         assertEquals(user.email, newEmail)
         assertEquals(user.country, newCountry)

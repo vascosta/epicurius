@@ -14,7 +14,7 @@ interface UserPostgresRepository {
 
     fun followUser(userId: Int, userIdToFollow: Int, status: Int)
     fun resetPassword(email: String, passwordHash: String)
-    fun updateProfile(username:String, userUpdate: UpdateUserModel)
+    fun updateProfile(username:String, userUpdate: UpdateUserModel): User
 
     fun checkIfUserIsLoggedIn(username: String? = null, email: String? = null): Boolean
     fun checkIfUserIsAlreadyFollowing(userId: Int, userIdToFollow: Int): Boolean

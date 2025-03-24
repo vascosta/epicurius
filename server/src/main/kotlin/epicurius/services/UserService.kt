@@ -80,7 +80,7 @@ class UserService(
         }
     }
 
-    fun updateProfile(username: String, userUpdate: UpdateUserInputModel) {
+    fun updateProfile(username: String, userUpdate: UpdateUserInputModel): User {
         if (checkIfUserExists(userUpdate.username, userUpdate.email) != null) throw UserAlreadyExists()
 
         if (userUpdate.country != null)
@@ -93,7 +93,7 @@ class UserService(
             checkIfPasswordsMatch(userUpdate.password, userUpdate.confirmPassword)
         }
 
-        tm.run {
+        return tm.run {
             it.userRepository.updateProfile(
                 username,
                 UpdateUserModel(

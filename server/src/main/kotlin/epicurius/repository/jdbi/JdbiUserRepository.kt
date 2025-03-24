@@ -81,8 +81,8 @@ class JdbiUserRepository(private val handle: Handle) : UserPostgresRepository {
             .list()
     }
 
-    override fun updateProfile(username: String, userUpdate: UpdateUserModel) {
-        handle.createUpdate(
+    override fun updateProfile(username: String, userUpdate: UpdateUserModel): User {
+        return handle.createQuery(
             """
                 UPDATE dbo.user
                 SET username = COALESCE(:newUsername, username),
@@ -94,6 +94,7 @@ class JdbiUserRepository(private val handle: Handle) : UserPostgresRepository {
                     diet = COALESCE(:diet, diet),
                     profile_picture_name = COALESCE(:profile_picture_name, profile_picture_name)
                 WHERE username = :username
+                RETURNING *
             """
         )
             .bind("newUsername", userUpdate.username)
@@ -105,7 +106,8 @@ class JdbiUserRepository(private val handle: Handle) : UserPostgresRepository {
             .bind("diet", userUpdate.diet?.toTypedArray())
             .bind("profile_picture_name", userUpdate.profilePictureName)
             .bind("username", username)
-            .execute()
+            .mapTo<User>()
+            .first()
     }
 
     override fun resetPassword(email: String, passwordHash: String) {
