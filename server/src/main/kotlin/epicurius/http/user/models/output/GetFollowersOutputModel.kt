@@ -1,9 +1,9 @@
 package epicurius.http.user.models.output
 
-import epicurius.domain.user.SocialUser
+import epicurius.domain.user.FollowUser
 
 data class GetFollowersOutputModel(
-    val followers: List<SocialUser>
+    val followers: List<FollowUser>
 )
 
 typealias GetFollowingOutputModel = GetFollowersOutputModel

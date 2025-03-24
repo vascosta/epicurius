@@ -12,6 +12,7 @@ import epicurius.domain.exceptions.PasswordsDoNotMatch
 import epicurius.domain.exceptions.UserAlreadyExists
 import epicurius.domain.exceptions.UserAlreadyLoggedIn
 import epicurius.domain.exceptions.UserNotFound
+import epicurius.domain.user.FollowUser
 import epicurius.domain.user.User
 import epicurius.domain.user.UserProfile
 import epicurius.http.user.models.input.UpdateUserInputModel
@@ -56,18 +57,27 @@ class UserService(
     fun getUserProfile(username: String): UserProfile {
         val user = checkIfUserExists(username = username) ?: throw UserNotFound(username)
         return if (user.profilePictureName == null) {
-            UserProfile(user.username, user.country, user.privacy, user.profilePictureName)
+            UserProfile(user.username, user.country, user.privacy, null)
         } else {
             val userProfilePicture = getProfilePicture(username)
             UserProfile(user.username, user.country, user.privacy, userProfilePicture)
         }
     }
 
-    fun getFollowers(userId: Int) = tm.run { it.userRepository.getFollowers(userId) }
-    fun getFollowing(userId: Int) = tm.run { it.userRepository.getFollowing(userId) }
-    fun getFollowRequests(userId: Int) = tm.run { it.userRepository.getFollowRequests(userId) }
+    fun getFollowers(userId: Int) =
+        tm.run { it.userRepository.getFollowers(userId).map { user -> FollowUser(user.username, getProfilePicture(user.username)) } }
+    fun getFollowing(userId: Int) =
+        tm.run { it.userRepository.getFollowing(userId).map { user -> FollowUser(user.username, getProfilePicture(user.username)) } }
+    fun getFollowRequests(userId: Int) =
+        tm.run {
+            it.userRepository.getFollowRequests(userId)
+                .map { user -> FollowUser(user.username, getProfilePicture(user.profilePictureName)) }
+        }
 
-    fun getProfilePicture(username: String) = cs.userCloudStorageRepository.getProfilePicture(username)
+    fun getProfilePicture(profilePictureName: String?): ByteArray? {
+        if (profilePictureName == null) return null
+        return cs.userCloudStorageRepository.getProfilePicture(profilePictureName)
+    }
 
     fun addProfilePicture() { }
 
@@ -88,7 +98,7 @@ class UserService(
         }
     }
 
-    fun updateProfile(username: String, userUpdate: UpdateUserInputModel): User {
+    fun updateUser(username: String, userUpdate: UpdateUserInputModel): User {
         if (checkIfUserExists(userUpdate.username, userUpdate.email) != null) throw UserAlreadyExists()
 
         if (userUpdate.country != null)
@@ -102,7 +112,7 @@ class UserService(
         }
 
         return tm.run {
-            it.userRepository.updateProfile(
+            it.userRepository.updateUser(
                 username,
                 UpdateUserModel(
                     userUpdate.username,

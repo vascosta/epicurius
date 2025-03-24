@@ -84,7 +84,7 @@ class JdbiUserRepository(private val handle: Handle) : UserPostgresRepository {
             .list()
     }
 
-    override fun updateProfile(username: String, userUpdate: UpdateUserModel): User {
+    override fun updateUser(username: String, userUpdate: UpdateUserModel): User {
         return handle.createQuery(
             """
                 UPDATE dbo.user

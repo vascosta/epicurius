@@ -37,7 +37,7 @@ class UserController(val userService: UserService) {
         @PathVariable username: String? = null
     ): ResponseEntity<*> {
         return if (username == null) {
-            val userProfilePicture = userService.getProfilePicture(authenticatedUser.userInfo.username)
+            val userProfilePicture = userService.getProfilePicture(authenticatedUser.userInfo.profilePictureName)
             val userProfile = UserProfile(
                 authenticatedUser.userInfo.username,
                 authenticatedUser.userInfo.country,
@@ -123,12 +123,12 @@ class UserController(val userService: UserService) {
         return ResponseEntity.noContent().build<Unit>()
     }
 
-    @PatchMapping(Uris.User.USER_PROFILE)
-    fun updateProfile(
+    @PatchMapping(Uris.User.USER)
+    fun updateUser(
         authenticatedUser: AuthenticatedUser,
         @Valid @RequestBody body: UpdateUserInputModel
     ): ResponseEntity<*> {
-        val updatedUser = userService.updateProfile(authenticatedUser.userInfo.username, body)
+        val updatedUser = userService.updateUser(authenticatedUser.userInfo.username, body)
         return ResponseEntity.ok().body(
             UpdateUserOutputModel(
                 updatedUser.username,

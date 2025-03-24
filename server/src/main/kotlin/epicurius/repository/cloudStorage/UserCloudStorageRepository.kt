@@ -7,8 +7,8 @@ import com.google.cloud.storage.Storage
 import epicurius.repository.UserCloudStorageRepository
 
 class UserCloudStorageRepository(private val cloudStorage: Storage): UserCloudStorageRepository {
-    override fun getProfilePicture(username: String): ByteArray {
-        val blob = cloudStorage.get(USERS_PROFILE_PICTURES_BUCKET, username)
+    override fun getProfilePicture(profilePictureName: String): ByteArray {
+        val blob = cloudStorage.get(USERS_PROFILE_PICTURES_BUCKET, profilePictureName)
         return blob.getContent()
     }
 

@@ -1,6 +1,5 @@
 import epicurius.domain.user.SocialUser
 import epicurius.domain.user.User
-import epicurius.domain.user.UserProfile
 import epicurius.services.models.UpdateUserModel
 
 interface UserPostgresRepository {
@@ -14,7 +13,7 @@ interface UserPostgresRepository {
 
     fun followUser(userId: Int, userIdToFollow: Int, status: Int)
     fun resetPassword(email: String, passwordHash: String)
-    fun updateProfile(username:String, userUpdate: UpdateUserModel): User
+    fun updateUser(username:String, userUpdate: UpdateUserModel): User
 
     fun checkIfUserIsLoggedIn(username: String? = null, email: String? = null): Boolean
     fun checkIfUserIsAlreadyFollowing(userId: Int, userIdToFollow: Int): Boolean
