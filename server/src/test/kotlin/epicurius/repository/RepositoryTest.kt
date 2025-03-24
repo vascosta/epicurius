@@ -37,9 +37,9 @@ open class RepositoryTest: EpicuriusTest() {
         fun resetPassword(email: String, passwordHash: String) =
             tm.run { it.userRepository.resetPassword(email, passwordHash) }
 
-        fun updateProfile(username: String, userUpdate: UpdateUserModel) =
+        fun updateUser(username: String, userUpdate: UpdateUserModel) =
             tm.run {
-                it.userRepository.updateProfile(
+                it.userRepository.updateUser(
                     username,
                     UpdateUserModel(
                         userUpdate.username,

@@ -82,7 +82,7 @@ class UserControllerTest: HttpTest() {
                 )
             )
             .exchange()
-            .expectStatus().isBadRequest
+            .expectStatus().isBadRequest // then the user is not created
 
         // when trying to create a user with the same email
         client.post().uri(api(Uris.User.SIGNUP))
@@ -96,7 +96,7 @@ class UserControllerTest: HttpTest() {
                 )
             )
             .exchange()
-            .expectStatus().isBadRequest
+            .expectStatus().isBadRequest // then the user is not created
 
         // when trying to create a user with the same username and email
         client.post().uri(api(Uris.User.SIGNUP))
@@ -110,7 +110,7 @@ class UserControllerTest: HttpTest() {
                 )
             )
             .exchange()
-            .expectStatus().isBadRequest
+            .expectStatus().isBadRequest // then the user is not created
     }
 
     @Test
@@ -133,7 +133,7 @@ class UserControllerTest: HttpTest() {
                 )
             )
             .exchange()
-            .expectStatus().isBadRequest
+            .expectStatus().isBadRequest // then the user is not created
     }
 
     @Test
@@ -156,7 +156,7 @@ class UserControllerTest: HttpTest() {
                 )
             )
             .exchange()
-            .expectStatus().isBadRequest
+            .expectStatus().isBadRequest // then the user is not created
     }
 
     @Test
@@ -257,11 +257,11 @@ class UserControllerTest: HttpTest() {
                 )
             )
             .exchange()
-            .expectStatus().isBadRequest
+            .expectStatus().isBadRequest // then the password is not reset
     }
 
     @Test
-    fun `Update user profile successfully`() {
+    fun `Update user successfully`() {
         // given information for a new user
         val username = generateRandomUsername()
         val email = generateEmail(username)
@@ -270,7 +270,7 @@ class UserControllerTest: HttpTest() {
         val token = createUser(username, email, country, password)
         assertNotNull(token)
 
-        // when updating the user profile
+        // when updating the user
         val newUsername = generateRandomUsername()
         val newEmail = generateEmail(newUsername)
         val newCountry = "ES"
@@ -278,7 +278,7 @@ class UserControllerTest: HttpTest() {
         val newIntolerances = listOf(Intolerance.SOY)
         val newDiets = listOf(Diet.WHOLE30)
 
-        val user = client.patch().uri(api(Uris.User.USER_PROFILE))
+        val user = client.patch().uri(api(Uris.User.USER))
             .header("Authorization", "Bearer $token")
             .bodyValue(
                 mapOf(
@@ -298,7 +298,7 @@ class UserControllerTest: HttpTest() {
             .returnResult()
             .responseBody
 
-        // then the user profile is updated successfully
+        // then the user is updated successfully
         assertNotNull(user)
         assertEquals(newUsername, user.username)
         assertEquals(newEmail, user.email)
@@ -322,7 +322,7 @@ class UserControllerTest: HttpTest() {
     }
 
     @Test
-    fun `Try to update user profile with existing username or email and fail`() {
+    fun `Try to update user with existing username or email and fail`() {
         // given information for a new user
         val username = generateRandomUsername()
         val email = generateEmail(username)
@@ -334,8 +334,8 @@ class UserControllerTest: HttpTest() {
         // given information for an existing user
         val existingUser = publicTestUser
 
-        // when trying to update the user profile with an existing username
-        client.patch().uri(api(Uris.User.USER_PROFILE))
+        // when trying to update the user with an existing username
+        client.patch().uri(api(Uris.User.USER))
             .header("Authorization", "Bearer $token")
             .bodyValue(
                 mapOf(
@@ -343,10 +343,10 @@ class UserControllerTest: HttpTest() {
                 )
             )
             .exchange()
-            .expectStatus().isBadRequest
+            .expectStatus().isBadRequest // then the user is not updated
 
-        // when trying to update the user profile with an existing email
-        client.patch().uri(api(Uris.User.USER_PROFILE))
+        // when trying to update the user with an existing email
+        client.patch().uri(api(Uris.User.USER))
             .header("Authorization", "Bearer $token")
             .bodyValue(
                 mapOf(
@@ -354,10 +354,10 @@ class UserControllerTest: HttpTest() {
                 )
             )
             .exchange()
-            .expectStatus().isBadRequest
+            .expectStatus().isBadRequest // then the user is not updated
 
-        // when trying to update the user profile with an existing username and email
-        client.patch().uri(api(Uris.User.USER_PROFILE))
+        // when trying to update the user with an existing username and email
+        client.patch().uri(api(Uris.User.USER))
             .header("Authorization", "Bearer $token")
             .bodyValue(
                 mapOf(
@@ -366,11 +366,11 @@ class UserControllerTest: HttpTest() {
                 )
             )
             .exchange()
-            .expectStatus().isBadRequest
+            .expectStatus().isBadRequest // then the user is not updated
     }
 
     @Test
-    fun `Try to update user profile with invalid country and fail`() {
+    fun `Try to update user with invalid country and fail`() {
         // given information for a new user
         val username = generateRandomUsername()
         val email = generateEmail(username)
@@ -379,8 +379,8 @@ class UserControllerTest: HttpTest() {
         val token = createUser(username, email, country, password)
         assertNotNull(token)
 
-        // when updating the user profile with an invalid country
-        client.patch().uri(api(Uris.User.USER_PROFILE))
+        // when updating the user with an invalid country
+        client.patch().uri(api(Uris.User.USER))
             .header("Authorization", "Bearer $token")
             .bodyValue(
                 mapOf(
@@ -388,11 +388,11 @@ class UserControllerTest: HttpTest() {
                 )
             )
             .exchange()
-            .expectStatus().isBadRequest
+            .expectStatus().isBadRequest // then the user is not updated
     }
 
     @Test
-    fun `Try to update user profile with different passwords and fail`() {
+    fun `Try to update user with different passwords and fail`() {
         // given information for a new user
         val username = generateRandomUsername()
         val email = generateEmail(username)
@@ -401,8 +401,8 @@ class UserControllerTest: HttpTest() {
         val token = createUser(username, email, country, password)
         assertNotNull(token)
 
-        // when updating the user profile with different passwords
-        client.patch().uri(api(Uris.User.USER_PROFILE))
+        // when updating the user with different passwords
+        client.patch().uri(api(Uris.User.USER))
             .header("Authorization", "Bearer $token")
             .bodyValue(
                 mapOf(
@@ -411,6 +411,6 @@ class UserControllerTest: HttpTest() {
                 )
             )
             .exchange()
-            .expectStatus().isBadRequest
+            .expectStatus().isBadRequest // then the user is not updated
     }
 }

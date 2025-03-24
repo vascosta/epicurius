@@ -255,7 +255,7 @@ class UserServiceTest: ServicesTest() {
     }
 
     @Test
-    fun `update user profile successfully`() {
+    fun `update user successfully`() {
         // given user required information
         val username = generateRandomUsername()
         val email = generateEmail(username)
@@ -265,7 +265,7 @@ class UserServiceTest: ServicesTest() {
         // when creating a user
         createUser(username, email, country, password, password)
 
-        // when updating the user profile
+        // when updating the user
         val newUsername = generateRandomUsername()
         val newEmail = generateEmail(newUsername)
         val newCountry = "ES"
@@ -274,7 +274,7 @@ class UserServiceTest: ServicesTest() {
         val newIntolerances = listOf(Intolerance.GLUTEN)
         val newDiet = listOf(Diet.VEGAN)
 
-        val user = updateProfile(
+        val user = updateUser(
             username, UpdateUserInputModel(
                 username = newUsername,
                 email = newEmail,
@@ -287,7 +287,7 @@ class UserServiceTest: ServicesTest() {
             )
         )
 
-        // then the user profile is updated successfully
+        // then the user is updated successfully
         assertEquals(user.username, newUsername)
         assertEquals(user.email, newEmail)
         assertEquals(user.country, newCountry)
@@ -298,35 +298,35 @@ class UserServiceTest: ServicesTest() {
     }
 
     @Test
-    fun `try to update user profile with existing username or email and throws UserAlreadyExists Exception`() {
+    fun `try to update user with existing username or email and throws UserAlreadyExists Exception`() {
         // given two existing users
         val user1 = publicTestUser
         val user2 = privateTestUser
 
-        // when updating the user profile with an existing username
-        // then the user profile cannot be updated and throws UserAlreadyExists Exception
+        // when updating the user with an existing username
+        // then the user cannot be updated and throws UserAlreadyExists Exception
         assertFailsWith<UserAlreadyExists> {
-            updateProfile(
+            updateUser(
                 user1.username, UpdateUserInputModel(
                     username = user2.username
                 )
             )
         }
 
-        // when updating the user profile with an existing email
-        // then the user profile cannot be updated and throws UserAlreadyExists Exception
+        // when updating the user with an existing email
+        // then the user cannot be updated and throws UserAlreadyExists Exception
         assertFailsWith<UserAlreadyExists> {
-            updateProfile(
+            updateUser(
                 user1.username, UpdateUserInputModel(
                     email = user2.email
                 )
             )
         }
 
-        // when updating the user profile with an existing username and email
-        // then the user profile cannot be updated and throws UserAlreadyExists Exception
+        // when updating the user with an existing username and email
+        // then the user cannot be updated and throws UserAlreadyExists Exception
         assertFailsWith<UserAlreadyExists> {
-            updateProfile(
+            updateUser(
                 user1.username, UpdateUserInputModel(
                     username = user2.username,
                     email = user2.email
@@ -336,14 +336,14 @@ class UserServiceTest: ServicesTest() {
     }
 
     @Test
-    fun `try to update user profile with an invalid country and throws InvalidCountry Exception`() {
+    fun `try to update user with an invalid country and throws InvalidCountry Exception`() {
         // given an existing user
         val user = publicTestUser
 
-        // when updating the user profile with an invalid country
-        // then the user profile cannot be updated and throws InvalidCountry Exception
+        // when updating the user with an invalid country
+        // then the user cannot be updated and throws InvalidCountry Exception
         assertFailsWith<InvalidCountry> {
-            updateProfile(
+            updateUser(
                 user.username, UpdateUserInputModel(
                     country = "XX"
                 )
@@ -352,14 +352,14 @@ class UserServiceTest: ServicesTest() {
     }
 
     @Test
-    fun `try to update user profile with different passwords and throws PasswordsDoNotMatch Exception`() {
+    fun `try to update user with different passwords and throws PasswordsDoNotMatch Exception`() {
         // given an existing user
         val user = publicTestUser
 
-        // when updating the user profile with different passwords
-        // then the user profile cannot be updated and throws PasswordsDoNotMatch Exception
+        // when updating the user with different passwords
+        // then the user cannot be updated and throws PasswordsDoNotMatch Exception
         assertFailsWith<PasswordsDoNotMatch> {
-            updateProfile(
+            updateUser(
                 user.username, UpdateUserInputModel(
                     password = UUID.randomUUID().toString(),
                     confirmPassword = UUID.randomUUID().toString()

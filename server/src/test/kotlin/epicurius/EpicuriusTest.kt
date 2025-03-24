@@ -3,10 +3,13 @@ package epicurius
 import com.google.auth.oauth2.GoogleCredentials
 import com.google.cloud.firestore.Firestore
 import com.google.cloud.firestore.FirestoreOptions
+import com.google.cloud.storage.Storage
+import com.google.cloud.storage.StorageOptions
 import epicurius.domain.CountriesDomain
 import epicurius.domain.token.Sha256TokenEncoder
 import epicurius.domain.user.UserDomain
 import epicurius.repository.jdbi.utils.configureWithAppRequirements
+import epicurius.repository.transaction.cloudStorage.CloudStorageManager
 import epicurius.repository.transaction.firestore.FirestoreManager
 import epicurius.repository.transaction.jdbi.JdbiTransactionManager
 import org.jdbi.v3.core.Jdbi
@@ -24,8 +27,11 @@ open class EpicuriusTest {
 
         private val firestore = getFirestoreService()
 
+        private val cloudStorage = getCloudStorageService()
+
         val tm = JdbiTransactionManager(jdbi)
         val fs = FirestoreManager(firestore)
+        val cs = CloudStorageManager(cloudStorage)
 
         private val tokenEncoder = Sha256TokenEncoder()
         private val passwordEncoder = BCryptPasswordEncoder()
@@ -38,6 +44,16 @@ open class EpicuriusTest {
             val options = FirestoreOptions.newBuilder()
                 .setCredentials(GoogleCredentials.fromStream(serviceAccount))
                 .setDatabaseId(Environment.getFirestoreDatabaseTestId())
+                .build()
+
+            return options.service
+        }
+
+        private fun getCloudStorageService(): Storage {
+            val serviceAccount = Environment.getGoogleServiceAccount()
+
+            val options = StorageOptions.newBuilder()
+                .setCredentials(GoogleCredentials.fromStream(serviceAccount))
                 .build()
 
             return options.service

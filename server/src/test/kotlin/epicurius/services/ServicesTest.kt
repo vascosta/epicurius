@@ -9,7 +9,7 @@ import org.junit.jupiter.api.BeforeAll
 open class ServicesTest: EpicuriusTest() {
 
     companion object {
-        private val userService = UserService(tm, fs, usersDomain, countriesDomain)
+        private val userService = UserService(tm, fs, cs, usersDomain, countriesDomain)
 
         lateinit var publicTestUser: User
         lateinit var privateTestUser: User
@@ -33,8 +33,8 @@ open class ServicesTest: EpicuriusTest() {
         fun resetPassword(email: String, newPassword: String, confirmPassword: String) =
             userService.resetPassword(email, newPassword, confirmPassword)
 
-        fun updateProfile(username: String, userUpdate: UpdateUserInputModel) =
-            userService.updateProfile(username, userUpdate)
+        fun updateUser(username: String, userUpdate: UpdateUserInputModel) =
+            userService.updateUser(username, userUpdate)
 
         fun logout(username: String) = userService.logout(username)
     }

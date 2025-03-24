@@ -19,10 +19,6 @@ import kotlin.test.assertTrue
 
 class UserRepositoryTest: RepositoryTest() {
 
-    /*
-    ** Postgres Tests
-    */
-
     @Test
     fun `Create new user and retrieve it successfully`() {
         // given user required information
@@ -92,7 +88,7 @@ class UserRepositoryTest: RepositoryTest() {
     }
 
     @Test
-    fun `Update user profile successfully`() {
+    fun `Update user successfully`() {
         // given user required information
         val username = generateRandomUsername()
         val email = generateEmail(username)
@@ -103,7 +99,7 @@ class UserRepositoryTest: RepositoryTest() {
         // when creating a user
         createUser(username, email, country, passwordHash)
 
-        // when updating the user profile
+        // when updating the user
         val newUsername = generateRandomUsername()
         val newEmail = generateEmail(newUsername)
         val newCountry = "ES"
@@ -113,7 +109,7 @@ class UserRepositoryTest: RepositoryTest() {
         val newIntolerances = listOf(Intolerance.GLUTEN)
         val newDiet = listOf(Diet.VEGAN)
 
-        val user = updateProfile(
+        val user = updateUser(
             username, UpdateUserModel(
                 username = newUsername,
                 email = newEmail,
@@ -125,7 +121,7 @@ class UserRepositoryTest: RepositoryTest() {
             )
         )
 
-        // then the user profile is updated successfully
+        // then the user is updated successfully
         assertEquals(user.username, newUsername)
         assertEquals(user.email, newEmail)
         assertEquals(user.country, newCountry)
