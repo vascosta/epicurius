@@ -1,3 +1,3 @@
-interface UserFirestoreRepository {
+interface RecipeFirestoreRepository {
     //fun addRecipeInstructions(user: SocialUser, usernameToFollow: SocialUser)
 }

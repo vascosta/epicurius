@@ -1,9 +1,9 @@
 package epicurius.repository.firestore
 
-import UserFirestoreRepository
+import RecipeFirestoreRepository
 import com.google.cloud.firestore.Firestore
 
-class FirestoreUserRepository(private val firestore: Firestore):UserFirestoreRepository {
+class FirestoreRecipeRepository(private val firestore: Firestore): RecipeFirestoreRepository {
 
 /*    override fun addRecipeInstructions(user: Strin, usernameToFollow: SocialUser) {
         val future: ApiFuture<Unit> = firestore.runTransaction { transaction ->

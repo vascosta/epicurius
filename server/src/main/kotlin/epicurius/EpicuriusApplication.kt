@@ -3,6 +3,8 @@ package epicurius
 import com.google.auth.oauth2.GoogleCredentials
 import com.google.cloud.firestore.Firestore
 import com.google.cloud.firestore.FirestoreOptions
+import com.google.cloud.storage.Storage
+import com.google.cloud.storage.StorageOptions
 import epicurius.domain.token.Sha256TokenEncoder
 import epicurius.http.pipeline.authentication.AuthenticatedUserArgumentResolver
 import epicurius.http.pipeline.authentication.AuthenticationInterceptor
@@ -31,11 +33,22 @@ class EpicuriusApplication {
 
     @Bean
     fun firestore(): Firestore {
-        val serviceAccount = Environment.getFirestoreServiceAccount()
+        val serviceAccount = Environment.getGoogleServiceAccount()
 
         val options = FirestoreOptions.newBuilder()
             .setCredentials(GoogleCredentials.fromStream(serviceAccount))
             .setDatabaseId(Environment.getFirestoreDatabaseId())
+            .build()
+
+        return options.service
+    }
+
+    @Bean
+    fun googleStorage(): Storage {
+        val serviceAccount = Environment.getGoogleServiceAccount()
+
+        val options = StorageOptions.newBuilder()
+            .setCredentials(GoogleCredentials.fromStream(serviceAccount))
             .build()
 
         return options.service
