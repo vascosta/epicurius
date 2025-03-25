@@ -1,37 +1,35 @@
 package epicurius.services
 
-import epicurius.domain.user.AuthenticatedUser
 import epicurius.domain.CountriesDomain
 import epicurius.domain.Diet
 import epicurius.domain.FollowingStatus
 import epicurius.domain.Intolerance
 import epicurius.domain.PagingParams
-import epicurius.domain.user.UserDomain
-import epicurius.domain.exceptions.InvalidCountry
 import epicurius.domain.exceptions.IncorrectPassword
+import epicurius.domain.exceptions.InvalidCountry
 import epicurius.domain.exceptions.PasswordsDoNotMatch
 import epicurius.domain.exceptions.UserAlreadyBeingFollowed
 import epicurius.domain.exceptions.UserAlreadyExists
 import epicurius.domain.exceptions.UserAlreadyLoggedIn
 import epicurius.domain.exceptions.UserNotFollowed
 import epicurius.domain.exceptions.UserNotFound
+import epicurius.domain.user.AuthenticatedUser
 import epicurius.domain.user.FollowUser
-import epicurius.domain.user.SearchUser
 import epicurius.domain.user.FollowingUser
+import epicurius.domain.user.SearchUser
+import epicurius.domain.user.UpdateUserInfo
 import epicurius.domain.user.User
+import epicurius.domain.user.UserDomain
 import epicurius.domain.user.UserProfile
 import epicurius.http.user.models.input.UpdateUserInputModel
-import epicurius.repository.transaction.TransactionManager
 import epicurius.repository.cloudStorage.CloudStorageManager
-import epicurius.repository.firestore.FirestoreManager
-import epicurius.domain.user.UpdateUserInfo
+import epicurius.repository.transaction.TransactionManager
 import org.springframework.stereotype.Component
-import java.lang.IllegalArgumentException
 
 @Component
 class UserService(
     private val tm: TransactionManager,
-    private val fs: FirestoreManager,
+    //private val fs: FirestoreManager,
     private val cs: CloudStorageManager,
     private val userDomain: UserDomain,
     private val countriesDomain: CountriesDomain

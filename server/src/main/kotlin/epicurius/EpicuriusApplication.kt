@@ -31,7 +31,7 @@ class EpicuriusApplication {
         ).configureWithAppRequirements()
     }
 
-    @Bean
+/*    @Bean
     fun firestore(): Firestore {
         val serviceAccount = Environment.getGoogleServiceAccount()
 
@@ -41,7 +41,7 @@ class EpicuriusApplication {
             .build()
 
         return options.service
-    }
+    }*/
 
     @Bean
     fun googleStorage(): Storage {
