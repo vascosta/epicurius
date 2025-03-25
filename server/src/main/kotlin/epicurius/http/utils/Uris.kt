@@ -10,6 +10,7 @@ object Uris {
         const val LOGOUT = "/logout"
         const val USER = "/user"
         const val USER_PROFILE = "/user/profile/{username}"
+        const val USERS = "/users"
         const val FOLLOW = "/user/follow/{usernameToFollow}"
         const val FOLLOWERS = "/user/followers"
         const val FOLLOWING = "/user/following"

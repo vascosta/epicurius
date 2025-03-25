@@ -2,10 +2,10 @@ package epicurius.repository.jdbi
 
 import UserPostgresRepository
 import epicurius.domain.FollowingStatus
+import epicurius.domain.PagingParams
 import epicurius.domain.user.SocialUser
 import epicurius.domain.user.User
-import epicurius.domain.user.UserProfile
-import epicurius.services.models.UpdateUserModel
+import epicurius.domain.user.UpdateUserInfo
 import org.jdbi.v3.core.Handle
 import org.jdbi.v3.core.kotlin.mapTo
 
@@ -39,6 +39,22 @@ class JdbiUserRepository(private val handle: Handle) : UserPostgresRepository {
             .bind("token_hash", tokenHash)
             .mapTo<User>()
             .firstOrNull()
+    }
+
+    override fun getUsers(username: String, pagingParams: PagingParams): List<SocialUser> {
+        return handle.createQuery(
+            """
+                SELECT username, profile_picture_name
+                FROM dbo.user
+                WHERE LOWER(username) LIKE LOWER(:username)
+                LIMIT :limit OFFSET :skip
+            """
+        )
+            .bind("username", "%${username.lowercase()}%")
+            .bind("limit", pagingParams.limit)
+            .bind("skip", pagingParams.skip)
+            .mapTo<SocialUser>()
+            .list()
     }
 
     override fun getFollowers(userId: Int): List<SocialUser> {
@@ -84,7 +100,7 @@ class JdbiUserRepository(private val handle: Handle) : UserPostgresRepository {
             .list()
     }
 
-    override fun updateUser(username: String, userUpdate: UpdateUserModel): User {
+    override fun updateUser(username: String, userUpdate: UpdateUserInfo): User {
         return handle.createQuery(
             """
                 UPDATE dbo.user
@@ -139,6 +155,18 @@ class JdbiUserRepository(private val handle: Handle) : UserPostgresRepository {
             .execute()
     }
 
+    override fun unfollowUser(userId: Int, userIdToUnfollow: Int) {
+        handle.createUpdate(
+            """
+                DELETE FROM dbo.followers
+                WHERE user_id = :user_id AND follower_id = :follower_id
+            """
+        )
+            .bind("user_id", userIdToUnfollow)
+            .bind("follower_id", userId)
+            .execute()
+    }
+
     override fun checkIfUserIsLoggedIn(username: String?, email: String?): Boolean =
         handle.createQuery(
             """
@@ -151,7 +179,7 @@ class JdbiUserRepository(private val handle: Handle) : UserPostgresRepository {
             .mapTo<Int>()
             .one() == 1
 
-    override fun checkIfUserIsAlreadyFollowing(userId: Int, userIdToFollow: Int): Boolean =
+    override fun checkIfUserIsBeingFollowedBy(userId: Int, userIdToFollow: Int): Boolean =
         handle.createQuery(
             """
                 SELECT COUNT (*) FROM dbo.followers

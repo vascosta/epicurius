@@ -1,5 +1,6 @@
 package epicurius.http.user
 
+import epicurius.domain.PagingParams
 import epicurius.services.UserService
 import epicurius.domain.user.AuthenticatedUser
 import epicurius.domain.user.UserProfile
@@ -12,6 +13,7 @@ import epicurius.http.user.models.input.SignUpInputModel
 import epicurius.http.user.models.input.UpdateUserInputModel
 import epicurius.http.user.models.output.GetFollowRequestsOutputModel
 import epicurius.http.user.models.output.GetFollowersOutputModel
+import epicurius.http.user.models.output.GetUsersOutputModel
 import epicurius.http.user.models.output.GetFollowingOutputModel
 import epicurius.http.user.models.output.GetUserProfileOutputModel
 import epicurius.http.user.models.output.UpdateUserOutputModel
@@ -49,6 +51,18 @@ class UserController(val userService: UserService) {
             val userProfile = userService.getUserProfile(username)
             ResponseEntity.ok().body(GetUserProfileOutputModel(userProfile))
         }
+    }
+
+    @GetMapping(Uris.User.USERS)
+    fun getUsers(
+        authenticatedUser: AuthenticatedUser,
+        @RequestParam username: String,
+        @RequestParam skip: Int,
+        @RequestParam limit: Int
+    ): ResponseEntity<*> {
+        val pagingParams = PagingParams(skip, limit)
+        val users = userService.getUsers(username, pagingParams)
+        return ResponseEntity.ok().body(GetUsersOutputModel(users))
     }
 
     @GetMapping(Uris.User.INTOLERANCES)
@@ -108,10 +122,9 @@ class UserController(val userService: UserService) {
         return ResponseEntity.noContent().build<Unit>()
     }
 
-    // TODO
     @PatchMapping(Uris.User.UNFOLLOW)
     fun unfollow(authenticatedUser: AuthenticatedUser, @PathVariable usernameToUnfollow: String): ResponseEntity<*> {
-        userService.unfollow(authenticatedUser.userInfo.username, usernameToUnfollow)
+        userService.unfollow(authenticatedUser.userInfo.id, usernameToUnfollow)
         return ResponseEntity.ok().build<Unit>()
     }
 

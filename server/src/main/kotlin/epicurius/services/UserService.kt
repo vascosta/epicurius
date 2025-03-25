@@ -5,21 +5,26 @@ import epicurius.domain.CountriesDomain
 import epicurius.domain.Diet
 import epicurius.domain.FollowingStatus
 import epicurius.domain.Intolerance
+import epicurius.domain.PagingParams
 import epicurius.domain.user.UserDomain
 import epicurius.domain.exceptions.InvalidCountry
 import epicurius.domain.exceptions.IncorrectPassword
 import epicurius.domain.exceptions.PasswordsDoNotMatch
+import epicurius.domain.exceptions.UserAlreadyBeingFollowed
 import epicurius.domain.exceptions.UserAlreadyExists
 import epicurius.domain.exceptions.UserAlreadyLoggedIn
+import epicurius.domain.exceptions.UserNotFollowed
 import epicurius.domain.exceptions.UserNotFound
 import epicurius.domain.user.FollowUser
+import epicurius.domain.user.SearchUser
+import epicurius.domain.user.FollowingUser
 import epicurius.domain.user.User
 import epicurius.domain.user.UserProfile
 import epicurius.http.user.models.input.UpdateUserInputModel
 import epicurius.repository.transaction.TransactionManager
-import epicurius.repository.transaction.cloudStorage.CloudStorageManager
-import epicurius.repository.transaction.firestore.FirestoreManager
-import epicurius.services.models.UpdateUserModel
+import epicurius.repository.cloudStorage.CloudStorageManager
+import epicurius.repository.firestore.FirestoreManager
+import epicurius.domain.user.UpdateUserInfo
 import org.springframework.stereotype.Component
 import java.lang.IllegalArgumentException
 
@@ -64,15 +69,22 @@ class UserService(
         }
     }
 
+    fun getUsers(username: String, pagingParams: PagingParams): List<SearchUser> {
+        return tm.run { it.userRepository.getUsers(username, pagingParams) }
+            .map {  user -> SearchUser(user.username, getProfilePicture(user.profilePictureName)) }
+    }
+
     fun getFollowers(userId: Int) =
-        tm.run { it.userRepository.getFollowers(userId).map { user -> FollowUser(user.username, getProfilePicture(user.username)) } }
+        tm.run { it.userRepository.getFollowers(userId) }
+            .map { user -> FollowUser(user.username, getProfilePicture(user.username)) }
+
     fun getFollowing(userId: Int) =
-        tm.run { it.userRepository.getFollowing(userId).map { user -> FollowUser(user.username, getProfilePicture(user.username)) } }
+        tm.run { it.userRepository.getFollowing(userId) }
+            .map { user -> FollowingUser(user.username, getProfilePicture(user.username)) }
+
     fun getFollowRequests(userId: Int) =
-        tm.run {
-            it.userRepository.getFollowRequests(userId)
-                .map { user -> FollowUser(user.username, getProfilePicture(user.profilePictureName)) }
-        }
+        tm.run { it.userRepository.getFollowRequests(userId) }
+            .map { user -> FollowUser(user.username, getProfilePicture(user.profilePictureName)) }
 
     fun getProfilePicture(profilePictureName: String?): ByteArray? {
         if (profilePictureName == null) return null
@@ -89,13 +101,8 @@ class UserService(
         return createToken(username, email)
     }
 
-    fun follow(userId: Int, usernameToFollow: String) {
-        val userToFollow = checkIfUserExists(username = usernameToFollow) ?: throw UserNotFound(usernameToFollow)
-        checkIfUserIsAlreadyFollowing(userId, userToFollow.id)
-        val followingStatus = if (userToFollow.privacy) FollowingStatus.PENDING else FollowingStatus.ACCEPTED
-        tm.run {
-            it.userRepository.followUser(userId, userToFollow.id, followingStatus.ordinal)
-        }
+    fun logout(username: String) {
+        deleteToken(username = username)
     }
 
     fun updateUser(username: String, userUpdate: UpdateUserInputModel): User {
@@ -114,7 +121,7 @@ class UserService(
         return tm.run {
             it.userRepository.updateUser(
                 username,
-                UpdateUserModel(
+                UpdateUserInfo(
                     userUpdate.username,
                     userUpdate.email,
                     userUpdate.country,
@@ -139,12 +146,21 @@ class UserService(
         }
     }
 
-    fun logout(username: String) {
-        deleteToken(username = username)
+    fun follow(userId: Int, usernameToFollow: String) {
+        val userToFollow = checkIfUserExists(username = usernameToFollow) ?: throw UserNotFound(usernameToFollow)
+        if (checkIfUserIsBeingFollowedBy(userId, userToFollow.id)) throw UserAlreadyBeingFollowed(usernameToFollow)
+        val followingStatus = if (userToFollow.privacy) FollowingStatus.PENDING else FollowingStatus.ACCEPTED
+        tm.run {
+            it.userRepository.followUser(userId, userToFollow.id, followingStatus.ordinal)
+        }
     }
 
-    fun unfollow(username: String, usernameToUnfollow: String) {
-        //fs.userRepository.removeFollowing(username, usernameToUnfollow)
+    fun unfollow(userId: Int, usernameToUnfollow: String) {
+        val userToUnfollow = checkIfUserExists(username = usernameToUnfollow) ?: throw UserNotFound(usernameToUnfollow)
+        if (checkIfUserIsBeingFollowedBy(userId, userToUnfollow.id)) throw UserNotFollowed(usernameToUnfollow)
+        tm.run {
+            it.userRepository.unfollowUser(userId, userToUnfollow.id)
+        }
     }
 
     private fun createToken(username: String? = null, email: String? = null): String {
@@ -169,10 +185,8 @@ class UserService(
             throw UserAlreadyLoggedIn()
     }
 
-    private fun checkIfUserIsAlreadyFollowing(userId: Int, userIdToFollow: Int) {
-        if (tm.run { it.userRepository.checkIfUserIsAlreadyFollowing(userId, userIdToFollow) })
-            throw IllegalArgumentException("User is already being followed by $userId")
-    }
+    private fun checkIfUserIsBeingFollowedBy(userId: Int, followerUserId: Int) =
+        tm.run { it.userRepository.checkIfUserIsBeingFollowedBy(userId, followerUserId) }
 
 
     private fun checkIfPasswordsMatch(password: String, confirmPassword: String) {
