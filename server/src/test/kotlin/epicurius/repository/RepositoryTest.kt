@@ -2,7 +2,7 @@ package epicurius.repository
 
 import epicurius.EpicuriusTest
 import epicurius.domain.user.User
-import epicurius.services.models.UpdateUserModel
+import epicurius.domain.user.UpdateUserInfo
 import epicurius.utils.createTestUser
 import org.junit.jupiter.api.BeforeAll
 
@@ -37,11 +37,11 @@ open class RepositoryTest: EpicuriusTest() {
         fun resetPassword(email: String, passwordHash: String) =
             tm.run { it.userRepository.resetPassword(email, passwordHash) }
 
-        fun updateUser(username: String, userUpdate: UpdateUserModel) =
+        fun updateUser(username: String, userUpdate: UpdateUserInfo) =
             tm.run {
                 it.userRepository.updateUser(
                     username,
-                    UpdateUserModel(
+                    UpdateUserInfo(
                         userUpdate.username,
                         userUpdate.email,
                         userUpdate.country,

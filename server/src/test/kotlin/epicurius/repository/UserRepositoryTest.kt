@@ -4,7 +4,7 @@ import epicurius.domain.Diet
 import epicurius.domain.FollowingStatus
 import epicurius.domain.Intolerance
 import epicurius.domain.user.SocialUser
-import epicurius.services.models.UpdateUserModel
+import epicurius.domain.user.UpdateUserInfo
 import epicurius.utils.generateEmail
 import epicurius.utils.generateRandomUsername
 import epicurius.utils.generateSecurePassword
@@ -110,7 +110,7 @@ class UserRepositoryTest: RepositoryTest() {
         val newDiet = listOf(Diet.VEGAN)
 
         val user = updateUser(
-            username, UpdateUserModel(
+            username, UpdateUserInfo(
                 username = newUsername,
                 email = newEmail,
                 country = newCountry,

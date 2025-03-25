@@ -9,8 +9,8 @@ import epicurius.domain.CountriesDomain
 import epicurius.domain.token.Sha256TokenEncoder
 import epicurius.domain.user.UserDomain
 import epicurius.repository.jdbi.utils.configureWithAppRequirements
-import epicurius.repository.transaction.cloudStorage.CloudStorageManager
-import epicurius.repository.transaction.firestore.FirestoreManager
+import epicurius.repository.cloudStorage.CloudStorageManager
+import epicurius.repository.firestore.FirestoreManager
 import epicurius.repository.transaction.jdbi.JdbiTransactionManager
 import org.jdbi.v3.core.Jdbi
 import org.postgresql.ds.PGSimpleDataSource

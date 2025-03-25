@@ -17,5 +17,6 @@ object Environment {
     //System.getenv(POSTGRES_DATABASE_URL) ?: throw Exception("Missing environment variable 'POSTGRES_DATABASE_URL'")
 
     fun getGoogleServiceAccount() = FileInputStream("src/main/resources/epicurius-credentials.json")
+
         //System.getenv(GOOGLE_APPLICATION_CREDENTIALS) ?: throw Exception("Missing environment variable '$GOOGLE_APPLICATION_CREDENTIALS'")
 }

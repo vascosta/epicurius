@@ -1,4 +1,4 @@
-package epicurius.repository.transaction.firestore
+package epicurius.repository.firestore
 
 import com.google.cloud.firestore.Firestore
 import epicurius.repository.firestore.FirestoreRecipeRepository
