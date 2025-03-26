@@ -13,8 +13,10 @@ import epicurius.utils.generateEmail
 import epicurius.utils.generateRandomUsername
 import epicurius.utils.generateSecurePassword
 import org.junit.jupiter.api.Assertions.assertFalse
+import org.springframework.mock.web.MockMultipartFile
 import java.util.UUID
 import kotlin.test.Test
+import kotlin.test.assertContentEquals
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 import kotlin.test.assertNotNull
@@ -24,7 +26,7 @@ import kotlin.test.assertTrue
 class UserServiceTest : ServicesTest() {
 
     @Test
-    fun `create new user and retrieve it successfully`() {
+    fun `Create new user and retrieve it successfully`() {
         // given user required information
         val username = generateRandomUsername()
         val email = generateEmail(username)
@@ -50,7 +52,7 @@ class UserServiceTest : ServicesTest() {
     }
 
     @Test
-    fun `try to create user with an existing username or email and throws UserAlreadyExists Exception`() {
+    fun `Try to create user with an existing username or email and throws UserAlreadyExists Exception`() {
         // given an existing user and a different username and email
         val username = generateRandomUsername()
         val email = generateEmail(username)
@@ -81,7 +83,7 @@ class UserServiceTest : ServicesTest() {
     }
 
     @Test
-    fun `try to create user with an invalid country and throws InvalidCountry Exception`() {
+    fun `Try to create user with an invalid country and throws InvalidCountry Exception`() {
         // given an invalid country
         val username = generateRandomUsername()
         val email = generateEmail(username)
@@ -94,7 +96,7 @@ class UserServiceTest : ServicesTest() {
     }
 
     @Test
-    fun `try to create user with different passwords and throws PasswordsDoNotMatch Exception`() {
+    fun `Try to create user with different passwords and throws PasswordsDoNotMatch Exception`() {
         // given a different password and confirm password
         val username = generateRandomUsername()
         val email = generateEmail(username)
@@ -109,7 +111,7 @@ class UserServiceTest : ServicesTest() {
     }
 
     @Test
-    fun `login a user by name successfully`() {
+    fun `Login a user by name successfully`() {
         // given an existing user logged out
         val username = generateRandomUsername()
         val email = generateEmail(username)
@@ -131,7 +133,7 @@ class UserServiceTest : ServicesTest() {
     }
 
     @Test
-    fun `login a user by email successfully`() {
+    fun `Login a user by email successfully`() {
         // given an existing user logged out
         val username = generateRandomUsername()
         val email = generateEmail(username)
@@ -153,7 +155,7 @@ class UserServiceTest : ServicesTest() {
     }
 
     @Test
-    fun `try to login with an non existing user and throws UserNotFound Exception`() {
+    fun `Try to login with an non existing user and throws UserNotFound Exception`() {
         // given a non-existing username and email
         val username = ""
         val email = ""
@@ -166,7 +168,7 @@ class UserServiceTest : ServicesTest() {
     }
 
     @Test
-    fun `try to login with an incorrect password and throws IncorrectPassword Exception`() {
+    fun `Try to login with an incorrect password and throws IncorrectPassword Exception`() {
         // given an existing user logged out and an incorrect password
         val username = generateRandomUsername()
         val email = generateEmail(username)
@@ -184,7 +186,7 @@ class UserServiceTest : ServicesTest() {
     }
 
     @Test
-    fun `try to login with an already logged in user and throws UserAlreadyLoggedIn Exception`() {
+    fun `Try to login with an already logged in user and throws UserAlreadyLoggedIn Exception`() {
         // given an existing logged in user
         val username = generateRandomUsername()
         val email = generateEmail(username)
@@ -199,7 +201,7 @@ class UserServiceTest : ServicesTest() {
     }
 
     @Test
-    fun `logout a user successfully`() {
+    fun `Logout a user successfully`() {
         // given an existing logged in user
         val username = generateRandomUsername()
         val email = generateEmail(username)
@@ -216,46 +218,64 @@ class UserServiceTest : ServicesTest() {
     }
 
     @Test
-    fun `reset password successfully`() {
-        // given user required information
+    fun `Retrieves the user profile without a picture successfully`() {
+        // given an existing user
+        val user = publicTestUser
+
+        // when getting the user profile
+        val userProfile = getUserProfile(user.username)
+
+        // then the user profile is retrieved successfully
+        assertEquals(userProfile.username, user.username)
+        assertEquals(userProfile.country, user.country)
+        assertEquals(userProfile.privacy, user.privacy)
+        assertNull(userProfile.profilePicture)
+    }
+
+    @Test
+    fun `Add a profile picture to an user and then retrieves the user profile successfully`() {
+        // given an existing user
         val username = generateRandomUsername()
         val email = generateEmail(username)
         val country = "PT"
         val password = generateSecurePassword()
-
-        // when creating a user with a random password
         createUser(username, email, country, password, password)
 
-        // when resetting the password
-        val newPassword = UUID.randomUUID().toString()
-        resetPassword(email, newPassword, newPassword)
+        // when adding a profile picture
+        updateProfilePicture(username, profilePicture = testProfilePicture)
 
-        // when logging in with the new password
-        val userToken = login(null, email, newPassword)
-
-        // then the password is reset successfully
-        val authenticatedUser = getAuthenticatedUser(userToken)
-        assertNotNull(authenticatedUser)
-        assertEquals(authenticatedUser.userInfo.username, username)
-        assertEquals(authenticatedUser.userInfo.email, email)
-        assertTrue(usersDomain.verifyPassword(newPassword, authenticatedUser.userInfo.passwordHash))
-        assertFalse(usersDomain.verifyPassword(password, authenticatedUser.userInfo.passwordHash))
+        // then the user profile is retrieved successfully with the new profile picture
+        val userProfile = getUserProfile(username)
+        assertEquals(userProfile.username, username)
+        assertEquals(userProfile.country, country)
+        assertFalse(userProfile.privacy)
+        assertNotNull(userProfile.profilePicture)
+        assertContentEquals(userProfile.profilePicture, testProfilePicture.bytes)
     }
 
     @Test
-    fun `try to reset password with different passwords and throws PasswordsDoNotMatch Exception`() {
+    fun `Update the profile picture of an user and then retrieves it successfully`() {
         // given an existing user
-        val user = publicTestUser
+        val username = generateRandomUsername()
+        val email = generateEmail(username)
+        val country = "PT"
+        val password = generateSecurePassword()
+        createUser(username, email, country, password, password)
+        val profilePictureName = updateProfilePicture(username, profilePicture = testProfilePicture)
 
-        // when resetting the password with different passwords
-        // then the password cannot be reset and throws PasswordsDoNotMatch Exception
-        assertFailsWith<PasswordsDoNotMatch> {
-            resetPassword(user.email, UUID.randomUUID().toString(), UUID.randomUUID().toString())
-        }
+        // when updating the profile picture
+        val newProfilePictureName = updateProfilePicture(username, profilePictureName, testProfilePicture2)
+
+        // then the user profile is retrieved successfully with the new profile picture
+        val updatedProfilePicture = getProfilePicture(newProfilePictureName)
+
+        assertEquals(profilePictureName, newProfilePictureName)
+        assertContentEquals(getProfilePicture(profilePictureName), testProfilePicture2.bytes)
+        assertContentEquals(updatedProfilePicture, testProfilePicture2.bytes)
     }
 
     @Test
-    fun `update user successfully`() {
+    fun `Update user successfully`() {
         // given user required information
         val username = generateRandomUsername()
         val email = generateEmail(username)
@@ -299,7 +319,7 @@ class UserServiceTest : ServicesTest() {
     }
 
     @Test
-    fun `try to update user with existing username or email and throws UserAlreadyExists Exception`() {
+    fun `Try to update user with existing username or email and throws UserAlreadyExists Exception`() {
         // given two existing users
         val user1 = publicTestUser
         val user2 = privateTestUser
@@ -340,7 +360,7 @@ class UserServiceTest : ServicesTest() {
     }
 
     @Test
-    fun `try to update user with an invalid country and throws InvalidCountry Exception`() {
+    fun `Try to update user with an invalid country and throws InvalidCountry Exception`() {
         // given an existing user
         val user = publicTestUser
 
@@ -357,7 +377,7 @@ class UserServiceTest : ServicesTest() {
     }
 
     @Test
-    fun `try to update user with different passwords and throws PasswordsDoNotMatch Exception`() {
+    fun `Try to update user with different passwords and throws PasswordsDoNotMatch Exception`() {
         // given an existing user
         val user = publicTestUser
 
@@ -371,6 +391,45 @@ class UserServiceTest : ServicesTest() {
                     confirmPassword = UUID.randomUUID().toString()
                 )
             )
+        }
+    }
+
+    @Test
+    fun `Reset password successfully`() {
+        // given user required information
+        val username = generateRandomUsername()
+        val email = generateEmail(username)
+        val country = "PT"
+        val password = generateSecurePassword()
+
+        // when creating a user with a random password
+        createUser(username, email, country, password, password)
+
+        // when resetting the password
+        val newPassword = UUID.randomUUID().toString()
+        resetPassword(email, newPassword, newPassword)
+
+        // when logging in with the new password
+        val userToken = login(null, email, newPassword)
+
+        // then the password is reset successfully
+        val authenticatedUser = getAuthenticatedUser(userToken)
+        assertNotNull(authenticatedUser)
+        assertEquals(authenticatedUser.userInfo.username, username)
+        assertEquals(authenticatedUser.userInfo.email, email)
+        assertTrue(usersDomain.verifyPassword(newPassword, authenticatedUser.userInfo.passwordHash))
+        assertFalse(usersDomain.verifyPassword(password, authenticatedUser.userInfo.passwordHash))
+    }
+
+    @Test
+    fun `Try to reset password with different passwords and throws PasswordsDoNotMatch Exception`() {
+        // given an existing user
+        val user = publicTestUser
+
+        // when resetting the password with different passwords
+        // then the password cannot be reset and throws PasswordsDoNotMatch Exception
+        assertFailsWith<PasswordsDoNotMatch> {
+            resetPassword(user.email, UUID.randomUUID().toString(), UUID.randomUUID().toString())
         }
     }
 

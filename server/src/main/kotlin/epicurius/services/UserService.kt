@@ -65,7 +65,7 @@ class UserService(
         return if (user.profilePictureName == null) {
             UserProfile(user.username, user.country, user.privacy, null)
         } else {
-            val userProfilePicture = getProfilePicture(username)
+            val userProfilePicture = getProfilePicture(user.profilePictureName)
             UserProfile(user.username, user.country, user.privacy, userProfilePicture)
         }
     }
@@ -82,11 +82,11 @@ class UserService(
 
     fun getFollowers(userId: Int) =
         tm.run { it.userRepository.getFollowers(userId) }
-            .map { user -> FollowUser(user.username, getProfilePicture(user.username)) }
+            .map { user -> FollowUser(user.username, getProfilePicture(user.profilePictureName)) }
 
     fun getFollowing(userId: Int) =
         tm.run { it.userRepository.getFollowing(userId) }
-            .map { user -> FollowingUser(user.username, getProfilePicture(user.username)) }
+            .map { user -> FollowingUser(user.username, getProfilePicture(user.profilePictureName)) }
 
     fun getFollowRequests(userId: Int) =
         tm.run { it.userRepository.getFollowRequests(userId) }
@@ -135,7 +135,7 @@ class UserService(
         }
     }
 
-    fun updateProfilePicture(username: String, profilePictureName: String?, profilePicture: MultipartFile) {
+    fun updateProfilePicture(username: String, profilePictureName: String? = null, profilePicture: MultipartFile): String {
         if (profilePictureName == null) {
             val newProfilePictureName = UUID.randomUUID().toString()
             cs.userCloudStorageRepository.updateProfilePicture(newProfilePictureName, Picture(profilePicture))
@@ -145,8 +145,10 @@ class UserService(
                     UpdateUserInfo(profilePictureName = newProfilePictureName)
                 )
             }
+            return newProfilePictureName
         } else {
             cs.userCloudStorageRepository.updateProfilePicture(profilePictureName, Picture(profilePicture))
+            return profilePictureName
         }
     }
 

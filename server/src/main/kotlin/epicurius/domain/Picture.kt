@@ -8,7 +8,7 @@ data class Picture(val picture: MultipartFile) {
 
     init {
 
-        if (SUPPORTED_IMAGE_TYPES.contains(picture.contentType)) {
+        if (!SUPPORTED_IMAGE_TYPES.contains(picture.contentType)) {
             throw IllegalArgumentException("Unsupported image type")
         }
 
@@ -22,7 +22,7 @@ data class Picture(val picture: MultipartFile) {
     }
 
     companion object {
-        private val SUPPORTED_IMAGE_TYPES = listOf("image/jpeg", "image/png")
+        private val SUPPORTED_IMAGE_TYPES = listOf("image/jpeg", "image/jpg", "image/png")
 
         private const val MAXIMUM_IMAGE_SIZE = 5 * 1024 * 1024 // 5MB
     }

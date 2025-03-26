@@ -16,6 +16,7 @@ import epicurius.http.user.models.output.GetIntolerancesOutputModel
 import epicurius.http.user.models.output.GetUserOutputModel
 import epicurius.http.user.models.output.GetUserProfileOutputModel
 import epicurius.http.user.models.output.GetUsersOutputModel
+import epicurius.http.user.models.output.UpdateProfilePictureOutputModel
 import epicurius.http.user.models.output.UpdateUserOutputModel
 import epicurius.http.utils.Uris
 import epicurius.services.UserService
@@ -148,12 +149,12 @@ class UserController(val userService: UserService) {
         authenticatedUser: AuthenticatedUser,
         @Valid @RequestBody body: UpdateProfilePictureInputModel
     ): ResponseEntity<*> {
-        userService.updateProfilePicture(
+        val newProfilePicture = userService.updateProfilePicture(
             authenticatedUser.userInfo.username,
             authenticatedUser.userInfo.profilePictureName,
             body.profilePicture
         )
-        return ResponseEntity.noContent().build<Unit>()
+        return ResponseEntity.ok().body(UpdateProfilePictureOutputModel(newProfilePicture))
     }
 
     @PatchMapping(Uris.User.RESET_PASSWORD)
