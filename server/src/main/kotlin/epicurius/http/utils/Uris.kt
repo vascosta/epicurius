@@ -20,4 +20,10 @@ object Uris {
         const val INTOLERANCES = "/intolerances"
         const val DIET = "/diet"
     }
+
+    object Fridge {
+        const val GET_FRIDGE = "/fridge"
+        const val GET_PRODUCTS = "/products"
+        const val ADD_PRODUCT = "/fridge/product"
+    }
 }

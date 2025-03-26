@@ -21,6 +21,15 @@ create table dbo.followers(
     foreign key (follower_id) references dbo.user(id)
 );
 
+create table dbo.fridge(
+    owner_id integer not null,
+    product_name varchar(50) not null,
+    quantity integer not null,
+    open_date date,
+    expiration_date date not null,
+    foreign key (owner_id) references dbo.user(id)
+)
+
 --create table recipe(
   --  id serial primary key,
  --   name varchar(40) not null,
