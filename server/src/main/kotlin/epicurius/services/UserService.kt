@@ -70,8 +70,8 @@ class UserService(
         }
     }
 
-    fun getUsers(username: String, pagingParams: PagingParams): List<SearchUser> {
-        return tm.run { it.userRepository.getUsers(username, pagingParams) }
+    fun getUsers(partialUsername: String, pagingParams: PagingParams): List<SearchUser> {
+        return tm.run { it.userRepository.getUsers(partialUsername, pagingParams) }
             .map { user -> SearchUser(user.username, getProfilePicture(user.profilePictureName)) }
     }
 

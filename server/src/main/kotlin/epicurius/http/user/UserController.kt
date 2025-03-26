@@ -64,12 +64,12 @@ class UserController(val userService: UserService) {
     @GetMapping(Uris.User.USERS)
     fun getUsers(
         authenticatedUser: AuthenticatedUser,
-        @RequestParam username: String,
+        @RequestParam partialUsername: String,
         @RequestParam skip: Int,
         @RequestParam limit: Int
     ): ResponseEntity<*> {
         val pagingParams = PagingParams(skip, limit)
-        val users = userService.getUsers(username, pagingParams)
+        val users = userService.getUsers(partialUsername, pagingParams)
         return ResponseEntity.ok().body(GetUsersOutputModel(users))
     }
 

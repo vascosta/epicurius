@@ -41,16 +41,16 @@ class JdbiUserRepository(private val handle: Handle) : UserPostgresRepository {
             .firstOrNull()
     }
 
-    override fun getUsers(username: String, pagingParams: PagingParams): List<SocialUser> {
+    override fun getUsers(partialUsername: String, pagingParams: PagingParams): List<SocialUser> {
         return handle.createQuery(
             """
                 SELECT username, profile_picture_name
                 FROM dbo.user
-                WHERE LOWER(username) LIKE LOWER(:username)
+                WHERE LOWER(username) LIKE LOWER(:partialUsername)
                 LIMIT :limit OFFSET :skip
             """
         )
-            .bind("username", "%${username.lowercase()}%")
+            .bind("partialUsername", "%${partialUsername.lowercase()}%")
             .bind("limit", pagingParams.limit)
             .bind("skip", pagingParams.skip)
             .mapTo<SocialUser>()
@@ -63,10 +63,11 @@ class JdbiUserRepository(private val handle: Handle) : UserPostgresRepository {
                 SELECT u.username, u.profile_picture_name
                 FROM dbo.user u
                 JOIN dbo.followers f ON u.id = f.follower_id
-                WHERE f.user_id = :user_id
+                WHERE f.user_id = :user_id AND f.status = :status
             """
         )
             .bind("user_id", userId)
+            .bind("status", FollowingStatus.ACCEPTED.ordinal)
             .mapTo<SocialUser>()
             .list()
     }
@@ -77,10 +78,11 @@ class JdbiUserRepository(private val handle: Handle) : UserPostgresRepository {
                 SELECT u.username, u.profile_picture_name
                 FROM dbo.user u
                 JOIN dbo.followers f ON u.id = f.user_id
-                WHERE f.follower_id = :user_id
+                WHERE f.follower_id = :user_id AND f.status = :status
             """
         )
             .bind("user_id", userId)
+            .bind("status", FollowingStatus.ACCEPTED.ordinal)
             .mapTo<SocialUser>()
             .list()
     }

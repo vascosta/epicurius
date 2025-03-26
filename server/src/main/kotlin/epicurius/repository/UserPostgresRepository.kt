@@ -8,7 +8,7 @@ interface UserPostgresRepository {
     fun createUser(username: String, email: String, country: String, passwordHash: String)
 
     fun getUser(username: String? = null, email: String? = null, tokenHash: String? = null): User?
-    fun getUsers(username: String, pagingParams: PagingParams): List<SocialUser>
+    fun getUsers(partialUsername: String, pagingParams: PagingParams): List<SocialUser>
     fun getFollowers(userId: Int): List<SocialUser>
     fun getFollowing(userId: Int): List<SocialUser>
     fun getFollowRequests(userId: Int): List<SocialUser>
