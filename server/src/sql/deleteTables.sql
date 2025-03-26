@@ -1,2 +1,3 @@
-delete from dbo.followers
-delete from dbo.user
+DELETE FROM dbo.followers
+DELETE FROM dbo.fridge
+DELETE FROM dbo.user

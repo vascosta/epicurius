@@ -10,6 +10,7 @@ import epicurius.repository.cloudStorage.CloudStorageManager
 import epicurius.repository.jdbi.utils.configureWithAppRequirements
 import epicurius.repository.transaction.jdbi.JdbiTransactionManager
 import org.jdbi.v3.core.Jdbi
+import org.junit.jupiter.api.AfterAll
 import org.postgresql.ds.PGSimpleDataSource
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import java.io.FileInputStream
@@ -17,6 +18,17 @@ import java.io.FileInputStream
 open class EpicuriusTest {
 
     companion object {
+
+        @JvmStatic
+        @AfterAll
+        fun clearDB() {
+            jdbi.useHandle<Exception> {
+                it.execute("DELETE FROM dbo.followers")
+                it.execute("DELETE FROM dbo.fridge")
+                it.execute("DELETE FROM dbo.user")
+            }
+        }
+
         private const val POSTGRES_DATABASE_URL = "jdbc:postgresql://localhost/postgres?user=postgres&password=postgres"
         private const val GOOGLE_CLOUD_CREDENTIALS_LOCATION = "src/main/resources/epicurius-credentials.json"
 
