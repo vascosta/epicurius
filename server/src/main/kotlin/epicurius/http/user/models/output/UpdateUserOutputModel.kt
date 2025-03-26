@@ -3,7 +3,7 @@ package epicurius.http.user.models.output
 import epicurius.domain.Diet
 import epicurius.domain.Intolerance
 
-data class UpdateUserOutputModel (
+data class UpdateUserOutputModel(
     val username: String,
     val email: String,
     val country: String,

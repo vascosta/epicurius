@@ -4,7 +4,7 @@ import epicurius.EpicuriusTest.Companion.usersDomain
 import epicurius.domain.user.User
 import epicurius.domain.user.UserDomain.Companion.MAX_PASSWORD_LENGTH
 import epicurius.repository.transaction.TransactionManager
-import java.util.*
+import java.util.UUID
 
 fun createTestUser(tm: TransactionManager): User {
     val username = generateRandomUsername()

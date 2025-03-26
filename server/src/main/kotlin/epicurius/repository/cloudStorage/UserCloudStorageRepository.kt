@@ -5,10 +5,9 @@ import com.google.cloud.storage.BlobId
 import com.google.cloud.storage.BlobInfo
 import com.google.cloud.storage.Storage
 import epicurius.domain.Picture
-import epicurius.domain.exceptions.ProfilePictureNotFound
 import epicurius.repository.UserCloudStorageRepository
 
-class UserCloudStorageRepository(private val cloudStorage: Storage): UserCloudStorageRepository {
+class UserCloudStorageRepository(private val cloudStorage: Storage) : UserCloudStorageRepository {
     override fun getProfilePicture(profilePictureName: String): ByteArray {
         val blob = getBlob(profilePictureName, USERS_PROFILE_PICTURES_BUCKET)
         return blob.getContent()
@@ -34,5 +33,4 @@ class UserCloudStorageRepository(private val cloudStorage: Storage): UserCloudSt
     companion object {
         const val USERS_PROFILE_PICTURES_BUCKET = "epicurius_users_profile_pictures"
     }
-
 }

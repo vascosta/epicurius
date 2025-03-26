@@ -1,12 +1,12 @@
 package epicurius.repository
 
 import epicurius.EpicuriusTest
-import epicurius.domain.user.User
 import epicurius.domain.user.UpdateUserInfo
+import epicurius.domain.user.User
 import epicurius.utils.createTestUser
 import org.junit.jupiter.api.BeforeAll
 
-open class RepositoryTest: EpicuriusTest() {
+open class RepositoryTest : EpicuriusTest() {
 
     companion object {
         lateinit var publicTestUser: User
@@ -58,6 +58,5 @@ open class RepositoryTest: EpicuriusTest() {
 
         fun checkIfUserIsLoggedIn(username: String? = null, email: String? = null) =
             tm.run { it.userRepository.checkIfUserIsLoggedIn(username, email) }
-
     }
 }

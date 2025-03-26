@@ -1,14 +1,14 @@
 package epicurius.http.user.models.input
 
 import epicurius.domain.user.UserDomain.Companion.MAX_PASSWORD_LENGTH
-import epicurius.domain.user.UserDomain.Companion.MIN_PASSWORD_LENGTH
 import epicurius.domain.user.UserDomain.Companion.MAX_USERNAME_LENGTH
+import epicurius.domain.user.UserDomain.Companion.MIN_PASSWORD_LENGTH
 import epicurius.domain.user.UserDomain.Companion.MIN_USERNAME_LENGTH
+import epicurius.http.utils.Regex
 import jakarta.validation.constraints.Email
 import jakarta.validation.constraints.NotBlank
 import jakarta.validation.constraints.Pattern
 import jakarta.validation.constraints.Size
-import epicurius.http.utils.Regex
 
 data class SignUpInputModel(
     @field:NotBlank

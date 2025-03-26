@@ -5,7 +5,7 @@ import epicurius.repository.FridgePostgresRepository
 import org.jdbi.v3.core.Handle
 import org.jdbi.v3.core.kotlin.mapTo
 
-class JdbiFridgeRepository(private val handle: Handle): FridgePostgresRepository {
+class JdbiFridgeRepository(private val handle: Handle) : FridgePostgresRepository {
     override fun getFridge(userId: Int): Fridge? {
         return handle.createQuery(
             """
@@ -18,6 +18,4 @@ class JdbiFridgeRepository(private val handle: Handle): FridgePostgresRepository
             .mapTo<Fridge>()
             .firstOrNull()
     }
-
-
 }

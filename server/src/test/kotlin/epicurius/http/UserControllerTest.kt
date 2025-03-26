@@ -15,7 +15,7 @@ import kotlin.test.assertNotNull
 import kotlin.test.assertNull
 import kotlin.test.assertTrue
 
-class UserControllerTest: HttpTest() {
+class UserControllerTest : HttpTest() {
 
     @Test
     fun `Create new user and retrieve it successfully`() {

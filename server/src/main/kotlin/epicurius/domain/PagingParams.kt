@@ -2,7 +2,7 @@ package epicurius.domain
 
 data class PagingParams(
     val skip: Int = Skip.DEFAULT,
-    val limit : Int = Limit.DEFAULT,
+    val limit: Int = Limit.DEFAULT,
 ) {
 
     init {
@@ -20,5 +20,4 @@ data class PagingParams(
             const val MAX_VALUE = 10
         }
     }
-
 }

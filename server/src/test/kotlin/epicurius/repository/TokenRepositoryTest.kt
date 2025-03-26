@@ -3,15 +3,12 @@ package epicurius.repository
 import epicurius.utils.generateEmail
 import epicurius.utils.generateRandomUsername
 import epicurius.utils.generateSecurePassword
-import java.lang.IllegalStateException
 import kotlin.test.Test
 import kotlin.test.assertEquals
-import kotlin.test.assertFailsWith
 import kotlin.test.assertNotNull
 import kotlin.test.assertNull
-import kotlin.test.assertTrue
 
-class TokenRepositoryTest: RepositoryTest() {
+class TokenRepositoryTest : RepositoryTest() {
 
     @Test
     fun `Creates a token for an user, retrieves it by token hash and then deletes the token successfully`() {

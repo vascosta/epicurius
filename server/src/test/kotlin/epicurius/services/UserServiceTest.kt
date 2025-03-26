@@ -13,7 +13,7 @@ import epicurius.utils.generateEmail
 import epicurius.utils.generateRandomUsername
 import epicurius.utils.generateSecurePassword
 import org.junit.jupiter.api.Assertions.assertFalse
-import java.util.*
+import java.util.UUID
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
@@ -21,7 +21,7 @@ import kotlin.test.assertNotNull
 import kotlin.test.assertNull
 import kotlin.test.assertTrue
 
-class UserServiceTest: ServicesTest() {
+class UserServiceTest : ServicesTest() {
 
     @Test
     fun `create new user and retrieve it successfully`() {
@@ -57,7 +57,7 @@ class UserServiceTest: ServicesTest() {
         val country = "PT"
         val password = generateSecurePassword()
         val randomUsername = generateRandomUsername()
-        val randomEmail= generateEmail(username)
+        val randomEmail = generateEmail(username)
 
         createUser(username, email, country, password, password)
 
@@ -275,7 +275,8 @@ class UserServiceTest: ServicesTest() {
         val newDiet = listOf(Diet.VEGAN)
 
         val user = updateUser(
-            username, UpdateUserInputModel(
+            username,
+            UpdateUserInputModel(
                 username = newUsername,
                 email = newEmail,
                 country = newCountry,
@@ -307,7 +308,8 @@ class UserServiceTest: ServicesTest() {
         // then the user cannot be updated and throws UserAlreadyExists Exception
         assertFailsWith<UserAlreadyExists> {
             updateUser(
-                user1.username, UpdateUserInputModel(
+                user1.username,
+                UpdateUserInputModel(
                     username = user2.username
                 )
             )
@@ -317,7 +319,8 @@ class UserServiceTest: ServicesTest() {
         // then the user cannot be updated and throws UserAlreadyExists Exception
         assertFailsWith<UserAlreadyExists> {
             updateUser(
-                user1.username, UpdateUserInputModel(
+                user1.username,
+                UpdateUserInputModel(
                     email = user2.email
                 )
             )
@@ -327,7 +330,8 @@ class UserServiceTest: ServicesTest() {
         // then the user cannot be updated and throws UserAlreadyExists Exception
         assertFailsWith<UserAlreadyExists> {
             updateUser(
-                user1.username, UpdateUserInputModel(
+                user1.username,
+                UpdateUserInputModel(
                     username = user2.username,
                     email = user2.email
                 )
@@ -344,7 +348,8 @@ class UserServiceTest: ServicesTest() {
         // then the user cannot be updated and throws InvalidCountry Exception
         assertFailsWith<InvalidCountry> {
             updateUser(
-                user.username, UpdateUserInputModel(
+                user.username,
+                UpdateUserInputModel(
                     country = "XX"
                 )
             )
@@ -360,14 +365,14 @@ class UserServiceTest: ServicesTest() {
         // then the user cannot be updated and throws PasswordsDoNotMatch Exception
         assertFailsWith<PasswordsDoNotMatch> {
             updateUser(
-                user.username, UpdateUserInputModel(
+                user.username,
+                UpdateUserInputModel(
                     password = UUID.randomUUID().toString(),
                     confirmPassword = UUID.randomUUID().toString()
                 )
             )
         }
     }
-
 
 //    @Test
 //    fun `follow a public user successfully`() {

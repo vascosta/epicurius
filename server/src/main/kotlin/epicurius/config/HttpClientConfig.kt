@@ -1,4 +1,4 @@
-package epicurius.http.utils
+package epicurius.config
 
 interface HttpClientConfig {
     suspend fun get(uri: String): String

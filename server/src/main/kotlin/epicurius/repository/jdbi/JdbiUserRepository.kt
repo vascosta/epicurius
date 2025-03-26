@@ -4,13 +4,13 @@ import UserPostgresRepository
 import epicurius.domain.FollowingStatus
 import epicurius.domain.PagingParams
 import epicurius.domain.user.SocialUser
-import epicurius.domain.user.User
 import epicurius.domain.user.UpdateUserInfo
+import epicurius.domain.user.User
 import org.jdbi.v3.core.Handle
 import org.jdbi.v3.core.kotlin.mapTo
 
 class JdbiUserRepository(private val handle: Handle) : UserPostgresRepository {
-    override fun createUser(username: String, email: String, country: String, passwordHash: String){
+    override fun createUser(username: String, email: String, country: String, passwordHash: String) {
         handle.createUpdate(
             """
                INSERT INTO dbo.user(username, email, password_hash, country, privacy, intolerances, diet)
@@ -190,5 +190,4 @@ class JdbiUserRepository(private val handle: Handle) : UserPostgresRepository {
             .bind("follower_id", userIdToFollow)
             .mapTo<Int>()
             .one() == 1
-
 }

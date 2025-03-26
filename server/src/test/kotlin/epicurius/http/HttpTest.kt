@@ -1,9 +1,9 @@
 package epicurius.http
 
 import epicurius.EpicuriusTest
+import epicurius.domain.user.User
 import epicurius.http.user.models.output.GetUserOutputModel
 import epicurius.http.utils.Uris
-import epicurius.domain.user.User
 import epicurius.utils.createTestUser
 import org.junit.jupiter.api.BeforeAll
 import org.springframework.boot.test.context.SpringBootTest
@@ -12,7 +12,7 @@ import org.springframework.test.web.reactive.server.WebTestClient
 import org.springframework.test.web.reactive.server.expectBody
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class HttpTest: EpicuriusTest() {
+class HttpTest : EpicuriusTest() {
     @LocalServerPort
     var port: Int = 0
     val client = WebTestClient.bindToServer().baseUrl(api("/")).build()
@@ -27,7 +27,7 @@ class HttpTest: EpicuriusTest() {
                     "password" to password,
                     "confirmPassword" to password,
                     "country" to country
-                    )
+                )
             )
             .exchange()
             .expectStatus().isCreated
@@ -73,6 +73,5 @@ class HttpTest: EpicuriusTest() {
             publicTestUser = createTestUser(tm)
             privateTestUser = createTestUser(tm)
         }
-
     }
 }

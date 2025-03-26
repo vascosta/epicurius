@@ -6,10 +6,11 @@ import epicurius.http.user.models.input.UpdateUserInputModel
 import epicurius.utils.createTestUser
 import org.junit.jupiter.api.BeforeAll
 
-open class ServicesTest: EpicuriusTest() {
+open class ServicesTest : EpicuriusTest() {
 
     companion object {
-        private val userService = UserService(tm, fs, cs, usersDomain, countriesDomain)
+        // private val userService = UserService(tm, fs, cs, usersDomain, countriesDomain)
+        private val userService = UserService(tm, cs, usersDomain, countriesDomain)
 
         lateinit var publicTestUser: User
         lateinit var privateTestUser: User

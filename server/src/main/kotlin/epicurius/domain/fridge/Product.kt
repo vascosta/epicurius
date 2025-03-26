@@ -1,8 +1,8 @@
 package epicurius.domain.fridge
 
-import java.util.*
+import java.util.Date
 
-data class Product (
+data class Product(
     val productName: String,
     val quantity: Int,
     val openDate: Date?,

@@ -9,7 +9,7 @@ import epicurius.utils.generateEmail
 import epicurius.utils.generateRandomUsername
 import epicurius.utils.generateSecurePassword
 import org.junit.jupiter.api.Assertions.assertNull
-import java.util.*
+import java.util.UUID
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
@@ -17,7 +17,7 @@ import kotlin.test.assertNotEquals
 import kotlin.test.assertNotNull
 import kotlin.test.assertTrue
 
-class UserRepositoryTest: RepositoryTest() {
+class UserRepositoryTest : RepositoryTest() {
 
     @Test
     fun `Create new user and retrieve it successfully`() {
@@ -110,7 +110,8 @@ class UserRepositoryTest: RepositoryTest() {
         val newDiet = listOf(Diet.VEGAN)
 
         val user = updateUser(
-            username, UpdateUserInfo(
+            username,
+            UpdateUserInfo(
                 username = newUsername,
                 email = newEmail,
                 country = newCountry,

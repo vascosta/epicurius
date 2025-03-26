@@ -1,7 +1,7 @@
 package epicurius.repository.spoonacular
 
 import epicurius.Environment
-import epicurius.HttpClientConfigurer
+import epicurius.config.HttpClientConfigurer
 import epicurius.domain.fridge.Ingredient
 import epicurius.repository.SpoonacularRepository
 import kotlinx.coroutines.Dispatchers
@@ -11,9 +11,9 @@ import kotlinx.serialization.json.Json
 import org.springframework.stereotype.Component
 
 @Component
-class SpoonacularRepository(private val httpClient: HttpClientConfigurer): SpoonacularRepository {
+class SpoonacularRepository(private val httpClient: HttpClientConfigurer) : SpoonacularRepository {
 
-    override suspend fun getProductsList(uri: String, partial:String): List<String> {
+    override suspend fun getProductsList(uri: String, partial: String): List<String> {
         val full = "$uri?apiKey=$spoonacularApiKey&query=$partial"
 
         return withContext(Dispatchers.IO) {
@@ -24,7 +24,6 @@ class SpoonacularRepository(private val httpClient: HttpClientConfigurer): Spoon
     }
 
     companion object {
-        val spoonacularApiKey =  Environment.getSpoonacularAPIKey().readAllBytes().decodeToString().trim()
+        val spoonacularApiKey = Environment.getSpoonacularAPIKey().readAllBytes().decodeToString().trim()
     }
 }
-

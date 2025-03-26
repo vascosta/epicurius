@@ -4,6 +4,7 @@ plugins {
     kotlin("plugin.serialization") version "1.9.21"
     id("org.springframework.boot") version "3.4.3"
     id("io.spring.dependency-management") version "1.1.7"
+    id("org.jlleitschuh.gradle.ktlint") version "10.2.0"
 }
 
 group = "epicurius"
@@ -39,7 +40,6 @@ dependencies {
     implementation("com.google.cloud:google-cloud-storage:2.40.0")
 
     implementation("org.springframework.security:spring-security-core:6.3.5")
-
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")

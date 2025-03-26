@@ -1,12 +1,11 @@
 package epicurius.http.pipeline.authentication
 
-import epicurius.services.UserService
 import epicurius.domain.user.AuthenticatedUser
+import epicurius.services.UserService
 import org.springframework.stereotype.Component
 
 @Component
 class RequestTokenProcessor(val userService: UserService) {
-
 
     fun getAuthenticatedUser(token: String): AuthenticatedUser? = userService.getAuthenticatedUser(token)
 

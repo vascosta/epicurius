@@ -32,7 +32,7 @@ import java.util.UUID
 @Component
 class UserService(
     private val tm: TransactionManager,
-    //private val fs: FirestoreManager,
+    // private val fs: FirestoreManager,
     private val cs: CloudStorageManager,
     private val userDomain: UserDomain,
     private val countriesDomain: CountriesDomain
@@ -72,7 +72,7 @@ class UserService(
 
     fun getUsers(username: String, pagingParams: PagingParams): List<SearchUser> {
         return tm.run { it.userRepository.getUsers(username, pagingParams) }
-            .map {  user -> SearchUser(user.username, getProfilePicture(user.profilePictureName)) }
+            .map { user -> SearchUser(user.username, getProfilePicture(user.profilePictureName)) }
     }
 
     fun getFollowers(userId: Int) =
@@ -128,7 +128,7 @@ class UserService(
                     userUpdate.country,
                     userUpdate.password?.let { password -> userDomain.encodePassword(password) },
                     userUpdate.privacy,
-                    userUpdate.intolerances?.map { intolerance ->  Intolerance.toInt(intolerance) },
+                    userUpdate.intolerances?.map { intolerance -> Intolerance.toInt(intolerance) },
                     userUpdate.diet?.map { diet -> Diet.toInt(diet) }
                 )
             )
@@ -145,8 +145,7 @@ class UserService(
                     UpdateUserInfo(profilePictureName = newProfilePictureName)
                 )
             }
-        }
-        else {
+        } else {
             cs.userCloudStorageRepository.updateProfilePicture(profilePictureName, Picture(profilePicture))
         }
     }
@@ -192,8 +191,8 @@ class UserService(
         tm.run { it.tokenRepository.deleteToken(username, email) }
     }
 
-    private fun checkIfUserExists(username: String? = null, email: String? = null, tokenHash: String? = null): User?
-        = tm.run { it.userRepository.getUser(username, email, tokenHash) }
+    private fun checkIfUserExists(username: String? = null, email: String? = null, tokenHash: String? = null): User? =
+        tm.run { it.userRepository.getUser(username, email, tokenHash) }
 
     private fun checkIfUserIsLoggedIn(username: String? = null, email: String? = null) {
         if (tm.run { it.userRepository.checkIfUserIsLoggedIn(username, email) })
@@ -202,7 +201,6 @@ class UserService(
 
     private fun checkIfUserIsBeingFollowedBy(userId: Int, followerUserId: Int) =
         tm.run { it.userRepository.checkIfUserIsBeingFollowedBy(userId, followerUserId) }
-
 
     private fun checkIfPasswordsMatch(password: String, confirmPassword: String) {
         if (password != confirmPassword) throw PasswordsDoNotMatch()

@@ -5,5 +5,5 @@ interface FridgePostgresRepository {
 
     fun getFridge(userId: Int): Fridge?
 
-    //fun addProduct(product: String, quantity: Int, openDate: Date? = null, ): Fridge
+    // fun addProduct(product: String, quantity: Int, openDate: Date? = null, ): Fridge
 }

@@ -90,7 +90,7 @@ class ExceptionHandler {
     @ExceptionHandler(
         value = [
             IllegalArgumentException::class,
-        // add exceptions
+            // add exceptions
         ]
     )
     fun handleBadRequest(request: HttpServletRequest, ex: Exception) =
@@ -161,7 +161,6 @@ class ExceptionHandler {
                status = HttpStatus.FORBIDDEN
            )*/
 
-
     companion object {
         const val PROBLEMS_DOCS_URI = ""
 
@@ -179,7 +178,7 @@ class ExceptionHandler {
                 detail = detail,
                 instance = URI.create(request.requestURI)
             ).toResponse(status, headers).also {
-                //logger.warn("Handled Exception: {}", message)
+                // logger.warn("Handled Exception: {}", message)
             }
 
         private fun Exception.getName(): String =

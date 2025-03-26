@@ -1,12 +1,12 @@
 package epicurius.http.pipeline.authentication
 
+import epicurius.domain.exceptions.UnauthorizedException
 import epicurius.domain.user.AuthenticatedUser
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
 import org.springframework.stereotype.Component
 import org.springframework.web.method.HandlerMethod
 import org.springframework.web.servlet.HandlerInterceptor
-import epicurius.domain.exceptions.UnauthorizedException
 
 @Component
 class AuthenticationInterceptor(
@@ -33,7 +33,7 @@ class AuthenticationInterceptor(
     }
 
     private inline fun <reified T : Any> HandlerMethod.hasParameterType() =
-    methodParameters.any { it.parameterType == T::class.java }
+        methodParameters.any { it.parameterType == T::class.java }
 
     companion object {
         const val AUTHORIZATION_HEADER = "Authorization"

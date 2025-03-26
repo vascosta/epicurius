@@ -11,7 +11,7 @@ import java.sql.ResultSet
 class UserMapper(
     private val intoleranceListMapper: ColumnMapper<List<Intolerance>>,
     private val dietListMapper: ColumnMapper<List<Diet>>
-): RowMapper<User> {
+) : RowMapper<User> {
     override fun map(rs: ResultSet, ctx: StatementContext): User {
         val intoleranceList = intoleranceListMapper.map(rs, 8, ctx)
         val dietList = dietListMapper.map(rs, 9, ctx)

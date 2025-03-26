@@ -1,29 +1,35 @@
 package epicurius.http.user
 
 import epicurius.domain.PagingParams
-import epicurius.domain.Picture
-import epicurius.services.UserService
 import epicurius.domain.user.AuthenticatedUser
 import epicurius.domain.user.UserProfile
-import epicurius.http.user.models.output.GetDietOutputModel
-import epicurius.http.user.models.output.GetUserOutputModel
-import epicurius.http.user.models.output.GetIntolerancesOutputModel
 import epicurius.http.user.models.input.LoginInputModel
 import epicurius.http.user.models.input.ResetPasswordInputModel
 import epicurius.http.user.models.input.SignUpInputModel
 import epicurius.http.user.models.input.UpdateProfilePictureInputModel
 import epicurius.http.user.models.input.UpdateUserInputModel
+import epicurius.http.user.models.output.GetDietOutputModel
 import epicurius.http.user.models.output.GetFollowRequestsOutputModel
 import epicurius.http.user.models.output.GetFollowersOutputModel
-import epicurius.http.user.models.output.GetUsersOutputModel
 import epicurius.http.user.models.output.GetFollowingOutputModel
+import epicurius.http.user.models.output.GetIntolerancesOutputModel
+import epicurius.http.user.models.output.GetUserOutputModel
 import epicurius.http.user.models.output.GetUserProfileOutputModel
+import epicurius.http.user.models.output.GetUsersOutputModel
 import epicurius.http.user.models.output.UpdateUserOutputModel
 import epicurius.http.utils.Uris
+import epicurius.services.UserService
 import jakarta.servlet.http.HttpServletResponse
 import jakarta.validation.Valid
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.*
+import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PatchMapping
+import org.springframework.web.bind.annotation.PathVariable
+import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestBody
+import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RequestParam
+import org.springframework.web.bind.annotation.RestController
 import java.net.URI
 
 @RestController

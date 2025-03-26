@@ -4,7 +4,7 @@ import epicurius.domain.token.TokenEncoder
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Component
 import java.security.SecureRandom
-import java.util.*
+import java.util.Base64
 
 @Component
 class UserDomain(

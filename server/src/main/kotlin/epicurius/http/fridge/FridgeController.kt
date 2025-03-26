@@ -5,7 +5,6 @@ import epicurius.http.fridge.models.output.FridgeOutputModel
 import epicurius.http.utils.Uris
 import epicurius.services.FridgeService
 import epicurius.services.SpoonacularService
-import jakarta.websocket.server.PathParam
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
@@ -26,7 +25,7 @@ class FridgeController(
     }
 
     @GetMapping(Uris.Fridge.GET_PRODUCTS)
-    suspend fun getProductsList(authenticatedUser: AuthenticatedUser, @RequestParam partial:String): ResponseEntity<*> {
+    suspend fun getProductsList(authenticatedUser: AuthenticatedUser, @RequestParam partial: String): ResponseEntity<*> {
         val productsList = spoonacularService.getAutocompleteProducts(partial)
         return ResponseEntity.ok().body(productsList)
     }
