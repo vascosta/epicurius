@@ -1,6 +1,7 @@
 package epicurius.http.user
 
 import epicurius.domain.PagingParams
+import epicurius.domain.Picture
 import epicurius.services.UserService
 import epicurius.domain.user.AuthenticatedUser
 import epicurius.domain.user.UserProfile
@@ -10,6 +11,7 @@ import epicurius.http.user.models.output.GetIntolerancesOutputModel
 import epicurius.http.user.models.input.LoginInputModel
 import epicurius.http.user.models.input.ResetPasswordInputModel
 import epicurius.http.user.models.input.SignUpInputModel
+import epicurius.http.user.models.input.UpdateProfilePictureInputModel
 import epicurius.http.user.models.input.UpdateUserInputModel
 import epicurius.http.user.models.output.GetFollowRequestsOutputModel
 import epicurius.http.user.models.output.GetFollowersOutputModel
@@ -153,5 +155,18 @@ class UserController(val userService: UserService) {
                 updatedUser.profilePictureName
             )
         )
+    }
+
+    @PatchMapping
+    fun updateProfilePicture(
+        authenticatedUser: AuthenticatedUser,
+        @Valid @RequestBody body: UpdateProfilePictureInputModel
+    ): ResponseEntity<*> {
+        userService.updateProfilePicture(
+            authenticatedUser.userInfo.username,
+            authenticatedUser.userInfo.profilePictureName,
+            body.profilePicture
+        )
+        return ResponseEntity.noContent().build<Unit>()
     }
 }

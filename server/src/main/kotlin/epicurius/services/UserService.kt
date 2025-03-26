@@ -5,6 +5,7 @@ import epicurius.domain.Diet
 import epicurius.domain.FollowingStatus
 import epicurius.domain.Intolerance
 import epicurius.domain.PagingParams
+import epicurius.domain.Picture
 import epicurius.domain.exceptions.IncorrectPassword
 import epicurius.domain.exceptions.InvalidCountry
 import epicurius.domain.exceptions.PasswordsDoNotMatch
@@ -25,6 +26,8 @@ import epicurius.http.user.models.input.UpdateUserInputModel
 import epicurius.repository.cloudStorage.CloudStorageManager
 import epicurius.repository.transaction.TransactionManager
 import org.springframework.stereotype.Component
+import org.springframework.web.multipart.MultipartFile
+import java.util.UUID
 
 @Component
 class UserService(
@@ -132,7 +135,21 @@ class UserService(
         }
     }
 
-    fun updateProfilePicture() { }
+    fun updateProfilePicture(username: String, profilePictureName: String?, profilePicture: MultipartFile) {
+        if (profilePictureName == null) {
+            val newProfilePictureName = UUID.randomUUID().toString()
+            cs.userCloudStorageRepository.updateProfilePicture(newProfilePictureName, Picture(profilePicture))
+            tm.run {
+                it.userRepository.updateUser(
+                    username,
+                    UpdateUserInfo(profilePictureName = newProfilePictureName)
+                )
+            }
+        }
+        else {
+            cs.userCloudStorageRepository.updateProfilePicture(profilePictureName, Picture(profilePicture))
+        }
+    }
 
     fun resetPassword(email: String, newPassword: String, confirmPassword: String) {
         checkIfPasswordsMatch(newPassword, confirmPassword)
