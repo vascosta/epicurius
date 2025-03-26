@@ -3,6 +3,7 @@ package epicurius.repository
 import epicurius.domain.Diet
 import epicurius.domain.FollowingStatus
 import epicurius.domain.Intolerance
+import epicurius.domain.PagingParams
 import epicurius.domain.user.SocialUser
 import epicurius.domain.user.UpdateUserInfo
 import epicurius.utils.generateEmail
@@ -60,31 +61,27 @@ class UserRepositoryTest : RepositoryTest() {
     }
 
     @Test
-    fun `Reset password successfully`() {
-        // given user required information
-        val username = generateRandomUsername()
+    fun `Create new users and retrieve them successfully`() {
+        // given 2 created users
+        val username = "partial"
+        val username2 = "partialUsername"
         val email = generateEmail(username)
+        val email2 = generateEmail(username2)
         val country = "PT"
-        val password = generateSecurePassword()
-        val passwordHash = usersDomain.encodePassword(password)
+        val passwordHash = usersDomain.encodePassword(generateSecurePassword())
 
-        // when creating a user
         createUser(username, email, country, passwordHash)
+        createUser(username2, email2, country, passwordHash)
 
-        // when resetting the password
-        val newPassword = UUID.randomUUID().toString()
-        val newPasswordHash = usersDomain.encodePassword(newPassword)
-        resetPassword(email, newPasswordHash)
+        // when getting the users by a partial username
+        val users = getUsers("partial", PagingParams())
 
-        // when getting the user by name
-        val user = getUserByName(username)
+        // then the users are retrieved successfully
+        assertTrue(users.isNotEmpty())
+        assertEquals(users.size, 2)
+        assertTrue(users.contains(SocialUser(username, null)))
+        assertTrue(users.contains(SocialUser(username2, null)))
 
-        // then the password is reset successfully
-        assertNotNull(user)
-        assertEquals(user.username, username)
-        assertEquals(user.email, email)
-        assertEquals(user.passwordHash, newPasswordHash)
-        assertNotEquals(user.passwordHash, passwordHash)
     }
 
     @Test
@@ -133,6 +130,79 @@ class UserRepositoryTest : RepositoryTest() {
     }
 
     @Test
+    fun `Reset password successfully`() {
+        // given user required information
+        val username = generateRandomUsername()
+        val email = generateEmail(username)
+        val country = "PT"
+        val password = generateSecurePassword()
+        val passwordHash = usersDomain.encodePassword(password)
+
+        // when creating a user
+        createUser(username, email, country, passwordHash)
+
+        // when resetting the password
+        val newPassword = UUID.randomUUID().toString()
+        val newPasswordHash = usersDomain.encodePassword(newPassword)
+        resetPassword(email, newPasswordHash)
+
+        // when getting the user by name
+        val user = getUserByName(username)
+
+        // then the password is reset successfully
+        assertNotNull(user)
+        assertEquals(user.username, username)
+        assertEquals(user.email, email)
+        assertEquals(user.passwordHash, newPasswordHash)
+        assertNotEquals(user.passwordHash, passwordHash)
+    }
+
+    @Test
+    fun `Follow a public user, unfollows him and then retrieve its followers and following successfully`() {
+        // given two existing users
+        val publicUser = publicTestUser
+        val privateUser = privateTestUser
+
+        // when following a public user
+        follow(privateUser.id, publicUser.id, FollowingStatus.ACCEPTED.ordinal)
+
+        // then the user is followed successfully
+        val publicUserFollowers = getFollowers(publicUser.id)
+        val privateUserFollowing = getFollowing(privateUser.id)
+        assertTrue(publicUserFollowers.isNotEmpty())
+        assertTrue(privateUserFollowing.isNotEmpty())
+        assertEquals(publicUserFollowers.size, 1)
+        assertEquals(privateUserFollowing.size, 1)
+        assertTrue(publicUserFollowers.contains(SocialUser(privateUser.username, privateUser.profilePictureName)))
+        assertTrue(privateUserFollowing.contains(SocialUser(publicUser.username, publicUser.profilePictureName)))
+
+        // when unfollowing the user
+        unfollow(privateUser.id, publicUser.id)
+
+        // then the user is unfollowed successfully
+        val publicUserFollowersAfterUnfollow = getFollowers(publicUser.id)
+        val privateUserFollowingAfterUnfollow = getFollowing(privateUser.id)
+        assertTrue(publicUserFollowersAfterUnfollow.isEmpty())
+        assertTrue(privateUserFollowingAfterUnfollow.isEmpty())
+    }
+
+    @Test
+    fun `Try to follow a private user, get added to its follow requests and then retrieve them successfully`() {
+        // given two existing users
+        val publicUser = publicTestUser
+        val privateUser = privateTestUser
+
+        // when following a private user
+        follow(publicUser.id, privateUser.id, FollowingStatus.PENDING.ordinal)
+
+        // then the follow request is sent successfully
+        val privateUserFollowRequests = getFollowRequests(privateUser.id)
+        assertTrue(privateUserFollowRequests.isNotEmpty())
+        assertEquals(privateUserFollowRequests.size, 1)
+        assertTrue(privateUserFollowRequests.contains(SocialUser(publicUser.username, publicUser.profilePictureName)))
+    }
+
+    @Test
     fun `Checks if an existing user exists successfully`() {
         // given an existing user with a token hash
         val username = generateRandomUsername()
@@ -167,7 +237,7 @@ class UserRepositoryTest : RepositoryTest() {
     }
 
     @Test
-    fun `Checks if an non user exists successfully`() {
+    fun `Checks if an non-existing user exists successfully`() {
         // given a non-existing user with non-existing token hash
         val username = ""
         val email = ""
@@ -234,22 +304,15 @@ class UserRepositoryTest : RepositoryTest() {
     }
 
     @Test
-    fun `Follow a public user and then retrieve its followers and following successfully`() {
-        // given two users
+    fun `Check if an user is being followed by other user successfully`() {
+        // given 2 existing users
         val publicUser = publicTestUser
         val privateUser = privateTestUser
 
-        // when following a public user
-        follow(privateUser.id, publicUser.id, FollowingStatus.ACCEPTED.ordinal)
+        // when checking if the user is being followed by the other user
+        val userBeingFollowedBy = checkIfUserIsBeingFollowedBy(privateUser.id, publicUser.id)
 
-        // then the user is followed successfully
-        val publicUserFollowers = getFollowers(publicUser.id)
-        val privateUserFollowing = getFollowing(privateUser.id)
-        assertTrue(publicUserFollowers.isNotEmpty())
-        assertTrue(privateUserFollowing.isNotEmpty())
-        assertEquals(publicUserFollowers.size, 1)
-        assertEquals(privateUserFollowing.size, 1)
-        assertTrue(publicUserFollowers.contains(SocialUser(privateUser.username, privateUser.profilePictureName)))
-        assertTrue(privateUserFollowing.contains(SocialUser(publicUser.username, publicUser.profilePictureName)))
+        // then the user is not being followed by the other user
+        assertFalse(userBeingFollowedBy)
     }
 }

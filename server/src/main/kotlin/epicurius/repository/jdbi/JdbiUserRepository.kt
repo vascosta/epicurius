@@ -181,15 +181,16 @@ class JdbiUserRepository(private val handle: Handle) : UserPostgresRepository {
             .mapTo<Int>()
             .one() == 1
 
-    override fun checkIfUserIsBeingFollowedBy(userId: Int, userIdToFollow: Int): Boolean =
+    override fun checkIfUserIsBeingFollowedBy(userId: Int, followerId: Int): Boolean =
         handle.createQuery(
             """
                 SELECT COUNT (*) FROM dbo.followers
-                WHERE user_id = :user_id AND follower_id = :follower_id
+                WHERE user_id = :user_id AND follower_id = :follower_id AND status = :status
             """
         )
             .bind("user_id", userId)
-            .bind("follower_id", userIdToFollow)
+            .bind("follower_id", followerId)
+            .bind("status", FollowingStatus.ACCEPTED.ordinal)
             .mapTo<Int>()
             .one() == 1
 }

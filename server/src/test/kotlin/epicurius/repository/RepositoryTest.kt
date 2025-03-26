@@ -1,9 +1,11 @@
 package epicurius.repository
 
 import epicurius.EpicuriusTest
+import epicurius.domain.PagingParams
 import epicurius.domain.user.UpdateUserInfo
 import epicurius.domain.user.User
 import epicurius.utils.createTestUser
+import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.BeforeAll
 
 open class RepositoryTest : EpicuriusTest() {
@@ -28,14 +30,13 @@ open class RepositoryTest : EpicuriusTest() {
         fun getUserByName(username: String) = tm.run { it.userRepository.getUser(username) }
         fun getUserByEmail(email: String) = tm.run { it.userRepository.getUser(email = email) }
         fun getUserByTokenHash(tokenHash: String) = tm.run { it.userRepository.getUser(tokenHash = tokenHash) }
+
+        fun getUsers(partialUsername: String, pagingParams: PagingParams) =
+            tm.run { it.userRepository.getUsers(partialUsername, pagingParams) }
+
         fun getFollowers(userId: Int) = tm.run { it.userRepository.getFollowers(userId) }
         fun getFollowing(userId: Int) = tm.run { it.userRepository.getFollowing(userId) }
-
-        fun follow(userId: Int, userIdToFollow: Int, status: Int) =
-            tm.run { it.userRepository.followUser(userId, userIdToFollow, status) }
-
-        fun resetPassword(email: String, passwordHash: String) =
-            tm.run { it.userRepository.resetPassword(email, passwordHash) }
+        fun getFollowRequests(userId: Int) = tm.run { it.userRepository.getFollowRequests(userId) }
 
         fun updateUser(username: String, userUpdate: UpdateUserInfo) =
             tm.run {
@@ -53,10 +54,22 @@ open class RepositoryTest : EpicuriusTest() {
                 )
             }
 
+        fun resetPassword(email: String, passwordHash: String) =
+            tm.run { it.userRepository.resetPassword(email, passwordHash) }
+
+        fun follow(userId: Int, userIdToFollow: Int, status: Int) =
+            tm.run { it.userRepository.followUser(userId, userIdToFollow, status) }
+
+        fun unfollow(userId: Int, userIdToUnfollow: Int) =
+            tm.run { it.userRepository.unfollowUser(userId, userIdToUnfollow) }
+
         fun deleteToken(username: String? = null, email: String? = null) =
             tm.run { it.tokenRepository.deleteToken(username, email) }
 
         fun checkIfUserIsLoggedIn(username: String? = null, email: String? = null) =
             tm.run { it.userRepository.checkIfUserIsLoggedIn(username, email) }
+
+        fun checkIfUserIsBeingFollowedBy(userId: Int, followerId: Int) =
+            tm.run { it.userRepository.checkIfUserIsBeingFollowedBy(userId, followerId) }
     }
 }

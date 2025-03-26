@@ -70,6 +70,11 @@ class UserService(
         }
     }
 
+    fun getProfilePicture(profilePictureName: String?): ByteArray? {
+        if (profilePictureName == null) return null
+        return cs.userCloudStorageRepository.getProfilePicture(profilePictureName)
+    }
+
     fun getUsers(partialUsername: String, pagingParams: PagingParams): List<SearchUser> {
         return tm.run { it.userRepository.getUsers(partialUsername, pagingParams) }
             .map { user -> SearchUser(user.username, getProfilePicture(user.profilePictureName)) }
@@ -86,11 +91,6 @@ class UserService(
     fun getFollowRequests(userId: Int) =
         tm.run { it.userRepository.getFollowRequests(userId) }
             .map { user -> FollowUser(user.username, getProfilePicture(user.profilePictureName)) }
-
-    fun getProfilePicture(profilePictureName: String?): ByteArray? {
-        if (profilePictureName == null) return null
-        return cs.userCloudStorageRepository.getProfilePicture(profilePictureName)
-    }
 
     fun addProfilePicture() { }
 

@@ -13,11 +13,11 @@ interface UserPostgresRepository {
     fun getFollowing(userId: Int): List<SocialUser>
     fun getFollowRequests(userId: Int): List<SocialUser>
 
+    fun updateUser(username: String, userUpdate: UpdateUserInfo): User
+    fun resetPassword(email: String, passwordHash: String)
     fun followUser(userId: Int, userIdToFollow: Int, status: Int)
     fun unfollowUser(userId: Int, userIdToUnfollow: Int)
-    fun resetPassword(email: String, passwordHash: String)
-    fun updateUser(username: String, userUpdate: UpdateUserInfo): User
 
     fun checkIfUserIsLoggedIn(username: String? = null, email: String? = null): Boolean
-    fun checkIfUserIsBeingFollowedBy(userId: Int, userIdToFollow: Int): Boolean
+    fun checkIfUserIsBeingFollowedBy(userId: Int, followerId: Int): Boolean
 }

@@ -124,26 +124,6 @@ class UserController(val userService: UserService) {
         return ResponseEntity.noContent().build<Unit>()
     }
 
-    @PatchMapping(Uris.User.FOLLOW)
-    fun follow(authenticatedUser: AuthenticatedUser, @PathVariable usernameToFollow: String): ResponseEntity<*> {
-        userService.follow(authenticatedUser.userInfo.id, usernameToFollow)
-        return ResponseEntity.noContent().build<Unit>()
-    }
-
-    @PatchMapping(Uris.User.UNFOLLOW)
-    fun unfollow(authenticatedUser: AuthenticatedUser, @PathVariable usernameToUnfollow: String): ResponseEntity<*> {
-        userService.unfollow(authenticatedUser.userInfo.id, usernameToUnfollow)
-        return ResponseEntity.ok().build<Unit>()
-    }
-
-    @PatchMapping(Uris.User.RESET_PASSWORD)
-    fun resetPassword(
-        @Valid @RequestBody body: ResetPasswordInputModel
-    ): ResponseEntity<*> {
-        userService.resetPassword(body.email, body.newPassword, body.confirmPassword)
-        return ResponseEntity.noContent().build<Unit>()
-    }
-
     @PatchMapping(Uris.User.USER)
     fun updateUser(
         authenticatedUser: AuthenticatedUser,
@@ -174,5 +154,25 @@ class UserController(val userService: UserService) {
             body.profilePicture
         )
         return ResponseEntity.noContent().build<Unit>()
+    }
+
+    @PatchMapping(Uris.User.RESET_PASSWORD)
+    fun resetPassword(
+        @Valid @RequestBody body: ResetPasswordInputModel
+    ): ResponseEntity<*> {
+        userService.resetPassword(body.email, body.newPassword, body.confirmPassword)
+        return ResponseEntity.noContent().build<Unit>()
+    }
+
+    @PatchMapping(Uris.User.FOLLOW)
+    fun follow(authenticatedUser: AuthenticatedUser, @PathVariable usernameToFollow: String): ResponseEntity<*> {
+        userService.follow(authenticatedUser.userInfo.id, usernameToFollow)
+        return ResponseEntity.noContent().build<Unit>()
+    }
+
+    @PatchMapping(Uris.User.UNFOLLOW)
+    fun unfollow(authenticatedUser: AuthenticatedUser, @PathVariable usernameToUnfollow: String): ResponseEntity<*> {
+        userService.unfollow(authenticatedUser.userInfo.id, usernameToUnfollow)
+        return ResponseEntity.ok().build<Unit>()
     }
 }
