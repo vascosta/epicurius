@@ -2,12 +2,14 @@ package epicurius.services
 
 import epicurius.domain.Diet
 import epicurius.domain.Intolerance
+import epicurius.domain.PagingParams
 import epicurius.domain.exceptions.IncorrectPassword
 import epicurius.domain.exceptions.InvalidCountry
 import epicurius.domain.exceptions.PasswordsDoNotMatch
 import epicurius.domain.exceptions.UserAlreadyExists
 import epicurius.domain.exceptions.UserAlreadyLoggedIn
 import epicurius.domain.exceptions.UserNotFound
+import epicurius.domain.user.SearchUser
 import epicurius.http.user.models.input.UpdateUserInputModel
 import epicurius.utils.generateEmail
 import epicurius.utils.generateRandomUsername
@@ -48,6 +50,29 @@ class UserServiceTest : ServicesTest() {
         assertEquals(userByName.intolerances, emptyList())
         assertEquals(userByName.diet, emptyList())
         assertNull(userByName.profilePictureName)
+    }
+
+    @Test
+    fun `Create new users and retrieve them successfully`() {
+        // given 2 created users
+        val username = "partial"
+        val username2 = "partialUsername"
+        val email = generateEmail(username)
+        val email2 = generateEmail(username2)
+        val country = "PT"
+        val password = generateSecurePassword()
+
+        createUser(username, email, country, password, password)
+        createUser(username2, email2, country, password, password)
+
+        // when getting the users by a partial username
+        val users = getUsers("partial", PagingParams())
+
+        // then the users are retrieved successfully
+        assertTrue(users.isNotEmpty())
+        assertEquals(users.size, 2)
+        assertTrue(users.contains(SearchUser(username, null)))
+        assertTrue(users.contains(SearchUser(username2, null)))
     }
 
     @Test

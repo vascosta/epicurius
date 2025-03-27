@@ -6,9 +6,7 @@ import epicurius.domain.user.User
 import epicurius.http.user.models.input.UpdateUserInputModel
 import epicurius.utils.createTestUser
 import org.junit.jupiter.api.BeforeAll
-import org.springframework.mock.web.MockMultipartFile
 import org.springframework.web.multipart.MultipartFile
-import java.io.FileInputStream
 
 open class ServicesTest : EpicuriusTest() {
 
@@ -18,21 +16,6 @@ open class ServicesTest : EpicuriusTest() {
 
         lateinit var publicTestUser: User
         lateinit var privateTestUser: User
-
-        val testProfilePicture =
-            MockMultipartFile(
-                "test-profile-picture.jpeg",
-                "test-profile-picture.jpeg",
-                "image/jpeg",
-                FileInputStream("src/test/resources/test-profile-picture.jpeg")
-            )
-
-        val testProfilePicture2 = MockMultipartFile(
-            "test-profile-picture2.jpeg",
-            "test-profile-picture2.jpeg",
-            "image/jpg",
-            FileInputStream("src/test/resources/test-profile-picture2.jpg")
-        )
 
         @JvmStatic
         @BeforeAll

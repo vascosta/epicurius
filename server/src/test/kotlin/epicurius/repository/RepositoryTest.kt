@@ -6,6 +6,7 @@ import epicurius.domain.user.UpdateUserInfo
 import epicurius.domain.user.User
 import epicurius.utils.createTestUser
 import org.junit.jupiter.api.BeforeAll
+import org.springframework.web.multipart.MultipartFile
 
 open class RepositoryTest : EpicuriusTest() {
 
@@ -33,6 +34,8 @@ open class RepositoryTest : EpicuriusTest() {
         fun getUsers(partialUsername: String, pagingParams: PagingParams) =
             tm.run { it.userRepository.getUsers(partialUsername, pagingParams) }
 
+        fun getProfilePicture(profilePictureName: String) = cs.userCloudStorageRepository.getProfilePicture(profilePictureName)
+
         fun getFollowers(userId: Int) = tm.run { it.userRepository.getFollowers(userId) }
         fun getFollowing(userId: Int) = tm.run { it.userRepository.getFollowing(userId) }
         fun getFollowRequests(userId: Int) = tm.run { it.userRepository.getFollowRequests(userId) }
@@ -52,6 +55,9 @@ open class RepositoryTest : EpicuriusTest() {
                     )
                 )
             }
+
+        fun updateProfilePicture(profilePictureName: String, profilePicture: MultipartFile) =
+            cs.userCloudStorageRepository.updateProfilePicture(profilePictureName, profilePicture)
 
         fun resetPassword(email: String, passwordHash: String) =
             tm.run { it.userRepository.resetPassword(email, passwordHash) }

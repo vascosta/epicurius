@@ -5,7 +5,6 @@ import epicurius.domain.Diet
 import epicurius.domain.FollowingStatus
 import epicurius.domain.Intolerance
 import epicurius.domain.PagingParams
-import epicurius.domain.Picture
 import epicurius.domain.exceptions.IncorrectPassword
 import epicurius.domain.exceptions.InvalidCountry
 import epicurius.domain.exceptions.PasswordsDoNotMatch
@@ -138,7 +137,7 @@ class UserService(
     fun updateProfilePicture(username: String, profilePictureName: String? = null, profilePicture: MultipartFile): String {
         if (profilePictureName == null) {
             val newProfilePictureName = UUID.randomUUID().toString()
-            cs.userCloudStorageRepository.updateProfilePicture(newProfilePictureName, Picture(profilePicture))
+            cs.userCloudStorageRepository.updateProfilePicture(newProfilePictureName, profilePicture)
             tm.run {
                 it.userRepository.updateUser(
                     username,
@@ -147,7 +146,7 @@ class UserService(
             }
             return newProfilePictureName
         } else {
-            cs.userCloudStorageRepository.updateProfilePicture(profilePictureName, Picture(profilePicture))
+            cs.userCloudStorageRepository.updateProfilePicture(profilePictureName, profilePicture)
             return profilePictureName
         }
     }

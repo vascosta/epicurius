@@ -1,8 +1,8 @@
 package epicurius.repository
 
-import epicurius.domain.Picture
+import org.springframework.web.multipart.MultipartFile
 
 interface UserCloudStorageRepository {
     fun getProfilePicture(profilePictureName: String): ByteArray
-    fun updateProfilePicture(profilePictureName: String, profilePicture: Picture)
+    fun updateProfilePicture(profilePictureName: String, profilePicture: MultipartFile)
 }

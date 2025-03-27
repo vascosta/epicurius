@@ -12,6 +12,7 @@ import epicurius.repository.transaction.jdbi.JdbiTransactionManager
 import org.jdbi.v3.core.Jdbi
 import org.junit.jupiter.api.AfterAll
 import org.postgresql.ds.PGSimpleDataSource
+import org.springframework.mock.web.MockMultipartFile
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import java.io.FileInputStream
 
@@ -50,6 +51,21 @@ open class EpicuriusTest {
         private val passwordEncoder = BCryptPasswordEncoder()
         val usersDomain = UserDomain(passwordEncoder, tokenEncoder)
         val countriesDomain = CountriesDomain()
+
+        val testProfilePicture =
+            MockMultipartFile(
+                "test-profile-picture.jpeg",
+                "test-profile-picture.jpeg",
+                "image/jpeg",
+                FileInputStream("src/test/resources/test-profile-picture.jpeg")
+            )
+
+        val testProfilePicture2 = MockMultipartFile(
+            "test-profile-picture2.jpeg",
+            "test-profile-picture2.jpeg",
+            "image/jpg",
+            FileInputStream("src/test/resources/test-profile-picture2.jpg")
+        )
 
 /*        private fun getFirestoreService(): Firestore {
             val serviceAccount = Environment.getGoogleServiceAccount()
