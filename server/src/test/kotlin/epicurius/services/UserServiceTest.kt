@@ -13,7 +13,6 @@ import epicurius.utils.generateEmail
 import epicurius.utils.generateRandomUsername
 import epicurius.utils.generateSecurePassword
 import org.junit.jupiter.api.Assertions.assertFalse
-import org.springframework.mock.web.MockMultipartFile
 import java.util.UUID
 import kotlin.test.Test
 import kotlin.test.assertContentEquals

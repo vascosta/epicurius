@@ -81,7 +81,6 @@ class UserRepositoryTest : RepositoryTest() {
         assertEquals(users.size, 2)
         assertTrue(users.contains(SocialUser(username, null)))
         assertTrue(users.contains(SocialUser(username2, null)))
-
     }
 
     @Test

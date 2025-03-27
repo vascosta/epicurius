@@ -5,7 +5,6 @@ import epicurius.domain.PagingParams
 import epicurius.domain.user.UpdateUserInfo
 import epicurius.domain.user.User
 import epicurius.utils.createTestUser
-import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.BeforeAll
 
 open class RepositoryTest : EpicuriusTest() {

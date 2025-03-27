@@ -6,6 +6,7 @@ import epicurius.domain.exceptions.IncorrectPassword
 import epicurius.domain.exceptions.InvalidCountry
 import epicurius.domain.exceptions.InvalidDietIdx
 import epicurius.domain.exceptions.InvalidIntolerancesIdx
+import epicurius.domain.exceptions.InvalidProduct
 import epicurius.domain.exceptions.PasswordsDoNotMatch
 import epicurius.domain.exceptions.UnauthorizedException
 import epicurius.domain.exceptions.UserAlreadyExists
@@ -90,7 +91,14 @@ class ExceptionHandler {
     @ExceptionHandler(
         value = [
             IllegalArgumentException::class,
-            // add exceptions
+            UserAlreadyExists::class,
+            UserAlreadyLoggedIn::class,
+            InvalidCountry::class,
+            IncorrectPassword::class,
+            PasswordsDoNotMatch::class,
+            InvalidIntolerancesIdx::class,
+            InvalidDietIdx::class,
+            InvalidProduct::class
         ]
     )
     fun handleBadRequest(request: HttpServletRequest, ex: Exception) =
@@ -109,23 +117,6 @@ class ExceptionHandler {
             }
         )
     }
-
-    @ExceptionHandler(
-        value = [
-            UserAlreadyExists::class,
-            UserAlreadyLoggedIn::class,
-            InvalidCountry::class,
-            IncorrectPassword::class,
-            PasswordsDoNotMatch::class,
-            InvalidIntolerancesIdx::class,
-            InvalidDietIdx::class
-        ]
-    )
-    fun handleUserBadRequest(request: HttpServletRequest, ex: Exception) =
-        ex.handle(
-            request = request,
-            status = HttpStatus.BAD_REQUEST
-        )
 
     @ExceptionHandler(
         value = [
