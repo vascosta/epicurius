@@ -8,5 +8,5 @@ object Environment {
 
     fun getFirestoreDatabaseTestId() = "epicurius-database-test"
 
-    fun getSpoonacularAPIKey() = FileInputStream("src/main/resources/SpoonacularAPIKey")
+    fun getSpoonacularAPIKey() = FileInputStream("src/main/resources/SpoonacularAPIKey.txt")
 }
