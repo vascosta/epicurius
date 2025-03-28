@@ -6,12 +6,14 @@ import epicurius.domain.Intolerance
 import epicurius.domain.PagingParams
 import epicurius.domain.user.SocialUser
 import epicurius.domain.user.UpdateUserInfo
+import epicurius.utils.createTestUser
 import epicurius.utils.generateEmail
 import epicurius.utils.generateRandomUsername
 import epicurius.utils.generateSecurePassword
 import org.junit.jupiter.api.Assertions.assertNull
 import java.util.UUID
 import kotlin.test.Test
+import kotlin.test.assertContentEquals
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertNotEquals
@@ -84,16 +86,41 @@ class UserRepositoryTest : RepositoryTest() {
     }
 
     @Test
+    fun `Adds a profile picture to the Cloud Storage and then retrieves it successfully`() {
+        // given a profile picture
+        val profilePicture = testProfilePicture
+        val profilePictureName = UUID.randomUUID().toString()
+
+        // when adding a profile picture
+        updateProfilePicture(profilePictureName, profilePicture)
+
+        // then the profile picture is added successfully
+        val newProfilePicture = getProfilePicture(profilePictureName)
+        assertNotNull(newProfilePicture)
+        assertContentEquals(profilePicture.bytes, newProfilePicture)
+    }
+
+    @Test
+    fun `Updates a profile picture already in the Cloud Storage and then retrieves it successfully`() {
+        // given a profile picture in the Cloud Storage
+        val profilePicture = testProfilePicture
+        val profilePictureName = UUID.randomUUID().toString()
+        updateProfilePicture(profilePictureName, profilePicture)
+
+        // when updating the profile picture
+        val newProfilePicture = testProfilePicture2
+        updateProfilePicture(profilePictureName, newProfilePicture)
+
+        // then the profile picture is updated successfully
+        val updatedProfilePicture = getProfilePicture(profilePictureName)
+        assertNotNull(newProfilePicture)
+        assertContentEquals(newProfilePicture.bytes, updatedProfilePicture)
+    }
+
+    @Test
     fun `Update user successfully`() {
         // given user required information
-        val username = generateRandomUsername()
-        val email = generateEmail(username)
-        val country = "PT"
-        val password = generateSecurePassword()
-        val passwordHash = usersDomain.encodePassword(password)
-
-        // when creating a user
-        createUser(username, email, country, passwordHash)
+        val user = createTestUser(tm)
 
         // when updating the user
         val newUsername = generateRandomUsername()
@@ -105,8 +132,8 @@ class UserRepositoryTest : RepositoryTest() {
         val newIntolerances = listOf(Intolerance.GLUTEN)
         val newDiet = listOf(Diet.VEGAN)
 
-        val user = updateUser(
-            username,
+        val updatedUser = updateUser(
+            user.username,
             UpdateUserInfo(
                 username = newUsername,
                 email = newEmail,
@@ -119,41 +146,34 @@ class UserRepositoryTest : RepositoryTest() {
         )
 
         // then the user is updated successfully
-        assertEquals(user.username, newUsername)
-        assertEquals(user.email, newEmail)
-        assertEquals(user.country, newCountry)
-        assertEquals(user.passwordHash, newPasswordHash)
-        assertEquals(user.privacy, newPrivacy)
-        assertEquals(user.intolerances, newIntolerances)
-        assertEquals(user.diet, newDiet)
+        assertEquals(updatedUser.username, newUsername)
+        assertEquals(updatedUser.email, newEmail)
+        assertEquals(updatedUser.country, newCountry)
+        assertEquals(updatedUser.passwordHash, newPasswordHash)
+        assertEquals(updatedUser.privacy, newPrivacy)
+        assertEquals(updatedUser.intolerances, newIntolerances)
+        assertEquals(updatedUser.diet, newDiet)
     }
 
     @Test
     fun `Reset password successfully`() {
         // given user required information
-        val username = generateRandomUsername()
-        val email = generateEmail(username)
-        val country = "PT"
-        val password = generateSecurePassword()
-        val passwordHash = usersDomain.encodePassword(password)
-
-        // when creating a user
-        createUser(username, email, country, passwordHash)
+        val user = createTestUser(tm)
 
         // when resetting the password
         val newPassword = UUID.randomUUID().toString()
         val newPasswordHash = usersDomain.encodePassword(newPassword)
-        resetPassword(email, newPasswordHash)
+        resetPassword(user.email, newPasswordHash)
 
         // when getting the user by name
-        val user = getUserByName(username)
+        val userAfterResetPassword = getUserByName(user.username)
 
         // then the password is reset successfully
-        assertNotNull(user)
-        assertEquals(user.username, username)
-        assertEquals(user.email, email)
-        assertEquals(user.passwordHash, newPasswordHash)
-        assertNotEquals(user.passwordHash, passwordHash)
+        assertNotNull(userAfterResetPassword)
+        assertEquals(userAfterResetPassword.username, user.username)
+        assertEquals(userAfterResetPassword.email, user.email)
+        assertEquals(userAfterResetPassword.passwordHash, newPasswordHash)
+        assertNotEquals(userAfterResetPassword.passwordHash, user.passwordHash)
     }
 
     @Test
@@ -186,7 +206,7 @@ class UserRepositoryTest : RepositoryTest() {
     }
 
     @Test
-    fun `Try to follow a private user, get added to its follow requests and then retrieve them successfully`() {
+    fun `Try to follow a private user, get added to its follow requests and then cancel the request successfully`() {
         // given two existing users
         val publicUser = publicTestUser
         val privateUser = privateTestUser
@@ -199,26 +219,29 @@ class UserRepositoryTest : RepositoryTest() {
         assertTrue(privateUserFollowRequests.isNotEmpty())
         assertEquals(privateUserFollowRequests.size, 1)
         assertTrue(privateUserFollowRequests.contains(SocialUser(publicUser.username, publicUser.profilePictureName)))
+
+        // when cancelling the follow request
+        cancelFollowRequest(privateUser.id, publicUser.id)
+
+        // then the follow request is cancelled successfully
+        val privateUserFollowRequestsAfterCancel = getFollowRequests(privateUser.id)
+        assertTrue(privateUserFollowRequestsAfterCancel.isEmpty())
     }
 
     @Test
     fun `Checks if an existing user exists successfully`() {
         // given an existing user with a token hash
-        val username = generateRandomUsername()
-        val email = generateEmail(username)
-        val country = "PT"
-        val passwordHash = usersDomain.encodePassword(generateSecurePassword())
+        val user = createTestUser(tm)
         val token = usersDomain.generateTokenValue()
         val tokenHash = usersDomain.hashToken(token)
 
-        createUser(username, email, country, passwordHash)
-        createToken(tokenHash, username)
+        createToken(tokenHash, user.username)
 
         // when checking if the user exists by name
-        val userExistsByName = getUserByName(username)
+        val userExistsByName = getUserByName(user.username)
 
         // when checking if the user exists by email
-        val userExistsByEmail = getUserByEmail(email)
+        val userExistsByEmail = getUserByEmail(user.email)
 
         // when checking if the user exists by token hash
         val userExistsByTokenHash = getUserByTokenHash(tokenHash)
@@ -227,12 +250,12 @@ class UserRepositoryTest : RepositoryTest() {
         assertNotNull(userExistsByName)
         assertNotNull(userExistsByEmail)
         assertNotNull(userExistsByTokenHash)
-        assertEquals(userExistsByName.username, username)
-        assertEquals(userExistsByEmail.username, username)
-        assertEquals(userExistsByTokenHash.username, username)
-        assertEquals(userExistsByName.email, email)
-        assertEquals(userExistsByEmail.email, email)
-        assertEquals(userExistsByTokenHash.email, email)
+        assertEquals(userExistsByName.username, user.username)
+        assertEquals(userExistsByEmail.username, user.username)
+        assertEquals(userExistsByTokenHash.username, user.username)
+        assertEquals(userExistsByName.email, user.email)
+        assertEquals(userExistsByEmail.email, user.email)
+        assertEquals(userExistsByTokenHash.email, user.email)
     }
 
     @Test
@@ -260,21 +283,17 @@ class UserRepositoryTest : RepositoryTest() {
     @Test
     fun `Checks if an existing user is logged in successfully`() {
         // given an existing user logged in
-        val username = generateRandomUsername()
-        val email = generateEmail(username)
-        val country = "PT"
-        val passwordHash = usersDomain.encodePassword(generateSecurePassword())
+        val user = createTestUser(tm)
         val token = usersDomain.generateTokenValue()
         val tokenHash = usersDomain.hashToken(token)
 
-        createUser(username, email, country, passwordHash)
-        createToken(tokenHash, username)
+        createToken(tokenHash, user.username)
 
         // when checking if the user is logged in
-        val userExistsByName = checkIfUserIsLoggedIn(username)
+        val userExistsByName = checkIfUserIsLoggedIn(user.username)
 
         // when checking if the user exists by email
-        val userExistsByEmail = checkIfUserIsLoggedIn(email = email)
+        val userExistsByEmail = checkIfUserIsLoggedIn(email = user.email)
 
         // then the user is logged in
         assertTrue(userExistsByName)
@@ -284,18 +303,13 @@ class UserRepositoryTest : RepositoryTest() {
     @Test
     fun `Checks if not logged in user is not logged in successfully`() {
         // given an existing user not logged in
-        val username = generateRandomUsername()
-        val email = generateEmail(username)
-        val country = "PT"
-        val passwordHash = usersDomain.encodePassword(generateSecurePassword())
-
-        createUser(username, email, country, passwordHash)
+        val user = createTestUser(tm)
 
         // when checking if the user is logged in
-        val userExistsByName = checkIfUserIsLoggedIn(username)
+        val userExistsByName = checkIfUserIsLoggedIn(user.username)
 
         // when checking if the user exists by email
-        val userExistsByEmail = checkIfUserIsLoggedIn(email = email)
+        val userExistsByEmail = checkIfUserIsLoggedIn(email = user.email)
 
         // then the user is not logged in
         assertFalse(userExistsByName)
@@ -313,5 +327,19 @@ class UserRepositoryTest : RepositoryTest() {
 
         // then the user is not being followed by the other user
         assertFalse(userBeingFollowedBy)
+    }
+
+    @Test
+    fun `Check if an user already sent a follow request to other user successfully`() {
+        // given 2 existing users
+        val privateUser = privateTestUser
+        val privateUser2 = createTestUser(tm, true)
+        follow(privateUser.id, privateUser2.id, FollowingStatus.PENDING.ordinal)
+
+        // when checking if the user already sent a follow request to the other user
+        val userAlreadySentFollowRequest = checkIfUserAlreadySentFollowRequest(privateUser2.id, privateUser.id)
+
+        // then a follow request was already sent
+        assertTrue(userAlreadySentFollowRequest)
     }
 }

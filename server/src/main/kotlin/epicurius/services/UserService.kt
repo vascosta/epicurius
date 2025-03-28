@@ -5,6 +5,8 @@ import epicurius.domain.Diet
 import epicurius.domain.FollowingStatus
 import epicurius.domain.Intolerance
 import epicurius.domain.PagingParams
+import epicurius.domain.exceptions.FollowRequestAlreadyBeenSent
+import epicurius.domain.exceptions.FollowRequestNotFound
 import epicurius.domain.exceptions.IncorrectPassword
 import epicurius.domain.exceptions.InvalidCountry
 import epicurius.domain.exceptions.PasswordsDoNotMatch
@@ -164,7 +166,14 @@ class UserService(
     fun follow(userId: Int, usernameToFollow: String) {
         val userToFollow = checkIfUserExists(username = usernameToFollow) ?: throw UserNotFound(usernameToFollow)
         if (checkIfUserIsBeingFollowedBy(userId, userToFollow.id)) throw UserAlreadyBeingFollowed(usernameToFollow)
-        val followingStatus = if (userToFollow.privacy) FollowingStatus.PENDING else FollowingStatus.ACCEPTED
+        val followingStatus =
+            if (userToFollow.privacy) {
+                if (checkIfUserAlreadySentFollowRequest(userId, userToFollow.id)) throw FollowRequestAlreadyBeenSent(usernameToFollow)
+                FollowingStatus.PENDING
+            } else {
+                FollowingStatus.ACCEPTED
+            }
+
         tm.run {
             it.userRepository.followUser(userId, userToFollow.id, followingStatus.ordinal)
         }
@@ -175,6 +184,14 @@ class UserService(
         if (checkIfUserIsBeingFollowedBy(userId, userToUnfollow.id)) throw UserNotFollowed(usernameToUnfollow)
         tm.run {
             it.userRepository.unfollowUser(userId, userToUnfollow.id)
+        }
+    }
+
+    fun cancelFollowRequest(userId: Int, usernameToCancelFollow: String) {
+        val userToCancelFollow = checkIfUserExists(username = usernameToCancelFollow) ?: throw UserNotFound(usernameToCancelFollow)
+        if (!checkIfUserAlreadySentFollowRequest(userId, userToCancelFollow.id)) throw FollowRequestNotFound(usernameToCancelFollow)
+        tm.run {
+            it.userRepository.cancelFollowRequest(userId, userToCancelFollow.id)
         }
     }
 
@@ -202,6 +219,9 @@ class UserService(
 
     private fun checkIfUserIsBeingFollowedBy(userId: Int, followerUserId: Int) =
         tm.run { it.userRepository.checkIfUserIsBeingFollowedBy(userId, followerUserId) }
+
+    private fun checkIfUserAlreadySentFollowRequest(userId: Int, followingUserId: Int) =
+        tm.run { it.userRepository.checkIfUserAlreadySentFollowRequest(userId, followingUserId) }
 
     private fun checkIfPasswordsMatch(password: String, confirmPassword: String) {
         if (password != confirmPassword) throw PasswordsDoNotMatch()

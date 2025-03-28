@@ -71,7 +71,7 @@ class HttpTest : EpicuriusTest() {
         @BeforeAll
         fun setupDB() {
             publicTestUser = createTestUser(tm)
-            privateTestUser = createTestUser(tm)
+            privateTestUser = createTestUser(tm, true)
         }
     }
 }

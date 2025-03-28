@@ -21,7 +21,7 @@ open class ServicesTest : EpicuriusTest() {
         @BeforeAll
         fun setupDB() {
             publicTestUser = createTestUser(tm)
-            privateTestUser = createTestUser(tm)
+            privateTestUser = createTestUser(tm, true)
         }
 
         fun createUser(username: String, email: String, country: String, password: String, confirmPassword: String) =
@@ -34,6 +34,12 @@ open class ServicesTest : EpicuriusTest() {
         fun getProfilePicture(profilePictureName: String) = userService.getProfilePicture(profilePictureName)
 
         fun getUsers(partialUsername: String, pagingParams: PagingParams) = userService.getUsers(partialUsername, pagingParams)
+
+        fun getFollowers(userId: Int) = userService.getFollowers(userId)
+
+        fun getFollowing(userId: Int) = userService.getFollowing(userId)
+
+        fun getFollowRequests(userId: Int) = userService.getFollowRequests(userId)
 
         fun login(username: String?, email: String?, password: String) = userService.login(username, email, password)
 
@@ -49,5 +55,7 @@ open class ServicesTest : EpicuriusTest() {
             userService.resetPassword(email, newPassword, confirmPassword)
 
         fun follow(userId: Int, usernameToFollow: String) = userService.follow(userId, usernameToFollow)
+
+        fun unfollow(userId: Int, usernameToUnfollow: String) = userService.unfollow(userId, usernameToUnfollow)
     }
 }

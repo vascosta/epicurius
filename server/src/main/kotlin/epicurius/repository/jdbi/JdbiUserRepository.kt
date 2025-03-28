@@ -169,7 +169,19 @@ class JdbiUserRepository(private val handle: Handle) : UserPostgresRepository {
             .execute()
     }
 
-    override fun checkIfUserIsLoggedIn(username: String?, email: String?): Boolean =
+    override fun cancelFollowRequest(userId: Int, userIdToCancelFollowRequest: Int) {
+        handle.createUpdate(
+            """
+                DELETE FROM dbo.followers
+                WHERE user_id = :user_id AND follower_id = :follower_id
+            """
+        )
+            .bind("user_id", userId)
+            .bind("follower_id", userIdToCancelFollowRequest)
+            .execute()
+    }
+
+    override fun checkIfUserIsLoggedIn(username: String?, email: String?) =
         handle.createQuery(
             """
                 SELECT COUNT (*) FROM dbo.user
@@ -181,7 +193,7 @@ class JdbiUserRepository(private val handle: Handle) : UserPostgresRepository {
             .mapTo<Int>()
             .one() == 1
 
-    override fun checkIfUserIsBeingFollowedBy(userId: Int, followerId: Int): Boolean =
+    override fun checkIfUserIsBeingFollowedBy(userId: Int, followerId: Int) =
         handle.createQuery(
             """
                 SELECT COUNT (*) FROM dbo.followers
@@ -191,6 +203,19 @@ class JdbiUserRepository(private val handle: Handle) : UserPostgresRepository {
             .bind("user_id", userId)
             .bind("follower_id", followerId)
             .bind("status", FollowingStatus.ACCEPTED.ordinal)
+            .mapTo<Int>()
+            .one() == 1
+
+    override fun checkIfUserAlreadySentFollowRequest(userId: Int, followerId: Int) =
+        handle.createQuery(
+            """
+                SELECT COUNT (*) FROM dbo.followers
+                WHERE user_id = :user_id AND follower_id = :follower_id AND status = :status
+            """
+        )
+            .bind("user_id", userId)
+            .bind("follower_id", followerId)
+            .bind("status", FollowingStatus.PENDING.ordinal)
             .mapTo<Int>()
             .one() == 1
 }

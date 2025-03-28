@@ -3,9 +3,12 @@ package epicurius.http.user
 import epicurius.domain.PagingParams
 import epicurius.domain.user.AuthenticatedUser
 import epicurius.domain.user.UserProfile
+import epicurius.http.user.models.input.CancelFollowRequestInputModel
+import epicurius.http.user.models.input.FollowInputModel
 import epicurius.http.user.models.input.LoginInputModel
 import epicurius.http.user.models.input.ResetPasswordInputModel
 import epicurius.http.user.models.input.SignUpInputModel
+import epicurius.http.user.models.input.UnfollowInputModel
 import epicurius.http.user.models.input.UpdateProfilePictureInputModel
 import epicurius.http.user.models.input.UpdateUserInputModel
 import epicurius.http.user.models.output.GetDietOutputModel
@@ -166,14 +169,20 @@ class UserController(val userService: UserService) {
     }
 
     @PatchMapping(Uris.User.FOLLOW)
-    fun follow(authenticatedUser: AuthenticatedUser, @PathVariable usernameToFollow: String): ResponseEntity<*> {
-        userService.follow(authenticatedUser.userInfo.id, usernameToFollow)
+    fun follow(authenticatedUser: AuthenticatedUser, @Valid @RequestBody body: FollowInputModel): ResponseEntity<*> {
+        userService.follow(authenticatedUser.userInfo.id, body.username)
         return ResponseEntity.noContent().build<Unit>()
     }
 
     @PatchMapping(Uris.User.UNFOLLOW)
-    fun unfollow(authenticatedUser: AuthenticatedUser, @PathVariable usernameToUnfollow: String): ResponseEntity<*> {
-        userService.unfollow(authenticatedUser.userInfo.id, usernameToUnfollow)
+    fun unfollow(authenticatedUser: AuthenticatedUser, @Valid @RequestBody body: UnfollowInputModel): ResponseEntity<*> {
+        userService.unfollow(authenticatedUser.userInfo.id, body.username)
+        return ResponseEntity.ok().build<Unit>()
+    }
+
+    @PatchMapping(Uris.User.FOLLOW_REQUESTS)
+    fun cancelFollowRequest(authenticatedUser: AuthenticatedUser, @Valid @RequestBody body: CancelFollowRequestInputModel): ResponseEntity<*> {
+        userService.cancelFollowRequest(authenticatedUser.userInfo.id, body.username)
         return ResponseEntity.ok().build<Unit>()
     }
 }

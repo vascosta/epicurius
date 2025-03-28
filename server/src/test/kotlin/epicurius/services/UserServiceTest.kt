@@ -9,6 +9,8 @@ import epicurius.domain.exceptions.PasswordsDoNotMatch
 import epicurius.domain.exceptions.UserAlreadyExists
 import epicurius.domain.exceptions.UserAlreadyLoggedIn
 import epicurius.domain.exceptions.UserNotFound
+import epicurius.domain.user.FollowUser
+import epicurius.domain.user.FollowingUser
 import epicurius.domain.user.SearchUser
 import epicurius.http.user.models.input.UpdateUserInputModel
 import epicurius.utils.generateEmail
@@ -416,6 +418,16 @@ class UserServiceTest : ServicesTest() {
                 )
             )
         }
+
+        assertFailsWith<PasswordsDoNotMatch> {
+            updateUser(
+                user.username,
+                UpdateUserInputModel(
+                    password = UUID.randomUUID().toString(),
+                    confirmPassword = null
+                )
+            )
+        }
     }
 
     @Test
@@ -457,13 +469,58 @@ class UserServiceTest : ServicesTest() {
         }
     }
 
-//    @Test
-//    fun `follow a public user successfully`() {
-//        // given an existing user
-//        val user = privateTestUser
-//
-//        // when following a public user
-//        val publicUser = publicTestUser
-//        follow(user.username, publicTestUser.username)
-//    }
+    @Test
+    fun `Follow a public user, unfollows him and then retrieve its followers and following successfully`() {
+        // given two existing users
+        val publicUser = publicTestUser
+        val privateUser = privateTestUser
+
+        // when following a public user
+        follow(privateUser.id, publicUser.username)
+
+        // then the user is followed successfully
+        val publicUserFollowers = getFollowers(publicUser.id)
+        val privateUserFollowing = getFollowing(privateUser.id)
+        assertTrue(publicUserFollowers.isNotEmpty())
+        assertTrue(privateUserFollowing.isNotEmpty())
+        assertEquals(publicUserFollowers.size, 1)
+        assertEquals(privateUserFollowing.size, 1)
+        assertTrue(publicUserFollowers.contains(FollowUser(privateUser.username, null)))
+        assertTrue(privateUserFollowing.contains(FollowingUser(publicUser.username, null)))
+
+        // when unfollowing the user
+        unfollow(privateUser.id, publicUser.username)
+
+        // then the user is unfollowed successfully
+        val publicUserFollowersAfterUnfollow = getFollowers(publicUser.id)
+        val privateUserFollowingAfterUnfollow = getFollowing(privateUser.id)
+        assertTrue(publicUserFollowersAfterUnfollow.isEmpty())
+        assertTrue(privateUserFollowingAfterUnfollow.isEmpty())
+    }
+
+    @Test
+    fun `Try to follow a private user, get added to its follow requests and then retrieve them successfully`() {
+        // given two existing users
+        val publicUser = publicTestUser
+        val privateUser = privateTestUser
+
+        // when following a private user
+        follow(publicUser.id, privateUser.username)
+
+        // then the follow request is sent successfully
+        val privateUserFollowRequests = getFollowRequests(privateUser.id)
+        assertTrue(privateUserFollowRequests.isNotEmpty())
+        assertEquals(privateUserFollowRequests.size, 1)
+        assertTrue(privateUserFollowRequests.contains(FollowUser(publicUser.username, null)))
+    }
+
+    @Test
+    fun `Try to follow a non-existing user and throws UserNotFound Exception`() {
+        // given an existing users
+        val publicUser = publicTestUser
+
+        // when following a non-existing user
+        // then the user cannot be followed and throws UserNotFound Exception
+        assertFailsWith<UserNotFound> { follow(publicUser.id, UUID.randomUUID().toString()) }
+    }
 }

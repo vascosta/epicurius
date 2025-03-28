@@ -18,7 +18,7 @@ open class RepositoryTest : EpicuriusTest() {
         @BeforeAll
         fun setupDB() {
             publicTestUser = createTestUser(tm)
-            privateTestUser = createTestUser(tm)
+            privateTestUser = createTestUser(tm, true)
         }
 
         fun createUser(username: String, email: String, country: String, passwordHash: String) =
@@ -68,6 +68,9 @@ open class RepositoryTest : EpicuriusTest() {
         fun unfollow(userId: Int, userIdToUnfollow: Int) =
             tm.run { it.userRepository.unfollowUser(userId, userIdToUnfollow) }
 
+        fun cancelFollowRequest(userId: Int, userIdToCancelFollowRequest: Int) =
+            tm.run { it.userRepository.cancelFollowRequest(userId, userIdToCancelFollowRequest) }
+
         fun deleteToken(username: String? = null, email: String? = null) =
             tm.run { it.tokenRepository.deleteToken(username, email) }
 
@@ -76,5 +79,8 @@ open class RepositoryTest : EpicuriusTest() {
 
         fun checkIfUserIsBeingFollowedBy(userId: Int, followerId: Int) =
             tm.run { it.userRepository.checkIfUserIsBeingFollowedBy(userId, followerId) }
+
+        fun checkIfUserAlreadySentFollowRequest(userId: Int, followerId: Int) =
+            tm.run { it.userRepository.checkIfUserAlreadySentFollowRequest(userId, followerId) }
     }
 }
