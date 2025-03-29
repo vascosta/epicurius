@@ -41,7 +41,8 @@ open class ServicesTest : EpicuriusTest() {
 
         fun getFollowRequests(userId: Int) = userService.getFollowRequests(userId)
 
-        fun login(username: String?, email: String?, password: String) = userService.login(username, email, password)
+        fun login(username: String? = null, email: String? = null, password: String) =
+            userService.login(username, email, password)
 
         fun logout(username: String) = userService.logout(username)
 
@@ -57,5 +58,8 @@ open class ServicesTest : EpicuriusTest() {
         fun follow(userId: Int, usernameToFollow: String) = userService.follow(userId, usernameToFollow)
 
         fun unfollow(userId: Int, usernameToUnfollow: String) = userService.unfollow(userId, usernameToUnfollow)
+
+        fun cancelFollowRequest(userId: Int, usernameToCancelFollow: String) =
+            userService.cancelFollowRequest(userId, usernameToCancelFollow)
     }
 }

@@ -165,10 +165,10 @@ class UserService(
 
     fun follow(userId: Int, usernameToFollow: String) {
         val userToFollow = checkIfUserExists(username = usernameToFollow) ?: throw UserNotFound(usernameToFollow)
-        if (checkIfUserIsBeingFollowedBy(userId, userToFollow.id)) throw UserAlreadyBeingFollowed(usernameToFollow)
+        if (checkIfUserIsBeingFollowedBy(userToFollow.id, userId)) throw UserAlreadyBeingFollowed(usernameToFollow)
         val followingStatus =
             if (userToFollow.privacy) {
-                if (checkIfUserAlreadySentFollowRequest(userId, userToFollow.id)) throw FollowRequestAlreadyBeenSent(usernameToFollow)
+                if (checkIfUserAlreadySentFollowRequest(userToFollow.id, userId)) throw FollowRequestAlreadyBeenSent(usernameToFollow)
                 FollowingStatus.PENDING
             } else {
                 FollowingStatus.ACCEPTED
@@ -181,7 +181,7 @@ class UserService(
 
     fun unfollow(userId: Int, usernameToUnfollow: String) {
         val userToUnfollow = checkIfUserExists(username = usernameToUnfollow) ?: throw UserNotFound(usernameToUnfollow)
-        if (checkIfUserIsBeingFollowedBy(userId, userToUnfollow.id)) throw UserNotFollowed(usernameToUnfollow)
+        if (!checkIfUserIsBeingFollowedBy(userToUnfollow.id, userId)) throw UserNotFollowed(usernameToUnfollow)
         tm.run {
             it.userRepository.unfollowUser(userId, userToUnfollow.id)
         }
@@ -217,8 +217,8 @@ class UserService(
             throw UserAlreadyLoggedIn()
     }
 
-    private fun checkIfUserIsBeingFollowedBy(userId: Int, followerUserId: Int) =
-        tm.run { it.userRepository.checkIfUserIsBeingFollowedBy(userId, followerUserId) }
+    private fun checkIfUserIsBeingFollowedBy(userId: Int, followerId: Int) =
+        tm.run { it.userRepository.checkIfUserIsBeingFollowedBy(userId, followerId) }
 
     private fun checkIfUserAlreadySentFollowRequest(userId: Int, followingUserId: Int) =
         tm.run { it.userRepository.checkIfUserAlreadySentFollowRequest(userId, followingUserId) }

@@ -3,16 +3,21 @@ package epicurius.services
 import epicurius.domain.Diet
 import epicurius.domain.Intolerance
 import epicurius.domain.PagingParams
+import epicurius.domain.exceptions.FollowRequestAlreadyBeenSent
+import epicurius.domain.exceptions.FollowRequestNotFound
 import epicurius.domain.exceptions.IncorrectPassword
 import epicurius.domain.exceptions.InvalidCountry
 import epicurius.domain.exceptions.PasswordsDoNotMatch
+import epicurius.domain.exceptions.UserAlreadyBeingFollowed
 import epicurius.domain.exceptions.UserAlreadyExists
 import epicurius.domain.exceptions.UserAlreadyLoggedIn
+import epicurius.domain.exceptions.UserNotFollowed
 import epicurius.domain.exceptions.UserNotFound
 import epicurius.domain.user.FollowUser
 import epicurius.domain.user.FollowingUser
 import epicurius.domain.user.SearchUser
 import epicurius.http.user.models.input.UpdateUserInputModel
+import epicurius.utils.createTestUser
 import epicurius.utils.generateEmail
 import epicurius.utils.generateRandomUsername
 import epicurius.utils.generateSecurePassword
@@ -22,6 +27,7 @@ import kotlin.test.Test
 import kotlin.test.assertContentEquals
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
+import kotlin.test.assertNotEquals
 import kotlin.test.assertNotNull
 import kotlin.test.assertNull
 import kotlin.test.assertTrue
@@ -63,7 +69,6 @@ class UserServiceTest : ServicesTest() {
         val email2 = generateEmail(username2)
         val country = "PT"
         val password = generateSecurePassword()
-
         createUser(username, email, country, password, password)
         createUser(username2, email2, country, password, password)
 
@@ -80,31 +85,27 @@ class UserServiceTest : ServicesTest() {
     @Test
     fun `Try to create user with an existing username or email and throws UserAlreadyExists Exception`() {
         // given an existing user and a different username and email
-        val username = generateRandomUsername()
-        val email = generateEmail(username)
-        val country = "PT"
+        val user = createTestUser(tm)
         val password = generateSecurePassword()
         val randomUsername = generateRandomUsername()
-        val randomEmail = generateEmail(username)
-
-        createUser(username, email, country, password, password)
+        val randomEmail = generateEmail(randomUsername)
 
         // when creating a user with an existing username
         // then the user cannot be created and throws UserAlreadyExists Exception
         assertFailsWith<UserAlreadyExists> {
-            createUser(username, randomEmail, "PT", password, password)
+            createUser(user.username, randomEmail, "PT", password, password)
         }
 
         // when creating a user with an existing email
         // then the user cannot be created and throws UserAlreadyExists Exception
         assertFailsWith<UserAlreadyExists> {
-            createUser(randomUsername, email, "PT", password, password)
+            createUser(randomUsername, user.email, "PT", password, password)
         }
 
         // when creating a user with an existing username and email
         // then the user cannot be created and throws UserAlreadyExists Exception
         assertFailsWith<UserAlreadyExists> {
-            createUser(username, email, "PT", password, password)
+            createUser(user.username, user.email, "PT", password, password)
         }
     }
 
@@ -143,12 +144,11 @@ class UserServiceTest : ServicesTest() {
         val email = generateEmail(username)
         val country = "PT"
         val password = generateSecurePassword()
-
         createUser(username, email, country, password, password)
         logout(username)
 
         // when logging in by name
-        val userToken = login(username, null, password)
+        val userToken = login(username, password = password)
 
         // then the user is logged in successfully
         val authenticatedUser = getAuthenticatedUser(userToken)
@@ -165,12 +165,11 @@ class UserServiceTest : ServicesTest() {
         val email = generateEmail(username)
         val country = "PT"
         val password = generateSecurePassword()
-
         createUser(username, email, country, password, password)
         logout(username)
 
         // when logging in by email
-        val userToken = login(null, email, password)
+        val userToken = login(email = email, password = password)
 
         // then the user is logged in successfully
         val authenticatedUser = getAuthenticatedUser(userToken)
@@ -196,19 +195,13 @@ class UserServiceTest : ServicesTest() {
     @Test
     fun `Try to login with an incorrect password and throws IncorrectPassword Exception`() {
         // given an existing user logged out and an incorrect password
-        val username = generateRandomUsername()
-        val email = generateEmail(username)
-        val country = "PT"
-        val password = generateSecurePassword()
-
-        createUser(username, email, country, password, password)
-        logout(username)
+        val user = createTestUser(tm)
         val incorrectPassword = UUID.randomUUID().toString()
 
         // when logging in with an incorrect password
         // then the user is cannot be logged in and throws IncorrectPassword Exception
-        assertFailsWith<IncorrectPassword> { login(username, null, incorrectPassword) }
-        assertFailsWith<IncorrectPassword> { login(null, email, incorrectPassword) }
+        assertFailsWith<IncorrectPassword> { login(user.username, password = incorrectPassword) }
+        assertFailsWith<IncorrectPassword> { login(email = user.email, password = incorrectPassword) }
     }
 
     @Test
@@ -246,7 +239,7 @@ class UserServiceTest : ServicesTest() {
     @Test
     fun `Retrieves the user profile without a picture successfully`() {
         // given an existing user
-        val user = publicTestUser
+        val user = createTestUser(tm)
 
         // when getting the user profile
         val userProfile = getUserProfile(user.username)
@@ -259,21 +252,27 @@ class UserServiceTest : ServicesTest() {
     }
 
     @Test
+    fun `Try to retrieve a non-existing user profile and throws UserNotFound Exception`() {
+        // given a non-existing username
+        val username = UUID.randomUUID().toString()
+
+        // when getting the user profile
+        // then the user profile cannot be retrieved and throws UserNotFound Exception
+        assertFailsWith<UserNotFound> { getUserProfile(username) }
+    }
+
+    @Test
     fun `Add a profile picture to an user and then retrieves the user profile successfully`() {
         // given an existing user
-        val username = generateRandomUsername()
-        val email = generateEmail(username)
-        val country = "PT"
-        val password = generateSecurePassword()
-        createUser(username, email, country, password, password)
+        val user = createTestUser(tm)
 
         // when adding a profile picture
-        updateProfilePicture(username, profilePicture = testProfilePicture)
+        updateProfilePicture(user.username, profilePicture = testProfilePicture)
 
         // then the user profile is retrieved successfully with the new profile picture
-        val userProfile = getUserProfile(username)
-        assertEquals(userProfile.username, username)
-        assertEquals(userProfile.country, country)
+        val userProfile = getUserProfile(user.username)
+        assertEquals(userProfile.username, user.username)
+        assertEquals(userProfile.country, user.country)
         assertFalse(userProfile.privacy)
         assertNotNull(userProfile.profilePicture)
         assertContentEquals(userProfile.profilePicture, testProfilePicture.bytes)
@@ -281,16 +280,12 @@ class UserServiceTest : ServicesTest() {
 
     @Test
     fun `Update the profile picture of an user and then retrieves it successfully`() {
-        // given an existing user
-        val username = generateRandomUsername()
-        val email = generateEmail(username)
-        val country = "PT"
-        val password = generateSecurePassword()
-        createUser(username, email, country, password, password)
-        val profilePictureName = updateProfilePicture(username, profilePicture = testProfilePicture)
+        // given an existing user logged in
+        val user = createTestUser(tm)
+        val profilePictureName = updateProfilePicture(user.username, profilePicture = testProfilePicture)
 
         // when updating the profile picture
-        val newProfilePictureName = updateProfilePicture(username, profilePictureName, testProfilePicture2)
+        val newProfilePictureName = updateProfilePicture(user.username, profilePictureName, testProfilePicture2)
 
         // then the user profile is retrieved successfully with the new profile picture
         val updatedProfilePicture = getProfilePicture(newProfilePictureName)
@@ -302,14 +297,8 @@ class UserServiceTest : ServicesTest() {
 
     @Test
     fun `Update user successfully`() {
-        // given user required information
-        val username = generateRandomUsername()
-        val email = generateEmail(username)
-        val country = "PT"
-        val password = generateSecurePassword()
-
-        // when creating a user
-        createUser(username, email, country, password, password)
+        // given an existing user
+        val user = createTestUser(tm)
 
         // when updating the user
         val newUsername = generateRandomUsername()
@@ -320,8 +309,8 @@ class UserServiceTest : ServicesTest() {
         val newIntolerances = listOf(Intolerance.GLUTEN)
         val newDiet = listOf(Diet.VEGAN)
 
-        val user = updateUser(
-            username,
+        val updatedUser = updateUser(
+            user.username,
             UpdateUserInputModel(
                 username = newUsername,
                 email = newEmail,
@@ -335,13 +324,13 @@ class UserServiceTest : ServicesTest() {
         )
 
         // then the user is updated successfully
-        assertEquals(user.username, newUsername)
-        assertEquals(user.email, newEmail)
-        assertEquals(user.country, newCountry)
-        assertTrue(usersDomain.verifyPassword(newPassword, user.passwordHash))
-        assertEquals(user.privacy, newPrivacy)
-        assertEquals(user.intolerances, newIntolerances)
-        assertEquals(user.diet, newDiet)
+        assertEquals(updatedUser.username, newUsername)
+        assertEquals(updatedUser.email, newEmail)
+        assertEquals(updatedUser.country, newCountry)
+        assertTrue(usersDomain.verifyPassword(newPassword, updatedUser.passwordHash))
+        assertEquals(updatedUser.privacy, newPrivacy)
+        assertEquals(updatedUser.intolerances, newIntolerances)
+        assertEquals(updatedUser.diet, newDiet)
     }
 
     @Test
@@ -432,29 +421,23 @@ class UserServiceTest : ServicesTest() {
 
     @Test
     fun `Reset password successfully`() {
-        // given user required information
-        val username = generateRandomUsername()
-        val email = generateEmail(username)
-        val country = "PT"
-        val password = generateSecurePassword()
-
-        // when creating a user with a random password
-        createUser(username, email, country, password, password)
+        // given an existing user
+        val user = createTestUser(tm)
 
         // when resetting the password
         val newPassword = UUID.randomUUID().toString()
-        resetPassword(email, newPassword, newPassword)
+        resetPassword(user.email, newPassword, newPassword)
 
         // when logging in with the new password
-        val userToken = login(null, email, newPassword)
+        val userToken = login(email = user.email, password = newPassword)
 
-        // then the password is reset successfully
+        // then the password was reset successfully
         val authenticatedUser = getAuthenticatedUser(userToken)
         assertNotNull(authenticatedUser)
-        assertEquals(authenticatedUser.userInfo.username, username)
-        assertEquals(authenticatedUser.userInfo.email, email)
+        assertEquals(authenticatedUser.userInfo.username, user.username)
+        assertEquals(authenticatedUser.userInfo.email, user.email)
         assertTrue(usersDomain.verifyPassword(newPassword, authenticatedUser.userInfo.passwordHash))
-        assertFalse(usersDomain.verifyPassword(password, authenticatedUser.userInfo.passwordHash))
+        assertNotEquals(authenticatedUser.userInfo.passwordHash, user.passwordHash)
     }
 
     @Test
@@ -472,8 +455,8 @@ class UserServiceTest : ServicesTest() {
     @Test
     fun `Follow a public user, unfollows him and then retrieve its followers and following successfully`() {
         // given two existing users
-        val publicUser = publicTestUser
-        val privateUser = privateTestUser
+        val publicUser = createTestUser(tm)
+        val privateUser = createTestUser(tm, true)
 
         // when following a public user
         follow(privateUser.id, publicUser.username)
@@ -499,10 +482,10 @@ class UserServiceTest : ServicesTest() {
     }
 
     @Test
-    fun `Try to follow a private user, get added to its follow requests and then retrieve them successfully`() {
+    fun `Try to follow a private user, get added to its follow requests and then cancel the request successfully`() {
         // given two existing users
-        val publicUser = publicTestUser
-        val privateUser = privateTestUser
+        val publicUser = createTestUser(tm)
+        val privateUser = createTestUser(tm, true)
 
         // when following a private user
         follow(publicUser.id, privateUser.username)
@@ -512,6 +495,13 @@ class UserServiceTest : ServicesTest() {
         assertTrue(privateUserFollowRequests.isNotEmpty())
         assertEquals(privateUserFollowRequests.size, 1)
         assertTrue(privateUserFollowRequests.contains(FollowUser(publicUser.username, null)))
+
+        // when cancelling the follow request
+        cancelFollowRequest(privateUser.id, publicUser.username)
+
+        // then the follow request is cancelled successfully
+        val privateUserFollowRequestsAfterCancel = getFollowRequests(privateUser.id)
+        assertTrue(privateUserFollowRequestsAfterCancel.isEmpty())
     }
 
     @Test
@@ -522,5 +512,75 @@ class UserServiceTest : ServicesTest() {
         // when following a non-existing user
         // then the user cannot be followed and throws UserNotFound Exception
         assertFailsWith<UserNotFound> { follow(publicUser.id, UUID.randomUUID().toString()) }
+    }
+
+    @Test
+    fun `Try to follow a user twice and throws UserAlreadyBeingFollowed Exception`() {
+        // given two existing users
+        val publicUser1 = createTestUser(tm)
+        val publicUser2 = createTestUser(tm)
+
+        // when following a user twice
+        follow(publicUser1.id, publicUser2.username)
+
+        // then the user cannot be followed and throws UserAlreadyBeingFollowed Exception
+        assertFailsWith<UserAlreadyBeingFollowed> { follow(publicUser1.id, publicUser2.username) }
+    }
+
+    @Test
+    fun `Try to follow a private user twice and throws FollowRequestAlreadyBeenSent Exception`() {
+        // given two existing users
+        val publicUser = createTestUser(tm)
+        val privateUser = createTestUser(tm, true)
+
+        // when trying to follow a private user twice
+        follow(publicUser.id, privateUser.username)
+
+        // then another follow request cannot be sent and throws FollowRequestAlreadyBeenSent Exception
+        assertFailsWith<FollowRequestAlreadyBeenSent> {
+            follow(publicUser.id, privateUser.username)
+        }
+    }
+
+    @Test
+    fun `Try to unfollow a non-existing user and throws UserNotFound Exception`() {
+        // given an existing users
+        val publicUser = publicTestUser
+
+        // when following a non-existing user
+        // then the user cannot be followed and throws UserNotFound Exception
+        assertFailsWith<UserNotFound> { unfollow(publicUser.id, UUID.randomUUID().toString()) }
+    }
+
+    @Test
+    fun `Try to unfollow a user that is not being followed and throws UserNotFollowed Exception`() {
+        // given two existing users
+        val publicUser = createTestUser(tm)
+        val privateUser = createTestUser(tm, true)
+
+        // when trying to unfollow a user that is not being followed
+        // then the user cannot be unfollowed and throws UserNotFollowed Exception
+        assertFailsWith<UserNotFollowed> { unfollow(publicUser.id, privateUser.username) }
+    }
+
+    @Test
+    fun `Try to cancel a follow request to a non-existing user and throws UserNotFound Exception`() {
+        // given an existing user
+        val publicUser = publicTestUser
+
+        // when cancelling a follow request to a non-existing user
+        // then the follow request cannot be cancelled and throws UserNotFound Exception
+        assertFailsWith<UserNotFound> { cancelFollowRequest(publicUser.id, UUID.randomUUID().toString()) }
+    }
+
+    @Test
+    fun `Try to cancel a non-existing follow request and throws FollowRequestNotFound Exception`() {
+        // given an existing user
+        val publicUser = publicTestUser
+        val privateUser = privateTestUser
+
+        // when cancelling a follow request to a non-existing user
+        // then the follow request cannot be cancelled and throws UserNotFound Exception
+        assertFailsWith<FollowRequestNotFound> { cancelFollowRequest(publicUser.id, privateTestUser.username) }
     }
 }

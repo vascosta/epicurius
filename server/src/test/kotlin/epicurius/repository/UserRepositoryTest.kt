@@ -71,7 +71,6 @@ class UserRepositoryTest : RepositoryTest() {
         val email2 = generateEmail(username2)
         val country = "PT"
         val passwordHash = usersDomain.encodePassword(generateSecurePassword())
-
         createUser(username, email, country, passwordHash)
         createUser(username2, email2, country, passwordHash)
 
@@ -179,8 +178,8 @@ class UserRepositoryTest : RepositoryTest() {
     @Test
     fun `Follow a public user, unfollows him and then retrieve its followers and following successfully`() {
         // given two existing users
-        val publicUser = publicTestUser
-        val privateUser = privateTestUser
+        val publicUser = createTestUser(tm)
+        val privateUser = createTestUser(tm, true)
 
         // when following a public user
         follow(privateUser.id, publicUser.id, FollowingStatus.ACCEPTED.ordinal)
@@ -208,8 +207,8 @@ class UserRepositoryTest : RepositoryTest() {
     @Test
     fun `Try to follow a private user, get added to its follow requests and then cancel the request successfully`() {
         // given two existing users
-        val publicUser = publicTestUser
-        val privateUser = privateTestUser
+        val publicUser = createTestUser(tm)
+        val privateUser = createTestUser(tm, true)
 
         // when following a private user
         follow(publicUser.id, privateUser.id, FollowingStatus.PENDING.ordinal)
@@ -234,7 +233,6 @@ class UserRepositoryTest : RepositoryTest() {
         val user = createTestUser(tm)
         val token = usersDomain.generateTokenValue()
         val tokenHash = usersDomain.hashToken(token)
-
         createToken(tokenHash, user.username)
 
         // when checking if the user exists by name
@@ -286,7 +284,6 @@ class UserRepositoryTest : RepositoryTest() {
         val user = createTestUser(tm)
         val token = usersDomain.generateTokenValue()
         val tokenHash = usersDomain.hashToken(token)
-
         createToken(tokenHash, user.username)
 
         // when checking if the user is logged in
@@ -319,8 +316,8 @@ class UserRepositoryTest : RepositoryTest() {
     @Test
     fun `Check if an user is being followed by other user successfully`() {
         // given 2 existing users
-        val publicUser = publicTestUser
-        val privateUser = privateTestUser
+        val publicUser = createTestUser(tm)
+        val privateUser = createTestUser(tm, true)
 
         // when checking if the user is being followed by the other user
         val userBeingFollowedBy = checkIfUserIsBeingFollowedBy(privateUser.id, publicUser.id)
@@ -332,7 +329,7 @@ class UserRepositoryTest : RepositoryTest() {
     @Test
     fun `Check if an user already sent a follow request to other user successfully`() {
         // given 2 existing users
-        val privateUser = privateTestUser
+        val privateUser = createTestUser(tm, true)
         val privateUser2 = createTestUser(tm, true)
         follow(privateUser.id, privateUser2.id, FollowingStatus.PENDING.ordinal)
 
