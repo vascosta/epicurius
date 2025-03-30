@@ -56,7 +56,7 @@ class UserServiceTest : ServicesTest() {
         assertTrue(usersDomain.verifyPassword(password, userByName.passwordHash))
         assertEquals(userByName.privacy, false)
         assertEquals(userByName.intolerances, emptyList())
-        assertEquals(userByName.diet, emptyList())
+        assertEquals(userByName.diets, emptyList())
         assertNull(userByName.profilePictureName)
     }
 
@@ -249,6 +249,8 @@ class UserServiceTest : ServicesTest() {
         assertEquals(userProfile.country, user.country)
         assertEquals(userProfile.privacy, user.privacy)
         assertNull(userProfile.profilePicture)
+        assertTrue(userProfile.followers.isEmpty())
+        assertTrue(userProfile.following.isEmpty())
     }
 
     @Test
@@ -276,6 +278,8 @@ class UserServiceTest : ServicesTest() {
         assertFalse(userProfile.privacy)
         assertNotNull(userProfile.profilePicture)
         assertContentEquals(userProfile.profilePicture, testProfilePicture.bytes)
+        assertTrue(userProfile.followers.isEmpty())
+        assertTrue(userProfile.following.isEmpty())
     }
 
     @Test
@@ -330,7 +334,7 @@ class UserServiceTest : ServicesTest() {
         assertTrue(usersDomain.verifyPassword(newPassword, updatedUser.passwordHash))
         assertEquals(updatedUser.privacy, newPrivacy)
         assertEquals(updatedUser.intolerances, newIntolerances)
-        assertEquals(updatedUser.diet, newDiet)
+        assertEquals(updatedUser.diets, newDiet)
     }
 
     @Test

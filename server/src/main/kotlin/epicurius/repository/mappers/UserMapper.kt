@@ -24,7 +24,7 @@ class UserMapper(
             country = rs.getString("country"),
             privacy = rs.getBoolean("privacy"),
             intolerances = intoleranceList,
-            diet = dietList,
+            diets = dietList,
             profilePictureName = rs.getString("profile_picture_name")
         )
     }

@@ -12,6 +12,6 @@ data class User(
     val country: String,
     val privacy: Boolean,
     val intolerances: List<Intolerance>,
-    val diet: List<Diet>,
+    val diets: List<Diet>,
     val profilePictureName: String?
 )

@@ -63,11 +63,13 @@ class UserService(
 
     fun getUserProfile(username: String): UserProfile {
         val user = checkIfUserExists(username = username) ?: throw UserNotFound(username)
+        val followers = getFollowers(user.id)
+        val following = getFollowing(user.id)
         return if (user.profilePictureName == null) {
-            UserProfile(user.username, user.country, user.privacy, null)
+            UserProfile(user.username, user.country, user.privacy, null, followers, following)
         } else {
             val userProfilePicture = getProfilePicture(user.profilePictureName)
-            UserProfile(user.username, user.country, user.privacy, userProfilePicture)
+            UserProfile(user.username, user.country, user.privacy, userProfilePicture, followers, following)
         }
     }
 
