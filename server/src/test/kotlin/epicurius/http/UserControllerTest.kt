@@ -56,7 +56,7 @@ class UserControllerTest : HttpTest() {
         assertTrue(usersDomain.verifyPassword(password, user.user.passwordHash))
         assertEquals(user.user.privacy, false)
         assertEquals(user.user.intolerances, emptyList())
-        assertEquals(user.user.diet, emptyList())
+        assertEquals(user.user.diets, emptyList())
         assertNull(user.user.profilePictureName)
     }
 
@@ -166,7 +166,7 @@ class UserControllerTest : HttpTest() {
         val email = generateEmail(username)
         val country = "PT"
         val password = generateSecurePassword()
-        val token = createUser(username, email, country, password)
+        val token = signUp(username, email, country, password)
 
         assertNotNull(token)
         logout(token)
@@ -191,7 +191,7 @@ class UserControllerTest : HttpTest() {
         val email = generateEmail(username)
         val country = "PT"
         val password = generateSecurePassword()
-        val token = createUser(username, email, country, password)
+        val token = signUp(username, email, country, password)
 
         assertNotNull(token)
         logout(token)
@@ -216,7 +216,7 @@ class UserControllerTest : HttpTest() {
 
         // when resetting the password
         val newPassword = generateSecurePassword()
-        client.patch().uri(api(Uris.User.RESET_PASSWORD))
+        client.patch().uri(api(Uris.User.USER_RESET_PASSWORD))
             .bodyValue(
                 mapOf(
                     "email" to publicTestUser.email,
@@ -248,7 +248,7 @@ class UserControllerTest : HttpTest() {
         val user = publicTestUser
 
         // when trying to reset the password with different passwords
-        client.patch().uri(api(Uris.User.RESET_PASSWORD))
+        client.patch().uri(api(Uris.User.USER_RESET_PASSWORD))
             .bodyValue(
                 mapOf(
                     "email" to user.email,
@@ -267,7 +267,7 @@ class UserControllerTest : HttpTest() {
         val email = generateEmail(username)
         val country = "PT"
         val password = generateSecurePassword()
-        val token = createUser(username, email, country, password)
+        val token = signUp(username, email, country, password)
         assertNotNull(token)
 
         // when updating the user
@@ -328,7 +328,7 @@ class UserControllerTest : HttpTest() {
         val email = generateEmail(username)
         val country = "PT"
         val password = generateSecurePassword()
-        val token = createUser(username, email, country, password)
+        val token = signUp(username, email, country, password)
         assertNotNull(token)
 
         // given information for an existing user
@@ -376,7 +376,7 @@ class UserControllerTest : HttpTest() {
         val email = generateEmail(username)
         val country = "PT"
         val password = generateSecurePassword()
-        val token = createUser(username, email, country, password)
+        val token = signUp(username, email, country, password)
         assertNotNull(token)
 
         // when updating the user with an invalid country
@@ -398,7 +398,7 @@ class UserControllerTest : HttpTest() {
         val email = generateEmail(username)
         val country = "PT"
         val password = generateSecurePassword()
-        val token = createUser(username, email, country, password)
+        val token = signUp(username, email, country, password)
         assertNotNull(token)
 
         // when updating the user with different passwords

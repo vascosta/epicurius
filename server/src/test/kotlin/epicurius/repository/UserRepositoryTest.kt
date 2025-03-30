@@ -44,7 +44,7 @@ class UserRepositoryTest : RepositoryTest() {
         assertEquals(userByName.passwordHash, passwordHash)
         assertEquals(userByName.privacy, false)
         assertEquals(userByName.intolerances, emptyList())
-        assertEquals(userByName.diet, emptyList())
+        assertEquals(userByName.diets, emptyList())
         assertNull(userByName.profilePictureName)
 
         // when getting the user by email
@@ -58,7 +58,7 @@ class UserRepositoryTest : RepositoryTest() {
         assertEquals(userByEmail.passwordHash, passwordHash)
         assertEquals(userByEmail.privacy, false)
         assertEquals(userByEmail.intolerances, emptyList())
-        assertEquals(userByEmail.diet, emptyList())
+        assertEquals(userByEmail.diets, emptyList())
         assertNull(userByEmail.profilePictureName)
     }
 
@@ -151,7 +151,7 @@ class UserRepositoryTest : RepositoryTest() {
         assertEquals(updatedUser.passwordHash, newPasswordHash)
         assertEquals(updatedUser.privacy, newPrivacy)
         assertEquals(updatedUser.intolerances, newIntolerances)
-        assertEquals(updatedUser.diet, newDiet)
+        assertEquals(updatedUser.diets, newDiet)
     }
 
     @Test
