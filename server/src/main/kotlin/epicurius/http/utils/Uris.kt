@@ -12,7 +12,7 @@ object Uris {
         const val USER_INTOLERANCES = "/user/intolerances"
         const val USER_DIETS = "/user/diets"
         const val USER_RESET_PASSWORD = "/user/resetPassword"
-        const val USER_PROFILE = "/user/profile/{username}"
+        const val USER_PROFILE = "/user/profile"
         const val USER_PROFILE_PICTURE = "/user/profile/picture"
         const val USERS = "/users"
         const val USER_FOLLOW = "/user/follow"

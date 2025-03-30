@@ -48,9 +48,9 @@ class UserController(val userService: UserService) {
     @GetMapping(Uris.User.USER_PROFILE)
     fun getUserProfile(
         authenticatedUser: AuthenticatedUser,
-        @PathVariable username: String? = null
+        @RequestParam username: String
     ): ResponseEntity<*> {
-        return if (username == null) {
+        return if (username.isEmpty()) {
             val userProfilePicture = userService.getProfilePicture(authenticatedUser.userInfo.profilePictureName)
             val followers = userService.getFollowers(authenticatedUser.userInfo.id)
             val following = userService.getFollowing(authenticatedUser.userInfo.id)

@@ -2,18 +2,18 @@ package epicurius.http
 
 import epicurius.domain.Diet
 import epicurius.domain.Intolerance
+import epicurius.domain.exceptions.UserNotFound
 import epicurius.http.user.models.output.UpdateUserOutputModel
+import epicurius.http.utils.Problem
 import epicurius.http.utils.Uris
+import epicurius.http.utils.get
+import epicurius.utils.createTestUser
 import epicurius.utils.generateEmail
 import epicurius.utils.generateRandomUsername
 import epicurius.utils.generateSecurePassword
+import org.springframework.http.HttpStatus
 import org.springframework.test.web.reactive.server.expectBody
-import kotlin.test.Test
-import kotlin.test.assertEquals
-import kotlin.test.assertNotEquals
-import kotlin.test.assertNotNull
-import kotlin.test.assertNull
-import kotlin.test.assertTrue
+import kotlin.test.*
 
 class UserControllerTest : HttpTest() {
 
@@ -157,6 +157,79 @@ class UserControllerTest : HttpTest() {
             )
             .exchange()
             .expectStatus().isBadRequest // then the user is not created
+    }
+
+    @Test
+    fun `Retrieve its own user profile successfully`() {
+        // given an existing logged in user
+        val username = generateRandomUsername()
+        val token = signUp(
+            username = username,
+            email = generateEmail(username),
+            country = "PT",
+            password = generateSecurePassword()
+        )
+
+        // when retrieving the user profile
+        val body = getUserProfile(token)
+
+        // then the user profile is retrieved successfully
+        assertNotNull(body)
+        assertEquals(username, body.userProfile.username)
+        assertEquals("PT", body.userProfile.country)
+        assertFalse(body.userProfile.privacy)
+        assertNull(body.userProfile.profilePicture)
+        assertTrue(body.userProfile.followers.isEmpty())
+        assertTrue(body.userProfile.following.isEmpty())
+    }
+
+    @Test
+    fun `Retrieve another user profile successfully`() {
+        // given an existing logged in user and another user
+        val username = generateRandomUsername()
+        val token = signUp(
+            username = username,
+            email = generateEmail(username),
+            country = "PT",
+            password = generateSecurePassword()
+        )
+        val user = createTestUser(tm)
+
+        // when retrieving the user profile
+        val body = getUserProfile(token, user.username)
+
+        // then the user profile is retrieved successfully
+        assertNotNull(body)
+        assertEquals(user.username, body.userProfile.username)
+        assertEquals(user.country, body.userProfile.country)
+        assertEquals(user.privacy, body.userProfile.privacy)
+        assertNull(body.userProfile.profilePicture)
+        assertTrue(body.userProfile.followers.isEmpty())
+        assertTrue(body.userProfile.following.isEmpty())
+    }
+
+    @Test
+    fun `Try to retrieve a profile from a non-existing user and returns code 404`() {
+        // given an existing logged in user
+        val username = generateRandomUsername()
+        val token = signUp(
+            username = username,
+            email = generateEmail(username),
+            country = "PT",
+            password = generateSecurePassword()
+        )
+
+        // when trying to retrieve a profile from a non-existing user
+        val error = get<Problem>(
+            client,
+            api(Uris.User.USER_PROFILE) + "?username=nonExistingUser",
+            HttpStatus.NOT_FOUND,
+            token
+        )
+
+        // then the user profile is not retrieved and an error is returned with the UserNotFound message
+        assertNotNull(error)
+        assertEquals(UserNotFound("nonExistingUser").message, error.detail)
     }
 
     @Test

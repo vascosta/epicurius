@@ -23,10 +23,10 @@ class HttpTest : EpicuriusTest() {
 
     fun getUser(token: String) = get<GetUserOutputModel>(client, api(Uris.User.USER), token = token)
 
-    fun getUserProfile(token: String, username: String? = null) =
+    fun getUserProfile(token: String, username: String = "") =
         get<GetUserProfileOutputModel>(
             client,
-            api(Uris.User.USER_PROFILE).replace("{username}", username ?: ""),
+            api(Uris.User.USER_PROFILE + "?username=$username"),
             token = token
         )
 
