@@ -103,12 +103,12 @@ class JdbiFridgeRepository(private val handle: Handle) : FridgePostgresRepositor
     override fun checkIfProductIsOpen(userId: Int, entryNumber: Int): Boolean =
         handle.createQuery(
             """
-                SELECT COUNT (*) FROM dbo.fridge 
+                SELECT COUNT(*) FROM dbo.fridge 
                 WHERE owner_id = :id AND entry_number = :number AND open_date IS NULL
             """
         )
             .bind("id", userId)
             .bind("number", entryNumber)
             .mapTo<Int>()
-            .one() == 1
+            .one() == 0
 }

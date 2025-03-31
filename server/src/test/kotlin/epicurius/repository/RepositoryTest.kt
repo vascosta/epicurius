@@ -2,6 +2,8 @@ package epicurius.repository
 
 import epicurius.EpicuriusTest
 import epicurius.domain.PagingParams
+import epicurius.domain.fridge.ProductInfo
+import epicurius.domain.fridge.UpdateProductInfo
 import epicurius.domain.user.UpdateUserInfo
 import epicurius.domain.user.User
 import epicurius.utils.createTestUser
@@ -21,6 +23,7 @@ open class RepositoryTest : EpicuriusTest() {
             privateTestUser = createTestUser(tm, true)
         }
 
+        // USER
         fun createUser(username: String, email: String, country: String, passwordHash: String) =
             tm.run { it.userRepository.createUser(username, email, country, passwordHash) }
 
@@ -82,5 +85,22 @@ open class RepositoryTest : EpicuriusTest() {
 
         fun checkIfUserAlreadySentFollowRequest(userId: Int, followerId: Int) =
             tm.run { it.userRepository.checkIfUserAlreadySentFollowRequest(userId, followerId) }
+
+        // FRIDGE
+        fun getFridge(userId: Int) = tm.run { it.fridgeRepository.getFridge(userId) }
+
+        fun addProduct(userId: Int, product: ProductInfo) = tm.run { it.fridgeRepository.addProduct(userId, product) }
+
+        fun updateProduct(userId: Int, product: UpdateProductInfo) =
+            tm.run { it.fridgeRepository.updateProduct(userId, product) }
+
+        fun removeProduct(userId: Int, entryNumber: Int) =
+            tm.run { it.fridgeRepository.removeProduct(userId, entryNumber) }
+
+        fun checkIfProductExistsInFridge(userId: Int, entryNumber: Int?, product: ProductInfo?) =
+            tm.run { it.fridgeRepository.checkIfProductExistsInFridge(userId, entryNumber, product) }
+
+        fun checkIfProductIsOpen(userId: Int, entryNumber: Int) =
+            tm.run { it.fridgeRepository.checkIfProductIsOpen(userId, entryNumber) }
     }
 }

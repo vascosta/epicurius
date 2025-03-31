@@ -101,7 +101,7 @@ class FridgeService(
 
     private fun checkIfProductIsOpen(userId: Int, entryNumber: Int) {
         val state = tm.run { it.fridgeRepository.checkIfProductIsOpen(userId, entryNumber) }
-        if (!state) throw ProductIsAlreadyOpen()
+        if (state) throw ProductIsAlreadyOpen()
     }
 
     private fun ProductInputModel.toProductInfo() = ProductInfo(
