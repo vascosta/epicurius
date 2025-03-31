@@ -61,6 +61,20 @@ class JdbiFridgeRepository(private val handle: Handle) : FridgePostgresRepositor
         return getFridge(userId)
     }
 
+    override fun removeProduct(userId: Int, entryNumber: Int): Fridge {
+        handle.createUpdate(
+            """
+                DELETE FROM dbo.fridge
+                WHERE owner_id = :id AND entry_number = :number
+            """
+        )
+            .bind("id", userId)
+            .bind("number", entryNumber)
+            .execute()
+
+        return getFridge(userId)
+    }
+
     override fun checkIfProductExistsInFridge(userId: Int, entryNumber: Int?, product: ProductInfo?): Product? {
         val query = StringBuilder(
             """

@@ -82,6 +82,11 @@ class FridgeService(
         return tm.run { it.fridgeRepository.addProduct(userId, newProduct) }
     }
 
+    fun removeProduct(userId: Int, entryNumber: Int): Fridge {
+        checkIfProductExistsInFridge(userId, entryNumber) ?: throw ProductNotFound()
+        return tm.run { it.fridgeRepository.removeProduct(userId, entryNumber) }
+    }
+
     private suspend fun checkIfProductIsValid(productName: String) {
         val validName = productName.replace(" ", "-").lowercase()
         val productList = sm.spoonacularRepository.getProductsList(validName)

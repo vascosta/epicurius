@@ -9,6 +9,7 @@ import epicurius.http.utils.Uris
 import epicurius.services.FridgeService
 import jakarta.validation.Valid
 import org.springframework.http.ResponseEntity
+import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PatchMapping
 import org.springframework.web.bind.annotation.PathVariable
@@ -46,7 +47,7 @@ class FridgeController(private val fridgeService: FridgeService) {
         return ResponseEntity.ok().body(newFridge)
     }
 
-    @PatchMapping(Uris.Fridge.NEW_PRODUCT)
+    @PatchMapping(Uris.Fridge.PRODUCT)
     fun updateFridgeProduct(
         authenticatedUser: AuthenticatedUser,
         @PathVariable entryNumber: Int,
@@ -63,6 +64,15 @@ class FridgeController(private val fridgeService: FridgeService) {
         @Valid @RequestBody body: OpenProductInputModel
     ): ResponseEntity<*> {
         val updatedFridge = fridgeService.openProduct(authenticatedUser.userInfo.id, entryNumber, body)
+        return ResponseEntity.ok().body(updatedFridge)
+    }
+
+    @DeleteMapping(Uris.Fridge.PRODUCT)
+    fun removeFridgeProduct(
+        authenticatedUser: AuthenticatedUser,
+        @PathVariable entryNumber: Int
+    ): ResponseEntity<*> {
+        val updatedFridge = fridgeService.removeProduct(authenticatedUser.userInfo.id, entryNumber)
         return ResponseEntity.ok().body(updatedFridge)
     }
 }

@@ -25,7 +25,7 @@ object Uris {
     object Fridge {
         const val FRIDGE = "/fridge"
         const val PRODUCTS = "/products"
-        const val NEW_PRODUCT = "/fridge/product/{entryNumber}"
+        const val PRODUCT = "/fridge/product/{entryNumber}"
         const val OPEN_PRODUCT = "/fridge/open/{entryNumber}"
     }
 }

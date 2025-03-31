@@ -13,6 +13,8 @@ interface FridgePostgresRepository {
 
     fun updateProduct(userId: Int, product: UpdateProductInfo): Fridge
 
+    fun removeProduct(userId: Int, entryNumber: Int): Fridge
+
     fun checkIfProductExistsInFridge(userId: Int, entryNumber: Int?, product: ProductInfo?): Product?
     fun checkIfProductIsOpen(userId: Int, entryNumber: Int): Boolean
 }
