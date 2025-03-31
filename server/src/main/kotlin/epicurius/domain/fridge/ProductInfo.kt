@@ -2,9 +2,8 @@ package epicurius.domain.fridge
 
 import java.util.Date
 
-data class Product(
+data class ProductInfo(
     val productName: String,
-    val entryNumber: Int,
     val quantity: Int,
     val openDate: Date?,
     val expirationDate: Date

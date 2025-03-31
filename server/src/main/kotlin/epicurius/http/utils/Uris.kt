@@ -20,12 +20,12 @@ object Uris {
         const val USER_FOLLOW_REQUESTS = "/user/follow/requests"
         const val USER_FOLLOWERS = "/user/followers"
         const val USER_FOLLOWING = "/user/following"
-
     }
 
     object Fridge {
-        const val GET_FRIDGE = "/fridge"
-        const val GET_PRODUCTS = "/products"
-        const val ADD_PRODUCT = "/fridge/product"
+        const val FRIDGE = "/fridge"
+        const val PRODUCTS = "/products"
+        const val NEW_PRODUCT = "/fridge/product/{entryNumber}"
+        const val OPEN_PRODUCT = "/fridge/open/{entryNumber}"
     }
 }

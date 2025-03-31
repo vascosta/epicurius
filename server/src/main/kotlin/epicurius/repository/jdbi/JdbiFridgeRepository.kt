@@ -2,6 +2,8 @@ package epicurius.repository.jdbi
 
 import epicurius.domain.fridge.Fridge
 import epicurius.domain.fridge.Product
+import epicurius.domain.fridge.ProductInfo
+import epicurius.domain.fridge.UpdateProductInfo
 import epicurius.repository.FridgePostgresRepository
 import org.jdbi.v3.core.Handle
 import org.jdbi.v3.core.kotlin.mapTo
@@ -10,7 +12,7 @@ class JdbiFridgeRepository(private val handle: Handle) : FridgePostgresRepositor
     override fun getFridge(userId: Int): Fridge {
         val fridgeProducts = handle.createQuery(
             """
-                SELECT *
+                SELECT product_name, entry_number, quantity, open_date, expiration_date
                 FROM dbo.fridge
                 WHERE owner_id = :id
             """
@@ -22,7 +24,7 @@ class JdbiFridgeRepository(private val handle: Handle) : FridgePostgresRepositor
         return Fridge(fridgeProducts)
     }
 
-    override fun addProduct(userId: Int, product: Product): Fridge {
+    override fun addProduct(userId: Int, product: ProductInfo): Fridge {
         handle.createUpdate(
             """
                 INSERT INTO dbo.fridge(owner_id, product_name, quantity, open_date, expiration_date)
@@ -36,17 +38,56 @@ class JdbiFridgeRepository(private val handle: Handle) : FridgePostgresRepositor
             .bind("expirationDate", product.expirationDate)
             .execute()
 
-        val fridgeProducts = handle.createQuery(
+        return getFridge(userId)
+    }
+
+    override fun updateProduct(userId: Int, product: UpdateProductInfo): Fridge {
+        handle.createUpdate(
             """
-                SELECT *
-                FROM dbo.fridge
-                WHERE owner_id = :id
+                UPDATE dbo.fridge
+                SET quantity = COALESCE(:quantity, quantity),
+                    open_date = COALESCE(:openDate, open_date),
+                    expiration_date = COALESCE(:expirationDate, expiration_date)
+                WHERE owner_id = :id AND entry_number = :number
+            """
+        )
+            .bind("quantity", product.quantity)
+            .bind("openDate", product.openDate)
+            .bind("expirationDate", product.expirationDate)
+            .bind("id", userId)
+            .bind("number", product.entryNumber)
+            .execute()
+
+        return getFridge(userId)
+    }
+
+    override fun checkIfProductExistsInFridge(userId: Int, entryNumber: Int?, product: ProductInfo?): Product? =
+        handle.createQuery(
+            """
+                SELECT product_name, entry_number, quantity, open_date, expiration_date
+                FROM dbo.fridge 
+                WHERE owner_id = :id 
+                    AND (COALESCE(:name, product_name) = product_name)
+                    AND (COALESCE(:date, expiration_date) = expiration_date)
+                    AND (COALESCE(:number, entry_number) = entry_number)
             """
         )
             .bind("id", userId)
+            .bind("name", product?.productName)
+            .bind("date", product?.expirationDate)
+            .bind("number", entryNumber)
             .mapTo<Product>()
-            .list()
+            .firstOrNull()
 
-        return Fridge(fridgeProducts)
-    }
+    override fun checkIfProductIsOpen(userId: Int, entryNumber: Int): Boolean =
+        handle.createQuery(
+            """
+                SELECT COUNT (*) FROM dbo.fridge 
+                WHERE owner_id = :id AND entry_number = :number AND open_date IS NULL
+            """
+        )
+            .bind("id", userId)
+            .bind("number", entryNumber)
+            .mapTo<Int>()
+            .one() == 1
 }

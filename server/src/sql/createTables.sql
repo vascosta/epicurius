@@ -23,10 +23,12 @@ create table dbo.followers(
 
 create table dbo.fridge(
     owner_id integer not null,
+    entry_number serial not null,
     product_name varchar(50) not null,
     quantity integer not null,
     open_date date,
     expiration_date date not null,
+    primary key (owner_id, entry_number),
     foreign key (owner_id) references dbo.user(id)
 )
 

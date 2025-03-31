@@ -3,8 +3,21 @@ package epicurius.http
 import epicurius.EpicuriusTest
 import epicurius.domain.Intolerance
 import epicurius.domain.user.User
-import epicurius.http.user.models.output.*
-import epicurius.http.utils.*
+import epicurius.http.user.models.output.GetDietsOutputModel
+import epicurius.http.user.models.output.GetFollowRequestsOutputModel
+import epicurius.http.user.models.output.GetFollowersOutputModel
+import epicurius.http.user.models.output.GetFollowingOutputModel
+import epicurius.http.user.models.output.GetIntolerancesOutputModel
+import epicurius.http.user.models.output.GetUserOutputModel
+import epicurius.http.user.models.output.GetUserProfileOutputModel
+import epicurius.http.user.models.output.GetUsersOutputModel
+import epicurius.http.user.models.output.UpdateProfilePictureOutputModel
+import epicurius.http.user.models.output.UpdateUserOutputModel
+import epicurius.http.utils.Uris
+import epicurius.http.utils.get
+import epicurius.http.utils.getAuthorizationHeader
+import epicurius.http.utils.getBody
+import epicurius.http.utils.post
 import epicurius.utils.createTestUser
 import org.junit.jupiter.api.BeforeAll
 import org.springframework.boot.test.context.SpringBootTest
@@ -33,7 +46,7 @@ class HttpTest : EpicuriusTest() {
     fun getUsers(token: String, partialUsername: String, skip: Int = 0, limit: Int = 10) =
         get<GetUsersOutputModel>(
             client,
-        api(Uris.User.USERS) + "?partialUsername=$partialUsername&skip=$skip&limit=$limit",
+            api(Uris.User.USERS) + "?partialUsername=$partialUsername&skip=$skip&limit=$limit",
             token = token
         )
 
@@ -50,7 +63,6 @@ class HttpTest : EpicuriusTest() {
 
     fun getFollowRequests(token: String) =
         get<GetFollowRequestsOutputModel>(client, api(Uris.User.USER_FOLLOW_REQUESTS), token = token)
-
 
     fun signUp(username: String, email: String, country: String, password: String): String {
         val result = post<Unit>(
@@ -78,7 +90,6 @@ class HttpTest : EpicuriusTest() {
 
         return getAuthorizationHeader(result)
     }
-
 
     fun logout(token: String): String {
         val result = post<Unit>(client, api(Uris.User.LOGOUT), "", token = token)

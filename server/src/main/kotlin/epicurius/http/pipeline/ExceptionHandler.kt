@@ -2,12 +2,15 @@ package epicurius.http.pipeline
 
 import com.fasterxml.jackson.core.JsonParseException
 import com.fasterxml.jackson.databind.exc.MismatchedInputException
+import epicurius.domain.exceptions.DurationIsNull
 import epicurius.domain.exceptions.IncorrectPassword
 import epicurius.domain.exceptions.InvalidCountry
 import epicurius.domain.exceptions.InvalidDietIdx
 import epicurius.domain.exceptions.InvalidIntolerancesIdx
 import epicurius.domain.exceptions.InvalidProduct
 import epicurius.domain.exceptions.PasswordsDoNotMatch
+import epicurius.domain.exceptions.ProductIsAlreadyOpen
+import epicurius.domain.exceptions.ProductNotFound
 import epicurius.domain.exceptions.UnauthorizedException
 import epicurius.domain.exceptions.UserAlreadyExists
 import epicurius.domain.exceptions.UserAlreadyLoggedIn
@@ -98,7 +101,10 @@ class ExceptionHandler {
             PasswordsDoNotMatch::class,
             InvalidIntolerancesIdx::class,
             InvalidDietIdx::class,
-            InvalidProduct::class
+            InvalidProduct::class,
+            InvalidProduct::class,
+            DurationIsNull::class,
+            ProductIsAlreadyOpen::class
         ]
     )
     fun handleBadRequest(request: HttpServletRequest, ex: Exception) =
@@ -121,6 +127,7 @@ class ExceptionHandler {
     @ExceptionHandler(
         value = [
             UserNotFound::class,
+            ProductNotFound::class
         ]
     )
     fun handleNotFound(request: HttpServletRequest, ex: Exception) =
