@@ -61,23 +61,30 @@ class JdbiFridgeRepository(private val handle: Handle) : FridgePostgresRepositor
         return getFridge(userId)
     }
 
-    override fun checkIfProductExistsInFridge(userId: Int, entryNumber: Int?, product: ProductInfo?): Product? =
-        handle.createQuery(
+    override fun checkIfProductExistsInFridge(userId: Int, entryNumber: Int?, product: ProductInfo?): Product? {
+        val query = StringBuilder(
             """
                 SELECT product_name, entry_number, quantity, open_date, expiration_date
                 FROM dbo.fridge 
-                WHERE owner_id = :id 
-                    AND (COALESCE(:name, product_name) = product_name)
-                    AND (COALESCE(:date, expiration_date) = expiration_date)
-                    AND (COALESCE(:number, entry_number) = entry_number)
+                WHERE owner_id = :id
             """
         )
+
+        if (product?.productName != null) query.append(" AND product_name = :name")
+        if (product?.openDate != null) query.append(" AND open_date = :open")
+        if (product?.expirationDate != null) query.append(" AND expiration_date = :date")
+        if (entryNumber != null) query.append(" AND entry_number = :number")
+
+        val result = handle.createQuery(query.toString())
             .bind("id", userId)
-            .bind("name", product?.productName)
-            .bind("date", product?.expirationDate)
-            .bind("number", entryNumber)
-            .mapTo<Product>()
-            .firstOrNull()
+
+        product?.productName?.let { result.bind("name", it) }
+        product?.openDate?.let { result.bind("open", it) }
+        product?.expirationDate?.let { result.bind("date", it) }
+        entryNumber?.let { result.bind("number", it) }
+
+        return result.mapTo<Product>().firstOrNull()
+    }
 
     override fun checkIfProductIsOpen(userId: Int, entryNumber: Int): Boolean =
         handle.createQuery(
