@@ -3,11 +3,14 @@ package epicurius
 import com.google.auth.oauth2.GoogleCredentials
 import com.google.cloud.storage.Storage
 import com.google.cloud.storage.StorageOptions
+import epicurius.config.HttpClientConfigurer
 import epicurius.domain.CountriesDomain
+import epicurius.domain.fridge.FridgeDomain
 import epicurius.domain.token.Sha256TokenEncoder
 import epicurius.domain.user.UserDomain
 import epicurius.repository.cloudStorage.CloudStorageManager
 import epicurius.repository.jdbi.utils.configureWithAppRequirements
+import epicurius.repository.spoonacular.SpoonacularManager
 import epicurius.repository.transaction.jdbi.JdbiTransactionManager
 import org.jdbi.v3.core.Jdbi
 import org.junit.jupiter.api.AfterAll
@@ -40,17 +43,19 @@ open class EpicuriusTest {
         ).configureWithAppRequirements()
 
         // private val firestore = getFirestoreService()
-
         private val cloudStorage = getCloudStorageService()
+        private val httpClient = HttpClientConfigurer()
 
         val tm = JdbiTransactionManager(jdbi)
         // val fs = FirestoreManager(firestore)
         val cs = CloudStorageManager(cloudStorage)
+        val sm = SpoonacularManager(httpClient)
 
         private val tokenEncoder = Sha256TokenEncoder()
         private val passwordEncoder = BCryptPasswordEncoder()
         val usersDomain = UserDomain(passwordEncoder, tokenEncoder)
         val countriesDomain = CountriesDomain()
+        val fridgeDomain = FridgeDomain()
 
         val testProfilePicture =
             MockMultipartFile(

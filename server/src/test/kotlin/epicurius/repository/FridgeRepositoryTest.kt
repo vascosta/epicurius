@@ -11,7 +11,7 @@ import kotlin.test.assertNotNull
 import kotlin.test.assertNull
 import kotlin.test.assertTrue
 
-class FridgeRepositoryTest: RepositoryTest() {
+class FridgeRepositoryTest : RepositoryTest() {
 
     @Test
     fun `Retrieve user fridge successfully`() {
@@ -68,10 +68,8 @@ class FridgeRepositoryTest: RepositoryTest() {
         val fridge = addProduct(user.id, product)
 
         val entryNumber = fridge.products.first {
-            it.productName == product.productName &&
-                    it.quantity == product.quantity &&
-                    it.openDate == product.openDate &&
-                    it.expirationDate == product.expirationDate
+            it.productName == product.productName && it.quantity == product.quantity &&
+            it.openDate == product.openDate && it.expirationDate == product.expirationDate
         }.entryNumber
 
         // when updating the product in the user's fridge
@@ -93,14 +91,16 @@ class FridgeRepositoryTest: RepositoryTest() {
             ProductInfo(it.productName, it.quantity, it.openDate, it.expirationDate)
         }
 
-        assertTrue(productInfoList.contains(
-            ProductInfo(
-                productName = product.productName,
-                quantity = newQuantity,
-                openDate = null,
-                expirationDate = newExpirationDate
+        assertTrue(
+            productInfoList.contains(
+                ProductInfo(
+                    productName = product.productName,
+                    quantity = newQuantity,
+                    openDate = null,
+                    expirationDate = newExpirationDate
+                )
             )
-        ))
+        )
     }
 
     @Test
@@ -120,10 +120,8 @@ class FridgeRepositoryTest: RepositoryTest() {
         val fridge = addProduct(user.id, product)
 
         val entryNumber = fridge.products.first {
-            it.productName == product.productName &&
-                    it.quantity == product.quantity &&
-                    it.openDate == product.openDate &&
-                    it.expirationDate == product.expirationDate
+            it.productName == product.productName && it.quantity == product.quantity &&
+            it.openDate == product.openDate && it.expirationDate == product.expirationDate
         }.entryNumber
 
         // when removing the product from the user's fridge
@@ -197,10 +195,8 @@ class FridgeRepositoryTest: RepositoryTest() {
         val fridge = addProduct(user.id, product)
 
         val entryNumber = fridge.products.first {
-            it.productName == product.productName &&
-                    it.quantity == product.quantity &&
-                    it.openDate == product.openDate &&
-                    it.expirationDate == product.expirationDate
+            it.productName == product.productName && it.quantity == product.quantity &&
+            it.openDate == product.openDate && it.expirationDate == product.expirationDate
         }.entryNumber
 
         // when checking if the product exists in the user's fridge

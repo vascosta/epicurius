@@ -3,6 +3,9 @@ package epicurius.services
 import epicurius.EpicuriusTest
 import epicurius.domain.PagingParams
 import epicurius.domain.user.User
+import epicurius.http.fridge.models.input.OpenProductInputModel
+import epicurius.http.fridge.models.input.ProductInputModel
+import epicurius.http.fridge.models.input.UpdateProductInputModel
 import epicurius.http.user.models.input.UpdateUserInputModel
 import epicurius.utils.createTestUser
 import org.junit.jupiter.api.BeforeAll
@@ -13,6 +16,7 @@ open class ServicesTest : EpicuriusTest() {
     companion object {
         // private val userService = UserService(tm, fs, cs, usersDomain, countriesDomain)
         private val userService = UserService(tm, cs, usersDomain, countriesDomain)
+        private val fridgeService = FridgeService(tm, sm, fridgeDomain)
 
         lateinit var publicTestUser: User
         lateinit var privateTestUser: User
@@ -24,6 +28,7 @@ open class ServicesTest : EpicuriusTest() {
             privateTestUser = createTestUser(tm, true)
         }
 
+        // USER
         fun createUser(username: String, email: String, country: String, password: String, confirmPassword: String) =
             userService.createUser(username, email, country, password, confirmPassword)
 
@@ -61,5 +66,21 @@ open class ServicesTest : EpicuriusTest() {
 
         fun cancelFollowRequest(userId: Int, usernameToCancelFollow: String) =
             userService.cancelFollowRequest(userId, usernameToCancelFollow)
+
+        // FRIDGE
+        fun getFridge(userId: Int) = fridgeService.getFridge(userId)
+
+        suspend fun addProduct(userId: Int, productName: ProductInputModel) =
+            fridgeService.addProduct(userId, productName)
+
+        suspend fun getProductsList(partial: String) = fridgeService.getProductsList(partial)
+
+        fun updateProductInfo(userId: Int, entryNumber: Int, product: UpdateProductInputModel) =
+            fridgeService.updateProductInfo(userId, entryNumber, product)
+
+        fun openProduct(userId: Int, entryNumber: Int, product: OpenProductInputModel) =
+            fridgeService.openProduct(userId, entryNumber, product)
+
+        fun removeProduct(userId: Int, entryNumber: Int) = fridgeService.removeProduct(userId, entryNumber)
     }
 }
