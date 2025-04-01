@@ -37,6 +37,5 @@ class UserDomain(
         const val MIN_PASSWORD_LENGTH = 8
         const val MAX_PASSWORD_LENGTH = 30
         const val TOKEN_SIZE_IN_BYTES = 32
-
     }
 }

@@ -41,7 +41,7 @@ class UserController(val userService: UserService) {
 
     @GetMapping(Uris.User.USER)
     fun getUser(authenticatedUser: AuthenticatedUser): ResponseEntity<*> {
-        return ResponseEntity.ok().body(GetUserOutputModel(authenticatedUser.userInfo))
+        return ResponseEntity.ok().body(GetUserOutputModel(authenticatedUser.user.toUserInfo()))
     }
 
     @GetMapping(Uris.User.USER_PROFILE)
@@ -50,13 +50,13 @@ class UserController(val userService: UserService) {
         @RequestParam username: String
     ): ResponseEntity<*> {
         return if (username.isEmpty()) {
-            val userProfilePicture = userService.getProfilePicture(authenticatedUser.userInfo.profilePictureName)
-            val followers = userService.getFollowers(authenticatedUser.userInfo.id)
-            val following = userService.getFollowing(authenticatedUser.userInfo.id)
+            val userProfilePicture = userService.getProfilePicture(authenticatedUser.user.profilePictureName)
+            val followers = userService.getFollowers(authenticatedUser.user.id)
+            val following = userService.getFollowing(authenticatedUser.user.id)
             val userProfile = UserProfile(
-                authenticatedUser.userInfo.username,
-                authenticatedUser.userInfo.country,
-                authenticatedUser.userInfo.privacy,
+                authenticatedUser.user.username,
+                authenticatedUser.user.country,
+                authenticatedUser.user.privacy,
                 userProfilePicture,
                 followers,
                 following,
@@ -82,31 +82,31 @@ class UserController(val userService: UserService) {
 
     @GetMapping(Uris.User.USER_INTOLERANCES)
     fun getIntolerances(authenticatedUser: AuthenticatedUser): ResponseEntity<*> {
-        val intolerances = authenticatedUser.userInfo.intolerances
+        val intolerances = authenticatedUser.user.intolerances
         return ResponseEntity.ok().body(GetIntolerancesOutputModel(intolerances))
     }
 
     @GetMapping(Uris.User.USER_DIETS)
     fun getDiet(authenticatedUser: AuthenticatedUser): ResponseEntity<*> {
-        val diet = authenticatedUser.userInfo.diets
+        val diet = authenticatedUser.user.diets
         return ResponseEntity.ok().body(GetDietsOutputModel(diet))
     }
 
     @GetMapping(Uris.User.USER_FOLLOWERS)
     fun getFollowers(authenticatedUser: AuthenticatedUser): ResponseEntity<*> {
-        val followers = userService.getFollowers(authenticatedUser.userInfo.id)
+        val followers = userService.getFollowers(authenticatedUser.user.id)
         return ResponseEntity.ok().body(GetFollowersOutputModel(followers))
     }
 
     @GetMapping(Uris.User.USER_FOLLOWING)
     fun getFollowing(authenticatedUser: AuthenticatedUser): ResponseEntity<*> {
-        val following = userService.getFollowing(authenticatedUser.userInfo.id)
+        val following = userService.getFollowing(authenticatedUser.user.id)
         return ResponseEntity.ok().body(GetFollowingOutputModel(following))
     }
 
     @GetMapping(Uris.User.USER_FOLLOW_REQUESTS)
     fun getFollowRequests(authenticatedUser: AuthenticatedUser): ResponseEntity<*> {
-        val followRequests = userService.getFollowRequests(authenticatedUser.userInfo.id)
+        val followRequests = userService.getFollowRequests(authenticatedUser.user.id)
         return ResponseEntity.ok().body(GetFollowRequestsOutputModel(followRequests))
     }
 
@@ -126,7 +126,7 @@ class UserController(val userService: UserService) {
 
     @PostMapping(Uris.User.LOGOUT)
     fun logout(authenticatedUser: AuthenticatedUser, response: HttpServletResponse): ResponseEntity<*> {
-        userService.logout(authenticatedUser.userInfo.username)
+        userService.logout(authenticatedUser.user.username)
         response.addHeader("Authorization", "")
         return ResponseEntity.noContent().build<Unit>()
     }
@@ -136,17 +136,9 @@ class UserController(val userService: UserService) {
         authenticatedUser: AuthenticatedUser,
         @Valid @RequestBody body: UpdateUserInputModel
     ): ResponseEntity<*> {
-        val updatedUser = userService.updateUser(authenticatedUser.userInfo.username, body)
+        val updatedUserInfo = userService.updateUser(authenticatedUser.user.username, body)
         return ResponseEntity.ok().body(
-            UpdateUserOutputModel(
-                updatedUser.username,
-                updatedUser.email,
-                updatedUser.country,
-                updatedUser.privacy,
-                updatedUser.intolerances,
-                updatedUser.diets,
-                updatedUser.profilePictureName
-            )
+            UpdateUserOutputModel(updatedUserInfo)
         )
     }
 
@@ -156,8 +148,8 @@ class UserController(val userService: UserService) {
         @Valid @RequestBody body: UpdateProfilePictureInputModel
     ): ResponseEntity<*> {
         val newProfilePicture = userService.updateProfilePicture(
-            authenticatedUser.userInfo.username,
-            authenticatedUser.userInfo.profilePictureName,
+            authenticatedUser.user.username,
+            authenticatedUser.user.profilePictureName,
             body.profilePicture
         )
         return ResponseEntity.ok().body(UpdateProfilePictureOutputModel(newProfilePicture))
@@ -173,13 +165,13 @@ class UserController(val userService: UserService) {
 
     @PatchMapping(Uris.User.USER_FOLLOW)
     fun follow(authenticatedUser: AuthenticatedUser, @Valid @RequestBody body: FollowInputModel): ResponseEntity<*> {
-        userService.follow(authenticatedUser.userInfo.id, body.username)
+        userService.follow(authenticatedUser.user.id, body.username)
         return ResponseEntity.noContent().build<Unit>()
     }
 
     @PatchMapping(Uris.User.USER_UNFOLLOW)
     fun unfollow(authenticatedUser: AuthenticatedUser, @Valid @RequestBody body: UnfollowInputModel): ResponseEntity<*> {
-        userService.unfollow(authenticatedUser.userInfo.id, body.username)
+        userService.unfollow(authenticatedUser.user.id, body.username)
         return ResponseEntity.noContent().build<Unit>()
     }
 
@@ -188,7 +180,7 @@ class UserController(val userService: UserService) {
         authenticatedUser: AuthenticatedUser,
         @Valid @RequestBody body: CancelFollowRequestInputModel
     ): ResponseEntity<*> {
-        userService.cancelFollowRequest(authenticatedUser.userInfo.id, body.username)
+        userService.cancelFollowRequest(authenticatedUser.user.id, body.username)
         return ResponseEntity.noContent().build<Unit>()
     }
 }

@@ -446,7 +446,6 @@ class UserServiceTest : ServicesTest() {
         assertNotNull(authenticatedUser)
         assertEquals(authenticatedUser.user.username, user.username)
         assertEquals(authenticatedUser.user.email, user.email)
-
     }
 
     @Test

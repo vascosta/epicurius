@@ -33,9 +33,24 @@ inline fun <reified T> post(
         .expectBody(T::class.java)
         .returnResult()
 
-inline fun <reified T> getBody(result: EntityExchangeResult<T>): T = result.responseBody ?:
-    throw IllegalStateException("Response body is null")
+inline fun <reified T> patch(
+    client: WebTestClient,
+    uri: String,
+    body: Any,
+    responseStatus: HttpStatus = HttpStatus.NO_CONTENT,
+    token: String? = null
+) =
+    client.patch().uri(uri)
+        .header("Authorization", "Bearer $token")
+        .bodyValue(body)
+        .exchange()
+        .expectStatus().isEqualTo(responseStatus)
+        .expectBody(T::class.java)
+        .returnResult()
 
-inline fun <reified T> getAuthorizationHeader(result: EntityExchangeResult<T>, ): String =
-    result.responseHeaders["Authorization"]?.first()?.substringAfter("Bearer ") ?:
-        throw IllegalStateException("Authorization header is null")
+inline fun <reified T> getBody(result: EntityExchangeResult<T>): T = result.responseBody
+    ?: throw IllegalStateException("Response body is null")
+
+inline fun <reified T> getAuthorizationHeader(result: EntityExchangeResult<T>,): String =
+    result.responseHeaders["Authorization"]?.first()?.substringAfter("Bearer ")
+        ?: throw IllegalStateException("Authorization header is null")

@@ -69,7 +69,7 @@ class FridgeRepositoryTest : RepositoryTest() {
 
         val entryNumber = fridge.products.first {
             it.productName == product.productName && it.quantity == product.quantity &&
-            it.openDate == product.openDate && it.expirationDate == product.expirationDate
+                it.openDate == product.openDate && it.expirationDate == product.expirationDate
         }.entryNumber
 
         // when updating the product in the user's fridge
@@ -121,7 +121,7 @@ class FridgeRepositoryTest : RepositoryTest() {
 
         val entryNumber = fridge.products.first {
             it.productName == product.productName && it.quantity == product.quantity &&
-            it.openDate == product.openDate && it.expirationDate == product.expirationDate
+                it.openDate == product.openDate && it.expirationDate == product.expirationDate
         }.entryNumber
 
         // when removing the product from the user's fridge
@@ -196,7 +196,7 @@ class FridgeRepositoryTest : RepositoryTest() {
 
         val entryNumber = fridge.products.first {
             it.productName == product.productName && it.quantity == product.quantity &&
-            it.openDate == product.openDate && it.expirationDate == product.expirationDate
+                it.openDate == product.openDate && it.expirationDate == product.expirationDate
         }.entryNumber
 
         // when checking if the product exists in the user's fridge

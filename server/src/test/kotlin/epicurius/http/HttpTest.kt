@@ -17,6 +17,7 @@ import epicurius.http.utils.Uris
 import epicurius.http.utils.get
 import epicurius.http.utils.getAuthorizationHeader
 import epicurius.http.utils.getBody
+import epicurius.http.utils.patch
 import epicurius.http.utils.post
 import epicurius.utils.createTestUser
 import org.junit.jupiter.api.BeforeAll
@@ -107,7 +108,7 @@ class HttpTest : EpicuriusTest() {
         intolerances: List<Intolerance>? = null,
         diets: List<String>? = null
     ): UpdateUserOutputModel? {
-        val result = post<UpdateUserOutputModel>(
+        val result = patch<UpdateUserOutputModel>(
             client,
             api(Uris.User.USER),
             mapOf(
@@ -155,15 +156,15 @@ class HttpTest : EpicuriusTest() {
     }
 
     fun follow(token: String, username: String) {
-        post<Unit>(client, api(Uris.User.USER_FOLLOW), mapOf("username" to username), token = token)
+        patch<Unit>(client, api(Uris.User.USER_FOLLOW), mapOf("username" to username), token = token)
     }
 
     fun unfollow(token: String, username: String) {
-        post<Unit>(client, api(Uris.User.USER_UNFOLLOW), mapOf("username" to username), token = token)
+        patch<Unit>(client, api(Uris.User.USER_UNFOLLOW), mapOf("username" to username), token = token)
     }
 
     fun cancelFollowRequest(token: String, username: String) {
-        post<Unit>(client, api(Uris.User.USER_FOLLOW_REQUESTS), mapOf("username" to username), token = token)
+        patch<Unit>(client, api(Uris.User.USER_FOLLOW_REQUESTS), mapOf("username" to username), token = token)
     }
 
     companion object {

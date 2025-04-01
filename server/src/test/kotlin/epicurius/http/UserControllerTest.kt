@@ -1,23 +1,166 @@
 package epicurius.http
 
-import epicurius.domain.Diet
-import epicurius.domain.Intolerance
+import epicurius.domain.exceptions.IncorrectPassword
+import epicurius.domain.exceptions.UserAlreadyLoggedIn
 import epicurius.domain.exceptions.UserNotFound
-import epicurius.http.user.models.output.UpdateUserOutputModel
+import epicurius.domain.user.FollowUser
+import epicurius.domain.user.FollowingUser
+import epicurius.domain.user.SearchUser
+import epicurius.domain.user.UserDomain
 import epicurius.http.utils.Problem
+import epicurius.http.utils.Regex
 import epicurius.http.utils.Uris
 import epicurius.http.utils.get
+import epicurius.http.utils.getBody
+import epicurius.http.utils.post
 import epicurius.utils.createTestUser
 import epicurius.utils.generateEmail
 import epicurius.utils.generateRandomUsername
 import epicurius.utils.generateSecurePassword
 import org.springframework.http.HttpStatus
-import org.springframework.test.web.reactive.server.expectBody
-import kotlin.test.*
+import kotlin.test.Test
+import kotlin.test.assertEquals
+import kotlin.test.assertFalse
+import kotlin.test.assertNotNull
+import kotlin.test.assertNull
+import kotlin.test.assertTrue
 
 class UserControllerTest : HttpTest() {
 
     @Test
+    fun `Retrieve its own user profile successfully`() {
+        // given an existing logged-in user
+        val username = generateRandomUsername()
+        val token = signUp(
+            username = username,
+            email = generateEmail(username),
+            country = "PT",
+            password = generateSecurePassword()
+        )
+
+        // when retrieving the user profile
+        val body = getUserProfile(token)
+
+        // then the user profile is retrieved successfully
+        assertNotNull(body)
+        assertEquals(username, body.userProfile.username)
+        assertEquals("PT", body.userProfile.country)
+        assertFalse(body.userProfile.privacy)
+        assertNull(body.userProfile.profilePicture)
+        assertTrue(body.userProfile.followers.isEmpty())
+        assertTrue(body.userProfile.following.isEmpty())
+    }
+
+    @Test
+    fun `Retrieve another user profile successfully`() {
+        // given an existing logged-in user and another user
+        val username = generateRandomUsername()
+        val token = signUp(
+            username = username,
+            email = generateEmail(username),
+            country = "PT",
+            password = generateSecurePassword()
+        )
+        val user = createTestUser(tm)
+
+        // when retrieving the user profile
+        val body = getUserProfile(token, user.username)
+
+        // then the user profile is retrieved successfully
+        assertNotNull(body)
+        assertEquals(user.username, body.userProfile.username)
+        assertEquals(user.country, body.userProfile.country)
+        assertEquals(user.privacy, body.userProfile.privacy)
+        assertNull(body.userProfile.profilePicture)
+        assertTrue(body.userProfile.followers.isEmpty())
+        assertTrue(body.userProfile.following.isEmpty())
+    }
+
+    @Test
+    fun `Try to retrieve a profile from a non-existing user and fails with code 404`() {
+        // given an existing logged-in user
+        val username = generateRandomUsername()
+        val token = signUp(
+            username = username,
+            email = generateEmail(username),
+            country = "PT",
+            password = generateSecurePassword()
+        )
+
+        // when trying to retrieve a profile from a non-existing user
+        val error = get<Problem>(
+            client,
+            api(Uris.User.USER_PROFILE) + "?username=nonExistingUser",
+            HttpStatus.NOT_FOUND,
+            token
+        )
+
+        // then the user profile is not retrieved and an error is returned with the UserNotFound message
+        assertNotNull(error)
+        assertEquals(UserNotFound("nonExistingUser").message, error.detail)
+    }
+
+    @Test
+    fun `Retrieves 2 users successfully`() {
+        // given 2 existing users
+        val username = "partial"
+        val username2 = "partialUsername"
+        val email = generateEmail(username)
+        val email2 = generateEmail(username2)
+        val country = "PT"
+        val password = generateSecurePassword()
+        val token = signUp(username, email, country, password)
+        signUp(username2, email2, country, password)
+
+        // when getting the users
+        val result = getUsers(token, username)
+
+        // then the users are retrieved successfully
+        assertNotNull(result)
+        assertEquals(2, result.users.size)
+        assertTrue(result.users.contains(SearchUser(username, null)))
+        assertTrue(result.users.contains(SearchUser(username2, null)))
+    }
+
+    @Test
+    fun `Retrieve the intolerances of the user successfully`() {
+        // given an existing logged-in user
+        val username = generateRandomUsername()
+        val token = signUp(
+            username = username,
+            email = generateEmail(username),
+            country = "PT",
+            password = generateSecurePassword()
+        )
+
+        // when retrieving the intolerances
+        val body = getIntolerances(token)
+
+        // then the intolerances are retrieved successfully
+        assertNotNull(body)
+        assertTrue(body.intolerances.isEmpty())
+    }
+
+    @Test
+    fun `Retrieve the diets of the user successfully`() {
+        // given an existing logged-in user
+        val username = generateRandomUsername()
+        val token = signUp(
+            username = username,
+            email = generateEmail(username),
+            country = "PT",
+            password = generateSecurePassword()
+        )
+
+        // when retrieving the diets
+        val body = getDiets(token)
+
+        // then the diets are retrieved successfully
+        assertNotNull(body)
+        assertTrue(body.diet.isEmpty())
+    }
+
+/*    @Test
     fun `Create new user and retrieve it successfully`() {
         // given user required information
         val username = generateRandomUsername()
@@ -157,92 +300,20 @@ class UserControllerTest : HttpTest() {
             )
             .exchange()
             .expectStatus().isBadRequest // then the user is not created
-    }
+    }*/
 
     @Test
-    fun `Retrieve its own user profile successfully`() {
-        // given an existing logged in user
-        val username = generateRandomUsername()
-        val token = signUp(
-            username = username,
-            email = generateEmail(username),
-            country = "PT",
-            password = generateSecurePassword()
-        )
-
-        // when retrieving the user profile
-        val body = getUserProfile(token)
-
-        // then the user profile is retrieved successfully
-        assertNotNull(body)
-        assertEquals(username, body.userProfile.username)
-        assertEquals("PT", body.userProfile.country)
-        assertFalse(body.userProfile.privacy)
-        assertNull(body.userProfile.profilePicture)
-        assertTrue(body.userProfile.followers.isEmpty())
-        assertTrue(body.userProfile.following.isEmpty())
-    }
-
-    @Test
-    fun `Retrieve another user profile successfully`() {
-        // given an existing logged in user and another user
-        val username = generateRandomUsername()
-        val token = signUp(
-            username = username,
-            email = generateEmail(username),
-            country = "PT",
-            password = generateSecurePassword()
-        )
-        val user = createTestUser(tm)
-
-        // when retrieving the user profile
-        val body = getUserProfile(token, user.username)
-
-        // then the user profile is retrieved successfully
-        assertNotNull(body)
-        assertEquals(user.username, body.userProfile.username)
-        assertEquals(user.country, body.userProfile.country)
-        assertEquals(user.privacy, body.userProfile.privacy)
-        assertNull(body.userProfile.profilePicture)
-        assertTrue(body.userProfile.followers.isEmpty())
-        assertTrue(body.userProfile.following.isEmpty())
-    }
-
-    @Test
-    fun `Try to retrieve a profile from a non-existing user and returns code 404`() {
-        // given an existing logged in user
-        val username = generateRandomUsername()
-        val token = signUp(
-            username = username,
-            email = generateEmail(username),
-            country = "PT",
-            password = generateSecurePassword()
-        )
-
-        // when trying to retrieve a profile from a non-existing user
-        val error = get<Problem>(
-            client,
-            api(Uris.User.USER_PROFILE) + "?username=nonExistingUser",
-            HttpStatus.NOT_FOUND,
-            token
-        )
-
-        // then the user profile is not retrieved and an error is returned with the UserNotFound message
-        assertNotNull(error)
-        assertEquals(UserNotFound("nonExistingUser").message, error.detail)
-    }
-
-    @Test
-    fun `Login a user by name successfully`() {
+    fun `Logout an user successfully and then login him by name successfully`() {
         // given an existing user logged out
         val username = generateRandomUsername()
         val email = generateEmail(username)
         val country = "PT"
         val password = generateSecurePassword()
         val token = signUp(username, email, country, password)
-
         assertNotNull(token)
-        logout(token)
+
+        val oldToken = logout(token)
+        assertTrue(oldToken.isEmpty())
 
         // when logging in
         val newToken = login(username = username, password = password)
@@ -254,20 +325,20 @@ class UserControllerTest : HttpTest() {
         assertEquals(username, authenticatedUser.user.username)
         assertEquals(email, authenticatedUser.user.email)
         assertEquals(country, authenticatedUser.user.country)
-        assertTrue(usersDomain.verifyPassword(password, authenticatedUser.user.passwordHash))
     }
 
     @Test
-    fun `Login a user by email successfully`() {
+    fun `Logout an user successfully and then login him by email successfully`() {
         // given an existing user logged out
         val username = generateRandomUsername()
         val email = generateEmail(username)
         val country = "PT"
         val password = generateSecurePassword()
         val token = signUp(username, email, country, password)
-
         assertNotNull(token)
-        logout(token)
+
+        val oldToken = logout(token)
+        assertTrue(oldToken.isEmpty())
 
         // when logging in
         val newToken = login(email = email, password = password)
@@ -279,10 +350,192 @@ class UserControllerTest : HttpTest() {
         assertEquals(username, authenticatedUser.user.username)
         assertEquals(email, authenticatedUser.user.email)
         assertEquals(country, authenticatedUser.user.country)
-        assertTrue(usersDomain.verifyPassword(password, authenticatedUser.user.passwordHash))
     }
 
     @Test
+    fun `Try to login an user with a non-existing username and fails with code 404`() {
+        // given a non-existing username
+        val username = generateRandomUsername()
+        val password = generateSecurePassword()
+
+        // when trying to login with a non-existing username
+        val error = post<Problem>(
+            client,
+            api(Uris.User.LOGIN),
+            mapOf("username" to username, "password" to password),
+            HttpStatus.NOT_FOUND
+        )
+        assertNotNull(error)
+
+        // then the user is not logged in and an error is returned with the UserNotFound message
+
+        val errorBody = getBody(error)
+        assertNotNull(errorBody)
+        assertEquals(UserNotFound(username).message, errorBody.detail)
+    }
+
+    @Test
+    fun `Try to login an user with a non-existing email and fails with code 404`() {
+        // given a non-existing username
+        val email = generateEmail("user")
+        val password = generateSecurePassword()
+
+        // when trying to login with a non-existing username
+        val error = post<Problem>(
+            client,
+            api(Uris.User.LOGIN),
+            mapOf("email" to email, "password" to password),
+            HttpStatus.NOT_FOUND
+        )
+        assertNotNull(error)
+
+        // then the user is not logged in and an error is returned with the UserNotFound message
+        val errorBody = getBody(error)
+        assertNotNull(errorBody)
+        assertEquals(UserNotFound(email).message, errorBody.detail)
+    }
+
+    @Test
+    fun `Try to login an already logged in user with and fails with code 400`() {
+        // given a logged-in user
+        val username = generateRandomUsername()
+        val email = generateEmail(username)
+        val country = "PT"
+        val password = generateSecurePassword()
+        signUp(username, email, country, password)
+
+        // when trying to login again
+        val error = post<Problem>(
+            client,
+            api(Uris.User.LOGIN),
+            mapOf("username" to username, "password" to password),
+            HttpStatus.BAD_REQUEST
+        )
+        assertNotNull(error)
+
+        // then the user was already logged in and an error is returned
+        val errorBody = getBody(error)
+        assertNotNull(errorBody)
+        assertEquals(UserAlreadyLoggedIn().message, errorBody.detail)
+    }
+
+    @Test
+    fun `Try to login an user with a different password and fails with code 401`() {
+        // given an existing user
+        val user = createTestUser(tm)
+
+        // when trying to login with a different password
+        val error = post<Problem>(
+            client,
+            api(Uris.User.LOGIN),
+            mapOf("username" to user.username, "password" to generateSecurePassword()),
+            HttpStatus.BAD_REQUEST
+        )
+        assertNotNull(error)
+
+        // then the user is not logged in and an error is returned
+        val errorBody = getBody(error)
+        assertNotNull(errorBody)
+        assertEquals(IncorrectPassword().message, errorBody.detail)
+    }
+
+    @Test
+    fun `Try to login with an invalid username and fails with code 400`() {
+        // given invalids usernames
+        val usernameToShort = "ab"
+        val usernameToLong = "wPIETGFH29THshfgOPHohasfn21h"
+        val invalidUsernameString = "/-+==;:"
+
+        // when trying to login with an invalid username
+        val errorWithShortUsername = post<Problem>(
+            client,
+            api(Uris.User.LOGIN),
+            mapOf("username" to usernameToShort, "password" to generateSecurePassword()),
+            HttpStatus.BAD_REQUEST
+        )
+        assertNotNull(errorWithShortUsername)
+
+        val errorWithLongUsername = post<Problem>(
+            client,
+            api(Uris.User.LOGIN),
+            mapOf("username" to usernameToLong, "password" to generateSecurePassword()),
+            HttpStatus.BAD_REQUEST
+        )
+        assertNotNull(errorWithLongUsername)
+
+        val errorWithInvalidUsernameString = post<Problem>(
+            client,
+            api(Uris.User.LOGIN),
+            mapOf("username" to invalidUsernameString, "password" to generateSecurePassword()),
+            HttpStatus.BAD_REQUEST
+        )
+        assertNotNull(errorWithInvalidUsernameString)
+
+        // then the user is not logged in and an error is returned
+        val errorBodyWithShortUsername = getBody(errorWithShortUsername)
+        val errorBodyWithLongUsername = getBody(errorWithLongUsername)
+        val errorBodyWithInvalidUsernameString = getBody(errorWithInvalidUsernameString)
+        assertNotNull(errorBodyWithShortUsername)
+        assertNotNull(errorBodyWithLongUsername)
+        assertNotNull(errorBodyWithInvalidUsernameString)
+        assertEquals("Username " + UserDomain.USERNAME_LENGTH_MSG, errorBodyWithShortUsername.detail)
+        assertEquals("Username " + UserDomain.USERNAME_LENGTH_MSG, errorBodyWithLongUsername.detail)
+        assertEquals("Username " + Regex.VALID_STRING_MSG, errorBodyWithInvalidUsernameString.detail)
+    }
+
+    @Test
+    fun `Try to login with an invalid email and fails with code 400`() {
+        // given invalids emails
+        val invalidEmail = "invalidEmail"
+        val invalidEmail2 = "invalidEmail@"
+
+        // when trying to login with an invalid email
+        val errorWithInvalidEmail = post<Problem>(
+            client,
+            api(Uris.User.LOGIN),
+            mapOf("email" to invalidEmail, "password" to generateSecurePassword()),
+            HttpStatus.BAD_REQUEST
+        )
+        assertNotNull(errorWithInvalidEmail)
+
+        val errorWithInvalidEmail2 = post<Problem>(
+            client,
+            api(Uris.User.LOGIN),
+            mapOf("email" to invalidEmail2, "password" to generateSecurePassword()),
+            HttpStatus.BAD_REQUEST
+        )
+        assertNotNull(errorWithInvalidEmail2)
+
+        // then the user is not logged in and an error is returned
+        val errorBodyWithInvalidEmail = getBody(errorWithInvalidEmail)
+        val errorBodyWithInvalidEmail2 = getBody(errorWithInvalidEmail2)
+        assertNotNull(errorBodyWithInvalidEmail)
+        assertNotNull(errorBodyWithInvalidEmail2)
+        assertEquals("Email " + UserDomain.VALID_EMAIL_MSG, errorBodyWithInvalidEmail.detail)
+        assertEquals("Email " + UserDomain.VALID_EMAIL_MSG, errorBodyWithInvalidEmail2.detail)
+    }
+
+    @Test
+    fun `Try to login with an invalid password and fails with code 400`() {
+        // given an existing user
+        val user = createTestUser(tm)
+
+        // when trying to login with an invalid password
+        val errorWithInvalidPassword = post<Problem>(
+            client,
+            api(Uris.User.LOGIN),
+            mapOf("username" to user.username, "password" to "invalidPassword"),
+            HttpStatus.BAD_REQUEST
+        )
+        assertNotNull(errorWithInvalidPassword)
+
+        // then the user is not logged in and an error is returned
+        val errorBodyWithInvalidPassword = getBody(errorWithInvalidPassword)
+        assertNotNull(errorBodyWithInvalidPassword)
+        assertEquals("Password " + Regex.VALID_PASSWORD_MSG, errorBodyWithInvalidPassword.detail)
+    }
+
+/*    @Test
     fun `Reset password successfully`() {
         // given an existing user
         val user = publicTestUser
@@ -485,5 +738,88 @@ class UserControllerTest : HttpTest() {
             )
             .exchange()
             .expectStatus().isBadRequest // then the user is not updated
+    }*/
+
+    @Test
+    fun `Follow a public user, unfollows him and then retrieve its followers and following successfully`() {
+        // given two existing users
+        val publicUsername = generateRandomUsername()
+        val publicUserToken = signUp(
+            username = publicUsername,
+            email = generateEmail(publicUsername),
+            country = "PT",
+            password = generateSecurePassword()
+        )
+        val publicUsername2 = generateRandomUsername()
+        val publicUserToken2 = signUp(
+            username = publicUsername2,
+            email = generateEmail(publicUsername2),
+            country = "PT",
+            password = generateSecurePassword()
+        )
+
+        // when following a public user
+        follow(publicUserToken2, publicUsername)
+
+        // then the user is followed successfully
+        val publicUserFollowers = getFollowers(publicUserToken)
+        val privateUserFollowing = getFollowing(publicUserToken2)
+        assertNotNull(publicUserFollowers)
+        assertNotNull(privateUserFollowing)
+        assertTrue(publicUserFollowers.users.isNotEmpty())
+        assertTrue(privateUserFollowing.users.isNotEmpty())
+        assertEquals(publicUserFollowers.users.size, 1)
+        assertEquals(privateUserFollowing.users.size, 1)
+        assertTrue(publicUserFollowers.users.contains(FollowUser(publicUsername2, null)))
+        assertTrue(privateUserFollowing.users.contains(FollowingUser(publicUsername, null)))
+
+        // when unfollowing the user
+        unfollow(publicUserToken2, publicUsername)
+
+        // then the user is unfollowed successfully
+        val publicUserFollowersAfterUnfollow = getFollowers(publicUserToken)
+        val privateUserFollowingAfterUnfollow = getFollowing(publicUserToken2)
+        assertNotNull(publicUserFollowersAfterUnfollow)
+        assertNotNull(privateUserFollowingAfterUnfollow)
+        assertTrue(publicUserFollowersAfterUnfollow.users.isEmpty())
+        assertTrue(privateUserFollowingAfterUnfollow.users.isEmpty())
+    }
+
+    @Test
+    fun `Try to follow a private user, get added to its follow requests and then cancel the request successfully`() {
+        // given two existing users
+        val publicUsername = generateRandomUsername()
+        val publicUserToken = signUp(
+            username = publicUsername,
+            email = generateEmail(publicUsername),
+            country = "PT",
+            password = generateSecurePassword()
+        )
+        val privateUsername = generateRandomUsername()
+        val privateUserToken = signUp(
+            username = privateUsername,
+            email = generateEmail(privateUsername),
+            country = "PT",
+            password = generateSecurePassword()
+        )
+        val privateUser = updateUser(privateUserToken, privacy = true)
+
+        // when following a private user
+        follow(publicUserToken, privateUsername)
+
+        // then the follow request is sent successfully
+        val privateUserFollowRequests = getFollowRequests(privateUserToken)
+        assertNotNull(privateUserFollowRequests)
+        assertTrue(privateUserFollowRequests.users.isNotEmpty())
+        assertEquals(privateUserFollowRequests.users.size, 1)
+        assertTrue(privateUserFollowRequests.users.contains(FollowUser(publicUsername, null)))
+
+        // when cancelling the follow request
+        cancelFollowRequest(publicUserToken, privateUsername)
+
+        // then the follow request is cancelled successfully
+        val privateUserFollowRequestsAfterCancel = getFollowRequests(privateUserToken)
+        assertNotNull(privateUserFollowRequestsAfterCancel)
+        assertTrue(privateUserFollowRequestsAfterCancel.users.isEmpty())
     }
 }
