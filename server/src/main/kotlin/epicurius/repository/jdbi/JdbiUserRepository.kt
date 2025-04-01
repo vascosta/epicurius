@@ -3,7 +3,7 @@ package epicurius.repository.jdbi
 import UserPostgresRepository
 import epicurius.domain.FollowingStatus
 import epicurius.domain.PagingParams
-import epicurius.domain.user.SocialUser
+import epicurius.domain.user.SearchUserModel
 import epicurius.domain.user.UpdateUserInfo
 import epicurius.domain.user.User
 import org.jdbi.v3.core.Handle
@@ -41,7 +41,7 @@ class JdbiUserRepository(private val handle: Handle) : UserPostgresRepository {
             .firstOrNull()
     }
 
-    override fun getUsers(partialUsername: String, pagingParams: PagingParams): List<SocialUser> {
+    override fun getUsers(partialUsername: String, pagingParams: PagingParams): List<SearchUserModel> {
         return handle.createQuery(
             """
                 SELECT username, profile_picture_name
@@ -53,11 +53,11 @@ class JdbiUserRepository(private val handle: Handle) : UserPostgresRepository {
             .bind("partialUsername", "%${partialUsername.lowercase()}%")
             .bind("limit", pagingParams.limit)
             .bind("skip", pagingParams.skip)
-            .mapTo<SocialUser>()
+            .mapTo<SearchUserModel>()
             .list()
     }
 
-    override fun getFollowers(userId: Int): List<SocialUser> {
+    override fun getFollowers(userId: Int): List<SearchUserModel> {
         return handle.createQuery(
             """
                 SELECT u.username, u.profile_picture_name
@@ -68,11 +68,11 @@ class JdbiUserRepository(private val handle: Handle) : UserPostgresRepository {
         )
             .bind("user_id", userId)
             .bind("status", FollowingStatus.ACCEPTED.ordinal)
-            .mapTo<SocialUser>()
+            .mapTo<SearchUserModel>()
             .list()
     }
 
-    override fun getFollowing(userId: Int): List<SocialUser> {
+    override fun getFollowing(userId: Int): List<SearchUserModel> {
         return handle.createQuery(
             """
                 SELECT u.username, u.profile_picture_name
@@ -83,11 +83,11 @@ class JdbiUserRepository(private val handle: Handle) : UserPostgresRepository {
         )
             .bind("user_id", userId)
             .bind("status", FollowingStatus.ACCEPTED.ordinal)
-            .mapTo<SocialUser>()
+            .mapTo<SearchUserModel>()
             .list()
     }
 
-    override fun getFollowRequests(userId: Int): List<SocialUser> {
+    override fun getFollowRequests(userId: Int): List<SearchUserModel> {
         return handle.createQuery(
             """
                 SELECT u.username, u.profile_picture_name
@@ -98,7 +98,7 @@ class JdbiUserRepository(private val handle: Handle) : UserPostgresRepository {
         )
             .bind("user_id", userId)
             .bind("status", FollowingStatus.PENDING.ordinal)
-            .mapTo<SocialUser>()
+            .mapTo<SearchUserModel>()
             .list()
     }
 
@@ -169,7 +169,7 @@ class JdbiUserRepository(private val handle: Handle) : UserPostgresRepository {
             .execute()
     }
 
-    override fun cancelFollowRequest(userId: Int, userIdToCancelFollowRequest: Int) {
+    override fun cancelFollowRequest(userId: Int, followerId: Int) {
         handle.createUpdate(
             """
                 DELETE FROM dbo.followers
@@ -177,7 +177,7 @@ class JdbiUserRepository(private val handle: Handle) : UserPostgresRepository {
             """
         )
             .bind("user_id", userId)
-            .bind("follower_id", userIdToCancelFollowRequest)
+            .bind("follower_id", followerId)
             .execute()
     }
 

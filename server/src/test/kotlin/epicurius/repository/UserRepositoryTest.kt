@@ -4,7 +4,7 @@ import epicurius.domain.Diet
 import epicurius.domain.FollowingStatus
 import epicurius.domain.Intolerance
 import epicurius.domain.PagingParams
-import epicurius.domain.user.SocialUser
+import epicurius.domain.user.SearchUserModel
 import epicurius.domain.user.UpdateUserInfo
 import epicurius.utils.createTestUser
 import epicurius.utils.generateEmail
@@ -80,8 +80,8 @@ class UserRepositoryTest : RepositoryTest() {
         // then the users are retrieved successfully
         assertTrue(users.isNotEmpty())
         assertEquals(users.size, 2)
-        assertTrue(users.contains(SocialUser(username, null)))
-        assertTrue(users.contains(SocialUser(username2, null)))
+        assertTrue(users.contains(SearchUserModel(username, null)))
+        assertTrue(users.contains(SearchUserModel(username2, null)))
     }
 
     @Test
@@ -191,8 +191,8 @@ class UserRepositoryTest : RepositoryTest() {
         assertTrue(privateUserFollowing.isNotEmpty())
         assertEquals(publicUserFollowers.size, 1)
         assertEquals(privateUserFollowing.size, 1)
-        assertTrue(publicUserFollowers.contains(SocialUser(privateUser.username, privateUser.profilePictureName)))
-        assertTrue(privateUserFollowing.contains(SocialUser(publicUser.username, publicUser.profilePictureName)))
+        assertTrue(publicUserFollowers.contains(SearchUserModel(privateUser.username, privateUser.profilePictureName)))
+        assertTrue(privateUserFollowing.contains(SearchUserModel(publicUser.username, publicUser.profilePictureName)))
 
         // when unfollowing the user
         unfollow(privateUser.id, publicUser.id)
@@ -217,7 +217,7 @@ class UserRepositoryTest : RepositoryTest() {
         val privateUserFollowRequests = getFollowRequests(privateUser.id)
         assertTrue(privateUserFollowRequests.isNotEmpty())
         assertEquals(privateUserFollowRequests.size, 1)
-        assertTrue(privateUserFollowRequests.contains(SocialUser(publicUser.username, publicUser.profilePictureName)))
+        assertTrue(privateUserFollowRequests.contains(SearchUserModel(publicUser.username, publicUser.profilePictureName)))
 
         // when cancelling the follow request
         cancelFollowRequest(privateUser.id, publicUser.id)

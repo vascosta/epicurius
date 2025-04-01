@@ -1,6 +1,6 @@
 package epicurius.domain.user
 
-data class SocialUser(
+data class SearchUserModel(
     val username: String,
     val profilePictureName: String?
 )

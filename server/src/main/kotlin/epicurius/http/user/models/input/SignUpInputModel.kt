@@ -1,5 +1,6 @@
 package epicurius.http.user.models.input
 
+import epicurius.domain.user.UserDomain
 import epicurius.domain.user.UserDomain.Companion.MAX_PASSWORD_LENGTH
 import epicurius.domain.user.UserDomain.Companion.MAX_USERNAME_LENGTH
 import epicurius.domain.user.UserDomain.Companion.MIN_PASSWORD_LENGTH
@@ -12,7 +13,7 @@ import jakarta.validation.constraints.Size
 
 data class SignUpInputModel(
     @field:NotBlank
-    @field:Size(min = MIN_USERNAME_LENGTH, max = MAX_USERNAME_LENGTH)
+    @field:Size(min = MIN_USERNAME_LENGTH, max = MAX_USERNAME_LENGTH, message = UserDomain.USERNAME_LENGTH_MSG)
     @field:Pattern(regexp = Regex.VALID_STRING, message = Regex.VALID_STRING_MSG)
     val username: String,
 

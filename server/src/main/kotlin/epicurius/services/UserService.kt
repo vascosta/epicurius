@@ -9,6 +9,7 @@ import epicurius.domain.exceptions.FollowRequestAlreadyBeenSent
 import epicurius.domain.exceptions.FollowRequestNotFound
 import epicurius.domain.exceptions.IncorrectPassword
 import epicurius.domain.exceptions.InvalidCountry
+import epicurius.domain.exceptions.InvalidToken
 import epicurius.domain.exceptions.PasswordsDoNotMatch
 import epicurius.domain.exceptions.UserAlreadyBeingFollowed
 import epicurius.domain.exceptions.UserAlreadyExists
@@ -22,6 +23,7 @@ import epicurius.domain.user.SearchUser
 import epicurius.domain.user.UpdateUserInfo
 import epicurius.domain.user.User
 import epicurius.domain.user.UserDomain
+import epicurius.domain.user.UserInfo
 import epicurius.domain.user.UserProfile
 import epicurius.http.user.models.input.UpdateUserInputModel
 import epicurius.repository.cloudStorage.CloudStorageManager
@@ -56,6 +58,7 @@ class UserService(
     }
 
     fun getAuthenticatedUser(token: String): AuthenticatedUser? {
+        checkIfTokenIsValid(token)
         val tokenHash = userDomain.hashToken(token)
         val user = checkIfUserExists(tokenHash = tokenHash) ?: return null
         return AuthenticatedUser(user, token)
@@ -109,7 +112,7 @@ class UserService(
         deleteToken(username = username)
     }
 
-    fun updateUser(username: String, userUpdate: UpdateUserInputModel): User {
+    fun updateUser(username: String, userUpdate: UpdateUserInputModel): UserInfo {
         if (checkIfUserExists(userUpdate.username, userUpdate.email) != null) throw UserAlreadyExists()
 
         if (userUpdate.country != null)
@@ -134,7 +137,7 @@ class UserService(
                     userUpdate.intolerances?.map { intolerance -> Intolerance.toInt(intolerance) },
                     userUpdate.diet?.map { diet -> Diet.toInt(diet) }
                 )
-            )
+            ).toUserInfo()
         }
     }
 
@@ -191,9 +194,9 @@ class UserService(
 
     fun cancelFollowRequest(userId: Int, usernameToCancelFollow: String) {
         val userToCancelFollow = checkIfUserExists(username = usernameToCancelFollow) ?: throw UserNotFound(usernameToCancelFollow)
-        if (!checkIfUserAlreadySentFollowRequest(userId, userToCancelFollow.id)) throw FollowRequestNotFound(usernameToCancelFollow)
+        if (!checkIfUserAlreadySentFollowRequest(userToCancelFollow.id, userId)) throw FollowRequestNotFound(usernameToCancelFollow)
         tm.run {
-            it.userRepository.cancelFollowRequest(userId, userToCancelFollow.id)
+            it.userRepository.cancelFollowRequest(userToCancelFollow.id, userId)
         }
     }
 
@@ -211,6 +214,10 @@ class UserService(
         tm.run { it.tokenRepository.deleteToken(username, email) }
     }
 
+    private fun checkIfTokenIsValid(token: String) {
+        if (!userDomain.isToken(token)) throw InvalidToken()
+    }
+
     private fun checkIfUserExists(username: String? = null, email: String? = null, tokenHash: String? = null): User? =
         tm.run { it.userRepository.getUser(username, email, tokenHash) }
 
@@ -222,8 +229,8 @@ class UserService(
     private fun checkIfUserIsBeingFollowedBy(userId: Int, followerId: Int) =
         tm.run { it.userRepository.checkIfUserIsBeingFollowedBy(userId, followerId) }
 
-    private fun checkIfUserAlreadySentFollowRequest(userId: Int, followingUserId: Int) =
-        tm.run { it.userRepository.checkIfUserAlreadySentFollowRequest(userId, followingUserId) }
+    private fun checkIfUserAlreadySentFollowRequest(userId: Int, followerId: Int) =
+        tm.run { it.userRepository.checkIfUserAlreadySentFollowRequest(userId, followerId) }
 
     private fun checkIfPasswordsMatch(password: String, confirmPassword: String) {
         if (password != confirmPassword) throw PasswordsDoNotMatch()

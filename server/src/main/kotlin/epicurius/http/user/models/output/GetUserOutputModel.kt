@@ -1,5 +1,5 @@
 package epicurius.http.user.models.output
 
-import epicurius.domain.user.User
+import epicurius.domain.user.UserInfo
 
-data class GetUserOutputModel(val user: User)
+data class GetUserOutputModel(val user: UserInfo)

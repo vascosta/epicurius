@@ -1,3 +1,3 @@
 package epicurius.domain.user
 
-data class AuthenticatedUser(val userInfo: User, val token: String)
+data class AuthenticatedUser(val user: User, val token: String)

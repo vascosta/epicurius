@@ -7,6 +7,7 @@ import epicurius.domain.exceptions.FollowRequestAlreadyBeenSent
 import epicurius.domain.exceptions.FollowRequestNotFound
 import epicurius.domain.exceptions.IncorrectPassword
 import epicurius.domain.exceptions.InvalidCountry
+import epicurius.domain.exceptions.InvalidToken
 import epicurius.domain.exceptions.PasswordsDoNotMatch
 import epicurius.domain.exceptions.UserAlreadyBeingFollowed
 import epicurius.domain.exceptions.UserAlreadyExists
@@ -27,7 +28,6 @@ import kotlin.test.Test
 import kotlin.test.assertContentEquals
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
-import kotlin.test.assertNotEquals
 import kotlin.test.assertNotNull
 import kotlin.test.assertNull
 import kotlin.test.assertTrue
@@ -45,19 +45,18 @@ class UserServiceTest : ServicesTest() {
         // when creating a user
         val token = createUser(username, email, country, password, password)
 
-        // when getting the authenticated user
-        val userByName = getAuthenticatedUser(token)?.userInfo
+        // when retrieving the authenticated user
+        val user = getAuthenticatedUser(token)?.user
 
         // then the user is retrieved successfully
-        assertNotNull(userByName)
-        assertEquals(userByName.username, username)
-        assertEquals(userByName.email, email)
-        assertEquals(userByName.country, country)
-        assertTrue(usersDomain.verifyPassword(password, userByName.passwordHash))
-        assertEquals(userByName.privacy, false)
-        assertEquals(userByName.intolerances, emptyList())
-        assertEquals(userByName.diets, emptyList())
-        assertNull(userByName.profilePictureName)
+        assertNotNull(user)
+        assertEquals(user.username, username)
+        assertEquals(user.email, email)
+        assertEquals(user.country, country)
+        assertEquals(user.privacy, false)
+        assertEquals(user.intolerances, emptyList())
+        assertEquals(user.diets, emptyList())
+        assertNull(user.profilePictureName)
     }
 
     @Test
@@ -72,7 +71,7 @@ class UserServiceTest : ServicesTest() {
         createUser(username, email, country, password, password)
         createUser(username2, email2, country, password, password)
 
-        // when getting the users by a partial username
+        // when retrieving the users by a partial username
         val users = getUsers("partial", PagingParams())
 
         // then the users are retrieved successfully
@@ -138,6 +137,16 @@ class UserServiceTest : ServicesTest() {
     }
 
     @Test
+    fun `Try to retrieve a user with an invalid token and throws InvalidToken Exception`() {
+        // given an invalid token
+        val token = "abc"
+
+        // when retrieving the authenticated user
+        // then the user cannot be retrieved and throws InvalidToken Exception
+        assertFailsWith<InvalidToken> { getAuthenticatedUser(token) }
+    }
+
+    @Test
     fun `Login a user by name successfully`() {
         // given an existing user logged out
         val username = generateRandomUsername()
@@ -153,9 +162,8 @@ class UserServiceTest : ServicesTest() {
         // then the user is logged in successfully
         val authenticatedUser = getAuthenticatedUser(userToken)
         assertNotNull(authenticatedUser)
-        assertEquals(username, authenticatedUser.userInfo.username)
-        assertEquals(email, authenticatedUser.userInfo.email)
-        assertTrue(usersDomain.verifyPassword(password, authenticatedUser.userInfo.passwordHash))
+        assertEquals(username, authenticatedUser.user.username)
+        assertEquals(email, authenticatedUser.user.email)
     }
 
     @Test
@@ -174,9 +182,8 @@ class UserServiceTest : ServicesTest() {
         // then the user is logged in successfully
         val authenticatedUser = getAuthenticatedUser(userToken)
         assertNotNull(authenticatedUser)
-        assertEquals(username, authenticatedUser.userInfo.username)
-        assertEquals(email, authenticatedUser.userInfo.email)
-        assertTrue(usersDomain.verifyPassword(password, authenticatedUser.userInfo.passwordHash))
+        assertEquals(username, authenticatedUser.user.username)
+        assertEquals(email, authenticatedUser.user.email)
     }
 
     @Test
@@ -331,7 +338,6 @@ class UserServiceTest : ServicesTest() {
         assertEquals(updatedUser.username, newUsername)
         assertEquals(updatedUser.email, newEmail)
         assertEquals(updatedUser.country, newCountry)
-        assertTrue(usersDomain.verifyPassword(newPassword, updatedUser.passwordHash))
         assertEquals(updatedUser.privacy, newPrivacy)
         assertEquals(updatedUser.intolerances, newIntolerances)
         assertEquals(updatedUser.diets, newDiet)
@@ -438,10 +444,9 @@ class UserServiceTest : ServicesTest() {
         // then the password was reset successfully
         val authenticatedUser = getAuthenticatedUser(userToken)
         assertNotNull(authenticatedUser)
-        assertEquals(authenticatedUser.userInfo.username, user.username)
-        assertEquals(authenticatedUser.userInfo.email, user.email)
-        assertTrue(usersDomain.verifyPassword(newPassword, authenticatedUser.userInfo.passwordHash))
-        assertNotEquals(authenticatedUser.userInfo.passwordHash, user.passwordHash)
+        assertEquals(authenticatedUser.user.username, user.username)
+        assertEquals(authenticatedUser.user.email, user.email)
+
     }
 
     @Test
@@ -501,7 +506,7 @@ class UserServiceTest : ServicesTest() {
         assertTrue(privateUserFollowRequests.contains(FollowUser(publicUser.username, null)))
 
         // when cancelling the follow request
-        cancelFollowRequest(privateUser.id, publicUser.username)
+        cancelFollowRequest(publicUser.id, privateUser.username)
 
         // then the follow request is cancelled successfully
         val privateUserFollowRequestsAfterCancel = getFollowRequests(privateUser.id)

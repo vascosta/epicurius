@@ -3,7 +3,7 @@ package epicurius.http.user.models.output
 import epicurius.domain.user.SearchUser
 
 data class GetUsersOutputModel(
-    val followers: List<SearchUser>
+    val users: List<SearchUser>
 )
 
 typealias GetFollowersOutputModel = GetUsersOutputModel

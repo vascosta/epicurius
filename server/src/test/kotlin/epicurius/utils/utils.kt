@@ -24,5 +24,4 @@ fun createTestUser(tm: TransactionManager, privacy: Boolean = false): User {
 
 fun generateRandomUsername() = "test${Math.random()}".replace(".", "")
 fun generateEmail(username: String) = "$username@email.com"
-
 fun generateSecurePassword() = ("P" + UUID.randomUUID().toString()).take(MAX_PASSWORD_LENGTH)

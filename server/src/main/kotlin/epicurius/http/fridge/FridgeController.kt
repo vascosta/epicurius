@@ -25,7 +25,7 @@ class FridgeController(private val fridgeService: FridgeService) {
 
     @GetMapping(Uris.Fridge.FRIDGE)
     fun getFridge(authenticatedUser: AuthenticatedUser): ResponseEntity<*> {
-        val fridge = fridgeService.getFridge(authenticatedUser.userInfo.id)
+        val fridge = fridgeService.getFridge(authenticatedUser.user.id)
         return ResponseEntity.ok().body(FridgeOutputModel(fridge.products))
     }
 
@@ -43,7 +43,7 @@ class FridgeController(private val fridgeService: FridgeService) {
         authenticatedUser: AuthenticatedUser,
         @Valid @RequestBody body: ProductInputModel
     ): ResponseEntity<*> {
-        val newFridge = fridgeService.addProduct(authenticatedUser.userInfo.id, body)
+        val newFridge = fridgeService.addProduct(authenticatedUser.user.id, body)
         return ResponseEntity.ok().body(newFridge)
     }
 
@@ -53,7 +53,7 @@ class FridgeController(private val fridgeService: FridgeService) {
         @PathVariable entryNumber: Int,
         @Valid @RequestBody body: UpdateProductInputModel
     ): ResponseEntity<*> {
-        val updatedFridge = fridgeService.updateProductInfo(authenticatedUser.userInfo.id, entryNumber, body)
+        val updatedFridge = fridgeService.updateProductInfo(authenticatedUser.user.id, entryNumber, body)
         return ResponseEntity.ok().body(updatedFridge)
     }
 
@@ -63,7 +63,7 @@ class FridgeController(private val fridgeService: FridgeService) {
         @PathVariable entryNumber: Int,
         @Valid @RequestBody body: OpenProductInputModel
     ): ResponseEntity<*> {
-        val updatedFridge = fridgeService.openProduct(authenticatedUser.userInfo.id, entryNumber, body)
+        val updatedFridge = fridgeService.openProduct(authenticatedUser.user.id, entryNumber, body)
         return ResponseEntity.ok().body(updatedFridge)
     }
 
@@ -72,7 +72,7 @@ class FridgeController(private val fridgeService: FridgeService) {
         authenticatedUser: AuthenticatedUser,
         @PathVariable entryNumber: Int
     ): ResponseEntity<*> {
-        val updatedFridge = fridgeService.removeProduct(authenticatedUser.userInfo.id, entryNumber)
+        val updatedFridge = fridgeService.removeProduct(authenticatedUser.user.id, entryNumber)
         return ResponseEntity.ok().body(updatedFridge)
     }
 }

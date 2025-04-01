@@ -12,9 +12,12 @@ class FollowRequestAlreadyBeenSent(username: String) : Exception("Follow request
 class FollowRequestNotFound(username: String) : Exception("Follow request to user $username not found")
 
 class ProfilePictureNotFound : Exception("Profile picture not found")
-class InvalidCountry : Exception("Invalid country")
+
 class IncorrectPassword : Exception("Incorrect password")
 class PasswordsDoNotMatch : Exception("Passwords don't match")
+
+class InvalidToken : Exception("Invalid token")
+class InvalidCountry : Exception("Invalid country")
 class InvalidIntolerancesIdx : Exception("Invalid intolerance index")
 class InvalidIntolerance : Exception("Invalid intolerance")
 class InvalidDietIdx : Exception("Invalid diet index")

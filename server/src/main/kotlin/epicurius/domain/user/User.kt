@@ -14,4 +14,16 @@ data class User(
     val intolerances: List<Intolerance>,
     val diets: List<Diet>,
     val profilePictureName: String?
-)
+) {
+    fun toUserInfo(): UserInfo {
+        return UserInfo(
+            username = username,
+            email = email,
+            country = country,
+            privacy = privacy,
+            intolerances = intolerances,
+            diets = diets,
+            profilePictureName = profilePictureName
+        )
+    }
+}

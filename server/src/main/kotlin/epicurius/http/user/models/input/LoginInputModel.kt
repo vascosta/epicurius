@@ -10,11 +10,11 @@ import jakarta.validation.constraints.Pattern
 import jakarta.validation.constraints.Size
 
 data class LoginInputModel(
-    @field:Size(min = UserDomain.MIN_USERNAME_LENGTH, max = UserDomain.MAX_USERNAME_LENGTH)
+    @field:Size(min = UserDomain.MIN_USERNAME_LENGTH, max = UserDomain.MAX_USERNAME_LENGTH, message = UserDomain.USERNAME_LENGTH_MSG)
     @field:Pattern(regexp = Regex.VALID_STRING, message = Regex.VALID_STRING_MSG)
     val username: String?,
 
-    @field:Email
+    @field:Email(message = UserDomain.VALID_EMAIL_MSG)
     val email: String?,
 
     @field:NotBlank

@@ -2,13 +2,6 @@ package epicurius.http.user.models.output
 
 import epicurius.domain.Diet
 import epicurius.domain.Intolerance
+import epicurius.domain.user.UserInfo
 
-data class UpdateUserOutputModel(
-    val username: String,
-    val email: String,
-    val country: String,
-    val privacy: Boolean,
-    val intolerances: List<Intolerance>,
-    val diet: List<Diet>,
-    val profilePicture: String?
-)
+data class UpdateUserOutputModel(val userInfo: UserInfo)
