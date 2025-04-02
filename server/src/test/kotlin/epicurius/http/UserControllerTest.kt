@@ -1,18 +1,11 @@
 package epicurius.http
 
-import epicurius.domain.exceptions.IncorrectPassword
-import epicurius.domain.exceptions.UserAlreadyLoggedIn
-import epicurius.domain.exceptions.UserNotFound
+import epicurius.domain.exceptions.*
 import epicurius.domain.user.FollowUser
 import epicurius.domain.user.FollowingUser
 import epicurius.domain.user.SearchUser
 import epicurius.domain.user.UserDomain
-import epicurius.http.utils.Problem
-import epicurius.http.utils.Regex
-import epicurius.http.utils.Uris
-import epicurius.http.utils.get
-import epicurius.http.utils.getBody
-import epicurius.http.utils.post
+import epicurius.http.utils.*
 import epicurius.utils.createTestUser
 import epicurius.utils.generateEmail
 import epicurius.utils.generateRandomUsername
@@ -802,7 +795,7 @@ class UserControllerTest : HttpTest() {
             country = "PT",
             password = generateSecurePassword()
         )
-        val privateUser = updateUser(privateUserToken, privacy = true)
+        updateUser(privateUserToken, privacy = true)
 
         // when following a private user
         follow(publicUserToken, privateUsername)
@@ -821,5 +814,93 @@ class UserControllerTest : HttpTest() {
         val privateUserFollowRequestsAfterCancel = getFollowRequests(privateUserToken)
         assertNotNull(privateUserFollowRequestsAfterCancel)
         assertTrue(privateUserFollowRequestsAfterCancel.users.isEmpty())
+    }
+
+    @Test
+    fun `Try to follow a non-existing user and fails with code 404`() {
+        // given an existing user
+        val publicUserUsername = generateRandomUsername()
+        val publicUserToken =
+            signUp(publicUserUsername, generateEmail(publicUserUsername), "PT", generateSecurePassword())
+
+        // when trying to follow a non-existing user
+        val error = patch<Problem>(
+            client,
+            api(Uris.User.USER_FOLLOW),
+            mapOf("username" to "nonExistingUser"),
+            HttpStatus.NOT_FOUND,
+            publicUserToken
+        )
+        assertNotNull(error)
+
+        // then the user is not followed and an error is returned with the UserNotFound message
+        val errorBody = getBody(error)
+        assertNotNull(errorBody)
+        assertEquals(UserNotFound("nonExistingUser").message, errorBody.detail)
+    }
+
+    @Test
+    fun `Try to follow a user twice and fails with code 400`() {
+        // given two existing users
+        val publicUsername = generateRandomUsername()
+        val publicUserToken = signUp(
+            username = publicUsername,
+            email = generateEmail(publicUsername),
+            country = "PT",
+            password = generateSecurePassword()
+        )
+        val publicUser2 = createTestUser(tm)
+
+        // when following a user twice
+        follow(publicUserToken, publicUser2.username)
+
+        val error = patch<Problem>(
+            client,
+            api(Uris.User.USER_FOLLOW),
+            mapOf("username" to publicUser2.username),
+            HttpStatus.BAD_REQUEST,
+            publicUserToken
+        )
+
+        // then an error is returned with the UserAlreadyFollowed message
+        val errorBody = getBody(error)
+        assertNotNull(errorBody)
+        assertEquals(UserAlreadyBeingFollowed(publicUser2.username).message, errorBody.detail)
+    }
+
+    @Test
+    fun `Try to follow a private user twice and fails with code 400`() {
+        // given two existing users
+        val publicUsername = generateRandomUsername()
+        val publicUserToken = signUp(
+            username = publicUsername,
+            email = generateEmail(publicUsername),
+            country = "PT",
+            password = generateSecurePassword()
+        )
+        val privateUsername = generateRandomUsername()
+        val privateUserToken = signUp(
+            username = privateUsername,
+            email = generateEmail(privateUsername),
+            country = "PT",
+            password = generateSecurePassword()
+        )
+        updateUser(privateUserToken, privacy = true)
+
+        // when following a private user twice
+        follow(publicUserToken, privateUsername)
+
+        val error = patch<Problem>(
+            client,
+            api(Uris.User.USER_FOLLOW),
+            mapOf("username" to privateUsername),
+            HttpStatus.BAD_REQUEST,
+            publicUserToken
+        )
+
+        // then an error is returned with the UserAlreadyFollowed message
+        val errorBody = getBody(error)
+        assertNotNull(errorBody)
+        assertEquals(FollowRequestAlreadyBeenSent(privateUsername).message, errorBody.detail)
     }
 }

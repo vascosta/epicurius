@@ -98,8 +98,6 @@ class UserService(
         tm.run { it.userRepository.getFollowRequests(userId) }
             .map { user -> FollowUser(user.username, getProfilePicture(user.profilePictureName)) }
 
-    fun addProfilePicture() { }
-
     fun login(username: String?, email: String?, password: String): String {
         val user = checkIfUserExists(username, email) ?: throw UserNotFound(username ?: email)
         checkIfUserIsLoggedIn(username, email)

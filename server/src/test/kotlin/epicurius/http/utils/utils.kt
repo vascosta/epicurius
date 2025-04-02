@@ -3,6 +3,7 @@ package epicurius.http.utils
 import org.springframework.http.HttpStatus
 import org.springframework.test.web.reactive.server.EntityExchangeResult
 import org.springframework.test.web.reactive.server.WebTestClient
+import org.springframework.util.MultiValueMap
 
 inline fun <reified T> get(
     client: WebTestClient,
