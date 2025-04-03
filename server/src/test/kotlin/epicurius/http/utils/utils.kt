@@ -1,8 +1,11 @@
 package epicurius.http.utils
 
 import org.springframework.http.HttpStatus
+import org.springframework.http.MediaType
+import org.springframework.http.MediaType.APPLICATION_JSON
 import org.springframework.test.web.reactive.server.EntityExchangeResult
 import org.springframework.test.web.reactive.server.WebTestClient
+import org.springframework.web.reactive.function.BodyInserters
 
 inline fun <reified T> get(
     client: WebTestClient,
@@ -36,13 +39,31 @@ inline fun <reified T> post(
 inline fun <reified T> patch(
     client: WebTestClient,
     uri: String,
+    contentType: MediaType = APPLICATION_JSON,
     body: Any,
     responseStatus: HttpStatus = HttpStatus.NO_CONTENT,
     token: String? = null
 ) =
     client.patch().uri(uri)
         .header("Authorization", "Bearer $token")
+        .contentType(contentType)
         .bodyValue(body)
+        .exchange()
+        .expectStatus().isEqualTo(responseStatus)
+        .expectBody(T::class.java)
+        .returnResult()
+
+inline fun <reified T> patchMultiPart(
+    client: WebTestClient,
+    uri: String,
+    body: BodyInserters.MultipartInserter,
+    responseStatus: HttpStatus = HttpStatus.NO_CONTENT,
+    token: String? = null
+) =
+    client.patch().uri(uri)
+        .header("Authorization", "Bearer $token")
+        .contentType(MediaType.MULTIPART_FORM_DATA)
+        .body(body)
         .exchange()
         .expectStatus().isEqualTo(responseStatus)
         .expectBody(T::class.java)

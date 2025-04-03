@@ -140,6 +140,7 @@ class UserService(
     }
 
     fun updateProfilePicture(username: String, profilePictureName: String? = null, profilePicture: MultipartFile): String {
+        userDomain.validateProfilePicture(profilePicture)
         if (profilePictureName == null) {
             val newProfilePictureName = UUID.randomUUID().toString()
             cs.userCloudStorageRepository.updateProfilePicture(newProfilePictureName, profilePicture)

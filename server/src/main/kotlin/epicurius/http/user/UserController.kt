@@ -9,7 +9,6 @@ import epicurius.http.user.models.input.LoginInputModel
 import epicurius.http.user.models.input.ResetPasswordInputModel
 import epicurius.http.user.models.input.SignUpInputModel
 import epicurius.http.user.models.input.UnfollowInputModel
-import epicurius.http.user.models.input.UpdateProfilePictureInputModel
 import epicurius.http.user.models.input.UpdateUserInputModel
 import epicurius.http.user.models.output.GetDietsOutputModel
 import epicurius.http.user.models.output.GetFollowRequestsOutputModel
@@ -25,6 +24,7 @@ import epicurius.http.utils.Uris
 import epicurius.services.UserService
 import jakarta.servlet.http.HttpServletResponse
 import jakarta.validation.Valid
+import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PatchMapping
@@ -32,7 +32,9 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
+import org.springframework.web.bind.annotation.RequestPart
 import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.multipart.MultipartFile
 import java.net.URI
 
 @RestController
@@ -145,12 +147,12 @@ class UserController(val userService: UserService) {
     @PatchMapping(Uris.User.USER_PROFILE_PICTURE)
     fun updateProfilePicture(
         authenticatedUser: AuthenticatedUser,
-        @Valid @RequestBody body: UpdateProfilePictureInputModel
+        @RequestPart("profilePicture") profilePicture: MultipartFile
     ): ResponseEntity<*> {
         val newProfilePicture = userService.updateProfilePicture(
             authenticatedUser.user.username,
             authenticatedUser.user.profilePictureName,
-            body.profilePicture
+            profilePicture
         )
         return ResponseEntity.ok().body(UpdateProfilePictureOutputModel(newProfilePicture))
     }

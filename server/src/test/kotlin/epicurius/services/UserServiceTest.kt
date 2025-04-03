@@ -291,7 +291,7 @@ class UserServiceTest : ServicesTest() {
 
     @Test
     fun `Update the profile picture of an user and then retrieves it successfully`() {
-        // given an existing user logged in
+        // given an existing user
         val user = createTestUser(tm)
         val profilePictureName = updateProfilePicture(user.username, profilePicture = testProfilePicture)
 

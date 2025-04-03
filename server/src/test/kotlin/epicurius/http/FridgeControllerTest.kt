@@ -30,10 +30,7 @@ class FridgeControllerTest : HttpTest() {
     @BeforeEach
     fun setup() {
         val username = generateRandomUsername()
-        val email = generateEmail(username)
-        val country = "PT"
-        val password = generateSecurePassword()
-        user = signUp(username, email, country, password)
+        user = signUp(username, generateEmail(username), "PT", generateSecurePassword())
     }
 
     @Test
@@ -165,9 +162,9 @@ class FridgeControllerTest : HttpTest() {
         val error = patch<Problem>(
             client,
             api(Uris.Fridge.PRODUCT.take(16) + 999999),
-            mapOf("quantity" to 2, "expirationDate" to newExpirationDate),
-            HttpStatus.NOT_FOUND,
-            token
+            body = mapOf("quantity" to 2, "expirationDate" to newExpirationDate),
+            responseStatus = HttpStatus.NOT_FOUND,
+            token = token
         )
 
         // then the request should fail with code 400
@@ -197,9 +194,9 @@ class FridgeControllerTest : HttpTest() {
         val error = patch<Problem>(
             client,
             api(Uris.Fridge.PRODUCT.take(16) + newFridge.products.first().entryNumber),
-            mapOf("quantity" to 2, "expirationDate" to newExpirationDate),
-            HttpStatus.BAD_REQUEST,
-            token
+            body = mapOf("quantity" to 2, "expirationDate" to newExpirationDate),
+            responseStatus = HttpStatus.BAD_REQUEST,
+            token = token
         )
 
         // then the request should fail with code 400
@@ -248,9 +245,9 @@ class FridgeControllerTest : HttpTest() {
         val error = patch<Problem>(
             client,
             api(Uris.Fridge.OPEN_PRODUCT.take(13) + 999999),
-            mapOf("openDate" to openDate, "duration" to duration),
-            HttpStatus.NOT_FOUND,
-            token
+            body = mapOf("openDate" to openDate, "duration" to duration),
+            responseStatus = HttpStatus.NOT_FOUND,
+            token = token
         )
 
         // then the request should fail with code 404
@@ -278,9 +275,9 @@ class FridgeControllerTest : HttpTest() {
         val error = patch<Problem>(
             client,
             api(Uris.Fridge.OPEN_PRODUCT.take(13) + newFridge.products.first().entryNumber),
-            mapOf("openDate" to openDate, "duration" to duration),
-            HttpStatus.BAD_REQUEST,
-            token
+            body = mapOf("openDate" to openDate, "duration" to duration),
+            responseStatus = HttpStatus.BAD_REQUEST,
+            token = token
         )
 
         // then the request should fail with code 400

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonParseException
 import com.fasterxml.jackson.databind.exc.MismatchedInputException
 import epicurius.domain.exceptions.DurationIsNull
 import epicurius.domain.exceptions.FollowRequestAlreadyBeenSent
+import epicurius.domain.exceptions.FollowRequestNotFound
 import epicurius.domain.exceptions.IncorrectPassword
 import epicurius.domain.exceptions.InvalidCountry
 import epicurius.domain.exceptions.InvalidDietIdx
@@ -16,6 +17,7 @@ import epicurius.domain.exceptions.UnauthorizedException
 import epicurius.domain.exceptions.UserAlreadyBeingFollowed
 import epicurius.domain.exceptions.UserAlreadyExists
 import epicurius.domain.exceptions.UserAlreadyLoggedIn
+import epicurius.domain.exceptions.UserNotFollowed
 import epicurius.domain.exceptions.UserNotFound
 import epicurius.http.pipeline.authentication.AuthenticationInterceptor.Companion.WWW_AUTHENTICATE_HEADER
 import epicurius.http.pipeline.authentication.RequestTokenProcessor.Companion.SCHEME
@@ -99,6 +101,7 @@ class ExceptionHandler {
             UserAlreadyExists::class,
             UserAlreadyLoggedIn::class,
             UserAlreadyBeingFollowed::class,
+            UserNotFollowed::class,
             FollowRequestAlreadyBeenSent ::class,
             InvalidCountry::class,
             IncorrectPassword::class,
@@ -130,7 +133,8 @@ class ExceptionHandler {
     @ExceptionHandler(
         value = [
             UserNotFound::class,
-            ProductNotFound::class
+            ProductNotFound::class,
+            FollowRequestNotFound::class,
         ]
     )
     fun handleNotFound(request: HttpServletRequest, ex: Exception) =
