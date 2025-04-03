@@ -23,7 +23,7 @@ import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 import kotlin.test.assertTrue
 
-class FollowControllerTest: HttpTest() {
+class FollowControllerTest : HttpTest() {
 
     lateinit var publicTestUserToken: String
     lateinit var publicTestUsername: String
@@ -263,4 +263,3 @@ class FollowControllerTest: HttpTest() {
         assertEquals(FollowRequestNotFound(publicUser2.username).message, errorBody.detail)
     }
 }
-

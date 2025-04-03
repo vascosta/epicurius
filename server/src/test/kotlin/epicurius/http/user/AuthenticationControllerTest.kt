@@ -3,6 +3,7 @@ package epicurius.http.user
 import epicurius.domain.exceptions.IncorrectPassword
 import epicurius.domain.exceptions.InvalidCountry
 import epicurius.domain.exceptions.PasswordsDoNotMatch
+import epicurius.domain.exceptions.UnauthorizedException
 import epicurius.domain.exceptions.UserAlreadyExists
 import epicurius.domain.exceptions.UserAlreadyLoggedIn
 import epicurius.domain.exceptions.UserNotFound
@@ -28,7 +29,7 @@ import kotlin.test.assertNotNull
 import kotlin.test.assertNull
 import kotlin.test.assertTrue
 
-class AuthenticationControllerTest: HttpTest() {
+class AuthenticationControllerTest : HttpTest() {
 
     val publicTestUser: User = createTestUser(tm)
 
@@ -37,20 +38,21 @@ class AuthenticationControllerTest: HttpTest() {
         // given a non-authenticated user
         val username = generateRandomUsername()
 
-        // when trying
+        // when trying to do an authenticated operation, e.g. logout
         val error = post<Problem>(
             client,
             api(Uris.User.LOGOUT),
             mapOf("username" to username, "password" to generateSecurePassword()),
-            HttpStatus.UNAUTHORIZED
+            HttpStatus.UNAUTHORIZED,
+            ""
         )
         assertNotNull(error)
 
         // then the user couldn't do the operation and an error is returned
         val errorBody = getBody(error)
-        
+        assertNotNull(errorBody)
+        assertEquals(UnauthorizedException("Missing user token").message, errorBody.detail)
     }
-
 
     @Test
     fun `Signup a new user and retrieve it successfully with code 200`() {

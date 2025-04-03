@@ -6,6 +6,7 @@ import epicurius.domain.exceptions.ProductNotFound
 import epicurius.http.fridge.models.input.OpenProductInputModel
 import epicurius.http.fridge.models.input.ProductInputModel
 import epicurius.http.fridge.models.input.UpdateProductInputModel
+import epicurius.utils.createTestUser
 import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -15,7 +16,10 @@ import java.time.ZoneId
 import java.util.Date
 import kotlin.test.assertTrue
 
-class FridgeServiceTest : ServicesTest() {
+class FridgeServiceTest : ServiceTest() {
+
+    private var publicTestUser = createTestUser(tm)
+    private var privateTestUser = createTestUser(tm, false)
 
     @Test
     fun `Get fridge successfully`() {
@@ -114,7 +118,7 @@ class FridgeServiceTest : ServicesTest() {
             expirationDate = expirationDate
         )
 
-        // then an InvalidProduct Exception should be thrown
+        // then an InvalidProduct Exception is thrown
         assertThrows<InvalidProduct> {
             runBlocking { addProduct(user.id, product) }
         }
@@ -204,7 +208,7 @@ class FridgeServiceTest : ServicesTest() {
         // when updating a product that does not exist in the user's fridge
         val updatedProduct = UpdateProductInputModel(quantity = 1, expirationDate = null)
 
-        // then a ProductNotFound exception should be thrown
+        // then a ProductNotFound exception is thrown
         assertThrows<ProductNotFound> {
             updateProductInfo(user.id, 0, updatedProduct)
         }
@@ -238,7 +242,7 @@ class FridgeServiceTest : ServicesTest() {
         )
         val updatedProduct = UpdateProductInputModel(quantity = 2, expirationDate = newExpirationDate)
 
-        // then a ProductIsAlreadyOpen exception should be thrown
+        // then a ProductIsAlreadyOpen exception is thrown
         assertThrows<ProductIsAlreadyOpen> {
             updateProductInfo(user.id, entryNumber, updatedProduct)
         }
@@ -341,7 +345,7 @@ class FridgeServiceTest : ServicesTest() {
         val openDate = Date.from(LocalDate.now().atStartOfDay(ZoneId.systemDefault()).toInstant())
         val duration = Period.ofDays(7)
 
-        // then a ProductNotFound exception should be thrown
+        // then a ProductNotFound exception is thrown
         assertThrows<ProductNotFound> {
             openProduct(user.id, 0, OpenProductInputModel(openDate, duration))
         }
@@ -373,7 +377,7 @@ class FridgeServiceTest : ServicesTest() {
         val newOpenDate = Date.from(LocalDate.now().atStartOfDay(ZoneId.systemDefault()).toInstant())
         val duration = Period.ofDays(7)
 
-        // then a ProductIsAlreadyOpen exception should be thrown
+        // then a ProductIsAlreadyOpen exception is thrown
         assertThrows<ProductIsAlreadyOpen> {
             openProduct(user.id, entryNumber, OpenProductInputModel(newOpenDate, duration))
         }
@@ -425,9 +429,7 @@ class FridgeServiceTest : ServicesTest() {
         runBlocking { addProduct(user.id, product) }
 
         // when removing a product that does not exist in the user's fridge
-        // then a ProductNotFound exception should be thrown
-        assertThrows<ProductNotFound> {
-            removeProduct(user.id, 0)
-        }
+        // then a ProductNotFound exception is thrown
+        assertThrows<ProductNotFound> { removeProduct(user.id, 0) }
     }
 }

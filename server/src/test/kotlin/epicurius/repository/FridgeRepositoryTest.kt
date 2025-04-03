@@ -4,7 +4,7 @@ import epicurius.domain.fridge.ProductInfo
 import epicurius.domain.fridge.UpdateProductInfo
 import epicurius.domain.user.User
 import epicurius.utils.createTestUser
-import org.junit.jupiter.api.BeforeAll
+import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import java.time.LocalDate
@@ -25,7 +25,6 @@ class FridgeRepositoryTest : RepositoryTest() {
         publicTestUser = createTestUser(tm)
         privateTestUser = createTestUser(tm, true)
     }
-
 
     @Test
     fun `Retrieve user fridge successfully`() {
@@ -147,7 +146,7 @@ class FridgeRepositoryTest : RepositoryTest() {
             ProductInfo(it.productName, it.quantity, it.openDate, it.expirationDate)
         }
 
-        assertTrue(!productInfoList.contains(product))
+        assertFalse(productInfoList.contains(product))
     }
 
     @Test
@@ -183,10 +182,10 @@ class FridgeRepositoryTest : RepositoryTest() {
 
         // then the existing product should be found
         assertNotNull(existingProduct)
-        assertEquals(existingProduct.productName, product.productName)
-        assertEquals(existingProduct.quantity, product.quantity)
-        assertEquals(existingProduct.openDate, product.openDate)
-        assertEquals(existingProduct.expirationDate, product.expirationDate)
+        assertEquals(product.productName, existingProduct.productName)
+        assertEquals(product.quantity, existingProduct.quantity)
+        assertEquals(product.openDate, existingProduct.openDate)
+        assertEquals(product.expirationDate, existingProduct.expirationDate)
 
         // and the non-existing product should not be found
         assertNull(nonExistingProduct)
@@ -219,10 +218,10 @@ class FridgeRepositoryTest : RepositoryTest() {
 
         // then the existing product should be found
         assertNotNull(existingProduct)
-        assertEquals(existingProduct.productName, product.productName)
-        assertEquals(existingProduct.quantity, product.quantity)
-        assertEquals(existingProduct.openDate, product.openDate)
-        assertEquals(existingProduct.expirationDate, product.expirationDate)
+        assertEquals(product.productName, existingProduct.productName)
+        assertEquals(product.quantity, existingProduct.quantity)
+        assertEquals(product.openDate, existingProduct.openDate)
+        assertEquals(product.expirationDate, existingProduct.expirationDate)
 
         // and the non-existing product should not be found
         assertNull(nonExistingProduct)
@@ -249,6 +248,7 @@ class FridgeRepositoryTest : RepositoryTest() {
         // when retrieving the product and checking if the product is open
         val check = checkIfProductExistsInFridge(user.id, null, product)
         assertNotNull(check)
+
         val isOpen = checkIfProductIsOpen(user.id, check.entryNumber)
 
         // then the product should be open

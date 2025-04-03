@@ -25,18 +25,18 @@ import kotlin.test.assertNotNull
 
 class FridgeControllerTest : HttpTest() {
 
-    lateinit var user: String
+    lateinit var testUserToken: String
 
     @BeforeEach
     fun setup() {
         val username = generateRandomUsername()
-        user = signUp(username, generateEmail(username), "PT", generateSecurePassword())
+        testUserToken = signUp(username, generateEmail(username), "PT", generateSecurePassword())
     }
 
     @Test
     fun `Get fridge successfully with code 200`() {
         // given a user token
-        val token = user
+        val token = testUserToken
 
         // when getting the user's fridge
         val fridgeBody = getFridge(token)
@@ -49,7 +49,7 @@ class FridgeControllerTest : HttpTest() {
     @Test
     fun `Get products list successfully with code 200`() {
         // given a user token
-        val token = user
+        val token = testUserToken
 
         // when getting the products list
         val productsListBody = getProductsList(token, "app")
@@ -62,7 +62,7 @@ class FridgeControllerTest : HttpTest() {
     @Test
     fun `Add products successfully with code 200`() {
         // given a user token
-        val token = user
+        val token = testUserToken
 
         // when adding a product
         val expirationDate = Date.from(
@@ -81,7 +81,7 @@ class FridgeControllerTest : HttpTest() {
     @Test
     fun `Add product that already exists successfully with code 200`() {
         // given a user token
-        val token = user
+        val token = testUserToken
 
         // when adding a product
         val expirationDate = Date.from(
@@ -103,7 +103,7 @@ class FridgeControllerTest : HttpTest() {
     @Test
     fun `Try to add product with invalid name and fails with code 400`() {
         // given a user
-        val token = user
+        val token = testUserToken
 
         // when trying to add a product with an invalid name
         val expirationDate = Date.from(
@@ -126,7 +126,7 @@ class FridgeControllerTest : HttpTest() {
     @Test
     fun `Update product successfully with code 200`() {
         // given a user token
-        val token = user
+        val token = testUserToken
 
         // when adding a product
         val expirationDate = Date.from(
@@ -153,7 +153,7 @@ class FridgeControllerTest : HttpTest() {
     @Test
     fun `Try to update product with invalid entry number and fails with code 404`() {
         // given a user token
-        val token = user
+        val token = testUserToken
 
         // when updating a product with an invalid entry number
         val newExpirationDate = Date.from(
@@ -176,7 +176,7 @@ class FridgeControllerTest : HttpTest() {
     @Test
     fun `Try to update a product expiration date but it is already open, fails with 400`() {
         // given a user token
-        val token = user
+        val token = testUserToken
 
         // when adding a product
         val openDate = Date.from(
@@ -208,7 +208,7 @@ class FridgeControllerTest : HttpTest() {
     @Test
     fun `Open fridge product successfully with code 200`() {
         // given a user token
-        val token = user
+        val token = testUserToken
 
         // when adding a product
         val expirationDate = Date.from(
@@ -235,7 +235,7 @@ class FridgeControllerTest : HttpTest() {
     @Test
     fun `Try to open product but entry number is invalid, fails with 404`() {
         // given a user token
-        val token = user
+        val token = testUserToken
 
         // when opening a product with an invalid entry number
         val openDate = Date.from(
@@ -259,7 +259,7 @@ class FridgeControllerTest : HttpTest() {
     @Test
     fun `Try to open product but product is already open, fails with 400`() {
         // given a user token
-        val token = user
+        val token = testUserToken
 
         // when adding a product
         val openDate = Date.from(
@@ -289,7 +289,7 @@ class FridgeControllerTest : HttpTest() {
     @Test
     fun `Remove product successfully with code 200`() {
         // given a user token
-        val token = user
+        val token = testUserToken
 
         // when adding a product
         val expirationDate = Date.from(
@@ -308,7 +308,7 @@ class FridgeControllerTest : HttpTest() {
     @Test
     fun `Try to remove product with invalid entry number and fails with code 404`() {
         // given a user token
-        val token = user
+        val token = testUserToken
 
         // when removing a product with an invalid entry number
         val error = delete<Problem>(

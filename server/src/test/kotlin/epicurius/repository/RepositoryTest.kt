@@ -5,9 +5,6 @@ import epicurius.domain.PagingParams
 import epicurius.domain.fridge.ProductInfo
 import epicurius.domain.fridge.UpdateProductInfo
 import epicurius.domain.user.UpdateUserInfo
-import epicurius.domain.user.User
-import epicurius.utils.createTestUser
-import org.junit.jupiter.api.BeforeAll
 import org.springframework.web.multipart.MultipartFile
 
 open class RepositoryTest : EpicuriusTest() {

@@ -16,7 +16,7 @@ import kotlin.test.assertNotEquals
 import kotlin.test.assertNotNull
 import kotlin.test.assertTrue
 
-class AuthenticationRepositoryTest: RepositoryTest() {
+class AuthenticationRepositoryTest : RepositoryTest() {
 
     @Test
     fun `Create new user and retrieve it successfully`() {
@@ -34,13 +34,13 @@ class AuthenticationRepositoryTest: RepositoryTest() {
 
         // then the user is retrieved successfully
         assertNotNull(userByName)
-        assertEquals(userByName.username, username)
-        assertEquals(userByName.email, email)
-        assertEquals(userByName.country, country)
-        assertEquals(userByName.passwordHash, passwordHash)
-        assertEquals(userByName.privacy, false)
-        assertEquals(userByName.intolerances, emptyList())
-        assertEquals(userByName.diets, emptyList())
+        assertEquals(username, userByName.username)
+        assertEquals(email, userByName.email)
+        assertEquals(country, userByName.country)
+        assertEquals(passwordHash, userByName.passwordHash)
+        assertFalse(userByName.privacy)
+        assertEquals(emptyList(), userByName.intolerances)
+        assertEquals(emptyList(), userByName.diets)
         assertNull(userByName.profilePictureName)
 
         // when getting the user by email
@@ -48,13 +48,13 @@ class AuthenticationRepositoryTest: RepositoryTest() {
 
         // then the user is retrieved successfully
         assertNotNull(userByEmail)
-        assertEquals(userByEmail.username, username)
-        assertEquals(userByEmail.email, email)
-        assertEquals(userByEmail.country, country)
-        assertEquals(userByEmail.passwordHash, passwordHash)
-        assertEquals(userByEmail.privacy, false)
-        assertEquals(userByEmail.intolerances, emptyList())
-        assertEquals(userByEmail.diets, emptyList())
+        assertEquals(username, userByEmail.username)
+        assertEquals(email, userByEmail.email)
+        assertEquals(country, userByEmail.country)
+        assertEquals(passwordHash, userByEmail.passwordHash)
+        assertFalse(userByEmail.privacy)
+        assertEquals(emptyList(), userByEmail.intolerances)
+        assertEquals(emptyList(), userByEmail.diets)
         assertNull(userByEmail.profilePictureName)
     }
 
@@ -75,7 +75,7 @@ class AuthenticationRepositoryTest: RepositoryTest() {
 
         // then the users are retrieved successfully
         assertTrue(users.isNotEmpty())
-        assertEquals(users.size, 2)
+        assertEquals(2, users.size)
         assertTrue(users.contains(SearchUserModel(username, null)))
         assertTrue(users.contains(SearchUserModel(username2, null)))
     }
@@ -95,10 +95,10 @@ class AuthenticationRepositoryTest: RepositoryTest() {
 
         // then the password is reset successfully
         assertNotNull(userAfterResetPassword)
-        assertEquals(userAfterResetPassword.username, user.username)
-        assertEquals(userAfterResetPassword.email, user.email)
-        assertEquals(userAfterResetPassword.passwordHash, newPasswordHash)
-        assertNotEquals(userAfterResetPassword.passwordHash, user.passwordHash)
+        assertEquals(user.username, userAfterResetPassword.username)
+        assertEquals(user.email, userAfterResetPassword.email)
+        assertEquals(newPasswordHash, userAfterResetPassword.passwordHash)
+        assertNotEquals(user.passwordHash, userAfterResetPassword.passwordHash)
     }
 
     @Test
@@ -122,12 +122,12 @@ class AuthenticationRepositoryTest: RepositoryTest() {
         assertNotNull(userExistsByName)
         assertNotNull(userExistsByEmail)
         assertNotNull(userExistsByTokenHash)
-        assertEquals(userExistsByName.username, user.username)
-        assertEquals(userExistsByEmail.username, user.username)
-        assertEquals(userExistsByTokenHash.username, user.username)
-        assertEquals(userExistsByName.email, user.email)
-        assertEquals(userExistsByEmail.email, user.email)
-        assertEquals(userExistsByTokenHash.email, user.email)
+        assertEquals(user.username, userExistsByName.username)
+        assertEquals(user.username, userExistsByEmail.username)
+        assertEquals(user.username, userExistsByTokenHash.username)
+        assertEquals(user.email, userExistsByName.email)
+        assertEquals(user.email, userExistsByEmail.email)
+        assertEquals(user.email, userExistsByTokenHash.email)
     }
 
     @Test

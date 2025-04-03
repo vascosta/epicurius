@@ -77,12 +77,12 @@ class UserRepositoryTest : RepositoryTest() {
         )
 
         // then the user is updated successfully
-        assertEquals(updatedUser.username, newUsername)
-        assertEquals(updatedUser.email, newEmail)
-        assertEquals(updatedUser.country, newCountry)
-        assertEquals(updatedUser.passwordHash, newPasswordHash)
-        assertEquals(updatedUser.privacy, newPrivacy)
-        assertEquals(updatedUser.intolerances, newIntolerances)
-        assertEquals(updatedUser.diets, newDiet)
+        assertEquals(newUsername, updatedUser.username)
+        assertEquals(newEmail, updatedUser.email)
+        assertEquals(newCountry, updatedUser.country)
+        assertEquals(newPasswordHash, updatedUser.passwordHash)
+        assertEquals(newPrivacy, updatedUser.privacy)
+        assertEquals(newIntolerances, updatedUser.intolerances)
+        assertEquals(newDiet, updatedUser.diets)
     }
 }

@@ -263,7 +263,7 @@ class UserControllerTest : HttpTest() {
         // then the picture was added successfully
         val userProfileBody = getUserProfile(userToken)
         assertNotNull(userProfileBody)
-        assertContentEquals(userProfileBody.userProfile.profilePicture, testProfilePicture.bytes)
+        assertContentEquals(testProfilePicture.bytes, userProfileBody.userProfile.profilePicture)
         assertEquals(userProfileBody.userProfile.username, publicTestUsername)
     }
 
@@ -282,7 +282,7 @@ class UserControllerTest : HttpTest() {
         // then the picture was updated successfully
         val userProfileBody = getUserProfile(userToken)
         assertNotNull(userProfileBody)
-        assertEquals(updateProfilePictureBody.profilePictureName, newUpdateProfilePictureBody.profilePictureName)
+        assertEquals(newUpdateProfilePictureBody.profilePictureName, updateProfilePictureBody.profilePictureName)
         assertContentEquals(testProfilePicture2.bytes, userProfileBody.userProfile.profilePicture)
     }
 

@@ -5,16 +5,13 @@ import epicurius.domain.user.SearchUserModel
 import epicurius.domain.user.User
 import epicurius.repository.RepositoryTest
 import epicurius.utils.createTestUser
-import epicurius.utils.generateEmail
-import epicurius.utils.generateRandomUsername
-import epicurius.utils.generateSecurePassword
 import org.junit.jupiter.api.BeforeEach
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 
-class FollowRepositoryTests: RepositoryTest() {
+class FollowRepositoryTests : RepositoryTest() {
 
     private lateinit var publicTestUser: User
     private lateinit var privateTestUser: User
@@ -39,8 +36,8 @@ class FollowRepositoryTests: RepositoryTest() {
         val privateUserFollowing = getFollowing(privateUser.id)
         assertTrue(publicUserFollowers.isNotEmpty())
         assertTrue(privateUserFollowing.isNotEmpty())
-        assertEquals(publicUserFollowers.size, 1)
-        assertEquals(privateUserFollowing.size, 1)
+        assertEquals(1, publicUserFollowers.size)
+        assertEquals(1, privateUserFollowing.size)
         assertTrue(publicUserFollowers.contains(SearchUserModel(privateUser.username, privateUser.profilePictureName)))
         assertTrue(privateUserFollowing.contains(SearchUserModel(publicUser.username, publicUser.profilePictureName)))
 
@@ -66,7 +63,7 @@ class FollowRepositoryTests: RepositoryTest() {
         // then the follow request is sent successfully
         val privateUserFollowRequests = getFollowRequests(privateUser.id)
         assertTrue(privateUserFollowRequests.isNotEmpty())
-        assertEquals(privateUserFollowRequests.size, 1)
+        assertEquals(1, privateUserFollowRequests.size)
         assertTrue(privateUserFollowRequests.contains(SearchUserModel(publicUser.username, publicUser.profilePictureName)))
 
         // when cancelling the follow request

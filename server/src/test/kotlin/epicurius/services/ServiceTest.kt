@@ -2,31 +2,18 @@ package epicurius.services
 
 import epicurius.EpicuriusTest
 import epicurius.domain.PagingParams
-import epicurius.domain.user.User
 import epicurius.http.fridge.models.input.OpenProductInputModel
 import epicurius.http.fridge.models.input.ProductInputModel
 import epicurius.http.fridge.models.input.UpdateProductInputModel
 import epicurius.http.user.models.input.UpdateUserInputModel
-import epicurius.utils.createTestUser
-import org.junit.jupiter.api.BeforeAll
 import org.springframework.web.multipart.MultipartFile
 
-open class ServicesTest : EpicuriusTest() {
+open class ServiceTest : EpicuriusTest() {
 
     companion object {
         // private val userService = UserService(tm, fs, cs, usersDomain, countriesDomain)
         private val userService = UserService(tm, cs, usersDomain, countriesDomain)
         private val fridgeService = FridgeService(tm, sm, fridgeDomain)
-
-        lateinit var publicTestUser: User
-        lateinit var privateTestUser: User
-
-        @JvmStatic
-        @BeforeAll
-        fun setupDB() {
-            publicTestUser = createTestUser(tm)
-            privateTestUser = createTestUser(tm, true)
-        }
 
         // USER
         fun createUser(username: String, email: String, country: String, password: String, confirmPassword: String) =

@@ -10,6 +10,7 @@ import epicurius.domain.exceptions.InvalidCountry
 import epicurius.domain.exceptions.InvalidDietIdx
 import epicurius.domain.exceptions.InvalidIntolerancesIdx
 import epicurius.domain.exceptions.InvalidProduct
+import epicurius.domain.exceptions.InvalidToken
 import epicurius.domain.exceptions.PasswordsDoNotMatch
 import epicurius.domain.exceptions.ProductIsAlreadyOpen
 import epicurius.domain.exceptions.ProductNotFound
@@ -119,7 +120,12 @@ class ExceptionHandler {
             status = HttpStatus.BAD_REQUEST
         )
 
-    @ExceptionHandler(value = [UnauthorizedException::class])
+    @ExceptionHandler(
+        value = [
+            UnauthorizedException::class,
+            InvalidToken::class
+        ]
+    )
     fun handleUnauthorized(request: HttpServletRequest, ex: Exception): ResponseEntity<*> {
         return ex.handle(
             request = request,
