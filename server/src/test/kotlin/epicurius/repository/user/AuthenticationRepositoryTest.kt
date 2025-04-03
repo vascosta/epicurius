@@ -1,11 +1,8 @@
-package epicurius.repository
+package epicurius.repository.user
 
-import epicurius.domain.Diet
-import epicurius.domain.FollowingStatus
-import epicurius.domain.Intolerance
 import epicurius.domain.PagingParams
 import epicurius.domain.user.SearchUserModel
-import epicurius.domain.user.UpdateUserInfo
+import epicurius.repository.RepositoryTest
 import epicurius.utils.createTestUser
 import epicurius.utils.generateEmail
 import epicurius.utils.generateRandomUsername
@@ -13,14 +10,13 @@ import epicurius.utils.generateSecurePassword
 import org.junit.jupiter.api.Assertions.assertNull
 import java.util.UUID
 import kotlin.test.Test
-import kotlin.test.assertContentEquals
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertNotEquals
 import kotlin.test.assertNotNull
 import kotlin.test.assertTrue
 
-class UserRepositoryTest : RepositoryTest() {
+class AuthenticationRepositoryTest: RepositoryTest() {
 
     @Test
     fun `Create new user and retrieve it successfully`() {
@@ -85,76 +81,6 @@ class UserRepositoryTest : RepositoryTest() {
     }
 
     @Test
-    fun `Adds a profile picture to the Cloud Storage and then retrieves it successfully`() {
-        // given a profile picture
-        val profilePicture = testProfilePicture
-        val profilePictureName = UUID.randomUUID().toString()
-
-        // when adding a profile picture
-        updateProfilePicture(profilePictureName, profilePicture)
-
-        // then the profile picture is added successfully
-        val newProfilePicture = getProfilePicture(profilePictureName)
-        assertNotNull(newProfilePicture)
-        assertContentEquals(profilePicture.bytes, newProfilePicture)
-    }
-
-    @Test
-    fun `Updates a profile picture already in the Cloud Storage and then retrieves it successfully`() {
-        // given a profile picture in the Cloud Storage
-        val profilePicture = testProfilePicture
-        val profilePictureName = UUID.randomUUID().toString()
-        updateProfilePicture(profilePictureName, profilePicture)
-
-        // when updating the profile picture
-        val newProfilePicture = testProfilePicture2
-        updateProfilePicture(profilePictureName, newProfilePicture)
-
-        // then the profile picture is updated successfully
-        val updatedProfilePicture = getProfilePicture(profilePictureName)
-        assertNotNull(newProfilePicture)
-        assertContentEquals(newProfilePicture.bytes, updatedProfilePicture)
-    }
-
-    @Test
-    fun `Update user successfully`() {
-        // given user required information
-        val user = createTestUser(tm)
-
-        // when updating the user
-        val newUsername = generateRandomUsername()
-        val newEmail = generateEmail(newUsername)
-        val newCountry = "ES"
-        val newPassword = generateSecurePassword()
-        val newPasswordHash = usersDomain.encodePassword(newPassword)
-        val newPrivacy = true
-        val newIntolerances = listOf(Intolerance.GLUTEN)
-        val newDiet = listOf(Diet.VEGAN)
-
-        val updatedUser = updateUser(
-            user.username,
-            UpdateUserInfo(
-                username = newUsername,
-                email = newEmail,
-                country = newCountry,
-                passwordHash = newPasswordHash,
-                privacy = newPrivacy,
-                intolerances = newIntolerances.map { Intolerance.entries.indexOf(it) },
-                diet = newDiet.map { Diet.entries.indexOf(it) }
-            )
-        )
-
-        // then the user is updated successfully
-        assertEquals(updatedUser.username, newUsername)
-        assertEquals(updatedUser.email, newEmail)
-        assertEquals(updatedUser.country, newCountry)
-        assertEquals(updatedUser.passwordHash, newPasswordHash)
-        assertEquals(updatedUser.privacy, newPrivacy)
-        assertEquals(updatedUser.intolerances, newIntolerances)
-        assertEquals(updatedUser.diets, newDiet)
-    }
-
-    @Test
     fun `Reset password successfully`() {
         // given user required information
         val user = createTestUser(tm)
@@ -173,58 +99,6 @@ class UserRepositoryTest : RepositoryTest() {
         assertEquals(userAfterResetPassword.email, user.email)
         assertEquals(userAfterResetPassword.passwordHash, newPasswordHash)
         assertNotEquals(userAfterResetPassword.passwordHash, user.passwordHash)
-    }
-
-    @Test
-    fun `Follow a public user, unfollows him and then retrieve its followers and following successfully`() {
-        // given two existing users
-        val publicUser = createTestUser(tm)
-        val privateUser = createTestUser(tm, true)
-
-        // when following a public user
-        follow(privateUser.id, publicUser.id, FollowingStatus.ACCEPTED.ordinal)
-
-        // then the user is followed successfully
-        val publicUserFollowers = getFollowers(publicUser.id)
-        val privateUserFollowing = getFollowing(privateUser.id)
-        assertTrue(publicUserFollowers.isNotEmpty())
-        assertTrue(privateUserFollowing.isNotEmpty())
-        assertEquals(publicUserFollowers.size, 1)
-        assertEquals(privateUserFollowing.size, 1)
-        assertTrue(publicUserFollowers.contains(SearchUserModel(privateUser.username, privateUser.profilePictureName)))
-        assertTrue(privateUserFollowing.contains(SearchUserModel(publicUser.username, publicUser.profilePictureName)))
-
-        // when unfollowing the user
-        unfollow(privateUser.id, publicUser.id)
-
-        // then the user is unfollowed successfully
-        val publicUserFollowersAfterUnfollow = getFollowers(publicUser.id)
-        val privateUserFollowingAfterUnfollow = getFollowing(privateUser.id)
-        assertTrue(publicUserFollowersAfterUnfollow.isEmpty())
-        assertTrue(privateUserFollowingAfterUnfollow.isEmpty())
-    }
-
-    @Test
-    fun `Try to follow a private user, get added to its follow requests and then cancel the request successfully`() {
-        // given two existing users
-        val publicUser = createTestUser(tm)
-        val privateUser = createTestUser(tm, true)
-
-        // when following a private user
-        follow(publicUser.id, privateUser.id, FollowingStatus.PENDING.ordinal)
-
-        // then the follow request is sent successfully
-        val privateUserFollowRequests = getFollowRequests(privateUser.id)
-        assertTrue(privateUserFollowRequests.isNotEmpty())
-        assertEquals(privateUserFollowRequests.size, 1)
-        assertTrue(privateUserFollowRequests.contains(SearchUserModel(publicUser.username, publicUser.profilePictureName)))
-
-        // when cancelling the follow request
-        cancelFollowRequest(privateUser.id, publicUser.id)
-
-        // then the follow request is cancelled successfully
-        val privateUserFollowRequestsAfterCancel = getFollowRequests(privateUser.id)
-        assertTrue(privateUserFollowRequestsAfterCancel.isEmpty())
     }
 
     @Test
@@ -311,32 +185,5 @@ class UserRepositoryTest : RepositoryTest() {
         // then the user is not logged in
         assertFalse(userExistsByName)
         assertFalse(userExistsByEmail)
-    }
-
-    @Test
-    fun `Check if an user is being followed by other user successfully`() {
-        // given 2 existing users
-        val publicUser = createTestUser(tm)
-        val privateUser = createTestUser(tm, true)
-
-        // when checking if the user is being followed by the other user
-        val userBeingFollowedBy = checkIfUserIsBeingFollowedBy(privateUser.id, publicUser.id)
-
-        // then the user is not being followed by the other user
-        assertFalse(userBeingFollowedBy)
-    }
-
-    @Test
-    fun `Check if an user already sent a follow request to other user successfully`() {
-        // given 2 existing users
-        val privateUser = createTestUser(tm, true)
-        val privateUser2 = createTestUser(tm, true)
-        follow(privateUser.id, privateUser2.id, FollowingStatus.PENDING.ordinal)
-
-        // when checking if the user already sent a follow request to the other user
-        val userAlreadySentFollowRequest = checkIfUserAlreadySentFollowRequest(privateUser2.id, privateUser.id)
-
-        // then a follow request was already sent
-        assertTrue(userAlreadySentFollowRequest)
     }
 }

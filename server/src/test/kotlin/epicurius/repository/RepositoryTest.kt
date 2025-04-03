@@ -13,15 +13,6 @@ import org.springframework.web.multipart.MultipartFile
 open class RepositoryTest : EpicuriusTest() {
 
     companion object {
-        lateinit var publicTestUser: User
-        lateinit var privateTestUser: User
-
-        @JvmStatic
-        @BeforeAll
-        fun setupDB() {
-            publicTestUser = createTestUser(tm)
-            privateTestUser = createTestUser(tm, true)
-        }
 
         // USER
         fun createUser(username: String, email: String, country: String, passwordHash: String) =

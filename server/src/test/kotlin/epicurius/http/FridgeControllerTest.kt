@@ -39,11 +39,11 @@ class FridgeControllerTest : HttpTest() {
         val token = user
 
         // when getting the user's fridge
-        val fridge = getFridge(token)
+        val fridgeBody = getFridge(token)
 
         // then the fridge should be empty
-        assertNotNull(fridge)
-        assertTrue(fridge.products.isEmpty())
+        assertNotNull(fridgeBody)
+        assertTrue(fridgeBody.products.isEmpty())
     }
 
     @Test
@@ -52,11 +52,11 @@ class FridgeControllerTest : HttpTest() {
         val token = user
 
         // when getting the products list
-        val productsList = getProductsList(token, "app")
+        val productsListBody = getProductsList(token, "app")
 
         // then the products list should not be empty
-        assertNotNull(productsList)
-        assertTrue(productsList.isNotEmpty())
+        assertNotNull(productsListBody)
+        assertTrue(productsListBody.isNotEmpty())
     }
 
     @Test
@@ -68,14 +68,14 @@ class FridgeControllerTest : HttpTest() {
         val expirationDate = Date.from(
             LocalDate.now().plusDays(7).atStartOfDay(ZoneId.systemDefault()).toInstant()
         )
-        val newFridge = getBody(addProducts(token, "apple", 1, null, expirationDate))
+        val newFridgeBody = getBody(addProducts(token, "apple", 1, null, expirationDate))
 
         // then the fridge should contain the product
-        assertNotNull(newFridge)
-        assertTrue(newFridge.products.isNotEmpty())
-        assertTrue(newFridge.products.first().productName == "apple")
-        assertTrue(newFridge.products.first().quantity == 1)
-        assertTrue(newFridge.products.first().openDate == null)
+        assertNotNull(newFridgeBody)
+        assertTrue(newFridgeBody.products.isNotEmpty())
+        assertTrue(newFridgeBody.products.first().productName == "apple")
+        assertTrue(newFridgeBody.products.first().quantity == 1)
+        assertTrue(newFridgeBody.products.first().openDate == null)
     }
 
     @Test
@@ -90,14 +90,14 @@ class FridgeControllerTest : HttpTest() {
         getBody(addProducts(token, "peach", 1, null, expirationDate))
 
         // and adding the same product again
-        val newFridge = getBody(addProducts(token, "peach", 1, null, expirationDate))
+        val newFridgeBody = getBody(addProducts(token, "peach", 1, null, expirationDate))
 
         // then the fridge should contain the product with the updated quantity
-        assertNotNull(newFridge)
-        assertTrue(newFridge.products.isNotEmpty())
-        assertTrue(newFridge.products.first().productName == "peach")
-        assertTrue(newFridge.products.first().quantity == 2)
-        assertTrue(newFridge.products.first().openDate == null)
+        assertNotNull(newFridgeBody)
+        assertTrue(newFridgeBody.products.isNotEmpty())
+        assertTrue(newFridgeBody.products.first().productName == "peach")
+        assertTrue(newFridgeBody.products.first().quantity == 2)
+        assertTrue(newFridgeBody.products.first().openDate == null)
     }
 
     @Test
@@ -116,9 +116,9 @@ class FridgeControllerTest : HttpTest() {
             HttpStatus.BAD_REQUEST,
             token
         )
+        assertNotNull(error)
 
         // then the request should fail with code 400
-        assertNotNull(error)
         val errorBody = getBody(error)
         assertEquals(InvalidProduct().message, errorBody.detail)
     }
@@ -132,22 +132,22 @@ class FridgeControllerTest : HttpTest() {
         val expirationDate = Date.from(
             LocalDate.now().plusDays(7).atStartOfDay(ZoneId.systemDefault()).toInstant()
         )
-        val newFridge = getBody(addProducts(token, "milk", 1, null, expirationDate))
+        val newFridgeBody = getBody(addProducts(token, "milk", 1, null, expirationDate))
 
         // and updating the product
         val newExpirationDate = Date.from(
             LocalDate.now().plusDays(14).atStartOfDay(ZoneId.systemDefault()).toInstant()
         )
-        val updatedFridge = getBody(
-            updateFridgeProduct(token, newFridge.products.first().entryNumber, 2, newExpirationDate)
+        val updatedFridgeBody = getBody(
+            updateFridgeProduct(token, newFridgeBody.products.first().entryNumber, 2, newExpirationDate)
         )
 
         // then the fridge should contain the updated product
-        assertNotNull(updatedFridge)
-        assertTrue(updatedFridge.products.isNotEmpty())
-        assertTrue(updatedFridge.products.first().productName == "milk")
-        assertTrue(updatedFridge.products.first().quantity == 2)
-        assertTrue(updatedFridge.products.first().openDate == null)
+        assertNotNull(updatedFridgeBody)
+        assertTrue(updatedFridgeBody.products.isNotEmpty())
+        assertTrue(updatedFridgeBody.products.first().productName == "milk")
+        assertTrue(updatedFridgeBody.products.first().quantity == 2)
+        assertTrue(updatedFridgeBody.products.first().openDate == null)
     }
 
     @Test
@@ -166,9 +166,9 @@ class FridgeControllerTest : HttpTest() {
             responseStatus = HttpStatus.NOT_FOUND,
             token = token
         )
+        assertNotNull(error)
 
         // then the request should fail with code 400
-        assertNotNull(error)
         val errorBody = getBody(error)
         assertEquals(ProductNotFound(999999).message, errorBody.detail)
     }
@@ -185,7 +185,7 @@ class FridgeControllerTest : HttpTest() {
         val expirationDate = Date.from(
             LocalDate.now().plusDays(7).atStartOfDay(ZoneId.systemDefault()).toInstant()
         )
-        val newFridge = getBody(addProducts(token, "cream", 1, openDate, expirationDate))
+        val newFridgeBody = getBody(addProducts(token, "cream", 1, openDate, expirationDate))
 
         // and trying to update the product
         val newExpirationDate = Date.from(
@@ -193,14 +193,14 @@ class FridgeControllerTest : HttpTest() {
         )
         val error = patch<Problem>(
             client,
-            api(Uris.Fridge.PRODUCT.take(16) + newFridge.products.first().entryNumber),
+            api(Uris.Fridge.PRODUCT.take(16) + newFridgeBody.products.first().entryNumber),
             body = mapOf("quantity" to 2, "expirationDate" to newExpirationDate),
             responseStatus = HttpStatus.BAD_REQUEST,
             token = token
         )
+        assertNotNull(error)
 
         // then the request should fail with code 400
-        assertNotNull(error)
         val errorBody = getBody(error)
         assertEquals(ProductIsAlreadyOpen().message, errorBody.detail)
     }
@@ -214,22 +214,22 @@ class FridgeControllerTest : HttpTest() {
         val expirationDate = Date.from(
             LocalDate.now().plusDays(7).atStartOfDay(ZoneId.systemDefault()).toInstant()
         )
-        val newFridge = getBody(addProducts(token, "peach", 1, null, expirationDate))
+        val newFridgeBody = getBody(addProducts(token, "peach", 1, null, expirationDate))
 
         // and opening the product
         val openDate = Date.from(
             LocalDate.now().atStartOfDay(ZoneId.systemDefault()).toInstant()
         )
         val duration = Period.ofDays(3)
-        val openProduct = getBody(
-            openFridgeProduct(token, newFridge.products.first().entryNumber, openDate, duration)
+        val openProductBody = getBody(
+            openFridgeProduct(token, newFridgeBody.products.first().entryNumber, openDate, duration)
         )
 
         // then the fridge should contain the updated product
-        assertNotNull(openProduct)
-        assertTrue(openProduct.products.isNotEmpty())
-        assertTrue(openProduct.products.first().productName == "peach")
-        assertTrue(openProduct.products.first().quantity == 1)
+        assertNotNull(openProductBody)
+        assertTrue(openProductBody.products.isNotEmpty())
+        assertTrue(openProductBody.products.first().productName == "peach")
+        assertTrue(openProductBody.products.first().quantity == 1)
     }
 
     @Test
@@ -249,9 +249,9 @@ class FridgeControllerTest : HttpTest() {
             responseStatus = HttpStatus.NOT_FOUND,
             token = token
         )
+        assertNotNull(error)
 
         // then the request should fail with code 404
-        assertNotNull(error)
         val errorBody = getBody(error)
         assertEquals(ProductNotFound(999999).message, errorBody.detail)
     }
@@ -268,20 +268,20 @@ class FridgeControllerTest : HttpTest() {
         val expirationDate = Date.from(
             LocalDate.now().plusDays(7).atStartOfDay(ZoneId.systemDefault()).toInstant()
         )
-        val newFridge = getBody(addProducts(token, "tomato", 1, openDate, expirationDate))
+        val newFridgeBody = getBody(addProducts(token, "tomato", 1, openDate, expirationDate))
 
         // and trying to open the product
         val duration = Period.ofDays(3)
         val error = patch<Problem>(
             client,
-            api(Uris.Fridge.OPEN_PRODUCT.take(13) + newFridge.products.first().entryNumber),
+            api(Uris.Fridge.OPEN_PRODUCT.take(13) + newFridgeBody.products.first().entryNumber),
             body = mapOf("openDate" to openDate, "duration" to duration),
             responseStatus = HttpStatus.BAD_REQUEST,
             token = token
         )
+        assertNotNull(error)
 
         // then the request should fail with code 400
-        assertNotNull(error)
         val errorBody = getBody(error)
         assertEquals(ProductIsAlreadyOpen().message, errorBody.detail)
     }
@@ -295,14 +295,14 @@ class FridgeControllerTest : HttpTest() {
         val expirationDate = Date.from(
             LocalDate.now().plusDays(7).atStartOfDay(ZoneId.systemDefault()).toInstant()
         )
-        val newFridge = getBody(addProducts(token, "banana", 1, null, expirationDate))
+        val newFridgeBody = getBody(addProducts(token, "banana", 1, null, expirationDate))
 
         // and removing the product
-        val removedFridge = getBody(removeProduct(token, newFridge.products.first().entryNumber))
+        val removedFridgeBody = getBody(removeProduct(token, newFridgeBody.products.first().entryNumber))
 
         // then the fridge should be empty
-        assertNotNull(removedFridge)
-        assertTrue(removedFridge.products.isEmpty())
+        assertNotNull(removedFridgeBody)
+        assertTrue(removedFridgeBody.products.isEmpty())
     }
 
     @Test
@@ -317,9 +317,9 @@ class FridgeControllerTest : HttpTest() {
             HttpStatus.NOT_FOUND,
             token
         )
+        assertNotNull(error)
 
         // then the request should fail with code 404
-        assertNotNull(error)
         val errorBody = getBody(error)
         assertEquals(ProductNotFound(999999).message, errorBody.detail)
     }

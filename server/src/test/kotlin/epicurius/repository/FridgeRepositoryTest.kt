@@ -2,6 +2,10 @@ package epicurius.repository
 
 import epicurius.domain.fridge.ProductInfo
 import epicurius.domain.fridge.UpdateProductInfo
+import epicurius.domain.user.User
+import epicurius.utils.createTestUser
+import org.junit.jupiter.api.BeforeAll
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import java.time.LocalDate
 import java.time.ZoneId
@@ -12,6 +16,16 @@ import kotlin.test.assertNull
 import kotlin.test.assertTrue
 
 class FridgeRepositoryTest : RepositoryTest() {
+
+    private lateinit var publicTestUser: User
+    private lateinit var privateTestUser: User
+
+    @BeforeEach
+    fun setup() {
+        publicTestUser = createTestUser(tm)
+        privateTestUser = createTestUser(tm, true)
+    }
+
 
     @Test
     fun `Retrieve user fridge successfully`() {

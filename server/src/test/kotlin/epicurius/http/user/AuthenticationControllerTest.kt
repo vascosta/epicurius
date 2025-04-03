@@ -28,9 +28,29 @@ import kotlin.test.assertNotNull
 import kotlin.test.assertNull
 import kotlin.test.assertTrue
 
-class AuthenticationControllerTests: HttpTest() {
+class AuthenticationControllerTest: HttpTest() {
 
     val publicTestUser: User = createTestUser(tm)
+
+    @Test
+    fun `Unauthenticated user tries to do an authenticated operation and fails with code 401`() {
+        // given a non-authenticated user
+        val username = generateRandomUsername()
+
+        // when trying
+        val error = post<Problem>(
+            client,
+            api(Uris.User.LOGOUT),
+            mapOf("username" to username, "password" to generateSecurePassword()),
+            HttpStatus.UNAUTHORIZED
+        )
+        assertNotNull(error)
+
+        // then the user couldn't do the operation and an error is returned
+        val errorBody = getBody(error)
+        
+    }
+
 
     @Test
     fun `Signup a new user and retrieve it successfully with code 200`() {

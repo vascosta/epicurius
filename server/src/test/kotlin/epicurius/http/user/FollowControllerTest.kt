@@ -23,7 +23,7 @@ import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 import kotlin.test.assertTrue
 
-class FollowControllerTests: HttpTest() {
+class FollowControllerTest: HttpTest() {
 
     lateinit var publicTestUserToken: String
     lateinit var publicTestUsername: String
