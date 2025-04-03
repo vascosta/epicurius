@@ -2,7 +2,21 @@ package epicurius.http.pipeline
 
 import com.fasterxml.jackson.core.JsonParseException
 import com.fasterxml.jackson.databind.exc.MismatchedInputException
-import epicurius.domain.exceptions.*
+import epicurius.domain.exceptions.DurationIsNull
+import epicurius.domain.exceptions.FollowRequestAlreadyBeenSent
+import epicurius.domain.exceptions.IncorrectPassword
+import epicurius.domain.exceptions.InvalidCountry
+import epicurius.domain.exceptions.InvalidDietIdx
+import epicurius.domain.exceptions.InvalidIntolerancesIdx
+import epicurius.domain.exceptions.InvalidProduct
+import epicurius.domain.exceptions.PasswordsDoNotMatch
+import epicurius.domain.exceptions.ProductIsAlreadyOpen
+import epicurius.domain.exceptions.ProductNotFound
+import epicurius.domain.exceptions.UnauthorizedException
+import epicurius.domain.exceptions.UserAlreadyBeingFollowed
+import epicurius.domain.exceptions.UserAlreadyExists
+import epicurius.domain.exceptions.UserAlreadyLoggedIn
+import epicurius.domain.exceptions.UserNotFound
 import epicurius.http.pipeline.authentication.AuthenticationInterceptor.Companion.WWW_AUTHENTICATE_HEADER
 import epicurius.http.pipeline.authentication.RequestTokenProcessor.Companion.SCHEME
 import epicurius.http.utils.Problem
@@ -91,7 +105,6 @@ class ExceptionHandler {
             PasswordsDoNotMatch::class,
             InvalidIntolerancesIdx::class,
             InvalidDietIdx::class,
-            InvalidProduct::class,
             InvalidProduct::class,
             DurationIsNull::class,
             ProductIsAlreadyOpen::class

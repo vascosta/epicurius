@@ -3,7 +3,6 @@ package epicurius.http.utils
 import org.springframework.http.HttpStatus
 import org.springframework.test.web.reactive.server.EntityExchangeResult
 import org.springframework.test.web.reactive.server.WebTestClient
-import org.springframework.util.MultiValueMap
 
 inline fun <reified T> get(
     client: WebTestClient,
@@ -44,6 +43,19 @@ inline fun <reified T> patch(
     client.patch().uri(uri)
         .header("Authorization", "Bearer $token")
         .bodyValue(body)
+        .exchange()
+        .expectStatus().isEqualTo(responseStatus)
+        .expectBody(T::class.java)
+        .returnResult()
+
+inline fun <reified T> delete(
+    client: WebTestClient,
+    uri: String,
+    responseStatus: HttpStatus = HttpStatus.OK,
+    token: String? = null
+) =
+    client.delete().uri(uri)
+        .header("Authorization", "Bearer $token")
         .exchange()
         .expectStatus().isEqualTo(responseStatus)
         .expectBody(T::class.java)

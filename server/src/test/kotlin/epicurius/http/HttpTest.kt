@@ -1,8 +1,10 @@
 package epicurius.http
 
 import epicurius.EpicuriusTest
+import epicurius.domain.Diet
 import epicurius.domain.Intolerance
 import epicurius.domain.user.User
+import epicurius.http.fridge.models.output.FridgeOutputModel
 import epicurius.http.user.models.output.GetDietsOutputModel
 import epicurius.http.user.models.output.GetFollowRequestsOutputModel
 import epicurius.http.user.models.output.GetFollowersOutputModel
@@ -14,6 +16,7 @@ import epicurius.http.user.models.output.GetUsersOutputModel
 import epicurius.http.user.models.output.UpdateProfilePictureOutputModel
 import epicurius.http.user.models.output.UpdateUserOutputModel
 import epicurius.http.utils.Uris
+import epicurius.http.utils.delete
 import epicurius.http.utils.get
 import epicurius.http.utils.getAuthorizationHeader
 import epicurius.http.utils.getBody
@@ -26,6 +29,8 @@ import org.springframework.boot.test.web.server.LocalServerPort
 import org.springframework.http.HttpStatus
 import org.springframework.test.web.reactive.server.WebTestClient
 import org.springframework.web.multipart.MultipartFile
+import java.time.Period
+import java.util.Date
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class HttpTest : EpicuriusTest() {
@@ -35,6 +40,7 @@ class HttpTest : EpicuriusTest() {
     val client = WebTestClient.bindToServer().baseUrl(api("/")).build()
     final fun api(path: String): String = "http://localhost:$port/api$path"
 
+    // USER
     fun getUser(token: String) = get<GetUserOutputModel>(client, api(Uris.User.USER), token = token)
 
     fun getUserProfile(token: String, username: String = "") =
@@ -106,7 +112,7 @@ class HttpTest : EpicuriusTest() {
         confirmPassword: String? = null,
         privacy: Boolean? = null,
         intolerances: List<Intolerance>? = null,
-        diets: List<String>? = null
+        diets: List<Diet>? = null
     ): UpdateUserOutputModel? {
         val result = patch<UpdateUserOutputModel>(
             client,
@@ -166,6 +172,56 @@ class HttpTest : EpicuriusTest() {
     fun cancelFollowRequest(token: String, username: String) {
         patch<Unit>(client, api(Uris.User.USER_FOLLOW_REQUESTS), mapOf("username" to username), token = token)
     }
+
+    // FRIDGE
+    fun getFridge(token: String) = get<FridgeOutputModel>(client, api(Uris.Fridge.FRIDGE), token = token)
+
+    fun getProductsList(token: String, partial: String) =
+        get<List<String>>(client, api(Uris.Fridge.PRODUCTS) + "?partial=$partial", token = token)
+
+    fun addProducts(token: String, productName: String, quantity: Int, openDate: Date? = null, expirationDate: Date) =
+        post<FridgeOutputModel>(
+            client,
+            api(Uris.Fridge.FRIDGE),
+            mapOf(
+                "productName" to productName,
+                "quantity" to quantity,
+                "openDate" to openDate,
+                "expirationDate" to expirationDate
+            ),
+            HttpStatus.OK,
+            token = token
+        )
+
+    fun updateFridgeProduct(token: String, entryNumber: Int, quantity: Int? = null, expirationDate: Date? = null) =
+        patch<FridgeOutputModel>(
+            client,
+            api(Uris.Fridge.PRODUCT.take(16) + entryNumber),
+            mapOf("quantity" to quantity, "expirationDate" to expirationDate),
+            HttpStatus.OK,
+            token = token
+        )
+
+    fun openFridgeProduct(
+        token: String,
+        entryNumber: Int,
+        openDate: Date,
+        duration: Period
+    ) = patch<FridgeOutputModel>(
+        client,
+        api(Uris.Fridge.OPEN_PRODUCT.take(13) + entryNumber),
+        mapOf("openDate" to openDate, "duration" to duration),
+        HttpStatus.OK,
+        token = token
+    )
+
+    fun removeProduct(token: String, entryNumber: Int) =
+        delete<FridgeOutputModel>(
+            client,
+            api(Uris.Fridge.PRODUCT.take(16) + entryNumber),
+            HttpStatus.OK,
+            token = token
+        )
 
     companion object {
 

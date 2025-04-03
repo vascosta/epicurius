@@ -1,5 +1,6 @@
 package epicurius.services
 
+import epicurius.domain.exceptions.InvalidProduct
 import epicurius.domain.exceptions.ProductIsAlreadyOpen
 import epicurius.domain.exceptions.ProductNotFound
 import epicurius.http.fridge.models.input.OpenProductInputModel
@@ -98,7 +99,29 @@ class FridgeServiceTest : ServicesTest() {
     }
 
     @Test
-    fun `Add product to fridge but product already exists`() {
+    fun `Try to add product but product is invalid`() {
+        // given a user
+        val user = publicTestUser
+
+        // when adding an invalid product to the user's fridge
+        val expirationDate = Date.from(
+            LocalDate.now().plusDays(7).atStartOfDay(ZoneId.systemDefault()).toInstant()
+        )
+        val product = ProductInputModel(
+            productName = "invalid",
+            quantity = 1,
+            openDate = null,
+            expirationDate = expirationDate
+        )
+
+        // then an InvalidProduct Exception should be thrown
+        assertThrows<InvalidProduct> {
+            runBlocking { addProduct(user.id, product) }
+        }
+    }
+
+    @Test
+    fun `Try to add product to fridge but product already exists`() {
         // given a user
         val user = publicTestUser
 

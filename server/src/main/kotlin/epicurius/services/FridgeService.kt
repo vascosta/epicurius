@@ -42,7 +42,7 @@ class FridgeService(
     }
 
     fun updateProductInfo(userId: Int, entryNumber: Int, body: UpdateProductInputModel): Fridge {
-        val observedProduct = checkIfProductExistsInFridge(userId, entryNumber) ?: throw ProductNotFound()
+        val observedProduct = checkIfProductExistsInFridge(userId, entryNumber) ?: throw ProductNotFound(entryNumber)
         if (body.expirationDate != null) checkIfProductIsOpen(userId, entryNumber)
 
         val updatedProduct = UpdateProductInfo(
@@ -55,7 +55,7 @@ class FridgeService(
     }
 
     fun openProduct(userId: Int, entryNumber: Int, body: OpenProductInputModel): Fridge {
-        val observedProduct = checkIfProductExistsInFridge(userId, entryNumber) ?: throw ProductNotFound()
+        val observedProduct = checkIfProductExistsInFridge(userId, entryNumber) ?: throw ProductNotFound(entryNumber)
         checkIfProductIsOpen(userId, observedProduct.entryNumber)
 
         val decreaseQuantity = UpdateProductInfo(
@@ -83,7 +83,7 @@ class FridgeService(
     }
 
     fun removeProduct(userId: Int, entryNumber: Int): Fridge {
-        checkIfProductExistsInFridge(userId, entryNumber) ?: throw ProductNotFound()
+        checkIfProductExistsInFridge(userId, entryNumber) ?: throw ProductNotFound(entryNumber)
         return tm.run { it.fridgeRepository.removeProduct(userId, entryNumber) }
     }
 
