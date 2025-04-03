@@ -330,7 +330,7 @@ class UserServiceTest : ServicesTest() {
                 confirmPassword = newPassword,
                 privacy = newPrivacy,
                 intolerances = newIntolerances,
-                diet = newDiet
+                diets = newDiet
             )
         )
 

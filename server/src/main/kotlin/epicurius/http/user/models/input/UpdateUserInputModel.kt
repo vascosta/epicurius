@@ -35,5 +35,5 @@ data class UpdateUserInputModel(
 
     val intolerances: List<Intolerance>? = null,
 
-    val diet: List<Diet>? = null
+    val diets: List<Diet>? = null
 )

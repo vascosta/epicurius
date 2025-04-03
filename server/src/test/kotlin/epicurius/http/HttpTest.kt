@@ -150,7 +150,7 @@ class HttpTest : EpicuriusTest() {
     }
 
     fun resetPassword(email: String, newPassword: String, confirmPassword: String) {
-        post<Unit>(
+        patch<Unit>(
             client,
             api(Uris.User.USER_RESET_PASSWORD),
             mapOf(

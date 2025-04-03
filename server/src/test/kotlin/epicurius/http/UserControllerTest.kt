@@ -1,11 +1,27 @@
 package epicurius.http
 
-import epicurius.domain.exceptions.*
+import epicurius.domain.Diet
+import epicurius.domain.Intolerance
+import epicurius.domain.exceptions.FollowRequestAlreadyBeenSent
+import epicurius.domain.exceptions.IncorrectPassword
+import epicurius.domain.exceptions.InvalidCountry
+import epicurius.domain.exceptions.PasswordsDoNotMatch
+import epicurius.domain.exceptions.UserAlreadyBeingFollowed
+import epicurius.domain.exceptions.UserAlreadyExists
+import epicurius.domain.exceptions.UserAlreadyLoggedIn
+import epicurius.domain.exceptions.UserNotFound
 import epicurius.domain.user.FollowUser
 import epicurius.domain.user.FollowingUser
 import epicurius.domain.user.SearchUser
 import epicurius.domain.user.UserDomain
-import epicurius.http.utils.*
+import epicurius.http.utils.Problem
+import epicurius.http.utils.Regex.VALID_PASSWORD_MSG
+import epicurius.http.utils.Regex.VALID_STRING_MSG
+import epicurius.http.utils.Uris
+import epicurius.http.utils.get
+import epicurius.http.utils.getBody
+import epicurius.http.utils.patch
+import epicurius.http.utils.post
 import epicurius.utils.createTestUser
 import epicurius.utils.generateEmail
 import epicurius.utils.generateRandomUsername
@@ -153,7 +169,7 @@ class UserControllerTest : HttpTest() {
         assertTrue(body.diet.isEmpty())
     }
 
-/*    @Test
+    @Test
     fun `Create new user and retrieve it successfully`() {
         // given user required information
         val username = generateRandomUsername()
@@ -162,24 +178,7 @@ class UserControllerTest : HttpTest() {
         val password = generateSecurePassword()
 
         // when creating a user
-        val token = client.post().uri(api(Uris.User.SIGNUP))
-            .bodyValue(
-                mapOf(
-                    "username" to username,
-                    "email" to email,
-                    "password" to password,
-                    "confirmPassword" to password,
-                    "country" to country
-                )
-            )
-            .exchange()
-            .expectStatus().isCreated
-            .expectBody<String>()
-            .returnResult()
-            .responseHeaders["Authorization"]?.first()?.substringAfter("Bearer ")
-
-        // then the user is created successfully
-        assertNotNull(token)
+        val token = signUp(username, email, country, password)
 
         // when getting the user
         val user = getUser(token)
@@ -189,7 +188,6 @@ class UserControllerTest : HttpTest() {
         assertEquals(user.user.username, username)
         assertEquals(user.user.email, email)
         assertEquals(user.user.country, country)
-        assertTrue(usersDomain.verifyPassword(password, user.user.passwordHash))
         assertEquals(user.user.privacy, false)
         assertEquals(user.user.intolerances, emptyList())
         assertEquals(user.user.diets, emptyList())
@@ -197,7 +195,7 @@ class UserControllerTest : HttpTest() {
     }
 
     @Test
-    fun `Try to create a user with existing name or email and fail`() {
+    fun `Try to create a user with existing name or email and fails with code 400`() {
         // given information for a new user and an existing user
         val username = generateRandomUsername()
         val email = generateEmail(username)
@@ -207,50 +205,68 @@ class UserControllerTest : HttpTest() {
         val existingUser = publicTestUser
 
         // when trying to create a user with the same username
-        client.post().uri(api(Uris.User.SIGNUP))
-            .bodyValue(
-                mapOf(
-                    "username" to existingUser.username,
-                    "email" to email,
-                    "password" to password,
-                    "confirmPassword" to password,
-                    "country" to country
-                )
-            )
-            .exchange()
-            .expectStatus().isBadRequest // then the user is not created
+        val usernameError = post<Problem>(
+            client,
+            api(Uris.User.SIGNUP),
+            mapOf(
+                "username" to existingUser.username,
+                "email" to email,
+                "password" to password,
+                "confirmPassword" to password,
+                "country" to country
+            ),
+            HttpStatus.BAD_REQUEST
+        )
+
+        // then the user is not created
+        assertNotNull(usernameError)
+        val usernameErrorBody = getBody(usernameError)
+        assertNotNull(usernameErrorBody)
+        assertEquals(UserAlreadyExists().message, usernameErrorBody.detail)
 
         // when trying to create a user with the same email
-        client.post().uri(api(Uris.User.SIGNUP))
-            .bodyValue(
-                mapOf(
-                    "username" to username,
-                    "email" to existingUser.email,
-                    "password" to password,
-                    "confirmPassword" to password,
-                    "country" to country
-                )
-            )
-            .exchange()
-            .expectStatus().isBadRequest // then the user is not created
+        val emailError = post<Problem>(
+            client,
+            api(Uris.User.SIGNUP),
+            mapOf(
+                "username" to username,
+                "email" to existingUser.email,
+                "password" to password,
+                "confirmPassword" to password,
+                "country" to country
+            ),
+            HttpStatus.BAD_REQUEST
+        )
+
+        // then the user is not created
+        assertNotNull(emailError)
+        val emailErrorBody = getBody(emailError)
+        assertNotNull(emailErrorBody)
+        assertEquals(UserAlreadyExists().message, emailErrorBody.detail)
 
         // when trying to create a user with the same username and email
-        client.post().uri(api(Uris.User.SIGNUP))
-            .bodyValue(
-                mapOf(
-                    "username" to existingUser.username,
-                    "email" to existingUser.email,
-                    "password" to password,
-                    "confirmPassword" to password,
-                    "country" to country
-                )
-            )
-            .exchange()
-            .expectStatus().isBadRequest // then the user is not created
+        val error = post<Problem>(
+            client,
+            api(Uris.User.SIGNUP),
+            mapOf(
+                "username" to existingUser.username,
+                "email" to existingUser.email,
+                "password" to password,
+                "confirmPassword" to password,
+                "country" to country
+            ),
+            HttpStatus.BAD_REQUEST
+        )
+
+        // then the user is not created
+        assertNotNull(error)
+        val errorBody = getBody(error)
+        assertNotNull(errorBody)
+        assertEquals(UserAlreadyExists().message, errorBody.detail)
     }
 
     @Test
-    fun `Try to create a user with invalid country and fail`() {
+    fun `Try to create a user with invalid country and fails with code 200`() {
         // given information for a new user
         val username = generateRandomUsername()
         val email = generateEmail(username)
@@ -258,22 +274,28 @@ class UserControllerTest : HttpTest() {
         val country = "XX"
 
         // when trying to create a user with an invalid country
-        client.post().uri(api(Uris.User.SIGNUP))
-            .bodyValue(
-                mapOf(
-                    "username" to username,
-                    "email" to email,
-                    "password" to password,
-                    "confirmPassword" to password,
-                    "country" to country
-                )
-            )
-            .exchange()
-            .expectStatus().isBadRequest // then the user is not created
+        val error = post<Problem>(
+            client,
+            api(Uris.User.SIGNUP),
+            mapOf(
+                "username" to username,
+                "email" to email,
+                "password" to password,
+                "confirmPassword" to password,
+                "country" to country
+            ),
+            HttpStatus.BAD_REQUEST
+        )
+
+        // then the user is not created
+        assertNotNull(error)
+        val errorBody = getBody(error)
+        assertNotNull(errorBody)
+        assertEquals(InvalidCountry().message, errorBody.detail)
     }
 
     @Test
-    fun `Try to create a user with different passwords and fail`() {
+    fun `Try to create a user with different passwords and fails with code 400`() {
         // given information for a new user
         val username = generateRandomUsername()
         val email = generateEmail(username)
@@ -281,19 +303,25 @@ class UserControllerTest : HttpTest() {
         val country = "PT"
 
         // when trying to create a user with an invalid password
-        client.post().uri(api(Uris.User.SIGNUP))
-            .bodyValue(
-                mapOf(
-                    "username" to username,
-                    "email" to email,
-                    "password" to password,
-                    "confirmPassword" to generateSecurePassword(),
-                    "country" to country
-                )
-            )
-            .exchange()
-            .expectStatus().isBadRequest // then the user is not created
-    }*/
+        val error = post<Problem>(
+            client,
+            api(Uris.User.SIGNUP),
+            mapOf(
+                "username" to username,
+                "email" to email,
+                "password" to password,
+                "confirmPassword" to generateSecurePassword(),
+                "country" to country
+            ),
+            HttpStatus.BAD_REQUEST
+        )
+
+        // then the user is not created
+        assertNotNull(error)
+        val errorBody = getBody(error)
+        assertNotNull(errorBody)
+        assertEquals(PasswordsDoNotMatch().message, errorBody.detail)
+    }
 
     @Test
     fun `Logout an user successfully and then login him by name successfully`() {
@@ -473,7 +501,7 @@ class UserControllerTest : HttpTest() {
         assertNotNull(errorBodyWithInvalidUsernameString)
         assertEquals("Username " + UserDomain.USERNAME_LENGTH_MSG, errorBodyWithShortUsername.detail)
         assertEquals("Username " + UserDomain.USERNAME_LENGTH_MSG, errorBodyWithLongUsername.detail)
-        assertEquals("Username " + Regex.VALID_STRING_MSG, errorBodyWithInvalidUsernameString.detail)
+        assertEquals("Username " + VALID_STRING_MSG, errorBodyWithInvalidUsernameString.detail)
     }
 
     @Test
@@ -525,28 +553,17 @@ class UserControllerTest : HttpTest() {
         // then the user is not logged in and an error is returned
         val errorBodyWithInvalidPassword = getBody(errorWithInvalidPassword)
         assertNotNull(errorBodyWithInvalidPassword)
-        assertEquals("Password " + Regex.VALID_PASSWORD_MSG, errorBodyWithInvalidPassword.detail)
+        assertEquals("Password " + VALID_PASSWORD_MSG, errorBodyWithInvalidPassword.detail)
     }
 
-/*    @Test
+    @Test
     fun `Reset password successfully`() {
         // given an existing user
         val user = publicTestUser
 
         // when resetting the password
         val newPassword = generateSecurePassword()
-        client.patch().uri(api(Uris.User.USER_RESET_PASSWORD))
-            .bodyValue(
-                mapOf(
-                    "email" to publicTestUser.email,
-                    "newPassword" to newPassword,
-                    "confirmPassword" to newPassword
-                )
-            )
-            .exchange()
-            .expectStatus().isNoContent
-            .expectBody<Unit>()
-            .returnResult()
+        resetPassword(publicTestUser.email, newPassword, newPassword)
 
         // then the password is reset successfully
         val newToken = login(email = user.email, password = newPassword)
@@ -557,26 +574,31 @@ class UserControllerTest : HttpTest() {
         assertNotNull(authenticatedUser)
         assertEquals(publicTestUser.username, authenticatedUser.user.username)
         assertEquals(publicTestUser.email, authenticatedUser.user.email)
-        assertTrue(usersDomain.verifyPassword(newPassword, authenticatedUser.user.passwordHash))
-        assertNotEquals(publicTestUser.passwordHash, authenticatedUser.user.passwordHash)
     }
 
     @Test
-    fun `Try to reset password with different passwords and fail`() {
+    fun `Try to reset password with different passwords and fails with code 400`() {
         // given an existing user
         val user = publicTestUser
 
         // when trying to reset the password with different passwords
-        client.patch().uri(api(Uris.User.USER_RESET_PASSWORD))
-            .bodyValue(
-                mapOf(
-                    "email" to user.email,
-                    "newPassword" to generateSecurePassword(),
-                    "confirmPassword" to generateSecurePassword()
-                )
-            )
-            .exchange()
-            .expectStatus().isBadRequest // then the password is not reset
+        val newPassword = generateSecurePassword()
+        val error = patch<Problem>(
+            client,
+            api(Uris.User.USER_RESET_PASSWORD),
+            mapOf(
+                "email" to user.email,
+                "newPassword" to newPassword,
+                "confirmPassword" to generateSecurePassword()
+            ),
+            HttpStatus.BAD_REQUEST
+        )
+
+        // then the password is not reset and an error is returned
+        assertNotNull(error)
+        val errorBody = getBody(error)
+        assertNotNull(errorBody)
+        assertEquals(PasswordsDoNotMatch().message, errorBody.detail)
     }
 
     @Test
@@ -597,34 +619,26 @@ class UserControllerTest : HttpTest() {
         val newIntolerances = listOf(Intolerance.SOY)
         val newDiets = listOf(Diet.WHOLE30)
 
-        val user = client.patch().uri(api(Uris.User.USER))
-            .header("Authorization", "Bearer $token")
-            .bodyValue(
-                mapOf(
-                    "username" to newUsername,
-                    "email" to newEmail,
-                    "country" to newCountry,
-                    "password" to newPassword,
-                    "confirmPassword" to newPassword,
-                    "privacy" to true,
-                    "intolerances" to newIntolerances,
-                    "diet" to newDiets
-                )
-            )
-            .exchange()
-            .expectStatus().isOk
-            .expectBody<UpdateUserOutputModel>()
-            .returnResult()
-            .responseBody
+        val updatedUser = updateUser(
+            token = token,
+            username = newUsername,
+            email = newEmail,
+            country = newCountry,
+            password = newPassword,
+            confirmPassword = newPassword,
+            privacy = true,
+            intolerances = newIntolerances,
+            diets = newDiets
+        )
 
         // then the user is updated successfully
-        assertNotNull(user)
-        assertEquals(newUsername, user.username)
-        assertEquals(newEmail, user.email)
-        assertEquals(newCountry, user.country)
-        assertTrue(user.privacy)
-        assertEquals(newIntolerances, user.intolerances)
-        assertEquals(newDiets, user.diet)
+        assertNotNull(updatedUser)
+        assertEquals(newUsername, updatedUser.userInfo.username)
+        assertEquals(newEmail, updatedUser.userInfo.email)
+        assertEquals(newCountry, updatedUser.userInfo.country)
+        assertTrue(updatedUser.userInfo.privacy)
+        assertEquals(newIntolerances, updatedUser.userInfo.intolerances)
+        assertEquals(newDiets, updatedUser.userInfo.diets)
 
         // when logging out
         logout(token)
@@ -637,11 +651,10 @@ class UserControllerTest : HttpTest() {
         val authenticatedUser = getUser(newToken)
         assertNotNull(authenticatedUser)
         assertEquals(newUsername, authenticatedUser.user.username)
-        assertTrue(usersDomain.verifyPassword(newPassword, authenticatedUser.user.passwordHash))
     }
 
     @Test
-    fun `Try to update user with existing username or email and fail`() {
+    fun `Try to update user with existing username or email and fails with code 400`() {
         // given information for a new user
         val username = generateRandomUsername()
         val email = generateEmail(username)
@@ -654,42 +667,60 @@ class UserControllerTest : HttpTest() {
         val existingUser = publicTestUser
 
         // when trying to update the user with an existing username
-        client.patch().uri(api(Uris.User.USER))
-            .header("Authorization", "Bearer $token")
-            .bodyValue(
-                mapOf(
-                    "username" to existingUser.username
-                )
-            )
-            .exchange()
-            .expectStatus().isBadRequest // then the user is not updated
+        val usernameError = patch<Problem>(
+            client,
+            api(Uris.User.USER),
+            mapOf(
+                "username" to existingUser.username
+            ),
+            HttpStatus.BAD_REQUEST,
+            token
+        )
+
+        // then the user is not updated
+        assertNotNull(usernameError)
+        val usernameErrorBody = getBody(usernameError)
+        assertNotNull(usernameErrorBody)
+        assertEquals(UserAlreadyExists().message, usernameErrorBody.detail)
 
         // when trying to update the user with an existing email
-        client.patch().uri(api(Uris.User.USER))
-            .header("Authorization", "Bearer $token")
-            .bodyValue(
-                mapOf(
-                    "email" to existingUser.email
-                )
-            )
-            .exchange()
-            .expectStatus().isBadRequest // then the user is not updated
+        val emailError = patch<Problem>(
+            client,
+            api(Uris.User.USER),
+            mapOf(
+                "email" to existingUser.email
+            ),
+            HttpStatus.BAD_REQUEST,
+            token
+        )
+
+        // then the user is not updated
+        assertNotNull(emailError)
+        val emailErrorBody = getBody(emailError)
+        assertNotNull(emailErrorBody)
+        assertEquals(UserAlreadyExists().message, emailErrorBody.detail)
 
         // when trying to update the user with an existing username and email
-        client.patch().uri(api(Uris.User.USER))
-            .header("Authorization", "Bearer $token")
-            .bodyValue(
-                mapOf(
-                    "username" to existingUser.username,
-                    "email" to existingUser.email
-                )
-            )
-            .exchange()
-            .expectStatus().isBadRequest // then the user is not updated
+        val error = patch<Problem>(
+            client,
+            api(Uris.User.USER),
+            mapOf(
+                "username" to existingUser.username,
+                "email" to existingUser.email
+            ),
+            HttpStatus.BAD_REQUEST,
+            token
+        )
+
+        // then the user is not updated
+        assertNotNull(error)
+        val errorBody = getBody(error)
+        assertNotNull(errorBody)
+        assertEquals(UserAlreadyExists().message, errorBody.detail)
     }
 
     @Test
-    fun `Try to update user with invalid country and fail`() {
+    fun `Try to update user with invalid country and fails with code 400`() {
         // given information for a new user
         val username = generateRandomUsername()
         val email = generateEmail(username)
@@ -699,19 +730,25 @@ class UserControllerTest : HttpTest() {
         assertNotNull(token)
 
         // when updating the user with an invalid country
-        client.patch().uri(api(Uris.User.USER))
-            .header("Authorization", "Bearer $token")
-            .bodyValue(
-                mapOf(
-                    "country" to "XX"
-                )
-            )
-            .exchange()
-            .expectStatus().isBadRequest // then the user is not updated
+        val error = patch<Problem>(
+            client,
+            api(Uris.User.USER),
+            mapOf(
+                "country" to "XX"
+            ),
+            HttpStatus.BAD_REQUEST,
+            token
+        )
+
+        // then the user is not updated
+        assertNotNull(error)
+        val errorBody = getBody(error)
+        assertNotNull(errorBody)
+        assertEquals(InvalidCountry().message, errorBody.detail)
     }
 
     @Test
-    fun `Try to update user with different passwords and fail`() {
+    fun `Try to update user with different passwords and fails with code 400`() {
         // given information for a new user
         val username = generateRandomUsername()
         val email = generateEmail(username)
@@ -721,17 +758,23 @@ class UserControllerTest : HttpTest() {
         assertNotNull(token)
 
         // when updating the user with different passwords
-        client.patch().uri(api(Uris.User.USER))
-            .header("Authorization", "Bearer $token")
-            .bodyValue(
-                mapOf(
-                    "password" to generateSecurePassword(),
-                    "confirmPassword" to generateSecurePassword()
-                )
-            )
-            .exchange()
-            .expectStatus().isBadRequest // then the user is not updated
-    }*/
+        val error = patch<Problem>(
+            client,
+            api(Uris.User.USER),
+            mapOf(
+                "password" to password,
+                "confirmPassword" to generateSecurePassword()
+            ),
+            HttpStatus.BAD_REQUEST,
+            token
+        )
+
+        // then the user is not updated
+        assertNotNull(error)
+        val errorBody = getBody(error)
+        assertNotNull(errorBody)
+        assertEquals(PasswordsDoNotMatch().message, errorBody.detail)
+    }
 
     @Test
     fun `Follow a public user, unfollows him and then retrieve its followers and following successfully`() {

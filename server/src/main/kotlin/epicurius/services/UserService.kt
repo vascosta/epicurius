@@ -133,7 +133,7 @@ class UserService(
                     userUpdate.password?.let { password -> userDomain.encodePassword(password) },
                     userUpdate.privacy,
                     userUpdate.intolerances?.map { intolerance -> Intolerance.toInt(intolerance) },
-                    userUpdate.diet?.map { diet -> Diet.toInt(diet) }
+                    userUpdate.diets?.map { diet -> Diet.toInt(diet) }
                 )
             ).toUserInfo()
         }
