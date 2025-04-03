@@ -30,7 +30,7 @@ create table dbo.fridge(
     expiration_date date not null,
     primary key (owner_id, entry_number),
     foreign key (owner_id) references dbo.user(id)
-)
+);
 
 --create table recipe(
   --  id serial primary key,
@@ -48,3 +48,21 @@ create table dbo.fridge(
  --   carbs int
  --   foreign key (user) references user(id)
 --);
+
+create or replace function delete_product_with_no_quantity()
+    returns trigger as
+$$
+begin
+    if new.quantity = 0 then
+        delete from dbo.fridge
+        where owner_id = new.owner_id and entry_number = new.entry_number;
+    end if;
+    return null;
+end;
+$$ language plpgsql;
+
+create trigger trg_delete_product_with_no_quantity
+    after insert or update
+    on dbo.fridge
+    for each row
+execute function delete_product_with_no_quantity();
