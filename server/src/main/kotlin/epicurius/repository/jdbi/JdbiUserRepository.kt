@@ -113,7 +113,7 @@ class JdbiUserRepository(private val handle: Handle) : UserPostgresRepository {
                     privacy = COALESCE(:privacy, privacy),
                     intolerances = COALESCE(:intolerances, intolerances),
                     diets = COALESCE(:diets, diets),
-                    profile_picture_name = COALESCE(:profile_picture_name, profile_picture_name)
+                    profile_picture_name = :profile_picture_name
                 WHERE username = :username
                 RETURNING *
             """

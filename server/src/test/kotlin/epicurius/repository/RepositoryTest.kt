@@ -62,6 +62,9 @@ open class RepositoryTest : EpicuriusTest() {
         fun cancelFollowRequest(userId: Int, userIdToCancelFollowRequest: Int) =
             tm.run { it.userRepository.cancelFollowRequest(userId, userIdToCancelFollowRequest) }
 
+        fun deleteProfilePicture(profilePictureName: String) =
+            cs.userCloudStorageRepository.deleteProfilePicture(profilePictureName)
+
         fun deleteToken(username: String? = null, email: String? = null) =
             tm.run { it.tokenRepository.deleteToken(username, email) }
 

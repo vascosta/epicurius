@@ -146,14 +146,18 @@ class UserController(val userService: UserService) {
     @PatchMapping(Uris.User.USER_PICTURE)
     fun updateProfilePicture(
         authenticatedUser: AuthenticatedUser,
-        @RequestPart("profilePicture") profilePicture: MultipartFile
+        @RequestPart("profilePicture", required = false) profilePicture: MultipartFile?
     ): ResponseEntity<*> {
         val newProfilePicture = userService.updateProfilePicture(
             authenticatedUser.user.username,
             authenticatedUser.user.profilePictureName,
             profilePicture
         )
-        return ResponseEntity.ok().body(UpdateProfilePictureOutputModel(newProfilePicture))
+        return if (newProfilePicture == null) {
+            ResponseEntity.noContent().build<Unit>()
+        } else {
+            ResponseEntity.ok().body(UpdateProfilePictureOutputModel(newProfilePicture))
+        }
     }
 
     @PatchMapping(Uris.User.USER_RESET_PASSWORD)

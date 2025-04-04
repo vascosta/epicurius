@@ -141,21 +141,31 @@ class UserService(
         }
     }
 
-    fun updateProfilePicture(username: String, profilePictureName: String? = null, profilePicture: MultipartFile): String {
-        userDomain.validateProfilePicture(profilePicture)
-        if (profilePictureName == null) {
-            val newProfilePictureName = UUID.randomUUID().toString()
-            cs.userCloudStorageRepository.updateProfilePicture(newProfilePictureName, profilePicture)
-            tm.run {
-                it.userRepository.updateUser(
-                    username,
-                    UpdateUserInfo(profilePictureName = newProfilePictureName)
-                )
+    fun updateProfilePicture(username: String, profilePictureName: String? = null, profilePicture: MultipartFile?): String? {
+        return when {
+            profilePictureName == null && profilePicture != null -> { // add new profile picture
+                userDomain.validateProfilePicture(profilePicture)
+                val newProfilePictureName = UUID.randomUUID().toString()
+
+                cs.userCloudStorageRepository.updateProfilePicture(newProfilePictureName, profilePicture)
+                tm.run {
+                    it.userRepository.updateUser(username, UpdateUserInfo(profilePictureName = newProfilePictureName))
+                }
+                newProfilePictureName
             }
-            return newProfilePictureName
-        } else {
-            cs.userCloudStorageRepository.updateProfilePicture(profilePictureName, profilePicture)
-            return profilePictureName
+
+            profilePictureName != null && profilePicture != null -> { // update profile picture
+                userDomain.validateProfilePicture(profilePicture)
+                cs.userCloudStorageRepository.updateProfilePicture(profilePictureName, profilePicture)
+                profilePictureName
+            }
+
+            profilePictureName != null && profilePicture == null -> { // remove profile picture
+                removeProfilePicture(username, profilePictureName)
+                null
+            }
+
+            else -> null
         }
     }
 
@@ -200,6 +210,11 @@ class UserService(
         tm.run {
             it.userRepository.unfollowUser(userId, userToUnfollow.id)
         }
+    }
+
+    private fun removeProfilePicture(username: String, profilePictureName: String) {
+        cs.userCloudStorageRepository.deleteProfilePicture(profilePictureName)
+        tm.run { it.userRepository.updateUser(username, UpdateUserInfo(profilePictureName = null)) }
     }
 
     private fun cancelFollowRequest(userId: Int, usernameToCancelFollow: String) {

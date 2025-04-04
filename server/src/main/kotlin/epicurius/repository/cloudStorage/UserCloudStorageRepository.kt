@@ -9,12 +9,12 @@ import org.springframework.web.multipart.MultipartFile
 
 class UserCloudStorageRepository(private val cloudStorage: Storage) : UserCloudStorageRepository {
     override fun getProfilePicture(profilePictureName: String): ByteArray {
-        val blob = getBlob(profilePictureName, USERS_PROFILE_PICTURES_BUCKET)
+        val blob = getBlob(profilePictureName)
         return blob.getContent()
     }
 
     override fun updateProfilePicture(profilePictureName: String, profilePicture: MultipartFile) {
-        val profilePictureBlobId = createBlobId(profilePictureName, USERS_PROFILE_PICTURES_BUCKET)
+        val profilePictureBlobId = createBlobId(profilePictureName)
 
         val newProfilePicture = createBlobInfo(
             profilePictureBlobId,
@@ -23,9 +23,17 @@ class UserCloudStorageRepository(private val cloudStorage: Storage) : UserCloudS
         cloudStorage.create(newProfilePicture, profilePicture.bytes)
     }
 
-    private fun getBlob(objectName: String, bucketName: String): Blob = cloudStorage.get(bucketName, objectName)
+    override fun deleteProfilePicture(profilePictureName: String) {
+        val blob = getBlob(profilePictureName)
 
-    private fun createBlobId(objectName: String, bucketName: String) = BlobId.of(bucketName, objectName)
+        if (blob.exists()) {
+            blob.delete()
+        }
+    }
+
+    private fun getBlob(objectName: String): Blob = cloudStorage.get(USERS_PROFILE_PICTURES_BUCKET, objectName)
+
+    private fun createBlobId(objectName: String) = BlobId.of(USERS_PROFILE_PICTURES_BUCKET, objectName)
 
     private fun createBlobInfo(blobId: BlobId, contentType: String) =
         BlobInfo.newBuilder(blobId).setContentType(contentType).build()

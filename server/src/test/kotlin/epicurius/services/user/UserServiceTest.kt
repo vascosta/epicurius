@@ -63,12 +63,13 @@ class UserServiceTest : ServiceTest() {
     }
 
     @Test
-    fun `Add a profile picture to an user and then retrieves the user profile successfully`() {
+    fun `Add a profile picture to an user, retrieves the user profile and then delete the profile picture successfully`() {
         // given an existing user
         val user = publicTestUser
 
         // when adding a profile picture
-        updateProfilePicture(user.username, profilePicture = testProfilePicture)
+        val profilePictureName = updateProfilePicture(user.username, profilePicture = testProfilePicture)
+        assertNotNull(profilePictureName)
 
         // then the user profile is retrieved successfully with the new profile picture
         val userProfile = getUserProfile(user.username)
@@ -79,22 +80,30 @@ class UserServiceTest : ServiceTest() {
         assertContentEquals(testProfilePicture.bytes, userProfile.profilePicture)
         assertTrue(userProfile.followers.isEmpty())
         assertTrue(userProfile.following.isEmpty())
+
+        // when deleting the profile picture
+        val deletedProfilePictureName = updateProfilePicture(user.username, profilePictureName)
+
+        // then the profile picture is deleted successfully
+        assertNull(deletedProfilePictureName)
+        val userProfileAfterProfilePictureDeletion = getUserProfile(user.username)
+        assertNull(userProfileAfterProfilePictureDeletion.profilePicture)
     }
 
     @Test
     fun `Update the profile picture of an user and then retrieves it successfully`() {
-        // given an existing user
+        // given an existing user with a profile picture
         val user = publicTestUser
         val profilePictureName = updateProfilePicture(user.username, profilePicture = testProfilePicture)
 
         // when updating the profile picture
         val newProfilePictureName = updateProfilePicture(user.username, profilePictureName, testProfilePicture2)
+        assertNotNull(newProfilePictureName)
 
         // then the user profile is retrieved successfully with the new profile picture
         val updatedProfilePicture = getProfilePicture(newProfilePictureName)
 
         assertEquals(profilePictureName, newProfilePictureName)
-        assertContentEquals(testProfilePicture2.bytes, getProfilePicture(profilePictureName))
         assertContentEquals(testProfilePicture2.bytes, updatedProfilePicture)
     }
 

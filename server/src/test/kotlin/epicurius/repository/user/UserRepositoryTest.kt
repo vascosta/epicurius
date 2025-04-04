@@ -12,12 +12,13 @@ import java.util.UUID
 import kotlin.test.Test
 import kotlin.test.assertContentEquals
 import kotlin.test.assertEquals
+import kotlin.test.assertFailsWith
 import kotlin.test.assertNotNull
 
 class UserRepositoryTest : RepositoryTest() {
 
     @Test
-    fun `Adds a profile picture to the Cloud Storage and then retrieves it successfully`() {
+    fun `Adds a profile picture to the Cloud Storage, retrieves it and then deletes it successfully`() {
         // given a profile picture
         val profilePicture = testProfilePicture
         val profilePictureName = UUID.randomUUID().toString()
@@ -29,6 +30,12 @@ class UserRepositoryTest : RepositoryTest() {
         val newProfilePicture = getProfilePicture(profilePictureName)
         assertNotNull(newProfilePicture)
         assertContentEquals(profilePicture.bytes, newProfilePicture)
+
+        // when deleting the profile picture
+        deleteProfilePicture(profilePictureName)
+
+        // then the profile picture is deleted successfully
+        assertFailsWith<NullPointerException> { getProfilePicture(profilePictureName) }
     }
 
     @Test

@@ -5,7 +5,6 @@ import epicurius.domain.exceptions.FollowRequestNotFound
 import epicurius.domain.exceptions.UserAlreadyBeingFollowed
 import epicurius.domain.exceptions.UserNotFollowed
 import epicurius.domain.exceptions.UserNotFound
-import epicurius.domain.user.FollowRequestType
 import epicurius.domain.user.FollowUser
 import epicurius.domain.user.FollowingUser
 import epicurius.domain.user.User

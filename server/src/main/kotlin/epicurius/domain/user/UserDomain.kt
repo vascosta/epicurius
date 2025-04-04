@@ -31,7 +31,7 @@ class UserDomain(
     fun hashToken(token: String): String = tokenEncoder.hash(token)
 
     fun validateProfilePicture(profilePicture: MultipartFile) {
-        if (!SUPPORTED_IMAGE_TYPES.contains(profilePicture.contentType) || profilePicture.contentType == null) {
+        if (!SUPPORTED_IMAGE_TYPES.contains(profilePicture.contentType)) {
             throw IllegalArgumentException("Unsupported image type")
         }
 

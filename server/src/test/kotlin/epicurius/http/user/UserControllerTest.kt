@@ -24,6 +24,7 @@ import kotlin.test.assertContentEquals
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertNotNull
+import kotlin.test.assertNull
 import kotlin.test.assertTrue
 
 class UserControllerTest : HttpTest() {
@@ -251,7 +252,7 @@ class UserControllerTest : HttpTest() {
     }
 
     @Test
-    fun `Add a profile picture to an user and then retrieves the user profile successfully with code 200`() {
+    fun `Add a profile picture to an user, retrieves the user profile and then deletes the profile picture successfully with code 204`() {
         // given an existing logged-in user
         val userToken = publicTestUserToken
 
@@ -265,6 +266,19 @@ class UserControllerTest : HttpTest() {
         assertNotNull(userProfileBody)
         assertContentEquals(testProfilePicture.bytes, userProfileBody.userProfile.profilePicture)
         assertEquals(userProfileBody.userProfile.username, publicTestUsername)
+
+        // when deleting the profile picture
+        val deleteProfilePictureResult = client.patch().uri(api(Uris.User.USER_PICTURE))
+            .header("Authorization", "Bearer $userToken")
+            .exchange()
+            .expectStatus().isEqualTo(HttpStatus.NO_CONTENT)
+
+        assertNotNull(deleteProfilePictureResult)
+
+        // then the picture was deleted successfully
+        val userProfileBodyAfterDelete = getUserProfile(userToken, publicTestUsername)
+        assertNotNull(userProfileBodyAfterDelete)
+        assertNull(userProfileBodyAfterDelete.userProfile.profilePicture)
     }
 
     @Test
