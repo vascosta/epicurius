@@ -42,7 +42,7 @@ open class RepositoryTest : EpicuriusTest() {
                         userUpdate.passwordHash,
                         userUpdate.privacy,
                         userUpdate.intolerances,
-                        userUpdate.diet
+                        userUpdate.diets
                     )
                 )
             }

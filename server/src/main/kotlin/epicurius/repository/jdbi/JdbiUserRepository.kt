@@ -13,8 +13,8 @@ class JdbiUserRepository(private val handle: Handle) : UserPostgresRepository {
     override fun createUser(username: String, email: String, country: String, passwordHash: String) {
         handle.createUpdate(
             """
-               INSERT INTO dbo.user(username, email, password_hash, country, privacy, intolerances, diet)
-               VALUES (:username, :email, :password_hash, :country, :privacy, :intolerances, :diet)
+               INSERT INTO dbo.user(username, email, password_hash, country, privacy, intolerances, diets)
+               VALUES (:username, :email, :password_hash, :country, :privacy, :intolerances, :diets)
             """
         )
             .bind("username", username)
@@ -23,7 +23,7 @@ class JdbiUserRepository(private val handle: Handle) : UserPostgresRepository {
             .bind("country", country)
             .bind("privacy", false) // user is created with a public profile
             .bind("intolerances", emptyArray<Int>())
-            .bind("diet", emptyArray<Int>())
+            .bind("diets", emptyArray<Int>())
             .execute()
     }
 
@@ -112,7 +112,7 @@ class JdbiUserRepository(private val handle: Handle) : UserPostgresRepository {
                     password_hash = COALESCE(:password_hash, password_hash),
                     privacy = COALESCE(:privacy, privacy),
                     intolerances = COALESCE(:intolerances, intolerances),
-                    diet = COALESCE(:diet, diet),
+                    diets = COALESCE(:diets, diets),
                     profile_picture_name = COALESCE(:profile_picture_name, profile_picture_name)
                 WHERE username = :username
                 RETURNING *
@@ -124,7 +124,7 @@ class JdbiUserRepository(private val handle: Handle) : UserPostgresRepository {
             .bind("password_hash", userUpdate.passwordHash)
             .bind("privacy", userUpdate.privacy)
             .bind("intolerances", userUpdate.intolerances?.toTypedArray())
-            .bind("diet", userUpdate.diet?.toTypedArray())
+            .bind("diets", userUpdate.diets?.toTypedArray())
             .bind("profile_picture_name", userUpdate.profilePictureName)
             .bind("username", username)
             .mapTo<User>()

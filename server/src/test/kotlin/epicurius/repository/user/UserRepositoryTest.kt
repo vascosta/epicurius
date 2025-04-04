@@ -72,7 +72,7 @@ class UserRepositoryTest : RepositoryTest() {
                 passwordHash = newPasswordHash,
                 privacy = newPrivacy,
                 intolerances = newIntolerances.map { Intolerance.entries.indexOf(it) },
-                diet = newDiet.map { Diet.entries.indexOf(it) }
+                diets = newDiet.map { Diet.entries.indexOf(it) }
             )
         )
 

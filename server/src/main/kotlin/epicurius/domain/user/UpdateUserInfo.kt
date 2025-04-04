@@ -7,6 +7,6 @@ data class UpdateUserInfo(
     val passwordHash: String? = null,
     val privacy: Boolean? = null,
     val intolerances: List<Int>? = null,
-    val diet: List<Int>? = null,
+    val diets: List<Int>? = null,
     val profilePictureName: String? = null
 )
