@@ -233,6 +233,35 @@ class FridgeControllerTest : HttpTest() {
     }
 
     @Test
+    fun `Open that already exists in the fridge with the same expiration date successfully with code 200`() {
+        // given a user token
+        val token = testUserToken
+
+        // when adding a product
+        val expirationDate = Date.from(
+            LocalDate.now().plusDays(7).atStartOfDay(ZoneId.systemDefault()).toInstant()
+        )
+        val newFridgeBody = getBody(addProducts(token, "orange", 2, null, expirationDate))
+
+        // and opening the product
+        val openDate = Date.from(
+            LocalDate.now().atStartOfDay(ZoneId.systemDefault()).toInstant()
+        )
+        val duration = Period.ofDays(3)
+        openFridgeProduct(token, newFridgeBody.products.first().entryNumber, openDate, duration)
+        val openProductBody = getBody(
+            openFridgeProduct(token, newFridgeBody.products.first().entryNumber, openDate, duration)
+        )
+
+        // then the fridge should contain the updated product
+        assertNotNull(openProductBody)
+        assertTrue(openProductBody.products.isNotEmpty())
+        assertTrue(openProductBody.products.first().productName == "orange")
+        assertTrue(openProductBody.products.first().quantity == 2)
+        assertNotNull(openProductBody.products.first().openDate)
+    }
+
+    @Test
     fun `Try to open product but entry number is invalid, fails with 404`() {
         // given a user token
         val token = testUserToken

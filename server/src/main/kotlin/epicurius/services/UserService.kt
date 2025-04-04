@@ -119,9 +119,6 @@ class UserService(
             if (!countriesDomain.checkIfCodeIsValid(userUpdate.country)) throw InvalidCountry()
 
         if (userUpdate.password != null) {
-            if (userUpdate.confirmPassword == null) {
-                throw PasswordsDoNotMatch()
-            }
             checkIfPasswordsMatch(userUpdate.password, userUpdate.confirmPassword)
         }
 
@@ -257,7 +254,7 @@ class UserService(
     private fun checkIfUserAlreadySentFollowRequest(userId: Int, followerId: Int) =
         tm.run { it.userRepository.checkIfUserAlreadySentFollowRequest(userId, followerId) }
 
-    private fun checkIfPasswordsMatch(password: String, confirmPassword: String) {
+    private fun checkIfPasswordsMatch(password: String, confirmPassword: String?) {
         if (password != confirmPassword) throw PasswordsDoNotMatch()
     }
 }

@@ -45,8 +45,8 @@ create table dbo.recipe(
     calories int,
     protein int,
     fat int,
-    carbs int
-    foreign key (author_id) references user(id)
+    carbs int,
+    foreign key (author_id) references dbo.user(id)
 );
 
 create table dbo.recipe_rating(
@@ -54,8 +54,8 @@ create table dbo.recipe_rating(
     user_id int not null, -- cannot be the same as the author
     rating int not null,
     primary key (recipe_id, user_id),
-    foreign key (recipe_id) references recipe(id),
-    foreign key (user_id) references user(id)
+    foreign key (recipe_id) references dbo.recipe(id),
+    foreign key (user_id) references dbo.user(id)
 );
 
 create table dbo.ingredients(
@@ -64,7 +64,7 @@ create table dbo.ingredients(
     name varchar(50) not null,
     quantity int not null,
     unit varchar(20) not null,
-    foreign key (recipe_id) references recipe(id)
+    foreign key (recipe_id) references dbo.recipe(id)
 );
 
 create table dbo.collections(
@@ -73,8 +73,8 @@ create table dbo.collections(
     collection_name varchar(20) not null,
     collection_type int not null, -- favourite or kitchen book
     primary key (user_id, recipe_id, collection_name),
-    foreign key (user_id) references user(id),
-    foreign key (recipe_id) references recipe(id)
+    foreign key (user_id) references dbo.user(id),
+    foreign key (recipe_id) references dbo.recipe(id)
 );
 
 -- TODO MEAL PLANING TABLE
