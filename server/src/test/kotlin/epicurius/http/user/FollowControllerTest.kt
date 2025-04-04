@@ -10,6 +10,7 @@ import epicurius.domain.user.FollowingUser
 import epicurius.http.HttpTest
 import epicurius.http.utils.Problem
 import epicurius.http.utils.Uris
+import epicurius.http.utils.delete
 import epicurius.http.utils.getBody
 import epicurius.http.utils.patch
 import epicurius.utils.createTestUser
@@ -113,8 +114,8 @@ class FollowControllerTest : HttpTest() {
         // when trying to follow a non-existing user
         val error = patch<Problem>(
             client,
-            api(Uris.User.USER_FOLLOW),
-            body = mapOf("username" to "nonExistingUser"),
+            api(Uris.User.USER_FOLLOW.replace("{username}", "nonExistingUser")),
+            body = "",
             responseStatus = HttpStatus.NOT_FOUND,
             token = userToken
         )
@@ -137,8 +138,8 @@ class FollowControllerTest : HttpTest() {
 
         val error = patch<Problem>(
             client,
-            api(Uris.User.USER_FOLLOW),
-            body = mapOf("username" to publicUser2.username),
+            api(Uris.User.USER_FOLLOW.replace("{username}", publicUser2.username)),
+            body = "",
             responseStatus = HttpStatus.BAD_REQUEST,
             token = userToken
         )
@@ -167,8 +168,8 @@ class FollowControllerTest : HttpTest() {
 
         val error = patch<Problem>(
             client,
-            api(Uris.User.USER_FOLLOW),
-            body = mapOf("username" to privateUsername),
+            api(Uris.User.USER_FOLLOW.replace("{username}", privateUsername)),
+            body = "",
             responseStatus = HttpStatus.BAD_REQUEST,
             token = userToken
         )
@@ -187,8 +188,8 @@ class FollowControllerTest : HttpTest() {
         // when trying to unfollow a non-existing user
         val error = patch<Problem>(
             client,
-            api(Uris.User.USER_UNFOLLOW),
-            body = mapOf("username" to "nonExistingUser"),
+            api(Uris.User.USER_FOLLOW.replace("{username}", "nonExistingUser")),
+            body = "",
             responseStatus = HttpStatus.NOT_FOUND,
             token = userToken
         )
@@ -207,10 +208,9 @@ class FollowControllerTest : HttpTest() {
         val publicUser2 = createTestUser(tm)
 
         // when unfollowing a user that is not being followed
-        val error = patch<Problem>(
+        val error = delete<Problem>(
             client,
-            api(Uris.User.USER_UNFOLLOW),
-            body = mapOf("username" to publicUser2.username),
+            api(Uris.User.USER_FOLLOW.replace("{username}", publicUser2.username)),
             responseStatus = HttpStatus.BAD_REQUEST,
             token = userToken
         )
@@ -229,8 +229,8 @@ class FollowControllerTest : HttpTest() {
         // when trying to cancel a follow request to a non-existing user
         val error = patch<Problem>(
             client,
-            api(Uris.User.USER_FOLLOW_REQUESTS),
-            body = mapOf("username" to "nonExistingUser"),
+            api(Uris.User.USER_FOLLOW_REQUEST.replace("{username}", "nonExistingUser") + "?type=CANCEL"),
+            body = "",
             responseStatus = HttpStatus.NOT_FOUND,
             token = userToken
         )
@@ -251,8 +251,8 @@ class FollowControllerTest : HttpTest() {
         // when cancelling a non-existing follow request
         val error = patch<Problem>(
             client,
-            api(Uris.User.USER_FOLLOW_REQUESTS),
-            body = mapOf("username" to publicUser2.username),
+            api(Uris.User.USER_FOLLOW_REQUEST.replace("{username}", publicUser2.username) + "?type=CANCEL"),
+            body = "",
             responseStatus = HttpStatus.NOT_FOUND,
             token = userToken
         )

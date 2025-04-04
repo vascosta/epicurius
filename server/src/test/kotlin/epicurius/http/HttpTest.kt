@@ -42,10 +42,10 @@ class HttpTest : EpicuriusTest() {
     // USER
     fun getUser(token: String) = get<GetUserOutputModel>(client, api(Uris.User.USER), token = token)
 
-    fun getUserProfile(token: String, username: String = "") =
+    fun getUserProfile(token: String, username: String) =
         get<GetUserProfileOutputModel>(
             client,
-            api(Uris.User.USER_PROFILE + "?username=$username"),
+            api(Uris.User.USER_PROFILE.replace("{username}", username)),
             token = token
         )
 
@@ -68,7 +68,11 @@ class HttpTest : EpicuriusTest() {
         get<GetFollowingOutputModel>(client, api(Uris.User.USER_FOLLOWING), token = token)
 
     fun getFollowRequests(token: String) =
-        get<GetFollowRequestsOutputModel>(client, api(Uris.User.USER_FOLLOW_REQUESTS), token = token)
+        get<GetFollowRequestsOutputModel>(
+            client,
+            api(Uris.User.USER_FOLLOW_REQUESTS),
+            token = token
+        )
 
     fun signUp(username: String, email: String, country: String, password: String): String {
         val result = post<Unit>(
@@ -139,7 +143,7 @@ class HttpTest : EpicuriusTest() {
     ): UpdateProfilePictureOutputModel? {
         val result = patchMultiPart<UpdateProfilePictureOutputModel>(
             client,
-            api(Uris.User.USER_PROFILE_PICTURE),
+            api(Uris.User.USER_PICTURE),
             BodyInserters.fromMultipartData("profilePicture", profilePicture.resource),
             responseStatus = HttpStatus.OK,
             token = token
@@ -161,15 +165,29 @@ class HttpTest : EpicuriusTest() {
     }
 
     fun follow(token: String, username: String) {
-        patch<Unit>(client, api(Uris.User.USER_FOLLOW), body = mapOf("username" to username), token = token)
+        patch<Unit>(
+            client,
+            api(Uris.User.USER_FOLLOW.replace("{username}", username)),
+            body = "",
+            token = token
+        )
     }
 
     fun unfollow(token: String, username: String) {
-        patch<Unit>(client, api(Uris.User.USER_UNFOLLOW), body = mapOf("username" to username), token = token)
+        delete<Unit>(
+            client,
+            api(Uris.User.USER_FOLLOW.replace("{username}", username)),
+            token = token
+        )
     }
 
     fun cancelFollowRequest(token: String, username: String) {
-        patch<Unit>(client, api(Uris.User.USER_FOLLOW_REQUESTS), body = mapOf("username" to username), token = token)
+        patch<Unit>(
+            client,
+            api(Uris.User.USER_FOLLOW_REQUEST.replace("{username}", username) + "?type=CANCEL"),
+            body = "",
+            token = token
+        )
     }
 
     // FRIDGE

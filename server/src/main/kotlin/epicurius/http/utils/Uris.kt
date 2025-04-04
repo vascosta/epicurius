@@ -8,18 +8,22 @@ object Uris {
         const val SIGNUP = "/signup"
         const val LOGIN = "/login"
         const val LOGOUT = "/logout"
+
         const val USER = "/user"
+        const val USER_PICTURE = "/user/picture"
         const val USER_INTOLERANCES = "/user/intolerances"
         const val USER_DIETS = "/user/diets"
-        const val USER_RESET_PASSWORD = "/user/resetPassword"
-        const val USER_PROFILE = "/user/profile"
-        const val USER_PROFILE_PICTURE = "/user/profile/picture"
-        const val USERS = "/users"
-        const val USER_FOLLOW = "/user/follow"
-        const val USER_UNFOLLOW = "/user/unfollow"
-        const val USER_FOLLOW_REQUESTS = "/user/follow/requests"
-        const val USER_FOLLOWERS = "/user/followers"
-        const val USER_FOLLOWING = "/user/following"
+        const val USER_RESET_PASSWORD = "/user/password" // PATCH
+
+        const val USERS = "/users" // GET
+        const val USER_PROFILE = "/users/profiles/{username}" // GET
+
+        const val USER_FOLLOW = "/user/follow/{username}" // PATCH and DELETE for unfollow
+        const val USER_FOLLOW_REQUEST = "/user/follow-requests/{username}" // PATCH
+
+        const val USER_FOLLOW_REQUESTS = "/user/follow-requests" // GET
+        const val USER_FOLLOWERS = "/user/followers" // GET
+        const val USER_FOLLOWING = "/user/following" // GET
     }
 
     object Fridge {

@@ -2,13 +2,11 @@ package epicurius.http.user
 
 import epicurius.domain.PagingParams
 import epicurius.domain.user.AuthenticatedUser
+import epicurius.domain.user.FollowRequestType
 import epicurius.domain.user.UserProfile
-import epicurius.http.user.models.input.CancelFollowRequestInputModel
-import epicurius.http.user.models.input.FollowInputModel
 import epicurius.http.user.models.input.LoginInputModel
 import epicurius.http.user.models.input.ResetPasswordInputModel
 import epicurius.http.user.models.input.SignUpInputModel
-import epicurius.http.user.models.input.UnfollowInputModel
 import epicurius.http.user.models.input.UpdateUserInputModel
 import epicurius.http.user.models.output.GetDietsOutputModel
 import epicurius.http.user.models.output.GetFollowRequestsOutputModel
@@ -25,8 +23,10 @@ import epicurius.services.UserService
 import jakarta.servlet.http.HttpServletResponse
 import jakarta.validation.Valid
 import org.springframework.http.ResponseEntity
+import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PatchMapping
+import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
@@ -48,9 +48,9 @@ class UserController(val userService: UserService) {
     @GetMapping(Uris.User.USER_PROFILE)
     fun getUserProfile(
         authenticatedUser: AuthenticatedUser,
-        @RequestParam username: String
+        @PathVariable username: String
     ): ResponseEntity<*> {
-        return if (username.isEmpty()) {
+        return if (username == authenticatedUser.user.username) {
             val userProfilePicture = userService.getProfilePicture(authenticatedUser.user.profilePictureName)
             val followers = userService.getFollowers(authenticatedUser.user.id)
             val following = userService.getFollowing(authenticatedUser.user.id)
@@ -143,7 +143,7 @@ class UserController(val userService: UserService) {
         )
     }
 
-    @PatchMapping(Uris.User.USER_PROFILE_PICTURE)
+    @PatchMapping(Uris.User.USER_PICTURE)
     fun updateProfilePicture(
         authenticatedUser: AuthenticatedUser,
         @RequestPart("profilePicture") profilePicture: MultipartFile
@@ -165,23 +165,24 @@ class UserController(val userService: UserService) {
     }
 
     @PatchMapping(Uris.User.USER_FOLLOW)
-    fun follow(authenticatedUser: AuthenticatedUser, @Valid @RequestBody body: FollowInputModel): ResponseEntity<*> {
-        userService.follow(authenticatedUser.user.id, body.username)
+    fun follow(authenticatedUser: AuthenticatedUser, @PathVariable username: String): ResponseEntity<*> {
+        userService.follow(authenticatedUser.user.id, username)
         return ResponseEntity.noContent().build<Unit>()
     }
 
-    @PatchMapping(Uris.User.USER_UNFOLLOW)
-    fun unfollow(authenticatedUser: AuthenticatedUser, @Valid @RequestBody body: UnfollowInputModel): ResponseEntity<*> {
-        userService.unfollow(authenticatedUser.user.id, body.username)
-        return ResponseEntity.noContent().build<Unit>()
-    }
-
-    @PatchMapping(Uris.User.USER_FOLLOW_REQUESTS)
-    fun cancelFollowRequest(
+    @PatchMapping(Uris.User.USER_FOLLOW_REQUEST)
+    fun followRequest(
         authenticatedUser: AuthenticatedUser,
-        @Valid @RequestBody body: CancelFollowRequestInputModel
+        @PathVariable username: String,
+        @RequestParam type: FollowRequestType,
     ): ResponseEntity<*> {
-        userService.cancelFollowRequest(authenticatedUser.user.id, body.username)
+        userService.followRequest(authenticatedUser.user.id, username, type)
         return ResponseEntity.noContent().build<Unit>()
+    }
+
+    @DeleteMapping(Uris.User.USER_FOLLOW)
+    fun unfollow(authenticatedUser: AuthenticatedUser, @PathVariable username: String): ResponseEntity<*> {
+        userService.unfollow(authenticatedUser.user.id, username)
+        return ResponseEntity.ok().build<Unit>()
     }
 }

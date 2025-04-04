@@ -9,6 +9,7 @@ import epicurius.domain.exceptions.FollowRequestAlreadyBeenSent
 import epicurius.domain.exceptions.FollowRequestNotFound
 import epicurius.domain.exceptions.IncorrectPassword
 import epicurius.domain.exceptions.InvalidCountry
+import epicurius.domain.exceptions.InvalidFollowRequestType
 import epicurius.domain.exceptions.InvalidToken
 import epicurius.domain.exceptions.PasswordsDoNotMatch
 import epicurius.domain.exceptions.UserAlreadyBeingFollowed
@@ -17,6 +18,7 @@ import epicurius.domain.exceptions.UserAlreadyLoggedIn
 import epicurius.domain.exceptions.UserNotFollowed
 import epicurius.domain.exceptions.UserNotFound
 import epicurius.domain.user.AuthenticatedUser
+import epicurius.domain.user.FollowRequestType
 import epicurius.domain.user.FollowUser
 import epicurius.domain.user.FollowingUser
 import epicurius.domain.user.SearchUser
@@ -167,6 +169,15 @@ class UserService(
         }
     }
 
+    fun followRequest(userId: Int, username: String, type: FollowRequestType) {
+        when (type) {
+            FollowRequestType.CANCEL -> cancelFollowRequest(userId, username)
+            // "accept" -> userService.acceptFollowRequest(authenticatedUser.user.id, username)
+            // "reject" -> userService.rejectFollowRequest(authenticatedUser.user.id, username)
+            else -> throw InvalidFollowRequestType()
+        }
+    }
+
     fun follow(userId: Int, usernameToFollow: String) {
         val userToFollow = checkIfUserExists(username = usernameToFollow) ?: throw UserNotFound(usernameToFollow)
         if (checkIfUserIsBeingFollowedBy(userToFollow.id, userId)) throw UserAlreadyBeingFollowed(usernameToFollow)
@@ -191,7 +202,7 @@ class UserService(
         }
     }
 
-    fun cancelFollowRequest(userId: Int, usernameToCancelFollow: String) {
+    private fun cancelFollowRequest(userId: Int, usernameToCancelFollow: String) {
         val userToCancelFollow = checkIfUserExists(username = usernameToCancelFollow) ?: throw UserNotFound(usernameToCancelFollow)
         if (!checkIfUserAlreadySentFollowRequest(userToCancelFollow.id, userId)) throw FollowRequestNotFound(usernameToCancelFollow)
         tm.run {

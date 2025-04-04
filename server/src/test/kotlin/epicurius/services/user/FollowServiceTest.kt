@@ -5,6 +5,7 @@ import epicurius.domain.exceptions.FollowRequestNotFound
 import epicurius.domain.exceptions.UserAlreadyBeingFollowed
 import epicurius.domain.exceptions.UserNotFollowed
 import epicurius.domain.exceptions.UserNotFound
+import epicurius.domain.user.FollowRequestType
 import epicurius.domain.user.FollowUser
 import epicurius.domain.user.FollowingUser
 import epicurius.domain.user.User
@@ -73,7 +74,7 @@ class FollowServiceTest : ServiceTest() {
         assertTrue(privateUserFollowRequests.contains(FollowUser(publicUser.username, null)))
 
         // when cancelling the follow request
-        cancelFollowRequest(publicUser.id, privateUser.username)
+        followRequest(publicUser.id, privateUser.username)
 
         // then the follow request is cancelled successfully
         val privateUserFollowRequestsAfterCancel = getFollowRequests(privateUser.id)
@@ -146,7 +147,7 @@ class FollowServiceTest : ServiceTest() {
 
         // when cancelling a follow request to a non-existing user
         // then the follow request cannot be cancelled and throws UserNotFound Exception
-        assertFailsWith<UserNotFound> { cancelFollowRequest(publicUser.id, UUID.randomUUID().toString()) }
+        assertFailsWith<UserNotFound> { followRequest(publicUser.id, UUID.randomUUID().toString()) }
     }
 
     @Test
@@ -157,6 +158,6 @@ class FollowServiceTest : ServiceTest() {
 
         // when cancelling a follow request to a non-existing user
         // then the follow request cannot be cancelled and throws UserNotFound Exception
-        assertFailsWith<FollowRequestNotFound> { cancelFollowRequest(publicUser.id, privateUsername) }
+        assertFailsWith<FollowRequestNotFound> { followRequest(publicUser.id, privateUsername) }
     }
 }

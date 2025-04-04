@@ -261,7 +261,7 @@ class UserControllerTest : HttpTest() {
         assertTrue(updateProfilePictureBody.profilePictureName.isNotBlank())
 
         // then the picture was added successfully
-        val userProfileBody = getUserProfile(userToken)
+        val userProfileBody = getUserProfile(userToken, publicTestUsername)
         assertNotNull(userProfileBody)
         assertContentEquals(testProfilePicture.bytes, userProfileBody.userProfile.profilePicture)
         assertEquals(userProfileBody.userProfile.username, publicTestUsername)
@@ -280,7 +280,7 @@ class UserControllerTest : HttpTest() {
         assertNotNull(newUpdateProfilePictureBody)
 
         // then the picture was updated successfully
-        val userProfileBody = getUserProfile(userToken)
+        val userProfileBody = getUserProfile(userToken, username)
         assertNotNull(userProfileBody)
         assertEquals(newUpdateProfilePictureBody.profilePictureName, updateProfilePictureBody.profilePictureName)
         assertContentEquals(testProfilePicture2.bytes, userProfileBody.userProfile.profilePicture)
@@ -315,7 +315,7 @@ class UserControllerTest : HttpTest() {
         // when trying to retrieve a profile from a non-existing user
         val error = get<Problem>(
             client,
-            api(Uris.User.USER_PROFILE) + "?username=nonExistingUser",
+            api(Uris.User.USER_PROFILE.replace("{username}", "nonExistingUser")),
             HttpStatus.NOT_FOUND,
             userToken
         )

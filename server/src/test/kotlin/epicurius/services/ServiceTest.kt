@@ -2,6 +2,7 @@ package epicurius.services
 
 import epicurius.EpicuriusTest
 import epicurius.domain.PagingParams
+import epicurius.domain.user.FollowRequestType
 import epicurius.http.fridge.models.input.OpenProductInputModel
 import epicurius.http.fridge.models.input.ProductInputModel
 import epicurius.http.fridge.models.input.UpdateProductInputModel
@@ -51,8 +52,8 @@ open class ServiceTest : EpicuriusTest() {
 
         fun unfollow(userId: Int, usernameToUnfollow: String) = userService.unfollow(userId, usernameToUnfollow)
 
-        fun cancelFollowRequest(userId: Int, usernameToCancelFollow: String) =
-            userService.cancelFollowRequest(userId, usernameToCancelFollow)
+        fun followRequest(userId: Int, username: String) =
+            userService.followRequest(userId, username, FollowRequestType.CANCEL)
 
         // FRIDGE
         fun getFridge(userId: Int) = fridgeService.getFridge(userId)
