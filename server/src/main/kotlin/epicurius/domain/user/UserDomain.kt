@@ -52,6 +52,7 @@ class UserDomain(
         const val VALID_EMAIL_MSG = "must be a valid email address"
         const val MIN_PASSWORD_LENGTH = 8
         const val MAX_PASSWORD_LENGTH = 30
+        const val PASSWORD_LENGTH_MSG = "must be between $MIN_PASSWORD_LENGTH and $MAX_PASSWORD_LENGTH characters"
         const val TOKEN_SIZE_IN_BYTES = 32
         const val MAXIMUM_IMAGE_SIZE = 5 * 1024 * 1024 // 5MB
     }

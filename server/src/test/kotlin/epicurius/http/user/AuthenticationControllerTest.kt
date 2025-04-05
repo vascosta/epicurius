@@ -80,6 +80,96 @@ class AuthenticationControllerTest : HttpTest() {
     }
 
     @Test
+    fun `Try to signup with invalid username too long or too small`() {
+        // given information for a new user
+        val usernameToShort = "ab"
+        val usernameToLong = "wPIETGFH29THshfgOPHohasfn21h"
+        val invalidUsernameString = "/-+==;:"
+        val email = generateEmail(usernameToShort)
+        val password = generateSecurePassword()
+        val country = "PT"
+
+        // when trying to create a user with an invalid username
+        val errorWithShortUsername = post<Problem>(
+            client,
+            api(Uris.User.SIGNUP),
+            mapOf(
+                "username" to usernameToShort,
+                "email" to email,
+                "password" to password,
+                "confirmPassword" to password,
+                "country" to country
+            ),
+            HttpStatus.BAD_REQUEST
+        )
+
+        val errorWithLongUsername = post<Problem>(
+            client,
+            api(Uris.User.SIGNUP),
+            mapOf(
+                "username" to usernameToLong,
+                "email" to email,
+                "password" to password,
+                "confirmPassword" to password,
+                "country" to country
+            ),
+            HttpStatus.BAD_REQUEST
+        )
+
+        val errorWithInvalidUsernameString = post<Problem>(
+            client,
+            api(Uris.User.SIGNUP),
+            mapOf(
+                "username" to invalidUsernameString,
+                "email" to email,
+                "password" to password,
+                "confirmPassword" to password,
+                "country" to country
+            ),
+            HttpStatus.BAD_REQUEST
+        )
+
+        // then the user is not created
+        val errorWithShortUsernameBody = getBody(errorWithShortUsername)
+        val errorWithLongUsernameBody = getBody(errorWithLongUsername)
+        val errorWithInvalidUsernameStringBody = getBody(errorWithInvalidUsernameString)
+        assertNotNull(errorWithShortUsernameBody)
+        assertNotNull(errorWithLongUsernameBody)
+        assertNotNull(errorWithInvalidUsernameStringBody)
+        assertEquals("Username " + UserDomain.USERNAME_LENGTH_MSG, errorWithShortUsernameBody.detail)
+        assertEquals("Username " + UserDomain.USERNAME_LENGTH_MSG, errorWithLongUsernameBody.detail)
+        assertEquals("Username $VALID_STRING_MSG", errorWithInvalidUsernameStringBody.detail)
+    }
+
+    @Test
+    fun `Try to signup with invalid email`() {
+        // given information for a new user
+        val username = generateRandomUsername()
+        val invalidEmail = "invalidEmail"
+        val password = generateSecurePassword()
+        val country = "PT"
+
+        // when trying to create a user with an invalid email
+        val errorWithInvalidEmail = post<Problem>(
+            client,
+            api(Uris.User.SIGNUP),
+            mapOf(
+                "username" to username,
+                "email" to invalidEmail,
+                "password" to password,
+                "confirmPassword" to password,
+                "country" to country
+            ),
+            HttpStatus.BAD_REQUEST
+        )
+
+        // then the user is not created
+        val errorWithInvalidEmailBody = getBody(errorWithInvalidEmail)
+        assertNotNull(errorWithInvalidEmailBody)
+        assertEquals("Email " + UserDomain.VALID_EMAIL_MSG , errorWithInvalidEmailBody.detail)
+    }
+
+    @Test
     fun `Try to signup a user with existing name or email and fails with code 400`() {
         // given information for a new user and an existing user
         val username = generateRandomUsername()
@@ -176,6 +266,36 @@ class AuthenticationControllerTest : HttpTest() {
         val errorBody = getBody(error)
         assertNotNull(errorBody)
         assertEquals(InvalidCountry().message, errorBody.detail)
+    }
+
+    @Test
+    fun `Try to signup a user with invalid password and fails with code 400`() {
+        // given information for a new user
+        val username = generateRandomUsername()
+        val email = generateEmail(username)
+        val password = "123456789"
+        val country = "PT"
+
+        // when trying to create a user with an invalid password
+        val error = post<Problem>(
+            client,
+            api(Uris.User.SIGNUP),
+            mapOf(
+                "username" to username,
+                "email" to email,
+                "password" to password,
+                "confirmPassword" to password,
+                "country" to country
+            ),
+            HttpStatus.BAD_REQUEST
+        )
+        assertNotNull(error)
+
+        // then the user is not created
+        val errorBody = getBody(error)
+        assertNotNull(errorBody)
+        println(errorBody)
+        assertEquals("Password $VALID_PASSWORD_MSG", errorBody.detail)
     }
 
     @Test
@@ -480,5 +600,51 @@ class AuthenticationControllerTest : HttpTest() {
         val errorBody = getBody(error)
         assertNotNull(errorBody)
         assertEquals(PasswordsDoNotMatch().message, errorBody.detail)
+    }
+
+    @Test
+    fun `Try to reset password with invalid email and fails with code 400`() {
+        // when trying to reset the password with an invalid email
+        val error = patch<Problem>(
+            client,
+            api(Uris.User.USER_RESET_PASSWORD),
+            body = mapOf(
+                "email" to "invalidEmail",
+                "newPassword" to generateSecurePassword(),
+                "confirmPassword" to generateSecurePassword()
+            ),
+            responseStatus = HttpStatus.BAD_REQUEST
+        )
+
+        // then the password is not reset and an error is returned
+        assertNotNull(error)
+        val errorBody = getBody(error)
+        assertNotNull(errorBody)
+        assertEquals("Email " + UserDomain.VALID_EMAIL_MSG, errorBody.detail)
+    }
+
+    @Test
+    fun `Try to reset password with invalid password and fails with code 400`() {
+        // given an existing user
+        val user = publicTestUser
+
+        // when trying to reset the password with an invalid password
+        val password = "1234567"
+        val error = patch<Problem>(
+            client,
+            api(Uris.User.USER_RESET_PASSWORD),
+            body = mapOf(
+                "email" to user.email,
+                "newPassword" to password,
+                "confirmPassword" to password
+            ),
+            responseStatus = HttpStatus.BAD_REQUEST
+        )
+
+        // then the password is not reset and an error is returned
+        assertNotNull(error)
+        val errorBody = getBody(error)
+        assertNotNull(errorBody)
+        assertEquals("NewPassword $VALID_PASSWORD_MSG", errorBody.detail)
     }
 }

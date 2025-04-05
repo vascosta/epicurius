@@ -18,16 +18,16 @@ data class SignUpInputModel(
     val username: String,
 
     @field:NotBlank
-    @field:Email
+    @field:Email(message = UserDomain.VALID_EMAIL_MSG)
     val email: String,
 
     @field:NotBlank
-    @field:Size(min = MIN_PASSWORD_LENGTH, max = MAX_PASSWORD_LENGTH)
+    @field:Size(min = MIN_PASSWORD_LENGTH, max = MAX_PASSWORD_LENGTH, message = UserDomain.PASSWORD_LENGTH_MSG)
     @field:Pattern(regexp = Regex.VALID_PASSWORD, message = Regex.VALID_PASSWORD_MSG)
     val password: String,
 
     @field:NotBlank
-    @field:Size(min = MIN_PASSWORD_LENGTH, max = MAX_PASSWORD_LENGTH)
+    @field:Size(min = MIN_PASSWORD_LENGTH, max = MAX_PASSWORD_LENGTH, message = UserDomain.PASSWORD_LENGTH_MSG)
     @field:Pattern(regexp = Regex.VALID_PASSWORD, message = Regex.VALID_PASSWORD_MSG)
     val confirmPassword: String,
 
