@@ -1,8 +1,7 @@
-package epicurius.repository.jdbi
+package epicurius.repository.jdbi.recipe
 
 import epicurius.domain.recipe.RecipeProfile
 import epicurius.domain.recipe.SearchRecipes
-import epicurius.repository.RecipePostgresRepository
 import org.jdbi.v3.core.Handle
 import org.jdbi.v3.core.kotlin.mapTo
 

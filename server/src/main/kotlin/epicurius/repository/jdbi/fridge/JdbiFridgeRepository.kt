@@ -1,10 +1,9 @@
-package epicurius.repository.jdbi
+package epicurius.repository.jdbi.fridge
 
 import epicurius.domain.fridge.Fridge
 import epicurius.domain.fridge.Product
 import epicurius.domain.fridge.ProductInfo
 import epicurius.domain.fridge.UpdateProductInfo
-import epicurius.repository.FridgePostgresRepository
 import org.jdbi.v3.core.Handle
 import org.jdbi.v3.core.kotlin.mapTo
 

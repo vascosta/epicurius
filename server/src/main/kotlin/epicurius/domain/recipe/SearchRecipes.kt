@@ -1,10 +1,7 @@
 package epicurius.domain.recipe
 
-import epicurius.domain.Cuisine
 import epicurius.domain.Diet
-import epicurius.domain.Ingredient
 import epicurius.domain.Intolerance
-import epicurius.domain.MealType
 
 data class SearchRecipes(
     val name: String?,

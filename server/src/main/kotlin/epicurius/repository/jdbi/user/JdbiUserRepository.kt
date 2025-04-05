@@ -1,6 +1,5 @@
-package epicurius.repository.jdbi
+package epicurius.repository.jdbi.user
 
-import UserPostgresRepository
 import epicurius.domain.FollowingStatus
 import epicurius.domain.PagingParams
 import epicurius.domain.user.SearchUserModel

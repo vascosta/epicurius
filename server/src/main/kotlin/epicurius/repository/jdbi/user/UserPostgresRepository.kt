@@ -1,3 +1,5 @@
+package epicurius.repository.jdbi.user
+
 import epicurius.domain.PagingParams
 import epicurius.domain.user.SearchUserModel
 import epicurius.domain.user.UpdateUserInfo

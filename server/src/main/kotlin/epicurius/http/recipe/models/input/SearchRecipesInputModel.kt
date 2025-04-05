@@ -2,9 +2,9 @@ package epicurius.http.recipe.models.input
 
 import epicurius.domain.Diet
 import epicurius.domain.Intolerance
-import epicurius.domain.Cuisine
-import epicurius.domain.Ingredient
-import epicurius.domain.MealType
+import epicurius.domain.recipe.Cuisine
+import epicurius.domain.recipe.Ingredient
+import epicurius.domain.recipe.MealType
 
 data class SearchRecipesInputModel (
     val cuisine: Cuisine?,

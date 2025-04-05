@@ -1,8 +1,5 @@
 package epicurius.domain.recipe
 
-import epicurius.domain.Cuisine
-import epicurius.domain.MealType
-
 data class RecipeProfile (
     val id: Int,
     val name: String,
