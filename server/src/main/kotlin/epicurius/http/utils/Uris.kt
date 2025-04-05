@@ -32,4 +32,8 @@ object Uris {
         const val PRODUCT = "/fridge/product/{entryNumber}"
         const val OPEN_PRODUCT = "/fridge/open/{entryNumber}"
     }
+
+    object Recipe {
+        const val RECIPES = "/recipes"
+    }
 }
