@@ -1,4 +1,4 @@
-package epicurius.domain
+package epicurius.domain.recipe
 
 enum class MealType {
     MAIN_COURSE,

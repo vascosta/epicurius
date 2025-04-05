@@ -40,12 +40,13 @@ create table dbo.recipe(
     preparation_time int not null,
     meal_type int not null,
     cuisine int not null,
-    intolerances integer[],
-    diets integer[],
+    intolerances integer[] not null,
+    diets integer[] not null,
     calories int,
     protein int,
     fat int,
     carbs int,
+    images_names varchar(80)[],
     foreign key (author_id) references dbo.user(id)
 );
 
