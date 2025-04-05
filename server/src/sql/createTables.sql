@@ -77,7 +77,29 @@ create table dbo.collections(
     foreign key (recipe_id) references dbo.recipe(id)
 );
 
--- TODO MEAL PLANING TABLE
+create table dbo.meal_planner(
+    user_id int not null,
+    date date not null,
+    meal_type int not null,
+    primary key (user_id, date),
+    foreign key (user_id) references dbo.user(id)
+);
+
+create table dbo.meal_planner_recipes(
+    date date not null,
+    recipe_id int not null,
+    primary key (date, recipe_id),
+    foreign key (date) references dbo.meal_planner(date),
+    foreign key (recipe_id) references dbo.recipe(id)
+);
+
+create table dbo.calories(
+    user_id int not null,
+    date date not null,
+    max_calories int not null,
+    primary key (user_id, date),
+    foreign key (user_id) references dbo.user(id)
+);
 
 create or replace function delete_product_with_no_quantity()
     returns trigger as
