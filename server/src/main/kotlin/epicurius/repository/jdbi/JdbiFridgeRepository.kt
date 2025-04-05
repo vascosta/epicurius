@@ -84,18 +84,17 @@ class JdbiFridgeRepository(private val handle: Handle) : FridgePostgresRepositor
             """
         )
 
-        if (product?.productName != null) query.append(" AND product_name = :name")
-        if (product?.openDate != null) query.append(" AND open_date = :open")
-        if (product?.expirationDate != null) query.append(" AND expiration_date = :date")
-        if (entryNumber != null) query.append(" AND entry_number = :number")
+        val params = mutableMapOf<String, Any?>()
+
+        params["id"] = userId
+        product?.productName?.let { query.append(" AND product_name = :name"); params["name"] = it }
+        product?.openDate?.let { query.append(" AND open_date = :open"); params["open"] = it }
+        product?.expirationDate?.let { query.append(" AND expiration_date = :date"); params["date"] = it }
+        entryNumber?.let { query.append(" AND entry_number = :number"); params["number"] = it }
 
         val result = handle.createQuery(query.toString())
-            .bind("id", userId)
 
-        product?.productName?.let { result.bind("name", it) }
-        product?.openDate?.let { result.bind("open", it) }
-        product?.expirationDate?.let { result.bind("date", it) }
-        entryNumber?.let { result.bind("number", it) }
+        params.forEach { (key, value) -> result.bind(key, value) }
 
         return result.mapTo<Product>().firstOrNull()
     }
