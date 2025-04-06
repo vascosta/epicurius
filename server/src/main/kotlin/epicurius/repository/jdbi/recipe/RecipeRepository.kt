@@ -1,12 +1,12 @@
 package epicurius.repository.jdbi.recipe
 
-import epicurius.domain.recipe.CreateRecipeModel
+import epicurius.repository.jdbi.recipe.models.JdbiRecipeModel
 import epicurius.domain.recipe.RecipeProfile
 import epicurius.domain.recipe.SearchRecipesModel
 
-interface RecipePostgresRepository {
+interface RecipeRepository {
 
-    fun createRecipe(recipeInfo: CreateRecipeModel): Int
+    fun createRecipe(recipeInfo: JdbiRecipeModel): Int
 
     fun searchRecipes(userId: Int, form: SearchRecipesModel): List<RecipeProfile>
 }

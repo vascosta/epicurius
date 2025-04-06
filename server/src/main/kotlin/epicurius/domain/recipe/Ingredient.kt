@@ -13,7 +13,7 @@ data class Ingredient(
 ) {
 
     init {
-        if (name.length in MIN_INGREDIENT_NAME_LENGTH..MAX_INGREDIENT_NAME_LENGTH) {
+        if (name.length !in MIN_INGREDIENT_NAME_LENGTH..MAX_INGREDIENT_NAME_LENGTH) {
             throw IllegalArgumentException(INGREDIENT_NAME_LENGTH_MSG)
         }
 

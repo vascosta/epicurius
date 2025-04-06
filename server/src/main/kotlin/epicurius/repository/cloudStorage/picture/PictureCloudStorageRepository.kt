@@ -1,13 +1,12 @@
-package epicurius.repository.cloudStorage
+package epicurius.repository.cloudStorage.picture
 
 import com.google.cloud.storage.Blob
 import com.google.cloud.storage.BlobId
 import com.google.cloud.storage.BlobInfo
 import com.google.cloud.storage.Storage
-import epicurius.repository.PictureCloudStorageRepository
 import org.springframework.web.multipart.MultipartFile
 
-class PictureCloudStorageRepository(private val cloudStorage: Storage) : PictureCloudStorageRepository {
+class PictureCloudStorageRepository(private val cloudStorage: Storage) : PictureRepository {
     override fun getPicture(pictureName: String): ByteArray {
         val blob = getBlob(pictureName)
         return blob.getContent()

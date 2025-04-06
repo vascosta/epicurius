@@ -2,7 +2,7 @@ package epicurius.http.recipe.models.input
 
 import epicurius.domain.Diet
 import epicurius.domain.Intolerance
-import epicurius.domain.recipe.CreateRecipeModel
+import epicurius.repository.jdbi.recipe.models.JdbiRecipeModel
 import epicurius.domain.recipe.Cuisine
 import epicurius.domain.recipe.Ingredient
 import epicurius.domain.recipe.Instructions
@@ -24,22 +24,22 @@ data class CreateRecipeInputModel(
     val intolerances: List<Intolerance>,
     val diets: List<Diet>,
     val ingredients: List<Ingredient>,
-    val calories: Int?,
-    val protein: Int?,
-    val fat: Int?,
-    val carbs: Int?,
+    val calories: Int? = null,
+    val protein: Int? = null,
+    val fat: Int? = null,
+    val carbs: Int? = null,
     val instructions: Instructions
 ) {
-    fun toCreateRecipeInputModel(authorId: Int, picturesNames: List<String>): CreateRecipeModel {
-        return CreateRecipeModel(
+    fun toJdbiRecipeModel(authorId: Int, picturesNames: List<String>): JdbiRecipeModel {
+        return JdbiRecipeModel(
             name = name,
             authorId = authorId,
             servings = servings,
             preparationTime = preparationTime,
             cuisine = cuisine,
             mealType = mealType,
-            intolerances = intolerances,
-            diets = diets,
+            intolerances = intolerances.map { it.ordinal },
+            diets = diets.map { it.ordinal },
             ingredients = ingredients,
             calories = calories,
             protein = protein,

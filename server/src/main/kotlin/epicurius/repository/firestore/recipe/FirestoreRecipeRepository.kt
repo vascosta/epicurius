@@ -1,9 +1,13 @@
-package epicurius.repository.firestore
+package epicurius.repository.firestore.recipe
 
-import RecipeFirestoreRepository
 import com.google.cloud.firestore.Firestore
+import epicurius.repository.firestore.recipe.models.FirestoreRecipeModel
 
-class FirestoreRecipeRepository(private val firestore: Firestore) : RecipeFirestoreRepository {
+class FirestoreRecipeRepository(private val firestore: Firestore) : RecipeRepository {
+
+    override fun createRecipe(recipe: FirestoreRecipeModel) {
+        firestore.collection(RECIPES_COLLECTION).document(recipe.id.toString()).set(recipe).get()
+    }
 
 /*    override fun addRecipeInstructions(user: Strin, usernameToFollow: SocialUser) {
         val future: ApiFuture<Unit> = firestore.runTransaction { transaction ->
@@ -71,6 +75,6 @@ class FirestoreRecipeRepository(private val firestore: Firestore) : RecipeFirest
     }*/
 
     companion object {
-        private const val RECIPE_INSTRUCTIONS_COLLECTION = "RecipeInstructions"
+        private const val RECIPES_COLLECTION = "Recipes"
     }
 }

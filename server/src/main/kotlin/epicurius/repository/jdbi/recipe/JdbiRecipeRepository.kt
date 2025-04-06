@@ -1,12 +1,12 @@
 package epicurius.repository.jdbi.recipe
 
-import epicurius.domain.recipe.CreateRecipeModel
+import epicurius.repository.jdbi.recipe.models.JdbiRecipeModel
 import epicurius.domain.recipe.RecipeProfile
 import epicurius.domain.recipe.SearchRecipesModel
 import org.jdbi.v3.core.Handle
 import org.jdbi.v3.core.kotlin.mapTo
 
-class JdbiRecipeRepository(private val handle: Handle) : RecipePostgresRepository {
+class JdbiRecipeRepository(private val handle: Handle) : RecipeRepository {
 
     override fun searchRecipes(userId: Int, form: SearchRecipesModel): List<RecipeProfile> {
         val query = StringBuilder(
@@ -43,7 +43,51 @@ class JdbiRecipeRepository(private val handle: Handle) : RecipePostgresRepositor
         return result.mapTo<RecipeProfile>().list()
     }
 
-    override fun createRecipe(recipeInfo: CreateRecipeModel): Int {
-        TODO("Not yet implemented")
+    override fun createRecipe(recipeInfo: JdbiRecipeModel): Int {
+        val recipeId = handle.createUpdate(
+            """
+                INSERT INTO dbo.Recipe (
+                name, author_id, servings, 
+                preparation_time, meal_type, cuisine, intolerances, diets, calories, protein, fat, carbs, pictures_names
+                )
+                VALUES (
+                :name, :authorId, :servings, 
+                :preparationTime, :mealType, :cuisine, :intolerances, :diets, :calories, :protein, :fat, :carbs, :pictureNames
+                )
+                RETURNING id
+            """
+        )
+            .bind("name", recipeInfo.name)
+            .bind("authorId", recipeInfo.authorId)
+            .bind("servings", recipeInfo.servings)
+            .bind("preparationTime", recipeInfo.preparationTime)
+            .bind("mealType", recipeInfo.mealType.ordinal)
+            .bind("cuisine", recipeInfo.cuisine.ordinal)
+            .bind("intolerances", recipeInfo.intolerances.toTypedArray())
+            .bind("diets", recipeInfo.diets.toTypedArray())
+            .bind("calories", recipeInfo.calories)
+            .bind("protein", recipeInfo.protein)
+            .bind("fat", recipeInfo.fat)
+            .bind("carbs", recipeInfo.carbs)
+            .bind("pictureNames", recipeInfo.picturesNames.toTypedArray())
+            .executeAndReturnGeneratedKeys()
+            .mapTo<Int>()
+            .one()
+
+        recipeInfo.ingredients.forEach { ingredient ->
+            handle.createUpdate(
+                """
+                    INSERT INTO dbo.ingredient (recipe_id, name, quantity, unit)
+                    VALUES (:recipeId, :name, :quantity, :unit)
+                """
+            )
+                .bind("recipeId", recipeId)
+                .bind("name", ingredient.name)
+                .bind("quantity", ingredient.quantity)
+                .bind("unit", ingredient.unit.ordinal)
+                .execute()
+        }
+
+        return recipeId
     }
 }

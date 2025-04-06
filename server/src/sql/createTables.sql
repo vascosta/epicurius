@@ -37,7 +37,7 @@ create table dbo.recipe(
     name varchar(25) not null,
     author_id int not null,
     servings int not null,
-    preparation_time int not null,
+    preparation_time int not null, -- in minutes, e.g if value is 30, it means 30 minutes
     meal_type int not null,
     cuisine int not null,
     intolerances integer[] not null,

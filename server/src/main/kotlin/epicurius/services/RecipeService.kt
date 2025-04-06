@@ -1,11 +1,15 @@
 package epicurius.services
 
 import epicurius.domain.PictureDomain
+import epicurius.domain.recipe.RecipeDomain.Companion.IMAGES_MSG
+import epicurius.domain.recipe.RecipeDomain.Companion.MAX_IMAGES
+import epicurius.domain.recipe.RecipeDomain.Companion.MIN_IMAGES
 import epicurius.domain.recipe.RecipeProfile
-import epicurius.domain.recipe.SearchRecipesModel
 import epicurius.http.recipe.models.input.CreateRecipeInputModel
 import epicurius.http.recipe.models.input.SearchRecipesInputModel
 import epicurius.repository.cloudStorage.CloudStorageManager
+import epicurius.repository.firestore.FirestoreManager
+import epicurius.repository.firestore.recipe.models.FirestoreRecipeModel
 import epicurius.repository.spoonacular.SpoonacularManager
 import epicurius.repository.transaction.TransactionManager
 import org.springframework.stereotype.Component
@@ -15,6 +19,7 @@ import java.util.UUID
 @Component
 class RecipeService(
     private val tm: TransactionManager,
+    private val fs: FirestoreManager,
     private val cs: CloudStorageManager,
     private val sm: SpoonacularManager,
     private val pictureDomain: PictureDomain,
@@ -29,17 +34,17 @@ class RecipeService(
 
     fun createRecipe(authorId: Int, recipeInfo: CreateRecipeInputModel, pictures: List<MultipartFile>): RecipeProfile {
 
-        if (pictures.isEmpty()) {
-            throw IllegalArgumentException("At least one image is required")
-        }
-
-        else {
+        if (pictures.size !in MIN_IMAGES..MAX_IMAGES) {
+            throw IllegalArgumentException(IMAGES_MSG)
+        } else {
             pictures.forEach { pictureDomain.validatePicture(it) }
             val picturesNames = pictures.map { UUID.randomUUID().toString() }
 
             val recipeId = tm.run {
-                it.recipeRepository.createRecipe(recipeInfo.toCreateRecipeInputModel(authorId, picturesNames))
+                it.recipeRepository.createRecipe(recipeInfo.toJdbiRecipeModel(authorId, picturesNames))
             }
+
+            fs.recipeRepository.createRecipe(FirestoreRecipeModel(recipeId, recipeInfo.description, recipeInfo.instructions))
 
             picturesNames.forEachIndexed { index, pictureName ->
                 cs.pictureCloudStorageRepository.updatePicture(

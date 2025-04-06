@@ -16,6 +16,7 @@ class RecipeDomain {
         const val MIN_INSTRUCTIONS_LENGTH = 1
         const val MAX_INSTRUCTIONS_LENGTH = 200
         const val INSTRUCTIONS_LENGTH_MSG = "Instructions length must be between $MIN_INSTRUCTIONS_LENGTH and $MAX_INSTRUCTIONS_LENGTH characters"
+        const val INSTRUCTIONS_STEP_NUMBER_MSG = "Instructions step number must be a number"
 
         const val MIN_INGREDIENT_NAME_LENGTH = 1
         const val MAX_INGREDIENT_NAME_LENGTH = 20
