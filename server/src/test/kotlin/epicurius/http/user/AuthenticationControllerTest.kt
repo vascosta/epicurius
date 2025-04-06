@@ -653,19 +653,19 @@ class AuthenticationControllerTest : HttpTest() {
             body = mapOf(
                 "email" to user.email,
                 "newPassword" to invalidPassword,
-                "confirmPassword" to invalidPassword
+                "confirmPassword" to generateSecurePassword()
             ),
             responseStatus = HttpStatus.BAD_REQUEST
         )
         assertNotNull(errorInvalidPassword)
 
-        // when trying to reset the password with an confirm password
+        // when trying to reset the password with an invalid confirm password
         val errorInvalidConfirmPassword = patch<Problem>(
             client,
             api(Uris.User.USER_RESET_PASSWORD),
             body = mapOf(
                 "email" to user.email,
-                "newPassword" to invalidPassword,
+                "newPassword" to generateSecurePassword(),
                 "confirmPassword" to invalidPassword
             ),
             responseStatus = HttpStatus.BAD_REQUEST
