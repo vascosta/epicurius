@@ -13,7 +13,7 @@ open class ServiceTest : EpicuriusTest() {
 
     companion object {
         // private val userService = UserService(tm, fs, cs, usersDomain, countriesDomain)
-        private val userService = UserService(tm, cs, usersDomain, countriesDomain)
+        private val userService = UserService(tm, cs, usersDomain, pictureDomain, countriesDomain)
         private val fridgeService = FridgeService(tm, sm, fridgeDomain)
 
         // USER

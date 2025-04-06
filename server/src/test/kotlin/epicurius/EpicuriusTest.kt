@@ -4,6 +4,7 @@ import com.google.auth.oauth2.GoogleCredentials
 import com.google.cloud.storage.Storage
 import com.google.cloud.storage.StorageOptions
 import epicurius.config.HttpClientConfigurer
+import epicurius.domain.PictureDomain
 import epicurius.domain.user.CountriesDomain
 import epicurius.domain.fridge.FridgeDomain
 import epicurius.domain.token.Sha256TokenEncoder
@@ -54,6 +55,7 @@ open class EpicuriusTest {
         private val tokenEncoder = Sha256TokenEncoder()
         private val passwordEncoder = BCryptPasswordEncoder()
         val usersDomain = UserDomain(passwordEncoder, tokenEncoder)
+        val pictureDomain = PictureDomain()
         val countriesDomain = CountriesDomain()
         val fridgeDomain = FridgeDomain()
 

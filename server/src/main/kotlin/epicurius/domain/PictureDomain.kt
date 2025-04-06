@@ -1,7 +1,5 @@
 package epicurius.domain
 
-import epicurius.domain.recipe.RecipeDomain.Companion.MAXIMUM_IMAGE_SIZE
-import epicurius.domain.recipe.RecipeDomain.Companion.SUPPORTED_IMAGE_TYPES
 import org.springframework.stereotype.Component
 import org.springframework.web.multipart.MultipartFile
 

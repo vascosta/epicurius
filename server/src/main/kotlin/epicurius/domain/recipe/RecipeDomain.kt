@@ -1,7 +1,6 @@
 package epicurius.domain.recipe
 
 import org.springframework.stereotype.Component
-import org.springframework.web.multipart.MultipartFile
 
 @Component
 class RecipeDomain {

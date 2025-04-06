@@ -277,25 +277,42 @@ class AuthenticationControllerTest : HttpTest() {
         val country = "PT"
 
         // when trying to create a user with an invalid password
-        val error = post<Problem>(
+        val errorInvalidPassword = post<Problem>(
             client,
             api(Uris.User.SIGNUP),
             mapOf(
                 "username" to username,
                 "email" to email,
                 "password" to password,
+                "confirmPassword" to generateSecurePassword(),
+                "country" to country
+            ),
+            HttpStatus.BAD_REQUEST
+        )
+        assertNotNull(errorInvalidPassword)
+
+        // when trying to create a user with an invalid confirm password
+        val errorInvalidConfirmPassword = post<Problem>(
+            client,
+            api(Uris.User.SIGNUP),
+            mapOf(
+                "username" to username,
+                "email" to email,
+                "password" to generateSecurePassword(),
                 "confirmPassword" to password,
                 "country" to country
             ),
             HttpStatus.BAD_REQUEST
         )
-        assertNotNull(error)
+        assertNotNull(errorInvalidConfirmPassword)
 
         // then the user is not created
-        val errorBody = getBody(error)
-        assertNotNull(errorBody)
-        println(errorBody)
-        assertEquals("Password $VALID_PASSWORD_MSG", errorBody.detail)
+        val errorInvalidPasswordBody = getBody(errorInvalidPassword)
+        val errorInvalidConfirmPasswordBody = getBody(errorInvalidConfirmPassword)
+        assertNotNull(errorInvalidPasswordBody)
+        assertNotNull(errorInvalidConfirmPasswordBody)
+        assertEquals("Password $VALID_PASSWORD_MSG", errorInvalidPasswordBody.detail)
+        assertEquals("ConfirmPassword $VALID_PASSWORD_MSG", errorInvalidConfirmPasswordBody.detail)
     }
 
     @Test
@@ -625,26 +642,43 @@ class AuthenticationControllerTest : HttpTest() {
 
     @Test
     fun `Try to reset password with invalid password and fails with code 400`() {
-        // given an existing user
+        // given an existing user and an invalid password
         val user = publicTestUser
+        val invalidPassword = "12345678"
 
         // when trying to reset the password with an invalid password
-        val password = "1234567"
-        val error = patch<Problem>(
+        val errorInvalidPassword = patch<Problem>(
             client,
             api(Uris.User.USER_RESET_PASSWORD),
             body = mapOf(
                 "email" to user.email,
-                "newPassword" to password,
-                "confirmPassword" to password
+                "newPassword" to invalidPassword,
+                "confirmPassword" to invalidPassword
             ),
             responseStatus = HttpStatus.BAD_REQUEST
         )
+        assertNotNull(errorInvalidPassword)
+
+        // when trying to reset the password with an confirm password
+        val errorInvalidConfirmPassword = patch<Problem>(
+            client,
+            api(Uris.User.USER_RESET_PASSWORD),
+            body = mapOf(
+                "email" to user.email,
+                "newPassword" to invalidPassword,
+                "confirmPassword" to invalidPassword
+            ),
+            responseStatus = HttpStatus.BAD_REQUEST
+        )
+        assertNotNull(errorInvalidConfirmPassword)
+
 
         // then the password is not reset and an error is returned
-        assertNotNull(error)
-        val errorBody = getBody(error)
-        assertNotNull(errorBody)
-        assertEquals("NewPassword $VALID_PASSWORD_MSG", errorBody.detail)
+        val errorInvalidPasswordBody = getBody(errorInvalidPassword)
+        val errorInvalidConfirmPasswordBody = getBody(errorInvalidConfirmPassword)
+        assertNotNull(errorInvalidConfirmPasswordBody)
+        assertNotNull(errorInvalidPasswordBody)
+        assertEquals("NewPassword $VALID_PASSWORD_MSG", errorInvalidPasswordBody.detail)
+        assertEquals("ConfirmPassword $VALID_PASSWORD_MSG", errorInvalidConfirmPasswordBody.detail)
     }
 }

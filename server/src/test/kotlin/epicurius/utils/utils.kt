@@ -4,6 +4,7 @@ import epicurius.EpicuriusTest.Companion.usersDomain
 import epicurius.domain.user.UpdateUserModel
 import epicurius.domain.user.User
 import epicurius.domain.user.UserDomain.Companion.MAX_PASSWORD_LENGTH
+import epicurius.domain.user.UserDomain.Companion.MAX_USERNAME_LENGTH
 import epicurius.repository.transaction.TransactionManager
 import java.util.UUID
 
@@ -22,6 +23,6 @@ fun createTestUser(tm: TransactionManager, privacy: Boolean = false): User {
     return tm.run { it.userRepository.getUser(username) } ?: throw Exception("User not created")
 }
 
-fun generateRandomUsername() = "test${Math.random()}".replace(".", "")
+fun generateRandomUsername() = "test${Math.random()}".replace(".", "").take(MAX_USERNAME_LENGTH)
 fun generateEmail(username: String) = "$username@email.com"
 fun generateSecurePassword() = ("P" + UUID.randomUUID().toString()).take(MAX_PASSWORD_LENGTH)

@@ -52,7 +52,7 @@ class UserService(
         confirmPassword: String
     ): String {
         if (checkIfUserExists(username, email) != null) throw UserAlreadyExists()
-        if (!countriesDomain.checkIfCodeIsValid(country)) throw InvalidCountry()
+        if (!countriesDomain.checkIfCountryCodeIsValid(country)) throw InvalidCountry()
         checkIfPasswordsMatch(password, confirmPassword)
         val passwordHash = userDomain.encodePassword(password)
 
@@ -118,7 +118,7 @@ class UserService(
         if (checkIfUserExists(userUpdate.username, userUpdate.email) != null) throw UserAlreadyExists()
 
         if (userUpdate.country != null)
-            if (!countriesDomain.checkIfCodeIsValid(userUpdate.country)) throw InvalidCountry()
+            if (!countriesDomain.checkIfCountryCodeIsValid(userUpdate.country)) throw InvalidCountry()
 
         if (userUpdate.password != null) {
             checkIfPasswordsMatch(userUpdate.password, userUpdate.confirmPassword)
