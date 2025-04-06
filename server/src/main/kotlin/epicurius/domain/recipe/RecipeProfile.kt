@@ -1,6 +1,6 @@
 package epicurius.domain.recipe
 
-data class RecipeProfile (
+data class RecipeProfile(
     val id: Int,
     val name: String,
     val cuisine: Cuisine,

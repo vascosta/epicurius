@@ -34,7 +34,7 @@ create table dbo.fridge(
 
 create table dbo.recipe(
     id serial primary key,
-    name varchar(40) not null,
+    name varchar(25) not null,
     author_id int not null,
     servings int not null,
     preparation_time int not null,
@@ -46,7 +46,7 @@ create table dbo.recipe(
     protein int,
     fat int,
     carbs int,
-    pictures_names varchar(80)[],
+    pictures_names varchar(80)[] check (cardinality(pictures_names) BETWEEN 1 AND 3),
     foreign key (author_id) references dbo.user(id)
 );
 
@@ -59,16 +59,16 @@ create table dbo.recipe_rating(
     foreign key (user_id) references dbo.user(id)
 );
 
-create table dbo.ingredients(
+create table dbo.ingredient(
     id serial primary key,
     recipe_id int not null,
-    name varchar(50) not null,
+    name varchar(20) not null,
     quantity int not null,
-    unit varchar(20) not null,
+    unit int not null,
     foreign key (recipe_id) references dbo.recipe(id)
 );
 
-create table dbo.collections(
+create table dbo.collection(
     user_id int not null,
     recipe_id int not null,
     collection_name varchar(20) not null,
@@ -86,7 +86,7 @@ create table dbo.meal_planner(
     foreign key (user_id) references dbo.user(id)
 );
 
-create table dbo.meal_planner_recipes(
+create table dbo.meal_planner_recipe(
     user_id int not null,
     date date not null,
     meal_type int not null,

@@ -166,7 +166,7 @@ class AuthenticationControllerTest : HttpTest() {
         // then the user is not created
         val errorWithInvalidEmailBody = getBody(errorWithInvalidEmail)
         assertNotNull(errorWithInvalidEmailBody)
-        assertEquals("Email " + UserDomain.VALID_EMAIL_MSG , errorWithInvalidEmailBody.detail)
+        assertEquals("Email " + UserDomain.VALID_EMAIL_MSG, errorWithInvalidEmailBody.detail)
     }
 
     @Test
@@ -671,7 +671,6 @@ class AuthenticationControllerTest : HttpTest() {
             responseStatus = HttpStatus.BAD_REQUEST
         )
         assertNotNull(errorInvalidConfirmPassword)
-
 
         // then the password is not reset and an error is returned
         val errorInvalidPasswordBody = getBody(errorInvalidPassword)

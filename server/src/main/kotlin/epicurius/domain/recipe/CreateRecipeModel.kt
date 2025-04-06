@@ -2,7 +2,6 @@ package epicurius.domain.recipe
 
 import epicurius.domain.Diet
 import epicurius.domain.Intolerance
-import epicurius.http.recipe.models.input.CreateRecipeInputModel
 
 data class CreateRecipeModel(
     val name: String,
@@ -18,7 +17,7 @@ data class CreateRecipeModel(
     val protein: Int?,
     val fat: Int?,
     val carbs: Int?,
-    val picturesNames : List<String>,
+    val picturesNames: List<String>,
 ) {
     fun toRecipe(recipeId: Int, description: String?, instructions: Instructions): Recipe {
         return Recipe(

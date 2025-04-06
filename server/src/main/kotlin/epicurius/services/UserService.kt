@@ -1,8 +1,6 @@
 package epicurius.services
 
-import epicurius.domain.user.CountriesDomain
 import epicurius.domain.Diet
-import epicurius.domain.user.FollowingStatus
 import epicurius.domain.Intolerance
 import epicurius.domain.PagingParams
 import epicurius.domain.PictureDomain
@@ -19,8 +17,10 @@ import epicurius.domain.exceptions.UserAlreadyLoggedIn
 import epicurius.domain.exceptions.UserNotFollowed
 import epicurius.domain.exceptions.UserNotFound
 import epicurius.domain.user.AuthenticatedUser
+import epicurius.domain.user.CountriesDomain
 import epicurius.domain.user.FollowRequestType
 import epicurius.domain.user.FollowUser
+import epicurius.domain.user.FollowingStatus
 import epicurius.domain.user.FollowingUser
 import epicurius.domain.user.SearchUser
 import epicurius.domain.user.UpdateUserModel

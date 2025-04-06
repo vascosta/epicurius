@@ -1,7 +1,7 @@
 package epicurius.repository.jdbi.user
 
-import epicurius.domain.user.FollowingStatus
 import epicurius.domain.PagingParams
+import epicurius.domain.user.FollowingStatus
 import epicurius.domain.user.SearchUserModel
 import epicurius.domain.user.UpdateUserModel
 import epicurius.domain.user.User
