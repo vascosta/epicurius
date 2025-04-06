@@ -5,6 +5,8 @@ import epicurius.domain.PagingParams
 import epicurius.domain.fridge.ProductInfo
 import epicurius.domain.fridge.UpdateProductInfo
 import epicurius.domain.user.UpdateUserModel
+import epicurius.repository.firestore.recipe.models.FirestoreRecipeModel
+import epicurius.repository.jdbi.recipe.models.JdbiRecipeModel
 import org.springframework.web.multipart.MultipartFile
 
 open class RepositoryTest : EpicuriusTest() {
@@ -93,5 +95,13 @@ open class RepositoryTest : EpicuriusTest() {
 
         fun checkIfProductIsOpen(userId: Int, entryNumber: Int) =
             tm.run { it.fridgeRepository.checkIfProductIsOpen(userId, entryNumber) }
+
+        // RECIPE
+        fun jdbiCreateRecipe(recipeInfo: JdbiRecipeModel) = tm.run { it.recipeRepository.createRecipe(recipeInfo) }
+
+        fun firestoreCreateRecipe(recipeInfo: FirestoreRecipeModel) {
+            fs.recipeRepository.createRecipe(recipeInfo)
+        }
+
     }
 }

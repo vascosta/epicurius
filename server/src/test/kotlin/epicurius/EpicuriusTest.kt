@@ -1,6 +1,8 @@
 package epicurius
 
 import com.google.auth.oauth2.GoogleCredentials
+import com.google.cloud.firestore.Firestore
+import com.google.cloud.firestore.FirestoreOptions
 import com.google.cloud.storage.Storage
 import com.google.cloud.storage.StorageOptions
 import epicurius.config.HttpClientConfigurer
@@ -10,7 +12,8 @@ import epicurius.domain.token.Sha256TokenEncoder
 import epicurius.domain.user.CountriesDomain
 import epicurius.domain.user.UserDomain
 import epicurius.repository.cloudStorage.CloudStorageManager
-import epicurius.repository.jdbi.utils.configureWithAppRequirements
+import epicurius.repository.firestore.FirestoreManager
+import epicurius.repository.jdbi.config.configureWithAppRequirements
 import epicurius.repository.spoonacular.SpoonacularManager
 import epicurius.repository.transaction.jdbi.JdbiTransactionManager
 import org.jdbi.v3.core.Jdbi
@@ -28,6 +31,13 @@ open class EpicuriusTest {
         @AfterAll
         fun clearDB() {
             jdbi.useHandle<Exception> {
+                it.execute("DELETE FROM dbo.calories")
+                it.execute("DELETE FROM dbo.meal_planner_recipe")
+                it.execute("DELETE FROM dbo.meal_planner")
+                it.execute("DELETE FROM dbo.collection")
+                it.execute("DELETE FROM dbo.ingredient")
+                it.execute("DELETE FROM dbo.recipe_rating")
+                it.execute("DELETE FROM dbo.recipe")
                 it.execute("DELETE FROM dbo.followers")
                 it.execute("DELETE FROM dbo.fridge")
                 it.execute("DELETE FROM dbo.user")
@@ -36,6 +46,7 @@ open class EpicuriusTest {
 
         private const val POSTGRES_DATABASE_URL = "jdbc:postgresql://localhost/postgres?user=postgres&password=postgres"
         private const val GOOGLE_CLOUD_CREDENTIALS_LOCATION = "src/main/resources/epicurius-credentials.json"
+        private const val FIRESTORE_TEST_DATABASE_ID = "epicurius-database-test"
 
         private val jdbi = Jdbi.create(
             PGSimpleDataSource().apply {
@@ -43,12 +54,12 @@ open class EpicuriusTest {
             }
         ).configureWithAppRequirements()
 
-        // private val firestore = getFirestoreService()
+        private val firestore = getFirestoreService()
         private val cloudStorage = getCloudStorageService()
         private val httpClient = HttpClientConfigurer()
 
         val tm = JdbiTransactionManager(jdbi)
-        // val fs = FirestoreManager(firestore)
+        val fs = FirestoreManager(firestore)
         val cs = CloudStorageManager(cloudStorage)
         val sm = SpoonacularManager(httpClient)
 
@@ -74,16 +85,16 @@ open class EpicuriusTest {
             FileInputStream("src/test/resources/test-profile-picture2.jpg")
         )
 
-/*        private fun getFirestoreService(): Firestore {
-            val serviceAccount = Environment.getGoogleServiceAccount()
+        private fun getFirestoreService(): Firestore {
+            val serviceAccount = FileInputStream(GOOGLE_CLOUD_CREDENTIALS_LOCATION)
 
             val options = FirestoreOptions.newBuilder()
                 .setCredentials(GoogleCredentials.fromStream(serviceAccount))
-                .setDatabaseId(Environment.getFirestoreDatabaseTestId())
+                .setDatabaseId(FIRESTORE_TEST_DATABASE_ID)
                 .build()
 
             return options.service
-        }*/
+        }
 
         private fun getCloudStorageService(): Storage {
             val serviceAccount = FileInputStream(GOOGLE_CLOUD_CREDENTIALS_LOCATION)
