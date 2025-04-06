@@ -2,7 +2,7 @@ package epicurius.repository.jdbi.user
 
 import epicurius.domain.PagingParams
 import epicurius.domain.user.SearchUserModel
-import epicurius.domain.user.UpdateUserInfo
+import epicurius.domain.user.UpdateUserModel
 import epicurius.domain.user.User
 
 interface UserPostgresRepository {
@@ -15,7 +15,7 @@ interface UserPostgresRepository {
     fun getFollowing(userId: Int): List<SearchUserModel>
     fun getFollowRequests(userId: Int): List<SearchUserModel>
 
-    fun updateUser(username: String, userUpdate: UpdateUserInfo): User
+    fun updateUser(username: String, userUpdate: UpdateUserModel): User
     fun resetPassword(email: String, passwordHash: String)
     fun followUser(userId: Int, userIdToFollow: Int, status: Int)
     fun unfollowUser(userId: Int, userIdToUnfollow: Int)

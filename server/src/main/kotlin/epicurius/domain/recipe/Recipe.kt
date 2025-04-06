@@ -7,7 +7,7 @@ data class Recipe(
     val id: Int,
     val name: String,
     val authorId: Int,
-    val description: String,
+    val description: String?,
     val servings: Int,
     val preparationTime: Int,
     val cuisine: Cuisine,
@@ -20,5 +20,5 @@ data class Recipe(
     val fat: Int?,
     val carbs: Int?,
     val instructions: Instructions,
-    val imagesNames: List<String>,
+    val picturesNames: List<String>,
 )

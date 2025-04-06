@@ -7,4 +7,4 @@ data class RecipeProfile (
     val mealType: MealType,
     val preparationTime: Int,
     val servings: Int
-)
+) // Stil needs images

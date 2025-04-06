@@ -1,7 +1,7 @@
 package epicurius.utils
 
 import epicurius.EpicuriusTest.Companion.usersDomain
-import epicurius.domain.user.UpdateUserInfo
+import epicurius.domain.user.UpdateUserModel
 import epicurius.domain.user.User
 import epicurius.domain.user.UserDomain.Companion.MAX_PASSWORD_LENGTH
 import epicurius.repository.transaction.TransactionManager
@@ -16,7 +16,7 @@ fun createTestUser(tm: TransactionManager, privacy: Boolean = false): User {
 
     tm.run { it.userRepository.createUser(username, email, country, passwordHash) }
     if (privacy) {
-        tm.run { it.userRepository.updateUser(username, UpdateUserInfo(privacy = true)) }
+        tm.run { it.userRepository.updateUser(username, UpdateUserModel(privacy = true)) }
     }
 
     return tm.run { it.userRepository.getUser(username) } ?: throw Exception("User not created")

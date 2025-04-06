@@ -3,7 +3,7 @@ package epicurius.domain.recipe
 import epicurius.domain.Diet
 import epicurius.domain.Intolerance
 
-data class SearchRecipes(
+data class SearchRecipesModel(
     val name: String?,
     val cuisine: Cuisine?,
     val mealType: MealType?,

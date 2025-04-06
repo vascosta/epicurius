@@ -1,4 +1,4 @@
-package epicurius.domain
+package epicurius.domain.user
 
 import org.springframework.stereotype.Component
 import java.util.Locale

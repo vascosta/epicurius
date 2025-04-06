@@ -1,6 +1,6 @@
 package epicurius.repository.user
 
-import epicurius.domain.FollowingStatus
+import epicurius.domain.user.FollowingStatus
 import epicurius.domain.user.SearchUserModel
 import epicurius.domain.user.User
 import epicurius.repository.RepositoryTest

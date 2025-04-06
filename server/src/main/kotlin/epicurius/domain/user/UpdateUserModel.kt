@@ -1,6 +1,6 @@
 package epicurius.domain.user
 
-data class UpdateUserInfo(
+data class UpdateUserModel(
     val username: String? = null,
     val email: String? = null,
     val country: String? = null,

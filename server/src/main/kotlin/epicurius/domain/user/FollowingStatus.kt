@@ -1,4 +1,6 @@
-package epicurius.domain
+package epicurius.domain.user
+
+import epicurius.domain.Intolerance
 
 enum class FollowingStatus {
     ACCEPTED,

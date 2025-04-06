@@ -4,7 +4,7 @@ import com.google.auth.oauth2.GoogleCredentials
 import com.google.cloud.storage.Storage
 import com.google.cloud.storage.StorageOptions
 import epicurius.config.HttpClientConfigurer
-import epicurius.domain.CountriesDomain
+import epicurius.domain.user.CountriesDomain
 import epicurius.domain.fridge.FridgeDomain
 import epicurius.domain.token.Sha256TokenEncoder
 import epicurius.domain.user.UserDomain

@@ -46,7 +46,7 @@ create table dbo.recipe(
     protein int,
     fat int,
     carbs int,
-    images_names varchar(80)[],
+    pictures_names varchar(80)[],
     foreign key (author_id) references dbo.user(id)
 );
 
@@ -87,7 +87,7 @@ create table dbo.meal_planner(
 );
 
 create table dbo.meal_planner_recipes(
-    date date not null,
+    meal_plan_date date not null,
     recipe_id int not null,
     primary key (date, recipe_id),
     foreign key (date) references dbo.meal_planner(date),

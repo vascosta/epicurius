@@ -2,9 +2,9 @@ package epicurius.domain.recipe
 
 import epicurius.domain.Diet
 import epicurius.domain.Intolerance
+import epicurius.http.recipe.models.input.CreateRecipeInputModel
 
-data class RecipePostrgresModel(
-    val id: Int,
+data class CreateRecipeModel(
     val name: String,
     val authorId: Int,
     val servings: Int,
@@ -18,11 +18,11 @@ data class RecipePostrgresModel(
     val protein: Int?,
     val fat: Int?,
     val carbs: Int?,
-    val imagesNames : List<String>,
+    val picturesNames : List<String>,
 ) {
-    fun toRecipe(description: String, instructions: Instructions): Recipe {
+    fun toRecipe(recipeId: Int, description: String?, instructions: Instructions): Recipe {
         return Recipe(
-            id = id,
+            id = recipeId,
             name = name,
             authorId = authorId,
             description = description,
@@ -38,7 +38,7 @@ data class RecipePostrgresModel(
             fat = fat,
             carbs = carbs,
             instructions = instructions,
-            imagesNames = imagesNames
+            picturesNames = picturesNames
         )
     }
 }

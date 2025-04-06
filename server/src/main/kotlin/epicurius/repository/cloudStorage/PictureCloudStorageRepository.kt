@@ -4,27 +4,27 @@ import com.google.cloud.storage.Blob
 import com.google.cloud.storage.BlobId
 import com.google.cloud.storage.BlobInfo
 import com.google.cloud.storage.Storage
-import epicurius.repository.UserCloudStorageRepository
+import epicurius.repository.PictureCloudStorageRepository
 import org.springframework.web.multipart.MultipartFile
 
-class UserCloudStorageRepository(private val cloudStorage: Storage) : UserCloudStorageRepository {
-    override fun getProfilePicture(profilePictureName: String): ByteArray {
-        val blob = getBlob(profilePictureName)
+class PictureCloudStorageRepository(private val cloudStorage: Storage) : PictureCloudStorageRepository {
+    override fun getPicture(pictureName: String): ByteArray {
+        val blob = getBlob(pictureName)
         return blob.getContent()
     }
 
-    override fun updateProfilePicture(profilePictureName: String, profilePicture: MultipartFile) {
-        val profilePictureBlobId = createBlobId(profilePictureName)
+    override fun updatePicture(pictureName: String, picture: MultipartFile) {
+        val profilePictureBlobId = createBlobId(pictureName)
 
         val newProfilePicture = createBlobInfo(
             profilePictureBlobId,
-            profilePicture.contentType.toString() // already being checked in the input model
+            picture.contentType.toString() // already being checked before
         )
-        cloudStorage.create(newProfilePicture, profilePicture.bytes)
+        cloudStorage.create(newProfilePicture, picture.bytes)
     }
 
-    override fun deleteProfilePicture(profilePictureName: String) {
-        val blob = getBlob(profilePictureName)
+    override fun deletePicture(pictureName: String) {
+        val blob = getBlob(pictureName)
 
         if (blob.exists()) {
             blob.delete()
@@ -40,5 +40,6 @@ class UserCloudStorageRepository(private val cloudStorage: Storage) : UserCloudS
 
     companion object {
         const val USERS_PROFILE_PICTURES_BUCKET = "epicurius_users_profile_pictures"
+        const val RECIPES_PICTURES_BUCKET = "epicurius_recipes_pictures"
     }
 }

@@ -5,5 +5,5 @@ import org.springframework.stereotype.Component
 
 @Component
 class CloudStorageManager(cloudStorage: Storage) {
-    val userCloudStorageRepository = UserCloudStorageRepository(cloudStorage)
+    val pictureCloudStorageRepository = PictureCloudStorageRepository(cloudStorage)
 }

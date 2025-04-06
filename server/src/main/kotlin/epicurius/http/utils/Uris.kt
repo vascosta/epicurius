@@ -35,5 +35,6 @@ object Uris {
 
     object Recipe {
         const val RECIPES = "/recipes"
+        const val RECIPE = "/recipes/{id}" // For now id maybe change later
     }
 }

@@ -1,10 +1,11 @@
 package epicurius.services
 
-import epicurius.domain.CountriesDomain
+import epicurius.domain.user.CountriesDomain
 import epicurius.domain.Diet
-import epicurius.domain.FollowingStatus
+import epicurius.domain.user.FollowingStatus
 import epicurius.domain.Intolerance
 import epicurius.domain.PagingParams
+import epicurius.domain.PictureDomain
 import epicurius.domain.exceptions.FollowRequestAlreadyBeenSent
 import epicurius.domain.exceptions.FollowRequestNotFound
 import epicurius.domain.exceptions.IncorrectPassword
@@ -22,7 +23,7 @@ import epicurius.domain.user.FollowRequestType
 import epicurius.domain.user.FollowUser
 import epicurius.domain.user.FollowingUser
 import epicurius.domain.user.SearchUser
-import epicurius.domain.user.UpdateUserInfo
+import epicurius.domain.user.UpdateUserModel
 import epicurius.domain.user.User
 import epicurius.domain.user.UserDomain
 import epicurius.domain.user.UserInfo
@@ -40,6 +41,7 @@ class UserService(
     // private val fs: FirestoreManager,
     private val cs: CloudStorageManager,
     private val userDomain: UserDomain,
+    private val pictureDomain: PictureDomain,
     private val countriesDomain: CountriesDomain
 ) {
     fun createUser(
@@ -80,7 +82,7 @@ class UserService(
 
     fun getProfilePicture(profilePictureName: String?): ByteArray? {
         if (profilePictureName == null) return null
-        return cs.userCloudStorageRepository.getProfilePicture(profilePictureName)
+        return cs.pictureCloudStorageRepository.getPicture(profilePictureName)
     }
 
     fun getUsers(partialUsername: String, pagingParams: PagingParams): List<SearchUser> {
@@ -125,7 +127,7 @@ class UserService(
         return tm.run {
             it.userRepository.updateUser(
                 username,
-                UpdateUserInfo(
+                UpdateUserModel(
                     userUpdate.username,
                     userUpdate.email,
                     userUpdate.country,
@@ -141,19 +143,19 @@ class UserService(
     fun updateProfilePicture(username: String, profilePictureName: String? = null, profilePicture: MultipartFile?): String? {
         return when {
             profilePictureName == null && profilePicture != null -> { // add new profile picture
-                userDomain.validateProfilePicture(profilePicture)
+                pictureDomain.validatePicture(profilePicture)
                 val newProfilePictureName = UUID.randomUUID().toString()
 
-                cs.userCloudStorageRepository.updateProfilePicture(newProfilePictureName, profilePicture)
+                cs.pictureCloudStorageRepository.updatePicture(newProfilePictureName, profilePicture)
                 tm.run {
-                    it.userRepository.updateUser(username, UpdateUserInfo(profilePictureName = newProfilePictureName))
+                    it.userRepository.updateUser(username, UpdateUserModel(profilePictureName = newProfilePictureName))
                 }
                 newProfilePictureName
             }
 
             profilePictureName != null && profilePicture != null -> { // update profile picture
-                userDomain.validateProfilePicture(profilePicture)
-                cs.userCloudStorageRepository.updateProfilePicture(profilePictureName, profilePicture)
+                pictureDomain.validatePicture(profilePicture)
+                cs.pictureCloudStorageRepository.updatePicture(profilePictureName, profilePicture)
                 profilePictureName
             }
 
@@ -210,8 +212,8 @@ class UserService(
     }
 
     private fun removeProfilePicture(username: String, profilePictureName: String) {
-        cs.userCloudStorageRepository.deleteProfilePicture(profilePictureName)
-        tm.run { it.userRepository.updateUser(username, UpdateUserInfo(profilePictureName = null)) }
+        cs.pictureCloudStorageRepository.deletePicture(profilePictureName)
+        tm.run { it.userRepository.updateUser(username, UpdateUserModel(profilePictureName = null)) }
     }
 
     private fun cancelFollowRequest(userId: Int, usernameToCancelFollow: String) {

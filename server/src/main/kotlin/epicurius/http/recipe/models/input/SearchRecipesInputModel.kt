@@ -5,6 +5,7 @@ import epicurius.domain.Intolerance
 import epicurius.domain.recipe.Cuisine
 import epicurius.domain.recipe.Ingredient
 import epicurius.domain.recipe.MealType
+import epicurius.domain.recipe.SearchRecipesModel
 
 data class SearchRecipesInputModel (
     val cuisine: Cuisine?,
@@ -23,4 +24,25 @@ data class SearchRecipesInputModel (
     val minTime: Int?,
     val maxTime: Int?,
     val maxResults: Int = 10,
-)
+) {
+    fun toSearchRecipe(name: String?) =
+        SearchRecipesModel(
+            name,
+            this.cuisine,
+            this.mealType,
+            this.ingredients,
+            this.intolerances,
+            this.diets,
+            this.minCalories,
+            this.maxCalories,
+            this.minCarbs,
+            this.maxCarbs,
+            this.minFat,
+            this.maxFat,
+            this.minProtein,
+            this.maxProtein,
+            this.minTime,
+            this.maxTime,
+            this.maxResults
+        )
+}

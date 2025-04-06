@@ -1,13 +1,14 @@
 package epicurius.repository.jdbi.recipe
 
+import epicurius.domain.recipe.CreateRecipeModel
 import epicurius.domain.recipe.RecipeProfile
-import epicurius.domain.recipe.SearchRecipes
+import epicurius.domain.recipe.SearchRecipesModel
 import org.jdbi.v3.core.Handle
 import org.jdbi.v3.core.kotlin.mapTo
 
 class JdbiRecipeRepository(private val handle: Handle) : RecipePostgresRepository {
 
-    override fun searchRecipes(userId: Int, form: SearchRecipes): List<RecipeProfile> {
+    override fun searchRecipes(userId: Int, form: SearchRecipesModel): List<RecipeProfile> {
         val query = StringBuilder(
             """
                 SELECT id, name, cuisine, meal_type, preparation_time, servings
@@ -40,5 +41,9 @@ class JdbiRecipeRepository(private val handle: Handle) : RecipePostgresRepositor
         params.forEach { (key, value) -> result.bind(key, value) }
 
         return result.mapTo<RecipeProfile>().list()
+    }
+
+    override fun createRecipe(recipeInfo: CreateRecipeModel): Int {
+        TODO("Not yet implemented")
     }
 }

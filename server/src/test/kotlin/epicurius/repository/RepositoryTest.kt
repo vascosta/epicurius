@@ -4,7 +4,7 @@ import epicurius.EpicuriusTest
 import epicurius.domain.PagingParams
 import epicurius.domain.fridge.ProductInfo
 import epicurius.domain.fridge.UpdateProductInfo
-import epicurius.domain.user.UpdateUserInfo
+import epicurius.domain.user.UpdateUserModel
 import org.springframework.web.multipart.MultipartFile
 
 open class RepositoryTest : EpicuriusTest() {
@@ -25,17 +25,17 @@ open class RepositoryTest : EpicuriusTest() {
         fun getUsers(partialUsername: String, pagingParams: PagingParams) =
             tm.run { it.userRepository.getUsers(partialUsername, pagingParams) }
 
-        fun getProfilePicture(profilePictureName: String) = cs.userCloudStorageRepository.getProfilePicture(profilePictureName)
+        fun getProfilePicture(profilePictureName: String) = cs.pictureCloudStorageRepository.getPicture(profilePictureName)
 
         fun getFollowers(userId: Int) = tm.run { it.userRepository.getFollowers(userId) }
         fun getFollowing(userId: Int) = tm.run { it.userRepository.getFollowing(userId) }
         fun getFollowRequests(userId: Int) = tm.run { it.userRepository.getFollowRequests(userId) }
 
-        fun updateUser(username: String, userUpdate: UpdateUserInfo) =
+        fun updateUser(username: String, userUpdate: UpdateUserModel) =
             tm.run {
                 it.userRepository.updateUser(
                     username,
-                    UpdateUserInfo(
+                    UpdateUserModel(
                         userUpdate.username,
                         userUpdate.email,
                         userUpdate.country,
@@ -48,7 +48,7 @@ open class RepositoryTest : EpicuriusTest() {
             }
 
         fun updateProfilePicture(profilePictureName: String, profilePicture: MultipartFile) =
-            cs.userCloudStorageRepository.updateProfilePicture(profilePictureName, profilePicture)
+            cs.pictureCloudStorageRepository.updatePicture(profilePictureName, profilePicture)
 
         fun resetPassword(email: String, passwordHash: String) =
             tm.run { it.userRepository.resetPassword(email, passwordHash) }
@@ -63,7 +63,7 @@ open class RepositoryTest : EpicuriusTest() {
             tm.run { it.userRepository.cancelFollowRequest(userId, userIdToCancelFollowRequest) }
 
         fun deleteProfilePicture(profilePictureName: String) =
-            cs.userCloudStorageRepository.deleteProfilePicture(profilePictureName)
+            cs.pictureCloudStorageRepository.deletePicture(profilePictureName)
 
         fun deleteToken(username: String? = null, email: String? = null) =
             tm.run { it.tokenRepository.deleteToken(username, email) }

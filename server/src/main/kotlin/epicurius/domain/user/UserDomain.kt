@@ -30,22 +30,7 @@ class UserDomain(
 
     fun hashToken(token: String): String = tokenEncoder.hash(token)
 
-    fun validateProfilePicture(profilePicture: MultipartFile) {
-        if (!SUPPORTED_IMAGE_TYPES.contains(profilePicture.contentType)) {
-            throw IllegalArgumentException("Unsupported image type")
-        }
-
-        if (profilePicture.size > MAXIMUM_IMAGE_SIZE) {
-            throw IllegalArgumentException("Image size too large")
-        }
-
-        if (profilePicture.isEmpty) {
-            throw IllegalArgumentException("Image is empty")
-        }
-    }
-
     companion object {
-        val SUPPORTED_IMAGE_TYPES = listOf("image/jpeg", "image/jpg", "image/png")
         const val MIN_USERNAME_LENGTH = 3
         const val MAX_USERNAME_LENGTH = 25
         const val USERNAME_LENGTH_MSG = "must be between $MIN_USERNAME_LENGTH and $MAX_USERNAME_LENGTH characters"
@@ -54,6 +39,5 @@ class UserDomain(
         const val MAX_PASSWORD_LENGTH = 30
         const val PASSWORD_LENGTH_MSG = "must be between $MIN_PASSWORD_LENGTH and $MAX_PASSWORD_LENGTH characters"
         const val TOKEN_SIZE_IN_BYTES = 32
-        const val MAXIMUM_IMAGE_SIZE = 5 * 1024 * 1024 // 5MB
     }
 }
