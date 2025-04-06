@@ -1,7 +1,7 @@
 package epicurius.repository.user
 
 import epicurius.domain.user.FollowingStatus
-import epicurius.domain.user.SearchUserModel
+import epicurius.repository.jdbi.user.models.SearchUserModel
 import epicurius.domain.user.User
 import epicurius.repository.RepositoryTest
 import epicurius.utils.createTestUser

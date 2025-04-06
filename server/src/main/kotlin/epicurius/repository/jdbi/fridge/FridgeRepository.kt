@@ -5,7 +5,7 @@ import epicurius.domain.fridge.Product
 import epicurius.domain.fridge.ProductInfo
 import epicurius.domain.fridge.UpdateProductInfo
 
-interface FridgePostgresRepository {
+interface FridgeRepository {
 
     fun getFridge(userId: Int): Fridge
 

@@ -1,11 +1,11 @@
 package epicurius.repository.jdbi.user
 
 import epicurius.domain.PagingParams
-import epicurius.domain.user.SearchUserModel
+import epicurius.repository.jdbi.user.models.SearchUserModel
 import epicurius.domain.user.UpdateUserModel
 import epicurius.domain.user.User
 
-interface UserPostgresRepository {
+interface UserRepository {
 
     fun createUser(username: String, email: String, country: String, passwordHash: String)
 

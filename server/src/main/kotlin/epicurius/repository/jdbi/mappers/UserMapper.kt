@@ -1,4 +1,4 @@
-package epicurius.repository.mappers
+package epicurius.repository.jdbi.mappers
 
 import epicurius.domain.Diet
 import epicurius.domain.Intolerance

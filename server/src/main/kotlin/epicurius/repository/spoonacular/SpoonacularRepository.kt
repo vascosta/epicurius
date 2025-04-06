@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component
 class SpoonacularRepository(private val httpClient: HttpClientConfigurer) : SpoonacularRepository {
 
     override suspend fun getProductsList(partial: String): List<String> {
-        val uriCompleted = "$AUTOCOMPLETE_INGREDIENTS?apiKey=$spoonacularApiKey&query=$partial"
+        val uriCompleted = "$AUTOCOMPLETE_INGREDIENTS_URL?apiKey=$spoonacularApiKey&query=$partial"
 
         return withContext(Dispatchers.IO) {
             val request = async { httpClient.get(uriCompleted) }.await()
@@ -26,6 +26,6 @@ class SpoonacularRepository(private val httpClient: HttpClientConfigurer) : Spoo
     companion object {
         val spoonacularApiKey = Environment.getSpoonacularAPIKey().readAllBytes().decodeToString().trim()
 
-        const val AUTOCOMPLETE_INGREDIENTS = "https://api.spoonacular.com/food/ingredients/autocomplete"
+        const val AUTOCOMPLETE_INGREDIENTS_URL = "https://api.spoonacular.com/food/ingredients/autocomplete"
     }
 }

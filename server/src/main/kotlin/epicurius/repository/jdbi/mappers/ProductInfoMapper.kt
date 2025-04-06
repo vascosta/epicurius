@@ -1,4 +1,4 @@
-package epicurius.repository.mappers
+package epicurius.repository.jdbi.mappers
 
 import epicurius.domain.fridge.ProductInfo
 import org.jdbi.v3.core.mapper.RowMapper

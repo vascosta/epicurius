@@ -1,7 +1,7 @@
-package epicurius.repository.mappers
+package epicurius.repository.jdbi.mappers
 
 import epicurius.domain.Diet
-import epicurius.repository.utils.getArray
+import epicurius.repository.jdbi.utils.getArray
 import org.jdbi.v3.core.mapper.ColumnMapper
 import org.jdbi.v3.core.statement.StatementContext
 import java.sql.ResultSet

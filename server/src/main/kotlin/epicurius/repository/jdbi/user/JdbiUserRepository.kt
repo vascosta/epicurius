@@ -2,13 +2,13 @@ package epicurius.repository.jdbi.user
 
 import epicurius.domain.PagingParams
 import epicurius.domain.user.FollowingStatus
-import epicurius.domain.user.SearchUserModel
+import epicurius.repository.jdbi.user.models.SearchUserModel
 import epicurius.domain.user.UpdateUserModel
 import epicurius.domain.user.User
 import org.jdbi.v3.core.Handle
 import org.jdbi.v3.core.kotlin.mapTo
 
-class JdbiUserRepository(private val handle: Handle) : UserPostgresRepository {
+class JdbiUserRepository(private val handle: Handle) : UserRepository {
     override fun createUser(username: String, email: String, country: String, passwordHash: String) {
         handle.createUpdate(
             """
