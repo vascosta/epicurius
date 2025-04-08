@@ -1,9 +1,9 @@
 package epicurius.repository.jdbi.user
 
 import epicurius.domain.PagingParams
-import epicurius.repository.jdbi.user.models.SearchUserModel
 import epicurius.domain.user.UpdateUserModel
 import epicurius.domain.user.User
+import epicurius.repository.jdbi.user.models.SearchUserModel
 
 interface UserRepository {
 

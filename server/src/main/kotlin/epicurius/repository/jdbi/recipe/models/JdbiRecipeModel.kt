@@ -1,16 +1,15 @@
 package epicurius.repository.jdbi.recipe.models
 
-import epicurius.domain.Diet
-import epicurius.domain.Intolerance
 import epicurius.domain.recipe.Cuisine
 import epicurius.domain.recipe.Ingredient
-import epicurius.domain.recipe.Instructions
 import epicurius.domain.recipe.MealType
-import epicurius.domain.recipe.Recipe
+import java.time.Instant
+import java.util.Date
 
 data class JdbiRecipeModel(
     val name: String,
     val authorId: Int,
+    val date: Date = Date.from(Instant.now()),
     val servings: Int,
     val preparationTime: Int,
     val cuisine: Cuisine,

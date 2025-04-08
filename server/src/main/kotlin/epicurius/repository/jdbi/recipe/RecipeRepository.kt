@@ -1,8 +1,8 @@
 package epicurius.repository.jdbi.recipe
 
-import epicurius.repository.jdbi.recipe.models.JdbiRecipeModel
 import epicurius.domain.recipe.RecipeProfile
 import epicurius.domain.recipe.SearchRecipesModel
+import epicurius.repository.jdbi.recipe.models.JdbiRecipeModel
 
 interface RecipeRepository {
 

@@ -1,8 +1,8 @@
 package epicurius.repository.jdbi.recipe
 
-import epicurius.repository.jdbi.recipe.models.JdbiRecipeModel
 import epicurius.domain.recipe.RecipeProfile
 import epicurius.domain.recipe.SearchRecipesModel
+import epicurius.repository.jdbi.recipe.models.JdbiRecipeModel
 import org.jdbi.v3.core.Handle
 import org.jdbi.v3.core.kotlin.mapTo
 
@@ -47,11 +47,11 @@ class JdbiRecipeRepository(private val handle: Handle) : RecipeRepository {
         val recipeId = handle.createUpdate(
             """
                 INSERT INTO dbo.Recipe (
-                name, author_id, servings, 
+                name, author_id, date, servings, 
                 preparation_time, meal_type, cuisine, intolerances, diets, calories, protein, fat, carbs, pictures_names
                 )
                 VALUES (
-                :name, :authorId, :servings, 
+                :name, :authorId, :date, :servings, 
                 :preparationTime, :mealType, :cuisine, :intolerances, :diets, :calories, :protein, :fat, :carbs, :pictureNames
                 )
                 RETURNING id
@@ -59,6 +59,7 @@ class JdbiRecipeRepository(private val handle: Handle) : RecipeRepository {
         )
             .bind("name", recipeInfo.name)
             .bind("authorId", recipeInfo.authorId)
+            .bind("date", recipeInfo.date)
             .bind("servings", recipeInfo.servings)
             .bind("preparationTime", recipeInfo.preparationTime)
             .bind("mealType", recipeInfo.mealType.ordinal)

@@ -27,7 +27,7 @@ data class SearchRecipesInputModel(
     val maxTime: Int?,
     val maxResults: Int = 10,
 ) {
-    fun toSearchRecipe(name: String?) : SearchRecipesModel {
+    fun toSearchRecipe(name: String?): SearchRecipesModel {
         if (name != null && name.length > MAX_RECIPE_NAME_LENGTH) {
             throw IllegalArgumentException(RECIPE_NAME_LENGTH_MSG)
         }
@@ -51,5 +51,4 @@ data class SearchRecipesInputModel(
             this.maxResults
         )
     }
-
 }

@@ -20,5 +20,4 @@ data class Instructions(val steps: Map<String, String>) {
             }
         }
     }
-
 }

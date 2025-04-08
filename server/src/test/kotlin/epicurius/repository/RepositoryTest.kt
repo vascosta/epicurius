@@ -102,6 +102,5 @@ open class RepositoryTest : EpicuriusTest() {
         fun firestoreCreateRecipe(recipeInfo: FirestoreRecipeModel) {
             fs.recipeRepository.createRecipe(recipeInfo)
         }
-
     }
 }

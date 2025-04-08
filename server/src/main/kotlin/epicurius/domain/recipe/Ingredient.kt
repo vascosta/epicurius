@@ -17,7 +17,7 @@ data class Ingredient(
             throw IllegalArgumentException(INGREDIENT_NAME_LENGTH_MSG)
         }
 
-        if (quantity <= MIN_INGREDIENT_QUANTITY) {
+        if (quantity < MIN_INGREDIENT_QUANTITY) {
             throw IllegalArgumentException(INGREDIENT_QUANTITY_MSG)
         }
     }

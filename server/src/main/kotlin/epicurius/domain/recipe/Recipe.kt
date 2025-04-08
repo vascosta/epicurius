@@ -1,5 +1,6 @@
 package epicurius.domain.recipe
 
+import com.google.type.Date
 import epicurius.domain.Diet
 import epicurius.domain.Intolerance
 
@@ -7,6 +8,7 @@ data class Recipe(
     val id: Int,
     val name: String,
     val authorId: Int,
+    val date: Date,
     val description: String?,
     val servings: Int,
     val preparationTime: Int,

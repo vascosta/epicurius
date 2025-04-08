@@ -2,9 +2,9 @@ package epicurius.repository.jdbi.user
 
 import epicurius.domain.PagingParams
 import epicurius.domain.user.FollowingStatus
-import epicurius.repository.jdbi.user.models.SearchUserModel
 import epicurius.domain.user.UpdateUserModel
 import epicurius.domain.user.User
+import epicurius.repository.jdbi.user.models.SearchUserModel
 import org.jdbi.v3.core.Handle
 import org.jdbi.v3.core.kotlin.mapTo
 

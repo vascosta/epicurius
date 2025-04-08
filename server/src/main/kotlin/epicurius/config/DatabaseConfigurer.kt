@@ -5,6 +5,7 @@ import com.google.cloud.firestore.Firestore
 import com.google.cloud.firestore.FirestoreOptions
 import com.google.cloud.storage.Storage
 import com.google.cloud.storage.StorageOptions
+import epicurius.Environment
 import epicurius.repository.jdbi.config.configureWithAppRequirements
 import org.jdbi.v3.core.Jdbi
 import org.postgresql.ds.PGSimpleDataSource
@@ -33,10 +34,10 @@ class DatabaseConfigurer {
 
     @Bean
     fun googleStorage(): Storage {
-        val serviceAccount = FileInputStream(googleCredentialsFile)
+        val credentials = FileInputStream(googleCredentialsFile)
 
         val options = StorageOptions.newBuilder()
-            .setCredentials(GoogleCredentials.fromStream(serviceAccount))
+            .setCredentials(GoogleCredentials.fromStream(credentials))
             .build()
 
         return options.service
@@ -44,12 +45,12 @@ class DatabaseConfigurer {
 
     @Bean
     fun firestore(): Firestore {
-        val serviceAccount = FileInputStream(googleCredentialsFile)
+        val credentials = FileInputStream(googleCredentialsFile)
 
-        val options = FirestoreOptions.newBuilder()
-            .setCredentials(GoogleCredentials.fromStream(serviceAccount))
+        return FirestoreOptions.newBuilder()
+            .setCredentials(GoogleCredentials.fromStream(credentials))
+            .setDatabaseId(Environment.getFirestoreDatabaseId())
             .build()
-
-        return options.service
+            .service
     }
 }

@@ -2,12 +2,12 @@ package epicurius.http.recipe.models.input
 
 import epicurius.domain.Diet
 import epicurius.domain.Intolerance
-import epicurius.repository.jdbi.recipe.models.JdbiRecipeModel
 import epicurius.domain.recipe.Cuisine
 import epicurius.domain.recipe.Ingredient
 import epicurius.domain.recipe.Instructions
 import epicurius.domain.recipe.MealType
 import epicurius.domain.recipe.RecipeDomain
+import epicurius.repository.jdbi.recipe.models.JdbiRecipeModel
 import jakarta.validation.constraints.Size
 
 data class CreateRecipeInputModel(

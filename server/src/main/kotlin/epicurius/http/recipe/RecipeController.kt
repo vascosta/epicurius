@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RequestPart
 import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.multipart.MultipartFile
+import java.net.URI
 
 @RestController
 @RequestMapping(Uris.PREFIX)
@@ -38,6 +39,6 @@ class RecipeController(private val recipeService: RecipeService) {
         @RequestPart("images") pictures: List<MultipartFile>
     ): ResponseEntity<*> {
         val recipe = recipeService.createRecipe(authenticatedUser.user.id, body, pictures)
-        return ResponseEntity.created(TODO()).body(recipe)
+        return ResponseEntity.created(URI.create(Uris.Recipe.RECIPE)).body(recipe)
     }
 }

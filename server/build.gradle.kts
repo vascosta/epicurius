@@ -37,7 +37,6 @@ dependencies {
     implementation("org.postgresql:postgresql:42.7.2")
 
     implementation("com.google.firebase:firebase-admin:9.2.0")
-    implementation("com.google.cloud:google-cloud-storage:2.40.0")
 
     implementation("org.springframework.security:spring-security-core:6.3.5")
 

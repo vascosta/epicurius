@@ -11,10 +11,11 @@ import epicurius.repository.firestore.recipe.models.FirestoreRecipeModel
 import epicurius.repository.jdbi.recipe.models.JdbiRecipeModel
 import epicurius.utils.createTestUser
 import org.junit.jupiter.api.Test
+import java.time.Instant
+import java.util.Date
 import java.util.UUID
 
-
-class RecipeRepositoryTest: RepositoryTest() {
+class RecipeRepositoryTest : RepositoryTest() {
 
     @Test
     fun `Test create recipe`() {
@@ -52,6 +53,7 @@ class RecipeRepositoryTest: RepositoryTest() {
             JdbiRecipeModel(
                 recipe.name,
                 user.id,
+                Date.from(Instant.now()),
                 recipe.servings,
                 recipe.preparationTime,
                 recipe.cuisine,
