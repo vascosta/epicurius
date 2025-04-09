@@ -1,12 +1,21 @@
 package epicurius.repository.firestore.recipe
 
+import com.google.cloud.firestore.DocumentReference
 import com.google.cloud.firestore.Firestore
 import epicurius.repository.firestore.recipe.models.FirestoreRecipeModel
 
 class FirestoreRecipeRepository(private val firestore: Firestore) : RecipeRepository {
 
     override fun createRecipe(recipe: FirestoreRecipeModel) {
-        firestore.collection(RECIPES_COLLECTION).document(recipe.id.toString()).set(recipe).get()
+        getDocumentReference(RECIPES_COLLECTION, recipe.id.toString()).set(recipe).get()
+    }
+
+    override fun getRecipe(recipeId: Int): FirestoreRecipeModel {
+        TODO("Not yet implemented")
+    }
+
+    override fun deleteRecipe(recipeId: Int) {
+        deleteDocument(getDocumentReference(RECIPES_COLLECTION, recipeId.toString()))
     }
 
 /*    override fun addRecipeInstructions(user: Strin, usernameToFollow: SocialUser) {
@@ -60,8 +69,12 @@ class FirestoreRecipeRepository(private val firestore: Firestore) : RecipeReposi
         future.get()
     }*/
 
-    private fun getDocumentReference(collectionName: String, name: String) =
-        firestore.collection(collectionName).document(name)
+    private fun getDocumentReference(collectionName: String, documentName: String) =
+        firestore.collection(collectionName).document(documentName)
+
+    private fun deleteDocument(document: DocumentReference) =
+        document.delete().get()
+
 
 /*    private inline fun <reified T> getSnapshotValue(snapshot: DocumentSnapshot, documentName: String) =
         snapshot.get(documentName) as T

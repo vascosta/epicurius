@@ -1,5 +1,7 @@
 package epicurius.http.utils
 
+import org.springframework.web.util.UriTemplate
+
 object Uris {
 
     const val PREFIX = "/api"
@@ -35,6 +37,8 @@ object Uris {
 
     object Recipe {
         const val RECIPES = "/recipes"
-        const val RECIPE = "/recipes/{id}" // For now id maybe change later
+        const val RECIPE = "/recipes/{id}"
+
+        fun recipe(id: Int) = UriTemplate(RECIPE).expand(id)
     }
 }
