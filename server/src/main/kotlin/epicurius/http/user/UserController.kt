@@ -69,7 +69,7 @@ class UserController(val userService: UserService) {
     }
 
     @GetMapping(Uris.User.USERS)
-    fun getUsers(
+    fun searchUsers(
         authenticatedUser: AuthenticatedUser,
         @RequestParam partialUsername: String,
         @RequestParam skip: Int,

@@ -2,6 +2,7 @@ package epicurius.repository
 
 import epicurius.EpicuriusTest
 import epicurius.domain.PagingParams
+import epicurius.domain.PictureDomain
 import epicurius.domain.fridge.ProductInfo
 import epicurius.domain.fridge.UpdateProductInfo
 import epicurius.domain.user.UpdateUserModel
@@ -27,7 +28,7 @@ open class RepositoryTest : EpicuriusTest() {
         fun getUsers(partialUsername: String, pagingParams: PagingParams) =
             tm.run { it.userRepository.getUsers(partialUsername, pagingParams) }
 
-        fun getProfilePicture(profilePictureName: String) = cs.pictureCloudStorageRepository.getPicture(profilePictureName)
+        fun getProfilePicture(profilePictureName: String) = cs.pictureCloudStorageRepository.getPicture(profilePictureName, PictureDomain.USERS_FOLDER)
 
         fun getFollowers(userId: Int) = tm.run { it.userRepository.getFollowers(userId) }
         fun getFollowing(userId: Int) = tm.run { it.userRepository.getFollowing(userId) }
@@ -50,7 +51,7 @@ open class RepositoryTest : EpicuriusTest() {
             }
 
         fun updateProfilePicture(profilePictureName: String, profilePicture: MultipartFile) =
-            cs.pictureCloudStorageRepository.updatePicture(profilePictureName, profilePicture)
+            cs.pictureCloudStorageRepository.updatePicture(profilePictureName, profilePicture, PictureDomain.USERS_FOLDER)
 
         fun resetPassword(email: String, passwordHash: String) =
             tm.run { it.userRepository.resetPassword(email, passwordHash) }
@@ -65,7 +66,7 @@ open class RepositoryTest : EpicuriusTest() {
             tm.run { it.userRepository.cancelFollowRequest(userId, userIdToCancelFollowRequest) }
 
         fun deleteProfilePicture(profilePictureName: String) =
-            cs.pictureCloudStorageRepository.deletePicture(profilePictureName)
+            cs.pictureCloudStorageRepository.deletePicture(profilePictureName, PictureDomain.USERS_FOLDER)
 
         fun deleteToken(username: String? = null, email: String? = null) =
             tm.run { it.tokenRepository.deleteToken(username, email) }

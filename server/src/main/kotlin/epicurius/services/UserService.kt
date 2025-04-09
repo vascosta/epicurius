@@ -82,7 +82,7 @@ class UserService(
 
     fun getProfilePicture(profilePictureName: String?): ByteArray? {
         if (profilePictureName == null) return null
-        return cs.pictureCloudStorageRepository.getPicture(profilePictureName)
+        return cs.pictureCloudStorageRepository.getPicture(profilePictureName, PictureDomain.USERS_FOLDER)
     }
 
     fun getUsers(partialUsername: String, pagingParams: PagingParams): List<SearchUser> {
@@ -146,7 +146,7 @@ class UserService(
                 pictureDomain.validatePicture(profilePicture)
                 val newProfilePictureName = UUID.randomUUID().toString()
 
-                cs.pictureCloudStorageRepository.updatePicture(newProfilePictureName, profilePicture)
+                cs.pictureCloudStorageRepository.updatePicture(newProfilePictureName, profilePicture, PictureDomain.USERS_FOLDER)
                 tm.run {
                     it.userRepository.updateUser(username, UpdateUserModel(profilePictureName = newProfilePictureName))
                 }
@@ -155,7 +155,7 @@ class UserService(
 
             profilePictureName != null && profilePicture != null -> { // update profile picture
                 pictureDomain.validatePicture(profilePicture)
-                cs.pictureCloudStorageRepository.updatePicture(profilePictureName, profilePicture)
+                cs.pictureCloudStorageRepository.updatePicture(profilePictureName, profilePicture, PictureDomain.USERS_FOLDER)
                 profilePictureName
             }
 
@@ -212,7 +212,7 @@ class UserService(
     }
 
     private fun removeProfilePicture(username: String, profilePictureName: String) {
-        cs.pictureCloudStorageRepository.deletePicture(profilePictureName)
+        cs.pictureCloudStorageRepository.deletePicture(profilePictureName, PictureDomain.USERS_FOLDER)
         tm.run { it.userRepository.updateUser(username, UpdateUserModel(profilePictureName = null)) }
     }
 

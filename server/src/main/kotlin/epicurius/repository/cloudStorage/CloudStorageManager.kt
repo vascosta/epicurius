@@ -1,10 +1,10 @@
 package epicurius.repository.cloudStorage
 
-import com.google.cloud.storage.Storage
+import epicurius.config.CloudStorage
 import epicurius.repository.cloudStorage.picture.PictureCloudStorageRepository
 import org.springframework.stereotype.Component
 
 @Component
-class CloudStorageManager(cloudStorage: Storage) {
+class CloudStorageManager(cloudStorage: CloudStorage) {
     val pictureCloudStorageRepository = PictureCloudStorageRepository(cloudStorage)
 }

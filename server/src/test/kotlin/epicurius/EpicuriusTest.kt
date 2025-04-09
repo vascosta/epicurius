@@ -3,8 +3,8 @@ package epicurius
 import com.google.auth.oauth2.GoogleCredentials
 import com.google.cloud.firestore.Firestore
 import com.google.cloud.firestore.FirestoreOptions
-import com.google.cloud.storage.Storage
 import com.google.cloud.storage.StorageOptions
+import epicurius.config.CloudStorage
 import epicurius.config.HttpClientConfigurer
 import epicurius.domain.PictureDomain
 import epicurius.domain.fridge.FridgeDomain
@@ -46,7 +46,8 @@ open class EpicuriusTest {
 
         private const val POSTGRES_DATABASE_URL = "jdbc:postgresql://localhost/postgres?user=postgres&password=postgres"
         private const val GOOGLE_CLOUD_CREDENTIALS_LOCATION = "src/main/resources/epicurius-credentials.json"
-        private const val FIRESTORE_TEST_DATABASE_ID = "epicurius-database-test"
+        private const val FIRESTORE_TEST_DATABASE_ID = "epicurius-test-database"
+        private const val GOOGLE_CLOUD_STORAGE_TEST_BUCKET = "epicurius-test-bucket"
 
         private val jdbi = Jdbi.create(
             PGSimpleDataSource().apply {
@@ -96,14 +97,14 @@ open class EpicuriusTest {
             return options.service
         }
 
-        private fun getCloudStorageService(): Storage {
+        private fun getCloudStorageService(): CloudStorage {
             val serviceAccount = FileInputStream(GOOGLE_CLOUD_CREDENTIALS_LOCATION)
 
             val options = StorageOptions.newBuilder()
                 .setCredentials(GoogleCredentials.fromStream(serviceAccount))
                 .build()
 
-            return options.service
+            return CloudStorage(options.service, GOOGLE_CLOUD_STORAGE_TEST_BUCKET)
         }
     }
 }

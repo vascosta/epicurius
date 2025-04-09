@@ -49,7 +49,7 @@ class JdbiUserRepository(private val handle: Handle) : UserRepository {
                 LIMIT :limit OFFSET :skip
             """
         )
-            .bind("partialUsername", "%${partialUsername.lowercase()}%")
+            .bind("partialUsername", "%$partialUsername%")
             .bind("limit", pagingParams.limit)
             .bind("skip", pagingParams.skip)
             .mapTo<SearchUserModel>()

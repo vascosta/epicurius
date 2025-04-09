@@ -23,5 +23,8 @@ class PictureDomain {
     companion object {
         val SUPPORTED_IMAGE_TYPES = listOf("image/jpeg", "image/jpg", "image/png")
         const val MAXIMUM_IMAGE_SIZE = 5 * 1024 * 1024 // 5MB
+
+        const val USERS_FOLDER = "users"
+        const val RECIPES_FOLDER = "recipes"
     }
 }

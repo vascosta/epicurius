@@ -44,7 +44,8 @@ class RecipeService(
             picturesNames.forEachIndexed { index, pictureName ->
                 cs.pictureCloudStorageRepository.updatePicture(
                     pictureName,
-                    pictures[index]
+                    pictures[index],
+                    PictureDomain.RECIPES_FOLDER
                 )
             }
 

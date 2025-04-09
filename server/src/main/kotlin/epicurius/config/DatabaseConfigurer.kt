@@ -3,7 +3,6 @@ package epicurius.config
 import com.google.auth.oauth2.GoogleCredentials
 import com.google.cloud.firestore.Firestore
 import com.google.cloud.firestore.FirestoreOptions
-import com.google.cloud.storage.Storage
 import com.google.cloud.storage.StorageOptions
 import epicurius.Environment
 import epicurius.repository.jdbi.config.configureWithAppRequirements
@@ -33,14 +32,14 @@ class DatabaseConfigurer {
     }
 
     @Bean
-    fun googleStorage(): Storage {
+    fun googleCloudStorage(): CloudStorage {
         val credentials = FileInputStream(googleCredentialsFile)
 
         val options = StorageOptions.newBuilder()
             .setCredentials(GoogleCredentials.fromStream(credentials))
             .build()
 
-        return options.service
+        return CloudStorage(options.service, Environment.getCloudStorageBucketName())
     }
 
     @Bean
