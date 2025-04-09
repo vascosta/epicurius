@@ -34,7 +34,6 @@ import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RequestPart
 import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.multipart.MultipartFile
-import java.net.URI
 
 @RestController
 @RequestMapping(Uris.PREFIX)
@@ -115,7 +114,7 @@ class UserController(val userService: UserService) {
     fun signUp(@Valid @RequestBody body: SignUpInputModel, response: HttpServletResponse): ResponseEntity<*> {
         val token = userService.createUser(body.username, body.email, body.country, body.password, body.confirmPassword)
         response.addHeader("Authorization", "Bearer $token")
-        return ResponseEntity.created(URI.create(Uris.User.SIGNUP)).build<Unit>()
+        return ResponseEntity.created(Uris.User.userProfile(body.username)).build<Unit>()
     }
 
     @PostMapping(Uris.User.LOGIN)
