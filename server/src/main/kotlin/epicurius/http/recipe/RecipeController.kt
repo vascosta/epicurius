@@ -7,6 +7,7 @@ import epicurius.domain.recipe.MealType
 import epicurius.domain.user.AuthenticatedUser
 import epicurius.http.recipe.models.input.CreateRecipeInputModel
 import epicurius.http.recipe.models.input.SearchRecipesInputModel
+import epicurius.http.recipe.models.output.RecipeOutputModel
 import epicurius.http.recipe.models.output.SearchRecipesOutputModel
 import epicurius.http.utils.Uris
 import epicurius.http.utils.Uris.Recipe.recipe
@@ -72,6 +73,12 @@ class RecipeController(private val recipeService: RecipeService) {
         return ResponseEntity.ok().body(SearchRecipesOutputModel(results))
     }
 
+    @GetMapping(Uris.Recipe.RECIPE)
+    fun getRecipe(authenticatedUser: AuthenticatedUser, @PathVariable id: Int): ResponseEntity<*> {
+        val recipe = recipeService.getRecipe(authenticatedUser.user.id, id)
+        return ResponseEntity.ok().body(RecipeOutputModel(recipe))
+    }
+
     @PostMapping(Uris.Recipe.RECIPES)
     fun createRecipe(
         authenticatedUser: AuthenticatedUser,
@@ -82,7 +89,6 @@ class RecipeController(private val recipeService: RecipeService) {
         return ResponseEntity.created(recipe(recipe.id)).body(recipe)
     }
 
-    /*
     @DeleteMapping(Uris.Recipe.RECIPE)
     fun deleteRecipe(
         authenticatedUser: AuthenticatedUser,
@@ -91,6 +97,4 @@ class RecipeController(private val recipeService: RecipeService) {
         recipeService.deleteRecipe(authenticatedUser.user.id, id)
         return ResponseEntity.noContent().build<Unit>()
     }
-
-     */
 }

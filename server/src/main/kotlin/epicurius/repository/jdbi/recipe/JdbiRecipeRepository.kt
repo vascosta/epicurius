@@ -2,6 +2,7 @@ package epicurius.repository.jdbi.recipe
 
 import epicurius.domain.recipe.RecipeInfo
 import epicurius.domain.recipe.SearchRecipesModel
+import epicurius.repository.jdbi.recipe.models.JdbiCreateRecipeModel
 import epicurius.repository.jdbi.recipe.models.JdbiRecipeModel
 import epicurius.repository.jdbi.utils.addCondition
 import org.jdbi.v3.core.Handle
@@ -9,7 +10,7 @@ import org.jdbi.v3.core.kotlin.mapTo
 
 class JdbiRecipeRepository(private val handle: Handle) : RecipeRepository {
 
-    override fun createRecipe(recipeInfo: JdbiRecipeModel): Int {
+    override fun createRecipe(recipeInfo: JdbiCreateRecipeModel): Int {
         val recipeId = handle.createUpdate(
             """
                 INSERT INTO dbo.Recipe (
@@ -58,6 +59,21 @@ class JdbiRecipeRepository(private val handle: Handle) : RecipeRepository {
         return recipeId
     }
 
+    override fun getRecipe(recipeId: Int): JdbiRecipeModel? =
+        handle.createQuery(
+            """
+                SELECT r.id, r.name, r.author_id, r.date, r.servings, r.preparation_time, 
+                       r.cuisine, r.meal_type, r.intolerances, r.diets, r.calories, 
+                       r.protein, r.fat, r.carbs, r.pictures_names, 
+                       i.name AS ingredient_name, i.quantity, i.unit, u.username
+                FROM dbo.Recipe r JOIN dbo.Ingredient i on r.id = i.recipe_id JOIN dbo.user u on r.author_id = u.id
+                WHERE r.id = :id
+            """
+        )
+            .bind("id", recipeId)
+            .mapTo<JdbiRecipeModel>()
+            .firstOrNull()
+
     override fun searchRecipes(userId: Int, form: SearchRecipesModel): List<RecipeInfo> {
         val query = StringBuilder(
             """
@@ -89,17 +105,6 @@ class JdbiRecipeRepository(private val handle: Handle) : RecipeRepository {
         return result.mapTo<RecipeInfo>().list()
     }
 
-    override fun deleteRecipe(recipeId: Int) {
-        handle.createUpdate(
-            """
-                DELETE FROM dbo.Recipe
-                WHERE id = :recipeId
-            """
-        )
-            .bind("recipeId", recipeId)
-            .execute()
-    }
-
     override fun searchRecipesByIngredients(userId: Int, ingredientsList: List<String>): List<RecipeInfo> {
         val ingredientsBinding = ingredientsList.indices.joinToString { ":i$it" }
         val query = StringBuilder(
@@ -123,5 +128,16 @@ class JdbiRecipeRepository(private val handle: Handle) : RecipeRepository {
         params.forEach { (key, value) -> result.bind(key, value) }
 
         return result.mapTo<RecipeInfo>().list()
+    }
+
+    override fun deleteRecipe(recipeId: Int) {
+        handle.createUpdate(
+            """
+                DELETE FROM dbo.Recipe
+                WHERE id = :recipeId
+            """
+        )
+            .bind("recipeId", recipeId)
+            .execute()
     }
 }

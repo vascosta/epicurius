@@ -7,7 +7,7 @@ import epicurius.domain.recipe.Ingredient
 import epicurius.domain.recipe.Instructions
 import epicurius.domain.recipe.MealType
 import epicurius.domain.recipe.RecipeDomain
-import epicurius.repository.jdbi.recipe.models.JdbiRecipeModel
+import epicurius.repository.jdbi.recipe.models.JdbiCreateRecipeModel
 import jakarta.validation.constraints.Size
 
 data class CreateRecipeInputModel(
@@ -30,8 +30,8 @@ data class CreateRecipeInputModel(
     val carbs: Int? = null,
     val instructions: Instructions
 ) {
-    fun toJdbiRecipeModel(authorId: Int, picturesNames: List<String>): JdbiRecipeModel {
-        return JdbiRecipeModel(
+    fun toJdbiRecipeModel(authorId: Int, picturesNames: List<String>): JdbiCreateRecipeModel {
+        return JdbiCreateRecipeModel(
             name = name,
             authorId = authorId,
             servings = servings,

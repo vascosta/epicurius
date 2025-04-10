@@ -14,7 +14,7 @@ class RecipeInfoMapper : RowMapper<RecipeInfo> {
         val cuisine = Cuisine.fromInt(rs.getInt("cuisine"))
         val mealType = MealType.fromInt(rs.getInt("meal_type"))
         return RecipeInfo(
-            id =  rs.getInt("id"),
+            id = rs.getInt("id"),
             name = rs.getString("name"),
             cuisine = cuisine,
             mealType = mealType,

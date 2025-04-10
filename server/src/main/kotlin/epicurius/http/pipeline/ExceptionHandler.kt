@@ -7,13 +7,17 @@ import epicurius.domain.exceptions.FollowRequestAlreadyBeenSent
 import epicurius.domain.exceptions.FollowRequestNotFound
 import epicurius.domain.exceptions.IncorrectPassword
 import epicurius.domain.exceptions.InvalidCountry
+import epicurius.domain.exceptions.InvalidCuisineIdx
 import epicurius.domain.exceptions.InvalidDietIdx
+import epicurius.domain.exceptions.InvalidIngredientUnitIdx
 import epicurius.domain.exceptions.InvalidIntolerancesIdx
+import epicurius.domain.exceptions.InvalidMealTypeIdx
 import epicurius.domain.exceptions.InvalidProduct
 import epicurius.domain.exceptions.InvalidToken
 import epicurius.domain.exceptions.PasswordsDoNotMatch
 import epicurius.domain.exceptions.ProductIsAlreadyOpen
 import epicurius.domain.exceptions.ProductNotFound
+import epicurius.domain.exceptions.RecipeNotFound
 import epicurius.domain.exceptions.UnauthorizedException
 import epicurius.domain.exceptions.UserAlreadyBeingFollowed
 import epicurius.domain.exceptions.UserAlreadyExists
@@ -111,7 +115,10 @@ class ExceptionHandler {
             InvalidDietIdx::class,
             InvalidProduct::class,
             DurationIsNull::class,
-            ProductIsAlreadyOpen::class
+            ProductIsAlreadyOpen::class,
+            InvalidCuisineIdx::class,
+            InvalidMealTypeIdx::class,
+            InvalidIngredientUnitIdx::class
         ]
     )
     fun handleBadRequest(request: HttpServletRequest, ex: Exception) =
@@ -141,6 +148,7 @@ class ExceptionHandler {
             UserNotFound::class,
             ProductNotFound::class,
             FollowRequestNotFound::class,
+            RecipeNotFound::class
         ]
     )
     fun handleNotFound(request: HttpServletRequest, ex: Exception) =

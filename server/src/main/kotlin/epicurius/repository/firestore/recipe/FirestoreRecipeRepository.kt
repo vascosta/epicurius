@@ -75,7 +75,6 @@ class FirestoreRecipeRepository(private val firestore: Firestore) : RecipeReposi
     private fun deleteDocument(document: DocumentReference) =
         document.delete().get()
 
-
 /*    private inline fun <reified T> getSnapshotValue(snapshot: DocumentSnapshot, documentName: String) =
         snapshot.get(documentName) as T
 

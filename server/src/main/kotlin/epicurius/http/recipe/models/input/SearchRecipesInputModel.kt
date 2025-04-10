@@ -8,7 +8,7 @@ import epicurius.domain.recipe.RecipeDomain.Companion.MAX_RECIPE_NAME_LENGTH
 import epicurius.domain.recipe.RecipeDomain.Companion.RECIPE_NAME_LENGTH_MSG
 import epicurius.domain.recipe.SearchRecipesModel
 
-data class SearchRecipesInputModel (
+data class SearchRecipesInputModel(
     val name: String? = null,
     val cuisine: Cuisine? = null,
     val mealType: MealType? = null,

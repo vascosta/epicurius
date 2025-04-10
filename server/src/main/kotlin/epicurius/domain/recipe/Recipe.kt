@@ -1,13 +1,14 @@
 package epicurius.domain.recipe
 
-import com.google.type.Date
 import epicurius.domain.Diet
 import epicurius.domain.Intolerance
+import java.util.Date
 
 data class Recipe(
     val id: Int,
     val name: String,
     val authorId: Int,
+    val authorUsername: String,
     val date: Date,
     val description: String?,
     val servings: Int,
@@ -21,6 +22,6 @@ data class Recipe(
     val protein: Int?,
     val fat: Int?,
     val carbs: Int?,
-    val instructions: Instructions,
+    val instructions: Instructions?, // to be changed
     val picturesNames: List<String>,
 )
