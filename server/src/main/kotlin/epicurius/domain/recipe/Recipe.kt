@@ -7,7 +7,6 @@ import java.util.Date
 data class Recipe(
     val id: Int,
     val name: String,
-    val authorId: Int,
     val authorUsername: String,
     val date: Date,
     val description: String?,
@@ -22,6 +21,6 @@ data class Recipe(
     val protein: Int?,
     val fat: Int?,
     val carbs: Int?,
-    val instructions: Instructions?, // to be changed
+    val instructions: Instructions,
     val picturesNames: List<String>,
 )

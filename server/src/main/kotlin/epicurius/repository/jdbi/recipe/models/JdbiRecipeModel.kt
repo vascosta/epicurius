@@ -4,6 +4,7 @@ import epicurius.domain.Diet
 import epicurius.domain.Intolerance
 import epicurius.domain.recipe.Cuisine
 import epicurius.domain.recipe.Ingredient
+import epicurius.domain.recipe.Instructions
 import epicurius.domain.recipe.MealType
 import epicurius.domain.recipe.Recipe
 import java.util.Date
@@ -26,26 +27,25 @@ data class JdbiRecipeModel(
     val fat: Int? = null,
     val carbs: Int? = null,
     val picturesNames: List<String>,
-)
-
-fun JdbiRecipeModel.toRecipe(): Recipe = Recipe(
-    id = this.id,
-    name = this.name,
-    authorId = this.authorId,
-    authorUsername = this.authorUsername,
-    date = this.date,
-    description = null,
-    servings = this.servings,
-    preparationTime = this.preparationTime,
-    cuisine = this.cuisine,
-    mealType = this.mealType,
-    intolerances = this.intolerances,
-    diets = this.diets,
-    ingredients = this.ingredients,
-    instructions = null,
-    calories = this.calories,
-    protein = this.protein,
-    fat = this.fat,
-    carbs = this.carbs,
-    picturesNames = this.picturesNames,
-)
+) {
+    fun toRecipe(description: String?, instructions: Instructions): Recipe = Recipe(
+        id = id,
+        name = name,
+        authorUsername = authorUsername,
+        date = date,
+        description = description,
+        servings = servings,
+        preparationTime = preparationTime,
+        cuisine = cuisine,
+        mealType = mealType,
+        intolerances = intolerances,
+        diets = diets,
+        ingredients = ingredients,
+        instructions = instructions,
+        calories = calories,
+        protein = protein,
+        fat = fat,
+        carbs = carbs,
+        picturesNames = picturesNames,
+    )
+}

@@ -19,6 +19,7 @@ class JdbiRecipeModelMapper(
     private val dietListMapper: ColumnMapper<List<Diet>>,
     private val ingredientMapper: RowMapper<Ingredient>
 ) : RowMapper<JdbiRecipeModel> {
+
     override fun map(rs: ResultSet, ctx: StatementContext): JdbiRecipeModel {
         val cuisine = Cuisine.fromInt(rs.getInt("cuisine"))
         val mealType = MealType.fromInt(rs.getInt("meal_type"))

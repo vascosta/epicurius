@@ -7,8 +7,11 @@ import epicurius.domain.recipe.MealType
 import epicurius.domain.user.AuthenticatedUser
 import epicurius.http.recipe.models.input.CreateRecipeInputModel
 import epicurius.http.recipe.models.input.SearchRecipesInputModel
-import epicurius.http.recipe.models.output.RecipeOutputModel
+import epicurius.http.recipe.models.input.UpdateRecipeInputModel
+import epicurius.http.recipe.models.output.CreateRecipeOutputModel
+import epicurius.http.recipe.models.output.GetRecipeOutputModel
 import epicurius.http.recipe.models.output.SearchRecipesOutputModel
+import epicurius.http.recipe.models.output.UpdateRecipeOutputModel
 import epicurius.http.utils.Uris
 import epicurius.http.utils.Uris.Recipe.recipe
 import epicurius.services.RecipeService
@@ -16,6 +19,7 @@ import jakarta.validation.Valid
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PatchMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
@@ -75,8 +79,8 @@ class RecipeController(private val recipeService: RecipeService) {
 
     @GetMapping(Uris.Recipe.RECIPE)
     fun getRecipe(authenticatedUser: AuthenticatedUser, @PathVariable id: Int): ResponseEntity<*> {
-        val recipe = recipeService.getRecipe(authenticatedUser.user.id, id)
-        return ResponseEntity.ok().body(RecipeOutputModel(recipe))
+        val recipe = recipeService.getRecipe(id)
+        return ResponseEntity.ok().body(GetRecipeOutputModel(recipe))
     }
 
     @PostMapping(Uris.Recipe.RECIPES)
@@ -85,8 +89,18 @@ class RecipeController(private val recipeService: RecipeService) {
         @Valid @RequestBody body: CreateRecipeInputModel,
         @RequestPart("images") pictures: List<MultipartFile>
     ): ResponseEntity<*> {
-        val recipe = recipeService.createRecipe(authenticatedUser.user.id, body, pictures)
-        return ResponseEntity.created(recipe(recipe.id)).body(recipe)
+        val recipe = recipeService.createRecipe(authenticatedUser.user.id, authenticatedUser.user.username, body, pictures)
+        return ResponseEntity.created(recipe(recipe.id)).body(CreateRecipeOutputModel(recipe))
+    }
+
+    @PatchMapping(Uris.Recipe.RECIPE)
+    fun updateRecipe(
+        authenticatedUser: AuthenticatedUser,
+        @PathVariable id: Int,
+        @Valid @RequestBody body: UpdateRecipeInputModel,
+    ): ResponseEntity<*> {
+        val recipe = recipeService.updateRecipe(authenticatedUser.user.id, id, body)
+        return ResponseEntity.ok().body(UpdateRecipeOutputModel(recipe))
     }
 
     @DeleteMapping(Uris.Recipe.RECIPE)

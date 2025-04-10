@@ -3,6 +3,7 @@ package epicurius.repository.firestore.recipe
 import com.google.cloud.firestore.DocumentReference
 import com.google.cloud.firestore.Firestore
 import epicurius.repository.firestore.recipe.models.FirestoreRecipeModel
+import epicurius.repository.firestore.recipe.models.FirestoreUpdateRecipeModel
 
 class FirestoreRecipeRepository(private val firestore: Firestore) : RecipeRepository {
 
@@ -12,6 +13,24 @@ class FirestoreRecipeRepository(private val firestore: Firestore) : RecipeReposi
 
     override fun getRecipe(recipeId: Int): FirestoreRecipeModel {
         TODO("Not yet implemented")
+    }
+
+    override fun updateRecipe(recipeInfo: FirestoreUpdateRecipeModel): FirestoreRecipeModel {
+        val oldRecipe = getRecipe(recipeInfo.id)
+
+        if (recipeInfo.description != null) {
+            getDocumentReference(RECIPES_COLLECTION, recipeInfo.id.toString())
+                .update(mapOf("description" to recipeInfo.description,)).get()
+
+            return oldRecipe.copy(description = recipeInfo.description)
+        } else if (recipeInfo.instructions != null) {
+            getDocumentReference(RECIPES_COLLECTION, recipeInfo.id.toString())
+                .update(mapOf("instructions" to recipeInfo.instructions)).get()
+
+            return oldRecipe.copy(instructions = recipeInfo.instructions)
+        }
+
+        return oldRecipe
     }
 
     override fun deleteRecipe(recipeId: Int) {
@@ -74,17 +93,6 @@ class FirestoreRecipeRepository(private val firestore: Firestore) : RecipeReposi
 
     private fun deleteDocument(document: DocumentReference) =
         document.delete().get()
-
-/*    private inline fun <reified T> getSnapshotValue(snapshot: DocumentSnapshot, documentName: String) =
-        snapshot.get(documentName) as T
-
-    private inline fun <reified T> getSnapshotValue(snapshot: DocumentSnapshot, documentName: String): T? {
-        return try {
-            snapshot.get(documentName) as? T
-        } catch (e: Exception) {
-            null
-        }
-    }*/
 
     companion object {
         private const val RECIPES_COLLECTION = "Recipes"

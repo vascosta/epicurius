@@ -2,6 +2,7 @@ package epicurius.services
 
 import epicurius.domain.PictureDomain
 import epicurius.domain.exceptions.RecipeNotFound
+import epicurius.domain.recipe.Instructions
 import epicurius.domain.recipe.Recipe
 import epicurius.domain.recipe.RecipeDomain.Companion.IMAGES_MSG
 import epicurius.domain.recipe.RecipeDomain.Companion.MAX_IMAGES
@@ -9,11 +10,10 @@ import epicurius.domain.recipe.RecipeDomain.Companion.MIN_IMAGES
 import epicurius.domain.recipe.RecipeInfo
 import epicurius.http.recipe.models.input.CreateRecipeInputModel
 import epicurius.http.recipe.models.input.SearchRecipesInputModel
+import epicurius.http.recipe.models.input.UpdateRecipeInputModel
 import epicurius.repository.cloudStorage.CloudStorageManager
 import epicurius.repository.firestore.FirestoreManager
-import epicurius.repository.firestore.recipe.models.FirestoreRecipeModel
 import epicurius.repository.jdbi.recipe.models.JdbiRecipeModel
-import epicurius.repository.jdbi.recipe.models.toRecipe
 import epicurius.repository.spoonacular.SpoonacularManager
 import epicurius.repository.transaction.TransactionManager
 import org.springframework.stereotype.Component
@@ -29,7 +29,7 @@ class RecipeService(
     private val pictureDomain: PictureDomain,
 ) {
 
-    fun createRecipe(authorId: Int, recipeInfo: CreateRecipeInputModel, pictures: List<MultipartFile>): RecipeInfo {
+    fun createRecipe(authorId: Int, authorName: String, recipeInfo: CreateRecipeInputModel, pictures: List<MultipartFile>): Recipe {
 
         if (pictures.size !in MIN_IMAGES..MAX_IMAGES) {
             throw IllegalArgumentException(IMAGES_MSG)
@@ -37,11 +37,13 @@ class RecipeService(
             pictures.forEach { pictureDomain.validatePicture(it) }
             val picturesNames = pictures.map { UUID.randomUUID().toString() }
 
+            val jdbiCreateRecipeModel = recipeInfo.toJdbiRecipeModel(authorId, picturesNames)
+
             val recipeId = tm.run {
-                it.recipeRepository.createRecipe(recipeInfo.toJdbiRecipeModel(authorId, picturesNames))
+                it.recipeRepository.createRecipe(jdbiCreateRecipeModel)
             }
 
-            fs.recipeRepository.createRecipe(FirestoreRecipeModel(recipeId, recipeInfo.description, recipeInfo.instructions))
+            fs.recipeRepository.createRecipe(recipeInfo.toFirestoreRecipeModel(recipeId))
 
             picturesNames.forEachIndexed { index, pictureName ->
                 cs.pictureCloudStorageRepository.updatePicture(
@@ -51,21 +53,33 @@ class RecipeService(
                 )
             }
 
-            return RecipeInfo(
+            return Recipe(
                 recipeId,
                 recipeInfo.name,
+                authorName,
+                jdbiCreateRecipeModel.date,
+                recipeInfo.description,
+                recipeInfo.servings,
+                recipeInfo.preparationTime,
                 recipeInfo.cuisine,
                 recipeInfo.mealType,
-                recipeInfo.preparationTime,
-                recipeInfo.servings
+                recipeInfo.intolerances,
+                recipeInfo.diets,
+                recipeInfo.ingredients,
+                recipeInfo.calories,
+                recipeInfo.protein,
+                recipeInfo.fat,
+                recipeInfo.carbs,
+                recipeInfo.instructions,
+                picturesNames
             )
         }
     }
 
-    fun getRecipe(userId: Int, recipeId: Int): Recipe {
+    fun getRecipe(recipeId: Int): Recipe {
         val jdbiRecipe = tm.run { it.recipeRepository.getRecipe(recipeId) } ?: throw RecipeNotFound()
         // missing description and instructions
-        return jdbiRecipe.toRecipe()
+        return jdbiRecipe.toRecipe(null, Instructions(emptyMap()))
     }
 
     fun searchRecipes(userId: Int, form: SearchRecipesInputModel): List<RecipeInfo> {
@@ -80,6 +94,35 @@ class RecipeService(
         } else {
             recipesList
         }
+    }
+
+    fun updateRecipe(userId: Int, recipeId: Int, recipeInfo: UpdateRecipeInputModel): Recipe {
+        checkIfRecipeExists(recipeId) ?: throw RecipeNotFound()
+        checkIfUserIsAuthor(userId, recipeId)
+
+        val jdbiRecipe = tm.run { it.recipeRepository.updateRecipe(recipeInfo.toJdbiUpdateRecipeModel(recipeId)) }
+        val firestoreRecipe = fs.recipeRepository.updateRecipe(recipeInfo.toFirestoreUpdateRecipeModel(recipeId))
+
+        return Recipe(
+            recipeId,
+            jdbiRecipe.name,
+            jdbiRecipe.authorUsername,
+            jdbiRecipe.date,
+            recipeInfo.description ?: firestoreRecipe.description,
+            jdbiRecipe.servings,
+            jdbiRecipe.preparationTime,
+            jdbiRecipe.cuisine,
+            jdbiRecipe.mealType,
+            jdbiRecipe.intolerances,
+            jdbiRecipe.diets,
+            jdbiRecipe.ingredients,
+            jdbiRecipe.calories,
+            jdbiRecipe.protein,
+            jdbiRecipe.fat,
+            jdbiRecipe.carbs,
+            recipeInfo.instructions ?: firestoreRecipe.instructions,
+            jdbiRecipe.picturesNames
+        )
     }
 
     fun deleteRecipe(userId: Int, recipeId: Int) {

@@ -4,6 +4,7 @@ import epicurius.domain.recipe.RecipeInfo
 import epicurius.domain.recipe.SearchRecipesModel
 import epicurius.repository.jdbi.recipe.models.JdbiCreateRecipeModel
 import epicurius.repository.jdbi.recipe.models.JdbiRecipeModel
+import epicurius.repository.jdbi.recipe.models.JdbiUpdateRecipeModel
 import epicurius.repository.jdbi.utils.addCondition
 import org.jdbi.v3.core.Handle
 import org.jdbi.v3.core.kotlin.mapTo
@@ -128,6 +129,48 @@ class JdbiRecipeRepository(private val handle: Handle) : RecipeRepository {
         params.forEach { (key, value) -> result.bind(key, value) }
 
         return result.mapTo<RecipeInfo>().list()
+    }
+
+    override fun updateRecipe(recipeInfo: JdbiUpdateRecipeModel): JdbiRecipeModel {
+        return handle.createQuery(
+            """
+                WITH updated_recipe AS (
+                    UPDATE dbo.Recipe
+                    SET name = COALESCE(:name, name),
+                        servings = COALESCE(:servings, servings),
+                        preparation_time = COALESCE(:preparationTime, preparation_time),
+                        cuisine = COALESCE(:cuisine, cuisine),
+                        meal_type = COALESCE(:mealType, meal_type),
+                        intolerances = COALESCE(:intolerances, intolerances),
+                        diets = COALESCE(:diets, diets),
+                        calories = COALESCE(:calories, calories),
+                        protein = COALESCE(:protein, protein),
+                        fat = COALESCE(:fat, fat),
+                        carbs = COALESCE(:carbs, carbs),
+                        pictures_names = COALESCE(:picturesNames, pictures_names)
+                    WHERE id = :id
+                    RETURNING *
+                )
+                SELECT ur.*, u.*
+                FROM updated_recipe ur
+                JOIN dbo.user u ON ur.author_id = u.id;
+            """
+        )
+            .bind("id", recipeInfo.id)
+            .bind("name", recipeInfo.name)
+            .bind("servings", recipeInfo.servings)
+            .bind("preparationTime", recipeInfo.preparationTime)
+            .bind("cuisine", recipeInfo.cuisine?.ordinal)
+            .bind("mealType", recipeInfo.mealType?.ordinal)
+            .bind("intolerances", recipeInfo.intolerances?.toTypedArray())
+            .bind("diets", recipeInfo.diets?.toTypedArray())
+            .bind("calories", recipeInfo.calories)
+            .bind("protein", recipeInfo.protein)
+            .bind("fat", recipeInfo.fat)
+            .bind("carbs", recipeInfo.carbs)
+            .bind("picturesNames", recipeInfo.picturesNames?.toTypedArray())
+            .mapTo<JdbiRecipeModel>()
+            .first()
     }
 
     override fun deleteRecipe(recipeId: Int) {
