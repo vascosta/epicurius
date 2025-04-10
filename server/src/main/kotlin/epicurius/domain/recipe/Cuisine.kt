@@ -1,5 +1,7 @@
 package epicurius.domain.recipe
 
+import epicurius.domain.exceptions.InvalidCuisineIdx
+
 enum class Cuisine {
     AFRICAN,
     ASIAN,
@@ -27,5 +29,11 @@ enum class Cuisine {
     SOUTHERN,
     SPANISH,
     THAI,
-    VIETNAMESE
+    VIETNAMESE;
+
+    companion object {
+        fun Companion.fromInt(value: Int): Cuisine {
+            return Cuisine.entries.getOrNull(value) ?: throw InvalidCuisineIdx()
+        }
+    }
 }

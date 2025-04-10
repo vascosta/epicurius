@@ -1,8 +1,9 @@
 package epicurius.repository.jdbi.recipe
 
-import epicurius.domain.recipe.RecipeProfile
+import epicurius.domain.recipe.RecipeInfo
 import epicurius.domain.recipe.SearchRecipesModel
 import epicurius.repository.jdbi.recipe.models.JdbiRecipeModel
+import epicurius.repository.jdbi.utils.addCondition
 import org.jdbi.v3.core.Handle
 import org.jdbi.v3.core.kotlin.mapTo
 
@@ -57,11 +58,7 @@ class JdbiRecipeRepository(private val handle: Handle) : RecipeRepository {
         return recipeId
     }
 
-    override fun getRecipe(recipeId: Int): JdbiRecipeModel? {
-        TODO("Not yet implemented")
-    }
-
-    override fun searchRecipes(userId: Int, form: SearchRecipesModel): List<RecipeProfile> {
+    override fun searchRecipes(userId: Int, form: SearchRecipesModel): List<RecipeInfo> {
         val query = StringBuilder(
             """
                 SELECT id, name, cuisine, meal_type, preparation_time, servings
@@ -70,30 +67,26 @@ class JdbiRecipeRepository(private val handle: Handle) : RecipeRepository {
             """
         )
 
-        val params = mutableMapOf<String, Any?>()
+        val params = mutableMapOf<String, Any?>("id" to userId)
 
-        params["id"] = userId
-        form.name?.let { query.append(" AND name = :name"); params["name"] = "%$it%" }
-        form.cuisine?.let { query.append(" AND cuisine = :cuisine"); params["cuisine"] = it.ordinal }
-        form.mealType?.let { query.append(" AND meal_type = :meal"); params["meal"] = it.ordinal }
-        form.minCalories?.let { query.append(" AND calories >= :minCal"); params["minCal"] = it }
-        form.maxCalories?.let { query.append(" AND calories <= :maxCal"); params["maxCal"] = it }
-        form.minCarbs?.let { query.append(" AND carbs >= :minCarb"); params["minCarb"] = it }
-        form.maxCarbs?.let { query.append(" AND carbs <= :maxCarb"); params["maxCarb"] = it }
-        form.minFat?.let { query.append(" AND fat >= :minFat"); params["minFat"] = it }
-        form.maxFat?.let { query.append(" AND fat <= :maxFat"); params["maxFat"] = it }
-        form.minProtein?.let { query.append(" AND protein >= :minProt"); params["minProt"] = it }
-        form.maxProtein?.let { query.append(" AND protein <= :maxProt"); params["maxProt"] = it }
-        form.minTime?.let { query.append(" AND preparation_time >= :minTime"); params["minTime"] = it }
-        form.maxTime?.let { query.append(" AND preparation_time <= :maxTime"); params["maxTime"] = it }
-
-        // missing ingredients, intolerances, diets, maxResults
+        addCondition(query, params, "AND lower(name) LIKE lower(:name)", "name", form.name?.let { "%$it%" })
+        addCondition(query, params, "AND cuisine = :cuisine", "cuisine", form.cuisine)
+        addCondition(query, params, "AND meal_type = :meal", "meal", form.mealType)
+        addCondition(query, params, "AND calories >= :minCal", "minCal", form.minCalories)
+        addCondition(query, params, "AND calories <= :maxCal", "maxCal", form.maxCalories)
+        addCondition(query, params, "AND carbs >= :minCarb", "minCarb", form.minCarbs)
+        addCondition(query, params, "AND carbs <= :maxCarb", "maxCarb", form.maxCarbs)
+        addCondition(query, params, "AND fat >= :minFat", "minFat", form.minFat)
+        addCondition(query, params, "AND fat <= :maxFat", "maxFat", form.maxFat)
+        addCondition(query, params, "AND protein >= :minProt", "minProt", form.minProtein)
+        addCondition(query, params, "AND protein <= :maxProt", "maxProt", form.maxProtein)
+        addCondition(query, params, "AND preparation_time >= :minTime", "minTime", form.minTime)
+        addCondition(query, params, "AND preparation_time <= :maxTime", "maxTime", form.maxTime)
 
         val result = handle.createQuery(query.toString())
-
         params.forEach { (key, value) -> result.bind(key, value) }
 
-        return result.mapTo<RecipeProfile>().list()
+        return result.mapTo<RecipeInfo>().list()
     }
 
     override fun deleteRecipe(recipeId: Int) {
@@ -105,5 +98,30 @@ class JdbiRecipeRepository(private val handle: Handle) : RecipeRepository {
         )
             .bind("recipeId", recipeId)
             .execute()
+    }
+
+    override fun searchRecipesByIngredients(userId: Int, ingredientsList: List<String>): List<RecipeInfo> {
+        val ingredientsBinding = ingredientsList.indices.joinToString { ":i$it" }
+        val query = StringBuilder(
+            """
+                SELECT r.id, r.name, r.cuisine, r.meal_type, r.preparation_time, r.servings
+                FROM dbo.Recipe r JOIN dbo.Ingredient i ON r.id = i.recipe_id
+                WHERE author_id <> :id
+                AND lower(i.name) IN ($ingredientsBinding)
+                GROUP BY r.id, r.name, r.cuisine, r.meal_type, r.preparation_time, r.servings
+                HAVING COUNT(DISTINCT CASE WHEN lower(i.name) IN ($ingredientsBinding) 
+                THEN lower(i.name) END) = :count
+            """
+        )
+
+        val params = mutableMapOf<String, Any?>("id" to userId)
+
+        ingredientsList.forEachIndexed { idx, ingredient -> params["i$idx"] = ingredient }
+        params["count"] = ingredientsList.size
+
+        val result = handle.createQuery(query.toString())
+        params.forEach { (key, value) -> result.bind(key, value) }
+
+        return result.mapTo<RecipeInfo>().list()
     }
 }

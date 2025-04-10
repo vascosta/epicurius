@@ -1,17 +1,15 @@
 package epicurius.services
 
 import epicurius.domain.PictureDomain
-import epicurius.domain.recipe.Recipe
 import epicurius.domain.recipe.RecipeDomain.Companion.IMAGES_MSG
 import epicurius.domain.recipe.RecipeDomain.Companion.MAX_IMAGES
 import epicurius.domain.recipe.RecipeDomain.Companion.MIN_IMAGES
-import epicurius.domain.recipe.RecipeProfile
+import epicurius.domain.recipe.RecipeInfo
 import epicurius.http.recipe.models.input.CreateRecipeInputModel
 import epicurius.http.recipe.models.input.SearchRecipesInputModel
 import epicurius.repository.cloudStorage.CloudStorageManager
 import epicurius.repository.firestore.FirestoreManager
 import epicurius.repository.firestore.recipe.models.FirestoreRecipeModel
-import epicurius.repository.jdbi.recipe.models.JdbiRecipeModel
 import epicurius.repository.spoonacular.SpoonacularManager
 import epicurius.repository.transaction.TransactionManager
 import org.springframework.stereotype.Component
@@ -27,7 +25,7 @@ class RecipeService(
     private val pictureDomain: PictureDomain,
 ) {
 
-    fun createRecipe(authorId: Int, recipeInfo: CreateRecipeInputModel, pictures: List<MultipartFile>): RecipeProfile {
+    fun createRecipe(authorId: Int, recipeInfo: CreateRecipeInputModel, pictures: List<MultipartFile>): RecipeInfo {
 
         if (pictures.size !in MIN_IMAGES..MAX_IMAGES) {
             throw IllegalArgumentException(IMAGES_MSG)
@@ -49,7 +47,7 @@ class RecipeService(
                 )
             }
 
-            return RecipeProfile(
+            return RecipeInfo(
                 recipeId,
                 recipeInfo.name,
                 recipeInfo.cuisine,
@@ -60,17 +58,27 @@ class RecipeService(
         }
     }
 
-    fun getRecipe(recipeId: Int): RecipeProfile {
+    fun getRecipe(recipeId: Int): RecipeInfo {
         TODO()
     }
 
-    fun searchRecipes(userId: Int, name: String?, form: SearchRecipesInputModel): List<RecipeProfile> {
-        val fillForm = form.toSearchRecipe(name)
-        return tm.run {
+    fun searchRecipes(userId: Int, form: SearchRecipesInputModel): List<RecipeInfo> {
+        val fillForm = form.toSearchRecipe(form.name)
+        val recipesList = tm.run {
             it.recipeRepository.searchRecipes(userId, fillForm)
+        }
+
+        return if (form.ingredients != null) {
+            val recipesByIngredients = tm.run {
+                it.recipeRepository.searchRecipesByIngredients(userId, form.ingredients)
+            }
+            recipesList.intersect(recipesByIngredients.toSet()).toList()
+        } else {
+            recipesList
         }
     }
 
+    /*
     fun deleteRecipe(userId: Int, recipeId: Int) {
         val recipe = checkIfRecipeExists(recipeId) ?: throw IllegalArgumentException("Recipe not found")
         checkIfUserIsAuthor(userId, recipe.authorId)
@@ -80,6 +88,8 @@ class RecipeService(
 
     private fun checkIfRecipeExists(recipeId: Int): JdbiRecipeModel? =
         tm.run { it.recipeRepository.getRecipe(recipeId) }
+
+     */
 
     private fun checkIfUserIsAuthor(userId: Int, authorId: Int) {
         if (userId != authorId) throw IllegalArgumentException("You are not the author of this recipe")

@@ -1,5 +1,7 @@
 package epicurius.domain.recipe
 
+import epicurius.domain.exceptions.InvalidMealTypeIdx
+
 enum class MealType {
     MAIN_COURSE,
     SIDE_DISH,
@@ -13,5 +15,11 @@ enum class MealType {
     SAUCE,
     MARINADE,
     FINGERFOOD,
-    SNACK
+    SNACK;
+
+    companion object {
+        fun Companion.fromInt(value: Int): MealType {
+            return MealType.entries.getOrNull(value) ?: throw InvalidMealTypeIdx()
+        }
+    }
 }

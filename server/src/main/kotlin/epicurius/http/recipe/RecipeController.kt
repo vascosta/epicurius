@@ -1,5 +1,9 @@
 package epicurius.http.recipe
 
+import epicurius.domain.Diet
+import epicurius.domain.Intolerance
+import epicurius.domain.recipe.Cuisine
+import epicurius.domain.recipe.MealType
 import epicurius.domain.user.AuthenticatedUser
 import epicurius.http.recipe.models.input.CreateRecipeInputModel
 import epicurius.http.recipe.models.input.SearchRecipesInputModel
@@ -28,9 +32,43 @@ class RecipeController(private val recipeService: RecipeService) {
     fun searchRecipes(
         authenticatedUser: AuthenticatedUser,
         @RequestParam name: String?,
-        @Valid @RequestBody body: SearchRecipesInputModel
+        @RequestParam cuisine: Cuisine?,
+        @RequestParam mealType: MealType?,
+        @RequestParam ingredients: List<String>?,
+        @RequestParam intolerances: List<Intolerance>?,
+        @RequestParam diets: List<Diet>?,
+        @RequestParam minCalories: Int?,
+        @RequestParam maxCalories: Int?,
+        @RequestParam minCarbs: Int?,
+        @RequestParam maxCarbs: Int?,
+        @RequestParam minFat: Int?,
+        @RequestParam maxFat: Int?,
+        @RequestParam minProtein: Int?,
+        @RequestParam maxProtein: Int?,
+        @RequestParam minTime: Int?,
+        @RequestParam maxTime: Int?,
+        @RequestParam maxResults: Int = 10
     ): ResponseEntity<*> {
-        val results = recipeService.searchRecipes(authenticatedUser.user.id, name, body)
+        val searchForm = SearchRecipesInputModel(
+            name = name,
+            cuisine = cuisine,
+            mealType = mealType,
+            ingredients = ingredients?.map { it.replace("-", " ") },
+            intolerances = intolerances,
+            diets = diets,
+            minCalories = minCalories,
+            maxCalories = maxCalories,
+            minCarbs = minCarbs,
+            maxCarbs = maxCarbs,
+            minFat = minFat,
+            maxFat = maxFat,
+            minProtein = minProtein,
+            maxProtein = maxProtein,
+            minTime = minTime,
+            maxTime = maxTime,
+            maxResults = maxResults
+        )
+        val results = recipeService.searchRecipes(authenticatedUser.user.id, searchForm)
         return ResponseEntity.ok().body(SearchRecipesOutputModel(results))
     }
 
@@ -44,6 +82,7 @@ class RecipeController(private val recipeService: RecipeService) {
         return ResponseEntity.created(recipe(recipe.id)).body(recipe)
     }
 
+    /*
     @DeleteMapping(Uris.Recipe.RECIPE)
     fun deleteRecipe(
         authenticatedUser: AuthenticatedUser,
@@ -52,4 +91,6 @@ class RecipeController(private val recipeService: RecipeService) {
         recipeService.deleteRecipe(authenticatedUser.user.id, id)
         return ResponseEntity.noContent().build<Unit>()
     }
+
+     */
 }

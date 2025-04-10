@@ -1,5 +1,5 @@
 package epicurius.http.recipe.models.output
 
-import epicurius.domain.recipe.RecipeProfile
+import epicurius.domain.recipe.RecipeInfo
 
-data class SearchRecipesOutputModel(val recipes: List<RecipeProfile>)
+data class SearchRecipesOutputModel(val recipes: List<RecipeInfo>)

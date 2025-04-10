@@ -1,15 +1,12 @@
 package epicurius.domain.recipe
 
-import epicurius.domain.Diet
-import epicurius.domain.Intolerance
-
 data class SearchRecipesModel(
     val name: String?,
-    val cuisine: Cuisine?,
-    val mealType: MealType?,
-    val ingredients: List<Ingredient>?,
-    val intolerances: List<Intolerance>?,
-    val diets: List<Diet>?,
+    val cuisine: Int?,
+    val mealType: Int?,
+    val ingredients: List<String>?,
+    val intolerances: List<Int>?,
+    val diets: List<Int>?,
     val minCalories: Int?,
     val maxCalories: Int?,
     val minCarbs: Int?,
