@@ -2,6 +2,7 @@ package epicurius.domain.recipe
 
 import epicurius.domain.Diet
 import epicurius.domain.Intolerance
+import epicurius.http.recipe.models.output.UpdateRecipeOutputModel
 import java.util.Date
 
 data class Recipe(
@@ -22,5 +23,26 @@ data class Recipe(
     val fat: Int?,
     val carbs: Int?,
     val instructions: Instructions,
-    val picturesNames: List<ByteArray>,
-)
+    val pictures: List<ByteArray>
+) {
+    fun toUpdateRecipeOutputModel() =
+        UpdateRecipeOutputModel(
+            id,
+            name,
+            authorUsername,
+            date,
+            description,
+            servings,
+            preparationTime,
+            cuisine,
+            mealType,
+            intolerances,
+            diets,
+            ingredients,
+            calories,
+            protein,
+            fat,
+            carbs,
+            instructions
+        )
+}

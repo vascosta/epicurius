@@ -9,18 +9,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 @SpringBootApplication
 class EpicuriusApplication {
 
-/*    @Bean
-    fun firestore(): Firestore {
-        val serviceAccount = Environment.getGoogleServiceAccount()
-
-        val options = FirestoreOptions.newBuilder()
-            .setCredentials(GoogleCredentials.fromStream(serviceAccount))
-            .setDatabaseId(Environment.getFirestoreDatabaseId())
-            .build()
-
-        return options.service
-    }*/
-
     @Bean
     fun passwordEncoder() = BCryptPasswordEncoder()
 

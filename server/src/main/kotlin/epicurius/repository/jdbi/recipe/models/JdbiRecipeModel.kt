@@ -28,7 +28,7 @@ data class JdbiRecipeModel(
     val carbs: Int? = null,
     val picturesNames: List<String>,
 ) {
-    fun toRecipe(description: String?, instructions: Instructions): Recipe = Recipe(
+    fun toRecipe(description: String?, instructions: Instructions, pictures: List<ByteArray>): Recipe = Recipe(
         id = id,
         name = name,
         authorUsername = authorUsername,
@@ -46,6 +46,6 @@ data class JdbiRecipeModel(
         protein = protein,
         fat = fat,
         carbs = carbs,
-        picturesNames = picturesNames,
+        pictures = pictures,
     )
 }

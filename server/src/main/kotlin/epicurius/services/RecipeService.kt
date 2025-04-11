@@ -11,6 +11,8 @@ import epicurius.domain.recipe.RecipeInfo
 import epicurius.http.recipe.models.input.CreateRecipeInputModel
 import epicurius.http.recipe.models.input.SearchRecipesInputModel
 import epicurius.http.recipe.models.input.UpdateRecipeInputModel
+import epicurius.http.recipe.models.output.CreateRecipeOutputModel
+import epicurius.http.recipe.models.output.UpdateRecipeOutputModel
 import epicurius.repository.cloudStorage.CloudStorageManager
 import epicurius.repository.firestore.FirestoreManager
 import epicurius.repository.jdbi.recipe.models.JdbiRecipeModel
@@ -79,7 +81,7 @@ class RecipeService(
     fun getRecipe(recipeId: Int): Recipe {
         val jdbiRecipe = tm.run { it.recipeRepository.getRecipe(recipeId) } ?: throw RecipeNotFound()
         // missing description and instructions
-        return jdbiRecipe.toRecipe(null, Instructions(emptyMap()))
+        return jdbiRecipe.toRecipe(null, Instructions(emptyMap()), emptyList())
     }
 
     fun getRecipePictures(recipeId: Int): List<ByteArray> {
@@ -101,19 +103,19 @@ class RecipeService(
         }
     }
 
-    fun updateRecipe(userId: Int, recipeId: Int, recipeInfo: UpdateRecipeInputModel): Recipe {
+    fun updateRecipe(userId: Int, recipeId: Int, recipeInfo: UpdateRecipeInputModel): UpdateRecipeOutputModel {
         checkIfRecipeExists(recipeId) ?: throw RecipeNotFound()
         checkIfUserIsAuthor(userId, recipeId)
 
         val jdbiRecipe = tm.run { it.recipeRepository.updateRecipe(recipeInfo.toJdbiUpdateRecipeModel(recipeId)) }
         val firestoreRecipe = fs.recipeRepository.updateRecipe(recipeInfo.toFirestoreUpdateRecipeModel(recipeId))
 
-        return Recipe(
+        return UpdateRecipeOutputModel(
             recipeId,
             jdbiRecipe.name,
             jdbiRecipe.authorUsername,
             jdbiRecipe.date,
-            recipeInfo.description ?: firestoreRecipe.description,
+            firestoreRecipe.description,
             jdbiRecipe.servings,
             jdbiRecipe.preparationTime,
             jdbiRecipe.cuisine,
@@ -125,8 +127,7 @@ class RecipeService(
             jdbiRecipe.protein,
             jdbiRecipe.fat,
             jdbiRecipe.carbs,
-            recipeInfo.instructions ?: firestoreRecipe.instructions,
-            getRecipePictures(recipeId)
+            firestoreRecipe.instructions
         )
     }
 

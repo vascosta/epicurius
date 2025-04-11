@@ -93,7 +93,7 @@ fun createTestRecipe(tm: TransactionManager, fs: FirestoreManager, user: User): 
         jdbiRecipeInfo.fat,
         jdbiRecipeInfo.carbs,
         firestoreRecipeInfo.instructions,
-        jdbiRecipeInfo.picturesNames
+        listOf(ByteArray(1))
     )
 }
 
