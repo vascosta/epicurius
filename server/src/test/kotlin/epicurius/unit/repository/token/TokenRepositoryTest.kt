@@ -1,5 +1,6 @@
-package epicurius.repository
+package epicurius.unit.repository.token
 
+import epicurius.unit.repository.RepositoryTest
 import epicurius.utils.generateEmail
 import epicurius.utils.generateRandomUsername
 import epicurius.utils.generateSecurePassword

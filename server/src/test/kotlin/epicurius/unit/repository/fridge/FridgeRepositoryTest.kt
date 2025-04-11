@@ -1,8 +1,9 @@
-package epicurius.repository
+package epicurius.unit.repository.fridge
 
 import epicurius.domain.fridge.ProductInfo
 import epicurius.domain.fridge.UpdateProductInfo
 import epicurius.domain.user.User
+import epicurius.unit.repository.RepositoryTest
 import epicurius.utils.createTestUser
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.BeforeEach

@@ -1,8 +1,8 @@
-package epicurius.repository.user
+package epicurius.unit.repository.user
 
 import epicurius.domain.user.FollowingStatus
 import epicurius.domain.user.User
-import epicurius.repository.RepositoryTest
+import epicurius.unit.repository.RepositoryTest
 import epicurius.repository.jdbi.user.models.SearchUserModel
 import epicurius.utils.createTestUser
 import org.junit.jupiter.api.BeforeEach

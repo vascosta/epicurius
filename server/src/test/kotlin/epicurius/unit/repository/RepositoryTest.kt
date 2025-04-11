@@ -1,4 +1,4 @@
-package epicurius.repository
+package epicurius.unit.repository
 
 import epicurius.EpicuriusTest
 import epicurius.domain.PagingParams
@@ -7,10 +7,12 @@ import epicurius.domain.fridge.ProductInfo
 import epicurius.domain.fridge.UpdateProductInfo
 import epicurius.domain.user.UpdateUserModel
 import epicurius.repository.firestore.recipe.models.FirestoreRecipeModel
+import epicurius.repository.firestore.recipe.models.FirestoreUpdateRecipeModel
 import epicurius.repository.jdbi.recipe.models.JdbiCreateRecipeModel
+import epicurius.repository.jdbi.recipe.models.JdbiUpdateRecipeModel
 import org.springframework.web.multipart.MultipartFile
 
-open class RepositoryTest : EpicuriusTest() {
+open class RepositoryTest : EpicuriusUnitTest() {
 
     companion object {
 
@@ -103,5 +105,19 @@ open class RepositoryTest : EpicuriusTest() {
         fun firestoreCreateRecipe(recipeInfo: FirestoreRecipeModel) {
             fs.recipeRepository.createRecipe(recipeInfo)
         }
+
+        fun getJdbiRecipe(recipeId: Int) = tm.run { it.recipeRepository.getRecipe(recipeId) }
+
+        fun getFirestoreRecipe(recipeId: Int) = fs.recipeRepository.getRecipe(recipeId)
+
+        fun updateJdbiRecipe(recipeInfo: JdbiUpdateRecipeModel) =
+            tm.run { it.recipeRepository.updateRecipe(recipeInfo) }
+
+        fun updateFirestoreRecipe(recipeInfo: FirestoreUpdateRecipeModel) =
+            fs.recipeRepository.updateRecipe(recipeInfo)
+
+        fun deleteJdbiRecipe(recipeId: Int) = tm.run { it.recipeRepository.deleteRecipe(recipeId) }
+
+        fun deleteFirestoreRecipe(recipeId: Int) = fs.recipeRepository.deleteRecipe(recipeId)
     }
 }

@@ -1,7 +1,7 @@
-package epicurius.repository.user
+package epicurius.unit.repository.user
 
 import epicurius.domain.PagingParams
-import epicurius.repository.RepositoryTest
+import epicurius.unit.repository.RepositoryTest
 import epicurius.repository.jdbi.user.models.SearchUserModel
 import epicurius.utils.createTestUser
 import epicurius.utils.generateEmail

@@ -1,9 +1,9 @@
-package epicurius.repository.user
+package epicurius.unit.repository.user
 
 import epicurius.domain.Diet
 import epicurius.domain.Intolerance
 import epicurius.domain.user.UpdateUserModel
-import epicurius.repository.RepositoryTest
+import epicurius.unit.repository.RepositoryTest
 import epicurius.utils.createTestUser
 import epicurius.utils.generateEmail
 import epicurius.utils.generateRandomUsername

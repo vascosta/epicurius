@@ -1,4 +1,4 @@
-package epicurius
+package epicurius.unit.repository
 
 import com.google.auth.oauth2.GoogleCredentials
 import com.google.cloud.firestore.Firestore
@@ -23,10 +23,8 @@ import org.springframework.mock.web.MockMultipartFile
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import java.io.FileInputStream
 
-open class EpicuriusTest {
-
+open class EpicuriusUnitTest {
     companion object {
-
         @JvmStatic
         @AfterAll
         fun clearDB() {
