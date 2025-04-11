@@ -13,7 +13,7 @@ import epicurius.http.recipe.models.output.GetRecipeOutputModel
 import epicurius.http.recipe.models.output.SearchRecipesOutputModel
 import epicurius.http.utils.Uris
 import epicurius.http.utils.Uris.Recipe.recipe
-import epicurius.services.RecipeService
+import epicurius.services.recipe.RecipeService
 import jakarta.validation.Valid
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.DeleteMapping

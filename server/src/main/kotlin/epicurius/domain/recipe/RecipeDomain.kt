@@ -25,8 +25,7 @@ class RecipeDomain {
         const val MIN_INGREDIENT_QUANTITY = 1
         const val INGREDIENT_QUANTITY_MSG = "Ingredient quantity must be greater than $MIN_INGREDIENT_QUANTITY"
 
-        const val MIN_IMAGES = 1
-        const val MAX_IMAGES = 3
-        const val IMAGES_MSG = "At least $MIN_IMAGES and at most $MAX_IMAGES images are required"
+        const val MIN_PICTURES = 1
+        const val MAX_PICTURES = 3
     }
 }

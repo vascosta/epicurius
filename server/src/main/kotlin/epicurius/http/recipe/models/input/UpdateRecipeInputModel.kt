@@ -31,7 +31,7 @@ data class UpdateRecipeInputModel(
     val carbs: Int? = null,
     val instructions: Instructions? = null,
 ) {
-    fun toJdbiUpdateRecipeModel(recipeId: Int) =
+    fun toJdbiUpdateRecipeModel(recipeId: Int, pictureNames: List<String>?) =
         JdbiUpdateRecipeModel(
             recipeId,
             name,
@@ -46,7 +46,7 @@ data class UpdateRecipeInputModel(
             protein,
             fat,
             carbs,
-            emptyList()
+            pictureNames
         )
 
     fun toFirestoreUpdateRecipeModel(recipeId: Int) = FirestoreUpdateRecipeModel(recipeId, description, instructions)

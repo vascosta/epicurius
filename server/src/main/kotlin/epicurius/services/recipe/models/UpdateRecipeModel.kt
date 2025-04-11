@@ -1,10 +1,14 @@
-package epicurius.domain.recipe
+package epicurius.services.recipe.models
 
 import epicurius.domain.Diet
 import epicurius.domain.Intolerance
+import epicurius.domain.recipe.Cuisine
+import epicurius.domain.recipe.Ingredient
+import epicurius.domain.recipe.Instructions
+import epicurius.domain.recipe.MealType
 import java.util.Date
 
-data class Recipe(
+data class UpdateRecipeModel(
     val id: Int,
     val name: String,
     val authorUsername: String,
@@ -21,6 +25,5 @@ data class Recipe(
     val protein: Int?,
     val fat: Int?,
     val carbs: Int?,
-    val instructions: Instructions,
-    val pictures: List<ByteArray>
+    val instructions: Instructions
 )
