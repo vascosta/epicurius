@@ -78,10 +78,14 @@ class RecipeService(
         }
     }
 
-    fun getRecipe(recipeId: Int): Recipe {
+    suspend fun getRecipe(recipeId: Int): Recipe {
         val jdbiRecipe = tm.run { it.recipeRepository.getRecipe(recipeId) } ?: throw RecipeNotFound()
-        // missing description and instructions
-        return jdbiRecipe.toRecipe(null, Instructions(emptyMap()), emptyList())
+        val firestoreRecipe = fs.recipeRepository.getRecipe(recipeId)
+        val recipePictures = jdbiRecipe.picturesNames.map {
+            cs.pictureCloudStorageRepository.getPicture(it, PictureDomain.RECIPES_FOLDER)
+        }
+
+        return jdbiRecipe.toRecipe(firestoreRecipe.description, firestoreRecipe.instructions, recipePictures)
     }
 
     fun getRecipePictures(recipeId: Int): List<ByteArray> {
@@ -103,7 +107,7 @@ class RecipeService(
         }
     }
 
-    fun updateRecipe(userId: Int, recipeId: Int, recipeInfo: UpdateRecipeInputModel): UpdateRecipeOutputModel {
+    suspend fun updateRecipe(userId: Int, recipeId: Int, recipeInfo: UpdateRecipeInputModel): UpdateRecipeOutputModel {
         checkIfRecipeExists(recipeId) ?: throw RecipeNotFound()
         checkIfUserIsAuthor(userId, recipeId)
 

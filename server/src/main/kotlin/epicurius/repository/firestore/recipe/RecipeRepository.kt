@@ -5,7 +5,7 @@ import epicurius.repository.firestore.recipe.models.FirestoreUpdateRecipeModel
 
 interface RecipeRepository {
     fun createRecipe(recipe: FirestoreRecipeModel)
-    fun getRecipe(recipeId: Int): FirestoreRecipeModel
-    fun updateRecipe(recipeInfo: FirestoreUpdateRecipeModel): FirestoreRecipeModel
+    suspend fun getRecipe(recipeId: Int): FirestoreRecipeModel
+    suspend fun updateRecipe(recipeInfo: FirestoreUpdateRecipeModel): FirestoreRecipeModel
     fun deleteRecipe(recipeId: Int)
 }

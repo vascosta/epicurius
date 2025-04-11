@@ -77,7 +77,7 @@ class RecipeController(private val recipeService: RecipeService) {
     }
 
     @GetMapping(Uris.Recipe.RECIPE)
-    fun getRecipe(authenticatedUser: AuthenticatedUser, @PathVariable id: Int): ResponseEntity<*> {
+    suspend fun getRecipe(authenticatedUser: AuthenticatedUser, @PathVariable id: Int): ResponseEntity<*> {
         val recipe = recipeService.getRecipe(id)
         return ResponseEntity.ok().body(GetRecipeOutputModel(recipe))
     }
@@ -93,7 +93,7 @@ class RecipeController(private val recipeService: RecipeService) {
     }
 
     @PatchMapping(Uris.Recipe.RECIPE)
-    fun updateRecipe(
+    suspend fun updateRecipe(
         authenticatedUser: AuthenticatedUser,
         @PathVariable id: Int,
         @Valid @RequestBody body: UpdateRecipeInputModel,
