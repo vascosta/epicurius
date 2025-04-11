@@ -1,5 +1,6 @@
 package epicurius.repository.jdbi.recipe
 
+import epicurius.domain.recipe.Ingredient
 import epicurius.domain.recipe.RecipeInfo
 import epicurius.domain.recipe.SearchRecipesModel
 import epicurius.repository.jdbi.recipe.models.JdbiCreateRecipeModel
@@ -15,8 +16,9 @@ class JdbiRecipeRepository(private val handle: Handle) : RecipeRepository {
         val recipeId = handle.createUpdate(
             """
                 INSERT INTO dbo.Recipe (
-                name, author_id, date, servings, 
-                preparation_time, meal_type, cuisine, intolerances, diets, calories, protein, fat, carbs, pictures_names
+                    name, author_id, date, servings, 
+                    preparation_time, meal_type, cuisine, 
+                    intolerances, diets, calories, protein, fat, carbs, pictures_names
                 )
                 VALUES (
                 :name, :authorId, :date, :servings, 
@@ -30,8 +32,8 @@ class JdbiRecipeRepository(private val handle: Handle) : RecipeRepository {
             .bind("date", recipeInfo.date)
             .bind("servings", recipeInfo.servings)
             .bind("preparationTime", recipeInfo.preparationTime)
-            .bind("mealType", recipeInfo.mealType.ordinal)
-            .bind("cuisine", recipeInfo.cuisine.ordinal)
+            .bind("mealType", recipeInfo.mealType)
+            .bind("cuisine", recipeInfo.cuisine)
             .bind("intolerances", recipeInfo.intolerances.toTypedArray())
             .bind("diets", recipeInfo.diets.toTypedArray())
             .bind("calories", recipeInfo.calories)
@@ -132,6 +134,11 @@ class JdbiRecipeRepository(private val handle: Handle) : RecipeRepository {
     }
 
     override fun updateRecipe(recipeInfo: JdbiUpdateRecipeModel): JdbiRecipeModel {
+        if (recipeInfo.ingredients != null) {
+            removeIngredients(recipeInfo.id)
+            addIngredients(recipeInfo.id, recipeInfo.ingredients)
+        }
+
         return handle.createQuery(
             """
                 WITH updated_recipe AS (
@@ -151,17 +158,18 @@ class JdbiRecipeRepository(private val handle: Handle) : RecipeRepository {
                     WHERE id = :id
                     RETURNING *
                 )
-                SELECT ur.*, u.*
+                SELECT ur.*, i.name AS ingredient_name, i.quantity, i.unit, u.username
                 FROM updated_recipe ur
-                JOIN dbo.user u ON ur.author_id = u.id;
+                JOIN dbo.Ingredient i ON i.recipe_id = ur.id
+                JOIN dbo.user u ON u.id = ur.author_id;
             """
         )
             .bind("id", recipeInfo.id)
             .bind("name", recipeInfo.name)
             .bind("servings", recipeInfo.servings)
             .bind("preparationTime", recipeInfo.preparationTime)
-            .bind("cuisine", recipeInfo.cuisine?.ordinal)
-            .bind("mealType", recipeInfo.mealType?.ordinal)
+            .bind("cuisine", recipeInfo.cuisine)
+            .bind("mealType", recipeInfo.mealType)
             .bind("intolerances", recipeInfo.intolerances?.toTypedArray())
             .bind("diets", recipeInfo.diets?.toTypedArray())
             .bind("calories", recipeInfo.calories)
@@ -178,6 +186,33 @@ class JdbiRecipeRepository(private val handle: Handle) : RecipeRepository {
             """
                 DELETE FROM dbo.Recipe
                 WHERE id = :recipeId
+            """
+        )
+            .bind("recipeId", recipeId)
+            .execute()
+    }
+
+    private fun addIngredients(recipeId: Int, ingredients: List<Ingredient>) {
+        ingredients.forEach { ingredient ->
+            handle.createUpdate(
+                """
+                    INSERT INTO dbo.Ingredient (recipe_id, name, quantity, unit)
+                    VALUES (:recipeId, :name, :quantity, :unit)
+                """
+            )
+                .bind("recipeId", recipeId)
+                .bind("name", ingredient.name)
+                .bind("quantity", ingredient.quantity)
+                .bind("unit", ingredient.unit.ordinal)
+                .execute()
+        }
+    }
+
+    private fun removeIngredients(recipeId: Int) {
+        handle.createUpdate(
+            """
+                DELETE FROM dbo.Ingredient
+                WHERE recipe_id = :recipeId
             """
         )
             .bind("recipeId", recipeId)

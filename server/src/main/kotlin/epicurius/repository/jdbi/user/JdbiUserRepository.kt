@@ -9,6 +9,7 @@ import org.jdbi.v3.core.Handle
 import org.jdbi.v3.core.kotlin.mapTo
 
 class JdbiUserRepository(private val handle: Handle) : UserRepository {
+
     override fun createUser(username: String, email: String, country: String, passwordHash: String) {
         handle.createUpdate(
             """

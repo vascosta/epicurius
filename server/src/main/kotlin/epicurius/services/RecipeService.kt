@@ -71,7 +71,7 @@ class RecipeService(
                 recipeInfo.fat,
                 recipeInfo.carbs,
                 recipeInfo.instructions,
-                picturesNames
+                pictures.map { it.bytes }
             )
         }
     }
@@ -80,6 +80,11 @@ class RecipeService(
         val jdbiRecipe = tm.run { it.recipeRepository.getRecipe(recipeId) } ?: throw RecipeNotFound()
         // missing description and instructions
         return jdbiRecipe.toRecipe(null, Instructions(emptyMap()))
+    }
+
+    fun getRecipePictures(recipeId: Int): List<ByteArray> {
+        val recipe = tm.run { it.recipeRepository.getRecipe(recipeId) } ?: throw RecipeNotFound()
+        return recipe.picturesNames.map { cs.pictureCloudStorageRepository.getPicture(it, PictureDomain.RECIPES_FOLDER) }
     }
 
     fun searchRecipes(userId: Int, form: SearchRecipesInputModel): List<RecipeInfo> {
@@ -121,8 +126,12 @@ class RecipeService(
             jdbiRecipe.fat,
             jdbiRecipe.carbs,
             recipeInfo.instructions ?: firestoreRecipe.instructions,
-            jdbiRecipe.picturesNames
+            getRecipePictures(recipeId)
         )
+    }
+
+    fun updatePictures() {
+        TODO()
     }
 
     fun deleteRecipe(userId: Int, recipeId: Int) {
