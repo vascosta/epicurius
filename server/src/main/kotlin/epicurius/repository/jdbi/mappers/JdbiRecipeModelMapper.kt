@@ -41,10 +41,10 @@ class JdbiRecipeModelMapper(
             intolerances = intolerances,
             diets = diets,
             ingredients = emptyList(),
-            calories = rs.getInt("calories"),
-            protein = rs.getInt("protein"),
-            fat = rs.getInt("fat"),
-            carbs = rs.getInt("carbs"),
+            calories = rs.getObject("calories", Integer::class.java)?.toInt(),
+            protein = rs.getObject("protein", Integer::class.java)?.toInt(),
+            fat = rs.getObject("fat", Integer::class.java)?.toInt(),
+            carbs = rs.getObject("carbs", Integer::class.java)?.toInt(),
             picturesNames = picturesNames
         )
 

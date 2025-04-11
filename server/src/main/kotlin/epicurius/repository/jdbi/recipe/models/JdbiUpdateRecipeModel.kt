@@ -1,20 +1,16 @@
 package epicurius.repository.jdbi.recipe.models
 
-import epicurius.domain.Diet
-import epicurius.domain.Intolerance
-import epicurius.domain.recipe.Cuisine
 import epicurius.domain.recipe.Ingredient
-import epicurius.domain.recipe.MealType
 
 data class JdbiUpdateRecipeModel(
     val id: Int,
     val name: String?,
     val servings: Int?,
     val preparationTime: Int?,
-    val cuisine: Cuisine?,
-    val mealType: MealType?,
-    val intolerances: List<Intolerance>?,
-    val diets: List<Diet>?,
+    val cuisine: Int?,
+    val mealType: Int?,
+    val intolerances: List<Int>?,
+    val diets: List<Int>?,
     val ingredients: List<Ingredient>?,
     val calories: Int?,
     val protein: Int?,
