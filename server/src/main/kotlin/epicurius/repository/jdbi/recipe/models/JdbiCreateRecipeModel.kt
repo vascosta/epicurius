@@ -1,8 +1,6 @@
 package epicurius.repository.jdbi.recipe.models
 
-import epicurius.domain.recipe.Cuisine
 import epicurius.domain.recipe.Ingredient
-import epicurius.domain.recipe.MealType
 import java.time.Instant
 import java.util.Date
 

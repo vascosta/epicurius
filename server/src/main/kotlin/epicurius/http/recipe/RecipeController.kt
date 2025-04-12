@@ -1,5 +1,6 @@
 package epicurius.http.recipe
 
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import epicurius.domain.Diet
 import epicurius.domain.Intolerance
 import epicurius.domain.recipe.Cuisine
@@ -15,6 +16,7 @@ import epicurius.http.utils.Uris
 import epicurius.http.utils.Uris.Recipe.recipe
 import epicurius.services.recipe.RecipeService
 import jakarta.validation.Valid
+import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
@@ -82,13 +84,15 @@ class RecipeController(private val recipeService: RecipeService) {
         return ResponseEntity.ok().body(GetRecipeOutputModel(recipe))
     }
 
-    @PostMapping(Uris.Recipe.RECIPES)
+    @PostMapping(Uris.Recipe.RECIPES, consumes = [MediaType.MULTIPART_FORM_DATA_VALUE])
     fun createRecipe(
         authenticatedUser: AuthenticatedUser,
-        @Valid @RequestBody body: CreateRecipeInputModel,
+        @RequestPart("body") body: String,
         @RequestPart("images") pictures: List<MultipartFile>
     ): ResponseEntity<*> {
-        val recipe = recipeService.createRecipe(authenticatedUser.user.id, authenticatedUser.user.username, body, pictures)
+        val objectMapper = jacksonObjectMapper()
+        val recipeInfo = objectMapper.readValue(body, CreateRecipeInputModel::class.java)
+        val recipe = recipeService.createRecipe(authenticatedUser.user.id, authenticatedUser.user.username, recipeInfo, pictures)
         return ResponseEntity.created(recipe(recipe.id)).body(CreateRecipeOutputModel(recipe))
     }
 

@@ -4,7 +4,6 @@ import epicurius.domain.PictureDomain
 import epicurius.domain.PictureDomain.Companion.RECIPES_FOLDER
 import epicurius.domain.exceptions.InvalidNumberOfRecipePictures
 import epicurius.domain.exceptions.RecipeNotFound
-import epicurius.domain.recipe.Instructions
 import epicurius.domain.recipe.Recipe
 import epicurius.domain.recipe.RecipeDomain.Companion.MAX_PICTURES
 import epicurius.domain.recipe.RecipeDomain.Companion.MIN_PICTURES
@@ -109,7 +108,7 @@ class RecipeService(
             recipesList
         }
     }
-    
+
     suspend fun updateRecipe(userId: Int, recipeId: Int, recipeInfo: UpdateRecipeInputModel): UpdateRecipeModel {
         checkIfRecipeExists(recipeId) ?: throw RecipeNotFound()
         checkIfUserIsAuthor(userId, recipeId)
@@ -151,8 +150,7 @@ class RecipeService(
 
         if (picturesBytes == newPictures) { // if the pictures are equal and in the same order
             return UpdatePicturesModel(picturesBytes)
-        }
-        else {
+        } else {
             val pictureNames = recipe.picturesNames
 
             val reorderedPicturesNames = newPicturesBytes.map { newPicture ->

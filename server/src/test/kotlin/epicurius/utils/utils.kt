@@ -15,7 +15,6 @@ import epicurius.domain.user.UpdateUserModel
 import epicurius.domain.user.User
 import epicurius.domain.user.UserDomain.Companion.MAX_PASSWORD_LENGTH
 import epicurius.domain.user.UserDomain.Companion.MAX_USERNAME_LENGTH
-import epicurius.unit.repository.RepositoryTest.Companion.jdbiCreateRecipe
 import epicurius.repository.firestore.FirestoreManager
 import epicurius.repository.firestore.recipe.models.FirestoreRecipeModel
 import epicurius.repository.jdbi.recipe.models.JdbiCreateRecipeModel
