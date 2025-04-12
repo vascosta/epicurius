@@ -82,7 +82,6 @@ create table dbo.collection(
 create table dbo.meal_planner(
     user_id int not null,
     date date not null,
-    meal_type int not null,
     primary key (user_id, date),
     foreign key (user_id) references dbo.user(id)
 );
@@ -90,9 +89,9 @@ create table dbo.meal_planner(
 create table dbo.meal_planner_recipe(
     user_id int not null,
     date date not null,
-    meal_plan_date date not null,
     recipe_id int not null,
-    primary key (user_id, date, recipe_id),
+    meal_time int not null,
+    primary key (user_id, date, recipe_id, meal_time),
     foreign key (user_id, date) references dbo.meal_planner(user_id, date),
     foreign key (recipe_id) references dbo.recipe(id)
 );
