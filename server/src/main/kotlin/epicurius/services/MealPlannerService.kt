@@ -3,7 +3,7 @@ package epicurius.services
 import epicurius.domain.PictureDomain.Companion.RECIPES_FOLDER
 import epicurius.domain.mealPlanner.DailyMealPlanner
 import epicurius.domain.mealPlanner.MealPlanner
-import epicurius.repository.cloudStorage.CloudStorageManager
+import epicurius.repository.cloudStorage.manager.CloudStorageManager
 import epicurius.repository.transaction.TransactionManager
 import org.springframework.stereotype.Component
 import java.util.Date

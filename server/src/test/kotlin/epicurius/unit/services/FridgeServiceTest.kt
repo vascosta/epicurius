@@ -1,4 +1,4 @@
-package epicurius.services
+package epicurius.unit.services
 
 import epicurius.domain.exceptions.InvalidProduct
 import epicurius.domain.exceptions.ProductIsAlreadyOpen

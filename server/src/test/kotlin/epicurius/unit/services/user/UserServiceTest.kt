@@ -1,4 +1,4 @@
-package epicurius.services.user
+package epicurius.unit.services.user
 
 import epicurius.domain.Diet
 import epicurius.domain.Intolerance
@@ -8,7 +8,7 @@ import epicurius.domain.exceptions.UserAlreadyExists
 import epicurius.domain.exceptions.UserNotFound
 import epicurius.domain.user.User
 import epicurius.http.user.models.input.UpdateUserInputModel
-import epicurius.services.ServiceTest
+import epicurius.unit.services.ServiceTest
 import epicurius.utils.createTestUser
 import epicurius.utils.generateEmail
 import epicurius.utils.generateRandomUsername

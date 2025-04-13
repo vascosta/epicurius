@@ -1,6 +1,5 @@
 package epicurius.unit.repository
 
-import epicurius.EpicuriusTest
 import epicurius.domain.PagingParams
 import epicurius.domain.PictureDomain
 import epicurius.domain.fridge.ProductInfo
@@ -10,6 +9,7 @@ import epicurius.repository.firestore.recipe.models.FirestoreRecipeModel
 import epicurius.repository.firestore.recipe.models.FirestoreUpdateRecipeModel
 import epicurius.repository.jdbi.recipe.models.JdbiCreateRecipeModel
 import epicurius.repository.jdbi.recipe.models.JdbiUpdateRecipeModel
+import epicurius.unit.EpicuriusUnitTest
 import org.springframework.web.multipart.MultipartFile
 
 open class RepositoryTest : EpicuriusUnitTest() {
@@ -108,12 +108,12 @@ open class RepositoryTest : EpicuriusUnitTest() {
 
         fun getJdbiRecipe(recipeId: Int) = tm.run { it.recipeRepository.getRecipe(recipeId) }
 
-        fun getFirestoreRecipe(recipeId: Int) = fs.recipeRepository.getRecipe(recipeId)
+        suspend fun getFirestoreRecipe(recipeId: Int) = fs.recipeRepository.getRecipe(recipeId)
 
         fun updateJdbiRecipe(recipeInfo: JdbiUpdateRecipeModel) =
             tm.run { it.recipeRepository.updateRecipe(recipeInfo) }
 
-        fun updateFirestoreRecipe(recipeInfo: FirestoreUpdateRecipeModel) =
+        suspend fun updateFirestoreRecipe(recipeInfo: FirestoreUpdateRecipeModel) =
             fs.recipeRepository.updateRecipe(recipeInfo)
 
         fun deleteJdbiRecipe(recipeId: Int) = tm.run { it.recipeRepository.deleteRecipe(recipeId) }

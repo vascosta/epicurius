@@ -11,7 +11,7 @@ import epicurius.domain.recipe.RecipeInfo
 import epicurius.http.recipe.models.input.CreateRecipeInputModel
 import epicurius.http.recipe.models.input.SearchRecipesInputModel
 import epicurius.http.recipe.models.input.UpdateRecipeInputModel
-import epicurius.repository.cloudStorage.CloudStorageManager
+import epicurius.repository.cloudStorage.manager.CloudStorageManager
 import epicurius.repository.firestore.FirestoreManager
 import epicurius.repository.jdbi.recipe.models.JdbiRecipeModel
 import epicurius.repository.jdbi.recipe.models.JdbiUpdateRecipeModel
@@ -82,7 +82,7 @@ class RecipeService(
 
     suspend fun getRecipe(recipeId: Int): Recipe {
         val jdbiRecipe = tm.run { it.recipeRepository.getRecipe(recipeId) } ?: throw RecipeNotFound()
-        val firestoreRecipe = fs.recipeRepository.getRecipe(recipeId)
+        val firestoreRecipe = fs.recipeRepository.getRecipe(recipeId) ?: throw RecipeNotFound()
         val recipePictures = jdbiRecipe.picturesNames.map {
             cs.pictureCloudStorageRepository.getPicture(it, RECIPES_FOLDER)
         }

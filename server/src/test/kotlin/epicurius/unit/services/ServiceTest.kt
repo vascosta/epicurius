@@ -1,21 +1,17 @@
-package epicurius.services
+package epicurius.unit.services
 
-import epicurius.EpicuriusTest
 import epicurius.domain.PagingParams
 import epicurius.domain.user.FollowRequestType
 import epicurius.http.fridge.models.input.OpenProductInputModel
 import epicurius.http.fridge.models.input.ProductInputModel
 import epicurius.http.fridge.models.input.UpdateProductInputModel
 import epicurius.http.user.models.input.UpdateUserInputModel
+import epicurius.unit.EpicuriusUnitTest
 import org.springframework.web.multipart.MultipartFile
 
-open class ServiceTest : EpicuriusTest() {
+open class ServiceTest : EpicuriusUnitTest() {
 
     companion object {
-        // private val userService = UserService(tm, fs, cs, usersDomain, countriesDomain)
-        private val userService = UserService(tm, cs, usersDomain, pictureDomain, countriesDomain)
-        private val fridgeService = FridgeService(tm, sm, fridgeDomain)
-
         // USER
         fun createUser(username: String, email: String, country: String, password: String, confirmPassword: String) =
             userService.createUser(username, email, country, password, confirmPassword)

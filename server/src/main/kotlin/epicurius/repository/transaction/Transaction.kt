@@ -1,6 +1,6 @@
 package epicurius.repository.transaction
 
-import TokenRepository
+import epicurius.repository.jdbi.user.TokenRepository
 import epicurius.repository.jdbi.fridge.FridgeRepository
 import epicurius.repository.jdbi.mealPlanner.MealPlannerRepository
 import epicurius.repository.jdbi.recipe.RecipeRepository

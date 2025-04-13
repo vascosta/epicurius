@@ -11,7 +11,7 @@ import epicurius.domain.fridge.FridgeDomain
 import epicurius.domain.token.Sha256TokenEncoder
 import epicurius.domain.user.CountriesDomain
 import epicurius.domain.user.UserDomain
-import epicurius.repository.cloudStorage.CloudStorageManager
+import epicurius.repository.cloudStorage.manager.CloudStorageManager
 import epicurius.repository.firestore.FirestoreManager
 import epicurius.repository.jdbi.config.configureWithAppRequirements
 import epicurius.repository.spoonacular.SpoonacularManager

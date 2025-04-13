@@ -8,6 +8,7 @@ import org.jdbi.v3.core.Handle
 import org.jdbi.v3.core.kotlin.mapTo
 
 class JdbiFridgeRepository(private val handle: Handle) : FridgeRepository {
+
     override fun getFridge(userId: Int): Fridge {
         val fridgeProducts = handle.createQuery(
             """

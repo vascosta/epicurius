@@ -29,7 +29,7 @@ import epicurius.domain.user.UserDomain
 import epicurius.domain.user.UserInfo
 import epicurius.domain.user.UserProfile
 import epicurius.http.user.models.input.UpdateUserInputModel
-import epicurius.repository.cloudStorage.CloudStorageManager
+import epicurius.repository.cloudStorage.manager.CloudStorageManager
 import epicurius.repository.transaction.TransactionManager
 import org.springframework.stereotype.Component
 import org.springframework.web.multipart.MultipartFile
@@ -38,7 +38,6 @@ import java.util.UUID
 @Component
 class UserService(
     private val tm: TransactionManager,
-    // private val fs: FirestoreManager,
     private val cs: CloudStorageManager,
     private val userDomain: UserDomain,
     private val pictureDomain: PictureDomain,
@@ -55,9 +54,7 @@ class UserService(
         if (!countriesDomain.checkIfCountryCodeIsValid(country)) throw InvalidCountry()
         checkIfPasswordsMatch(password, confirmPassword)
         val passwordHash = userDomain.encodePassword(password)
-
         tm.run { it.userRepository.createUser(username, email, country, passwordHash) }
-
         return createToken(username, email)
     }
 
@@ -225,9 +222,7 @@ class UserService(
     }
 
     private fun createToken(username: String? = null, email: String? = null): String {
-        checkIfUserExists(username, email)
         checkIfUserIsLoggedIn(username, email)
-
         val token = userDomain.generateTokenValue()
         val tokenHash = userDomain.hashToken(token)
         tm.run { it.tokenRepository.createToken(tokenHash, username, email) }

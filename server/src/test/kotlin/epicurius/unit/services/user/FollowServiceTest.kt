@@ -1,4 +1,4 @@
-package epicurius.services.user
+package epicurius.unit.services.user
 
 import epicurius.domain.exceptions.FollowRequestAlreadyBeenSent
 import epicurius.domain.exceptions.FollowRequestNotFound
@@ -8,7 +8,7 @@ import epicurius.domain.exceptions.UserNotFound
 import epicurius.domain.user.FollowUser
 import epicurius.domain.user.FollowingUser
 import epicurius.domain.user.User
-import epicurius.services.ServiceTest
+import epicurius.unit.services.ServiceTest
 import epicurius.utils.createTestUser
 import org.junit.jupiter.api.BeforeEach
 import java.util.UUID

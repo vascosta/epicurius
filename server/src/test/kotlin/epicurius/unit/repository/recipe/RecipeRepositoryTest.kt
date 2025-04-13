@@ -7,18 +7,19 @@ import epicurius.domain.recipe.Ingredient
 import epicurius.domain.recipe.IngredientUnit
 import epicurius.domain.recipe.Instructions
 import epicurius.domain.recipe.MealType
-import epicurius.unit.repository.RepositoryTest
 import epicurius.repository.firestore.recipe.models.FirestoreRecipeModel
 import epicurius.repository.firestore.recipe.models.FirestoreUpdateRecipeModel
 import epicurius.repository.jdbi.recipe.models.JdbiCreateRecipeModel
 import epicurius.repository.jdbi.recipe.models.JdbiUpdateRecipeModel
+import epicurius.unit.repository.RepositoryTest
 import epicurius.utils.createTestRecipe
 import epicurius.utils.createTestUser
-import java.util.UUID
+import kotlinx.coroutines.runBlocking
 import java.util.UUID.randomUUID
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
+import kotlin.test.assertNull
 
 class RecipeRepositoryTest : RepositoryTest() {
 
@@ -69,7 +70,7 @@ class RecipeRepositoryTest : RepositoryTest() {
         assertEquals(jdbiRecipeInfo.picturesNames, jdbiRecipe.picturesNames)
 
         // when creating the recipe in Firestore
-        /*val firestoreRecipeInfo = FirestoreRecipeModel(
+        val firestoreRecipeInfo = FirestoreRecipeModel(
             recipeId,
             "A delicious Portuguese dessert",
             Instructions(
@@ -86,9 +87,26 @@ class RecipeRepositoryTest : RepositoryTest() {
         firestoreCreateRecipe(firestoreRecipeInfo)
 
         // then the recipe is created successfully
-        val firestoreRecipe = getFirestoreRecipe(recipeId)
+        val firestoreRecipe = runBlocking { getFirestoreRecipe(recipeId) }
+        assertNotNull(firestoreRecipe)
         assertEquals(firestoreRecipeInfo.description, firestoreRecipe.description)
-        assertEquals(firestoreRecipeInfo.instructions, firestoreRecipe.instructions)*/
+        assertEquals(firestoreRecipeInfo.instructions, firestoreRecipe.instructions)
+    }
+
+    @Test
+    fun `Create a recipe and then delete it successfully`() {
+        // given a recipe
+        val recipe = createTestRecipe(tm, fs, publicTestUser)
+
+        // when deleting the recipe
+        deleteJdbiRecipe(recipe.id)
+        deleteFirestoreRecipe(recipe.id)
+
+        // then the recipe is deleted successfully
+        val jdbiRecipe = getJdbiRecipe(recipe.id)
+        val firestoreRecipe = runBlocking { getFirestoreRecipe(recipe.id) }
+        assertNull(jdbiRecipe)
+        assertNull(firestoreRecipe)
     }
 
     @Test
@@ -135,16 +153,16 @@ class RecipeRepositoryTest : RepositoryTest() {
         assertEquals(jdbiUpdateRecipeInfo.picturesNames, updatedJdbiRecipe.picturesNames)
 
         // when updating the recipe in Firestore
-/*        val firestoreRecipeInfo = FirestoreUpdateRecipeModel(
+        val firestoreRecipeInfo = FirestoreUpdateRecipeModel(
             recipe.id,
             randomUUID().toString(),
             Instructions(mapOf("1" to randomUUID().toString(), "2" to randomUUID().toString()))
         )
 
-        val updatedFirestoreRecipe = updateFirestoreRecipe(firestoreRecipeInfo)
+        val updatedFirestoreRecipe = runBlocking { updateFirestoreRecipe(firestoreRecipeInfo) }
 
         // then the recipe is updated successfully
         assertEquals(firestoreRecipeInfo.description, updatedFirestoreRecipe.description)
-        assertEquals(firestoreRecipeInfo.instructions, updatedFirestoreRecipe.instructions)*/
+        assertEquals(firestoreRecipeInfo.instructions, updatedFirestoreRecipe.instructions)
     }
 }

@@ -1,4 +1,4 @@
-package epicurius.services.user
+package epicurius.unit.services.user
 
 import epicurius.domain.PagingParams
 import epicurius.domain.exceptions.IncorrectPassword
@@ -9,11 +9,14 @@ import epicurius.domain.exceptions.UserAlreadyExists
 import epicurius.domain.exceptions.UserAlreadyLoggedIn
 import epicurius.domain.exceptions.UserNotFound
 import epicurius.domain.user.SearchUser
-import epicurius.services.ServiceTest
+import epicurius.domain.user.User
+import epicurius.unit.services.ServiceTest
 import epicurius.utils.createTestUser
 import epicurius.utils.generateEmail
 import epicurius.utils.generateRandomUsername
 import epicurius.utils.generateSecurePassword
+import org.mockito.kotlin.verify
+import org.mockito.kotlin.whenever
 import java.util.UUID
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -28,15 +31,38 @@ class AuthenticationServiceTest : ServiceTest() {
     private var testUser = createTestUser(tm)
 
     @Test
-    fun `Create new user and retrieve it successfully`() {
+    fun `Should create new user and retrieve it successfully`() {
         // given user required information
         val username = generateRandomUsername()
         val email = generateEmail(username)
         val country = "PT"
         val password = generateSecurePassword()
+        val passwordHash = usersDomain.encodePassword(password)
+        val token = usersDomain.generateTokenValue()
+        val tokenHash = usersDomain.hashToken(token)
+
+        // mocks for createUser
+        whenever(userRepositoryMock.getUser(username, email)).thenReturn(null)
+        whenever(countriesDomainMock.checkIfCountryCodeIsValid(country)).thenReturn(true)
+        whenever(usersDomainMock.encodePassword(password)).thenReturn(passwordHash)
+        whenever(userRepositoryMock.checkIfUserIsLoggedIn(username, email)).thenReturn(false)
+        whenever(usersDomainMock.generateTokenValue()).thenReturn(token)
+        whenever(usersDomainMock.hashToken(token)).thenReturn(tokenHash)
 
         // when creating a user
-        val token = createUser(username, email, country, password, password)
+        val createToken = createUser(username, email, country, password, password)
+        verify(userRepositoryMock).createUser(username, email, country, passwordHash)
+        verify(tokenRepositoryMock).createToken(tokenHash, username, email)
+
+        // then the user is created successfully
+        assertNotNull(createToken)
+        assertEquals(token, createToken)
+
+        // mocks for getAuthenticatedUser
+        val mockUser = User(1, username, email, passwordHash, tokenHash, country, false, emptyList(), emptyList(), null)
+        whenever(usersDomainMock.isToken(createToken)).thenReturn(true)
+        whenever(usersDomainMock.hashToken(createToken)).thenReturn(tokenHash)
+        whenever(userRepositoryMock.getUser(tokenHash = tokenHash)).thenReturn(mockUser)
 
         // when retrieving the authenticated user
         val authenticatedUser = getAuthenticatedUser(token)
@@ -44,14 +70,7 @@ class AuthenticationServiceTest : ServiceTest() {
 
         // then the user is retrieved successfully
         val user = authenticatedUser.user
-        assertNotNull(authenticatedUser)
-        assertEquals(username, user.username)
-        assertEquals(email, user.email)
-        assertEquals(country, user.country)
-        assertFalse(user.privacy)
-        assertEquals(emptyList(), user.intolerances)
-        assertEquals(emptyList(), user.diets)
-        assertNull(user.profilePictureName)
+        assertEquals(mockUser, user)
     }
 
     @Test
