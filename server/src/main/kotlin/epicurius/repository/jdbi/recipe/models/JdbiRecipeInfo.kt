@@ -4,7 +4,6 @@ import epicurius.domain.recipe.Cuisine
 import epicurius.domain.recipe.MealType
 import epicurius.domain.recipe.RecipeInfo
 
-
 data class JdbiRecipeInfo(
     val id: Int,
     val name: String,

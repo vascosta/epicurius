@@ -7,10 +7,10 @@ import epicurius.domain.user.User
 import epicurius.repository.jdbi.mappers.DietListMapper
 import epicurius.repository.jdbi.mappers.IngredientMapper
 import epicurius.repository.jdbi.mappers.IntoleranceListMapper
+import epicurius.repository.jdbi.mappers.JdbiRecipeInfoMapper
 import epicurius.repository.jdbi.mappers.JdbiRecipeModelMapper
 import epicurius.repository.jdbi.mappers.ProductInfoMapper
 import epicurius.repository.jdbi.mappers.ProductMapper
-import epicurius.repository.jdbi.mappers.JdbiRecipeInfoMapper
 import epicurius.repository.jdbi.mappers.UserMapper
 import epicurius.repository.jdbi.recipe.models.JdbiRecipeInfo
 import epicurius.repository.jdbi.recipe.models.JdbiRecipeModel
