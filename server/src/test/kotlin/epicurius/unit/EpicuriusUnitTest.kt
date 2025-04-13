@@ -20,7 +20,7 @@ import org.mockito.kotlin.any
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
 
-open class EpicuriusUnitTest: EpicuriusTest() {
+open class EpicuriusUnitTest : EpicuriusTest() {
 
     companion object {
 
@@ -52,6 +52,7 @@ open class EpicuriusUnitTest: EpicuriusTest() {
         val pictureDomainMock: PictureDomain = mock()
         val countriesDomainMock: CountriesDomain = mock()
 
+        // change to mocks when all service tests are mocked
         val userService = UserService(tm, cs, usersDomain, pictureDomain, countriesDomain)
         val fridgeService = FridgeService(tm, sm, fridgeDomain)
     }

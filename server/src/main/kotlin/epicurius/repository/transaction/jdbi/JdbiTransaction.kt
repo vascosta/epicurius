@@ -1,9 +1,9 @@
 package epicurius.repository.transaction.jdbi
 
-import epicurius.repository.jdbi.user.JdbiTokenRepository
 import epicurius.repository.jdbi.fridge.JdbiFridgeRepository
 import epicurius.repository.jdbi.mealPlanner.JdbiMealPlannerRepository
 import epicurius.repository.jdbi.recipe.JdbiRecipeRepository
+import epicurius.repository.jdbi.user.JdbiTokenRepository
 import epicurius.repository.jdbi.user.JdbiUserRepository
 import epicurius.repository.transaction.Transaction
 import org.jdbi.v3.core.Handle

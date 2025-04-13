@@ -104,7 +104,7 @@ class JdbiRecipeRepository(private val handle: Handle) : RecipeRepository {
 
         val result = handle.createQuery(query.toString())
         result.bindMap(params)
-        //params.forEach { (key, value) -> result.bind(key, value) }
+        // params.forEach { (key, value) -> result.bind(key, value) }
 
         return result.mapTo<JdbiRecipeInfo>().list()
     }

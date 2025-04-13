@@ -5,7 +5,6 @@ import epicurius.domain.user.FollowingStatus
 import epicurius.domain.user.UpdateUserModel
 import epicurius.domain.user.User
 import epicurius.repository.jdbi.user.models.SearchUserModel
-import epicurius.repository.jdbi.utils.addCondition
 import org.jdbi.v3.core.Handle
 import org.jdbi.v3.core.kotlin.mapTo
 
@@ -40,7 +39,8 @@ class JdbiUserRepository(private val handle: Handle) : UserRepository {
             """
                 SELECT * FROM dbo.user
                 WHERE username = :username OR email = :email OR token_hash = :token_hash
-            """)
+            """
+        )
             .bindMap(bindings)
             .mapTo<User>()
             .firstOrNull()
