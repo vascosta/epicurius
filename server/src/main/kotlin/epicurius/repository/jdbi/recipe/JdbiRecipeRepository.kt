@@ -103,7 +103,8 @@ class JdbiRecipeRepository(private val handle: Handle) : RecipeRepository {
         addCondition(query, params, "AND preparation_time <= :maxTime", "maxTime", form.maxTime)
 
         val result = handle.createQuery(query.toString())
-        params.forEach { (key, value) -> result.bind(key, value) }
+        result.bindMap(params)
+        //params.forEach { (key, value) -> result.bind(key, value) }
 
         return result.mapTo<JdbiRecipeInfo>().list()
     }
@@ -182,6 +183,7 @@ class JdbiRecipeRepository(private val handle: Handle) : RecipeRepository {
     }
 
     override fun deleteRecipe(recipeId: Int) {
+        removeIngredients(recipeId)
         handle.createUpdate(
             """
                 DELETE FROM dbo.Recipe

@@ -15,8 +15,8 @@ data class CreateRecipeInputModel(
     @field:Size(min = RecipeDomain.MIN_RECIPE_NAME_LENGTH, max = RecipeDomain.MAX_RECIPE_NAME_LENGTH, message = RecipeDomain.RECIPE_NAME_LENGTH_MSG)
     val name: String,
 
-    @field:Size(max = RecipeDomain.MAX_RECIPE_DESCRIPTION_LENGTH, message = RecipeDomain.RECIPE_DESCRIPTION_LENGTH_MSG)
-    val description: String? = null,
+    @field:Size(min = RecipeDomain.MIN_RECIPE_DESCRIPTION_LENGTH, max = RecipeDomain.MAX_RECIPE_DESCRIPTION_LENGTH, message = RecipeDomain.RECIPE_DESCRIPTION_LENGTH_MSG)
+    val description: String,
 
     val servings: Int,
     val preparationTime: Int,

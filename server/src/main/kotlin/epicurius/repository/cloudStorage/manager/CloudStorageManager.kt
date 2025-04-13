@@ -1,4 +1,4 @@
-package epicurius.repository.cloudStorage
+package epicurius.repository.cloudStorage.manager
 
 import epicurius.config.CloudStorage
 import epicurius.repository.cloudStorage.picture.PictureCloudStorageRepository
