@@ -84,7 +84,7 @@ class RecipeService(
         val jdbiRecipe = tm.run { it.recipeRepository.getRecipe(recipeId) } ?: throw RecipeNotFound()
         val firestoreRecipe = fs.recipeRepository.getRecipe(recipeId)
         val recipePictures = jdbiRecipe.picturesNames.map {
-            cs.pictureCloudStorageRepository.getPicture(it, PictureDomain.RECIPES_FOLDER)
+            cs.pictureCloudStorageRepository.getPicture(it, RECIPES_FOLDER)
         }
 
         return jdbiRecipe.toRecipe(firestoreRecipe.description, firestoreRecipe.instructions, recipePictures)
@@ -99,13 +99,17 @@ class RecipeService(
         val fillForm = form.toSearchRecipe(form.name)
         val recipesList = tm.run { it.recipeRepository.searchRecipes(userId, fillForm) }
 
-        return if (form.ingredients != null) {
+        val recipes = if (form.ingredients != null) {
             val recipesByIngredients = tm.run {
                 it.recipeRepository.searchRecipesByIngredients(userId, form.ingredients)
             }
             recipesList.intersect(recipesByIngredients.toSet()).toList()
         } else {
             recipesList
+        }
+
+        return recipes.map {
+            it.toRecipeInfo(cs.pictureCloudStorageRepository.getPicture(it.pictures.first(), RECIPES_FOLDER))
         }
     }
 

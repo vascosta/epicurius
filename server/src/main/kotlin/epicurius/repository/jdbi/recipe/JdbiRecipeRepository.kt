@@ -4,6 +4,7 @@ import epicurius.domain.recipe.Ingredient
 import epicurius.domain.recipe.RecipeInfo
 import epicurius.domain.recipe.SearchRecipesModel
 import epicurius.repository.jdbi.recipe.models.JdbiCreateRecipeModel
+import epicurius.repository.jdbi.recipe.models.JdbiRecipeInfo
 import epicurius.repository.jdbi.recipe.models.JdbiRecipeModel
 import epicurius.repository.jdbi.recipe.models.JdbiUpdateRecipeModel
 import epicurius.repository.jdbi.utils.addCondition
@@ -77,10 +78,10 @@ class JdbiRecipeRepository(private val handle: Handle) : RecipeRepository {
             .mapTo<JdbiRecipeModel>()
             .firstOrNull()
 
-    override fun searchRecipes(userId: Int, form: SearchRecipesModel): List<RecipeInfo> {
+    override fun searchRecipes(userId: Int, form: SearchRecipesModel): List<JdbiRecipeInfo> {
         val query = StringBuilder(
             """
-                SELECT id, name, cuisine, meal_type, preparation_time, servings
+                SELECT id, name, cuisine, meal_type, preparation_time, servings, pictures_names
                 FROM dbo.Recipe
                 WHERE author_id <> :id
             """
@@ -105,10 +106,10 @@ class JdbiRecipeRepository(private val handle: Handle) : RecipeRepository {
         val result = handle.createQuery(query.toString())
         params.forEach { (key, value) -> result.bind(key, value) }
 
-        return result.mapTo<RecipeInfo>().list()
+        return result.mapTo<JdbiRecipeInfo>().list()
     }
 
-    override fun searchRecipesByIngredients(userId: Int, ingredientsList: List<String>): List<RecipeInfo> {
+    override fun searchRecipesByIngredients(userId: Int, ingredientsList: List<String>): List<JdbiRecipeInfo> {
         val ingredientsBinding = ingredientsList.indices.joinToString { ":i$it" }
         val query = StringBuilder(
             """
@@ -130,7 +131,7 @@ class JdbiRecipeRepository(private val handle: Handle) : RecipeRepository {
         val result = handle.createQuery(query.toString())
         params.forEach { (key, value) -> result.bind(key, value) }
 
-        return result.mapTo<RecipeInfo>().list()
+        return result.mapTo<JdbiRecipeInfo>().list()
     }
 
     override fun updateRecipe(recipeInfo: JdbiUpdateRecipeModel): JdbiRecipeModel {

@@ -6,5 +6,6 @@ data class RecipeInfo(
     val cuisine: Cuisine,
     val mealType: MealType,
     val preparationTime: Int,
-    val servings: Int
-) // Stil needs images
+    val servings: Int,
+    val picture: ByteArray
+)
