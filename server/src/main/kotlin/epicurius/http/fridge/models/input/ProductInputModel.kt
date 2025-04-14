@@ -1,12 +1,13 @@
 package epicurius.http.fridge.models.input
 
+import epicurius.domain.fridge.ProductInfo
 import jakarta.validation.constraints.Future
 import jakarta.validation.constraints.Max
 import jakarta.validation.constraints.Min
 import jakarta.validation.constraints.NotBlank
 import jakarta.validation.constraints.NotNull
 import jakarta.validation.constraints.PastOrPresent
-import java.util.Date
+import java.time.LocalDate
 
 data class ProductInputModel(
     @field:NotBlank
@@ -17,9 +18,16 @@ data class ProductInputModel(
     val quantity: Int,
 
     @field:PastOrPresent
-    val openDate: Date? = null,
+    val openDate: LocalDate? = null,
 
     @field:NotNull
     @field:Future
-    val expirationDate: Date
-)
+    val expirationDate: LocalDate
+) {
+    fun toProductInfo() = ProductInfo(
+        productName = productName,
+        quantity = quantity,
+        openDate = openDate,
+        expirationDate = expirationDate
+    )
+}

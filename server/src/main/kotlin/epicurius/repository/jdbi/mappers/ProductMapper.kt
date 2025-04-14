@@ -11,8 +11,8 @@ class ProductMapper : RowMapper<Product> {
             productName = rs.getString("product_name"),
             entryNumber = rs.getInt("entry_number"),
             quantity = rs.getInt("quantity"),
-            openDate = rs.getDate("open_date"),
-            expirationDate = rs.getDate("expiration_date")
+            openDate = rs.getDate("open_date")?.toLocalDate(),
+            expirationDate = rs.getDate("expiration_date").toLocalDate()
         )
     }
 }

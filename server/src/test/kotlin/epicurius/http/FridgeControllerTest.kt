@@ -18,8 +18,6 @@ import org.junit.jupiter.api.Test
 import org.springframework.http.HttpStatus
 import java.time.LocalDate
 import java.time.Period
-import java.time.ZoneId
-import java.util.Date
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 
@@ -65,9 +63,7 @@ class FridgeControllerTest : HttpTest() {
         val token = testUserToken
 
         // when adding a product
-        val expirationDate = Date.from(
-            LocalDate.now().plusDays(7).atStartOfDay(ZoneId.systemDefault()).toInstant()
-        )
+        val expirationDate = LocalDate.now().plusDays(7)
         val newFridgeBody = getBody(addProducts(token, "apple", 1, null, expirationDate))
 
         // then the fridge should contain the product
@@ -84,9 +80,7 @@ class FridgeControllerTest : HttpTest() {
         val token = testUserToken
 
         // when adding a product
-        val expirationDate = Date.from(
-            LocalDate.now().plusDays(7).atStartOfDay(ZoneId.systemDefault()).toInstant()
-        )
+        val expirationDate = LocalDate.now().plusDays(7)
         getBody(addProducts(token, "peach", 1, null, expirationDate))
 
         // and adding the same product again
@@ -106,9 +100,7 @@ class FridgeControllerTest : HttpTest() {
         val token = testUserToken
 
         // when trying to add a product with an invalid name
-        val expirationDate = Date.from(
-            LocalDate.now().plusDays(7).atStartOfDay(ZoneId.systemDefault()).toInstant()
-        )
+        val expirationDate = LocalDate.now().plusDays(7)
         val error = post<Problem>(
             client,
             api(Uris.Fridge.FRIDGE),
@@ -129,15 +121,11 @@ class FridgeControllerTest : HttpTest() {
         val token = testUserToken
 
         // when adding a product
-        val expirationDate = Date.from(
-            LocalDate.now().plusDays(7).atStartOfDay(ZoneId.systemDefault()).toInstant()
-        )
+        val expirationDate = LocalDate.now().plusDays(7)
         val newFridgeBody = getBody(addProducts(token, "milk", 1, null, expirationDate))
 
         // and updating the product
-        val newExpirationDate = Date.from(
-            LocalDate.now().plusDays(14).atStartOfDay(ZoneId.systemDefault()).toInstant()
-        )
+        val newExpirationDate = LocalDate.now().plusDays(14)
         val updatedFridgeBody = getBody(
             updateFridgeProduct(token, newFridgeBody.products.first().entryNumber, 2, newExpirationDate)
         )
@@ -156,9 +144,7 @@ class FridgeControllerTest : HttpTest() {
         val token = testUserToken
 
         // when updating a product with an invalid entry number
-        val newExpirationDate = Date.from(
-            LocalDate.now().plusDays(14).atStartOfDay(ZoneId.systemDefault()).toInstant()
-        )
+        val newExpirationDate = LocalDate.now().plusDays(14)
         val error = patch<Problem>(
             client,
             api(Uris.Fridge.PRODUCT.take(16) + 999999),
@@ -179,18 +165,12 @@ class FridgeControllerTest : HttpTest() {
         val token = testUserToken
 
         // when adding a product
-        val openDate = Date.from(
-            LocalDate.now().atStartOfDay(ZoneId.systemDefault()).toInstant()
-        )
-        val expirationDate = Date.from(
-            LocalDate.now().plusDays(7).atStartOfDay(ZoneId.systemDefault()).toInstant()
-        )
+        val openDate = LocalDate.now()
+        val expirationDate = LocalDate.now().plusDays(7)
         val newFridgeBody = getBody(addProducts(token, "cream", 1, openDate, expirationDate))
 
         // and trying to update the product
-        val newExpirationDate = Date.from(
-            LocalDate.now().plusDays(14).atStartOfDay(ZoneId.systemDefault()).toInstant()
-        )
+        val newExpirationDate = LocalDate.now().plusDays(14)
         val error = patch<Problem>(
             client,
             api(Uris.Fridge.PRODUCT.take(16) + newFridgeBody.products.first().entryNumber),
@@ -211,15 +191,11 @@ class FridgeControllerTest : HttpTest() {
         val token = testUserToken
 
         // when adding a product
-        val expirationDate = Date.from(
-            LocalDate.now().plusDays(7).atStartOfDay(ZoneId.systemDefault()).toInstant()
-        )
+        val expirationDate = LocalDate.now().plusDays(7)
         val newFridgeBody = getBody(addProducts(token, "peach", 1, null, expirationDate))
 
         // and opening the product
-        val openDate = Date.from(
-            LocalDate.now().atStartOfDay(ZoneId.systemDefault()).toInstant()
-        )
+        val openDate = LocalDate.now()
         val duration = Period.ofDays(3)
         val openProductBody = getBody(
             openFridgeProduct(token, newFridgeBody.products.first().entryNumber, openDate, duration)
@@ -238,15 +214,11 @@ class FridgeControllerTest : HttpTest() {
         val token = testUserToken
 
         // when adding a product
-        val expirationDate = Date.from(
-            LocalDate.now().plusDays(7).atStartOfDay(ZoneId.systemDefault()).toInstant()
-        )
+        val expirationDate = LocalDate.now().plusDays(7)
         val newFridgeBody = getBody(addProducts(token, "orange", 2, null, expirationDate))
 
         // and opening the product
-        val openDate = Date.from(
-            LocalDate.now().atStartOfDay(ZoneId.systemDefault()).toInstant()
-        )
+        val openDate = LocalDate.now()
         val duration = Period.ofDays(3)
         openFridgeProduct(token, newFridgeBody.products.first().entryNumber, openDate, duration)
         val openProductBody = getBody(
@@ -267,9 +239,7 @@ class FridgeControllerTest : HttpTest() {
         val token = testUserToken
 
         // when opening a product with an invalid entry number
-        val openDate = Date.from(
-            LocalDate.now().atStartOfDay(ZoneId.systemDefault()).toInstant()
-        )
+        val openDate = LocalDate.now()
         val duration = Period.ofDays(3)
         val error = patch<Problem>(
             client,
@@ -291,12 +261,8 @@ class FridgeControllerTest : HttpTest() {
         val token = testUserToken
 
         // when adding a product
-        val openDate = Date.from(
-            LocalDate.now().atStartOfDay(ZoneId.systemDefault()).toInstant()
-        )
-        val expirationDate = Date.from(
-            LocalDate.now().plusDays(7).atStartOfDay(ZoneId.systemDefault()).toInstant()
-        )
+        val openDate = LocalDate.now()
+        val expirationDate = LocalDate.now().plusDays(7)
         val newFridgeBody = getBody(addProducts(token, "tomato", 1, openDate, expirationDate))
 
         // and trying to open the product
@@ -321,9 +287,7 @@ class FridgeControllerTest : HttpTest() {
         val token = testUserToken
 
         // when adding a product
-        val expirationDate = Date.from(
-            LocalDate.now().plusDays(7).atStartOfDay(ZoneId.systemDefault()).toInstant()
-        )
+        val expirationDate = LocalDate.now().plusDays(7)
         val newFridgeBody = getBody(addProducts(token, "banana", 1, null, expirationDate))
 
         // and removing the product

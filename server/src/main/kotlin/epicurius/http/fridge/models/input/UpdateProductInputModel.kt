@@ -3,7 +3,7 @@ package epicurius.http.fridge.models.input
 import jakarta.validation.constraints.Future
 import jakarta.validation.constraints.Max
 import jakarta.validation.constraints.Min
-import java.util.Date
+import java.time.LocalDate
 
 data class UpdateProductInputModel(
     @field:Min(1)
@@ -11,5 +11,5 @@ data class UpdateProductInputModel(
     val quantity: Int? = null,
 
     @field:Future
-    val expirationDate: Date? = null
+    val expirationDate: LocalDate? = null
 )

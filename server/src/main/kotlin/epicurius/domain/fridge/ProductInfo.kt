@@ -1,10 +1,10 @@
 package epicurius.domain.fridge
 
-import java.util.Date
+import java.time.LocalDate
 
 data class ProductInfo(
     val productName: String,
     val quantity: Int,
-    val openDate: Date?,
-    val expirationDate: Date
+    val openDate: LocalDate?,
+    val expirationDate: LocalDate
 )

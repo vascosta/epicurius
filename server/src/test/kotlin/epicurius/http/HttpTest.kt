@@ -28,8 +28,8 @@ import org.springframework.http.HttpStatus
 import org.springframework.test.web.reactive.server.WebTestClient
 import org.springframework.web.multipart.MultipartFile
 import org.springframework.web.reactive.function.BodyInserters
+import java.time.LocalDate
 import java.time.Period
-import java.util.Date
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class HttpTest : EpicuriusTest() {
@@ -196,7 +196,7 @@ class HttpTest : EpicuriusTest() {
     fun getProductsList(token: String, partial: String) =
         get<List<String>>(client, api(Uris.Fridge.PRODUCTS) + "?partial=$partial", token = token)
 
-    fun addProducts(token: String, productName: String, quantity: Int, openDate: Date? = null, expirationDate: Date) =
+    fun addProducts(token: String, productName: String, quantity: Int, openDate: LocalDate? = null, expirationDate: LocalDate) =
         post<FridgeOutputModel>(
             client,
             api(Uris.Fridge.FRIDGE),
@@ -210,7 +210,7 @@ class HttpTest : EpicuriusTest() {
             token = token
         )
 
-    fun updateFridgeProduct(token: String, entryNumber: Int, quantity: Int? = null, expirationDate: Date? = null) =
+    fun updateFridgeProduct(token: String, entryNumber: Int, quantity: Int? = null, expirationDate: LocalDate? = null) =
         patch<FridgeOutputModel>(
             client,
             api(Uris.Fridge.PRODUCT.take(16) + entryNumber),
@@ -222,7 +222,7 @@ class HttpTest : EpicuriusTest() {
     fun openFridgeProduct(
         token: String,
         entryNumber: Int,
-        openDate: Date,
+        openDate: LocalDate,
         duration: Period
     ) = patch<FridgeOutputModel>(
         client,

@@ -9,8 +9,6 @@ import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import java.time.LocalDate
-import java.time.ZoneId
-import java.util.Date
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 import kotlin.test.assertNull
@@ -49,9 +47,7 @@ class FridgeRepositoryTest : RepositoryTest() {
             productName = "Milk",
             quantity = 1,
             openDate = null,
-            expirationDate = Date.from(
-                LocalDate.now().plusDays(7).atStartOfDay(ZoneId.systemDefault()).toInstant()
-            )
+            expirationDate = LocalDate.now().plusDays(7)
         )
         val fridge = addProduct(user.id, product)
 
@@ -75,9 +71,7 @@ class FridgeRepositoryTest : RepositoryTest() {
             productName = "Apple",
             quantity = 1,
             openDate = null,
-            expirationDate = Date.from(
-                LocalDate.now().plusDays(7).atStartOfDay(ZoneId.systemDefault()).toInstant()
-            )
+            expirationDate = LocalDate.now().plusDays(7)
         )
         val fridge = addProduct(user.id, product)
 
@@ -88,9 +82,7 @@ class FridgeRepositoryTest : RepositoryTest() {
 
         // when updating the product in the user's fridge
         val newQuantity = 2
-        val newExpirationDate = Date.from(
-            LocalDate.now().plusDays(6).atStartOfDay(ZoneId.systemDefault()).toInstant()
-        )
+        val newExpirationDate = LocalDate.now().plusDays(6)
         val updatedProduct = UpdateProductInfo(
             entryNumber = entryNumber,
             quantity = newQuantity,
@@ -127,9 +119,7 @@ class FridgeRepositoryTest : RepositoryTest() {
             productName = "Peach",
             quantity = 1,
             openDate = null,
-            expirationDate = Date.from(
-                LocalDate.now().plusDays(7).atStartOfDay(ZoneId.systemDefault()).toInstant()
-            )
+            expirationDate = LocalDate.now().plusDays(7)
         )
         val fridge = addProduct(user.id, product)
 
@@ -160,9 +150,7 @@ class FridgeRepositoryTest : RepositoryTest() {
             productName = "Cream",
             quantity = 1,
             openDate = null,
-            expirationDate = Date.from(
-                LocalDate.now().plusDays(7).atStartOfDay(ZoneId.systemDefault()).toInstant()
-            )
+            expirationDate = LocalDate.now().plusDays(7)
         )
         addProduct(user.id, product)
 
@@ -175,9 +163,7 @@ class FridgeRepositoryTest : RepositoryTest() {
                 productName = "Eggs",
                 quantity = 1,
                 openDate = null,
-                expirationDate = Date.from(
-                    LocalDate.now().plusDays(7).atStartOfDay(ZoneId.systemDefault()).toInstant()
-                )
+                expirationDate = LocalDate.now().plusDays(7)
             )
         )
 
@@ -202,9 +188,7 @@ class FridgeRepositoryTest : RepositoryTest() {
             productName = "Milk",
             quantity = 1,
             openDate = null,
-            expirationDate = Date.from(
-                LocalDate.now().plusDays(7).atStartOfDay(ZoneId.systemDefault()).toInstant()
-            )
+            expirationDate = LocalDate.now().plusDays(7)
         )
         val fridge = addProduct(user.id, product)
 
@@ -237,12 +221,8 @@ class FridgeRepositoryTest : RepositoryTest() {
         val product = ProductInfo(
             productName = "Orange",
             quantity = 1,
-            openDate = Date.from(
-                LocalDate.now().minusDays(1).atStartOfDay(ZoneId.systemDefault()).toInstant()
-            ),
-            expirationDate = Date.from(
-                LocalDate.now().plusDays(7).atStartOfDay(ZoneId.systemDefault()).toInstant()
-            )
+            openDate = LocalDate.now().minusDays(1),
+            expirationDate = LocalDate.now().plusDays(7)
         )
         addProduct(user.id, product)
 

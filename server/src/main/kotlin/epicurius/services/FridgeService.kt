@@ -103,11 +103,4 @@ class FridgeService(
         val state = tm.run { it.fridgeRepository.checkIfProductIsOpen(userId, entryNumber) }
         if (state) throw ProductIsAlreadyOpen()
     }
-
-    private fun ProductInputModel.toProductInfo() = ProductInfo(
-        productName = this.productName,
-        quantity = this.quantity,
-        openDate = this.openDate,
-        expirationDate = this.expirationDate
-    )
 }

@@ -12,8 +12,6 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import java.time.LocalDate
 import java.time.Period
-import java.time.ZoneId
-import java.util.Date
 import kotlin.test.assertTrue
 
 class FridgeServiceTest : ServiceTest() {
@@ -51,9 +49,7 @@ class FridgeServiceTest : ServiceTest() {
         val user = publicTestUser
 
         // when adding a product to the user's fridge
-        val expirationDate = Date.from(
-            LocalDate.now().plusDays(7).atStartOfDay(ZoneId.systemDefault()).toInstant()
-        )
+        val expirationDate = LocalDate.now().plusDays(7)
         val fridge = runBlocking {
             addProduct(
                 user.id,
@@ -80,9 +76,7 @@ class FridgeServiceTest : ServiceTest() {
         val user = publicTestUser
 
         // and a product in the user's fridge
-        val expirationDate = Date.from(
-            LocalDate.now().plusDays(7).atStartOfDay(ZoneId.systemDefault()).toInstant()
-        )
+        val expirationDate = LocalDate.now().plusDays(7)
         val product = ProductInputModel(
             productName = "lettuce",
             quantity = 1,
@@ -108,9 +102,7 @@ class FridgeServiceTest : ServiceTest() {
         val user = publicTestUser
 
         // when adding an invalid product to the user's fridge
-        val expirationDate = Date.from(
-            LocalDate.now().plusDays(7).atStartOfDay(ZoneId.systemDefault()).toInstant()
-        )
+        val expirationDate = LocalDate.now().plusDays(7)
         val product = ProductInputModel(
             productName = "invalid",
             quantity = 1,
@@ -130,9 +122,7 @@ class FridgeServiceTest : ServiceTest() {
         val user = publicTestUser
 
         // and a product in the user's fridge
-        val expirationDate = Date.from(
-            LocalDate.now().plusDays(7).atStartOfDay(ZoneId.systemDefault()).toInstant()
-        )
+        val expirationDate = LocalDate.now().plusDays(7)
         val product = ProductInputModel(
             productName = "milk",
             quantity = 1,
@@ -158,9 +148,7 @@ class FridgeServiceTest : ServiceTest() {
         val user = publicTestUser
 
         // and a product in the user's fridge
-        val expirationDate = Date.from(
-            LocalDate.now().plusDays(7).atStartOfDay(ZoneId.systemDefault()).toInstant()
-        )
+        val expirationDate = LocalDate.now().plusDays(7)
         val product = ProductInputModel(
             productName = "peach",
             quantity = 1,
@@ -174,9 +162,7 @@ class FridgeServiceTest : ServiceTest() {
         }.entryNumber
 
         // when updating the product in the user's fridge
-        val newExpirationDate = Date.from(
-            LocalDate.now().plusDays(14).atStartOfDay(ZoneId.systemDefault()).toInstant()
-        )
+        val newExpirationDate = LocalDate.now().plusDays(14)
         val updatedProduct = UpdateProductInputModel(quantity = 4, expirationDate = newExpirationDate)
         val updatedFridge = updateProductInfo(user.id, entryNumber, updatedProduct)
 
@@ -194,9 +180,7 @@ class FridgeServiceTest : ServiceTest() {
         val user = publicTestUser
 
         // and a product in the user's fridge
-        val expirationDate = Date.from(
-            LocalDate.now().plusDays(7).atStartOfDay(ZoneId.systemDefault()).toInstant()
-        )
+        val expirationDate = LocalDate.now().plusDays(7)
         val product = ProductInputModel(
             productName = "egg",
             quantity = 1,
@@ -220,10 +204,8 @@ class FridgeServiceTest : ServiceTest() {
         val user = publicTestUser
 
         // and a product in the user's fridge
-        val openDate = Date.from(LocalDate.now().atStartOfDay(ZoneId.systemDefault()).toInstant())
-        val expirationDate = Date.from(
-            LocalDate.now().plusDays(7).atStartOfDay(ZoneId.systemDefault()).toInstant()
-        )
+        val openDate = LocalDate.now()
+        val expirationDate = LocalDate.now().plusDays(7)
         val product = ProductInputModel(
             productName = "carrot",
             quantity = 1,
@@ -237,9 +219,7 @@ class FridgeServiceTest : ServiceTest() {
         }.entryNumber
 
         // when updating the product with an expiration date
-        val newExpirationDate = Date.from(
-            LocalDate.now().plusDays(8).atStartOfDay(ZoneId.systemDefault()).toInstant()
-        )
+        val newExpirationDate = LocalDate.now().plusDays(8)
         val updatedProduct = UpdateProductInputModel(quantity = 2, expirationDate = newExpirationDate)
 
         // then a ProductIsAlreadyOpen exception is thrown
@@ -254,9 +234,7 @@ class FridgeServiceTest : ServiceTest() {
         val user = publicTestUser
 
         // and a product in the user's fridge
-        val expirationDate = Date.from(
-            LocalDate.now().plusDays(7).atStartOfDay(ZoneId.systemDefault()).toInstant()
-        )
+        val expirationDate = LocalDate.now().plusDays(7)
         val product = ProductInputModel(
             productName = "orange",
             quantity = 1,
@@ -270,7 +248,7 @@ class FridgeServiceTest : ServiceTest() {
         }.entryNumber
 
         // when opening the product in the user's fridge
-        val openDate = Date.from(LocalDate.now().atStartOfDay(ZoneId.systemDefault()).toInstant())
+        val openDate = LocalDate.now()
         val duration = Period.ofDays(7)
         val openedFridge = openProduct(user.id, entryNumber, OpenProductInputModel(openDate, duration))
 
@@ -289,9 +267,7 @@ class FridgeServiceTest : ServiceTest() {
         val user = publicTestUser
 
         // and a product in the user's fridge
-        val expirationDate = Date.from(
-            LocalDate.now().plusDays(7).atStartOfDay(ZoneId.systemDefault()).toInstant()
-        )
+        val expirationDate = LocalDate.now().plusDays(7)
         val product = ProductInputModel(
             productName = "yogurt",
             quantity = 3,
@@ -305,7 +281,7 @@ class FridgeServiceTest : ServiceTest() {
         }.entryNumber
 
         // when opening the product in the user's fridge
-        val openDate = Date.from(LocalDate.now().atStartOfDay(ZoneId.systemDefault()).toInstant())
+        val openDate = LocalDate.now()
         val duration = Period.ofDays(7)
         openProduct(user.id, entryNumber, OpenProductInputModel(openDate, duration))
         val openedFridge = openProduct(user.id, entryNumber, OpenProductInputModel(openDate, duration))
@@ -330,9 +306,7 @@ class FridgeServiceTest : ServiceTest() {
         val user = publicTestUser
 
         // and a product in the user's fridge
-        val expirationDate = Date.from(
-            LocalDate.now().plusDays(7).atStartOfDay(ZoneId.systemDefault()).toInstant()
-        )
+        val expirationDate = LocalDate.now().plusDays(7)
         val product = ProductInputModel(
             productName = "banana",
             quantity = 1,
@@ -342,7 +316,7 @@ class FridgeServiceTest : ServiceTest() {
         runBlocking { addProduct(user.id, product) }
 
         // when opening a product that does not exist in the user's fridge
-        val openDate = Date.from(LocalDate.now().atStartOfDay(ZoneId.systemDefault()).toInstant())
+        val openDate = LocalDate.now()
         val duration = Period.ofDays(7)
 
         // then a ProductNotFound exception is thrown
@@ -357,10 +331,8 @@ class FridgeServiceTest : ServiceTest() {
         val user = publicTestUser
 
         // and a product in the user's fridge
-        val openDate = Date.from(LocalDate.now().atStartOfDay(ZoneId.systemDefault()).toInstant())
-        val expirationDate = Date.from(
-            LocalDate.now().plusDays(7).atStartOfDay(ZoneId.systemDefault()).toInstant()
-        )
+        val openDate = LocalDate.now()
+        val expirationDate = LocalDate.now().plusDays(7)
         val product = ProductInputModel(
             productName = "cheese",
             quantity = 1,
@@ -374,7 +346,7 @@ class FridgeServiceTest : ServiceTest() {
         }.entryNumber
 
         // when opening the product that is already open
-        val newOpenDate = Date.from(LocalDate.now().atStartOfDay(ZoneId.systemDefault()).toInstant())
+        val newOpenDate = LocalDate.now()
         val duration = Period.ofDays(7)
 
         // then a ProductIsAlreadyOpen exception is thrown
@@ -389,9 +361,7 @@ class FridgeServiceTest : ServiceTest() {
         val user = privateTestUser
 
         // and a product in the user's fridge
-        val expirationDate = Date.from(
-            LocalDate.now().plusDays(7).atStartOfDay(ZoneId.systemDefault()).toInstant()
-        )
+        val expirationDate = LocalDate.now().plusDays(7)
         val product = ProductInputModel(
             productName = "tomato",
             quantity = 1,
@@ -417,9 +387,7 @@ class FridgeServiceTest : ServiceTest() {
         val user = publicTestUser
 
         // and a product in the user's fridge
-        val expirationDate = Date.from(
-            LocalDate.now().plusDays(7).atStartOfDay(ZoneId.systemDefault()).toInstant()
-        )
+        val expirationDate = LocalDate.now().plusDays(7)
         val product = ProductInputModel(
             productName = "potato",
             quantity = 1,
