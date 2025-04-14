@@ -5,6 +5,9 @@ import epicurius.domain.user.FollowRequestType
 import epicurius.http.fridge.models.input.OpenProductInputModel
 import epicurius.http.fridge.models.input.ProductInputModel
 import epicurius.http.fridge.models.input.UpdateProductInputModel
+import epicurius.http.recipe.models.input.CreateRecipeInputModel
+import epicurius.http.recipe.models.input.SearchRecipesInputModel
+import epicurius.http.recipe.models.input.UpdateRecipeInputModel
 import epicurius.http.user.models.input.UpdateUserInputModel
 import epicurius.unit.EpicuriusUnitTest
 import org.springframework.web.multipart.MultipartFile
@@ -66,5 +69,23 @@ open class ServiceTest : EpicuriusUnitTest() {
             fridgeService.openProduct(userId, entryNumber, product)
 
         fun removeProduct(userId: Int, entryNumber: Int) = fridgeService.removeProduct(userId, entryNumber)
+
+        // RECIPE
+        fun createRecipe(authorId: Int, authorName: String, recipeInfo: CreateRecipeInputModel, pictures: List<MultipartFile>) =
+            recipeService.createRecipe(authorId, authorName, recipeInfo, pictures)
+
+        suspend fun getRecipe(recipeId: Int) = recipeService.getRecipe(recipeId)
+
+        fun searchRecipes(userId: Int, form: SearchRecipesInputModel) =
+            recipeService.searchRecipes(userId, form)
+
+        suspend fun updateRecipe(userId: Int, recipeId: Int, recipeInfo: UpdateRecipeInputModel) =
+            recipeService.updateRecipe(userId, recipeId, recipeInfo)
+
+        fun updateRecipePictures(userId: Int, recipeId: Int, pictures: List<MultipartFile>) =
+            recipeService.updatePictures(userId, recipeId, pictures)
+
+        fun deleteRecipe(userId: Int, recipeId: Int) =
+            recipeService.deleteRecipe(userId, recipeId)
     }
 }

@@ -69,19 +69,19 @@ open class EpicuriusTest {
         val countriesDomain = CountriesDomain()
         val fridgeDomain = FridgeDomain()
 
-        val testProfilePicture =
+        val testPicture =
             MockMultipartFile(
-                "test-profile-picture.jpeg",
-                "test-profile-picture.jpeg",
+                "test-picture.jpeg",
+                "test-picture.jpeg",
                 "image/jpeg",
-                FileInputStream("src/test/resources/test-profile-picture.jpeg")
+                FileInputStream("src/test/resources/test-picture.jpeg")
             )
 
-        val testProfilePicture2 = MockMultipartFile(
-            "test-profile-picture2.jpeg",
-            "test-profile-picture2.jpeg",
+        val testPicture2 = MockMultipartFile(
+            "test-picture2.jpeg",
+            "test-picture2.jpeg",
             "image/jpg",
-            FileInputStream("src/test/resources/test-profile-picture2.jpg")
+            FileInputStream("src/test/resources/test-picture2.jpg")
         )
 
         private fun getFirestoreService(): Firestore {

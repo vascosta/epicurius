@@ -41,17 +41,17 @@ class AuthenticationServiceTest : ServiceTest() {
         val tokenHash = usersDomain.hashToken(token)
 
         // mocks for createUser
-        whenever(userRepositoryMock.getUser(username, email)).thenReturn(null)
+        whenever(jdbiUserRepositoryMock.getUser(username, email)).thenReturn(null)
         whenever(countriesDomainMock.checkIfCountryCodeIsValid(country)).thenReturn(true)
         whenever(usersDomainMock.encodePassword(password)).thenReturn(passwordHash)
-        whenever(userRepositoryMock.checkIfUserIsLoggedIn(username, email)).thenReturn(false)
+        whenever(jdbiUserRepositoryMock.checkIfUserIsLoggedIn(username, email)).thenReturn(false)
         whenever(usersDomainMock.generateTokenValue()).thenReturn(token)
         whenever(usersDomainMock.hashToken(token)).thenReturn(tokenHash)
 
         // when creating a user
         val createToken = createUser(username, email, country, password, password)
-        verify(userRepositoryMock).createUser(username, email, country, passwordHash)
-        verify(tokenRepositoryMock).createToken(tokenHash, username, email)
+        verify(jdbiUserRepositoryMock).createUser(username, email, country, passwordHash)
+        verify(jdbiTokenRepositoryMock).createToken(tokenHash, username, email)
 
         // then the user is created successfully
         assertNotNull(createToken)
@@ -61,7 +61,7 @@ class AuthenticationServiceTest : ServiceTest() {
         val mockUser = User(1, username, email, passwordHash, tokenHash, country, false, emptyList(), emptyList(), null)
         whenever(usersDomainMock.isToken(createToken)).thenReturn(true)
         whenever(usersDomainMock.hashToken(createToken)).thenReturn(tokenHash)
-        whenever(userRepositoryMock.getUser(tokenHash = tokenHash)).thenReturn(mockUser)
+        whenever(jdbiUserRepositoryMock.getUser(tokenHash = tokenHash)).thenReturn(mockUser)
 
         // when retrieving the authenticated user
         val authenticatedUser = getAuthenticatedUser(token)

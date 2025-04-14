@@ -2,25 +2,31 @@ package epicurius.unit
 
 import epicurius.EpicuriusTest
 import epicurius.domain.PictureDomain
+import epicurius.domain.fridge.FridgeDomain
 import epicurius.domain.user.CountriesDomain
 import epicurius.domain.user.UserDomain
 import epicurius.repository.cloudStorage.manager.CloudStorageManager
+import epicurius.repository.cloudStorage.picture.PictureCloudStorageRepository
+import epicurius.repository.firestore.FirestoreManager
+import epicurius.repository.firestore.recipe.FirestoreRecipeRepository
 import epicurius.repository.jdbi.fridge.JdbiFridgeRepository
 import epicurius.repository.jdbi.mealPlanner.JdbiMealPlannerRepository
 import epicurius.repository.jdbi.recipe.JdbiRecipeRepository
 import epicurius.repository.jdbi.user.JdbiTokenRepository
 import epicurius.repository.jdbi.user.JdbiUserRepository
+import epicurius.repository.spoonacular.SpoonacularManager
 import epicurius.repository.transaction.Transaction
 import epicurius.repository.transaction.jdbi.JdbiTransaction
 import epicurius.repository.transaction.jdbi.JdbiTransactionManager
 import epicurius.services.FridgeService
 import epicurius.services.UserService
+import epicurius.services.recipe.RecipeService
 import org.junit.jupiter.api.BeforeAll
 import org.mockito.kotlin.any
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
 
-open class EpicuriusUnitTest : EpicuriusTest() {
+open class EpicuriusUnitTest: EpicuriusTest() {
 
     companion object {
 
@@ -28,11 +34,11 @@ open class EpicuriusUnitTest : EpicuriusTest() {
         @BeforeAll
         fun setUp() {
             val mockTransaction: JdbiTransaction = mock<JdbiTransaction>().apply {
-                whenever(userRepository).thenReturn(userRepositoryMock)
-                whenever(tokenRepository).thenReturn(tokenRepositoryMock)
-                whenever(fridgeRepository).thenReturn(fridgeRepositoryMock)
-                whenever(recipeRepository).thenReturn(recipeRepositoryMock)
-                whenever(mealPlannerRepository).thenReturn(mealPlannerRepositoryMock)
+                whenever(userRepository).thenReturn(jdbiUserRepositoryMock)
+                whenever(tokenRepository).thenReturn(jdbiTokenRepositoryMock)
+                whenever(fridgeRepository).thenReturn(jdbiFridgeRepositoryMock)
+                whenever(recipeRepository).thenReturn(jdbiRecipeRepositoryMock)
+                whenever(mealPlannerRepository).thenReturn(jdbiMealPlannerRepositoryMock)
             }
 
             whenever(transactionManagerMock.run<Any>(any())).thenAnswer { invocation ->
@@ -40,20 +46,34 @@ open class EpicuriusUnitTest : EpicuriusTest() {
                 block(mockTransaction)
             }
         }
-        val userRepositoryMock: JdbiUserRepository = mock()
-        val tokenRepositoryMock: JdbiTokenRepository = mock()
-        val fridgeRepositoryMock: JdbiFridgeRepository = mock()
-        val recipeRepositoryMock: JdbiRecipeRepository = mock()
-        val mealPlannerRepositoryMock: JdbiMealPlannerRepository = mock()
 
-        private val transactionManagerMock: JdbiTransactionManager = mock()
-        private val cloudStorageManagerMock = mock<CloudStorageManager>()
+        val jdbiUserRepositoryMock: JdbiUserRepository = mock()
+        val jdbiTokenRepositoryMock: JdbiTokenRepository = mock()
+        val jdbiFridgeRepositoryMock: JdbiFridgeRepository = mock()
+        val jdbiRecipeRepositoryMock: JdbiRecipeRepository = mock()
+        val jdbiMealPlannerRepositoryMock: JdbiMealPlannerRepository = mock()
+
+        val firestoreRecipeRepositoryMock: FirestoreRecipeRepository = mock()
+
+        val cloudStoragePictureRepositoryMock: PictureCloudStorageRepository = mock()
+
         val usersDomainMock: UserDomain = mock()
         val pictureDomainMock: PictureDomain = mock()
         val countriesDomainMock: CountriesDomain = mock()
+        val fridgeDomainMock: FridgeDomain = mock()
+
+        private val transactionManagerMock: JdbiTransactionManager = mock()
+        private val firestoreManagerMock: FirestoreManager = mock<FirestoreManager>().apply {
+            whenever(recipeRepository).thenReturn(firestoreRecipeRepositoryMock)
+        }
+        private val cloudStorageManagerMock = mock<CloudStorageManager>().apply {
+            whenever(pictureCloudStorageRepository).thenReturn(cloudStoragePictureRepositoryMock)
+        }
+        private val spoonacularStorageManagerMock: SpoonacularManager = mock()
 
         // change to mocks when all service tests are mocked
-        val userService = UserService(tm, cs, usersDomain, pictureDomain, countriesDomain)
-        val fridgeService = FridgeService(tm, sm, fridgeDomain)
+        val userService = UserService(transactionManagerMock, cloudStorageManagerMock, usersDomainMock, pictureDomainMock, countriesDomainMock)
+        val fridgeService = FridgeService(transactionManagerMock, spoonacularStorageManagerMock, fridgeDomainMock)
+        val recipeService = RecipeService(transactionManagerMock, firestoreManagerMock, cloudStorageManagerMock, pictureDomainMock)
     }
 }

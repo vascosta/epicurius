@@ -1,4 +1,4 @@
-package epicurius.unit.services
+package epicurius.unit.services.fridge
 
 import epicurius.domain.exceptions.InvalidProduct
 import epicurius.domain.exceptions.ProductIsAlreadyOpen
@@ -6,6 +6,7 @@ import epicurius.domain.exceptions.ProductNotFound
 import epicurius.http.fridge.models.input.OpenProductInputModel
 import epicurius.http.fridge.models.input.ProductInputModel
 import epicurius.http.fridge.models.input.UpdateProductInputModel
+import epicurius.unit.services.ServiceTest
 import epicurius.utils.createTestUser
 import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Test

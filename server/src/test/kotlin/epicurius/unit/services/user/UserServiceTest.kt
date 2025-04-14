@@ -68,7 +68,7 @@ class UserServiceTest : ServiceTest() {
         val user = publicTestUser
 
         // when adding a profile picture
-        val profilePictureName = updateProfilePicture(user.username, profilePicture = testProfilePicture)
+        val profilePictureName = updateProfilePicture(user.username, profilePicture = testPicture)
         assertNotNull(profilePictureName)
 
         // then the user profile is retrieved successfully with the new profile picture
@@ -77,7 +77,7 @@ class UserServiceTest : ServiceTest() {
         assertEquals(user.country, userProfile.country)
         assertFalse(userProfile.privacy)
         assertNotNull(userProfile.profilePicture)
-        assertContentEquals(testProfilePicture.bytes, userProfile.profilePicture)
+        assertContentEquals(testPicture.bytes, userProfile.profilePicture)
         assertTrue(userProfile.followers.isEmpty())
         assertTrue(userProfile.following.isEmpty())
 
@@ -94,17 +94,17 @@ class UserServiceTest : ServiceTest() {
     fun `Update the profile picture of an user and then retrieves it successfully`() {
         // given an existing user with a profile picture
         val user = publicTestUser
-        val profilePictureName = updateProfilePicture(user.username, profilePicture = testProfilePicture)
+        val profilePictureName = updateProfilePicture(user.username, profilePicture = testPicture)
 
         // when updating the profile picture
-        val newProfilePictureName = updateProfilePicture(user.username, profilePictureName, testProfilePicture2)
+        val newProfilePictureName = updateProfilePicture(user.username, profilePictureName, testPicture2)
         assertNotNull(newProfilePictureName)
 
         // then the user profile is retrieved successfully with the new profile picture
         val updatedProfilePicture = getProfilePicture(newProfilePictureName)
 
         assertEquals(profilePictureName, newProfilePictureName)
-        assertContentEquals(testProfilePicture2.bytes, updatedProfilePicture)
+        assertContentEquals(testPicture2.bytes, updatedProfilePicture)
     }
 
     @Test

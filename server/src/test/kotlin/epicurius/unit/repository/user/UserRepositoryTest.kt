@@ -20,7 +20,7 @@ class UserRepositoryTest : RepositoryTest() {
     @Test
     fun `Adds a profile picture to the Cloud Storage, retrieves it and then deletes it successfully`() {
         // given a profile picture
-        val profilePicture = testProfilePicture
+        val profilePicture = testPicture
         val profilePictureName = UUID.randomUUID().toString()
 
         // when adding a profile picture
@@ -41,12 +41,12 @@ class UserRepositoryTest : RepositoryTest() {
     @Test
     fun `Updates a profile picture already in the Cloud Storage and then retrieves it successfully`() {
         // given a profile picture in the Cloud Storage
-        val profilePicture = testProfilePicture
+        val profilePicture = testPicture
         val profilePictureName = UUID.randomUUID().toString()
         updateProfilePicture(profilePictureName, profilePicture)
 
         // when updating the profile picture
-        val newProfilePicture = testProfilePicture2
+        val newProfilePicture = testPicture2
         updateProfilePicture(profilePictureName, newProfilePicture)
 
         // then the profile picture is updated successfully

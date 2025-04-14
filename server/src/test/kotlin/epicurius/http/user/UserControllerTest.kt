@@ -257,14 +257,14 @@ class UserControllerTest : HttpTest() {
         val userToken = publicTestUserToken
 
         // when adding a profile picture
-        val updateProfilePictureBody = updateProfilePicture(userToken, testProfilePicture)
+        val updateProfilePictureBody = updateProfilePicture(userToken, testPicture)
         assertNotNull(updateProfilePictureBody)
         assertTrue(updateProfilePictureBody.profilePictureName.isNotBlank())
 
         // then the picture was added successfully
         val userProfileBody = getUserProfile(userToken, publicTestUsername)
         assertNotNull(userProfileBody)
-        assertContentEquals(testProfilePicture.bytes, userProfileBody.userProfile.profilePicture)
+        assertContentEquals(testPicture.bytes, userProfileBody.userProfile.profilePicture)
         assertEquals(userProfileBody.userProfile.username, publicTestUsername)
 
         // when deleting the profile picture
@@ -286,18 +286,18 @@ class UserControllerTest : HttpTest() {
         // given an existing logged-in user with a profile picture
         val username = generateRandomUsername()
         val userToken = signUp(username, generateEmail(username), "PT", generateSecurePassword())
-        val updateProfilePictureBody = updateProfilePicture(userToken, testProfilePicture)
+        val updateProfilePictureBody = updateProfilePicture(userToken, testPicture)
         assertNotNull(updateProfilePictureBody)
 
         // when updating the profile picture
-        val newUpdateProfilePictureBody = updateProfilePicture(userToken, testProfilePicture2)
+        val newUpdateProfilePictureBody = updateProfilePicture(userToken, testPicture2)
         assertNotNull(newUpdateProfilePictureBody)
 
         // then the picture was updated successfully
         val userProfileBody = getUserProfile(userToken, username)
         assertNotNull(userProfileBody)
         assertEquals(newUpdateProfilePictureBody.profilePictureName, updateProfilePictureBody.profilePictureName)
-        assertContentEquals(testProfilePicture2.bytes, userProfileBody.userProfile.profilePicture)
+        assertContentEquals(testPicture2.bytes, userProfileBody.userProfile.profilePicture)
     }
 
     @Test
@@ -306,7 +306,7 @@ class UserControllerTest : HttpTest() {
         val existingUserToken = publicTestUserToken
         val username = generateRandomUsername()
         val userToken = signUp(username, generateEmail(username), "PT", generateSecurePassword())
-        updateProfilePicture(userToken, testProfilePicture)
+        updateProfilePicture(userToken, testPicture)
 
         // when retrieving the user profile
         val userProfileBody = getUserProfile(existingUserToken, username)
@@ -316,7 +316,7 @@ class UserControllerTest : HttpTest() {
         assertEquals(username, userProfileBody.userProfile.username)
         assertEquals("PT", userProfileBody.userProfile.country)
         assertFalse(userProfileBody.userProfile.privacy)
-        assertContentEquals(testProfilePicture.bytes, userProfileBody.userProfile.profilePicture)
+        assertContentEquals(testPicture.bytes, userProfileBody.userProfile.profilePicture)
         assertTrue(userProfileBody.userProfile.followers.isEmpty())
         assertTrue(userProfileBody.userProfile.following.isEmpty())
     }
