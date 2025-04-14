@@ -88,7 +88,7 @@ class RecipeController(private val recipeService: RecipeService) {
     fun createRecipe(
         authenticatedUser: AuthenticatedUser,
         @RequestPart("body") body: String,
-        @RequestPart("images") pictures: List<MultipartFile>
+        @RequestPart("pictures") pictures: List<MultipartFile>
     ): ResponseEntity<*> {
         val objectMapper = jacksonObjectMapper()
         val recipeInfo = objectMapper.readValue(body, CreateRecipeInputModel::class.java)

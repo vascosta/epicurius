@@ -26,6 +26,11 @@ class RecipeDomain {
         const val MIN_INGREDIENT_QUANTITY = 1
         const val INGREDIENT_QUANTITY_MSG = "Ingredient quantity must be greater than $MIN_INGREDIENT_QUANTITY"
 
+        const val CALORIES_MSG = "Calories must be a positive number"
+        const val PROTEIN_MSG = "Protein must be a positive number"
+        const val FAT_MSG = "Fat must be a positive number"
+        const val CARBS_MSG = "Carbs must be a positive number"
+
         const val MIN_PICTURES = 1
         const val MAX_PICTURES = 3
     }

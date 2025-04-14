@@ -29,8 +29,7 @@ class RecipeService(
     private val tm: TransactionManager,
     private val fs: FirestoreManager,
     private val cs: CloudStorageManager,
-    private val sm: SpoonacularManager,
-    private val pictureDomain: PictureDomain,
+    private val pictureDomain: PictureDomain
 ) {
 
     fun createRecipe(authorId: Int, authorName: String, recipeInfo: CreateRecipeInputModel, pictures: List<MultipartFile>): Recipe {
@@ -39,13 +38,11 @@ class RecipeService(
             throw InvalidNumberOfRecipePictures()
         } else {
             pictures.forEach { pictureDomain.validatePicture(it) }
-            val picturesNames = pictures.map { UUID.randomUUID().toString() }
+            val picturesNames = pictures.map { pictureDomain.generatePictureName() }
 
             val jdbiCreateRecipeModel = recipeInfo.toJdbiRecipeModel(authorId, picturesNames)
 
-            val recipeId = tm.run {
-                it.recipeRepository.createRecipe(jdbiCreateRecipeModel)
-            }
+            val recipeId = tm.run { it.recipeRepository.createRecipe(jdbiCreateRecipeModel) }
 
             fs.recipeRepository.createRecipe(recipeInfo.toFirestoreRecipeModel(recipeId))
 
@@ -88,11 +85,6 @@ class RecipeService(
         }
 
         return jdbiRecipe.toRecipe(firestoreRecipe.description, firestoreRecipe.instructions, recipePictures)
-    }
-
-    fun getRecipePictures(recipeId: Int): List<ByteArray> {
-        val recipe = tm.run { it.recipeRepository.getRecipe(recipeId) } ?: throw RecipeNotFound()
-        return recipe.picturesNames.map { cs.pictureCloudStorageRepository.getPicture(it, RECIPES_FOLDER) }
     }
 
     fun searchRecipes(userId: Int, form: SearchRecipesInputModel): List<RecipeInfo> {
@@ -162,7 +154,7 @@ class RecipeService(
                 if (oldIdx != -1) {
                     pictureNames[oldIdx] // if the picture is already saved, keep the same name
                 } else {
-                    randomUUID().toString() // new picture
+                    pictureDomain.generatePictureName() // new picture
                 }
             }
 

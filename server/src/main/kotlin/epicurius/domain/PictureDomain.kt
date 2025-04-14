@@ -2,6 +2,7 @@ package epicurius.domain
 
 import org.springframework.stereotype.Component
 import org.springframework.web.multipart.MultipartFile
+import java.util.UUID.randomUUID
 
 @Component
 class PictureDomain {
@@ -19,6 +20,8 @@ class PictureDomain {
             throw IllegalArgumentException("Image is empty")
         }
     }
+
+    fun generatePictureName() = randomUUID().toString()
 
     companion object {
         val SUPPORTED_IMAGE_TYPES = listOf("image/jpeg", "image/jpg", "image/png")

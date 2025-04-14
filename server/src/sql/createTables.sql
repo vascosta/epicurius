@@ -8,24 +8,24 @@ create table dbo.user(
     token_hash varchar(80) unique,
     country varchar(5) not null,
     privacy boolean not null,
-    intolerances integer[] not null,
-    diets integer[] not null,
+    intolerances int[] not null,
+    diets int[] not null,
     profile_picture_name varchar(80)
 );
 
 create table dbo.followers(
-    user_id integer not null,
-    follower_id integer not null,
-    status integer not null,
+    user_id int not null,
+    follower_id int not null,
+    status int not null,
     foreign key (user_id) references dbo.user(id),
     foreign key (follower_id) references dbo.user(id)
 );
 
 create table dbo.fridge(
-    owner_id integer not null,
+    owner_id int not null,
     entry_number serial not null,
     product_name varchar(50) not null,
-    quantity integer not null,
+    quantity int not null,
     open_date date,
     expiration_date date not null,
     primary key (owner_id, entry_number),
@@ -41,12 +41,12 @@ create table dbo.recipe(
     preparation_time int not null, -- in minutes, e.g if value is 30, it means 30 minutes
     meal_type int not null,
     cuisine int not null,
-    intolerances integer[] not null,
-    diets integer[] not null,
-    calories int,
-    protein int,
-    fat int,
-    carbs int,
+    intolerances int[] not null,
+    diets int[] not null,
+    calories int check ( >= 0),
+    protein int check ( >= 0),
+    fat int check ( >= 0),
+    carbs int check ( >= 0),
     pictures_names varchar(80)[] check (cardinality(pictures_names) BETWEEN 1 AND 3),
     foreign key (author_id) references dbo.user(id)
 );

@@ -9,7 +9,9 @@ import epicurius.domain.recipe.MealType
 import epicurius.domain.recipe.RecipeDomain
 import epicurius.repository.firestore.recipe.models.FirestoreRecipeModel
 import epicurius.repository.jdbi.recipe.models.JdbiCreateRecipeModel
+import jakarta.validation.constraints.Positive
 import jakarta.validation.constraints.Size
+import org.springframework.beans.factory.annotation.Value
 
 data class CreateRecipeInputModel(
     @field:Size(min = RecipeDomain.MIN_RECIPE_NAME_LENGTH, max = RecipeDomain.MAX_RECIPE_NAME_LENGTH, message = RecipeDomain.RECIPE_NAME_LENGTH_MSG)
@@ -25,12 +27,21 @@ data class CreateRecipeInputModel(
     val intolerances: List<Intolerance>,
     val diets: List<Diet>,
     val ingredients: List<Ingredient>,
+
+    @field:Positive(message = RecipeDomain.CALORIES_MSG)
     val calories: Int? = null,
+
+    @field:Positive(message = RecipeDomain.PROTEIN_MSG)
     val protein: Int? = null,
+
+    @field:Positive(message = RecipeDomain.FAT_MSG)
     val fat: Int? = null,
+
+    @field:Positive(message = RecipeDomain.CARBS_MSG)
     val carbs: Int? = null,
     val instructions: Instructions
 ) {
+
     fun toJdbiRecipeModel(authorId: Int, picturesNames: List<String>): JdbiCreateRecipeModel {
         return JdbiCreateRecipeModel(
             name = name,
