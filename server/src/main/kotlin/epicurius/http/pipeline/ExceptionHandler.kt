@@ -14,6 +14,7 @@ import epicurius.domain.exceptions.InvalidIntolerancesIdx
 import epicurius.domain.exceptions.InvalidMealPlannerDate
 import epicurius.domain.exceptions.InvalidMealTimeIdx
 import epicurius.domain.exceptions.InvalidMealTypeIdx
+import epicurius.domain.exceptions.InvalidNumberOfRecipePictures
 import epicurius.domain.exceptions.InvalidProduct
 import epicurius.domain.exceptions.InvalidToken
 import epicurius.domain.exceptions.MealPlannerAlreadyExists
@@ -134,7 +135,10 @@ class ExceptionHandler {
             RecipeDoesNotContainCaloriesInfo::class,
             MealTimeAlreadyExistsInPlanner::class,
             MealPlannerAlreadyExists::class,
-            InvalidMealPlannerDate::class
+            InvalidMealPlannerDate::class,
+            // RECIPE
+            InvalidNumberOfRecipePictures::class,
+
         ]
     )
     fun handleBadRequest(request: HttpServletRequest, ex: Exception) =
