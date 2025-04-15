@@ -1,5 +1,7 @@
 package epicurius.unit.http.recipe
 
+import epicurius.domain.exceptions.InvalidNumberOfRecipePictures
+import epicurius.domain.exceptions.UserNotFound
 import epicurius.domain.recipe.Recipe
 import epicurius.http.recipe.models.output.CreateRecipeOutputModel
 import org.mockito.kotlin.whenever
@@ -9,6 +11,8 @@ import java.time.Instant
 import java.util.Date
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertFails
+import kotlin.test.assertFailsWith
 
 
 class CreateRecipeHttpTest: RecipeHttpTest() {
@@ -52,6 +56,27 @@ class CreateRecipeHttpTest: RecipeHttpTest() {
         // then the recipe is created successfully
         assertEquals(HttpStatus.CREATED, response.statusCode)
         assertEquals(CreateRecipeOutputModel(recipeMock), response.body)
+    }
 
+    @Test
+    fun `Should throw InvalidNumberOfRecipePictures exception when creating a recipe with an invalid number of pictures`() {
+        // given information for a new recipe (createRecipeInfo, recipePictures)
+
+        // mock
+        whenever(recipeServiceMock.createRecipe(
+            authenticatedUser.user.id,
+            authenticatedUser.user.name,
+            createRecipeInfo,
+            emptyList()
+        )
+        ).thenThrow(InvalidNumberOfRecipePictures())
+
+        // when creating the recipe
+        val exception = assertFailsWith<InvalidNumberOfRecipePictures> {
+            createRecipe(authenticatedUser, objectMapper.writeValueAsString(createRecipeInfo), emptyList())
+        }
+
+        // then the recipe is created successfully
+        assertEquals(InvalidNumberOfRecipePictures().message, exception.message)
     }
 }
