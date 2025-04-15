@@ -11,12 +11,20 @@ import epicurius.domain.exceptions.InvalidCuisineIdx
 import epicurius.domain.exceptions.InvalidDietIdx
 import epicurius.domain.exceptions.InvalidIngredientUnitIdx
 import epicurius.domain.exceptions.InvalidIntolerancesIdx
+import epicurius.domain.exceptions.InvalidMealPlannerDate
+import epicurius.domain.exceptions.InvalidMealTimeIdx
 import epicurius.domain.exceptions.InvalidMealTypeIdx
 import epicurius.domain.exceptions.InvalidProduct
 import epicurius.domain.exceptions.InvalidToken
+import epicurius.domain.exceptions.MealPlannerAlreadyExists
+import epicurius.domain.exceptions.MealPlannerNotFound
+import epicurius.domain.exceptions.MealTimeAlreadyExistsInPlanner
 import epicurius.domain.exceptions.PasswordsDoNotMatch
 import epicurius.domain.exceptions.ProductIsAlreadyOpen
 import epicurius.domain.exceptions.ProductNotFound
+import epicurius.domain.exceptions.RecipeDoesNotContainCaloriesInfo
+import epicurius.domain.exceptions.RecipeExceedsMaximumCalories
+import epicurius.domain.exceptions.RecipeIsInvalidForMealTime
 import epicurius.domain.exceptions.RecipeNotFound
 import epicurius.domain.exceptions.UnauthorizedException
 import epicurius.domain.exceptions.UserAlreadyBeingFollowed
@@ -118,7 +126,15 @@ class ExceptionHandler {
             ProductIsAlreadyOpen::class,
             InvalidCuisineIdx::class,
             InvalidMealTypeIdx::class,
-            InvalidIngredientUnitIdx::class
+            InvalidIngredientUnitIdx::class,
+            InvalidMealTimeIdx::class,
+            InvalidMealPlannerDate::class,
+            RecipeIsInvalidForMealTime::class,
+            RecipeExceedsMaximumCalories::class,
+            RecipeDoesNotContainCaloriesInfo::class,
+            MealTimeAlreadyExistsInPlanner::class,
+            MealPlannerAlreadyExists::class,
+            InvalidMealPlannerDate::class
         ]
     )
     fun handleBadRequest(request: HttpServletRequest, ex: Exception) =
@@ -148,7 +164,8 @@ class ExceptionHandler {
             UserNotFound::class,
             ProductNotFound::class,
             FollowRequestNotFound::class,
-            RecipeNotFound::class
+            RecipeNotFound::class,
+            MealPlannerNotFound::class
         ]
     )
     fun handleNotFound(request: HttpServletRequest, ex: Exception) =

@@ -45,6 +45,7 @@ object Uris {
     }
 
     object MealPlanner {
-        const val MEAL_PLANNER = "/planner"
+        const val PLANNER = "/planner"
+        const val MEAL_PLANNER = "/planner/{date}"
     }
 }

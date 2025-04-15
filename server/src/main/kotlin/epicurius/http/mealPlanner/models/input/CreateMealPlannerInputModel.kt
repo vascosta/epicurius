@@ -1,13 +1,12 @@
 package epicurius.http.mealPlanner.models.input
 
 import epicurius.domain.exceptions.InvalidMealPlannerDate
-import java.time.Instant
-import java.util.Date
+import java.time.LocalDate
 
 data class CreateMealPlannerInputModel(
-    val date: Date
+    val date: LocalDate
 ) {
     init {
-        if (date < Date.from(Instant.now())) { throw InvalidMealPlannerDate() }
+        if (date < LocalDate.now()) { throw InvalidMealPlannerDate() }
     }
 }
