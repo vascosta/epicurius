@@ -41,10 +41,10 @@ class UserServiceTest : ServiceTest() {
         val user = publicTestUser
 
         // when getting the user profile
-        val userProfile = getUserProfile(user.username)
+        val userProfile = getUserProfile(user.name)
 
         // then the user profile is retrieved successfully
-        assertEquals(user.username, userProfile.username)
+        assertEquals(user.name, userProfile.name)
         assertEquals(user.country, userProfile.country)
         assertEquals(user.privacy, userProfile.privacy)
         assertNull(userProfile.profilePicture)
@@ -68,12 +68,12 @@ class UserServiceTest : ServiceTest() {
         val user = publicTestUser
 
         // when adding a profile picture
-        val profilePictureName = updateProfilePicture(user.username, profilePicture = testPicture)
+        val profilePictureName = updateProfilePicture(user.name, profilePicture = testPicture)
         assertNotNull(profilePictureName)
 
         // then the user profile is retrieved successfully with the new profile picture
-        val userProfile = getUserProfile(user.username)
-        assertEquals(user.username, userProfile.username)
+        val userProfile = getUserProfile(user.name)
+        assertEquals(user.name, userProfile.name)
         assertEquals(user.country, userProfile.country)
         assertFalse(userProfile.privacy)
         assertNotNull(userProfile.profilePicture)
@@ -82,11 +82,11 @@ class UserServiceTest : ServiceTest() {
         assertTrue(userProfile.following.isEmpty())
 
         // when deleting the profile picture
-        val deletedProfilePictureName = updateProfilePicture(user.username, profilePictureName)
+        val deletedProfilePictureName = updateProfilePicture(user.name, profilePictureName)
 
         // then the profile picture is deleted successfully
         assertNull(deletedProfilePictureName)
-        val userProfileAfterProfilePictureDeletion = getUserProfile(user.username)
+        val userProfileAfterProfilePictureDeletion = getUserProfile(user.name)
         assertNull(userProfileAfterProfilePictureDeletion.profilePicture)
     }
 
@@ -94,10 +94,10 @@ class UserServiceTest : ServiceTest() {
     fun `Update the profile picture of an user and then retrieves it successfully`() {
         // given an existing user with a profile picture
         val user = publicTestUser
-        val profilePictureName = updateProfilePicture(user.username, profilePicture = testPicture)
+        val profilePictureName = updateProfilePicture(user.name, profilePicture = testPicture)
 
         // when updating the profile picture
-        val newProfilePictureName = updateProfilePicture(user.username, profilePictureName, testPicture2)
+        val newProfilePictureName = updateProfilePicture(user.name, profilePictureName, testPicture2)
         assertNotNull(newProfilePictureName)
 
         // then the user profile is retrieved successfully with the new profile picture
@@ -122,9 +122,9 @@ class UserServiceTest : ServiceTest() {
         val newDiet = listOf(Diet.VEGAN)
 
         val updatedUser = updateUser(
-            user.username,
+            user.name,
             UpdateUserInputModel(
-                username = newUsername,
+                name = newUsername,
                 email = newEmail,
                 country = newCountry,
                 password = newPassword,
@@ -136,7 +136,7 @@ class UserServiceTest : ServiceTest() {
         )
 
         // then the user is updated successfully
-        assertEquals(newUsername, updatedUser.username)
+        assertEquals(newUsername, updatedUser.name)
         assertEquals(newEmail, updatedUser.email)
         assertEquals(newCountry, updatedUser.country)
         assertEquals(newPrivacy, updatedUser.privacy)
@@ -154,9 +154,9 @@ class UserServiceTest : ServiceTest() {
         // then the user cannot be updated and throws UserAlreadyExists Exception
         assertFailsWith<UserAlreadyExists> {
             updateUser(
-                user1.username,
+                user1.name,
                 UpdateUserInputModel(
-                    username = user2.username
+                    name = user2.name
                 )
             )
         }
@@ -165,7 +165,7 @@ class UserServiceTest : ServiceTest() {
         // then the user cannot be updated and throws UserAlreadyExists Exception
         assertFailsWith<UserAlreadyExists> {
             updateUser(
-                user1.username,
+                user1.name,
                 UpdateUserInputModel(
                     email = user2.email
                 )
@@ -176,9 +176,9 @@ class UserServiceTest : ServiceTest() {
         // then the user cannot be updated and throws UserAlreadyExists Exception
         assertFailsWith<UserAlreadyExists> {
             updateUser(
-                user1.username,
+                user1.name,
                 UpdateUserInputModel(
-                    username = user2.username,
+                    name = user2.name,
                     email = user2.email
                 )
             )
@@ -194,7 +194,7 @@ class UserServiceTest : ServiceTest() {
         // then the user cannot be updated and throws InvalidCountry Exception
         assertFailsWith<InvalidCountry> {
             updateUser(
-                user.username,
+                user.name,
                 UpdateUserInputModel(
                     country = "XX"
                 )
@@ -211,7 +211,7 @@ class UserServiceTest : ServiceTest() {
         // then the user cannot be updated and throws PasswordsDoNotMatch Exception
         assertFailsWith<PasswordsDoNotMatch> {
             updateUser(
-                user.username,
+                user.name,
                 UpdateUserInputModel(
                     password = UUID.randomUUID().toString(),
                     confirmPassword = UUID.randomUUID().toString()
@@ -221,7 +221,7 @@ class UserServiceTest : ServiceTest() {
 
         assertFailsWith<PasswordsDoNotMatch> {
             updateUser(
-                user.username,
+                user.name,
                 UpdateUserInputModel(
                     password = UUID.randomUUID().toString(),
                     confirmPassword = null

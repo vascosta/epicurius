@@ -30,7 +30,7 @@ class TokenRepositoryTest : RepositoryTest() {
 
         // then the user is retrieved successfully
         assertNotNull(userFromTokenHash)
-        assertEquals(username, userFromTokenHash.username)
+        assertEquals(username, userFromTokenHash.name)
         assertEquals(email, userFromTokenHash.email)
 
         // when deleting the token

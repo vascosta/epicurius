@@ -45,9 +45,6 @@ open class EpicuriusTest {
         }
 
         private const val POSTGRES_DATABASE_URL = "jdbc:postgresql://localhost/postgres?user=postgres&password=postgres"
-        private const val GOOGLE_CLOUD_CREDENTIALS_LOCATION = "src/main/resources/epicurius-credentials.json"
-        private const val FIRESTORE_TEST_DATABASE_ID = "epicurius-test-database"
-        private const val GOOGLE_CLOUD_STORAGE_TEST_BUCKET = "epicurius-test-bucket"
 
         private val jdbi = Jdbi.create(
             PGSimpleDataSource().apply {
@@ -55,13 +52,9 @@ open class EpicuriusTest {
             }
         ).configureWithAppRequirements()
 
-        private val firestore = getFirestoreService()
-        private val cloudStorage = getCloudStorageService()
         private val httpClient = HttpClientConfigurer()
 
         val tm = JdbiTransactionManager(jdbi)
-        val fs = FirestoreManager(firestore)
-        val cs = CloudStorageManager(cloudStorage)
         val sm = SpoonacularManager(httpClient)
 
         val usersDomain = UserDomain(BCryptPasswordEncoder(), Sha256TokenEncoder())
@@ -84,25 +77,5 @@ open class EpicuriusTest {
             FileInputStream("src/test/resources/test-picture2.jpg")
         )
 
-        private fun getFirestoreService(): Firestore {
-            val serviceAccount = FileInputStream(GOOGLE_CLOUD_CREDENTIALS_LOCATION)
-
-            val options = FirestoreOptions.newBuilder()
-                .setCredentials(GoogleCredentials.fromStream(serviceAccount))
-                .setDatabaseId(FIRESTORE_TEST_DATABASE_ID)
-                .build()
-
-            return options.service
-        }
-
-        private fun getCloudStorageService(): CloudStorage {
-            val serviceAccount = FileInputStream(GOOGLE_CLOUD_CREDENTIALS_LOCATION)
-
-            val options = StorageOptions.newBuilder()
-                .setCredentials(GoogleCredentials.fromStream(serviceAccount))
-                .build()
-
-            return CloudStorage(options.service, GOOGLE_CLOUD_STORAGE_TEST_BUCKET)
-        }
     }
 }

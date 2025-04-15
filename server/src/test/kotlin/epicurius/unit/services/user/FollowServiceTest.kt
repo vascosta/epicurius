@@ -35,7 +35,7 @@ class FollowServiceTest : ServiceTest() {
         val privateUser = privateTestUser
 
         // when following a public user
-        follow(privateUser.id, publicUser.username)
+        follow(privateUser.id, publicUser.name)
 
         // then the user is followed successfully
         val publicUserFollowers = getFollowers(publicUser.id)
@@ -44,11 +44,11 @@ class FollowServiceTest : ServiceTest() {
         assertTrue(privateUserFollowing.isNotEmpty())
         assertEquals(1, publicUserFollowers.size)
         assertEquals(1, privateUserFollowing.size)
-        assertTrue(publicUserFollowers.contains(FollowUser(privateUser.username, null)))
-        assertTrue(privateUserFollowing.contains(FollowingUser(publicUser.username, null)))
+        assertTrue(publicUserFollowers.contains(FollowUser(privateUser.name, null)))
+        assertTrue(privateUserFollowing.contains(FollowingUser(publicUser.name, null)))
 
         // when unfollowing the user
-        unfollow(privateUser.id, publicUser.username)
+        unfollow(privateUser.id, publicUser.name)
 
         // then the user is unfollowed successfully
         val publicUserFollowersAfterUnfollow = getFollowers(publicUser.id)
@@ -64,16 +64,16 @@ class FollowServiceTest : ServiceTest() {
         val privateUser = privateTestUser
 
         // when following a private user
-        follow(publicUser.id, privateUser.username)
+        follow(publicUser.id, privateUser.name)
 
         // then the follow request is sent successfully
         val privateUserFollowRequests = getFollowRequests(privateUser.id)
         assertTrue(privateUserFollowRequests.isNotEmpty())
         assertEquals(1, privateUserFollowRequests.size)
-        assertTrue(privateUserFollowRequests.contains(FollowUser(publicUser.username, null)))
+        assertTrue(privateUserFollowRequests.contains(FollowUser(publicUser.name, null)))
 
         // when cancelling the follow request
-        followRequest(publicUser.id, privateUser.username)
+        followRequest(publicUser.id, privateUser.name)
 
         // then the follow request is cancelled successfully
         val privateUserFollowRequestsAfterCancel = getFollowRequests(privateUser.id)
@@ -97,10 +97,10 @@ class FollowServiceTest : ServiceTest() {
         val publicUser2 = createTestUser(tm)
 
         // when following a user twice
-        follow(publicUser1.id, publicUser2.username)
+        follow(publicUser1.id, publicUser2.name)
 
         // then the user cannot be followed and throws UserAlreadyBeingFollowed Exception
-        assertFailsWith<UserAlreadyBeingFollowed> { follow(publicUser1.id, publicUser2.username) }
+        assertFailsWith<UserAlreadyBeingFollowed> { follow(publicUser1.id, publicUser2.name) }
     }
 
     @Test
@@ -110,11 +110,11 @@ class FollowServiceTest : ServiceTest() {
         val privateUser = privateTestUser
 
         // when trying to follow a private user twice
-        follow(publicUser.id, privateUser.username)
+        follow(publicUser.id, privateUser.name)
 
         // then another follow request cannot be sent and throws FollowRequestAlreadyBeenSent Exception
         assertFailsWith<FollowRequestAlreadyBeenSent> {
-            follow(publicUser.id, privateUser.username)
+            follow(publicUser.id, privateUser.name)
         }
     }
 
@@ -136,7 +136,7 @@ class FollowServiceTest : ServiceTest() {
 
         // when trying to unfollow a user that is not being followed
         // then the user cannot be unfollowed and throws UserNotFollowed Exception
-        assertFailsWith<UserNotFollowed> { unfollow(publicUser.id, privateUser.username) }
+        assertFailsWith<UserNotFollowed> { unfollow(publicUser.id, privateUser.name) }
     }
 
     @Test
@@ -153,7 +153,7 @@ class FollowServiceTest : ServiceTest() {
     fun `Try to cancel a non-existing follow request and throws FollowRequestNotFound Exception`() {
         // given an existing user
         val publicUser = publicTestUser
-        val privateUsername = privateTestUser.username
+        val privateUsername = privateTestUser.name
 
         // when cancelling a follow request to a non-existing user
         // then the follow request cannot be cancelled and throws UserNotFound Exception

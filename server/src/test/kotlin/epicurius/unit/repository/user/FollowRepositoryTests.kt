@@ -38,8 +38,8 @@ class FollowRepositoryTests : RepositoryTest() {
         assertTrue(privateUserFollowing.isNotEmpty())
         assertEquals(1, publicUserFollowers.size)
         assertEquals(1, privateUserFollowing.size)
-        assertTrue(publicUserFollowers.contains(SearchUserModel(privateUser.username, privateUser.profilePictureName)))
-        assertTrue(privateUserFollowing.contains(SearchUserModel(publicUser.username, publicUser.profilePictureName)))
+        assertTrue(publicUserFollowers.contains(SearchUserModel(privateUser.name, privateUser.profilePictureName)))
+        assertTrue(privateUserFollowing.contains(SearchUserModel(publicUser.name, publicUser.profilePictureName)))
 
         // when unfollowing the user
         unfollow(privateUser.id, publicUser.id)
@@ -64,7 +64,7 @@ class FollowRepositoryTests : RepositoryTest() {
         val privateUserFollowRequests = getFollowRequests(privateUser.id)
         assertTrue(privateUserFollowRequests.isNotEmpty())
         assertEquals(1, privateUserFollowRequests.size)
-        assertTrue(privateUserFollowRequests.contains(SearchUserModel(publicUser.username, publicUser.profilePictureName)))
+        assertTrue(privateUserFollowRequests.contains(SearchUserModel(publicUser.name, publicUser.profilePictureName)))
 
         // when cancelling the follow request
         cancelFollowRequest(privateUser.id, publicUser.id)

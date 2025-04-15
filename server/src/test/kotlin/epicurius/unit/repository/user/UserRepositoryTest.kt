@@ -71,9 +71,9 @@ class UserRepositoryTest : RepositoryTest() {
         val newDiet = listOf(Diet.VEGAN)
 
         val updatedUser = updateUser(
-            user.username,
+            user.name,
             UpdateUserModel(
-                username = newUsername,
+                name = newUsername,
                 email = newEmail,
                 country = newCountry,
                 passwordHash = newPasswordHash,
@@ -84,7 +84,7 @@ class UserRepositoryTest : RepositoryTest() {
         )
 
         // then the user is updated successfully
-        assertEquals(newUsername, updatedUser.username)
+        assertEquals(newUsername, updatedUser.name)
         assertEquals(newEmail, updatedUser.email)
         assertEquals(newCountry, updatedUser.country)
         assertEquals(newPasswordHash, updatedUser.passwordHash)

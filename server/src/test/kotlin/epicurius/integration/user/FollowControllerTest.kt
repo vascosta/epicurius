@@ -134,11 +134,11 @@ class FollowControllerTest : EpicuriusIntegrationTest() {
         val publicUser2 = createTestUser(tm)
 
         // when following a user twice
-        follow(userToken, publicUser2.username)
+        follow(userToken, publicUser2.name)
 
         val error = patch<Problem>(
             client,
-            api(Uris.User.USER_FOLLOW.replace("{username}", publicUser2.username)),
+            api(Uris.User.USER_FOLLOW.replace("{username}", publicUser2.name)),
             body = "",
             responseStatus = HttpStatus.BAD_REQUEST,
             token = userToken
@@ -147,7 +147,7 @@ class FollowControllerTest : EpicuriusIntegrationTest() {
         // then an error is returned with the UserAlreadyFollowed message
         val errorBody = getBody(error)
         assertNotNull(errorBody)
-        assertEquals(UserAlreadyBeingFollowed(publicUser2.username).message, errorBody.detail)
+        assertEquals(UserAlreadyBeingFollowed(publicUser2.name).message, errorBody.detail)
     }
 
     @Test
@@ -210,7 +210,7 @@ class FollowControllerTest : EpicuriusIntegrationTest() {
         // when unfollowing a user that is not being followed
         val error = delete<Problem>(
             client,
-            api(Uris.User.USER_FOLLOW.replace("{username}", publicUser2.username)),
+            api(Uris.User.USER_FOLLOW.replace("{username}", publicUser2.name)),
             responseStatus = HttpStatus.BAD_REQUEST,
             token = userToken
         )
@@ -218,7 +218,7 @@ class FollowControllerTest : EpicuriusIntegrationTest() {
         // then an error is returned with the UserNotFound message
         val errorBody = getBody(error)
         assertNotNull(errorBody)
-        assertEquals(UserNotFollowed(publicUser2.username).message, errorBody.detail)
+        assertEquals(UserNotFollowed(publicUser2.name).message, errorBody.detail)
     }
 
     @Test
@@ -251,7 +251,7 @@ class FollowControllerTest : EpicuriusIntegrationTest() {
         // when cancelling a non-existing follow request
         val error = patch<Problem>(
             client,
-            api(Uris.User.USER_FOLLOW_REQUEST.replace("{username}", publicUser2.username) + "?type=CANCEL"),
+            api(Uris.User.USER_FOLLOW_REQUEST.replace("{username}", publicUser2.name) + "?type=CANCEL"),
             body = "",
             responseStatus = HttpStatus.NOT_FOUND,
             token = userToken
@@ -260,6 +260,6 @@ class FollowControllerTest : EpicuriusIntegrationTest() {
         // then an error is returned with the UserNotFound message
         val errorBody = getBody(error)
         assertNotNull(errorBody)
-        assertEquals(FollowRequestNotFound(publicUser2.username).message, errorBody.detail)
+        assertEquals(FollowRequestNotFound(publicUser2.name).message, errorBody.detail)
     }
 }

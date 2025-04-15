@@ -77,7 +77,7 @@ fun createTestRecipe(tm: TransactionManager, fs: FirestoreManager, user: User): 
     return Recipe(
         recipeId,
         jdbiRecipeInfo.name,
-        user.username,
+        user.name,
         jdbiRecipeInfo.date,
         firestoreRecipeInfo.description,
         jdbiRecipeInfo.servings,

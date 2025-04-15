@@ -118,7 +118,7 @@ class UserControllerTest : EpicuriusIntegrationTest() {
 
         // then the user is updated successfully
         assertNotNull(updatedUserBody)
-        assertEquals(newUsername, updatedUserBody.userInfo.username)
+        assertEquals(newUsername, updatedUserBody.userInfo.name)
         assertEquals(newEmail, updatedUserBody.userInfo.email)
         assertEquals(newCountry, updatedUserBody.userInfo.country)
         assertTrue(updatedUserBody.userInfo.privacy)
@@ -135,7 +135,7 @@ class UserControllerTest : EpicuriusIntegrationTest() {
         // then the user is logged in successfully with the new password
         val authenticatedUser = getUser(newToken)
         assertNotNull(authenticatedUser)
-        assertEquals(newUsername, authenticatedUser.user.username)
+        assertEquals(newUsername, authenticatedUser.user.name)
     }
 
     @Test
@@ -156,7 +156,7 @@ class UserControllerTest : EpicuriusIntegrationTest() {
             client,
             api(Uris.User.USER),
             body = mapOf(
-                "username" to existingUser.username
+                "username" to existingUser.name
             ),
             responseStatus = HttpStatus.BAD_REQUEST,
             token = userToken
@@ -190,7 +190,7 @@ class UserControllerTest : EpicuriusIntegrationTest() {
             client,
             api(Uris.User.USER),
             body = mapOf(
-                "username" to existingUser.username,
+                "username" to existingUser.name,
                 "email" to existingUser.email
             ),
             responseStatus = HttpStatus.BAD_REQUEST,
@@ -265,7 +265,7 @@ class UserControllerTest : EpicuriusIntegrationTest() {
         val userProfileBody = getUserProfile(userToken, publicTestUsername)
         assertNotNull(userProfileBody)
         assertContentEquals(testPicture.bytes, userProfileBody.userProfile.profilePicture)
-        assertEquals(userProfileBody.userProfile.username, publicTestUsername)
+        assertEquals(userProfileBody.userProfile.name, publicTestUsername)
 
         // when deleting the profile picture
         val deleteProfilePictureResult = client.patch().uri(api(Uris.User.USER_PICTURE))
@@ -313,7 +313,7 @@ class UserControllerTest : EpicuriusIntegrationTest() {
 
         // then the user profile is retrieved successfully
         assertNotNull(userProfileBody)
-        assertEquals(username, userProfileBody.userProfile.username)
+        assertEquals(username, userProfileBody.userProfile.name)
         assertEquals("PT", userProfileBody.userProfile.country)
         assertFalse(userProfileBody.userProfile.privacy)
         assertContentEquals(testPicture.bytes, userProfileBody.userProfile.profilePicture)

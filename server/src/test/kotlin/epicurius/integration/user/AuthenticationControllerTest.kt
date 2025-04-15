@@ -70,7 +70,7 @@ class AuthenticationControllerTest : EpicuriusIntegrationTest() {
 
         // then the user is retrieved successfully
         assertNotNull(userBody)
-        assertEquals(username, userBody.user.username)
+        assertEquals(username, userBody.user.name)
         assertEquals(email, userBody.user.email)
         assertEquals(country, userBody.user.country)
         assertFalse(userBody.user.privacy)
@@ -184,7 +184,7 @@ class AuthenticationControllerTest : EpicuriusIntegrationTest() {
             client,
             api(Uris.User.SIGNUP),
             mapOf(
-                "username" to existingUser.username,
+                "username" to existingUser.name,
                 "email" to email,
                 "password" to password,
                 "confirmPassword" to password,
@@ -224,7 +224,7 @@ class AuthenticationControllerTest : EpicuriusIntegrationTest() {
             client,
             api(Uris.User.SIGNUP),
             mapOf(
-                "username" to existingUser.username,
+                "username" to existingUser.name,
                 "email" to existingUser.email,
                 "password" to password,
                 "confirmPassword" to password,
@@ -364,7 +364,7 @@ class AuthenticationControllerTest : EpicuriusIntegrationTest() {
         // then the user is logged in successfully
         val authenticatedUserBody = getUser(newToken)
         assertNotNull(authenticatedUserBody)
-        assertEquals(username, authenticatedUserBody.user.username)
+        assertEquals(username, authenticatedUserBody.user.name)
         assertEquals(email, authenticatedUserBody.user.email)
         assertEquals(country, authenticatedUserBody.user.country)
     }
@@ -389,7 +389,7 @@ class AuthenticationControllerTest : EpicuriusIntegrationTest() {
         // then the user is logged in successfully
         val authenticatedUserBody = getUser(newToken)
         assertNotNull(authenticatedUserBody)
-        assertEquals(username, authenticatedUserBody.user.username)
+        assertEquals(username, authenticatedUserBody.user.name)
         assertEquals(email, authenticatedUserBody.user.email)
         assertEquals(country, authenticatedUserBody.user.country)
     }
@@ -467,7 +467,7 @@ class AuthenticationControllerTest : EpicuriusIntegrationTest() {
         val error = post<Problem>(
             client,
             api(Uris.User.LOGIN),
-            mapOf("username" to user.username, "password" to generateSecurePassword()),
+            mapOf("username" to user.name, "password" to generateSecurePassword()),
             HttpStatus.BAD_REQUEST
         )
         assertNotNull(error)
@@ -563,7 +563,7 @@ class AuthenticationControllerTest : EpicuriusIntegrationTest() {
         val error = post<Problem>(
             client,
             api(Uris.User.LOGIN),
-            mapOf("username" to user.username, "password" to "invalidPassword"),
+            mapOf("username" to user.name, "password" to "invalidPassword"),
             HttpStatus.BAD_REQUEST
         )
         assertNotNull(error)
@@ -590,7 +590,7 @@ class AuthenticationControllerTest : EpicuriusIntegrationTest() {
         // then the user is logged in successfully
         val authenticatedUserBody = getUser(newToken)
         assertNotNull(authenticatedUserBody)
-        assertEquals(publicTestUser.username, authenticatedUserBody.user.username)
+        assertEquals(publicTestUser.name, authenticatedUserBody.user.name)
         assertEquals(publicTestUser.email, authenticatedUserBody.user.email)
     }
 

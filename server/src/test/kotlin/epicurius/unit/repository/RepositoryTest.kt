@@ -1,20 +1,58 @@
 package epicurius.unit.repository
 
+import com.google.auth.oauth2.GoogleCredentials
+import com.google.cloud.firestore.Firestore
+import com.google.cloud.firestore.FirestoreOptions
+import com.google.cloud.storage.StorageOptions
+import epicurius.config.CloudStorage
 import epicurius.domain.PagingParams
 import epicurius.domain.PictureDomain
 import epicurius.domain.fridge.ProductInfo
 import epicurius.domain.fridge.UpdateProductInfo
 import epicurius.domain.user.UpdateUserModel
+import epicurius.repository.cloudStorage.manager.CloudStorageManager
+import epicurius.repository.firestore.FirestoreManager
 import epicurius.repository.firestore.recipe.models.FirestoreRecipeModel
 import epicurius.repository.firestore.recipe.models.FirestoreUpdateRecipeModel
 import epicurius.repository.jdbi.recipe.models.JdbiCreateRecipeModel
 import epicurius.repository.jdbi.recipe.models.JdbiUpdateRecipeModel
 import epicurius.unit.EpicuriusUnitTest
 import org.springframework.web.multipart.MultipartFile
+import java.io.FileInputStream
 
 open class RepositoryTest : EpicuriusUnitTest() {
 
     companion object {
+        private const val FIRESTORE_TEST_DATABASE_ID = "epicurius-test-database"
+        private const val GOOGLE_CLOUD_STORAGE_TEST_BUCKET = "epicurius-test-bucket"
+        private const val GOOGLE_CLOUD_CREDENTIALS_LOCATION = "src/main/resources/epicurius-credentials.json"
+
+        private val firestore = getFirestoreService()
+        private val cloudStorage = getCloudStorageService()
+
+        val fs = FirestoreManager(firestore)
+        private val cs = CloudStorageManager(cloudStorage)
+
+        private fun getFirestoreService(): Firestore {
+            val serviceAccount = FileInputStream(GOOGLE_CLOUD_CREDENTIALS_LOCATION)
+
+            val options = FirestoreOptions.newBuilder()
+                .setCredentials(GoogleCredentials.fromStream(serviceAccount))
+                .setDatabaseId(FIRESTORE_TEST_DATABASE_ID)
+                .build()
+
+            return options.service
+        }
+
+        private fun getCloudStorageService(): CloudStorage {
+            val serviceAccount = FileInputStream(GOOGLE_CLOUD_CREDENTIALS_LOCATION)
+
+            val options = StorageOptions.newBuilder()
+                .setCredentials(GoogleCredentials.fromStream(serviceAccount))
+                .build()
+
+            return CloudStorage(options.service, GOOGLE_CLOUD_STORAGE_TEST_BUCKET)
+        }
 
         // USER
         fun createUser(username: String, email: String, country: String, passwordHash: String) =
@@ -41,7 +79,7 @@ open class RepositoryTest : EpicuriusUnitTest() {
                 it.userRepository.updateUser(
                     username,
                     UpdateUserModel(
-                        userUpdate.username,
+                        userUpdate.name,
                         userUpdate.email,
                         userUpdate.country,
                         userUpdate.passwordHash,
@@ -117,7 +155,6 @@ open class RepositoryTest : EpicuriusUnitTest() {
             fs.recipeRepository.updateRecipe(recipeInfo)
 
         fun deleteJdbiRecipe(recipeId: Int) = tm.run { it.recipeRepository.deleteRecipe(recipeId) }
-
         fun deleteFirestoreRecipe(recipeId: Int) = fs.recipeRepository.deleteRecipe(recipeId)
     }
 }

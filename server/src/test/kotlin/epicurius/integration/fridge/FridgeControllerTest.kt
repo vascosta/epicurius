@@ -1,10 +1,11 @@
-package epicurius.integration
+package epicurius.integration.fridge
 
 import epicurius.domain.exceptions.InvalidProduct
 import epicurius.domain.exceptions.ProductIsAlreadyOpen
 import epicurius.domain.exceptions.ProductNotFound
 import epicurius.http.utils.Problem
 import epicurius.http.utils.Uris
+import epicurius.integration.EpicuriusIntegrationTest
 import epicurius.integration.utils.delete
 import epicurius.integration.utils.getBody
 import epicurius.integration.utils.patch

@@ -34,7 +34,7 @@ class AuthenticationRepositoryTest : RepositoryTest() {
 
         // then the user is retrieved successfully
         assertNotNull(userByName)
-        assertEquals(username, userByName.username)
+        assertEquals(username, userByName.name)
         assertEquals(email, userByName.email)
         assertEquals(country, userByName.country)
         assertEquals(passwordHash, userByName.passwordHash)
@@ -48,7 +48,7 @@ class AuthenticationRepositoryTest : RepositoryTest() {
 
         // then the user is retrieved successfully
         assertNotNull(userByEmail)
-        assertEquals(username, userByEmail.username)
+        assertEquals(username, userByEmail.name)
         assertEquals(email, userByEmail.email)
         assertEquals(country, userByEmail.country)
         assertEquals(passwordHash, userByEmail.passwordHash)
@@ -91,11 +91,11 @@ class AuthenticationRepositoryTest : RepositoryTest() {
         resetPassword(user.email, newPasswordHash)
 
         // when getting the user by name
-        val userAfterResetPassword = getUserByName(user.username)
+        val userAfterResetPassword = getUserByName(user.name)
 
         // then the password is reset successfully
         assertNotNull(userAfterResetPassword)
-        assertEquals(user.username, userAfterResetPassword.username)
+        assertEquals(user.name, userAfterResetPassword.name)
         assertEquals(user.email, userAfterResetPassword.email)
         assertEquals(newPasswordHash, userAfterResetPassword.passwordHash)
         assertNotEquals(user.passwordHash, userAfterResetPassword.passwordHash)
@@ -107,10 +107,10 @@ class AuthenticationRepositoryTest : RepositoryTest() {
         val user = createTestUser(tm)
         val token = usersDomain.generateTokenValue()
         val tokenHash = usersDomain.hashToken(token)
-        createToken(tokenHash, user.username)
+        createToken(tokenHash, user.name)
 
         // when checking if the user exists by name
-        val userExistsByName = getUserByName(user.username)
+        val userExistsByName = getUserByName(user.name)
 
         // when checking if the user exists by email
         val userExistsByEmail = getUserByEmail(user.email)
@@ -122,9 +122,9 @@ class AuthenticationRepositoryTest : RepositoryTest() {
         assertNotNull(userExistsByName)
         assertNotNull(userExistsByEmail)
         assertNotNull(userExistsByTokenHash)
-        assertEquals(user.username, userExistsByName.username)
-        assertEquals(user.username, userExistsByEmail.username)
-        assertEquals(user.username, userExistsByTokenHash.username)
+        assertEquals(user.name, userExistsByName.name)
+        assertEquals(user.name, userExistsByEmail.name)
+        assertEquals(user.name, userExistsByTokenHash.name)
         assertEquals(user.email, userExistsByName.email)
         assertEquals(user.email, userExistsByEmail.email)
         assertEquals(user.email, userExistsByTokenHash.email)
@@ -158,10 +158,10 @@ class AuthenticationRepositoryTest : RepositoryTest() {
         val user = createTestUser(tm)
         val token = usersDomain.generateTokenValue()
         val tokenHash = usersDomain.hashToken(token)
-        createToken(tokenHash, user.username)
+        createToken(tokenHash, user.name)
 
         // when checking if the user is logged in
-        val userExistsByName = checkIfUserIsLoggedIn(user.username)
+        val userExistsByName = checkIfUserIsLoggedIn(user.name)
 
         // when checking if the user exists by email
         val userExistsByEmail = checkIfUserIsLoggedIn(email = user.email)
@@ -177,7 +177,7 @@ class AuthenticationRepositoryTest : RepositoryTest() {
         val user = createTestUser(tm)
 
         // when checking if the user is logged in
-        val userExistsByName = checkIfUserIsLoggedIn(user.username)
+        val userExistsByName = checkIfUserIsLoggedIn(user.name)
 
         // when checking if the user exists by email
         val userExistsByEmail = checkIfUserIsLoggedIn(email = user.email)

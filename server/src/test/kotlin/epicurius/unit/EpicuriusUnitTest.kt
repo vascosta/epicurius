@@ -5,23 +5,18 @@ import epicurius.domain.PictureDomain
 import epicurius.domain.fridge.FridgeDomain
 import epicurius.domain.user.CountriesDomain
 import epicurius.domain.user.UserDomain
+import epicurius.http.recipe.RecipeController
 import epicurius.repository.cloudStorage.manager.CloudStorageManager
 import epicurius.repository.cloudStorage.picture.PictureCloudStorageRepository
 import epicurius.repository.firestore.FirestoreManager
 import epicurius.repository.firestore.recipe.FirestoreRecipeRepository
-import epicurius.repository.jdbi.fridge.FridgeRepository
 import epicurius.repository.jdbi.fridge.JdbiFridgeRepository
 import epicurius.repository.jdbi.mealPlanner.JdbiMealPlannerRepository
-import epicurius.repository.jdbi.mealPlanner.MealPlannerRepository
 import epicurius.repository.jdbi.recipe.JdbiRecipeRepository
-import epicurius.repository.jdbi.recipe.RecipeRepository
 import epicurius.repository.jdbi.user.JdbiTokenRepository
 import epicurius.repository.jdbi.user.JdbiUserRepository
-import epicurius.repository.jdbi.user.TokenRepository
-import epicurius.repository.jdbi.user.UserRepository
 import epicurius.repository.spoonacular.SpoonacularManager
 import epicurius.repository.transaction.Transaction
-import epicurius.repository.transaction.jdbi.JdbiTransaction
 import epicurius.repository.transaction.jdbi.JdbiTransactionManager
 import epicurius.services.FridgeService
 import epicurius.services.user.UserService
@@ -60,11 +55,6 @@ open class EpicuriusUnitTest: EpicuriusTest() {
 
         val cloudStoragePictureRepositoryMock: PictureCloudStorageRepository = mock()
 
-        val usersDomainMock: UserDomain = mock()
-        val pictureDomainMock: PictureDomain = mock()
-        val countriesDomainMock: CountriesDomain = mock()
-        val fridgeDomainMock: FridgeDomain = mock()
-
         private val transactionManagerMock: JdbiTransactionManager = mock()
         private val firestoreManagerMock: FirestoreManager = mock<FirestoreManager>().apply {
             whenever(recipeRepository).thenReturn(firestoreRecipeRepositoryMock)
@@ -74,9 +64,16 @@ open class EpicuriusUnitTest: EpicuriusTest() {
         }
         private val spoonacularStorageManagerMock: SpoonacularManager = mock()
 
-        // change to mocks when all service tests are mocked
+        val usersDomainMock: UserDomain = mock()
+        val pictureDomainMock: PictureDomain = mock()
+        val countriesDomainMock: CountriesDomain = mock()
+        val fridgeDomainMock: FridgeDomain = mock()
+
         val userService = UserService(transactionManagerMock, cloudStorageManagerMock, usersDomainMock, pictureDomainMock, countriesDomainMock)
         val fridgeService = FridgeService(transactionManagerMock, spoonacularStorageManagerMock, fridgeDomainMock)
         val recipeService = RecipeService(transactionManagerMock, firestoreManagerMock, cloudStorageManagerMock, pictureDomainMock)
+
+        val recipeServiceMock: RecipeService = mock()
+        val recipeController = RecipeController(recipeServiceMock)
     }
 }

@@ -105,7 +105,7 @@ class AuthenticationServiceTest : ServiceTest() {
         // when creating a user with an existing username
         // then the user cannot be created and throws UserAlreadyExists Exception
         assertFailsWith<UserAlreadyExists> {
-            createUser(user.username, randomEmail, "PT", password, password)
+            createUser(user.name, randomEmail, "PT", password, password)
         }
 
         // when creating a user with an existing email
@@ -117,7 +117,7 @@ class AuthenticationServiceTest : ServiceTest() {
         // when creating a user with an existing username and email
         // then the user cannot be created and throws UserAlreadyExists Exception
         assertFailsWith<UserAlreadyExists> {
-            createUser(user.username, user.email, "PT", password, password)
+            createUser(user.name, user.email, "PT", password, password)
         }
     }
 
@@ -175,7 +175,7 @@ class AuthenticationServiceTest : ServiceTest() {
         // then the user is logged in successfully
         val authenticatedUser = getAuthenticatedUser(userToken)
         assertNotNull(authenticatedUser)
-        assertEquals(username, authenticatedUser.user.username)
+        assertEquals(username, authenticatedUser.user.name)
         assertEquals(email, authenticatedUser.user.email)
     }
 
@@ -198,7 +198,7 @@ class AuthenticationServiceTest : ServiceTest() {
         // then the user is logged in successfully
         val authenticatedUser = getAuthenticatedUser(userToken)
         assertNotNull(authenticatedUser)
-        assertEquals(username, authenticatedUser.user.username)
+        assertEquals(username, authenticatedUser.user.name)
         assertEquals(email, authenticatedUser.user.email)
     }
 
@@ -223,7 +223,7 @@ class AuthenticationServiceTest : ServiceTest() {
 
         // when logging in with an incorrect password
         // then the user is cannot be logged in and throws IncorrectPassword Exception
-        assertFailsWith<IncorrectPassword> { login(user.username, password = incorrectPassword) }
+        assertFailsWith<IncorrectPassword> { login(user.name, password = incorrectPassword) }
         assertFailsWith<IncorrectPassword> { login(email = user.email, password = incorrectPassword) }
     }
 
@@ -274,7 +274,7 @@ class AuthenticationServiceTest : ServiceTest() {
         // then the password was reset successfully
         val authenticatedUser = getAuthenticatedUser(userToken)
         assertNotNull(authenticatedUser)
-        assertEquals(user.username, authenticatedUser.user.username)
+        assertEquals(user.name, authenticatedUser.user.name)
         assertEquals(user.email, authenticatedUser.user.email)
     }
 

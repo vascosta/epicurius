@@ -55,7 +55,7 @@ class RecipeRepositoryTest : RepositoryTest() {
         assertNotNull(jdbiRecipe)
         assertEquals(jdbiRecipeInfo.name, jdbiRecipe.name)
         assertEquals(jdbiRecipeInfo.authorId, jdbiRecipe.authorId)
-        assertEquals(publicTestUser.username, jdbiRecipe.authorUsername)
+        assertEquals(publicTestUser.name, jdbiRecipe.authorUsername)
         assertEquals(jdbiRecipeInfo.servings, jdbiRecipe.servings)
         assertEquals(jdbiRecipeInfo.preparationTime, jdbiRecipe.preparationTime)
         assertEquals(jdbiRecipeInfo.cuisine, jdbiRecipe.cuisine.ordinal)
@@ -138,7 +138,7 @@ class RecipeRepositoryTest : RepositoryTest() {
 
         // then the recipe is updated successfully
         assertEquals(jdbiUpdateRecipeInfo.name, updatedJdbiRecipe.name)
-        assertEquals(publicTestUser.username, updatedJdbiRecipe.authorUsername)
+        assertEquals(publicTestUser.name, updatedJdbiRecipe.authorUsername)
         assertEquals(jdbiUpdateRecipeInfo.servings, updatedJdbiRecipe.servings)
         assertEquals(jdbiUpdateRecipeInfo.preparationTime, updatedJdbiRecipe.preparationTime)
         assertEquals(jdbiUpdateRecipeInfo.cuisine, updatedJdbiRecipe.cuisine.ordinal)
