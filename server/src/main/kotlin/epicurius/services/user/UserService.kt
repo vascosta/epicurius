@@ -44,18 +44,18 @@ class UserService(
     private val countriesDomain: CountriesDomain
 ) {
     fun createUser(
-        username: String,
+        name: String,
         email: String,
         country: String,
         password: String,
         confirmPassword: String
     ): String {
-        if (checkIfUserExists(username, email) != null) throw UserAlreadyExists()
+        if (checkIfUserExists(name, email) != null) throw UserAlreadyExists()
         if (!countriesDomain.checkIfCountryCodeIsValid(country)) throw InvalidCountry()
         checkIfPasswordsMatch(password, confirmPassword)
         val passwordHash = userDomain.encodePassword(password)
-        tm.run { it.userRepository.createUser(username, email, country, passwordHash) }
-        return createToken(username, email)
+        tm.run { it.userRepository.createUser(name, email, country, passwordHash) }
+        return createToken(name, email)
     }
 
     fun getAuthenticatedUser(token: String): AuthenticatedUser? {
@@ -65,15 +65,15 @@ class UserService(
         return AuthenticatedUser(user, token)
     }
 
-    fun getUserProfile(username: String): UserProfile {
-        val user = checkIfUserExists(username = username) ?: throw UserNotFound(username)
+    fun getUserProfile(name: String): UserProfile {
+        val user = checkIfUserExists(name = name) ?: throw UserNotFound(name)
         val followers = getFollowers(user.id)
         val following = getFollowing(user.id)
         return if (user.profilePictureName == null) {
-            UserProfile(user.username, user.country, user.privacy, null, followers, following)
+            UserProfile(user.name, user.country, user.privacy, null, followers, following)
         } else {
             val userProfilePicture = getProfilePicture(user.profilePictureName)
-            UserProfile(user.username, user.country, user.privacy, userProfilePicture, followers, following)
+            UserProfile(user.name, user.country, user.privacy, userProfilePicture, followers, following)
         }
     }
 
@@ -84,35 +84,35 @@ class UserService(
 
     fun getUsers(partialUsername: String, pagingParams: PagingParams): List<SearchUser> {
         return tm.run { it.userRepository.getUsers(partialUsername, pagingParams) }
-            .map { user -> SearchUser(user.username, getProfilePicture(user.profilePictureName)) }
+            .map { user -> SearchUser(user.name, getProfilePicture(user.profilePictureName)) }
     }
 
     fun getFollowers(userId: Int) =
         tm.run { it.userRepository.getFollowers(userId) }
-            .map { user -> FollowUser(user.username, getProfilePicture(user.profilePictureName)) }
+            .map { user -> FollowUser(user.name, getProfilePicture(user.profilePictureName)) }
 
     fun getFollowing(userId: Int) =
         tm.run { it.userRepository.getFollowing(userId) }
-            .map { user -> FollowingUser(user.username, getProfilePicture(user.profilePictureName)) }
+            .map { user -> FollowingUser(user.name, getProfilePicture(user.profilePictureName)) }
 
     fun getFollowRequests(userId: Int) =
         tm.run { it.userRepository.getFollowRequests(userId) }
-            .map { user -> FollowUser(user.username, getProfilePicture(user.profilePictureName)) }
+            .map { user -> FollowUser(user.name, getProfilePicture(user.profilePictureName)) }
 
-    fun login(username: String?, email: String?, password: String): String {
-        val user = checkIfUserExists(username, email) ?: throw UserNotFound(username ?: email)
-        checkIfUserIsLoggedIn(username, email)
+    fun login(name: String?, email: String?, password: String): String {
+        val user = checkIfUserExists(name, email) ?: throw UserNotFound(name ?: email)
+        checkIfUserIsLoggedIn(name, email)
 
         if (!userDomain.verifyPassword(password, user.passwordHash)) throw IncorrectPassword()
-        return createToken(username, email)
+        return createToken(name, email)
     }
 
-    fun logout(username: String) {
-        deleteToken(username = username)
+    fun logout(name: String) {
+        deleteToken(name = name)
     }
 
-    fun updateUser(username: String, userUpdate: UpdateUserInputModel): UserInfo {
-        if (checkIfUserExists(userUpdate.username, userUpdate.email) != null) throw UserAlreadyExists()
+    fun updateUser(name: String, userUpdate: UpdateUserInputModel): UserInfo {
+        if (checkIfUserExists(userUpdate.name, userUpdate.email) != null) throw UserAlreadyExists()
 
         if (userUpdate.country != null)
             if (!countriesDomain.checkIfCountryCodeIsValid(userUpdate.country)) throw InvalidCountry()
@@ -123,9 +123,9 @@ class UserService(
 
         return tm.run {
             it.userRepository.updateUser(
-                username,
+                name,
                 UpdateUserModel(
-                    userUpdate.username,
+                    userUpdate.name,
                     userUpdate.email,
                     userUpdate.country,
                     userUpdate.password?.let { password -> userDomain.encodePassword(password) },
@@ -185,7 +185,7 @@ class UserService(
     }
 
     fun follow(userId: Int, usernameToFollow: String) {
-        val userToFollow = checkIfUserExists(username = usernameToFollow) ?: throw UserNotFound(usernameToFollow)
+        val userToFollow = checkIfUserExists(name = usernameToFollow) ?: throw UserNotFound(usernameToFollow)
         if (checkIfUserIsBeingFollowedBy(userToFollow.id, userId)) throw UserAlreadyBeingFollowed(usernameToFollow)
         val followingStatus =
             if (userToFollow.privacy) {
@@ -201,7 +201,7 @@ class UserService(
     }
 
     fun unfollow(userId: Int, usernameToUnfollow: String) {
-        val userToUnfollow = checkIfUserExists(username = usernameToUnfollow) ?: throw UserNotFound(usernameToUnfollow)
+        val userToUnfollow = checkIfUserExists(name = usernameToUnfollow) ?: throw UserNotFound(usernameToUnfollow)
         if (!checkIfUserIsBeingFollowedBy(userToUnfollow.id, userId)) throw UserNotFollowed(usernameToUnfollow)
         tm.run {
             it.userRepository.unfollowUser(userId, userToUnfollow.id)
@@ -214,34 +214,34 @@ class UserService(
     }
 
     private fun cancelFollowRequest(userId: Int, usernameToCancelFollow: String) {
-        val userToCancelFollow = checkIfUserExists(username = usernameToCancelFollow) ?: throw UserNotFound(usernameToCancelFollow)
+        val userToCancelFollow = checkIfUserExists(name = usernameToCancelFollow) ?: throw UserNotFound(usernameToCancelFollow)
         if (!checkIfUserAlreadySentFollowRequest(userToCancelFollow.id, userId)) throw FollowRequestNotFound(usernameToCancelFollow)
         tm.run {
             it.userRepository.cancelFollowRequest(userToCancelFollow.id, userId)
         }
     }
 
-    private fun createToken(username: String? = null, email: String? = null): String {
-        checkIfUserIsLoggedIn(username, email)
+    private fun createToken(name: String? = null, email: String? = null): String {
+        checkIfUserIsLoggedIn(name, email)
         val token = userDomain.generateTokenValue()
         val tokenHash = userDomain.hashToken(token)
-        tm.run { it.tokenRepository.createToken(tokenHash, username, email) }
+        tm.run { it.tokenRepository.createToken(tokenHash, name, email) }
         return token
     }
 
-    private fun deleteToken(username: String? = null, email: String? = null) {
-        tm.run { it.tokenRepository.deleteToken(username, email) }
+    private fun deleteToken(name: String? = null, email: String? = null) {
+        tm.run { it.tokenRepository.deleteToken(name, email) }
     }
 
     private fun checkIfTokenIsValid(token: String) {
         if (!userDomain.isToken(token)) throw InvalidToken()
     }
 
-    private fun checkIfUserExists(username: String? = null, email: String? = null, tokenHash: String? = null): User? =
-        tm.run { it.userRepository.getUser(username, email, tokenHash) }
+    private fun checkIfUserExists(name: String? = null, email: String? = null, tokenHash: String? = null): User? =
+        tm.run { it.userRepository.getUser(name, email, tokenHash) }
 
-    private fun checkIfUserIsLoggedIn(username: String? = null, email: String? = null) {
-        if (tm.run { it.userRepository.checkIfUserIsLoggedIn(username, email) })
+    private fun checkIfUserIsLoggedIn(name: String? = null, email: String? = null) {
+        if (tm.run { it.userRepository.checkIfUserIsLoggedIn(name, email) })
             throw UserAlreadyLoggedIn()
     }
 

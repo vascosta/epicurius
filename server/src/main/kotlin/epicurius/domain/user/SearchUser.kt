@@ -1,6 +1,6 @@
 package epicurius.domain.user
 
-data class SearchUser(val username: String, val profilePicture: ByteArray?)
+data class SearchUser(val name: String, val profilePicture: ByteArray?)
 
 typealias FollowUser = SearchUser
 

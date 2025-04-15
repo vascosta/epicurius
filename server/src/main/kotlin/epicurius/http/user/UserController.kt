@@ -47,14 +47,14 @@ class UserController(val userService: UserService) {
     @GetMapping(Uris.User.USER_PROFILE)
     fun getUserProfile(
         authenticatedUser: AuthenticatedUser,
-        @PathVariable username: String
+        @PathVariable name: String
     ): ResponseEntity<*> {
-        return if (username == authenticatedUser.user.username) {
+        return if (name == authenticatedUser.user.name) {
             val userProfilePicture = userService.getProfilePicture(authenticatedUser.user.profilePictureName)
             val followers = userService.getFollowers(authenticatedUser.user.id)
             val following = userService.getFollowing(authenticatedUser.user.id)
             val userProfile = UserProfile(
-                authenticatedUser.user.username,
+                authenticatedUser.user.name,
                 authenticatedUser.user.country,
                 authenticatedUser.user.privacy,
                 userProfilePicture,
@@ -63,7 +63,7 @@ class UserController(val userService: UserService) {
             )
             ResponseEntity.ok().body(GetUserProfileOutputModel(userProfile))
         } else {
-            val userProfile = userService.getUserProfile(username)
+            val userProfile = userService.getUserProfile(name)
             ResponseEntity.ok().body(GetUserProfileOutputModel(userProfile))
         }
     }
@@ -112,21 +112,21 @@ class UserController(val userService: UserService) {
 
     @PostMapping(Uris.User.SIGNUP)
     fun signUp(@Valid @RequestBody body: SignUpInputModel, response: HttpServletResponse): ResponseEntity<*> {
-        val token = userService.createUser(body.username, body.email, body.country, body.password, body.confirmPassword)
+        val token = userService.createUser(body.name, body.email, body.country, body.password, body.confirmPassword)
         response.addHeader("Authorization", "Bearer $token")
-        return ResponseEntity.created(Uris.User.userProfile(body.username)).build<Unit>()
+        return ResponseEntity.created(Uris.User.userProfile(body.name)).build<Unit>()
     }
 
     @PostMapping(Uris.User.LOGIN)
     fun login(@Valid @RequestBody body: LoginInputModel, response: HttpServletResponse): ResponseEntity<*> {
-        val token = userService.login(body.username, body.email, body.password)
+        val token = userService.login(body.name, body.email, body.password)
         response.addHeader("Authorization", "Bearer $token")
         return ResponseEntity.noContent().build<Unit>()
     }
 
     @PostMapping(Uris.User.LOGOUT)
     fun logout(authenticatedUser: AuthenticatedUser, response: HttpServletResponse): ResponseEntity<*> {
-        userService.logout(authenticatedUser.user.username)
+        userService.logout(authenticatedUser.user.name)
         response.addHeader("Authorization", "")
         return ResponseEntity.noContent().build<Unit>()
     }
@@ -136,7 +136,7 @@ class UserController(val userService: UserService) {
         authenticatedUser: AuthenticatedUser,
         @Valid @RequestBody body: UpdateUserInputModel
     ): ResponseEntity<*> {
-        val updatedUserInfo = userService.updateUser(authenticatedUser.user.username, body)
+        val updatedUserInfo = userService.updateUser(authenticatedUser.user.name, body)
         return ResponseEntity.ok().body(
             UpdateUserOutputModel(updatedUserInfo)
         )
@@ -148,7 +148,7 @@ class UserController(val userService: UserService) {
         @RequestPart("profilePicture", required = false) profilePicture: MultipartFile?
     ): ResponseEntity<*> {
         val newProfilePicture = userService.updateProfilePicture(
-            authenticatedUser.user.username,
+            authenticatedUser.user.name,
             authenticatedUser.user.profilePictureName,
             profilePicture
         )
@@ -168,24 +168,24 @@ class UserController(val userService: UserService) {
     }
 
     @PatchMapping(Uris.User.USER_FOLLOW)
-    fun follow(authenticatedUser: AuthenticatedUser, @PathVariable username: String): ResponseEntity<*> {
-        userService.follow(authenticatedUser.user.id, username)
+    fun follow(authenticatedUser: AuthenticatedUser, @PathVariable name: String): ResponseEntity<*> {
+        userService.follow(authenticatedUser.user.id, name)
         return ResponseEntity.noContent().build<Unit>()
     }
 
     @PatchMapping(Uris.User.USER_FOLLOW_REQUEST)
     fun followRequest(
         authenticatedUser: AuthenticatedUser,
-        @PathVariable username: String,
+        @PathVariable name: String,
         @RequestParam type: FollowRequestType,
     ): ResponseEntity<*> {
-        userService.followRequest(authenticatedUser.user.id, username, type)
+        userService.followRequest(authenticatedUser.user.id, name, type)
         return ResponseEntity.noContent().build<Unit>()
     }
 
     @DeleteMapping(Uris.User.USER_FOLLOW)
-    fun unfollow(authenticatedUser: AuthenticatedUser, @PathVariable username: String): ResponseEntity<*> {
-        userService.unfollow(authenticatedUser.user.id, username)
+    fun unfollow(authenticatedUser: AuthenticatedUser, @PathVariable name: String): ResponseEntity<*> {
+        userService.unfollow(authenticatedUser.user.id, name)
         return ResponseEntity.ok().build<Unit>()
     }
 }

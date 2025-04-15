@@ -17,7 +17,7 @@ class UserMapper(
         val dietList = dietListMapper.map(rs, 9, ctx)
         return User(
             id = rs.getInt("id"),
-            username = rs.getString("username"),
+            name = rs.getString("name"),
             email = rs.getString("email"),
             passwordHash = rs.getString("password_hash"),
             tokenHash = rs.getString("token_hash"),

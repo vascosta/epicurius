@@ -7,21 +7,21 @@ import epicurius.repository.jdbi.user.models.SearchUserModel
 
 interface UserRepository {
 
-    fun createUser(username: String, email: String, country: String, passwordHash: String)
+    fun createUser(name: String, email: String, country: String, passwordHash: String)
 
-    fun getUser(username: String? = null, email: String? = null, tokenHash: String? = null): User?
+    fun getUser(name: String? = null, email: String? = null, tokenHash: String? = null): User?
     fun getUsers(partialUsername: String, pagingParams: PagingParams): List<SearchUserModel>
     fun getFollowers(userId: Int): List<SearchUserModel>
     fun getFollowing(userId: Int): List<SearchUserModel>
     fun getFollowRequests(userId: Int): List<SearchUserModel>
 
-    fun updateUser(username: String, userUpdate: UpdateUserModel): User
+    fun updateUser(name: String, userUpdate: UpdateUserModel): User
     fun resetPassword(email: String, passwordHash: String)
     fun followUser(userId: Int, userIdToFollow: Int, status: Int)
     fun unfollowUser(userId: Int, userIdToUnfollow: Int)
     fun cancelFollowRequest(userId: Int, followerId: Int)
 
-    fun checkIfUserIsLoggedIn(username: String? = null, email: String? = null): Boolean
+    fun checkIfUserIsLoggedIn(name: String? = null, email: String? = null): Boolean
     fun checkIfUserIsBeingFollowedBy(userId: Int, followerId: Int): Boolean
     fun checkIfUserAlreadySentFollowRequest(userId: Int, followerId: Int): Boolean
 }

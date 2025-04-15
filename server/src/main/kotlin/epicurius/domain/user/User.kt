@@ -5,7 +5,7 @@ import epicurius.domain.Intolerance
 
 data class User(
     val id: Int,
-    val username: String,
+    val name: String,
     val email: String,
     val passwordHash: String,
     val tokenHash: String?,
@@ -17,7 +17,7 @@ data class User(
 ) {
     fun toUserInfo(): UserInfo {
         return UserInfo(
-            username = username,
+            name = name,
             email = email,
             country = country,
             privacy = privacy,

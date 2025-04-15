@@ -4,7 +4,7 @@ import epicurius.domain.Diet
 import epicurius.domain.Intolerance
 
 data class UserInfo(
-    val username: String,
+    val name: String,
     val email: String,
     val country: String,
     val privacy: Boolean,

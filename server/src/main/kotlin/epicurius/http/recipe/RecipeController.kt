@@ -34,6 +34,12 @@ import org.springframework.web.multipart.MultipartFile
 @RequestMapping(Uris.PREFIX)
 class RecipeController(private val recipeService: RecipeService) {
 
+    @GetMapping(Uris.Recipe.RECIPE)
+    suspend fun getRecipe(authenticatedUser: AuthenticatedUser, @PathVariable id: Int): ResponseEntity<*> {
+        val recipe = recipeService.getRecipe(id)
+        return ResponseEntity.ok().body(GetRecipeOutputModel(recipe))
+    }
+
     @GetMapping(Uris.Recipe.RECIPES)
     fun searchRecipes(
         authenticatedUser: AuthenticatedUser,
@@ -53,7 +59,7 @@ class RecipeController(private val recipeService: RecipeService) {
         @RequestParam maxProtein: Int?,
         @RequestParam minTime: Int?,
         @RequestParam maxTime: Int?,
-        @RequestParam maxResults: Int = 10
+        @RequestParam maxResults: Int = 10 // change to pagingParams
     ): ResponseEntity<*> {
         val searchForm = SearchRecipesInputModel(
             name = name,
@@ -78,12 +84,6 @@ class RecipeController(private val recipeService: RecipeService) {
         return ResponseEntity.ok().body(SearchRecipesOutputModel(results))
     }
 
-    @GetMapping(Uris.Recipe.RECIPE)
-    suspend fun getRecipe(authenticatedUser: AuthenticatedUser, @PathVariable id: Int): ResponseEntity<*> {
-        val recipe = recipeService.getRecipe(id)
-        return ResponseEntity.ok().body(GetRecipeOutputModel(recipe))
-    }
-
     @PostMapping(Uris.Recipe.RECIPES, consumes = [MediaType.MULTIPART_FORM_DATA_VALUE])
     fun createRecipe(
         authenticatedUser: AuthenticatedUser,
@@ -92,7 +92,7 @@ class RecipeController(private val recipeService: RecipeService) {
     ): ResponseEntity<*> {
         val objectMapper = jacksonObjectMapper()
         val recipeInfo = objectMapper.readValue(body, CreateRecipeInputModel::class.java)
-        val recipe = recipeService.createRecipe(authenticatedUser.user.id, authenticatedUser.user.username, recipeInfo, pictures)
+        val recipe = recipeService.createRecipe(authenticatedUser.user.id, authenticatedUser.user.name, recipeInfo, pictures)
         return ResponseEntity.created(recipe(recipe.id)).body(CreateRecipeOutputModel(recipe))
     }
 

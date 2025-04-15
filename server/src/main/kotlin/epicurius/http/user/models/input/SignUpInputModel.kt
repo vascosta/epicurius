@@ -15,7 +15,7 @@ data class SignUpInputModel(
     @field:NotBlank
     @field:Size(min = MIN_USERNAME_LENGTH, max = MAX_USERNAME_LENGTH, message = UserDomain.USERNAME_LENGTH_MSG)
     @field:Pattern(regexp = Regex.VALID_STRING, message = Regex.VALID_STRING_MSG)
-    val username: String,
+    val name: String,
 
     @field:NotBlank
     @field:Email(message = UserDomain.VALID_EMAIL_MSG)

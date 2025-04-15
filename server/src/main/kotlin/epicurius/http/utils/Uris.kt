@@ -18,16 +18,16 @@ object Uris {
         const val USER_RESET_PASSWORD = "/user/password" // PATCH
 
         const val USERS = "/users" // GET
-        const val USER_PROFILE = "/users/{username}" // GET
+        const val USER_PROFILE = "/users/{name}" // GET
 
-        const val USER_FOLLOW = "/user/follow/{username}" // PATCH and DELETE for unfollow
-        const val USER_FOLLOW_REQUEST = "/user/follow-requests/{username}" // PATCH
+        const val USER_FOLLOW = "/user/follow/{name}" // PATCH and DELETE for unfollow
+        const val USER_FOLLOW_REQUEST = "/user/follow-requests/{name}" // PATCH
 
         const val USER_FOLLOW_REQUESTS = "/user/follow-requests" // GET
         const val USER_FOLLOWERS = "/user/followers" // GET
         const val USER_FOLLOWING = "/user/following" // GET
 
-        fun userProfile(username: String) = UriTemplate(USER_PROFILE).expand(username)
+        fun userProfile(name: String) = UriTemplate(USER_PROFILE).expand(name)
     }
 
     object Fridge {

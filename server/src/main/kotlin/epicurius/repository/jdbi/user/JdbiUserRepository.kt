@@ -10,14 +10,14 @@ import org.jdbi.v3.core.kotlin.mapTo
 
 class JdbiUserRepository(private val handle: Handle) : UserRepository {
 
-    override fun createUser(username: String, email: String, country: String, passwordHash: String) {
+    override fun createUser(name: String, email: String, country: String, passwordHash: String) {
         handle.createUpdate(
             """
-               INSERT INTO dbo.user(username, email, password_hash, country, privacy, intolerances, diets)
-               VALUES (:username, :email, :password_hash, :country, :privacy, :intolerances, :diets)
+               INSERT INTO dbo.user(name, email, password_hash, country, privacy, intolerances, diets)
+               VALUES (:name, :email, :password_hash, :country, :privacy, :intolerances, :diets)
             """
         )
-            .bind("username", username)
+            .bind("name", name)
             .bind("email", email)
             .bind("password_hash", passwordHash)
             .bind("country", country)
@@ -27,10 +27,10 @@ class JdbiUserRepository(private val handle: Handle) : UserRepository {
             .execute()
     }
 
-    override fun getUser(username: String?, email: String?, tokenHash: String?): User? {
+    override fun getUser(name: String?, email: String?, tokenHash: String?): User? {
 
         val bindings = mutableMapOf(
-            "username" to username,
+            "name" to name,
             "email" to email,
             "token_hash" to tokenHash
         )
@@ -38,7 +38,7 @@ class JdbiUserRepository(private val handle: Handle) : UserRepository {
         return handle.createQuery(
             """
                 SELECT * FROM dbo.user
-                WHERE username = :username OR email = :email OR token_hash = :token_hash
+                WHERE name = :name OR email = :email OR token_hash = :token_hash
             """
         )
             .bindMap(bindings)
@@ -49,9 +49,9 @@ class JdbiUserRepository(private val handle: Handle) : UserRepository {
     override fun getUsers(partialUsername: String, pagingParams: PagingParams): List<SearchUserModel> {
         return handle.createQuery(
             """
-                SELECT username, profile_picture_name
+                SELECT name, profile_picture_name
                 FROM dbo.user
-                WHERE LOWER(username) LIKE LOWER(:partialUsername)
+                WHERE LOWER(name) LIKE LOWER(:partialUsername)
                 LIMIT :limit OFFSET :skip
             """
         )
@@ -65,7 +65,7 @@ class JdbiUserRepository(private val handle: Handle) : UserRepository {
     override fun getFollowers(userId: Int): List<SearchUserModel> {
         return handle.createQuery(
             """
-                SELECT u.username, u.profile_picture_name
+                SELECT u.name, u.profile_picture_name
                 FROM dbo.user u
                 JOIN dbo.followers f ON u.id = f.follower_id
                 WHERE f.user_id = :user_id AND f.status = :status
@@ -80,7 +80,7 @@ class JdbiUserRepository(private val handle: Handle) : UserRepository {
     override fun getFollowing(userId: Int): List<SearchUserModel> {
         return handle.createQuery(
             """
-                SELECT u.username, u.profile_picture_name
+                SELECT u.name, u.profile_picture_name
                 FROM dbo.user u
                 JOIN dbo.followers f ON u.id = f.user_id
                 WHERE f.follower_id = :user_id AND f.status = :status
@@ -95,7 +95,7 @@ class JdbiUserRepository(private val handle: Handle) : UserRepository {
     override fun getFollowRequests(userId: Int): List<SearchUserModel> {
         return handle.createQuery(
             """
-                SELECT u.username, u.profile_picture_name
+                SELECT u.name, u.profile_picture_name
                 FROM dbo.user u
                 JOIN dbo.followers f ON u.id = f.follower_id
                 WHERE f.user_id = :user_id AND f.status = :status
@@ -107,11 +107,11 @@ class JdbiUserRepository(private val handle: Handle) : UserRepository {
             .list()
     }
 
-    override fun updateUser(username: String, userUpdate: UpdateUserModel): User {
+    override fun updateUser(name: String, userUpdate: UpdateUserModel): User {
         return handle.createQuery(
             """
                 UPDATE dbo.user
-                SET username = COALESCE(:newUsername, username),
+                SET name = COALESCE(:newUsername, name),
                     email = COALESCE(:email, email),
                     country = COALESCE(:country, country),
                     password_hash = COALESCE(:password_hash, password_hash),
@@ -119,11 +119,11 @@ class JdbiUserRepository(private val handle: Handle) : UserRepository {
                     intolerances = COALESCE(:intolerances, intolerances),
                     diets = COALESCE(:diets, diets),
                     profile_picture_name = :profile_picture_name
-                WHERE username = :username
+                WHERE name = :name
                 RETURNING *
             """
         )
-            .bind("newUsername", userUpdate.username)
+            .bind("newUsername", userUpdate.name)
             .bind("email", userUpdate.email)
             .bind("country", userUpdate.country)
             .bind("password_hash", userUpdate.passwordHash)
@@ -131,7 +131,7 @@ class JdbiUserRepository(private val handle: Handle) : UserRepository {
             .bind("intolerances", userUpdate.intolerances?.toTypedArray())
             .bind("diets", userUpdate.diets?.toTypedArray())
             .bind("profile_picture_name", userUpdate.profilePictureName)
-            .bind("username", username)
+            .bind("name", name)
             .mapTo<User>()
             .first()
     }
@@ -186,14 +186,14 @@ class JdbiUserRepository(private val handle: Handle) : UserRepository {
             .execute()
     }
 
-    override fun checkIfUserIsLoggedIn(username: String?, email: String?) =
+    override fun checkIfUserIsLoggedIn(name: String?, email: String?) =
         handle.createQuery(
             """
                 SELECT COUNT (*) FROM dbo.user
-                WHERE (username = :username OR email = :email) AND token_hash IS NOT NULL
+                WHERE (name = :name OR email = :email) AND token_hash IS NOT NULL
             """
         )
-            .bind("username", username)
+            .bind("name", name)
             .bind("email", email)
             .mapTo<Int>()
             .one() == 1
