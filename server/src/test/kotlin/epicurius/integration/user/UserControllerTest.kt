@@ -1,4 +1,4 @@
-package epicurius.http.user
+package epicurius.integration.user
 
 import epicurius.domain.Diet
 import epicurius.domain.Intolerance
@@ -7,12 +7,12 @@ import epicurius.domain.exceptions.PasswordsDoNotMatch
 import epicurius.domain.exceptions.UserAlreadyExists
 import epicurius.domain.exceptions.UserNotFound
 import epicurius.domain.user.SearchUser
-import epicurius.http.HttpTest
+import epicurius.integration.EpicuriusIntegrationTest
 import epicurius.http.utils.Problem
 import epicurius.http.utils.Uris
-import epicurius.http.utils.get
-import epicurius.http.utils.getBody
-import epicurius.http.utils.patch
+import epicurius.integration.utils.get
+import epicurius.integration.utils.getBody
+import epicurius.integration.utils.patch
 import epicurius.utils.createTestUser
 import epicurius.utils.generateEmail
 import epicurius.utils.generateRandomUsername
@@ -27,7 +27,7 @@ import kotlin.test.assertNotNull
 import kotlin.test.assertNull
 import kotlin.test.assertTrue
 
-class UserControllerTest : HttpTest() {
+class UserControllerTest : EpicuriusIntegrationTest() {
 
     lateinit var publicTestUserToken: String
     lateinit var publicTestUsername: String

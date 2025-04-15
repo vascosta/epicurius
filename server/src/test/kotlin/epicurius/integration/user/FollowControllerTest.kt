@@ -1,4 +1,4 @@
-package epicurius.http.user
+package epicurius.integration.user
 
 import epicurius.domain.exceptions.FollowRequestAlreadyBeenSent
 import epicurius.domain.exceptions.FollowRequestNotFound
@@ -7,12 +7,12 @@ import epicurius.domain.exceptions.UserNotFollowed
 import epicurius.domain.exceptions.UserNotFound
 import epicurius.domain.user.FollowUser
 import epicurius.domain.user.FollowingUser
-import epicurius.http.HttpTest
+import epicurius.integration.EpicuriusIntegrationTest
 import epicurius.http.utils.Problem
 import epicurius.http.utils.Uris
-import epicurius.http.utils.delete
-import epicurius.http.utils.getBody
-import epicurius.http.utils.patch
+import epicurius.integration.utils.delete
+import epicurius.integration.utils.getBody
+import epicurius.integration.utils.patch
 import epicurius.utils.createTestUser
 import epicurius.utils.generateEmail
 import epicurius.utils.generateRandomUsername
@@ -24,7 +24,7 @@ import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 import kotlin.test.assertTrue
 
-class FollowControllerTest : HttpTest() {
+class FollowControllerTest : EpicuriusIntegrationTest() {
 
     lateinit var publicTestUserToken: String
     lateinit var publicTestUsername: String

@@ -1,14 +1,14 @@
-package epicurius.http
+package epicurius.integration
 
 import epicurius.domain.exceptions.InvalidProduct
 import epicurius.domain.exceptions.ProductIsAlreadyOpen
 import epicurius.domain.exceptions.ProductNotFound
 import epicurius.http.utils.Problem
 import epicurius.http.utils.Uris
-import epicurius.http.utils.delete
-import epicurius.http.utils.getBody
-import epicurius.http.utils.patch
-import epicurius.http.utils.post
+import epicurius.integration.utils.delete
+import epicurius.integration.utils.getBody
+import epicurius.integration.utils.patch
+import epicurius.integration.utils.post
 import epicurius.utils.generateEmail
 import epicurius.utils.generateRandomUsername
 import epicurius.utils.generateSecurePassword
@@ -21,7 +21,7 @@ import java.time.Period
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 
-class FridgeControllerTest : HttpTest() {
+class FridgeControllerTest : EpicuriusIntegrationTest() {
 
     lateinit var testUserToken: String
 

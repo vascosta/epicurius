@@ -1,4 +1,4 @@
-package epicurius.http.user
+package epicurius.integration.user
 
 import epicurius.domain.exceptions.IncorrectPassword
 import epicurius.domain.exceptions.InvalidCountry
@@ -9,14 +9,14 @@ import epicurius.domain.exceptions.UserAlreadyLoggedIn
 import epicurius.domain.exceptions.UserNotFound
 import epicurius.domain.user.User
 import epicurius.domain.user.UserDomain
-import epicurius.http.HttpTest
+import epicurius.integration.EpicuriusIntegrationTest
 import epicurius.http.utils.Problem
 import epicurius.http.utils.Regex.VALID_PASSWORD_MSG
 import epicurius.http.utils.Regex.VALID_STRING_MSG
 import epicurius.http.utils.Uris
-import epicurius.http.utils.getBody
-import epicurius.http.utils.patch
-import epicurius.http.utils.post
+import epicurius.integration.utils.getBody
+import epicurius.integration.utils.patch
+import epicurius.integration.utils.post
 import epicurius.utils.createTestUser
 import epicurius.utils.generateEmail
 import epicurius.utils.generateRandomUsername
@@ -29,7 +29,7 @@ import kotlin.test.assertNotNull
 import kotlin.test.assertNull
 import kotlin.test.assertTrue
 
-class AuthenticationControllerTest : HttpTest() {
+class AuthenticationControllerTest : EpicuriusIntegrationTest() {
 
     val publicTestUser: User = createTestUser(tm)
 

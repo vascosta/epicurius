@@ -1,4 +1,4 @@
-package epicurius.http
+package epicurius.integration
 
 import epicurius.EpicuriusTest
 import epicurius.domain.Diet
@@ -15,13 +15,13 @@ import epicurius.http.user.models.output.GetUsersOutputModel
 import epicurius.http.user.models.output.UpdateProfilePictureOutputModel
 import epicurius.http.user.models.output.UpdateUserOutputModel
 import epicurius.http.utils.Uris
-import epicurius.http.utils.delete
-import epicurius.http.utils.get
-import epicurius.http.utils.getAuthorizationHeader
-import epicurius.http.utils.getBody
-import epicurius.http.utils.patch
-import epicurius.http.utils.patchMultiPart
-import epicurius.http.utils.post
+import epicurius.integration.utils.delete
+import epicurius.integration.utils.get
+import epicurius.integration.utils.getAuthorizationHeader
+import epicurius.integration.utils.getBody
+import epicurius.integration.utils.patch
+import epicurius.integration.utils.patchMultiPart
+import epicurius.integration.utils.post
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.web.server.LocalServerPort
 import org.springframework.http.HttpStatus
@@ -32,7 +32,7 @@ import java.time.LocalDate
 import java.time.Period
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class HttpTest : EpicuriusTest() {
+class EpicuriusIntegrationTest : EpicuriusTest() {
 
     @LocalServerPort
     var port: Int = 0

@@ -1,4 +1,4 @@
-package epicurius.http.utils
+package epicurius.integration.utils
 
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
