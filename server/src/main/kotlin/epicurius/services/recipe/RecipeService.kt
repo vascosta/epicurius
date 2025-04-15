@@ -15,14 +15,11 @@ import epicurius.repository.cloudStorage.manager.CloudStorageManager
 import epicurius.repository.firestore.FirestoreManager
 import epicurius.repository.jdbi.recipe.models.JdbiRecipeModel
 import epicurius.repository.jdbi.recipe.models.JdbiUpdateRecipeModel
-import epicurius.repository.spoonacular.SpoonacularManager
 import epicurius.repository.transaction.TransactionManager
 import epicurius.services.recipe.models.UpdatePicturesModel
 import epicurius.services.recipe.models.UpdateRecipeModel
 import org.springframework.stereotype.Component
 import org.springframework.web.multipart.MultipartFile
-import java.util.UUID
-import java.util.UUID.randomUUID
 
 @Component
 class RecipeService(
@@ -40,7 +37,7 @@ class RecipeService(
             pictures.forEach { pictureDomain.validatePicture(it) }
             val picturesNames = pictures.map { pictureDomain.generatePictureName() }
 
-            val jdbiCreateRecipeModel = recipeInfo.toJdbiRecipeModel(authorId, picturesNames)
+            val jdbiCreateRecipeModel = recipeInfo.toJdbiCreateRecipeModel(authorId, picturesNames)
 
             val recipeId = tm.run { it.recipeRepository.createRecipe(jdbiCreateRecipeModel) }
 
@@ -106,8 +103,8 @@ class RecipeService(
     }
 
     suspend fun updateRecipe(userId: Int, recipeId: Int, recipeInfo: UpdateRecipeInputModel): UpdateRecipeModel {
-        checkIfRecipeExists(recipeId) ?: throw RecipeNotFound()
-        checkIfUserIsAuthor(userId, recipeId)
+        val jdbiRecipeModel = checkIfRecipeExists(recipeId) ?: throw RecipeNotFound()
+        checkIfUserIsAuthor(userId, jdbiRecipeModel.authorId)
 
         val jdbiRecipe = tm.run { it.recipeRepository.updateRecipe(recipeInfo.toJdbiUpdateRecipeModel(recipeId, null)) }
         val firestoreRecipe = fs.recipeRepository.updateRecipe(recipeInfo.toFirestoreUpdateRecipeModel(recipeId))

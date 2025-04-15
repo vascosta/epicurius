@@ -19,7 +19,7 @@ import epicurius.http.user.models.output.GetUsersOutputModel
 import epicurius.http.user.models.output.UpdateProfilePictureOutputModel
 import epicurius.http.user.models.output.UpdateUserOutputModel
 import epicurius.http.utils.Uris
-import epicurius.services.UserService
+import epicurius.services.user.UserService
 import jakarta.servlet.http.HttpServletResponse
 import jakarta.validation.Valid
 import org.springframework.http.ResponseEntity

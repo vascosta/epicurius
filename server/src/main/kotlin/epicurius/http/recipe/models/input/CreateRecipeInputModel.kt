@@ -11,7 +11,6 @@ import epicurius.repository.firestore.recipe.models.FirestoreRecipeModel
 import epicurius.repository.jdbi.recipe.models.JdbiCreateRecipeModel
 import jakarta.validation.constraints.Positive
 import jakarta.validation.constraints.Size
-import org.springframework.beans.factory.annotation.Value
 
 data class CreateRecipeInputModel(
     @field:Size(min = RecipeDomain.MIN_RECIPE_NAME_LENGTH, max = RecipeDomain.MAX_RECIPE_NAME_LENGTH, message = RecipeDomain.RECIPE_NAME_LENGTH_MSG)
@@ -42,7 +41,7 @@ data class CreateRecipeInputModel(
     val instructions: Instructions
 ) {
 
-    fun toJdbiRecipeModel(authorId: Int, picturesNames: List<String>): JdbiCreateRecipeModel {
+    fun toJdbiCreateRecipeModel(authorId: Int, picturesNames: List<String>): JdbiCreateRecipeModel {
         return JdbiCreateRecipeModel(
             name = name,
             authorId = authorId,

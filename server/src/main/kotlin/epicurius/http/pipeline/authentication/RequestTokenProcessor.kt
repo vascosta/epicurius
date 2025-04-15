@@ -1,7 +1,7 @@
 package epicurius.http.pipeline.authentication
 
 import epicurius.domain.user.AuthenticatedUser
-import epicurius.services.UserService
+import epicurius.services.user.UserService
 import org.springframework.stereotype.Component
 
 @Component

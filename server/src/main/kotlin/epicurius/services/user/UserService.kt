@@ -1,4 +1,4 @@
-package epicurius.services
+package epicurius.services.user
 
 import epicurius.domain.Diet
 import epicurius.domain.Intolerance
