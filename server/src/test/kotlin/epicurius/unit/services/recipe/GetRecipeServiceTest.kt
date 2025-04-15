@@ -13,11 +13,12 @@ class GetRecipeServiceTest: RecipeServiceTest() {
 
     @Test
     fun `Should retrieve the recipe successfully`() {
-        // given a recipe id
-        // mocks
-        val jdbiRecipeModel = getJdbiRecipeModel()
+        // given a recipe id (RECIPE_ID)
+
+        // mock
+        val jdbiRecipeModel = getJdbiRecipeModel(jdbiCreateRecipeInfo.date)
         whenever(jdbiRecipeRepositoryMock.getRecipe(RECIPE_ID)).thenReturn(jdbiRecipeModel)
-        whenever(runBlocking { firestoreRecipeRepositoryMock.getRecipe(RECIPE_ID) } ).thenReturn(firestoreRecipeModel)
+        whenever(runBlocking { firestoreRecipeRepositoryMock.getRecipe(RECIPE_ID) } ).thenReturn(firestoreRecipeInfo)
         whenever(cloudStoragePictureRepositoryMock.getPicture(testPicture.name, RECIPES_FOLDER)).thenReturn(testPicture.bytes)
 
         // when retrieving the recipe
@@ -25,21 +26,21 @@ class GetRecipeServiceTest: RecipeServiceTest() {
 
         // then the recipe is retrieved successfully
         assertEquals(RECIPE_ID, recipe.id)
-        assertEquals(recipeInfo.name, recipe.name)
+        assertEquals(createRecipeInfo.name, recipe.name)
         assertEquals(authorName, recipe.authorUsername)
-        assertEquals(recipeInfo.description, recipe.description)
-        assertEquals(recipeInfo.servings, recipe.servings)
-        assertEquals(recipeInfo.preparationTime, recipe.preparationTime)
-        assertEquals(recipeInfo.cuisine, recipe.cuisine)
-        assertEquals(recipeInfo.mealType, recipe.mealType)
-        assertEquals(recipeInfo.intolerances, recipe.intolerances)
-        assertEquals(recipeInfo.diets, recipe.diets)
-        assertEquals(recipeInfo.ingredients, recipe.ingredients)
-        assertEquals(recipeInfo.calories, recipe.calories)
-        assertEquals(recipeInfo.protein, recipe.protein)
-        assertEquals(recipeInfo.fat, recipe.fat)
-        assertEquals(recipeInfo.carbs, recipe.carbs)
-        assertEquals(recipeInfo.instructions, recipe.instructions)
+        assertEquals(createRecipeInfo.description, recipe.description)
+        assertEquals(createRecipeInfo.servings, recipe.servings)
+        assertEquals(createRecipeInfo.preparationTime, recipe.preparationTime)
+        assertEquals(createRecipeInfo.cuisine, recipe.cuisine)
+        assertEquals(createRecipeInfo.mealType, recipe.mealType)
+        assertEquals(createRecipeInfo.intolerances, recipe.intolerances)
+        assertEquals(createRecipeInfo.diets, recipe.diets)
+        assertEquals(createRecipeInfo.ingredients, recipe.ingredients)
+        assertEquals(createRecipeInfo.calories, recipe.calories)
+        assertEquals(createRecipeInfo.protein, recipe.protein)
+        assertEquals(createRecipeInfo.fat, recipe.fat)
+        assertEquals(createRecipeInfo.carbs, recipe.carbs)
+        assertEquals(createRecipeInfo.instructions, recipe.instructions)
         assertContentEquals(recipePictures.map { it.bytes }, recipe.pictures)
     }
 
@@ -49,7 +50,7 @@ class GetRecipeServiceTest: RecipeServiceTest() {
         val nonExistingRecipeId = 9999
 
         // mock
-        val jdbiRecipeModel = getJdbiRecipeModel()
+        val jdbiRecipeModel = getJdbiRecipeModel(jdbiCreateRecipeInfo.date)
         whenever(jdbiRecipeRepositoryMock.getRecipe(nonExistingRecipeId))
             .thenReturn(null)
             .thenReturn(jdbiRecipeModel)

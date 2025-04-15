@@ -3,6 +3,7 @@ package epicurius.services.recipe
 import epicurius.domain.PictureDomain
 import epicurius.domain.PictureDomain.Companion.RECIPES_FOLDER
 import epicurius.domain.exceptions.InvalidNumberOfRecipePictures
+import epicurius.domain.exceptions.NotTheAuthor
 import epicurius.domain.exceptions.RecipeNotFound
 import epicurius.domain.recipe.Recipe
 import epicurius.domain.recipe.RecipeDomain.Companion.MAX_PICTURES
@@ -187,6 +188,6 @@ class RecipeService(
         tm.run { it.recipeRepository.getRecipe(recipeId) }
 
     private fun checkIfUserIsAuthor(userId: Int, authorId: Int) {
-        if (userId != authorId) throw IllegalArgumentException("You are not the author of this recipe")
+        if (userId != authorId) throw NotTheAuthor()
     }
 }

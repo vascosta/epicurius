@@ -9,17 +9,22 @@ import epicurius.repository.cloudStorage.manager.CloudStorageManager
 import epicurius.repository.cloudStorage.picture.PictureCloudStorageRepository
 import epicurius.repository.firestore.FirestoreManager
 import epicurius.repository.firestore.recipe.FirestoreRecipeRepository
+import epicurius.repository.jdbi.fridge.FridgeRepository
 import epicurius.repository.jdbi.fridge.JdbiFridgeRepository
 import epicurius.repository.jdbi.mealPlanner.JdbiMealPlannerRepository
+import epicurius.repository.jdbi.mealPlanner.MealPlannerRepository
 import epicurius.repository.jdbi.recipe.JdbiRecipeRepository
+import epicurius.repository.jdbi.recipe.RecipeRepository
 import epicurius.repository.jdbi.user.JdbiTokenRepository
 import epicurius.repository.jdbi.user.JdbiUserRepository
+import epicurius.repository.jdbi.user.TokenRepository
+import epicurius.repository.jdbi.user.UserRepository
 import epicurius.repository.spoonacular.SpoonacularManager
 import epicurius.repository.transaction.Transaction
 import epicurius.repository.transaction.jdbi.JdbiTransaction
 import epicurius.repository.transaction.jdbi.JdbiTransactionManager
 import epicurius.services.FridgeService
-import epicurius.services.UserService
+import epicurius.services.user.UserService
 import epicurius.services.recipe.RecipeService
 import org.junit.jupiter.api.BeforeAll
 import org.mockito.kotlin.any
@@ -33,17 +38,15 @@ open class EpicuriusUnitTest: EpicuriusTest() {
         @JvmStatic
         @BeforeAll
         fun setUp() {
-            val mockTransaction: JdbiTransaction = mock<JdbiTransaction>().apply {
-                whenever(userRepository).thenReturn(jdbiUserRepositoryMock)
-                whenever(tokenRepository).thenReturn(jdbiTokenRepositoryMock)
-                whenever(fridgeRepository).thenReturn(jdbiFridgeRepositoryMock)
-                whenever(recipeRepository).thenReturn(jdbiRecipeRepositoryMock)
-                whenever(mealPlannerRepository).thenReturn(jdbiMealPlannerRepositoryMock)
-            }
-
             whenever(transactionManagerMock.run<Any>(any())).thenAnswer { invocation ->
                 val block = invocation.getArgument<Function1<Transaction, Any>>(0)
-                block(mockTransaction)
+                block(object: Transaction {
+                    override val userRepository = jdbiUserRepositoryMock
+                    override val tokenRepository = jdbiTokenRepositoryMock
+                    override val fridgeRepository = jdbiFridgeRepositoryMock
+                    override val recipeRepository = jdbiRecipeRepositoryMock
+                    override val mealPlannerRepository = jdbiMealPlannerRepositoryMock
+                })
             }
         }
 

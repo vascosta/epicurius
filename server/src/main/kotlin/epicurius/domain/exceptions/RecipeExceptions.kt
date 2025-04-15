@@ -4,6 +4,7 @@ import epicurius.domain.recipe.RecipeDomain.Companion.MAX_PICTURES
 import epicurius.domain.recipe.RecipeDomain.Companion.MIN_PICTURES
 
 class RecipeNotFound : Exception("Recipe not found")
+class NotTheAuthor : Exception("You are not the author of this recipe")
 
 class InvalidCuisineIdx : Exception("Invalid cuisine idx")
 class InvalidMealTypeIdx : Exception("Invalid meal type idx")

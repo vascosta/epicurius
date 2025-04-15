@@ -8,35 +8,41 @@ import epicurius.domain.recipe.IngredientUnit
 import epicurius.domain.recipe.Instructions
 import epicurius.domain.recipe.MealType
 import epicurius.http.recipe.models.input.CreateRecipeInputModel
+import epicurius.http.recipe.models.input.UpdateRecipeInputModel
 import epicurius.repository.jdbi.recipe.models.JdbiRecipeModel
 import epicurius.unit.services.ServiceTest
 import epicurius.utils.generateRandomUsername
+import java.util.Date
 
 open class RecipeServiceTest: ServiceTest() {
 
     companion object {
-        const val RECIPE_ID = 0
+        const val RECIPE_ID = 1
         const val AUTHOR_ID = 1
         val authorName = generateRandomUsername()
 
         val recipePictures = listOf(testPicture)
         val recipePicturesNames = recipePictures.map { it.name }
 
-        val recipeInfo = getCreatRecipeInputModel()
-        val jdbiCreateRecipeModel = recipeInfo.toJdbiRecipeModel(AUTHOR_ID, recipePicturesNames)
-        val firestoreRecipeModel = recipeInfo.toFirestoreRecipeModel(RECIPE_ID)
+        val createRecipeInfo = getCreateRecipeInputModel()
+        val jdbiCreateRecipeInfo = createRecipeInfo.toJdbiCreateRecipeModel(AUTHOR_ID, recipePicturesNames)
+        val firestoreRecipeInfo = createRecipeInfo.toFirestoreRecipeModel(RECIPE_ID)
 
-        fun getCreatRecipeInputModel(): CreateRecipeInputModel {
-            return CreateRecipeInputModel(
-                name = "Pastel de nata",
-                description = "A delicious Portuguese dessert",
-                servings = 4,
-                preparationTime = 30,
-                cuisine = Cuisine.MEDITERRANEAN,
-                mealType = MealType.DESSERT,
-                intolerances = listOf(Intolerance.EGG, Intolerance.GLUTEN, Intolerance.DAIRY),
-                diets = listOf(Diet.OVO_VEGETARIAN, Diet.LACTO_VEGETARIAN),
-                ingredients = listOf(
+        val updateRecipeInfo = getUpdateRecipeInputModel()
+        val jdbiUpdateRecipeInfo = updateRecipeInfo.toJdbiUpdateRecipeModel(RECIPE_ID, null)
+        val firestoreUpdateRecipeInfo = updateRecipeInfo.toFirestoreUpdateRecipeModel(RECIPE_ID)
+
+        fun getCreateRecipeInputModel() =
+            CreateRecipeInputModel(
+                "Pastel de nata",
+                "A delicious Portuguese dessert",
+                4,
+                30,
+                Cuisine.MEDITERRANEAN,
+                MealType.DESSERT,
+                listOf(Intolerance.EGG, Intolerance.GLUTEN, Intolerance.DAIRY),
+                listOf(Diet.OVO_VEGETARIAN, Diet.LACTO_VEGETARIAN),
+                listOf(
                     Ingredient("Eggs", 4, IngredientUnit.X),
                     Ingredient("Sugar", 200, IngredientUnit.G),
                     Ingredient("Flour", 100, IngredientUnit.G),
@@ -53,26 +59,47 @@ open class RecipeServiceTest: ServiceTest() {
                     )
                 )
             )
-        }
 
-        fun getJdbiRecipeModel(): JdbiRecipeModel {
+
+        fun getUpdateRecipeInputModel() =
+            UpdateRecipeInputModel(
+                "name",
+                "description",
+                1,
+                1,
+                Cuisine.ASIAN,
+                MealType.SOUP,
+                listOf(Intolerance.PEANUT),
+                listOf(Diet.KETOGENIC),
+                listOf(
+                    Ingredient("Ingredient1", 1, IngredientUnit.TSP),
+                    Ingredient("Ingredient2", 1, IngredientUnit.TSP)
+                ),
+                1,
+                1,
+                1,
+                1,
+                Instructions(mapOf("1" to "Step1", "2" to "Step2"))
+            )
+
+        fun getJdbiRecipeModel(date: Date): JdbiRecipeModel {
             return JdbiRecipeModel(
                 RECIPE_ID,
-                recipeInfo.name,
+                createRecipeInfo.name,
                 AUTHOR_ID,
                 authorName,
-                jdbiCreateRecipeModel.date,
-                recipeInfo.servings,
-                recipeInfo.preparationTime,
-                recipeInfo.cuisine,
-                recipeInfo.mealType,
-                recipeInfo.intolerances,
-                recipeInfo.diets,
-                recipeInfo.ingredients,
-                recipeInfo.calories,
-                recipeInfo.protein,
-                recipeInfo.fat,
-                recipeInfo.carbs,
+                date,
+                createRecipeInfo.servings,
+                createRecipeInfo.preparationTime,
+                createRecipeInfo.cuisine,
+                createRecipeInfo.mealType,
+                createRecipeInfo.intolerances,
+                createRecipeInfo.diets,
+                createRecipeInfo.ingredients,
+                createRecipeInfo.calories,
+                createRecipeInfo.protein,
+                createRecipeInfo.fat,
+                createRecipeInfo.carbs,
                 recipePicturesNames
             )
         }
