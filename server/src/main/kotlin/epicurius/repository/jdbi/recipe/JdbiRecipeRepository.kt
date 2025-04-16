@@ -68,7 +68,7 @@ class JdbiRecipeRepository(private val handle: Handle) : RecipeRepository {
                 SELECT r.id, r.name, r.author_id, r.date, r.servings, r.preparation_time, 
                        r.cuisine, r.meal_type, r.intolerances, r.diets, r.calories, 
                        r.protein, r.fat, r.carbs, r.pictures_names, 
-                       i.name AS ingredient_name, i.quantity, i.unit, u.name
+                       i.name AS ingredient_name, i.quantity, i.unit, u.name as author_username
                 FROM dbo.Recipe r JOIN dbo.Ingredient i on r.id = i.recipe_id JOIN dbo.user u on r.author_id = u.id
                 WHERE r.id = :id
             """
@@ -160,7 +160,7 @@ class JdbiRecipeRepository(private val handle: Handle) : RecipeRepository {
                     WHERE id = :id
                     RETURNING *
                 )
-                SELECT ur.*, i.name AS ingredient_name, i.quantity, i.unit, u.name
+                SELECT ur.*, i.name AS ingredient_name, i.quantity, i.unit, u.name as author_username
                 FROM updated_recipe ur
                 JOIN dbo.Ingredient i ON i.recipe_id = ur.id
                 JOIN dbo.user u ON u.id = ur.author_id;

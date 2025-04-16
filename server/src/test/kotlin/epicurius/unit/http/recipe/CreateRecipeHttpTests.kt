@@ -1,21 +1,18 @@
 package epicurius.unit.http.recipe
 
 import epicurius.domain.exceptions.InvalidNumberOfRecipePictures
-import epicurius.domain.exceptions.UserNotFound
 import epicurius.domain.recipe.Recipe
 import epicurius.http.recipe.models.output.CreateRecipeOutputModel
 import org.mockito.kotlin.whenever
 import org.springframework.http.HttpStatus
-import org.springframework.http.HttpStatusCode
 import java.time.Instant
 import java.util.Date
 import kotlin.test.Test
 import kotlin.test.assertEquals
-import kotlin.test.assertFails
 import kotlin.test.assertFailsWith
 
 
-class CreateRecipeHttpTest: RecipeHttpTest() {
+class CreateRecipeHttpTests: RecipeHttpTest() {
 
     @Test
     fun `Should create a recipe successfully`() {

@@ -32,7 +32,7 @@ class JdbiRecipeModelMapper(
             id = rs.getInt("id"),
             name = rs.getString("name"),
             authorId = rs.getInt("author_id"),
-            authorUsername = rs.getString("name"),
+            authorUsername = rs.getString("author_username"),
             date = rs.getDate("date"),
             servings = rs.getInt("servings"),
             preparationTime = rs.getInt("preparation_time"),

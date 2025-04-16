@@ -12,6 +12,7 @@ import epicurius.http.recipe.models.input.UpdateRecipeInputModel
 import epicurius.http.recipe.models.output.CreateRecipeOutputModel
 import epicurius.http.recipe.models.output.GetRecipeOutputModel
 import epicurius.http.recipe.models.output.SearchRecipesOutputModel
+import epicurius.http.recipe.models.output.UpdateRecipeOutputModel
 import epicurius.http.utils.Uris
 import epicurius.http.utils.Uris.Recipe.recipe
 import epicurius.services.recipe.RecipeService
@@ -103,7 +104,7 @@ class RecipeController(private val recipeService: RecipeService) {
         @Valid @RequestBody body: UpdateRecipeInputModel,
     ): ResponseEntity<*> {
         val updatedRecipe = recipeService.updateRecipe(authenticatedUser.user.id, id, body)
-        return ResponseEntity.ok().body(updatedRecipe)
+        return ResponseEntity.ok().body(UpdateRecipeOutputModel(updatedRecipe))
     }
 
     @DeleteMapping(Uris.Recipe.RECIPE)

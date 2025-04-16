@@ -11,6 +11,7 @@ import epicurius.domain.recipe.MealType
 import epicurius.domain.user.AuthenticatedUser
 import epicurius.domain.user.User
 import epicurius.http.recipe.models.input.CreateRecipeInputModel
+import epicurius.http.recipe.models.input.UpdateRecipeInputModel
 import epicurius.unit.http.HttpTest
 import epicurius.utils.generateEmail
 import epicurius.utils.generateRandomUsername
@@ -20,7 +21,6 @@ open class RecipeHttpTest: HttpTest() {
 
     companion object {
         const val RECIPE_ID = 1
-        const val AUTHOR_ID = 1
 
         val objectMapper = jacksonObjectMapper()
 
@@ -29,7 +29,7 @@ open class RecipeHttpTest: HttpTest() {
 
         val authenticatedUser = AuthenticatedUser(
             User(
-                AUTHOR_ID,
+                1,
                 authenticatedUsername,
                 generateEmail(authenticatedUsername),
                 usersDomain.encodePassword(randomUUID().toString()),
@@ -71,5 +71,25 @@ open class RecipeHttpTest: HttpTest() {
         )
 
         val recipePictures = listOf(testPicture)
+
+        val updateRecipeInfo = UpdateRecipeInputModel(
+            "name",
+            "description",
+            1,
+            1,
+            Cuisine.ASIAN,
+            MealType.SOUP,
+            listOf(Intolerance.PEANUT),
+            listOf(Diet.KETOGENIC),
+            listOf(
+                Ingredient("Ingredient1", 1, IngredientUnit.TSP),
+                Ingredient("Ingredient2", 1, IngredientUnit.TSP)
+            ),
+            1,
+            1,
+            1,
+            1,
+            Instructions(mapOf("1" to "Step1", "2" to "Step2"))
+        )
     }
 }

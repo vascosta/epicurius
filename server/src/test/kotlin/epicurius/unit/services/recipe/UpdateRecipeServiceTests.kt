@@ -17,7 +17,7 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 
-class UpdateRecipeServiceTest : RecipeServiceTest() {
+class UpdateRecipeServiceTests: RecipeServiceTest() {
 
     @Test
     fun `Should update a recipe successfully`() {

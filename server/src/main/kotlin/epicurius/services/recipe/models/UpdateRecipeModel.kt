@@ -13,7 +13,7 @@ data class UpdateRecipeModel(
     val name: String,
     val authorUsername: String,
     val date: Date,
-    val description: String?,
+    val description: String,
     val servings: Int,
     val preparationTime: Int,
     val cuisine: Cuisine,

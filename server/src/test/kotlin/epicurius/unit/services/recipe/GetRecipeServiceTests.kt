@@ -9,7 +9,7 @@ import kotlin.test.assertContentEquals
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 
-class GetRecipeServiceTest : RecipeServiceTest() {
+class GetRecipeServiceTests: RecipeServiceTest() {
 
     @Test
     fun `Should retrieve the recipe successfully`() {

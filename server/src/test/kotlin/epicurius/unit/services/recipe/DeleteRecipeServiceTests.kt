@@ -9,7 +9,7 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 
-class DeleteRecipeServiceTest: RecipeServiceTest() {
+class DeleteRecipeServiceTests: RecipeServiceTest() {
 
     @Test
     fun `Should delete recipe successfully`() {
