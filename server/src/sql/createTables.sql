@@ -43,10 +43,10 @@ create table dbo.recipe(
     cuisine int not null,
     intolerances int[] not null,
     diets int[] not null,
-    calories int check ( >= 0),
-    protein int check ( >= 0),
-    fat int check ( >= 0),
-    carbs int check ( >= 0),
+    calories int check ( calories >= 0),
+    protein int check ( protein >= 0),
+    fat int check ( fat >= 0),
+    carbs int check ( carbs >= 0),
     pictures_names varchar(80)[] check (cardinality(pictures_names) BETWEEN 1 AND 3),
     foreign key (author_id) references dbo.user(id)
 );
@@ -99,7 +99,7 @@ create table dbo.meal_planner_recipe(
 create table dbo.calories(
     user_id int not null,
     date date not null,
-    max_calories int not null,
+    max_calories int not null check ( max_calories >= 0 ),
     primary key (user_id, date),
     foreign key (user_id) references dbo.user(id),
     foreign key (user_id, date) references dbo.meal_planner(user_id, date)
