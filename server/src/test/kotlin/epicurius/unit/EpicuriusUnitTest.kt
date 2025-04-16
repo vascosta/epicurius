@@ -26,7 +26,7 @@ import org.mockito.kotlin.any
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
 
-open class EpicuriusUnitTest: EpicuriusTest() {
+open class EpicuriusUnitTest : EpicuriusTest() {
 
     companion object {
 

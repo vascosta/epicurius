@@ -91,6 +91,8 @@ class JdbiRecipeRepository(private val handle: Handle) : RecipeRepository {
         addCondition(query, params, "AND lower(name) LIKE lower(:name)", "name", form.name?.let { "%$it%" })
         addCondition(query, params, "AND cuisine = :cuisine", "cuisine", form.cuisine)
         addCondition(query, params, "AND meal_type = :meal", "meal", form.mealType)
+        addCondition(query, params, "AND intolerances && :intolerances", "intolerances", form.intolerances?.toTypedArray())
+        addCondition(query, params, "AND diets && :diets", "diets", form.diets?.toTypedArray())
         addCondition(query, params, "AND calories >= :minCal", "minCal", form.minCalories)
         addCondition(query, params, "AND calories <= :maxCal", "maxCal", form.maxCalories)
         addCondition(query, params, "AND carbs >= :minCarb", "minCarb", form.minCarbs)

@@ -9,7 +9,7 @@ import kotlin.test.assertContentEquals
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 
-class GetRecipeServiceTest: RecipeServiceTest() {
+class GetRecipeServiceTest : RecipeServiceTest() {
 
     @Test
     fun `Should retrieve the recipe successfully`() {
@@ -18,7 +18,7 @@ class GetRecipeServiceTest: RecipeServiceTest() {
         // mock
         val jdbiRecipeModel = getJdbiRecipeModel(jdbiCreateRecipeInfo.date)
         whenever(jdbiRecipeRepositoryMock.getRecipe(RECIPE_ID)).thenReturn(jdbiRecipeModel)
-        whenever(runBlocking { firestoreRecipeRepositoryMock.getRecipe(RECIPE_ID) } ).thenReturn(firestoreRecipeInfo)
+        whenever(runBlocking { firestoreRecipeRepositoryMock.getRecipe(RECIPE_ID) }).thenReturn(firestoreRecipeInfo)
         whenever(cloudStoragePictureRepositoryMock.getPicture(testPicture.name, RECIPES_FOLDER)).thenReturn(testPicture.bytes)
 
         // when retrieving the recipe

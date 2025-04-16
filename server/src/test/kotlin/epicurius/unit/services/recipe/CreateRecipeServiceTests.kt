@@ -11,7 +11,7 @@ import kotlin.test.assertContentEquals
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 
-class CreateRecipeServiceTests: RecipeServiceTest() {
+class CreateRecipeServiceTests : RecipeServiceTest() {
 
     @Test
     fun `Should create a recipe successfully`() {

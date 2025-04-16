@@ -7,6 +7,7 @@ import epicurius.domain.recipe.Ingredient
 import epicurius.domain.recipe.IngredientUnit
 import epicurius.domain.recipe.Instructions
 import epicurius.domain.recipe.MealType
+import epicurius.domain.recipe.SearchRecipesModel
 import epicurius.repository.firestore.recipe.models.FirestoreRecipeModel
 import epicurius.repository.firestore.recipe.models.FirestoreUpdateRecipeModel
 import epicurius.repository.jdbi.recipe.models.JdbiCreateRecipeModel
@@ -107,6 +108,109 @@ class RecipeRepositoryTest : RepositoryTest() {
         val firestoreRecipe = runBlocking { getFirestoreRecipe(recipe.id) }
         assertNull(jdbiRecipe)
         assertNull(firestoreRecipe)
+    }
+
+    @Test
+    fun `Create recipe and search by name`() {
+        // given a user and a recipe
+        val author = createTestUser(tm)
+        val recipe = createTestRecipe(tm, fs, author)
+
+        // when searching for the recipe by name
+        val searchName = SearchRecipesModel(name = recipe.name)
+        val nameResults = searchJdbiRecipes(publicTestUser.id, searchName)
+
+        // then the recipe is found
+        assertEquals(1, nameResults.size)
+        assertEquals(recipe.name, nameResults[0].name)
+
+        // when searching for the recipe by a different name
+        val searchDifferentName = SearchRecipesModel(name = "Nonexistent Recipe")
+        val differentNameResults = searchJdbiRecipes(publicTestUser.id, searchDifferentName)
+
+        // then no recipes are found
+        assertEquals(0, differentNameResults.size)
+    }
+
+    @Test
+    fun `Create recipe and search by multiple filters`() {
+        // given a user
+        val author = createTestUser(tm)
+
+        // given recipe info
+        val jdbiRecipeInfo = JdbiCreateRecipeModel(
+            name = "Buffalo Cauliflower Wings",
+            authorId = author.id,
+            servings = 4,
+            preparationTime = 30,
+            cuisine = Cuisine.ASIAN.ordinal,
+            mealType = MealType.APPETIZER.ordinal,
+            intolerances = listOf(Intolerance.PEANUT.ordinal),
+            diets = listOf(Diet.VEGAN.ordinal, Diet.PALEO.ordinal),
+            ingredients = listOf(
+                Ingredient("Cauliflower", 1, IngredientUnit.X),
+                Ingredient("Buffalo Sauce", 100, IngredientUnit.ML),
+                Ingredient("Flour", 200, IngredientUnit.G),
+                Ingredient("Spices", 10, IngredientUnit.G)
+            ),
+            calories = 200,
+            protein = 5,
+            fat = 10,
+            carbs = 30,
+            picturesNames = listOf("")
+        )
+
+        // when creating the recipe
+        val recipeId = jdbiCreateRecipe(jdbiRecipeInfo)
+
+        // and the recipe is retrieved
+        val recipe = getJdbiRecipe(recipeId)
+        assertNotNull(recipe)
+
+        // given multiple filters to test
+        val filtersToTest = listOf(
+            SearchRecipesModel(cuisine = Cuisine.ASIAN.ordinal),
+            SearchRecipesModel(mealType = MealType.APPETIZER.ordinal),
+            SearchRecipesModel(intolerances = listOf(Intolerance.PEANUT.ordinal)),
+            SearchRecipesModel(diets = listOf(Diet.PALEO.ordinal)),
+            SearchRecipesModel(minCalories = 100, maxCalories = 500),
+            SearchRecipesModel(minProtein = 5, maxProtein = 10),
+            SearchRecipesModel(minFat = 5, maxFat = 20),
+            SearchRecipesModel(minCarbs = 20, maxCarbs = 100),
+        )
+
+        for (searchModel in filtersToTest) {
+            // when searching for the recipe with the current filter
+            val results = searchJdbiRecipes(publicTestUser.id, searchModel)
+
+            // then the recipe is found
+            assertEquals(1, results.size)
+            assertEquals(recipe.name, results[0].name)
+            assertEquals(recipe.cuisine, results[0].cuisine)
+            assertEquals(recipe.mealType, results[0].mealType)
+            assertEquals(recipe.preparationTime, results[0].preparationTime)
+            assertEquals(recipe.servings, results[0].servings)
+        }
+
+        // given multiple filters that do not match the recipe
+        val nonMatchingFilters = listOf(
+            SearchRecipesModel(cuisine = Cuisine.AMERICAN.ordinal),
+            SearchRecipesModel(mealType = MealType.BEVERAGE.ordinal),
+            SearchRecipesModel(intolerances = listOf(Intolerance.SULFITE.ordinal)),
+            SearchRecipesModel(diets = listOf(Diet.LOW_FODMAP.ordinal)),
+            SearchRecipesModel(minCalories = 1000, maxCalories = 2000),
+            SearchRecipesModel(minProtein = 100, maxProtein = 200),
+            SearchRecipesModel(minFat = 50, maxFat = 100),
+            SearchRecipesModel(minCarbs = 200, maxCarbs = 500),
+        )
+
+        for (searchModel in nonMatchingFilters) {
+            // when searching for the recipe with the current filter
+            val results = searchJdbiRecipes(publicTestUser.id, searchModel)
+
+            // then no recipes are found
+            assertEquals(0, results.size)
+        }
     }
 
     @Test

@@ -8,13 +8,15 @@ import epicurius.domain.recipe.IngredientUnit
 import epicurius.domain.recipe.Instructions
 import epicurius.domain.recipe.MealType
 import epicurius.http.recipe.models.input.CreateRecipeInputModel
+import epicurius.http.recipe.models.input.SearchRecipesInputModel
 import epicurius.http.recipe.models.input.UpdateRecipeInputModel
+import epicurius.repository.jdbi.recipe.models.JdbiRecipeInfo
 import epicurius.repository.jdbi.recipe.models.JdbiRecipeModel
 import epicurius.unit.services.ServiceTest
 import epicurius.utils.generateRandomUsername
 import java.util.Date
 
-open class RecipeServiceTest: ServiceTest() {
+open class RecipeServiceTest : ServiceTest() {
 
     companion object {
         const val RECIPE_ID = 1
@@ -40,6 +42,10 @@ open class RecipeServiceTest: ServiceTest() {
                 Ingredient("Milk", 500, IngredientUnit.ML),
                 Ingredient("Butter", 50, IngredientUnit.G)
             ),
+            calories = 300,
+            protein = 8,
+            fat = 10,
+            carbs = 40,
             instructions = Instructions(
                 mapOf(
                     "1" to "Preheat the oven to 200°C.",
@@ -96,5 +102,40 @@ open class RecipeServiceTest: ServiceTest() {
                 recipePicturesNames
             )
         }
+
+        fun getSearchRecipesInputModel(): SearchRecipesInputModel {
+            return SearchRecipesInputModel(
+                name = "Pastel de nata",
+                cuisine = Cuisine.MEDITERRANEAN,
+                mealType = MealType.DESSERT,
+                ingredients = listOf("Eggs", "Sugar"),
+                intolerances = listOf(Intolerance.EGG, Intolerance.GLUTEN),
+                diets = listOf(Diet.OVO_VEGETARIAN, Diet.LACTO_VEGETARIAN),
+                minCalories = 200,
+                maxCalories = 500,
+                minCarbs = 20,
+                maxCarbs = 50,
+                minFat = 10,
+                maxFat = 30,
+                minProtein = 5,
+                maxProtein = 15,
+                minTime = 20,
+                maxTime = 60
+            )
+        }
+
+        fun getJdbiRecipeInfo(): JdbiRecipeInfo {
+            return JdbiRecipeInfo(
+                id = RECIPE_ID,
+                name = "Pastel de nata",
+                cuisine = Cuisine.MEDITERRANEAN,
+                mealType = MealType.DESSERT,
+                preparationTime = 30,
+                servings = 4,
+                pictures = recipePicturesNames
+            )
+        }
+
+        //val jdbiSearchRecipesModel = getSearchRecipesModel()
     }
 }

@@ -17,12 +17,11 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 
-class UpdateRecipeServiceTest: RecipeServiceTest() {
+class UpdateRecipeServiceTest : RecipeServiceTest() {
 
     @Test
     fun `Should update a recipe successfully`() {
         // given information to update a recipe (jdbiUpdateRecipeInfo, firestoreUpdateRecipeInfo)
-
         // mock
         val jdbiRecipeModel = JdbiRecipeModel(
             RECIPE_ID,

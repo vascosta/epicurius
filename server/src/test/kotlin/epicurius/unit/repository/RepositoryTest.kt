@@ -9,6 +9,7 @@ import epicurius.domain.PagingParams
 import epicurius.domain.PictureDomain
 import epicurius.domain.fridge.ProductInfo
 import epicurius.domain.fridge.UpdateProductInfo
+import epicurius.domain.recipe.SearchRecipesModel
 import epicurius.domain.user.UpdateUserModel
 import epicurius.repository.cloudStorage.manager.CloudStorageManager
 import epicurius.repository.firestore.FirestoreManager
@@ -147,6 +148,9 @@ open class RepositoryTest : EpicuriusUnitTest() {
         fun getJdbiRecipe(recipeId: Int) = tm.run { it.recipeRepository.getRecipe(recipeId) }
 
         suspend fun getFirestoreRecipe(recipeId: Int) = fs.recipeRepository.getRecipe(recipeId)
+
+        fun searchJdbiRecipes(userId: Int, form: SearchRecipesModel) =
+            tm.run { it.recipeRepository.searchRecipes(userId, form) }
 
         fun updateJdbiRecipe(recipeInfo: JdbiUpdateRecipeModel) =
             tm.run { it.recipeRepository.updateRecipe(recipeInfo) }
