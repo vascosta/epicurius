@@ -2,7 +2,7 @@ package epicurius.repository.jdbi.user
 
 import epicurius.domain.PagingParams
 import epicurius.domain.user.FollowingStatus
-import epicurius.domain.user.UpdateUserModel
+import epicurius.repository.jdbi.user.models.JdbiUpdateUserModel
 import epicurius.domain.user.User
 import epicurius.repository.jdbi.user.models.SearchUserModel
 import org.jdbi.v3.core.Handle
@@ -107,7 +107,7 @@ class JdbiUserRepository(private val handle: Handle) : UserRepository {
             .list()
     }
 
-    override fun updateUser(name: String, userUpdate: UpdateUserModel): User {
+    override fun updateUser(name: String, userUpdateInfo: JdbiUpdateUserModel): User {
         return handle.createQuery(
             """
                 UPDATE dbo.user
@@ -123,14 +123,14 @@ class JdbiUserRepository(private val handle: Handle) : UserRepository {
                 RETURNING *
             """
         )
-            .bind("newUsername", userUpdate.name)
-            .bind("email", userUpdate.email)
-            .bind("country", userUpdate.country)
-            .bind("password_hash", userUpdate.passwordHash)
-            .bind("privacy", userUpdate.privacy)
-            .bind("intolerances", userUpdate.intolerances?.toTypedArray())
-            .bind("diets", userUpdate.diets?.toTypedArray())
-            .bind("profile_picture_name", userUpdate.profilePictureName)
+            .bind("newUsername", userUpdateInfo.name)
+            .bind("email", userUpdateInfo.email)
+            .bind("country", userUpdateInfo.country)
+            .bind("password_hash", userUpdateInfo.passwordHash)
+            .bind("privacy", userUpdateInfo.privacy)
+            .bind("intolerances", userUpdateInfo.intolerances?.toTypedArray())
+            .bind("diets", userUpdateInfo.diets?.toTypedArray())
+            .bind("profile_picture_name", userUpdateInfo.profilePictureName)
             .bind("name", name)
             .mapTo<User>()
             .first()

@@ -1,6 +1,6 @@
-package epicurius.domain.user
+package epicurius.repository.jdbi.user.models
 
-data class UpdateUserModel(
+data class JdbiUpdateUserModel(
     val name: String? = null,
     val email: String? = null,
     val country: String? = null,

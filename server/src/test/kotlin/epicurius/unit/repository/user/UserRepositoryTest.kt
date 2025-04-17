@@ -2,7 +2,7 @@ package epicurius.unit.repository.user
 
 import epicurius.domain.Diet
 import epicurius.domain.Intolerance
-import epicurius.domain.user.UpdateUserModel
+import epicurius.repository.jdbi.user.models.JdbiUpdateUserModel
 import epicurius.unit.repository.RepositoryTest
 import epicurius.utils.createTestUser
 import epicurius.utils.generateEmail
@@ -72,7 +72,7 @@ class UserRepositoryTest : RepositoryTest() {
 
         val updatedUser = updateUser(
             user.name,
-            UpdateUserModel(
+            JdbiUpdateUserModel(
                 name = newUsername,
                 email = newEmail,
                 country = newCountry,

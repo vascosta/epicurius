@@ -23,7 +23,7 @@ import epicurius.domain.user.FollowUser
 import epicurius.domain.user.FollowingStatus
 import epicurius.domain.user.FollowingUser
 import epicurius.domain.user.SearchUser
-import epicurius.domain.user.UpdateUserModel
+import epicurius.repository.jdbi.user.models.JdbiUpdateUserModel
 import epicurius.domain.user.User
 import epicurius.domain.user.UserDomain
 import epicurius.domain.user.UserInfo
@@ -111,27 +111,21 @@ class UserService(
         deleteToken(name = name)
     }
 
-    fun updateUser(name: String, userUpdate: UpdateUserInputModel): UserInfo {
-        if (checkIfUserExists(userUpdate.name, userUpdate.email) != null) throw UserAlreadyExists()
+    fun updateUser(name: String, userUpdateInfo: UpdateUserInputModel): UserInfo {
+        if (checkIfUserExists(userUpdateInfo.name, userUpdateInfo.email) != null) throw UserAlreadyExists()
 
-        if (userUpdate.country != null)
-            if (!countriesDomain.checkIfCountryCodeIsValid(userUpdate.country)) throw InvalidCountry()
+        if (userUpdateInfo.country != null)
+            if (!countriesDomain.checkIfCountryCodeIsValid(userUpdateInfo.country)) throw InvalidCountry()
 
-        if (userUpdate.password != null) {
-            checkIfPasswordsMatch(userUpdate.password, userUpdate.confirmPassword)
+        if (userUpdateInfo.password != null) {
+            checkIfPasswordsMatch(userUpdateInfo.password, userUpdateInfo.confirmPassword)
         }
 
         return tm.run {
             it.userRepository.updateUser(
                 name,
-                UpdateUserModel(
-                    userUpdate.name,
-                    userUpdate.email,
-                    userUpdate.country,
-                    userUpdate.password?.let { password -> userDomain.encodePassword(password) },
-                    userUpdate.privacy,
-                    userUpdate.intolerances?.map { intolerance -> Intolerance.toInt(intolerance) },
-                    userUpdate.diets?.map { diet -> Diet.toInt(diet) }
+                userUpdateInfo.toJdbiUpdateUser(
+                    userUpdateInfo.password?.let { password -> userDomain.encodePassword(password) }
                 )
             ).toUserInfo()
         }
@@ -145,7 +139,7 @@ class UserService(
 
                 cs.pictureCloudStorageRepository.updatePicture(newProfilePictureName, profilePicture, PictureDomain.USERS_FOLDER)
                 tm.run {
-                    it.userRepository.updateUser(username, UpdateUserModel(profilePictureName = newProfilePictureName))
+                    it.userRepository.updateUser(username, JdbiUpdateUserModel(profilePictureName = newProfilePictureName))
                 }
                 newProfilePictureName
             }
@@ -210,7 +204,7 @@ class UserService(
 
     private fun removeProfilePicture(username: String, profilePictureName: String) {
         cs.pictureCloudStorageRepository.deletePicture(profilePictureName, PictureDomain.USERS_FOLDER)
-        tm.run { it.userRepository.updateUser(username, UpdateUserModel(profilePictureName = null)) }
+        tm.run { it.userRepository.updateUser(username, JdbiUpdateUserModel(profilePictureName = null)) }
     }
 
     private fun cancelFollowRequest(userId: Int, usernameToCancelFollow: String) {

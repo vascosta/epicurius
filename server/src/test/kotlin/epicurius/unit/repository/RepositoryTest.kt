@@ -9,7 +9,7 @@ import epicurius.domain.PagingParams
 import epicurius.domain.PictureDomain
 import epicurius.domain.fridge.ProductInfo
 import epicurius.domain.fridge.UpdateProductInfo
-import epicurius.domain.user.UpdateUserModel
+import epicurius.repository.jdbi.user.models.JdbiUpdateUserModel
 import epicurius.repository.cloudStorage.manager.CloudStorageManager
 import epicurius.repository.firestore.FirestoreManager
 import epicurius.unit.EpicuriusUnitTest
@@ -86,11 +86,11 @@ open class RepositoryTest : EpicuriusUnitTest() {
         fun getFollowing(userId: Int) = tm.run { it.userRepository.getFollowing(userId) }
         fun getFollowRequests(userId: Int) = tm.run { it.userRepository.getFollowRequests(userId) }
 
-        fun updateUser(username: String, userUpdate: UpdateUserModel) =
+        fun updateUser(username: String, userUpdate: JdbiUpdateUserModel) =
             tm.run {
                 it.userRepository.updateUser(
                     username,
-                    UpdateUserModel(
+                    JdbiUpdateUserModel(
                         userUpdate.name,
                         userUpdate.email,
                         userUpdate.country,

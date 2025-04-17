@@ -17,7 +17,7 @@ import epicurius.repository.firestore.FirestoreManager
 import epicurius.repository.jdbi.recipe.models.JdbiRecipeModel
 import epicurius.repository.jdbi.recipe.models.JdbiUpdateRecipeModel
 import epicurius.repository.transaction.TransactionManager
-import epicurius.services.recipe.models.UpdatePicturesModel
+import epicurius.services.recipe.models.UpdateRecipePicturesModel
 import epicurius.services.recipe.models.UpdateRecipeModel
 import org.springframework.stereotype.Component
 import org.springframework.web.multipart.MultipartFile
@@ -131,7 +131,7 @@ class RecipeService(
         )
     }
 
-    fun updateRecipePictures(userId: Int, recipeId: Int, newPictures: List<MultipartFile>): UpdatePicturesModel {
+    fun updateRecipePictures(userId: Int, recipeId: Int, newPictures: List<MultipartFile>): UpdateRecipePicturesModel {
         if (newPictures.size !in MIN_PICTURES..MAX_PICTURES) {
             throw InvalidNumberOfRecipePictures()
         }
@@ -143,7 +143,7 @@ class RecipeService(
         val newPicturesBytes = newPictures.map { it.bytes }
 
         if (picturesBytes == newPictures) { // if the pictures are equal and in the same order
-            return UpdatePicturesModel(picturesBytes)
+            return UpdateRecipePicturesModel(picturesBytes)
         } else {
             val pictureNames = recipe.picturesNames
 
@@ -173,7 +173,7 @@ class RecipeService(
                 }
             }
 
-            return UpdatePicturesModel(picturesBytes)
+            return UpdateRecipePicturesModel(picturesBytes)
         }
     }
 

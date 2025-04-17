@@ -55,11 +55,11 @@ class GetRecipeServiceTests : RecipeServiceTest() {
 
         // when retrieving the recipe
         val exception = assertFailsWith<RecipeNotFound> {
-            runBlocking { recipeService.getRecipe(nonExistingRecipeId) }
+            runBlocking { recipeService.getRecipe(nonExistingRecipeId) } // jdbi
         }
 
         val exception2 = assertFailsWith<RecipeNotFound> {
-            runBlocking { recipeService.getRecipe(nonExistingRecipeId) }
+            runBlocking { recipeService.getRecipe(nonExistingRecipeId) } // firestore
         }
 
         // then an exception is thrown

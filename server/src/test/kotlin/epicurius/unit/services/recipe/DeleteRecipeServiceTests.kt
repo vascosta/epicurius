@@ -12,8 +12,8 @@ import kotlin.test.assertFailsWith
 class DeleteRecipeServiceTests : RecipeServiceTest() {
 
     @Test
-    fun `Should delete recipe successfully`() {
-        // given a user and recipe id (AUTHOR_ID, RECIPE_ID)
+    fun `Should delete a recipe successfully`() {
+        // given a user id and a recipe id (AUTHOR_ID, RECIPE_ID)
 
         // mock
         whenever(jdbiRecipeRepositoryMock.getRecipe(RECIPE_ID)).thenReturn(jdbiRecipeModel)
@@ -39,13 +39,13 @@ class DeleteRecipeServiceTests : RecipeServiceTest() {
             recipeService.deleteRecipe(AUTHOR_ID, nonExistingRecipeId)
         }
 
-        // then the exception is thrown
+        // then an exception is thrown
         assertEquals(RecipeNotFound().message, exception.message)
     }
 
     @Test
     fun `Should throw NotTheAuthor exception when deleting a recipe that does not belong to the user`() {
-        // given a recipe id (RECIPE_ID) that does not belong to the user
+        // given a user id and a recipe id (RECIPE_ID) that does not belong to him
         val userId = 9999
 
         // mock

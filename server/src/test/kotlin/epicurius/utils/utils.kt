@@ -12,7 +12,7 @@ import epicurius.domain.recipe.MealType
 import epicurius.domain.recipe.MealType.Companion.fromInt
 import epicurius.domain.recipe.Recipe
 import epicurius.domain.recipe.RecipeDomain
-import epicurius.domain.user.UpdateUserModel
+import epicurius.repository.jdbi.user.models.JdbiUpdateUserModel
 import epicurius.domain.user.User
 import epicurius.domain.user.UserDomain.Companion.MAX_PASSWORD_LENGTH
 import epicurius.domain.user.UserDomain.Companion.MAX_USERNAME_LENGTH
@@ -32,7 +32,7 @@ fun createTestUser(tm: TransactionManager, privacy: Boolean = false): User {
 
     tm.run { it.userRepository.createUser(username, email, country, passwordHash) }
     if (privacy) {
-        tm.run { it.userRepository.updateUser(username, UpdateUserModel(privacy = true)) }
+        tm.run { it.userRepository.updateUser(username, JdbiUpdateUserModel(privacy = true)) }
     }
 
     return tm.run { it.userRepository.getUser(username) } ?: throw Exception("User not created")

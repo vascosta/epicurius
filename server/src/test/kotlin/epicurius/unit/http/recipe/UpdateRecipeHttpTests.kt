@@ -47,7 +47,7 @@ class UpdateRecipeHttpTests : RecipeHttpTest() {
     fun `Should update a recipe successfully`() {
         // given information to update a recipe (updateRecipeInfo)
 
-        //
+        // mock
         val updateRecipeModelMock = UpdateRecipeModel(
             RECIPE_ID,
             updateRecipeInfo.name!!,
@@ -100,7 +100,7 @@ class UpdateRecipeHttpTests : RecipeHttpTest() {
 
     @Test
     fun `Should throw NotTheAuthor exception when updating a recipe that does not belong to the user`() {
-        // given a recipe id (RECIPE_ID) that does not belong to the user
+        // given a user id and a recipe id (RECIPE_ID) that does not belong to him
         val notTheAuthorUser = AuthenticatedUser(
             User(9999, "", "", "", "", "", false, emptyList(), emptyList(), ""),
             ""

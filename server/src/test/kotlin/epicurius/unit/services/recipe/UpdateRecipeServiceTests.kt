@@ -114,7 +114,7 @@ class UpdateRecipeServiceTests : RecipeServiceTest() {
 
     @Test
     fun `Should throw NotTheAuthor exception when updating a recipe that does not belong to the user`() {
-        // given a recipe id (RECIPE_ID) that does not belong to the user
+        // given a user id and a recipe id (RECIPE_ID) that does not belong to him
         val userId = 9999
 
         // mock

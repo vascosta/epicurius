@@ -8,6 +8,7 @@ import epicurius.domain.user.UserDomain.Companion.MAX_USERNAME_LENGTH
 import epicurius.domain.user.UserDomain.Companion.MIN_PASSWORD_LENGTH
 import epicurius.domain.user.UserDomain.Companion.MIN_USERNAME_LENGTH
 import epicurius.http.utils.Regex
+import epicurius.repository.jdbi.user.models.JdbiUpdateUserModel
 import jakarta.validation.constraints.Email
 import jakarta.validation.constraints.Pattern
 import jakarta.validation.constraints.Size
@@ -36,4 +37,9 @@ data class UpdateUserInputModel(
     val intolerances: List<Intolerance>? = null,
 
     val diets: List<Diet>? = null
-)
+) {
+    fun toJdbiUpdateUser(passwordHash: String?) =
+        JdbiUpdateUserModel(
+            name, email, country, passwordHash, privacy, intolerances?.map { it.ordinal }, diets?.map { it.ordinal }
+        )
+}
