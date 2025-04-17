@@ -1,7 +1,15 @@
 package epicurius.unit.http.recipe
 
+import epicurius.domain.Diet
+import epicurius.domain.Intolerance
 import epicurius.domain.exceptions.InvalidNumberOfRecipePictures
+import epicurius.domain.recipe.Cuisine
+import epicurius.domain.recipe.Ingredient
+import epicurius.domain.recipe.IngredientUnit
+import epicurius.domain.recipe.Instructions
+import epicurius.domain.recipe.MealType
 import epicurius.domain.recipe.Recipe
+import epicurius.http.recipe.models.input.CreateRecipeInputModel
 import epicurius.http.recipe.models.output.CreateRecipeOutputModel
 import org.mockito.kotlin.whenever
 import org.springframework.http.HttpStatus
@@ -11,8 +19,34 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 
+class CreateRecipeHttpTests : RecipeHttpTest() {
 
-class CreateRecipeHttpTests: RecipeHttpTest() {
+    private val createRecipeInfo = CreateRecipeInputModel(
+        "Pastel de nata",
+        "A delicious Portuguese dessert",
+        4,
+        30,
+        Cuisine.MEDITERRANEAN,
+        MealType.DESSERT,
+        listOf(Intolerance.EGG, Intolerance.GLUTEN, Intolerance.DAIRY),
+        listOf(Diet.OVO_VEGETARIAN, Diet.LACTO_VEGETARIAN),
+        listOf(
+            Ingredient("Eggs", 4, IngredientUnit.X),
+            Ingredient("Sugar", 200, IngredientUnit.G),
+            Ingredient("Flour", 100, IngredientUnit.G),
+            Ingredient("Milk", 500, IngredientUnit.ML),
+            Ingredient("Butter", 50, IngredientUnit.G)
+        ),
+        instructions = Instructions(
+            mapOf(
+                "1" to "Preheat the oven to 200°C.",
+                "2" to "In a bowl, mix the eggs, sugar, flour, and milk.",
+                "3" to "Pour the mixture into pastry shells.",
+                "4" to "Bake for 20 minutes or until golden brown.",
+                "5" to "Let cool before serving."
+            )
+        )
+    )
 
     @Test
     fun `Should create a recipe successfully`() {
@@ -22,7 +56,7 @@ class CreateRecipeHttpTests: RecipeHttpTest() {
         val recipeMock = Recipe(
             RECIPE_ID,
             createRecipeInfo.name,
-            authenticatedUser.user.name,
+            testAuthenticatedUser.user.name,
             Date.from(Instant.now()),
             createRecipeInfo.description,
             createRecipeInfo.servings,
@@ -39,16 +73,18 @@ class CreateRecipeHttpTests: RecipeHttpTest() {
             createRecipeInfo.instructions,
             recipePictures.map { it.bytes }
         )
-        whenever(recipeServiceMock
-            .createRecipe(
-                authenticatedUser.user.id,
-                authenticatedUser.user.name,
-                createRecipeInfo,
-                recipePictures)
+        whenever(
+            recipeServiceMock
+                .createRecipe(
+                    testAuthenticatedUser.user.id,
+                    testAuthenticatedUser.user.name,
+                    createRecipeInfo,
+                    recipePictures
+                )
         ).thenReturn(recipeMock)
 
         // when creating the recipe
-        val response = createRecipe(authenticatedUser, objectMapper.writeValueAsString(createRecipeInfo), recipePictures)
+        val response = createRecipe(testAuthenticatedUser, objectMapper.writeValueAsString(createRecipeInfo), recipePictures)
 
         // then the recipe is created successfully
         assertEquals(HttpStatus.CREATED, response.statusCode)
@@ -60,20 +96,21 @@ class CreateRecipeHttpTests: RecipeHttpTest() {
         // given information for a new recipe (createRecipeInfo, recipePictures)
 
         // mock
-        whenever(recipeServiceMock.createRecipe(
-            authenticatedUser.user.id,
-            authenticatedUser.user.name,
-            createRecipeInfo,
-            emptyList()
-        )
+        whenever(
+            recipeServiceMock.createRecipe(
+                testAuthenticatedUser.user.id,
+                testAuthenticatedUser.user.name,
+                createRecipeInfo,
+                emptyList()
+            )
         ).thenThrow(InvalidNumberOfRecipePictures())
 
         // when creating the recipe
         val exception = assertFailsWith<InvalidNumberOfRecipePictures> {
-            createRecipe(authenticatedUser, objectMapper.writeValueAsString(createRecipeInfo), emptyList())
+            createRecipe(testAuthenticatedUser, objectMapper.writeValueAsString(createRecipeInfo), emptyList())
         }
 
-        // then the recipe is created successfully
+        // then an exception is thrown
         assertEquals(InvalidNumberOfRecipePictures().message, exception.message)
     }
 }

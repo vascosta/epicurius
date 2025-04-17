@@ -7,9 +7,9 @@ import epicurius.domain.exceptions.UserNotFollowed
 import epicurius.domain.exceptions.UserNotFound
 import epicurius.domain.user.FollowUser
 import epicurius.domain.user.FollowingUser
-import epicurius.integration.EpicuriusIntegrationTest
 import epicurius.http.utils.Problem
 import epicurius.http.utils.Uris
+import epicurius.integration.EpicuriusIntegrationTest
 import epicurius.integration.utils.delete
 import epicurius.integration.utils.getBody
 import epicurius.integration.utils.patch

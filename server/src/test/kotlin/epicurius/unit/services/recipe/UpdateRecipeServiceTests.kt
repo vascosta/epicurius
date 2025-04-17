@@ -5,27 +5,49 @@ import epicurius.domain.Intolerance
 import epicurius.domain.exceptions.NotTheAuthor
 import epicurius.domain.exceptions.RecipeNotFound
 import epicurius.domain.recipe.Cuisine
-import epicurius.domain.recipe.Ingredient
-import epicurius.domain.recipe.IngredientUnit
-import epicurius.domain.recipe.Instructions
 import epicurius.domain.recipe.MealType
+import epicurius.http.recipe.models.input.UpdateRecipeInputModel
 import epicurius.repository.firestore.recipe.models.FirestoreRecipeModel
 import epicurius.repository.jdbi.recipe.models.JdbiRecipeModel
+import epicurius.utils.generateRandomRecipeDescription
+import epicurius.utils.generateRandomRecipeIngredients
+import epicurius.utils.generateRandomRecipeInstructions
+import epicurius.utils.generateRandomRecipeName
 import kotlinx.coroutines.runBlocking
 import org.mockito.kotlin.whenever
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 
-class UpdateRecipeServiceTests: RecipeServiceTest() {
+class UpdateRecipeServiceTests : RecipeServiceTest() {
+
+    private val updateRecipeInfo = UpdateRecipeInputModel(
+        generateRandomRecipeName(),
+        generateRandomRecipeDescription(),
+        1,
+        1,
+        Cuisine.ASIAN,
+        MealType.SOUP,
+        listOf(Intolerance.PEANUT),
+        listOf(Diet.KETOGENIC),
+        generateRandomRecipeIngredients(),
+        1,
+        1,
+        1,
+        1,
+        generateRandomRecipeInstructions()
+    )
 
     @Test
     fun `Should update a recipe successfully`() {
-        // given information to update a recipe (jdbiUpdateRecipeInfo, firestoreUpdateRecipeInfo)
+        // given information to update a recipe
+        val jdbiUpdateRecipeInfo = updateRecipeInfo.toJdbiUpdateRecipeModel(RECIPE_ID, null)
+        val firestoreUpdateRecipeInfo = updateRecipeInfo.toFirestoreUpdateRecipeModel(RECIPE_ID)
+
         // mock
         val jdbiRecipeModel = JdbiRecipeModel(
             RECIPE_ID,
-            "name",
+            updateRecipeInfo.name!!,
             AUTHOR_ID,
             authorName,
             jdbiCreateRecipeInfo.date,
@@ -35,10 +57,7 @@ class UpdateRecipeServiceTests: RecipeServiceTest() {
             MealType.SOUP,
             listOf(Intolerance.PEANUT),
             listOf(Diet.KETOGENIC),
-            listOf(
-                Ingredient("Ingredient1", 1, IngredientUnit.TSP),
-                Ingredient("Ingredient2", 1, IngredientUnit.TSP)
-            ),
+            updateRecipeInfo.ingredients!!,
             1,
             1,
             1,
@@ -47,10 +66,10 @@ class UpdateRecipeServiceTests: RecipeServiceTest() {
         )
         val firestoreRecipeModel = FirestoreRecipeModel(
             RECIPE_ID,
-            "description",
-            Instructions(mapOf("1" to "Step1", "2" to "Step2"))
+            updateRecipeInfo.description!!,
+            updateRecipeInfo.instructions!!
         )
-        whenever(jdbiRecipeRepositoryMock.getRecipe(RECIPE_ID)).thenReturn(getJdbiRecipeModel(jdbiCreateRecipeInfo.date))
+        whenever(jdbiRecipeRepositoryMock.getRecipe(RECIPE_ID)).thenReturn(jdbiRecipeModel)
         whenever(jdbiRecipeRepositoryMock.updateRecipe(jdbiUpdateRecipeInfo)).thenReturn(jdbiRecipeModel)
         whenever(runBlocking { firestoreRecipeRepositoryMock.updateRecipe(firestoreUpdateRecipeInfo) }).thenReturn(firestoreRecipeModel)
 
@@ -95,12 +114,10 @@ class UpdateRecipeServiceTests: RecipeServiceTest() {
 
     @Test
     fun `Should throw NotTheAuthor exception when updating a recipe that does not belong to the user`() {
-        // given a recipe id that does not belong to the user (RECIPE_ID)
+        // given a recipe id (RECIPE_ID) that does not belong to the user
         val userId = 9999
 
         // mock
-        val jdbiCreateRecipeModel = createRecipeInfo.toJdbiCreateRecipeModel(AUTHOR_ID, recipePicturesNames)
-        val jdbiRecipeModel = getJdbiRecipeModel(jdbiCreateRecipeModel.date)
         whenever(jdbiRecipeRepositoryMock.getRecipe(RECIPE_ID)).thenReturn(jdbiRecipeModel)
 
         // when updating the recipe

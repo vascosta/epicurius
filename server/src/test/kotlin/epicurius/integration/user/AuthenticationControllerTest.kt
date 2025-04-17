@@ -9,11 +9,11 @@ import epicurius.domain.exceptions.UserAlreadyLoggedIn
 import epicurius.domain.exceptions.UserNotFound
 import epicurius.domain.user.User
 import epicurius.domain.user.UserDomain
-import epicurius.integration.EpicuriusIntegrationTest
 import epicurius.http.utils.Problem
 import epicurius.http.utils.Regex.VALID_PASSWORD_MSG
 import epicurius.http.utils.Regex.VALID_STRING_MSG
 import epicurius.http.utils.Uris
+import epicurius.integration.EpicuriusIntegrationTest
 import epicurius.integration.utils.getBody
 import epicurius.integration.utils.patch
 import epicurius.integration.utils.post

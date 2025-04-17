@@ -7,9 +7,9 @@ import epicurius.domain.exceptions.PasswordsDoNotMatch
 import epicurius.domain.exceptions.UserAlreadyExists
 import epicurius.domain.exceptions.UserNotFound
 import epicurius.domain.user.SearchUser
-import epicurius.integration.EpicuriusIntegrationTest
 import epicurius.http.utils.Problem
 import epicurius.http.utils.Uris
+import epicurius.integration.EpicuriusIntegrationTest
 import epicurius.integration.utils.get
 import epicurius.integration.utils.getBody
 import epicurius.integration.utils.patch

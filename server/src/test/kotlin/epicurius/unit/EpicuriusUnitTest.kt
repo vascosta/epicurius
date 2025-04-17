@@ -19,8 +19,8 @@ import epicurius.repository.spoonacular.SpoonacularManager
 import epicurius.repository.transaction.Transaction
 import epicurius.repository.transaction.jdbi.JdbiTransactionManager
 import epicurius.services.FridgeService
-import epicurius.services.user.UserService
 import epicurius.services.recipe.RecipeService
+import epicurius.services.user.UserService
 import org.junit.jupiter.api.BeforeAll
 import org.mockito.kotlin.any
 import org.mockito.kotlin.mock
@@ -35,7 +35,7 @@ open class EpicuriusUnitTest : EpicuriusTest() {
         fun setUp() {
             whenever(transactionManagerMock.run<Any>(any())).thenAnswer { invocation ->
                 val block = invocation.getArgument<Function1<Transaction, Any>>(0)
-                block(object: Transaction {
+                block(object : Transaction {
                     override val userRepository = jdbiUserRepositoryMock
                     override val tokenRepository = jdbiTokenRepositoryMock
                     override val fridgeRepository = jdbiFridgeRepositoryMock

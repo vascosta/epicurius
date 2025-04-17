@@ -9,14 +9,9 @@ import epicurius.domain.PagingParams
 import epicurius.domain.PictureDomain
 import epicurius.domain.fridge.ProductInfo
 import epicurius.domain.fridge.UpdateProductInfo
-import epicurius.domain.recipe.SearchRecipesModel
 import epicurius.domain.user.UpdateUserModel
 import epicurius.repository.cloudStorage.manager.CloudStorageManager
 import epicurius.repository.firestore.FirestoreManager
-import epicurius.repository.firestore.recipe.models.FirestoreRecipeModel
-import epicurius.repository.firestore.recipe.models.FirestoreUpdateRecipeModel
-import epicurius.repository.jdbi.recipe.models.JdbiCreateRecipeModel
-import epicurius.repository.jdbi.recipe.models.JdbiUpdateRecipeModel
 import epicurius.unit.EpicuriusUnitTest
 import org.springframework.web.multipart.MultipartFile
 import java.io.FileInputStream
@@ -24,6 +19,22 @@ import java.io.FileInputStream
 open class RepositoryTest : EpicuriusUnitTest() {
 
     companion object {
+
+/*        init {
+            jdbi.useHandle<Exception> {
+                it.execute("DELETE FROM dbo.calories")
+                it.execute("DELETE FROM dbo.meal_planner_recipe")
+                it.execute("DELETE FROM dbo.meal_planner")
+                it.execute("DELETE FROM dbo.collection")
+                it.execute("DELETE FROM dbo.ingredient")
+                it.execute("DELETE FROM dbo.recipe_rating")
+                it.execute("DELETE FROM dbo.recipe")
+                it.execute("DELETE FROM dbo.followers")
+                it.execute("DELETE FROM dbo.fridge")
+                it.execute("DELETE FROM dbo.user")
+            }
+        }*/
+
         private const val FIRESTORE_TEST_DATABASE_ID = "epicurius-test-database"
         private const val GOOGLE_CLOUD_STORAGE_TEST_BUCKET = "epicurius-test-bucket"
         private const val GOOGLE_CLOUD_CREDENTIALS_LOCATION = "src/main/resources/epicurius-credentials.json"
@@ -137,28 +148,5 @@ open class RepositoryTest : EpicuriusUnitTest() {
 
         fun checkIfProductIsOpen(userId: Int, entryNumber: Int) =
             tm.run { it.fridgeRepository.checkIfProductIsOpen(userId, entryNumber) }
-
-        // RECIPE
-        fun jdbiCreateRecipe(recipeInfo: JdbiCreateRecipeModel) = tm.run { it.recipeRepository.createRecipe(recipeInfo) }
-
-        fun firestoreCreateRecipe(recipeInfo: FirestoreRecipeModel) {
-            fs.recipeRepository.createRecipe(recipeInfo)
-        }
-
-        fun getJdbiRecipe(recipeId: Int) = tm.run { it.recipeRepository.getRecipe(recipeId) }
-
-        suspend fun getFirestoreRecipe(recipeId: Int) = fs.recipeRepository.getRecipe(recipeId)
-
-        fun searchJdbiRecipes(userId: Int, form: SearchRecipesModel) =
-            tm.run { it.recipeRepository.searchRecipes(userId, form) }
-
-        fun updateJdbiRecipe(recipeInfo: JdbiUpdateRecipeModel) =
-            tm.run { it.recipeRepository.updateRecipe(recipeInfo) }
-
-        suspend fun updateFirestoreRecipe(recipeInfo: FirestoreUpdateRecipeModel) =
-            fs.recipeRepository.updateRecipe(recipeInfo)
-
-        fun deleteJdbiRecipe(recipeId: Int) = tm.run { it.recipeRepository.deleteRecipe(recipeId) }
-        fun deleteFirestoreRecipe(recipeId: Int) = fs.recipeRepository.deleteRecipe(recipeId)
     }
 }

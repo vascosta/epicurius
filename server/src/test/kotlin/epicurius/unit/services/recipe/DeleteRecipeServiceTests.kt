@@ -9,14 +9,13 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 
-class DeleteRecipeServiceTests: RecipeServiceTest() {
+class DeleteRecipeServiceTests : RecipeServiceTest() {
 
     @Test
     fun `Should delete recipe successfully`() {
         // given a user and recipe id (AUTHOR_ID, RECIPE_ID)
 
         // mock
-        val jdbiRecipeModel = getJdbiRecipeModel(jdbiCreateRecipeInfo.date)
         whenever(jdbiRecipeRepositoryMock.getRecipe(RECIPE_ID)).thenReturn(jdbiRecipeModel)
 
         // when deleting the recipe
@@ -46,12 +45,10 @@ class DeleteRecipeServiceTests: RecipeServiceTest() {
 
     @Test
     fun `Should throw NotTheAuthor exception when deleting a recipe that does not belong to the user`() {
-        // given a recipe id that does not belong to the user (RECIPE_ID)
+        // given a recipe id (RECIPE_ID) that does not belong to the user
         val userId = 9999
 
         // mock
-        val jdbiCreateRecipeModel = createRecipeInfo.toJdbiCreateRecipeModel(AUTHOR_ID, recipePicturesNames)
-        val jdbiRecipeModel = getJdbiRecipeModel(jdbiCreateRecipeModel.date)
         whenever(jdbiRecipeRepositoryMock.getRecipe(RECIPE_ID)).thenReturn(jdbiRecipeModel)
 
         // when updating the recipe

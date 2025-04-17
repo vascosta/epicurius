@@ -131,7 +131,7 @@ class RecipeService(
         )
     }
 
-    fun updatePictures(userId: Int, recipeId: Int, newPictures: List<MultipartFile>): UpdatePicturesModel {
+    fun updateRecipePictures(userId: Int, recipeId: Int, newPictures: List<MultipartFile>): UpdatePicturesModel {
         if (newPictures.size !in MIN_PICTURES..MAX_PICTURES) {
             throw InvalidNumberOfRecipePictures()
         }

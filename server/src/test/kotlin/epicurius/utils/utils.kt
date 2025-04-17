@@ -11,6 +11,7 @@ import epicurius.domain.recipe.Instructions
 import epicurius.domain.recipe.MealType
 import epicurius.domain.recipe.MealType.Companion.fromInt
 import epicurius.domain.recipe.Recipe
+import epicurius.domain.recipe.RecipeDomain
 import epicurius.domain.user.UpdateUserModel
 import epicurius.domain.user.User
 import epicurius.domain.user.UserDomain.Companion.MAX_PASSWORD_LENGTH
@@ -20,6 +21,7 @@ import epicurius.repository.firestore.recipe.models.FirestoreRecipeModel
 import epicurius.repository.jdbi.recipe.models.JdbiCreateRecipeModel
 import epicurius.repository.transaction.TransactionManager
 import java.util.UUID
+import java.util.UUID.randomUUID
 
 fun createTestUser(tm: TransactionManager, privacy: Boolean = false): User {
     val username = generateRandomUsername()
@@ -38,21 +40,15 @@ fun createTestUser(tm: TransactionManager, privacy: Boolean = false): User {
 
 fun createTestRecipe(tm: TransactionManager, fs: FirestoreManager, user: User): Recipe {
     val jdbiRecipeInfo = JdbiCreateRecipeModel(
-        name = "Pastel de nata",
+        generateRandomRecipeName(),
         authorId = user.id,
-        servings = 4,
-        preparationTime = 30,
+        servings = 1,
+        preparationTime = 1,
         cuisine = Cuisine.MEDITERRANEAN.ordinal,
         mealType = MealType.DESSERT.ordinal,
         intolerances = listOf(Intolerance.EGG, Intolerance.GLUTEN, Intolerance.DAIRY).map { it.ordinal },
         diets = listOf(Diet.OVO_VEGETARIAN, Diet.LACTO_VEGETARIAN).map { it.ordinal },
-        ingredients = listOf(
-            Ingredient("Eggs", 4, IngredientUnit.X),
-            Ingredient("Sugar", 200, IngredientUnit.G),
-            Ingredient("Flour", 100, IngredientUnit.G),
-            Ingredient("Milk", 500, IngredientUnit.ML),
-            Ingredient("Butter", 50, IngredientUnit.G)
-        ),
+        ingredients = generateRandomRecipeIngredients(),
         picturesNames = listOf("")
     )
 
@@ -60,16 +56,8 @@ fun createTestRecipe(tm: TransactionManager, fs: FirestoreManager, user: User): 
 
     val firestoreRecipeInfo = FirestoreRecipeModel(
         recipeId,
-        "A delicious Portuguese dessert",
-        Instructions(
-            mapOf(
-                "1" to "Preheat the oven to 200°C.",
-                "2" to "In a bowl, mix the eggs, sugar, flour, and milk.",
-                "3" to "Pour the mixture into pastry shells.",
-                "4" to "Bake for 20 minutes or until golden brown.",
-                "5" to "Let cool before serving."
-            )
-        )
+        generateRandomRecipeDescription(),
+        generateRandomRecipeInstructions()
     )
 
     fs.recipeRepository.createRecipe(firestoreRecipeInfo)
@@ -99,3 +87,16 @@ fun createTestRecipe(tm: TransactionManager, fs: FirestoreManager, user: User): 
 fun generateRandomUsername() = "test${Math.random()}".replace(".", "").take(MAX_USERNAME_LENGTH)
 fun generateEmail(username: String) = "$username@email.com"
 fun generateSecurePassword() = ("P" + UUID.randomUUID().toString()).take(MAX_PASSWORD_LENGTH)
+
+fun generateRandomRecipeName() = randomUUID().toString().take(RecipeDomain.MAX_RECIPE_NAME_LENGTH)
+fun generateRandomRecipeDescription() = randomUUID().toString().take(RecipeDomain.MAX_RECIPE_DESCRIPTION_LENGTH)
+fun generateRandomRecipeIngredients() = listOf(
+    Ingredient(randomUUID().toString().take(RecipeDomain.MAX_INGREDIENT_NAME_LENGTH), 1, IngredientUnit.TSP),
+    Ingredient(randomUUID().toString().take(RecipeDomain.MAX_INGREDIENT_NAME_LENGTH), 1, IngredientUnit.TSP)
+)
+fun generateRandomRecipeInstructions() = Instructions(
+    mapOf(
+        "1" to randomUUID().toString().take(RecipeDomain.MAX_INSTRUCTIONS_STEP_LENGTH),
+        "2" to randomUUID().toString().take(RecipeDomain.MAX_INSTRUCTIONS_STEP_LENGTH)
+    )
+)

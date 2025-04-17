@@ -1,23 +1,38 @@
 package epicurius.unit.services.recipe
 
 import epicurius.domain.PictureDomain.Companion.RECIPES_FOLDER
+import epicurius.domain.recipe.Cuisine
+import epicurius.domain.recipe.MealType
+import epicurius.repository.jdbi.recipe.models.JdbiRecipeInfo
 import org.junit.jupiter.api.Test
 import org.mockito.kotlin.whenever
 import kotlin.test.assertEquals
 
-class SearchRecipeServiceTests: RecipeServiceTest() {
+class SearchRecipeServiceTests : RecipeServiceTest() {
 
     @Test
     fun `Should search for a recipe without ingredients successfully`() {
         // given a user id and a search form
         val userId = 6798
         val searchRecipesInputModel = getSearchRecipesInputModel()
+
         // mock
-        val jdbiRecipeInfo = getJdbiRecipeInfo()
+        val jdbiRecipeInfo = JdbiRecipeInfo(
+            id = RECIPE_ID,
+            name = "Pastel de nata",
+            cuisine = Cuisine.MEDITERRANEAN,
+            mealType = MealType.DESSERT,
+            preparationTime = 30,
+            servings = 4,
+            pictures = recipePicturesNames
+        )
         whenever(
-            jdbiRecipeRepositoryMock.searchRecipes(userId, searchRecipesInputModel.toSearchRecipe(
-                searchRecipesInputModel.name
-            ))
+            jdbiRecipeRepositoryMock.searchRecipes(
+                userId,
+                searchRecipesInputModel.toSearchRecipe(
+                    searchRecipesInputModel.name
+                )
+            )
         ).thenReturn(listOf(jdbiRecipeInfo))
         whenever(cloudStoragePictureRepositoryMock.getPicture(testPicture.name, RECIPES_FOLDER)).thenReturn(testPicture.bytes)
 

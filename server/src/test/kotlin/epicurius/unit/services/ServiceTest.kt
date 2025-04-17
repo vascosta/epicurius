@@ -83,7 +83,7 @@ open class ServiceTest : EpicuriusUnitTest() {
             recipeService.updateRecipe(userId, recipeId, recipeInfo)
 
         fun updateRecipePictures(userId: Int, recipeId: Int, pictures: List<MultipartFile>) =
-            recipeService.updatePictures(userId, recipeId, pictures)
+            recipeService.updateRecipePictures(userId, recipeId, pictures)
 
         fun deleteRecipe(userId: Int, recipeId: Int) =
             recipeService.deleteRecipe(userId, recipeId)

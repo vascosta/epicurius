@@ -9,12 +9,9 @@ import epicurius.domain.recipe.Instructions
 import epicurius.domain.recipe.MealType
 import epicurius.http.recipe.models.input.CreateRecipeInputModel
 import epicurius.http.recipe.models.input.SearchRecipesInputModel
-import epicurius.http.recipe.models.input.UpdateRecipeInputModel
-import epicurius.repository.jdbi.recipe.models.JdbiRecipeInfo
 import epicurius.repository.jdbi.recipe.models.JdbiRecipeModel
 import epicurius.unit.services.ServiceTest
 import epicurius.utils.generateRandomUsername
-import java.util.Date
 
 open class RecipeServiceTest : ServiceTest() {
 
@@ -59,49 +56,25 @@ open class RecipeServiceTest : ServiceTest() {
         val jdbiCreateRecipeInfo = createRecipeInfo.toJdbiCreateRecipeModel(AUTHOR_ID, recipePicturesNames)
         val firestoreRecipeInfo = createRecipeInfo.toFirestoreRecipeModel(RECIPE_ID)
 
-        val updateRecipeInfo = UpdateRecipeInputModel(
-            "name",
-            "description",
-            1,
-            1,
-            Cuisine.ASIAN,
-            MealType.SOUP,
-            listOf(Intolerance.PEANUT),
-            listOf(Diet.KETOGENIC),
-            listOf(
-                Ingredient("Ingredient1", 1, IngredientUnit.TSP),
-                Ingredient("Ingredient2", 1, IngredientUnit.TSP)
-            ),
-            1,
-            1,
-            1,
-            1,
-            Instructions(mapOf("1" to "Step1", "2" to "Step2"))
+        val jdbiRecipeModel = JdbiRecipeModel(
+            RECIPE_ID,
+            createRecipeInfo.name,
+            AUTHOR_ID,
+            authorName,
+            jdbiCreateRecipeInfo.date,
+            createRecipeInfo.servings,
+            createRecipeInfo.preparationTime,
+            createRecipeInfo.cuisine,
+            createRecipeInfo.mealType,
+            createRecipeInfo.intolerances,
+            createRecipeInfo.diets,
+            createRecipeInfo.ingredients,
+            createRecipeInfo.calories,
+            createRecipeInfo.protein,
+            createRecipeInfo.fat,
+            createRecipeInfo.carbs,
+            recipePicturesNames
         )
-        val jdbiUpdateRecipeInfo = updateRecipeInfo.toJdbiUpdateRecipeModel(RECIPE_ID, null)
-        val firestoreUpdateRecipeInfo = updateRecipeInfo.toFirestoreUpdateRecipeModel(RECIPE_ID)
-
-        fun getJdbiRecipeModel(date: Date): JdbiRecipeModel {
-            return JdbiRecipeModel(
-                RECIPE_ID,
-                createRecipeInfo.name,
-                AUTHOR_ID,
-                authorName,
-                date,
-                createRecipeInfo.servings,
-                createRecipeInfo.preparationTime,
-                createRecipeInfo.cuisine,
-                createRecipeInfo.mealType,
-                createRecipeInfo.intolerances,
-                createRecipeInfo.diets,
-                createRecipeInfo.ingredients,
-                createRecipeInfo.calories,
-                createRecipeInfo.protein,
-                createRecipeInfo.fat,
-                createRecipeInfo.carbs,
-                recipePicturesNames
-            )
-        }
 
         fun getSearchRecipesInputModel(): SearchRecipesInputModel {
             return SearchRecipesInputModel(
@@ -124,18 +97,6 @@ open class RecipeServiceTest : ServiceTest() {
             )
         }
 
-        fun getJdbiRecipeInfo(): JdbiRecipeInfo {
-            return JdbiRecipeInfo(
-                id = RECIPE_ID,
-                name = "Pastel de nata",
-                cuisine = Cuisine.MEDITERRANEAN,
-                mealType = MealType.DESSERT,
-                preparationTime = 30,
-                servings = 4,
-                pictures = recipePicturesNames
-            )
-        }
-
-        //val jdbiSearchRecipesModel = getSearchRecipesModel()
+        // val jdbiSearchRecipesModel = getSearchRecipesModel()
     }
 }

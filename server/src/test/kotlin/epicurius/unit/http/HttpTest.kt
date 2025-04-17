@@ -1,4 +1,4 @@
-package epicurius.unit.http;
+package epicurius.unit.http
 
 import epicurius.domain.Diet
 import epicurius.domain.Intolerance
@@ -9,7 +9,7 @@ import epicurius.http.recipe.models.input.UpdateRecipeInputModel
 import epicurius.unit.EpicuriusUnitTest
 import org.springframework.web.multipart.MultipartFile
 
-open class HttpTest: EpicuriusUnitTest() {
+open class HttpTest : EpicuriusUnitTest() {
 
     companion object {
         // USER
