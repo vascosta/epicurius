@@ -114,19 +114,17 @@ class JdbiRecipeRepository(private val handle: Handle) : RecipeRepository {
         val ingredientsBinding = ingredientsList.indices.joinToString { ":i$it" }
         val query = StringBuilder(
             """
-                SELECT r.id, r.name, r.cuisine, r.meal_type, r.preparation_time, r.servings
+                SELECT r.id, r.name, r.cuisine, r.meal_type, r.preparation_time, r.servings, r.pictures_names
                 FROM dbo.Recipe r JOIN dbo.Ingredient i ON r.id = i.recipe_id
-                WHERE author_id <> :id
-                AND lower(i.name) IN ($ingredientsBinding)
+                WHERE author_id <> :id AND lower(i.name) IN ($ingredientsBinding)
                 GROUP BY r.id, r.name, r.cuisine, r.meal_type, r.preparation_time, r.servings
-                HAVING COUNT(DISTINCT CASE WHEN lower(i.name) IN ($ingredientsBinding) 
-                THEN lower(i.name) END) = :count
+                ORDER BY COUNT(DISTINCT lower(i.name)) DESC
             """
         )
 
         val params = mutableMapOf<String, Any?>("id" to userId)
 
-        ingredientsList.forEachIndexed { idx, ingredient -> params["i$idx"] = ingredient }
+        ingredientsList.forEachIndexed { idx, ingredient -> params["i$idx"] = ingredient.lowercase() }
         params["count"] = ingredientsList.size
 
         val result = handle.createQuery(query.toString())

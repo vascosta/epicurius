@@ -7,28 +7,20 @@ import epicurius.repository.jdbi.recipe.models.JdbiRecipeInfo
 import org.junit.jupiter.api.Test
 import org.mockito.kotlin.whenever
 import kotlin.test.assertEquals
+import kotlin.test.assertNotNull
 
 class SearchRecipeServiceTests : RecipeServiceTest() {
 
     @Test
     fun `Should search for a recipe without ingredients successfully`() {
         // given a user id and a search form
-        val userId = 6798
-        val searchRecipesInputModel = getSearchRecipesInputModel()
+        val searchRecipesInputModel = getSearchRecipesWithoutIngredientsInputModel()
+        val jdbiRecipeInfo = getRecipeInfo()
 
         // mock
-        val jdbiRecipeInfo = JdbiRecipeInfo(
-            id = RECIPE_ID,
-            name = "Pastel de nata",
-            cuisine = Cuisine.MEDITERRANEAN,
-            mealType = MealType.DESSERT,
-            preparationTime = 30,
-            servings = 4,
-            pictures = recipePicturesNames
-        )
         whenever(
             jdbiRecipeRepositoryMock.searchRecipes(
-                userId,
+                USER_ID,
                 searchRecipesInputModel.toSearchRecipe(
                     searchRecipesInputModel.name
                 )
@@ -37,7 +29,7 @@ class SearchRecipeServiceTests : RecipeServiceTest() {
         whenever(cloudStoragePictureRepositoryMock.getPicture(testPicture.name, RECIPES_FOLDER)).thenReturn(testPicture.bytes)
 
         // when searching for the recipe
-        val results = recipeService.searchRecipes(userId, searchRecipesInputModel)
+        val results = recipeService.searchRecipes(USER_ID, searchRecipesInputModel)
 
         // then a list containing the recipe is returned
         assertEquals(1, results.size)
@@ -47,31 +39,40 @@ class SearchRecipeServiceTests : RecipeServiceTest() {
         assertEquals(testPicture.bytes, results.first().picture)
     }
 
-    /*
-    val userId = 67890
+    @Test
+    fun `Should search for a recipe with ingredients successfully`() {
+        // given a user id and a search form
+        val searchRecipesInputModel = getSearchRecipesWithIngredientsInputModel()
+        val jdbiRecipeInfo = getRecipeInfo()
 
-        // given a search form
-        val form = SearchRecipesModel(
-            name = "Burrito",
-            cuisine = Cuisine.MEXICAN.ordinal,
-            mealType = MealType.SIDE_DISH.ordinal,
-            ingredients = listOf("Tortilla", "Beans"),
-            intolerances = listOf(Intolerance.SESAME, Intolerance.WHEAT).map { it.ordinal },
-            diets = listOf(Diet.VEGAN, Diet.VEGETARIAN).map { it.ordinal },
-            minCalories = 100,
-            maxCalories = 500,
-            minCarbs = 10,
-            maxCarbs = 100,
-            minFat = 5,
-            maxFat = 50,
-            minProtein = 5,
-            maxProtein = 50
-        )
+        // mock
+        whenever(
+            jdbiRecipeRepositoryMock.searchRecipes(
+                USER_ID,
+                searchRecipesInputModel.toSearchRecipe(
+                    searchRecipesInputModel.name
+                )
+            )
+        ).thenReturn(listOf(jdbiRecipeInfo))
+        whenever(
+            searchRecipesInputModel.ingredients?.let {
+                jdbiRecipeRepositoryMock.searchRecipesByIngredients(USER_ID, it)
+            }
+        ).thenReturn(listOf(jdbiRecipeInfo))
+        whenever(cloudStoragePictureRepositoryMock.getPicture(testPicture.name, RECIPES_FOLDER)).thenReturn(testPicture.bytes)
 
-        // given information for a new recipe (in companion object)
-        // mocks
-        whenever(pictureDomainMock.generatePictureName()).thenReturn(recipePicturesNames.first())
-        whenever(jdbiRecipeRepositoryMock.searchRecipes(userId, form))
-            .thenReturn(listOf(JdbiRecipeModel()))
-     */
+        // when searching for the recipe
+        val results = recipeService.searchRecipes(USER_ID, searchRecipesInputModel)
+
+        // then a list containing the recipe is returned
+        assertEquals(1, results.size)
+        assertEquals(searchRecipesInputModel.name, results.first().name)
+        assertEquals(searchRecipesInputModel.cuisine, results.first().cuisine)
+        assertEquals(searchRecipesInputModel.mealType, results.first().mealType)
+        assertEquals(testPicture.bytes, results.first().picture)
+    }
+
+    companion object {
+        const val USER_ID = 6798
+    }
 }

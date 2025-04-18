@@ -9,6 +9,7 @@ import epicurius.domain.recipe.Instructions
 import epicurius.domain.recipe.MealType
 import epicurius.http.recipe.models.input.CreateRecipeInputModel
 import epicurius.http.recipe.models.input.SearchRecipesInputModel
+import epicurius.repository.jdbi.recipe.models.JdbiRecipeInfo
 import epicurius.repository.jdbi.recipe.models.JdbiRecipeModel
 import epicurius.unit.services.ServiceTest
 import epicurius.utils.generateRandomUsername
@@ -76,7 +77,27 @@ open class RecipeServiceTest : ServiceTest() {
             recipePicturesNames
         )
 
-        fun getSearchRecipesInputModel(): SearchRecipesInputModel {
+        fun getSearchRecipesWithoutIngredientsInputModel(): SearchRecipesInputModel {
+            return SearchRecipesInputModel(
+                name = "Pastel de nata",
+                cuisine = Cuisine.MEDITERRANEAN,
+                mealType = MealType.DESSERT,
+                intolerances = listOf(Intolerance.EGG, Intolerance.GLUTEN),
+                diets = listOf(Diet.OVO_VEGETARIAN, Diet.LACTO_VEGETARIAN),
+                minCalories = 200,
+                maxCalories = 500,
+                minCarbs = 20,
+                maxCarbs = 50,
+                minFat = 10,
+                maxFat = 30,
+                minProtein = 5,
+                maxProtein = 15,
+                minTime = 20,
+                maxTime = 60
+            )
+        }
+
+        fun getSearchRecipesWithIngredientsInputModel(): SearchRecipesInputModel {
             return SearchRecipesInputModel(
                 name = "Pastel de nata",
                 cuisine = Cuisine.MEDITERRANEAN,
@@ -96,6 +117,16 @@ open class RecipeServiceTest : ServiceTest() {
                 maxTime = 60
             )
         }
+
+        fun getRecipeInfo(): JdbiRecipeInfo = JdbiRecipeInfo(
+            id = RECIPE_ID,
+            name = "Pastel de nata",
+            cuisine = Cuisine.MEDITERRANEAN,
+            mealType = MealType.DESSERT,
+            preparationTime = 30,
+            servings = 4,
+            pictures = recipePicturesNames
+        )
 
         // val jdbiSearchRecipesModel = getSearchRecipesModel()
     }

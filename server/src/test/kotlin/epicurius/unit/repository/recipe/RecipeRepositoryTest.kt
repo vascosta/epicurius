@@ -29,6 +29,9 @@ open class RecipeRepositoryTest : RepositoryTest() {
         fun searchRecipes(userId: Int, form: SearchRecipesModel) =
             tm.run { it.recipeRepository.searchRecipes(userId, form) }
 
+        fun searchRecipesByIngredients(userId: Int, ingredients: List<String>) =
+            tm.run { it.recipeRepository.searchRecipesByIngredients(userId, ingredients) }
+
         fun updateJdbiRecipe(recipeInfo: JdbiUpdateRecipeModel) =
             tm.run { it.recipeRepository.updateRecipe(recipeInfo) }
 
