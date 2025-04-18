@@ -13,7 +13,7 @@ class SearchRecipeServiceTests : RecipeServiceTest() {
 
     @Test
     fun `Should search for a recipe without ingredients successfully`() {
-        // given a user id and a search form
+        // given a user id  (USER_ID) and a search form
         val searchRecipesInputModel = getSearchRecipesWithoutIngredientsInputModel()
         val jdbiRecipeInfo = getRecipeInfo()
 
@@ -41,7 +41,7 @@ class SearchRecipeServiceTests : RecipeServiceTest() {
 
     @Test
     fun `Should search for a recipe with ingredients successfully`() {
-        // given a user id and a search form
+        // given a user id (USER_ID) and a search form
         val searchRecipesInputModel = getSearchRecipesWithIngredientsInputModel()
         val jdbiRecipeInfo = getRecipeInfo()
 
@@ -70,9 +70,5 @@ class SearchRecipeServiceTests : RecipeServiceTest() {
         assertEquals(searchRecipesInputModel.cuisine, results.first().cuisine)
         assertEquals(searchRecipesInputModel.mealType, results.first().mealType)
         assertEquals(testPicture.bytes, results.first().picture)
-    }
-
-    companion object {
-        const val USER_ID = 6798
     }
 }

@@ -19,6 +19,7 @@ open class RecipeServiceTest : ServiceTest() {
     companion object {
         const val RECIPE_ID = 1
         const val AUTHOR_ID = 1
+        const val USER_ID = 6798
         val authorName = generateRandomUsername()
 
         val recipePictures = listOf(testPicture)
