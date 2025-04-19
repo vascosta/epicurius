@@ -11,36 +11,6 @@ const gcsUri = `gs://${bucketName}/${cloudStorageFolder}/`
 
 const visionClient = new vision.ImageAnnotatorClient();
 
-const spoonacularAPIKey = process.env.SPOONACULAR_API_KEY;
-const AUTOCOMPLETE_INGREDIENTS_URL = "https://api.spoonacular.com/food/ingredients/autocomplete"
-
-const invalidIngredients = ["food"];
-
-async function isValidIngredient(ingredient) {
-    const url = AUTOCOMPLETE_INGREDIENTS_URL + `?apiKey=${spoonacularAPIKey}&query=${ingredient}`
-
-    try {
-        const response = await axios.get(url);
-        return response.data.length >= 1;
-    } catch (err) {
-        console.error(`Error on Open Food Facts with "${ingredient}":`, err.message);
-        return false;
-    }
-}
-
-async function filterIngredients(ingredients) {
-    const results = [];
-
-    for (const ingredient of ingredients) {
-        const isValid = await isValidIngredient(ingredient);
-        if (isValid) {
-            results.push(ingredient);
-        }
-    }
-
-    return results;
-}
-
 app.post("/", async (req, res) => {
     const imageName = req.body.imageName;
 
@@ -51,20 +21,17 @@ app.post("/", async (req, res) => {
     try {
         const [result] = await visionClient.objectLocalization(gcsUri + imageName);
 
-        const detectedIngredients  = [
+        const ingredients  = [
             ... new Set(
                 result.localizedObjectAnnotations
                     .map(ingredient => ingredient.name.toLowerCase())
-                    .filter(ingredient => !invalidIngredients.includes(ingredient))
+                    .filter(ingredient => !ingredient.includes(" "))
             )
         ];
 
-        const filteredIngredients = await filterIngredients(detectedIngredients);
+        console.log("Detected Ingredients", ingredients );
 
-        console.log("Detected Ingredients", detectedIngredients );
-        console.log("Filtered Ingredients", filteredIngredients);
-
-        res.status(200).json({ "Ingredients": filteredIngredients });
+        res.status(200).json({ "ingredients": ingredients });
     } catch (error) {
         res.status(500).json({ "error": error.message });
     }
