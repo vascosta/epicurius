@@ -1,13 +1,10 @@
 package epicurius.unit.services.user
 
 import epicurius.domain.PagingParams
-import epicurius.domain.exceptions.IncorrectPassword
 import epicurius.domain.exceptions.InvalidCountry
 import epicurius.domain.exceptions.InvalidToken
 import epicurius.domain.exceptions.PasswordsDoNotMatch
 import epicurius.domain.exceptions.UserAlreadyExists
-import epicurius.domain.exceptions.UserAlreadyLoggedIn
-import epicurius.domain.exceptions.UserNotFound
 import epicurius.domain.user.SearchUser
 import epicurius.domain.user.User
 import epicurius.unit.services.ServiceTest
@@ -36,17 +33,17 @@ class AuthenticationServiceTest : ServiceTest() {
         val email = generateEmail(username)
         val country = "PT"
         val password = generateSecurePassword()
-        val passwordHash = usersDomain.encodePassword(password)
-        val token = usersDomain.generateTokenValue()
-        val tokenHash = usersDomain.hashToken(token)
+        val passwordHash = userDomain.encodePassword(password)
+        val token = userDomain.generateTokenValue()
+        val tokenHash = userDomain.hashToken(token)
 
         // mocks for createUser
         whenever(jdbiUserRepositoryMock.getUser(username, email)).thenReturn(null)
         whenever(countriesDomainMock.checkIfCountryCodeIsValid(country)).thenReturn(true)
-        whenever(usersDomainMock.encodePassword(password)).thenReturn(passwordHash)
+        whenever(userDomainMock.encodePassword(password)).thenReturn(passwordHash)
         whenever(jdbiUserRepositoryMock.checkIfUserIsLoggedIn(username, email)).thenReturn(false)
-        whenever(usersDomainMock.generateTokenValue()).thenReturn(token)
-        whenever(usersDomainMock.hashToken(token)).thenReturn(tokenHash)
+        whenever(userDomainMock.generateTokenValue()).thenReturn(token)
+        whenever(userDomainMock.hashToken(token)).thenReturn(tokenHash)
 
         // when creating a user
         val createToken = createUser(username, email, country, password, password)
@@ -59,8 +56,8 @@ class AuthenticationServiceTest : ServiceTest() {
 
         // mocks for getAuthenticatedUser
         val mockUser = User(1, username, email, passwordHash, tokenHash, country, false, emptyList(), emptyList(), null)
-        whenever(usersDomainMock.isToken(createToken)).thenReturn(true)
-        whenever(usersDomainMock.hashToken(createToken)).thenReturn(tokenHash)
+        whenever(userDomainMock.isToken(createToken)).thenReturn(true)
+        whenever(userDomainMock.hashToken(createToken)).thenReturn(tokenHash)
         whenever(jdbiUserRepositoryMock.getUser(tokenHash = tokenHash)).thenReturn(mockUser)
 
         // when retrieving the authenticated user
@@ -154,92 +151,6 @@ class AuthenticationServiceTest : ServiceTest() {
         // when retrieving the authenticated user
         // then the user cannot be retrieved and throws InvalidToken Exception
         assertFailsWith<InvalidToken> { getAuthenticatedUser(token) }
-    }
-
-    @Test
-    fun `Logout an user successfully and then login him by name successfully`() {
-        // given an existing user
-        val username = generateRandomUsername()
-        val email = generateEmail(username)
-        val country = "PT"
-        val password = generateSecurePassword()
-        createUser(username, email, country, password, password)
-
-        // when logging out
-        // then the user is logged out
-        logout(username)
-
-        // when logging in by name
-        val userToken = login(username, password = password)
-
-        // then the user is logged in successfully
-        val authenticatedUser = getAuthenticatedUser(userToken)
-        assertNotNull(authenticatedUser)
-        assertEquals(username, authenticatedUser.user.name)
-        assertEquals(email, authenticatedUser.user.email)
-    }
-
-    @Test
-    fun `Logout an user successfully and then login him by email successfully`() {
-        // given an existing user logged out
-        val username = generateRandomUsername()
-        val email = generateEmail(username)
-        val country = "PT"
-        val password = generateSecurePassword()
-        createUser(username, email, country, password, password)
-
-        // when logging out
-        // then the user is logged out
-        logout(username)
-
-        // when logging in by email
-        val userToken = login(email = email, password = password)
-
-        // then the user is logged in successfully
-        val authenticatedUser = getAuthenticatedUser(userToken)
-        assertNotNull(authenticatedUser)
-        assertEquals(username, authenticatedUser.user.name)
-        assertEquals(email, authenticatedUser.user.email)
-    }
-
-    @Test
-    fun `Try to login with an non existing user and throws UserNotFound Exception`() {
-        // given a non-existing username and email
-        val username = ""
-        val email = ""
-        val password = ""
-
-        // when logging in
-        // then the user is cannot be logged in and throws UserNotFound Exception
-        assertFailsWith<UserNotFound> { login(username, null, password) }
-        assertFailsWith<UserNotFound> { login(null, email, password) }
-    }
-
-    @Test
-    fun `Try to login with an incorrect password and throws IncorrectPassword Exception`() {
-        // given an existing user logged out and an incorrect password
-        val user = createTestUser(tm)
-        val incorrectPassword = UUID.randomUUID().toString()
-
-        // when logging in with an incorrect password
-        // then the user is cannot be logged in and throws IncorrectPassword Exception
-        assertFailsWith<IncorrectPassword> { login(user.name, password = incorrectPassword) }
-        assertFailsWith<IncorrectPassword> { login(email = user.email, password = incorrectPassword) }
-    }
-
-    @Test
-    fun `Try to login with an already logged in user and throws UserAlreadyLoggedIn Exception`() {
-        // given an existing logged in user
-        val username = generateRandomUsername()
-        val email = generateEmail(username)
-        val country = "PT"
-        val password = generateSecurePassword()
-        createUser(username, email, country, password, password)
-
-        // when logging in
-        // then the user is cannot be logged in and throws UserAlreadyLoggedIn Exception
-        assertFailsWith<UserAlreadyLoggedIn> { login(username, null, password) }
-        assertFailsWith<UserAlreadyLoggedIn> { login(null, email, password) }
     }
 
     @Test

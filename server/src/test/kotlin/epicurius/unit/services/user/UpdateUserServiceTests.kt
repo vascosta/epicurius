@@ -7,7 +7,6 @@ import epicurius.domain.exceptions.PasswordsDoNotMatch
 import epicurius.domain.exceptions.UserAlreadyExists
 import epicurius.domain.user.User
 import epicurius.http.user.models.input.UpdateUserInputModel
-import epicurius.unit.services.ServiceTest
 import epicurius.utils.generateEmail
 import epicurius.utils.generateRandomUsername
 import epicurius.utils.generateSecurePassword
@@ -17,35 +16,7 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 
-class UpdateUserServiceTests: ServiceTest() {
-
-    private val testUsername = generateRandomUsername()
-    private val testUser = User(
-        1,
-        testUsername,
-        generateEmail(testUsername),
-        usersDomain.encodePassword(randomUUID().toString()),
-        usersDomain.hashToken(randomUUID().toString()),
-        "PT",
-        false,
-        listOf(Intolerance.GLUTEN),
-        listOf(Diet.GLUTEN_FREE),
-        randomUUID().toString()
-    )
-
-    private val testUsername2 = generateRandomUsername()
-    private val testUser2 = User(
-        2,
-        testUsername2,
-        generateEmail(testUsername2),
-        usersDomain.encodePassword(randomUUID().toString()),
-        usersDomain.hashToken(randomUUID().toString()),
-        "PT",
-        false,
-        listOf(Intolerance.GLUTEN),
-        listOf(Diet.GLUTEN_FREE),
-        randomUUID().toString()
-    )
+class UpdateUserServiceTests: UserServiceTest() {
 
     @Test
     fun `Should update a user successfully`() {
@@ -79,7 +50,7 @@ class UpdateUserServiceTests: ServiceTest() {
         )
         whenever(jdbiUserRepositoryMock.getUser(newUsername)).thenReturn(null)
         whenever(countriesDomainMock.checkIfCountryCodeIsValid(updateUserInfo.country!!)).thenReturn(true)
-        whenever(usersDomainMock.encodePassword(newPassword)).thenReturn(passwordHash)
+        whenever(userDomainMock.encodePassword(newPassword)).thenReturn(passwordHash)
         whenever(jdbiUserRepositoryMock.updateUser(testUsername, updateUserInfo.toJdbiUpdateUser(passwordHash)))
             .thenReturn(userMock)
 
@@ -96,7 +67,7 @@ class UpdateUserServiceTests: ServiceTest() {
     }
 
     @Test
-    fun `Try to update user with existing username or email and throws UserAlreadyExists Exception`() {
+    fun `Should throw UserAlreadyExists exception when updating a user with an existing username or email`() {
         // given two existing users (testUser, testUser2)
 
         // mock

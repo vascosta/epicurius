@@ -1,6 +1,6 @@
 package epicurius.utils
 
-import epicurius.EpicuriusTest.Companion.usersDomain
+import epicurius.EpicuriusTest.Companion.userDomain
 import epicurius.domain.Diet
 import epicurius.domain.Intolerance
 import epicurius.domain.recipe.Cuisine
@@ -20,7 +20,6 @@ import epicurius.repository.firestore.FirestoreManager
 import epicurius.repository.firestore.recipe.models.FirestoreRecipeModel
 import epicurius.repository.jdbi.recipe.models.JdbiCreateRecipeModel
 import epicurius.repository.transaction.TransactionManager
-import java.util.UUID
 import java.util.UUID.randomUUID
 
 fun createTestUser(tm: TransactionManager, privacy: Boolean = false): User {
@@ -28,7 +27,7 @@ fun createTestUser(tm: TransactionManager, privacy: Boolean = false): User {
     val email = generateEmail(username)
     val country = "PT"
     val password = generateSecurePassword()
-    val passwordHash = usersDomain.encodePassword(password)
+    val passwordHash = userDomain.encodePassword(password)
 
     tm.run { it.userRepository.createUser(username, email, country, passwordHash) }
     if (privacy) {
@@ -86,7 +85,7 @@ fun createTestRecipe(tm: TransactionManager, fs: FirestoreManager, user: User): 
 
 fun generateRandomUsername() = "test${Math.random()}".replace(".", "").take(MAX_USERNAME_LENGTH)
 fun generateEmail(username: String) = "$username@email.com"
-fun generateSecurePassword() = ("P" + UUID.randomUUID().toString()).take(MAX_PASSWORD_LENGTH)
+fun generateSecurePassword() = ("P" + randomUUID().toString()).take(MAX_PASSWORD_LENGTH)
 
 fun generateRandomRecipeName() = randomUUID().toString().take(RecipeDomain.MAX_RECIPE_NAME_LENGTH)
 fun generateRandomRecipeDescription() = randomUUID().toString().take(RecipeDomain.MAX_RECIPE_DESCRIPTION_LENGTH)

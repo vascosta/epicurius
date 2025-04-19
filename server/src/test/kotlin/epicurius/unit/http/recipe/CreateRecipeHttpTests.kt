@@ -13,6 +13,7 @@ import epicurius.http.recipe.models.input.CreateRecipeInputModel
 import epicurius.http.recipe.models.output.CreateRecipeOutputModel
 import org.mockito.kotlin.whenever
 import org.springframework.http.HttpStatus
+import org.springframework.web.multipart.MultipartFile
 import java.time.Instant
 import java.util.Date
 import kotlin.test.Test
@@ -93,7 +94,8 @@ class CreateRecipeHttpTests : RecipeHttpTest() {
 
     @Test
     fun `Should throw InvalidNumberOfRecipePictures exception when creating a recipe with an invalid number of pictures`() {
-        // given information for a new recipe (createRecipeInfo, recipePictures)
+        // given information for a new recipe (createRecipeInfo, recipePictures) and an invalid number of pictures
+        val invalidNumberOfRecipePicturesList = emptyList<MultipartFile>()
 
         // mock
         whenever(
@@ -101,13 +103,13 @@ class CreateRecipeHttpTests : RecipeHttpTest() {
                 testAuthenticatedUser.user.id,
                 testAuthenticatedUser.user.name,
                 createRecipeInfo,
-                emptyList()
+                invalidNumberOfRecipePicturesList
             )
         ).thenThrow(InvalidNumberOfRecipePictures())
 
         // when creating the recipe
         val exception = assertFailsWith<InvalidNumberOfRecipePictures> {
-            createRecipe(testAuthenticatedUser, objectMapper.writeValueAsString(createRecipeInfo), emptyList())
+            createRecipe(testAuthenticatedUser, objectMapper.writeValueAsString(createRecipeInfo), invalidNumberOfRecipePicturesList)
         }
 
         // then an exception is thrown

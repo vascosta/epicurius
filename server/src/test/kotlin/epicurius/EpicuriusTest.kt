@@ -47,7 +47,7 @@ open class EpicuriusTest {
         val tm = JdbiTransactionManager(jdbi)
         val sm = SpoonacularManager(httpClient)
 
-        val usersDomain = UserDomain(BCryptPasswordEncoder(), Sha256TokenEncoder())
+        val userDomain = UserDomain(BCryptPasswordEncoder(), Sha256TokenEncoder())
         val pictureDomain = PictureDomain()
         val countriesDomain = CountriesDomain()
         val fridgeDomain = FridgeDomain()

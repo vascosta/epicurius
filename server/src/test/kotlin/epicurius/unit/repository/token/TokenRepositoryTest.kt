@@ -17,12 +17,12 @@ class TokenRepositoryTest : RepositoryTest() {
         val username = generateRandomUsername()
         val email = generateEmail(username)
         val country = "PT"
-        val passwordHash = usersDomain.encodePassword(generateSecurePassword())
+        val passwordHash = userDomain.encodePassword(generateSecurePassword())
         createUser(username, email, country, passwordHash)
 
         // when creating a token for the user
-        val token = usersDomain.generateTokenValue()
-        val tokenHash = usersDomain.hashToken(token)
+        val token = userDomain.generateTokenValue()
+        val tokenHash = userDomain.hashToken(token)
         createToken(tokenHash, username)
 
         // when retrieving the user by the token hash

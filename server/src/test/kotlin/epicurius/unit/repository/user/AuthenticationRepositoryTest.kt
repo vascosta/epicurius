@@ -24,7 +24,7 @@ class AuthenticationRepositoryTest : RepositoryTest() {
         val username = generateRandomUsername()
         val email = generateEmail(username)
         val country = "PT"
-        val passwordHash = usersDomain.encodePassword(generateSecurePassword())
+        val passwordHash = userDomain.encodePassword(generateSecurePassword())
 
         // when creating a user
         createUser(username, email, country, passwordHash)
@@ -66,7 +66,7 @@ class AuthenticationRepositoryTest : RepositoryTest() {
         val email = generateEmail(username)
         val email2 = generateEmail(username2)
         val country = "PT"
-        val passwordHash = usersDomain.encodePassword(generateSecurePassword())
+        val passwordHash = userDomain.encodePassword(generateSecurePassword())
         createUser(username, email, country, passwordHash)
         createUser(username2, email2, country, passwordHash)
 
@@ -87,7 +87,7 @@ class AuthenticationRepositoryTest : RepositoryTest() {
 
         // when resetting the password
         val newPassword = UUID.randomUUID().toString()
-        val newPasswordHash = usersDomain.encodePassword(newPassword)
+        val newPasswordHash = userDomain.encodePassword(newPassword)
         resetPassword(user.email, newPasswordHash)
 
         // when getting the user by name
@@ -105,8 +105,8 @@ class AuthenticationRepositoryTest : RepositoryTest() {
     fun `Checks if an existing user exists successfully`() {
         // given an existing user with a token hash
         val user = createTestUser(tm)
-        val token = usersDomain.generateTokenValue()
-        val tokenHash = usersDomain.hashToken(token)
+        val token = userDomain.generateTokenValue()
+        val tokenHash = userDomain.hashToken(token)
         createToken(tokenHash, user.name)
 
         // when checking if the user exists by name
@@ -156,8 +156,8 @@ class AuthenticationRepositoryTest : RepositoryTest() {
     fun `Checks if an existing user is logged in successfully`() {
         // given an existing user logged in
         val user = createTestUser(tm)
-        val token = usersDomain.generateTokenValue()
-        val tokenHash = usersDomain.hashToken(token)
+        val token = userDomain.generateTokenValue()
+        val tokenHash = userDomain.hashToken(token)
         createToken(tokenHash, user.name)
 
         // when checking if the user is logged in

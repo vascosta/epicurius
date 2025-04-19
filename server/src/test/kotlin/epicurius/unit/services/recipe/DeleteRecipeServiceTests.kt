@@ -27,7 +27,7 @@ class DeleteRecipeServiceTests : RecipeServiceTest() {
     }
 
     @Test
-    fun `Should throw RecipeNotFound when deleting a non-existing recipe`() {
+    fun `Should throw RecipeNotFound exception when deleting a non-existing recipe`() {
         // given a non-existing recipe id
         val nonExistingRecipeId = 9999
 

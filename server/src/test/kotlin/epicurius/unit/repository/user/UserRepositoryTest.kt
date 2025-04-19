@@ -65,7 +65,7 @@ class UserRepositoryTest : RepositoryTest() {
         val newEmail = generateEmail(newUsername)
         val newCountry = "ES"
         val newPassword = generateSecurePassword()
-        val newPasswordHash = usersDomain.encodePassword(newPassword)
+        val newPasswordHash = userDomain.encodePassword(newPassword)
         val newPrivacy = true
         val newIntolerances = listOf(Intolerance.GLUTEN)
         val newDiet = listOf(Diet.VEGAN)
