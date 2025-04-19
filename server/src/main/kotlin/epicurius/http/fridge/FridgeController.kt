@@ -6,7 +6,7 @@ import epicurius.http.fridge.models.input.ProductInputModel
 import epicurius.http.fridge.models.input.UpdateProductInputModel
 import epicurius.http.fridge.models.output.FridgeOutputModel
 import epicurius.http.utils.Uris
-import epicurius.services.FridgeService
+import epicurius.services.fridge.FridgeService
 import jakarta.validation.Valid
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.DeleteMapping

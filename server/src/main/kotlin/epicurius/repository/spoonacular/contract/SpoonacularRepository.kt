@@ -1,4 +1,4 @@
-package epicurius.repository
+package epicurius.repository.spoonacular.contract
 
 interface SpoonacularRepository {
 

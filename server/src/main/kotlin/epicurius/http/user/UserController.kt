@@ -15,7 +15,7 @@ import epicurius.http.user.models.output.GetFollowingOutputModel
 import epicurius.http.user.models.output.GetIntolerancesOutputModel
 import epicurius.http.user.models.output.GetUserOutputModel
 import epicurius.http.user.models.output.GetUserProfileOutputModel
-import epicurius.http.user.models.output.GetUsersOutputModel
+import epicurius.http.user.models.output.SearchUsersOutputModel
 import epicurius.http.user.models.output.UpdateProfilePictureOutputModel
 import epicurius.http.user.models.output.UpdateUserOutputModel
 import epicurius.http.utils.Uris
@@ -76,8 +76,8 @@ class UserController(val userService: UserService) {
         @RequestParam limit: Int
     ): ResponseEntity<*> {
         val pagingParams = PagingParams(skip, limit)
-        val users = userService.getUsers(partialUsername, pagingParams)
-        return ResponseEntity.ok().body(GetUsersOutputModel(users))
+        val users = userService.searchUsers(partialUsername, pagingParams)
+        return ResponseEntity.ok().body(SearchUsersOutputModel(users))
     }
 
     @GetMapping(Uris.User.USER_INTOLERANCES)

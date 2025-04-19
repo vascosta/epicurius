@@ -1,4 +1,4 @@
-package epicurius.repository.jdbi.user
+package epicurius.repository.jdbi.user.contract
 
 import epicurius.domain.PagingParams
 import epicurius.repository.jdbi.user.models.JdbiUpdateUserModel
@@ -10,7 +10,7 @@ interface UserRepository {
     fun createUser(name: String, email: String, country: String, passwordHash: String)
 
     fun getUser(name: String? = null, email: String? = null, tokenHash: String? = null): User?
-    fun getUsers(partialUsername: String, pagingParams: PagingParams): List<SearchUserModel>
+    fun searchUsers(partialUsername: String, pagingParams: PagingParams): List<SearchUserModel>
     fun getFollowers(userId: Int): List<SearchUserModel>
     fun getFollowing(userId: Int): List<SearchUserModel>
     fun getFollowRequests(userId: Int): List<SearchUserModel>

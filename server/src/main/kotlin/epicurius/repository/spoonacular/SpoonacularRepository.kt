@@ -3,7 +3,7 @@ package epicurius.repository.spoonacular
 import epicurius.Environment
 import epicurius.config.HttpClientConfigurer
 import epicurius.domain.fridge.Ingredient
-import epicurius.repository.SpoonacularRepository
+import epicurius.repository.spoonacular.contract.SpoonacularRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.withContext

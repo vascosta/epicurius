@@ -1,5 +1,6 @@
-package epicurius.repository.jdbi.user
+package epicurius.repository.jdbi.token
 
+import epicurius.repository.jdbi.token.contract.TokenRepository
 import org.jdbi.v3.core.Handle
 
 class JdbiTokenRepository(private val handle: Handle) : TokenRepository {

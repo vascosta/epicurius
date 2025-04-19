@@ -1,6 +1,7 @@
 package epicurius.repository.cloudStorage.picture
 
 import epicurius.config.CloudStorage
+import epicurius.repository.cloudStorage.picture.contract.PictureRepository
 import org.springframework.web.multipart.MultipartFile
 
 class PictureCloudStorageRepository(private val cloudStorage: CloudStorage) : PictureRepository {

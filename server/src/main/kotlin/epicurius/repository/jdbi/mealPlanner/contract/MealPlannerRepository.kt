@@ -1,4 +1,4 @@
-package epicurius.repository.jdbi.mealPlanner
+package epicurius.repository.jdbi.mealPlanner.contract
 
 import epicurius.domain.mealPlanner.MealTime
 import epicurius.repository.jdbi.mealPlanner.models.JdbiCalories

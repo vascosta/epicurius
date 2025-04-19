@@ -2,6 +2,7 @@ package epicurius.repository.jdbi.recipe
 
 import epicurius.domain.recipe.Ingredient
 import epicurius.domain.recipe.SearchRecipesModel
+import epicurius.repository.jdbi.recipe.contract.RecipeRepository
 import epicurius.repository.jdbi.recipe.models.JdbiCreateRecipeModel
 import epicurius.repository.jdbi.recipe.models.JdbiRecipeInfo
 import epicurius.repository.jdbi.recipe.models.JdbiRecipeModel

@@ -1,4 +1,4 @@
-package epicurius.services
+package epicurius.services.fridge
 
 import epicurius.domain.exceptions.InvalidProduct
 import epicurius.domain.exceptions.ProductIsAlreadyOpen
@@ -11,7 +11,7 @@ import epicurius.domain.fridge.UpdateProductInfo
 import epicurius.http.fridge.models.input.OpenProductInputModel
 import epicurius.http.fridge.models.input.ProductInputModel
 import epicurius.http.fridge.models.input.UpdateProductInputModel
-import epicurius.repository.spoonacular.SpoonacularManager
+import epicurius.repository.spoonacular.manager.SpoonacularManager
 import epicurius.repository.transaction.TransactionManager
 import org.springframework.stereotype.Component
 

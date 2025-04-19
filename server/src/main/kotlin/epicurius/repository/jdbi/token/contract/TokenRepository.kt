@@ -1,4 +1,4 @@
-package epicurius.repository.jdbi.user
+package epicurius.repository.jdbi.token.contract
 
 interface TokenRepository {
 

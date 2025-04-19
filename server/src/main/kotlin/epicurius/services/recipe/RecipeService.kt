@@ -18,7 +18,7 @@ import epicurius.repository.cloudStorage.manager.CloudStorageManager
 import epicurius.repository.firestore.FirestoreManager
 import epicurius.repository.jdbi.recipe.models.JdbiRecipeModel
 import epicurius.repository.jdbi.recipe.models.JdbiUpdateRecipeModel
-import epicurius.repository.spoonacular.SpoonacularManager
+import epicurius.repository.spoonacular.manager.SpoonacularManager
 import epicurius.repository.transaction.TransactionManager
 import epicurius.services.recipe.models.UpdateRecipePicturesModel
 import epicurius.services.recipe.models.UpdateRecipeModel

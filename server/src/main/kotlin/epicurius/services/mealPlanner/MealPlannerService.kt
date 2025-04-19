@@ -1,4 +1,4 @@
-package epicurius.services
+package epicurius.services.mealPlanner
 
 import epicurius.domain.PictureDomain.Companion.RECIPES_FOLDER
 import epicurius.domain.exceptions.MealPlannerAlreadyExists

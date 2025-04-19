@@ -4,6 +4,7 @@ import com.google.cloud.firestore.DocumentReference
 import com.google.cloud.firestore.Firestore
 import epicurius.domain.exceptions.RecipeNotFound
 import epicurius.domain.recipe.Instructions
+import epicurius.repository.firestore.recipe.contract.RecipeRepository
 import epicurius.repository.firestore.recipe.models.FirestoreRecipeModel
 import epicurius.repository.firestore.recipe.models.FirestoreUpdateRecipeModel
 import epicurius.repository.firestore.utils.await

@@ -71,7 +71,7 @@ class AuthenticationRepositoryTest : RepositoryTest() {
         createUser(username2, email2, country, passwordHash)
 
         // when getting the users by a partial username
-        val users = getUsers("partial", PagingParams())
+        val users = searchUsers("partial", PagingParams())
 
         // then the users are retrieved successfully
         assertTrue(users.isNotEmpty())

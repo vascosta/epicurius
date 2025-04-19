@@ -1,10 +1,10 @@
 package epicurius.repository.transaction
 
-import epicurius.repository.jdbi.fridge.FridgeRepository
-import epicurius.repository.jdbi.mealPlanner.MealPlannerRepository
-import epicurius.repository.jdbi.recipe.RecipeRepository
-import epicurius.repository.jdbi.user.TokenRepository
-import epicurius.repository.jdbi.user.UserRepository
+import epicurius.repository.jdbi.fridge.contract.FridgeRepository
+import epicurius.repository.jdbi.mealPlanner.contract.MealPlannerRepository
+import epicurius.repository.jdbi.recipe.contract.RecipeRepository
+import epicurius.repository.jdbi.token.contract.TokenRepository
+import epicurius.repository.jdbi.user.contract.UserRepository
 
 interface Transaction {
     val userRepository: UserRepository

@@ -77,8 +77,8 @@ open class RepositoryTest : EpicuriusUnitTest() {
         fun getUserByEmail(email: String) = tm.run { it.userRepository.getUser(email = email) }
         fun getUserByTokenHash(tokenHash: String) = tm.run { it.userRepository.getUser(tokenHash = tokenHash) }
 
-        fun getUsers(partialUsername: String, pagingParams: PagingParams) =
-            tm.run { it.userRepository.getUsers(partialUsername, pagingParams) }
+        fun searchUsers(partialUsername: String, pagingParams: PagingParams) =
+            tm.run { it.userRepository.searchUsers(partialUsername, pagingParams) }
 
         fun getProfilePicture(profilePictureName: String) = cs.pictureCloudStorageRepository.getPicture(profilePictureName, PictureDomain.USERS_FOLDER)
 

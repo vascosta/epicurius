@@ -1,7 +1,5 @@
 package epicurius.services.user
 
-import epicurius.domain.Diet
-import epicurius.domain.Intolerance
 import epicurius.domain.PagingParams
 import epicurius.domain.PictureDomain
 import epicurius.domain.exceptions.FollowRequestAlreadyBeenSent
@@ -82,8 +80,8 @@ class UserService(
         return cs.pictureCloudStorageRepository.getPicture(profilePictureName, PictureDomain.USERS_FOLDER)
     }
 
-    fun getUsers(partialUsername: String, pagingParams: PagingParams): List<SearchUser> {
-        return tm.run { it.userRepository.getUsers(partialUsername, pagingParams) }
+    fun searchUsers(partialUsername: String, pagingParams: PagingParams): List<SearchUser> {
+        return tm.run { it.userRepository.searchUsers(partialUsername, pagingParams) }
             .map { user -> SearchUser(user.name, getProfilePicture(user.profilePictureName)) }
     }
 

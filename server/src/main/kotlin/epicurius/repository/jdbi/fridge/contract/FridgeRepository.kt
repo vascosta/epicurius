@@ -1,4 +1,4 @@
-package epicurius.repository.jdbi.fridge
+package epicurius.repository.jdbi.fridge.contract
 
 import epicurius.domain.fridge.Fridge
 import epicurius.domain.fridge.Product

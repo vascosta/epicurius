@@ -1,4 +1,4 @@
-package epicurius.repository.firestore.recipe
+package epicurius.repository.firestore.recipe.contract
 
 import epicurius.repository.firestore.recipe.models.FirestoreRecipeModel
 import epicurius.repository.firestore.recipe.models.FirestoreUpdateRecipeModel

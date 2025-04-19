@@ -14,13 +14,13 @@ import epicurius.repository.firestore.recipe.FirestoreRecipeRepository
 import epicurius.repository.jdbi.fridge.JdbiFridgeRepository
 import epicurius.repository.jdbi.mealPlanner.JdbiMealPlannerRepository
 import epicurius.repository.jdbi.recipe.JdbiRecipeRepository
-import epicurius.repository.jdbi.user.JdbiTokenRepository
+import epicurius.repository.jdbi.token.JdbiTokenRepository
 import epicurius.repository.jdbi.user.JdbiUserRepository
-import epicurius.repository.spoonacular.SpoonacularManager
 import epicurius.repository.spoonacular.SpoonacularRepository
+import epicurius.repository.spoonacular.manager.SpoonacularManager
 import epicurius.repository.transaction.Transaction
 import epicurius.repository.transaction.jdbi.JdbiTransactionManager
-import epicurius.services.FridgeService
+import epicurius.services.fridge.FridgeService
 import epicurius.services.recipe.RecipeService
 import epicurius.services.user.UserService
 import org.junit.jupiter.api.BeforeAll

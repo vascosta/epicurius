@@ -5,7 +5,7 @@ import epicurius.http.mealPlanner.models.input.AddMealPlannerInputModel
 import epicurius.http.mealPlanner.models.input.CreateMealPlannerInputModel
 import epicurius.http.mealPlanner.models.output.GetMealPlannerOutputModel
 import epicurius.http.utils.Uris
-import epicurius.services.MealPlannerService
+import epicurius.services.mealPlanner.MealPlannerService
 import jakarta.validation.Valid
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping

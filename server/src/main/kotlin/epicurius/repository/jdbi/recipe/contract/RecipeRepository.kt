@@ -1,4 +1,4 @@
-package epicurius.repository.jdbi.recipe
+package epicurius.repository.jdbi.recipe.contract
 
 import epicurius.domain.recipe.SearchRecipesModel
 import epicurius.repository.jdbi.recipe.models.JdbiCreateRecipeModel

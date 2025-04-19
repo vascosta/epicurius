@@ -1,4 +1,4 @@
-package epicurius.repository.cloudStorage.picture
+package epicurius.repository.cloudStorage.picture.contract
 
 import org.springframework.web.multipart.MultipartFile
 

@@ -4,6 +4,7 @@ import epicurius.domain.PagingParams
 import epicurius.domain.user.FollowingStatus
 import epicurius.repository.jdbi.user.models.JdbiUpdateUserModel
 import epicurius.domain.user.User
+import epicurius.repository.jdbi.user.contract.UserRepository
 import epicurius.repository.jdbi.user.models.SearchUserModel
 import org.jdbi.v3.core.Handle
 import org.jdbi.v3.core.kotlin.mapTo
@@ -46,7 +47,7 @@ class JdbiUserRepository(private val handle: Handle) : UserRepository {
             .firstOrNull()
     }
 
-    override fun getUsers(partialUsername: String, pagingParams: PagingParams): List<SearchUserModel> {
+    override fun searchUsers(partialUsername: String, pagingParams: PagingParams): List<SearchUserModel> {
         return handle.createQuery(
             """
                 SELECT name, profile_picture_name
