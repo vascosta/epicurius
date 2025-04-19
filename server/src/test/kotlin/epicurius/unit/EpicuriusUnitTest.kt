@@ -17,6 +17,7 @@ import epicurius.repository.jdbi.recipe.JdbiRecipeRepository
 import epicurius.repository.jdbi.user.JdbiTokenRepository
 import epicurius.repository.jdbi.user.JdbiUserRepository
 import epicurius.repository.spoonacular.SpoonacularManager
+import epicurius.repository.spoonacular.SpoonacularRepository
 import epicurius.repository.transaction.Transaction
 import epicurius.repository.transaction.jdbi.JdbiTransactionManager
 import epicurius.services.FridgeService
@@ -56,6 +57,8 @@ open class EpicuriusUnitTest : EpicuriusTest() {
 
         val cloudStoragePictureRepositoryMock: PictureCloudStorageRepository = mock()
 
+        val spoonacularRepositoryMock: SpoonacularRepository = mock()
+
         private val transactionManagerMock: JdbiTransactionManager = mock()
         private val firestoreManagerMock: FirestoreManager = mock<FirestoreManager>().apply {
             whenever(recipeRepository).thenReturn(firestoreRecipeRepositoryMock)
@@ -63,7 +66,9 @@ open class EpicuriusUnitTest : EpicuriusTest() {
         private val cloudStorageManagerMock = mock<CloudStorageManager>().apply {
             whenever(pictureCloudStorageRepository).thenReturn(cloudStoragePictureRepositoryMock)
         }
-        private val spoonacularStorageManagerMock: SpoonacularManager = mock()
+        private val spoonacularStorageManagerMock: SpoonacularManager = mock<SpoonacularManager>().apply {
+            whenever(spoonacularRepository).thenReturn(spoonacularRepositoryMock)
+        }
         private val cloudFunctionManager: CloudFunctionManager = mock()
 
         val userDomainMock: UserDomain = mock()
