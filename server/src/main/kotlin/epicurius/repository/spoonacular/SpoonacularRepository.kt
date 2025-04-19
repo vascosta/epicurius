@@ -13,13 +13,14 @@ import org.springframework.stereotype.Component
 @Component
 class SpoonacularRepository(private val httpClient: HttpClientConfigurer) : SpoonacularRepository {
 
-    override suspend fun getProductsList(partial: String): List<String> {
-        val uriCompleted = "$AUTOCOMPLETE_INGREDIENTS_URL?apiKey=$spoonacularApiKey&query=$partial"
+    override suspend fun getProductsList(partialName: String): List<String> {
+        val validName = partialName.replace(" ", "-").lowercase()
+        val uriCompleted = "$AUTOCOMPLETE_INGREDIENTS_URL?apiKey=$spoonacularApiKey&query=$validName"
 
         return withContext(Dispatchers.IO) {
             val request = async { httpClient.get(uriCompleted) }.await()
             val ingredientsList = Json.decodeFromString<List<Ingredient>>(request)
-            ingredientsList.map { it.name }
+            ingredientsList.map { it.name.lowercase() }
         }
     }
 

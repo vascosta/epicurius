@@ -11,6 +11,7 @@ import java.time.LocalDate
 
 data class ProductInputModel(
     @field:NotBlank
+    // adicionar regex para garantir que nao sao enviados caracteres especiais
     val productName: String,
 
     @field:Min(1)

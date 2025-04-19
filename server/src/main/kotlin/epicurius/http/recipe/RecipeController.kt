@@ -10,6 +10,7 @@ import epicurius.http.recipe.models.input.CreateRecipeInputModel
 import epicurius.http.recipe.models.input.SearchRecipesInputModel
 import epicurius.http.recipe.models.input.UpdateRecipeInputModel
 import epicurius.http.recipe.models.output.CreateRecipeOutputModel
+import epicurius.http.recipe.models.output.GetIngredientsFromPictureOutputModel
 import epicurius.http.recipe.models.output.GetRecipeOutputModel
 import epicurius.http.recipe.models.output.SearchRecipesOutputModel
 import epicurius.http.recipe.models.output.UpdateRecipeOutputModel
@@ -83,6 +84,14 @@ class RecipeController(private val recipeService: RecipeService) {
         )
         val results = recipeService.searchRecipes(authenticatedUser.user.id, searchForm)
         return ResponseEntity.ok().body(SearchRecipesOutputModel(results))
+    }
+
+    @PostMapping(Uris.Ingredient.INGREDIENTS)
+    suspend fun getIngredientsFromPicture(
+        @RequestPart("picture") picture: MultipartFile,
+    ): ResponseEntity<*> {
+        val ingredients = recipeService.getIngredientsFromPicture(picture)
+        return ResponseEntity.ok().body(GetIngredientsFromPictureOutputModel(ingredients))
     }
 
     @PostMapping(Uris.Recipe.RECIPES, consumes = [MediaType.MULTIPART_FORM_DATA_VALUE])

@@ -2,5 +2,5 @@ package epicurius.repository
 
 interface SpoonacularRepository {
 
-    suspend fun getProductsList(partial: String): List<String>
+    suspend fun getProductsList(partialName: String): List<String>
 }

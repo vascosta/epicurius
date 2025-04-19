@@ -29,5 +29,6 @@ class PictureDomain {
 
         const val USERS_FOLDER = "users"
         const val RECIPES_FOLDER = "recipes"
+        const val INGREDIENTS_FOLDER = "ingredients"
     }
 }

@@ -1,6 +1,7 @@
 package epicurius.services.recipe
 
 import epicurius.domain.PictureDomain
+import epicurius.domain.PictureDomain.Companion.INGREDIENTS_FOLDER
 import epicurius.domain.PictureDomain.Companion.RECIPES_FOLDER
 import epicurius.domain.exceptions.InvalidNumberOfRecipePictures
 import epicurius.domain.exceptions.NotTheAuthor
@@ -12,10 +13,12 @@ import epicurius.domain.recipe.RecipeInfo
 import epicurius.http.recipe.models.input.CreateRecipeInputModel
 import epicurius.http.recipe.models.input.SearchRecipesInputModel
 import epicurius.http.recipe.models.input.UpdateRecipeInputModel
+import epicurius.repository.cloudFunction.manager.CloudFunctionManager
 import epicurius.repository.cloudStorage.manager.CloudStorageManager
 import epicurius.repository.firestore.FirestoreManager
 import epicurius.repository.jdbi.recipe.models.JdbiRecipeModel
 import epicurius.repository.jdbi.recipe.models.JdbiUpdateRecipeModel
+import epicurius.repository.spoonacular.SpoonacularManager
 import epicurius.repository.transaction.TransactionManager
 import epicurius.services.recipe.models.UpdateRecipePicturesModel
 import epicurius.services.recipe.models.UpdateRecipeModel
@@ -27,6 +30,8 @@ class RecipeService(
     private val tm: TransactionManager,
     private val fs: FirestoreManager,
     private val cs: CloudStorageManager,
+    private val sm: SpoonacularManager,
+    private val cf: CloudFunctionManager,
     private val pictureDomain: PictureDomain
 ) {
 
@@ -101,6 +106,20 @@ class RecipeService(
         return recipes.map {
             it.toRecipeInfo(cs.pictureCloudStorageRepository.getPicture(it.pictures.first(), RECIPES_FOLDER))
         }
+    }
+
+    suspend fun getIngredientsFromPicture(picture: MultipartFile): List<String> {
+        pictureDomain.validatePicture(picture)
+        val pictureName = pictureDomain.generatePictureName() + "." + picture.contentType
+        println(pictureName)
+        cs.pictureCloudStorageRepository.updatePicture(pictureName, picture, INGREDIENTS_FOLDER)
+
+        val ingredients = cf.cloudFunctionRepository.getIngredientsFromPicture(pictureName)
+        val validIngredients = ingredients.filter { ingredient ->
+            sm.spoonacularRepository.getProductsList(ingredient).contains(ingredient)
+        }
+
+        return validIngredients
     }
 
     suspend fun updateRecipe(userId: Int, recipeId: Int, recipeInfo: UpdateRecipeInputModel): UpdateRecipeModel {
