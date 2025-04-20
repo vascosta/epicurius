@@ -18,7 +18,7 @@ class GetRecipeServiceTests : RecipeServiceTest() {
         // mock
         whenever(jdbiRecipeRepositoryMock.getRecipe(RECIPE_ID)).thenReturn(jdbiRecipeModel)
         whenever(runBlocking { firestoreRecipeRepositoryMock.getRecipe(RECIPE_ID) }).thenReturn(firestoreRecipeInfo)
-        whenever(cloudStoragePictureRepositoryMock.getPicture(testPicture.name, RECIPES_FOLDER)).thenReturn(testPicture.bytes)
+        whenever(pictureRepositoryMock.getPicture(testPicture.name, RECIPES_FOLDER)).thenReturn(testPicture.bytes)
 
         // when retrieving the recipe
         val recipe = runBlocking { recipeService.getRecipe(RECIPE_ID) }
@@ -54,16 +54,8 @@ class GetRecipeServiceTests : RecipeServiceTest() {
             .thenReturn(jdbiRecipeModel)
 
         // when retrieving the recipe
-        val exception = assertFailsWith<RecipeNotFound> {
-            runBlocking { recipeService.getRecipe(nonExistingRecipeId) } // jdbi
-        }
-
-        val exception2 = assertFailsWith<RecipeNotFound> {
-            runBlocking { recipeService.getRecipe(nonExistingRecipeId) } // firestore
-        }
-
-        // then an exception is thrown
-        assertEquals(RecipeNotFound().message, exception.message)
-        assertEquals(RecipeNotFound().message, exception2.message)
+        // then the recipe is not retrieved and throws RecipeNotFound exception
+        assertFailsWith<RecipeNotFound> { runBlocking { recipeService.getRecipe(nonExistingRecipeId) } } // jdbi
+        assertFailsWith<RecipeNotFound> { runBlocking { recipeService.getRecipe(nonExistingRecipeId) } } // firestore
     }
 }

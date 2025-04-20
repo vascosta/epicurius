@@ -19,11 +19,10 @@ class DeleteRecipeServiceTests : RecipeServiceTest() {
         whenever(jdbiRecipeRepositoryMock.getRecipe(RECIPE_ID)).thenReturn(jdbiRecipeModel)
 
         // when deleting the recipe
+        // then the recipe is deleted successfully
         recipeService.deleteRecipe(AUTHOR_ID, RECIPE_ID)
         verify(jdbiRecipeRepositoryMock).deleteRecipe(RECIPE_ID)
         verify(firestoreRecipeRepositoryMock).deleteRecipe(RECIPE_ID)
-
-        // then the recipe is deleted successfully
     }
 
     @Test
@@ -35,12 +34,10 @@ class DeleteRecipeServiceTests : RecipeServiceTest() {
         whenever(jdbiRecipeRepositoryMock.getRecipe(nonExistingRecipeId)).thenReturn(null)
 
         // when deleting the recipe
-        val exception = assertFailsWith<RecipeNotFound> {
+        // then the recipe is not deleted and throws RecipeNotFound exception
+        assertFailsWith<RecipeNotFound> {
             recipeService.deleteRecipe(AUTHOR_ID, nonExistingRecipeId)
         }
-
-        // then an exception is thrown
-        assertEquals(RecipeNotFound().message, exception.message)
     }
 
     @Test
@@ -51,12 +48,10 @@ class DeleteRecipeServiceTests : RecipeServiceTest() {
         // mock
         whenever(jdbiRecipeRepositoryMock.getRecipe(RECIPE_ID)).thenReturn(jdbiRecipeModel)
 
-        // when updating the recipe
-        val exception = assertFailsWith<NotTheAuthor> {
+        // when deleting the recipe
+        // then the recipe is not deleted and throws NotTheAuthor exception
+        assertFailsWith<NotTheAuthor> {
             runBlocking { recipeService.deleteRecipe(userId, RECIPE_ID) }
         }
-
-        // then an exception is thrown
-        assertEquals(NotTheAuthor().message, exception.message)
     }
 }

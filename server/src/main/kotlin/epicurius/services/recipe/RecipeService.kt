@@ -50,7 +50,7 @@ class RecipeService(
             fs.recipeRepository.createRecipe(recipeInfo.toFirestoreRecipeModel(recipeId))
 
             picturesNames.forEachIndexed { index, pictureName ->
-                cs.pictureCloudStorageRepository.updatePicture(
+                cs.pictureRepository.updatePicture(
                     pictureName,
                     pictures[index],
                     RECIPES_FOLDER
@@ -84,7 +84,7 @@ class RecipeService(
         val jdbiRecipe = tm.run { it.recipeRepository.getRecipe(recipeId) } ?: throw RecipeNotFound()
         val firestoreRecipe = fs.recipeRepository.getRecipe(recipeId) ?: throw RecipeNotFound()
         val recipePictures = jdbiRecipe.picturesNames.map {
-            cs.pictureCloudStorageRepository.getPicture(it, RECIPES_FOLDER)
+            cs.pictureRepository.getPicture(it, RECIPES_FOLDER)
         }
 
         return jdbiRecipe.toRecipe(firestoreRecipe.description, firestoreRecipe.instructions, recipePictures)
@@ -104,7 +104,7 @@ class RecipeService(
         }
 
         return recipes.map {
-            it.toRecipeInfo(cs.pictureCloudStorageRepository.getPicture(it.pictures.first(), RECIPES_FOLDER))
+            it.toRecipeInfo(cs.pictureRepository.getPicture(it.pictures.first(), RECIPES_FOLDER))
         }
     }
 
@@ -112,7 +112,7 @@ class RecipeService(
         pictureDomain.validatePicture(picture)
         val pictureName = pictureDomain.generatePictureName() + "." + picture.contentType
         println(pictureName)
-        cs.pictureCloudStorageRepository.updatePicture(pictureName, picture, INGREDIENTS_FOLDER)
+        cs.pictureRepository.updatePicture(pictureName, picture, INGREDIENTS_FOLDER)
 
         val ingredients = cf.cloudFunctionRepository.getIngredientsFromPicture(pictureName)
         val validIngredients = ingredients.filter { ingredient ->
@@ -158,7 +158,7 @@ class RecipeService(
         val recipe = checkIfRecipeExists(recipeId) ?: throw RecipeNotFound()
         checkIfUserIsAuthor(userId, recipe.authorId)
 
-        val picturesBytes = recipe.picturesNames.map { cs.pictureCloudStorageRepository.getPicture(it, RECIPES_FOLDER) }
+        val picturesBytes = recipe.picturesNames.map { cs.pictureRepository.getPicture(it, RECIPES_FOLDER) }
         val newPicturesBytes = newPictures.map { it.bytes }
 
         if (picturesBytes == newPictures) { // if the pictures are equal and in the same order
@@ -176,7 +176,7 @@ class RecipeService(
             }
 
             val picturesToDelete = pictureNames.filter { !reorderedPicturesNames.contains(it) }
-            picturesToDelete.forEach { cs.pictureCloudStorageRepository.deletePicture(it, RECIPES_FOLDER) }
+            picturesToDelete.forEach { cs.pictureRepository.deletePicture(it, RECIPES_FOLDER) }
 
             tm.run { it.recipeRepository.updateRecipe(JdbiUpdateRecipeModel(recipeId, picturesNames = reorderedPicturesNames)) }
             val picturesToAdd = reorderedPicturesNames.filter { !pictureNames.contains(it) }
@@ -184,7 +184,7 @@ class RecipeService(
             picturesToAdd.forEachIndexed { _, pictureName ->
                 val pictureIdx = reorderedPicturesNames.indexOf(pictureName)
                 if (pictureIdx != -1) {
-                    cs.pictureCloudStorageRepository.updatePicture(
+                    cs.pictureRepository.updatePicture(
                         pictureName,
                         newPictures[pictureIdx],
                         RECIPES_FOLDER

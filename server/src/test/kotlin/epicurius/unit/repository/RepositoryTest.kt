@@ -80,7 +80,7 @@ open class RepositoryTest : EpicuriusUnitTest() {
         fun searchUsers(partialUsername: String, pagingParams: PagingParams) =
             tm.run { it.userRepository.searchUsers(partialUsername, pagingParams) }
 
-        fun getProfilePicture(profilePictureName: String) = cs.pictureCloudStorageRepository.getPicture(profilePictureName, PictureDomain.USERS_FOLDER)
+        fun getProfilePicture(profilePictureName: String) = cs.pictureRepository.getPicture(profilePictureName, PictureDomain.USERS_FOLDER)
 
         fun getFollowers(userId: Int) = tm.run { it.userRepository.getFollowers(userId) }
         fun getFollowing(userId: Int) = tm.run { it.userRepository.getFollowing(userId) }
@@ -103,7 +103,7 @@ open class RepositoryTest : EpicuriusUnitTest() {
             }
 
         fun updateProfilePicture(profilePictureName: String, profilePicture: MultipartFile) =
-            cs.pictureCloudStorageRepository.updatePicture(profilePictureName, profilePicture, PictureDomain.USERS_FOLDER)
+            cs.pictureRepository.updatePicture(profilePictureName, profilePicture, PictureDomain.USERS_FOLDER)
 
         fun resetPassword(email: String, passwordHash: String) =
             tm.run { it.userRepository.resetPassword(email, passwordHash) }
@@ -118,7 +118,7 @@ open class RepositoryTest : EpicuriusUnitTest() {
             tm.run { it.userRepository.cancelFollowRequest(userId, userIdToCancelFollowRequest) }
 
         fun deleteProfilePicture(profilePictureName: String) =
-            cs.pictureCloudStorageRepository.deletePicture(profilePictureName, PictureDomain.USERS_FOLDER)
+            cs.pictureRepository.deletePicture(profilePictureName, PictureDomain.USERS_FOLDER)
 
         fun deleteToken(username: String? = null, email: String? = null) =
             tm.run { it.tokenRepository.deleteToken(username, email) }

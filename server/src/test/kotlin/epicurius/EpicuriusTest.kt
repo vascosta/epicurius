@@ -7,7 +7,7 @@ import epicurius.domain.token.Sha256TokenEncoder
 import epicurius.domain.user.CountriesDomain
 import epicurius.domain.user.UserDomain
 import epicurius.repository.jdbi.config.configureWithAppRequirements
-import epicurius.repository.spoonacular.SpoonacularManager
+import epicurius.repository.spoonacular.manager.SpoonacularManager
 import epicurius.repository.transaction.jdbi.JdbiTransactionManager
 import org.jdbi.v3.core.Jdbi
 import org.postgresql.ds.PGSimpleDataSource

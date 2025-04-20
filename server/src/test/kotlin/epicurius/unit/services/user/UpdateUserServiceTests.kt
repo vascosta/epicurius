@@ -20,7 +20,7 @@ class UpdateUserServiceTests: UserServiceTest() {
 
     @Test
     fun `Should update a user successfully`() {
-        // given information to update a recipe
+        // given information to update a user
         val newUsername = generateRandomUsername()
         val newPassword = generateSecurePassword()
         val updateUserInfo = UpdateUserInputModel(
@@ -35,12 +35,12 @@ class UpdateUserServiceTests: UserServiceTest() {
         )
 
         // mock
-        val passwordHash = randomUUID().toString()
-        val userMock = User (
+        val mockPasswordHash = userDomain.encodePassword(newPassword)
+        val mockUser = User (
             testUser.id,
             updateUserInfo.name!!,
             updateUserInfo.email!!,
-            passwordHash,
+            mockPasswordHash,
             testUser.tokenHash,
             updateUserInfo.country!!,
             updateUserInfo.privacy!!,
@@ -50,9 +50,9 @@ class UpdateUserServiceTests: UserServiceTest() {
         )
         whenever(jdbiUserRepositoryMock.getUser(newUsername)).thenReturn(null)
         whenever(countriesDomainMock.checkIfCountryCodeIsValid(updateUserInfo.country!!)).thenReturn(true)
-        whenever(userDomainMock.encodePassword(newPassword)).thenReturn(passwordHash)
-        whenever(jdbiUserRepositoryMock.updateUser(testUsername, updateUserInfo.toJdbiUpdateUser(passwordHash)))
-            .thenReturn(userMock)
+        whenever(userDomainMock.encodePassword(newPassword)).thenReturn(mockPasswordHash)
+        whenever(jdbiUserRepositoryMock.updateUser(testUsername, updateUserInfo.toJdbiUpdateUser(mockPasswordHash)))
+            .thenReturn(mockUser)
 
         // when updating the user
         val updatedUser = updateUser(testUsername, updateUserInfo)
@@ -112,19 +112,20 @@ class UpdateUserServiceTests: UserServiceTest() {
 
     @Test
     fun `Should throw InvalidCountry exception when updating a user with an invalid country`() {
-        // given an existing user (testUser)
+        // given an existing user (testUser) and an invalid country
+        val invalidCountry = "XX"
 
         // mock
         whenever(jdbiUserRepositoryMock.getUser(testUsername)).thenReturn(null)
-        whenever(countriesDomainMock.checkIfCountryCodeIsValid("XX")).thenReturn(false)
+        whenever(countriesDomainMock.checkIfCountryCodeIsValid(invalidCountry)).thenReturn(false)
 
         // when updating the user with an invalid country
-        // then the user cannot be updated and an exception is thrown
+        // then the user cannot be updated and throws InvalidCountry exception
         assertFailsWith<InvalidCountry> {
             updateUser(
                 testUsername,
                 UpdateUserInputModel(
-                    country = "XX"
+                    country = invalidCountry
                 )
             )
         }
@@ -133,19 +134,21 @@ class UpdateUserServiceTests: UserServiceTest() {
     @Test
     fun `Should throw PasswordsDoNotMatch exception when updating a user with different passwords`() {
         // given an existing user (testUser)
+        val password1 = generateSecurePassword()
+        val password2 = generateSecurePassword()
 
         // mock
         whenever(jdbiUserRepositoryMock.getUser(testUsername)).thenReturn(null)
         whenever(countriesDomainMock.checkIfCountryCodeIsValid(testUser.country)).thenReturn(true)
 
         // when updating the user with different passwords
-        // then the user cannot be updated and an exception is thrown
+        // then the user cannot be updated and throws PasswordsDoNotMatch exception
         assertFailsWith<PasswordsDoNotMatch> {
             updateUser(
                 testUsername,
                 UpdateUserInputModel(
-                    password = randomUUID().toString(),
-                    confirmPassword = randomUUID().toString()
+                    password = password1,
+                    confirmPassword = password2
                 )
             )
         }
@@ -154,7 +157,7 @@ class UpdateUserServiceTests: UserServiceTest() {
             updateUser(
                 testUsername,
                 UpdateUserInputModel(
-                    password = randomUUID().toString(),
+                    password = password1,
                     confirmPassword = null
                 )
             )

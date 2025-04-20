@@ -11,7 +11,7 @@ import epicurius.http.user.models.output.GetFollowingOutputModel
 import epicurius.http.user.models.output.GetIntolerancesOutputModel
 import epicurius.http.user.models.output.GetUserOutputModel
 import epicurius.http.user.models.output.GetUserProfileOutputModel
-import epicurius.http.user.models.output.GetUsersOutputModel
+import epicurius.http.user.models.output.SearchUsersOutputModel
 import epicurius.http.user.models.output.UpdateProfilePictureOutputModel
 import epicurius.http.user.models.output.UpdateUserOutputModel
 import epicurius.http.utils.Uris
@@ -50,7 +50,7 @@ class EpicuriusIntegrationTest : EpicuriusTest() {
         )
 
     fun getUsers(token: String, partialUsername: String, skip: Int = 0, limit: Int = 10) =
-        get<GetUsersOutputModel>(
+        get<SearchUsersOutputModel>(
             client,
             api(Uris.User.USERS) + "?partialUsername=$partialUsername&skip=$skip&limit=$limit",
             token = token

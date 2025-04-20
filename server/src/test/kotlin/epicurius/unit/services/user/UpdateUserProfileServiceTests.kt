@@ -11,7 +11,7 @@ import kotlin.test.assertNotNull
 import kotlin.test.assertNull
 import kotlin.test.assertTrue
 
-class UpdateUserProfileServiceTest: UserServiceTest() {
+class UpdateUserProfileServiceTests: UserServiceTest() {
 
     @Test
     fun `Retrieves the user profile without a picture successfully`() {

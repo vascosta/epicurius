@@ -25,7 +25,7 @@ open class ServiceTest : EpicuriusUnitTest() {
 
         fun getProfilePicture(profilePictureName: String) = userService.getProfilePicture(profilePictureName)
 
-        fun getUsers(partialUsername: String, pagingParams: PagingParams) = userService.getUsers(partialUsername, pagingParams)
+        fun searchUsers(partialUsername: String, pagingParams: PagingParams) = userService.searchUsers(partialUsername, pagingParams)
 
         fun getFollowers(userId: Int) = userService.getFollowers(userId)
 

@@ -53,7 +53,7 @@ class MealPlannerService(
     private fun getRecipeInfoPicture(planner: List<JdbiDailyMealPlanner>) =
         planner.map { daily ->
             val dailyMeals = daily.meals.mapValues { (_, recipe) ->
-                val picture = cs.pictureCloudStorageRepository.getPicture(recipe.pictures.first(), RECIPES_FOLDER)
+                val picture = cs.pictureRepository.getPicture(recipe.pictures.first(), RECIPES_FOLDER)
                 recipe.toRecipeInfo(picture)
             }
             DailyMealPlanner(date = daily.date, meals = dailyMeals)

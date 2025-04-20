@@ -1,13 +1,9 @@
 package epicurius.unit.services.recipe
 
 import epicurius.domain.PictureDomain.Companion.RECIPES_FOLDER
-import epicurius.domain.recipe.Cuisine
-import epicurius.domain.recipe.MealType
-import epicurius.repository.jdbi.recipe.models.JdbiRecipeInfo
 import org.junit.jupiter.api.Test
 import org.mockito.kotlin.whenever
 import kotlin.test.assertEquals
-import kotlin.test.assertNotNull
 
 class SearchRecipeServiceTests : RecipeServiceTest() {
 
@@ -26,7 +22,7 @@ class SearchRecipeServiceTests : RecipeServiceTest() {
                 )
             )
         ).thenReturn(listOf(jdbiRecipeInfo))
-        whenever(cloudStoragePictureRepositoryMock.getPicture(testPicture.name, RECIPES_FOLDER)).thenReturn(testPicture.bytes)
+        whenever(pictureRepositoryMock.getPicture(testPicture.name, RECIPES_FOLDER)).thenReturn(testPicture.bytes)
 
         // when searching for the recipe
         val results = recipeService.searchRecipes(USER_ID, searchRecipesInputModel)
@@ -59,7 +55,7 @@ class SearchRecipeServiceTests : RecipeServiceTest() {
                 jdbiRecipeRepositoryMock.searchRecipesByIngredients(USER_ID, it)
             }
         ).thenReturn(listOf(jdbiRecipeInfo))
-        whenever(cloudStoragePictureRepositoryMock.getPicture(testPicture.name, RECIPES_FOLDER)).thenReturn(testPicture.bytes)
+        whenever(pictureRepositoryMock.getPicture(testPicture.name, RECIPES_FOLDER)).thenReturn(testPicture.bytes)
 
         // when searching for the recipe
         val results = recipeService.searchRecipes(USER_ID, searchRecipesInputModel)

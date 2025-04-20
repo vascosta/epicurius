@@ -4,7 +4,7 @@ import epicurius.config.CloudStorage
 import epicurius.repository.cloudStorage.picture.contract.PictureRepository
 import org.springframework.web.multipart.MultipartFile
 
-class PictureCloudStorageRepository(private val cloudStorage: CloudStorage) : PictureRepository {
+class CloudStoragePictureRepository(private val cloudStorage: CloudStorage) : PictureRepository {
 
     override fun getPicture(pictureName: String, folder: String): ByteArray {
         val blob = cloudStorage.getBlob("$folder/$pictureName")

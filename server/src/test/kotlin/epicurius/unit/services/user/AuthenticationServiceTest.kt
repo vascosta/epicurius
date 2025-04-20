@@ -70,28 +70,6 @@ class AuthenticationServiceTest : ServiceTest() {
     }
 
     @Test
-    fun `Create new users and retrieve them successfully`() {
-        // given 2 created users
-        val username = "partial"
-        val username2 = "partialUsername"
-        val email = generateEmail(username)
-        val email2 = generateEmail(username2)
-        val country = "PT"
-        val password = generateSecurePassword()
-        createUser(username, email, country, password, password)
-        createUser(username2, email2, country, password, password)
-
-        // when retrieving the users by a partial username
-        val users = getUsers("partial", PagingParams())
-
-        // then the users are retrieved successfully
-        assertTrue(users.isNotEmpty())
-        assertEquals(2, users.size)
-        assertTrue(users.contains(SearchUser(username, null)))
-        assertTrue(users.contains(SearchUser(username2, null)))
-    }
-
-    @Test
     fun `Try to create user with an existing username or email and throws UserAlreadyExists Exception`() {
         // given an existing user and a different username and email
         val user = testUser
@@ -151,53 +129,5 @@ class AuthenticationServiceTest : ServiceTest() {
         // when retrieving the authenticated user
         // then the user cannot be retrieved and throws InvalidToken Exception
         assertFailsWith<InvalidToken> { getAuthenticatedUser(token) }
-    }
-
-    @Test
-    fun `Logout a user successfully`() {
-        // given an existing logged in user
-        val username = generateRandomUsername()
-        val email = generateEmail(username)
-        val country = "PT"
-        val password = generateSecurePassword()
-        val userToken = createUser(username, email, country, password, password)
-
-        // when logging out
-        logout(username)
-
-        // then the user is logged out successfully
-        val authenticatedUser = getAuthenticatedUser(userToken)
-        assertNull(authenticatedUser)
-    }
-
-    @Test
-    fun `Reset password successfully`() {
-        // given an existing user
-        val user = testUser
-
-        // when resetting the password
-        val newPassword = UUID.randomUUID().toString()
-        resetPassword(user.email, newPassword, newPassword)
-
-        // when logging in with the new password
-        val userToken = login(email = user.email, password = newPassword)
-
-        // then the password was reset successfully
-        val authenticatedUser = getAuthenticatedUser(userToken)
-        assertNotNull(authenticatedUser)
-        assertEquals(user.name, authenticatedUser.user.name)
-        assertEquals(user.email, authenticatedUser.user.email)
-    }
-
-    @Test
-    fun `Try to reset password with different passwords and throws PasswordsDoNotMatch Exception`() {
-        // given an existing user
-        val user = testUser
-
-        // when resetting the password with different passwords
-        // then the password cannot be reset and throws PasswordsDoNotMatch Exception
-        assertFailsWith<PasswordsDoNotMatch> {
-            resetPassword(user.email, UUID.randomUUID().toString(), UUID.randomUUID().toString())
-        }
     }
 }

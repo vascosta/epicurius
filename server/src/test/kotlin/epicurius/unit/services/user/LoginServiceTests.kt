@@ -3,20 +3,16 @@ package epicurius.unit.services.user
 import epicurius.domain.exceptions.IncorrectPassword
 import epicurius.domain.exceptions.UserAlreadyLoggedIn
 import epicurius.domain.exceptions.UserNotFound
-import epicurius.utils.createTestUser
-import epicurius.utils.generateEmail
-import epicurius.utils.generateRandomUsername
 import epicurius.utils.generateSecurePassword
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
-import java.util.UUID
 import java.util.UUID.randomUUID
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 import kotlin.test.assertNotNull
 
-class LoginServiceTest: UserServiceTest() {
+class LoginServiceTests: UserServiceTest() {
 
     @Test
     fun `Should login a user by name successfully`() {
@@ -78,7 +74,7 @@ class LoginServiceTest: UserServiceTest() {
         whenever(jdbiUserRepositoryMock.getUser(email = email)).thenReturn(null)
 
         // when logging in
-        // then the user cannot be logged in and throws UserNotFound Exception
+        // then the user cannot be logged in and throws UserNotFound exception
         assertFailsWith<UserNotFound> { login(username, password = password) }
         assertFailsWith<UserNotFound> { login(email = email, password =  password) }
     }
@@ -95,7 +91,7 @@ class LoginServiceTest: UserServiceTest() {
         whenever(jdbiUserRepositoryMock.checkIfUserIsLoggedIn(email = testUser.email)).thenReturn(true)
 
         // when logging in
-        // then the user cannot be logged in and throws UserAlreadyLoggedIn Exception
+        // then the user cannot be logged in and throws UserAlreadyLoggedIn exception
         assertFailsWith<UserAlreadyLoggedIn> { login(testUsername, password = password) }
         assertFailsWith<UserAlreadyLoggedIn> { login(email = testUser.email, password = password) }
     }
@@ -113,10 +109,8 @@ class LoginServiceTest: UserServiceTest() {
         whenever(userDomainMock.verifyPassword(incorrectPassword, testUser.passwordHash)).thenReturn(false)
 
         // when logging in with an incorrect password
-        // then the user cannot be logged in and throws IncorrectPassword Exception
+        // then the user cannot be logged in and throws IncorrectPassword exception
         assertFailsWith<IncorrectPassword> { login(testUsername, password = incorrectPassword) }
         assertFailsWith<IncorrectPassword> { login(email = testUser.email, password = incorrectPassword) }
     }
-
-
 }

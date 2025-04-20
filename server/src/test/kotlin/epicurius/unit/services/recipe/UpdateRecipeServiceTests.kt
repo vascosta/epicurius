@@ -45,7 +45,7 @@ class UpdateRecipeServiceTests : RecipeServiceTest() {
         val firestoreUpdateRecipeInfo = updateRecipeInfo.toFirestoreUpdateRecipeModel(RECIPE_ID)
 
         // mock
-        val jdbiRecipeModel = JdbiRecipeModel(
+        val mockJdbiRecipeModel = JdbiRecipeModel(
             RECIPE_ID,
             updateRecipeInfo.name!!,
             AUTHOR_ID,
@@ -64,14 +64,14 @@ class UpdateRecipeServiceTests : RecipeServiceTest() {
             1,
             recipePicturesNames,
         )
-        val firestoreRecipeModel = FirestoreRecipeModel(
+        val mockFirestoreRecipeModel = FirestoreRecipeModel(
             RECIPE_ID,
             updateRecipeInfo.description!!,
             updateRecipeInfo.instructions!!
         )
-        whenever(jdbiRecipeRepositoryMock.getRecipe(RECIPE_ID)).thenReturn(jdbiRecipeModel)
-        whenever(jdbiRecipeRepositoryMock.updateRecipe(jdbiUpdateRecipeInfo)).thenReturn(jdbiRecipeModel)
-        whenever(runBlocking { firestoreRecipeRepositoryMock.updateRecipe(firestoreUpdateRecipeInfo) }).thenReturn(firestoreRecipeModel)
+        whenever(jdbiRecipeRepositoryMock.getRecipe(RECIPE_ID)).thenReturn(mockJdbiRecipeModel)
+        whenever(jdbiRecipeRepositoryMock.updateRecipe(jdbiUpdateRecipeInfo)).thenReturn(mockJdbiRecipeModel)
+        whenever(runBlocking { firestoreRecipeRepositoryMock.updateRecipe(firestoreUpdateRecipeInfo) }).thenReturn(mockFirestoreRecipeModel)
 
         // when updating the recipe
         val updatedRecipe = runBlocking { recipeService.updateRecipe(AUTHOR_ID, RECIPE_ID, updateRecipeInfo) }
@@ -104,12 +104,10 @@ class UpdateRecipeServiceTests : RecipeServiceTest() {
         whenever(jdbiRecipeRepositoryMock.getRecipe(nonExistingRecipeId)).thenReturn(null)
 
         // when updating the recipe
-        val exception = assertFailsWith<RecipeNotFound> {
+        // then the recipe is not updated and throws RecipeNotFound exception
+        assertFailsWith<RecipeNotFound> {
             runBlocking { recipeService.updateRecipe(AUTHOR_ID, nonExistingRecipeId, updateRecipeInfo) }
         }
-
-        // then an exception is thrown
-        assertEquals(RecipeNotFound().message, exception.message)
     }
 
     @Test
@@ -121,11 +119,9 @@ class UpdateRecipeServiceTests : RecipeServiceTest() {
         whenever(jdbiRecipeRepositoryMock.getRecipe(RECIPE_ID)).thenReturn(jdbiRecipeModel)
 
         // when updating the recipe
-        val exception = assertFailsWith<NotTheAuthor> {
+        // then the recipe is not updated and throws NotTheAuthor exception
+        assertFailsWith<NotTheAuthor> {
             runBlocking { recipeService.updateRecipe(userId, RECIPE_ID, updateRecipeInfo) }
         }
-
-        // then an exception is thrown
-        assertEquals(NotTheAuthor().message, exception.message)
     }
 }
