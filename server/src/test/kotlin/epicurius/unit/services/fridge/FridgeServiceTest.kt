@@ -1,18 +1,22 @@
 package epicurius.unit.services.fridge
 
+import epicurius.domain.fridge.Product
+import epicurius.domain.fridge.ProductInfo
 import epicurius.domain.fridge.UpdateProductInfo
+import epicurius.http.fridge.models.input.OpenProductInputModel
 import epicurius.http.fridge.models.input.ProductInputModel
 import epicurius.http.fridge.models.input.UpdateProductInputModel
 import epicurius.unit.services.ServiceTest
 import java.time.LocalDate
+import java.time.Period
 
 open class FridgeServiceTest : ServiceTest() {
 
     companion object {
         const val USER_ID = 1
-        private const val PRODUCT_NAME = "apple"
+        const val PRODUCT_NAME = "apple"
         const val ENTRY_NUMBER = 1
-        private const val PRODUCT_QUANTITY = 1
+        const val PRODUCT_QUANTITY = 1
         private val openDate: LocalDate? = null
         private val expirationDate: LocalDate = LocalDate.now().plusDays(7)
         val productsList = listOf(
@@ -45,6 +49,45 @@ open class FridgeServiceTest : ServiceTest() {
             entryNumber = ENTRY_NUMBER,
             quantity = NEW_QUANTITY,
             expirationDate = newExpirationDate
+        )
+
+        // OPEN PRODUCT
+        val open: LocalDate = LocalDate.now()
+        val duration: Period = Period.ofDays(10)
+        val newExpiration: LocalDate = open.plus(duration)
+        const val NEW_ENTRY_NUMBER = ENTRY_NUMBER + 1
+
+        val openedProductInfo = ProductInfo(
+            productName = PRODUCT_NAME,
+            quantity = PRODUCT_QUANTITY,
+            openDate = open,
+            expirationDate = newExpiration
+        )
+
+        val openedProduct = Product(
+            productName = PRODUCT_NAME,
+            entryNumber = NEW_ENTRY_NUMBER,
+            quantity = PRODUCT_QUANTITY + 1,
+            openDate = open,
+            expirationDate = newExpiration
+        )
+
+        val openProductInputModel = OpenProductInputModel(
+            openDate = open,
+            duration = duration
+        )
+
+        val decreaseQuantity = UpdateProductInfo(
+            entryNumber = ENTRY_NUMBER,
+            quantity = 0,
+            expirationDate = expirationDate
+        )
+
+        val increaseQuantity = UpdateProductInfo(
+            entryNumber = NEW_ENTRY_NUMBER,
+            quantity = PRODUCT_QUANTITY + 1,
+            openDate = open,
+            expirationDate = newExpiration
         )
     }
 }
