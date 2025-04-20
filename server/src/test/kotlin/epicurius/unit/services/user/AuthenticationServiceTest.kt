@@ -1,11 +1,9 @@
 package epicurius.unit.services.user
 
-import epicurius.domain.PagingParams
 import epicurius.domain.exceptions.InvalidCountry
 import epicurius.domain.exceptions.InvalidToken
 import epicurius.domain.exceptions.PasswordsDoNotMatch
 import epicurius.domain.exceptions.UserAlreadyExists
-import epicurius.domain.user.SearchUser
 import epicurius.domain.user.User
 import epicurius.unit.services.ServiceTest
 import epicurius.utils.createTestUser
@@ -14,13 +12,10 @@ import epicurius.utils.generateRandomUsername
 import epicurius.utils.generateSecurePassword
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
-import java.util.UUID
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 import kotlin.test.assertNotNull
-import kotlin.test.assertNull
-import kotlin.test.assertTrue
 
 class AuthenticationServiceTest : ServiceTest() {
 

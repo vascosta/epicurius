@@ -20,8 +20,8 @@ import epicurius.repository.jdbi.recipe.models.JdbiRecipeModel
 import epicurius.repository.jdbi.recipe.models.JdbiUpdateRecipeModel
 import epicurius.repository.spoonacular.manager.SpoonacularManager
 import epicurius.repository.transaction.TransactionManager
-import epicurius.services.recipe.models.UpdateRecipePicturesModel
 import epicurius.services.recipe.models.UpdateRecipeModel
+import epicurius.services.recipe.models.UpdateRecipePicturesModel
 import org.springframework.stereotype.Component
 import org.springframework.web.multipart.MultipartFile
 

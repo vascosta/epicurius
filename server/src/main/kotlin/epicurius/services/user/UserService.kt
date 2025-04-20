@@ -21,13 +21,13 @@ import epicurius.domain.user.FollowUser
 import epicurius.domain.user.FollowingStatus
 import epicurius.domain.user.FollowingUser
 import epicurius.domain.user.SearchUser
-import epicurius.repository.jdbi.user.models.JdbiUpdateUserModel
 import epicurius.domain.user.User
 import epicurius.domain.user.UserDomain
 import epicurius.domain.user.UserInfo
 import epicurius.domain.user.UserProfile
 import epicurius.http.user.models.input.UpdateUserInputModel
 import epicurius.repository.cloudStorage.manager.CloudStorageManager
+import epicurius.repository.jdbi.user.models.JdbiUpdateUserModel
 import epicurius.repository.transaction.TransactionManager
 import org.springframework.stereotype.Component
 import org.springframework.web.multipart.MultipartFile

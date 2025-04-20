@@ -37,5 +37,4 @@ open class UserServiceTest : ServiceTest() {
         listOf(Diet.GLUTEN_FREE),
         randomUUID().toString()
     )
-
 }

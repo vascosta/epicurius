@@ -12,7 +12,7 @@ import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 import kotlin.test.assertNotNull
 
-class LoginServiceTests: UserServiceTest() {
+class LoginServiceTests : UserServiceTest() {
 
     @Test
     fun `Should login a user by name successfully`() {
@@ -76,7 +76,7 @@ class LoginServiceTests: UserServiceTest() {
         // when logging in
         // then the user cannot be logged in and throws UserNotFound exception
         assertFailsWith<UserNotFound> { login(username, password = password) }
-        assertFailsWith<UserNotFound> { login(email = email, password =  password) }
+        assertFailsWith<UserNotFound> { login(email = email, password = password) }
     }
 
     @Test

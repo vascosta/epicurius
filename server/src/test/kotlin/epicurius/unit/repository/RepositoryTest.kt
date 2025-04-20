@@ -9,9 +9,9 @@ import epicurius.domain.PagingParams
 import epicurius.domain.PictureDomain
 import epicurius.domain.fridge.ProductInfo
 import epicurius.domain.fridge.UpdateProductInfo
-import epicurius.repository.jdbi.user.models.JdbiUpdateUserModel
 import epicurius.repository.cloudStorage.manager.CloudStorageManager
 import epicurius.repository.firestore.FirestoreManager
+import epicurius.repository.jdbi.user.models.JdbiUpdateUserModel
 import epicurius.unit.EpicuriusUnitTest
 import org.springframework.web.multipart.MultipartFile
 import java.io.FileInputStream

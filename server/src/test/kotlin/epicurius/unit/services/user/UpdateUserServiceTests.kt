@@ -11,12 +11,11 @@ import epicurius.utils.generateEmail
 import epicurius.utils.generateRandomUsername
 import epicurius.utils.generateSecurePassword
 import org.mockito.kotlin.whenever
-import java.util.UUID.randomUUID
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 
-class UpdateUserServiceTests: UserServiceTest() {
+class UpdateUserServiceTests : UserServiceTest() {
 
     @Test
     fun `Should update a user successfully`() {
@@ -36,7 +35,7 @@ class UpdateUserServiceTests: UserServiceTest() {
 
         // mock
         val mockPasswordHash = userDomain.encodePassword(newPassword)
-        val mockUser = User (
+        val mockUser = User(
             testUser.id,
             updateUserInfo.name!!,
             updateUserInfo.email!!,

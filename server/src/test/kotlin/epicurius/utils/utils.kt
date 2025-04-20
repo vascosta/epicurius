@@ -12,13 +12,13 @@ import epicurius.domain.recipe.MealType
 import epicurius.domain.recipe.MealType.Companion.fromInt
 import epicurius.domain.recipe.Recipe
 import epicurius.domain.recipe.RecipeDomain
-import epicurius.repository.jdbi.user.models.JdbiUpdateUserModel
 import epicurius.domain.user.User
 import epicurius.domain.user.UserDomain.Companion.MAX_PASSWORD_LENGTH
 import epicurius.domain.user.UserDomain.Companion.MAX_USERNAME_LENGTH
 import epicurius.repository.firestore.FirestoreManager
 import epicurius.repository.firestore.recipe.models.FirestoreRecipeModel
 import epicurius.repository.jdbi.recipe.models.JdbiCreateRecipeModel
+import epicurius.repository.jdbi.user.models.JdbiUpdateUserModel
 import epicurius.repository.transaction.TransactionManager
 import java.util.UUID.randomUUID
 

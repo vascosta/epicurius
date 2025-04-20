@@ -7,7 +7,7 @@ import org.mockito.kotlin.whenever
 import kotlin.test.Test
 import kotlin.test.assertFailsWith
 
-class ResetPasswordServiceTests: UserServiceTest() {
+class ResetPasswordServiceTests : UserServiceTest() {
 
     @Test
     fun `Should reset a user's password successfully`() {

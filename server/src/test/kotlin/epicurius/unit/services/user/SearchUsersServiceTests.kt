@@ -2,7 +2,6 @@ package epicurius.unit.services.user
 
 import epicurius.domain.PagingParams
 import epicurius.domain.PictureDomain
-import epicurius.domain.user.SearchUser
 import epicurius.repository.jdbi.user.models.SearchUserModel
 import org.mockito.kotlin.whenever
 import kotlin.test.Test
@@ -10,7 +9,7 @@ import kotlin.test.assertContentEquals
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
-class SearchUsersServiceTests: UserServiceTest() {
+class SearchUsersServiceTests : UserServiceTest() {
 
     @Test
     fun `Should search for users and retrieve them successfully`() {
