@@ -5,6 +5,7 @@ import epicurius.domain.Intolerance
 import epicurius.domain.recipe.Cuisine
 import epicurius.domain.recipe.MealType
 import epicurius.domain.user.AuthenticatedUser
+import epicurius.http.fridge.models.input.ProductInputModel
 import epicurius.http.recipe.models.input.UpdateRecipeInputModel
 import epicurius.unit.EpicuriusUnitTest
 import org.springframework.web.multipart.MultipartFile
@@ -15,6 +16,16 @@ open class HttpTest : EpicuriusUnitTest() {
         // USER
 
         // FRIDGE
+        fun getFridge(authenticatedUser: AuthenticatedUser) = fridgeController.getFridge(authenticatedUser)
+
+        suspend fun getProductsList(authenticatedUser: AuthenticatedUser, partialName: String) =
+            fridgeController.getProductsList(authenticatedUser, partialName)
+
+        suspend fun addProducts(authenticatedUser: AuthenticatedUser, product: ProductInputModel) =
+            fridgeController.addProducts(authenticatedUser, product)
+
+        fun removeFridgeProduct(authenticatedUser: AuthenticatedUser, entryNumber: Int) =
+            fridgeController.removeFridgeProduct(authenticatedUser, entryNumber)
 
         // RECIPE
         suspend fun getRecipe(authenticatedUser: AuthenticatedUser, id: Int) =

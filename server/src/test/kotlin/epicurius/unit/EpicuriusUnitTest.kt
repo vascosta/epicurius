@@ -5,6 +5,7 @@ import epicurius.domain.PictureDomain
 import epicurius.domain.fridge.FridgeDomain
 import epicurius.domain.user.CountriesDomain
 import epicurius.domain.user.UserDomain
+import epicurius.http.fridge.FridgeController
 import epicurius.http.recipe.RecipeController
 import epicurius.repository.cloudFunction.manager.CloudFunctionManager
 import epicurius.repository.cloudStorage.manager.CloudStorageManager
@@ -77,7 +78,11 @@ open class EpicuriusUnitTest : EpicuriusTest() {
         val fridgeDomainMock: FridgeDomain = mock()
 
         val userService = UserService(transactionManagerMock, cloudStorageManagerMock, userDomainMock, pictureDomainMock, countriesDomainMock)
+
         val fridgeService = FridgeService(transactionManagerMock, spoonacularStorageManagerMock, fridgeDomainMock)
+        val fridgeServiceMock: FridgeService = mock()
+        val fridgeController = FridgeController(fridgeServiceMock)
+
         val recipeService = RecipeService(
             transactionManagerMock, firestoreManagerMock, cloudStorageManagerMock, spoonacularStorageManagerMock, cloudFunctionManager, pictureDomainMock
         )
