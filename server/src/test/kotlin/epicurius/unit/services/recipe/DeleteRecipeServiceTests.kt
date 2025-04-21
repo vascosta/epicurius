@@ -19,7 +19,7 @@ class DeleteRecipeServiceTests : RecipeServiceTest() {
 
         // when deleting the recipe
         // then the recipe is deleted successfully
-        recipeService.deleteRecipe(AUTHOR_ID, RECIPE_ID)
+        deleteRecipe(AUTHOR_ID, RECIPE_ID)
         verify(jdbiRecipeRepositoryMock).deleteRecipe(RECIPE_ID)
         verify(firestoreRecipeRepositoryMock).deleteRecipe(RECIPE_ID)
     }
@@ -35,7 +35,7 @@ class DeleteRecipeServiceTests : RecipeServiceTest() {
         // when deleting the recipe
         // then the recipe is not deleted and throws RecipeNotFound exception
         assertFailsWith<RecipeNotFound> {
-            recipeService.deleteRecipe(AUTHOR_ID, nonExistingRecipeId)
+            deleteRecipe(AUTHOR_ID, nonExistingRecipeId)
         }
     }
 
@@ -50,7 +50,7 @@ class DeleteRecipeServiceTests : RecipeServiceTest() {
         // when deleting the recipe
         // then the recipe is not deleted and throws NotTheAuthor exception
         assertFailsWith<NotTheAuthor> {
-            runBlocking { recipeService.deleteRecipe(userId, RECIPE_ID) }
+            runBlocking { deleteRecipe(userId, RECIPE_ID) }
         }
     }
 }

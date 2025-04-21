@@ -41,13 +41,7 @@ class UserService(
     private val pictureDomain: PictureDomain,
     private val countriesDomain: CountriesDomain
 ) {
-    fun createUser(
-        name: String,
-        email: String,
-        country: String,
-        password: String,
-        confirmPassword: String
-    ): String {
+    fun createUser(name: String, email: String, country: String, password: String, confirmPassword: String): String {
         if (checkIfUserExists(name, email) != null) throw UserAlreadyExists()
         if (!countriesDomain.checkIfCountryCodeIsValid(country)) throw InvalidCountry()
         checkIfPasswordsMatch(password, confirmPassword)

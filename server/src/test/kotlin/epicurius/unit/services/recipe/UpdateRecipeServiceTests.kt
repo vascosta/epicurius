@@ -74,7 +74,7 @@ class UpdateRecipeServiceTests : RecipeServiceTest() {
         whenever(runBlocking { firestoreRecipeRepositoryMock.updateRecipe(firestoreUpdateRecipeInfo) }).thenReturn(mockFirestoreRecipeModel)
 
         // when updating the recipe
-        val updatedRecipe = runBlocking { recipeService.updateRecipe(AUTHOR_ID, RECIPE_ID, updateRecipeInfo) }
+        val updatedRecipe = runBlocking { updateRecipe(AUTHOR_ID, RECIPE_ID, updateRecipeInfo) }
 
         // then the recipe is updated successfully
         assertEquals(RECIPE_ID, updatedRecipe.id)
@@ -106,7 +106,7 @@ class UpdateRecipeServiceTests : RecipeServiceTest() {
         // when updating the recipe
         // then the recipe is not updated and throws RecipeNotFound exception
         assertFailsWith<RecipeNotFound> {
-            runBlocking { recipeService.updateRecipe(AUTHOR_ID, nonExistingRecipeId, updateRecipeInfo) }
+            runBlocking { updateRecipe(AUTHOR_ID, nonExistingRecipeId, updateRecipeInfo) }
         }
     }
 
@@ -121,7 +121,7 @@ class UpdateRecipeServiceTests : RecipeServiceTest() {
         // when updating the recipe
         // then the recipe is not updated and throws NotTheAuthor exception
         assertFailsWith<NotTheAuthor> {
-            runBlocking { recipeService.updateRecipe(userId, RECIPE_ID, updateRecipeInfo) }
+            runBlocking { updateRecipe(userId, RECIPE_ID, updateRecipeInfo) }
         }
     }
 }

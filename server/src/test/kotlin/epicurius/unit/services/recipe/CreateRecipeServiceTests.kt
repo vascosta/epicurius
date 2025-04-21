@@ -41,7 +41,7 @@ class CreateRecipeServiceTests : RecipeServiceTest() {
         ).thenReturn(RECIPE_ID)
 
         // when creating the recipe
-        val recipe = recipeService.createRecipe(AUTHOR_ID, authorName, createRecipeInfo, recipePictures)
+        val recipe = createRecipe(AUTHOR_ID, authorName, createRecipeInfo, recipePictures)
         verify(firestoreRecipeRepositoryMock).createRecipe(firestoreRecipeInfo)
         verify(pictureRepositoryMock).updatePicture(recipePicturesNames.first(), recipePictures.first(), RECIPES_FOLDER)
 
@@ -73,7 +73,7 @@ class CreateRecipeServiceTests : RecipeServiceTest() {
         // when creating the recipe with invalid number of pictures
         // then the recipe is not created and throws InvalidNumberOfRecipePictures exception
         assertFailsWith<InvalidNumberOfRecipePictures> {
-            recipeService.createRecipe(AUTHOR_ID, authorName, createRecipeInfo, invalidList)
+            createRecipe(AUTHOR_ID, authorName, createRecipeInfo, invalidList)
         }
     }
 }

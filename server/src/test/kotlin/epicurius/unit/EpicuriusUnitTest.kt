@@ -78,16 +78,15 @@ open class EpicuriusUnitTest : EpicuriusTest() {
         val fridgeDomainMock: FridgeDomain = mock()
 
         val userService = UserService(transactionManagerMock, cloudStorageManagerMock, userDomainMock, pictureDomainMock, countriesDomainMock)
-
         val fridgeService = FridgeService(transactionManagerMock, spoonacularStorageManagerMock, fridgeDomainMock)
-        val fridgeServiceMock: FridgeService = mock()
-        val fridgeController = FridgeController(fridgeServiceMock)
-
         val recipeService = RecipeService(
             transactionManagerMock, firestoreManagerMock, cloudStorageManagerMock, spoonacularStorageManagerMock, cloudFunctionManager, pictureDomainMock
         )
 
+        val fridgeServiceMock: FridgeService = mock()
         val recipeServiceMock: RecipeService = mock()
+
+        val fridgeController = FridgeController(fridgeServiceMock)
         val recipeController = RecipeController(recipeServiceMock)
     }
 }

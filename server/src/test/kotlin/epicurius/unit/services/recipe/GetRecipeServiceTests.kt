@@ -21,7 +21,7 @@ class GetRecipeServiceTests : RecipeServiceTest() {
         whenever(pictureRepositoryMock.getPicture(testPicture.name, RECIPES_FOLDER)).thenReturn(testPicture.bytes)
 
         // when retrieving the recipe
-        val recipe = runBlocking { recipeService.getRecipe(RECIPE_ID) }
+        val recipe = runBlocking { getRecipe(RECIPE_ID) }
 
         // then the recipe is retrieved successfully
         assertEquals(RECIPE_ID, recipe.id)
@@ -55,7 +55,7 @@ class GetRecipeServiceTests : RecipeServiceTest() {
 
         // when retrieving the recipe
         // then the recipe is not retrieved and throws RecipeNotFound exception
-        assertFailsWith<RecipeNotFound> { runBlocking { recipeService.getRecipe(nonExistingRecipeId) } } // jdbi
-        assertFailsWith<RecipeNotFound> { runBlocking { recipeService.getRecipe(nonExistingRecipeId) } } // firestore
+        assertFailsWith<RecipeNotFound> { runBlocking { getRecipe(nonExistingRecipeId) } } // jdbi
+        assertFailsWith<RecipeNotFound> { runBlocking { getRecipe(nonExistingRecipeId) } } // firestore
     }
 }
