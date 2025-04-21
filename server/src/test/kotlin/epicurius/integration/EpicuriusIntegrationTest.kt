@@ -79,7 +79,7 @@ class EpicuriusIntegrationTest : EpicuriusTest() {
             client,
             api(Uris.User.SIGNUP),
             mapOf(
-                "username" to username,
+                "name" to username,
                 "email" to email,
                 "password" to password,
                 "confirmPassword" to password,

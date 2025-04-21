@@ -39,10 +39,11 @@ class OpenFridgeProductHttpTests : FridgeHttpTest() {
         val productToOpen = product.copy(quantity = 2)
         val openedProduct = product.copy(
             entryNumber = NEW_ENTRY_NUMBER,
+            quantity = 1,
             openDate = openProductInputModel.openDate,
             expirationDate = openProductInputModel.openDate.plus(openProductInputModel.duration)
         )
-        val newFridge = Fridge(listOf(productToOpen.copy(quantity = 1), openedProduct))
+        val newFridge = Fridge(listOf(productToOpen.copy(quantity = 1), openedProduct.copy(quantity = 2)))
 
         // mock
         whenever(
