@@ -6,11 +6,14 @@ import epicurius.domain.Intolerance
 import epicurius.domain.fridge.Product
 import epicurius.domain.user.AuthenticatedUser
 import epicurius.domain.user.User
+import epicurius.http.fridge.models.input.OpenProductInputModel
 import epicurius.http.fridge.models.input.ProductInputModel
+import epicurius.http.fridge.models.input.UpdateProductInputModel
 import epicurius.unit.http.HttpTest
 import epicurius.utils.generateEmail
 import epicurius.utils.generateRandomUsername
 import java.time.LocalDate
+import java.time.Period
 import java.util.UUID.randomUUID
 
 open class FridgeHttpTest : HttpTest() {
@@ -51,6 +54,7 @@ open class FridgeHttpTest : HttpTest() {
         )
 
         const val ENTRY_NUMBER = 1
+        const val NEW_ENTRY_NUMBER = 2
 
         val product = Product(
             productName = "apple",
@@ -65,6 +69,21 @@ open class FridgeHttpTest : HttpTest() {
             productName = "apple",
             quantity = 1,
             expirationDate = LocalDate.now().plusDays(7)
+        )
+
+        // UPDATE PRODUCT
+        const val NEW_QUANTITY = 2
+        val newExpirationDate: LocalDate = LocalDate.now().plusDays(10)
+
+        val updateProductInputModel = UpdateProductInputModel(
+            quantity = NEW_QUANTITY,
+            expirationDate = newExpirationDate
+        )
+
+        // OPEN PRODUCT
+        val openProductInputModel = OpenProductInputModel(
+            openDate = LocalDate.now(),
+            duration = Period.ofDays(7)
         )
     }
 }
