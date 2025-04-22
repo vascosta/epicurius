@@ -1,6 +1,5 @@
 const express = require("express");
 const vision = require("@google-cloud/vision");
-const axios = require("axios");
 
 const app = express();
 app.use(express.json());

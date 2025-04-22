@@ -108,21 +108,6 @@ class RecipeService(
         }
     }
 
-    suspend fun getIngredientsFromPicture(picture: MultipartFile): List<String> {
-        pictureDomain.validatePicture(picture)
-        val pictureName = pictureDomain.generatePictureName() + "." + picture.contentType?.substringAfter("/")
-        cs.pictureRepository.updatePicture(pictureName, picture, INGREDIENTS_FOLDER)
-
-        val ingredients = cf.cloudFunctionRepository.getIngredientsFromPicture(pictureName)
-        val validIngredients = ingredients.filter { ingredient ->
-            sm.spoonacularRepository.getProductsList(ingredient).contains(ingredient)
-        }
-
-        cs.pictureRepository.deletePicture(pictureName, INGREDIENTS_FOLDER)
-
-        return validIngredients
-    }
-
     suspend fun updateRecipe(userId: Int, recipeId: Int, recipeInfo: UpdateRecipeInputModel): UpdateRecipeModel {
         val jdbiRecipeModel = checkIfRecipeExists(recipeId) ?: throw RecipeNotFound()
         checkIfUserIsAuthor(userId, jdbiRecipeModel.authorId)

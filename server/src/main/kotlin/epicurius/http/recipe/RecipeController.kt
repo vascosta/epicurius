@@ -86,14 +86,6 @@ class RecipeController(private val recipeService: RecipeService) {
         return ResponseEntity.ok().body(SearchRecipesOutputModel(results))
     }
 
-    @PostMapping(Uris.Ingredient.INGREDIENTS)
-    suspend fun getIngredientsFromPicture(
-        @RequestPart("picture") picture: MultipartFile,
-    ): ResponseEntity<*> {
-        val ingredients = recipeService.getIngredientsFromPicture(picture)
-        return ResponseEntity.ok().body(GetIngredientsFromPictureOutputModel(ingredients))
-    }
-
     @PostMapping(Uris.Recipe.RECIPES, consumes = [MediaType.MULTIPART_FORM_DATA_VALUE])
     fun createRecipe(
         authenticatedUser: AuthenticatedUser,

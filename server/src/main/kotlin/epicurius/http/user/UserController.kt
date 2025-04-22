@@ -22,6 +22,7 @@ import epicurius.http.utils.Uris
 import epicurius.services.user.UserService
 import jakarta.servlet.http.HttpServletResponse
 import jakarta.validation.Valid
+import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
@@ -142,7 +143,7 @@ class UserController(val userService: UserService) {
         )
     }
 
-    @PatchMapping(Uris.User.USER_PICTURE)
+    @PatchMapping(Uris.User.USER_PICTURE, consumes = [MediaType.MULTIPART_FORM_DATA_VALUE])
     fun updateProfilePicture(
         authenticatedUser: AuthenticatedUser,
         @RequestPart("profilePicture", required = false) profilePicture: MultipartFile?

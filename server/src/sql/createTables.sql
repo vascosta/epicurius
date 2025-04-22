@@ -61,11 +61,11 @@ create table dbo.recipe_rating(
 );
 
 create table dbo.ingredient(
-    id serial primary key,
     recipe_id int not null,
     name varchar(20) not null,
     quantity int not null,
     unit int not null,
+    primary key (recipe_id, name)
     foreign key (recipe_id) references dbo.recipe(id)
 );
 
