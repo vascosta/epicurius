@@ -3,7 +3,6 @@ package epicurius.http.ingredients
 import epicurius.http.recipe.models.output.GetIngredientsFromPictureOutputModel
 import epicurius.http.utils.Uris
 import epicurius.services.ingredients.IngredientsService
-import epicurius.services.recipe.RecipeService
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.PostMapping

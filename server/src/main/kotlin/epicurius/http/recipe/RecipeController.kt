@@ -10,7 +10,6 @@ import epicurius.http.recipe.models.input.CreateRecipeInputModel
 import epicurius.http.recipe.models.input.SearchRecipesInputModel
 import epicurius.http.recipe.models.input.UpdateRecipeInputModel
 import epicurius.http.recipe.models.output.CreateRecipeOutputModel
-import epicurius.http.recipe.models.output.GetIngredientsFromPictureOutputModel
 import epicurius.http.recipe.models.output.GetRecipeOutputModel
 import epicurius.http.recipe.models.output.SearchRecipesOutputModel
 import epicurius.http.recipe.models.output.UpdateRecipeOutputModel

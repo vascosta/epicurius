@@ -10,7 +10,7 @@ import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 import kotlin.test.assertTrue
 
-class GetUserProfileServiceTests: UserServiceTest() {
+class GetUserProfileServiceTests : UserServiceTest() {
 
     @Test
     fun `Should retrieve the user profile successfully`() {

@@ -1,95 +1,66 @@
 package epicurius.unit.repository.user
 
-import epicurius.domain.Diet
-import epicurius.domain.Intolerance
+import epicurius.domain.PagingParams
 import epicurius.repository.jdbi.user.models.JdbiUpdateUserModel
 import epicurius.unit.repository.RepositoryTest
 import epicurius.utils.createTestUser
-import epicurius.utils.generateEmail
-import epicurius.utils.generateRandomUsername
-import epicurius.utils.generateSecurePassword
-import java.util.UUID
-import kotlin.test.Test
-import kotlin.test.assertContentEquals
-import kotlin.test.assertEquals
-import kotlin.test.assertFailsWith
-import kotlin.test.assertNotNull
 
-class UserRepositoryTest : RepositoryTest() {
+open class UserRepositoryTest : RepositoryTest() {
 
-    @Test
-    fun `Adds a profile picture to the Cloud Storage, retrieves it and then deletes it successfully`() {
-        // given a profile picture
-        val profilePicture = testPicture
-        val profilePictureName = UUID.randomUUID().toString()
+    companion object {
 
-        // when adding a profile picture
-        updateProfilePicture(profilePictureName, profilePicture)
+        val publicTestUser = createTestUser(tm)
+        val privateTestUser = createTestUser(tm, false)
 
-        // then the profile picture is added successfully
-        val newProfilePicture = getProfilePicture(profilePictureName)
-        assertNotNull(newProfilePicture)
-        assertContentEquals(profilePicture.bytes, newProfilePicture)
+        fun createUser(username: String, email: String, country: String, passwordHash: String) =
+            tm.run { it.userRepository.createUser(username, email, country, passwordHash) }
 
-        // when deleting the profile picture
-        deleteProfilePicture(profilePictureName)
+        fun getUserByName(username: String) = tm.run { it.userRepository.getUser(username) }
+        fun getUserByEmail(email: String) = tm.run { it.userRepository.getUser(email = email) }
+        fun getUserByTokenHash(tokenHash: String) = tm.run { it.userRepository.getUser(tokenHash = tokenHash) }
 
-        // then the profile picture is deleted successfully
-        assertFailsWith<NullPointerException> { getProfilePicture(profilePictureName) }
-    }
+        fun searchUsers(partialUsername: String, pagingParams: PagingParams) =
+            tm.run { it.userRepository.searchUsers(partialUsername, pagingParams) }
 
-    @Test
-    fun `Updates a profile picture already in the Cloud Storage and then retrieves it successfully`() {
-        // given a profile picture in the Cloud Storage
-        val profilePicture = testPicture
-        val profilePictureName = UUID.randomUUID().toString()
-        updateProfilePicture(profilePictureName, profilePicture)
+        fun getFollowers(userId: Int) = tm.run { it.userRepository.getFollowers(userId) }
+        fun getFollowing(userId: Int) = tm.run { it.userRepository.getFollowing(userId) }
+        fun getFollowRequests(userId: Int) = tm.run { it.userRepository.getFollowRequests(userId) }
 
-        // when updating the profile picture
-        val newProfilePicture = testPicture2
-        updateProfilePicture(profilePictureName, newProfilePicture)
+        fun updateUser(username: String, userUpdate: JdbiUpdateUserModel) =
+            tm.run {
+                it.userRepository.updateUser(
+                    username,
+                    JdbiUpdateUserModel(
+                        userUpdate.name,
+                        userUpdate.email,
+                        userUpdate.country,
+                        userUpdate.passwordHash,
+                        userUpdate.privacy,
+                        userUpdate.intolerances,
+                        userUpdate.diets
+                    )
+                )
+            }
 
-        // then the profile picture is updated successfully
-        val updatedProfilePicture = getProfilePicture(profilePictureName)
-        assertNotNull(newProfilePicture)
-        assertContentEquals(newProfilePicture.bytes, updatedProfilePicture)
-    }
+        fun resetPassword(email: String, passwordHash: String) =
+            tm.run { it.userRepository.resetPassword(email, passwordHash) }
 
-    @Test
-    fun `Update user successfully`() {
-        // given user required information
-        val user = createTestUser(tm)
+        fun follow(userId: Int, userIdToFollow: Int, status: Int) =
+            tm.run { it.userRepository.followUser(userId, userIdToFollow, status) }
 
-        // when updating the user
-        val newUsername = generateRandomUsername()
-        val newEmail = generateEmail(newUsername)
-        val newCountry = "ES"
-        val newPassword = generateSecurePassword()
-        val newPasswordHash = userDomain.encodePassword(newPassword)
-        val newPrivacy = true
-        val newIntolerances = listOf(Intolerance.GLUTEN)
-        val newDiet = listOf(Diet.VEGAN)
+        fun unfollow(userId: Int, userIdToUnfollow: Int) =
+            tm.run { it.userRepository.unfollowUser(userId, userIdToUnfollow) }
 
-        val updatedUser = updateUser(
-            user.name,
-            JdbiUpdateUserModel(
-                name = newUsername,
-                email = newEmail,
-                country = newCountry,
-                passwordHash = newPasswordHash,
-                privacy = newPrivacy,
-                intolerances = newIntolerances.map { Intolerance.entries.indexOf(it) },
-                diets = newDiet.map { Diet.entries.indexOf(it) }
-            )
-        )
+        fun cancelFollowRequest(userId: Int, userIdToCancelFollowRequest: Int) =
+            tm.run { it.userRepository.cancelFollowRequest(userId, userIdToCancelFollowRequest) }
 
-        // then the user is updated successfully
-        assertEquals(newUsername, updatedUser.name)
-        assertEquals(newEmail, updatedUser.email)
-        assertEquals(newCountry, updatedUser.country)
-        assertEquals(newPasswordHash, updatedUser.passwordHash)
-        assertEquals(newPrivacy, updatedUser.privacy)
-        assertEquals(newIntolerances, updatedUser.intolerances)
-        assertEquals(newDiet, updatedUser.diets)
+        fun checkIfUserIsLoggedIn(username: String? = null, email: String? = null) =
+            tm.run { it.userRepository.checkIfUserIsLoggedIn(username, email) }
+
+        fun checkIfUserIsBeingFollowedBy(userId: Int, followerId: Int) =
+            tm.run { it.userRepository.checkIfUserIsBeingFollowedBy(userId, followerId) }
+
+        fun checkIfUserAlreadySentFollowRequest(userId: Int, followerId: Int) =
+            tm.run { it.userRepository.checkIfUserAlreadySentFollowRequest(userId, followerId) }
     }
 }

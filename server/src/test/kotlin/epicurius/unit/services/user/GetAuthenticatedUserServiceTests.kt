@@ -61,5 +61,4 @@ class GetAuthenticatedUserServiceTests : UserServiceTest() {
         // then the user is not retrieved and throws InvalidToken exception
         assertFailsWith<InvalidToken> { getAuthenticatedUser(invalidToken) }
     }
-
 }

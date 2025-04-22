@@ -8,8 +8,6 @@ import epicurius.domain.recipe.IngredientUnit
 import epicurius.domain.recipe.Instructions
 import epicurius.domain.recipe.MealType
 import epicurius.http.recipe.models.input.CreateRecipeInputModel
-import epicurius.http.recipe.models.input.SearchRecipesInputModel
-import epicurius.repository.jdbi.recipe.models.JdbiRecipeInfo
 import epicurius.repository.jdbi.recipe.models.JdbiRecipeModel
 import epicurius.unit.services.ServiceTest
 import epicurius.utils.generateRandomUsername

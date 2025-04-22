@@ -34,6 +34,9 @@ fun createTestUser(tm: TransactionManager, privacy: Boolean = false): User {
         tm.run { it.userRepository.updateUser(username, JdbiUpdateUserModel(privacy = true)) }
     }
 
+    val tokenHash = userDomain.hashToken(randomUUID().toString())
+    tm.run { it.tokenRepository.createToken(tokenHash, username) }
+
     return tm.run { it.userRepository.getUser(username) } ?: throw Exception("User not created")
 }
 

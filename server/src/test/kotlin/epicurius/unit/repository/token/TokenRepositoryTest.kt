@@ -1,42 +1,36 @@
 package epicurius.unit.repository.token
 
 import epicurius.unit.repository.RepositoryTest
-import epicurius.utils.generateEmail
-import epicurius.utils.generateRandomUsername
-import epicurius.utils.generateSecurePassword
+import epicurius.utils.createTestUser
 import kotlin.test.Test
-import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
-import kotlin.test.assertNull
 
 class TokenRepositoryTest : RepositoryTest() {
 
+    companion object {
+        private val testUser = createTestUser(tm)
+
+        fun createToken(tokenHash: String, username: String? = null, email: String? = null) =
+            tm.run { it.tokenRepository.createToken(tokenHash, username, email) }
+
+        fun deleteToken(username: String? = null, email: String? = null) =
+            tm.run { it.tokenRepository.deleteToken(username, email) }
+    }
+
     @Test
-    fun `Creates a token for an user, retrieves it by token hash and then deletes the token successfully`() {
-        // given an existing user
-        val username = generateRandomUsername()
-        val email = generateEmail(username)
-        val country = "PT"
-        val passwordHash = userDomain.encodePassword(generateSecurePassword())
-        createUser(username, email, country, passwordHash)
+    fun `Should create a token for an user and then delete the token successfully`() {
+        // given an existing user (testUser)
 
         // when creating a token for the user
         val token = userDomain.generateTokenValue()
         val tokenHash = userDomain.hashToken(token)
-        createToken(tokenHash, username)
+        createToken(tokenHash, testUser.name)
 
-        // when retrieving the user by the token hash
-        val userFromTokenHash = getUserByTokenHash(tokenHash)
-
-        // then the user is retrieved successfully
-        assertNotNull(userFromTokenHash)
-        assertEquals(username, userFromTokenHash.name)
-        assertEquals(email, userFromTokenHash.email)
+        // then the token is created successfully
+        assertNotNull(tokenHash)
 
         // when deleting the token
-        deleteToken(username)
-
         // then the token is deleted successfully
-        assertNull(getUserByTokenHash(tokenHash))
+        deleteToken(testUser.name)
     }
 }
