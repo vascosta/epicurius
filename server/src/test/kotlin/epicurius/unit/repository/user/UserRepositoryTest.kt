@@ -8,7 +8,6 @@ import epicurius.utils.createTestUser
 open class UserRepositoryTest : RepositoryTest() {
 
     companion object {
-
         val publicTestUser = createTestUser(tm)
         val privateTestUser = createTestUser(tm, false)
 

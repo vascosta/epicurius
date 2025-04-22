@@ -22,7 +22,7 @@ class CreateUserServiceTests : UserServiceTest() {
 
     @Test
     fun `Should create new user and retrieve it successfully`() {
-        // given user required information (username, email, country, password)
+        // given information to create a user (username, email, country, password)
         val passwordHash = userDomain.encodePassword(password)
         val token = userDomain.generateTokenValue()
         val tokenHash = userDomain.hashToken(token)
@@ -57,19 +57,19 @@ class CreateUserServiceTests : UserServiceTest() {
         whenever(jdbiUserRepositoryMock.getUser(testUsername, testUser.email)).thenReturn(testUser)
 
         // when creating a user with an existing username
-        // then the user cannot be created and throws UserAlreadyExists Exception
+        // then the user cannot be created and throws UserAlreadyExists exception
         assertFailsWith<UserAlreadyExists> {
             createUser(testUsername, randomEmail, "PT", password, password)
         }
 
         // when creating a user with an existing email
-        // then the user cannot be created and throws UserAlreadyExists Exception
+        // then the user cannot be created and throws UserAlreadyExists exception
         assertFailsWith<UserAlreadyExists> {
             createUser(randomUsername, testUser.email, "PT", password, password)
         }
 
         // when creating a user with an existing username and email
-        // then the user cannot be created and throws UserAlreadyExists Exception
+        // then the user cannot be created and throws UserAlreadyExists exception
         assertFailsWith<UserAlreadyExists> {
             createUser(testUsername, testUser.email, "PT", password, password)
         }

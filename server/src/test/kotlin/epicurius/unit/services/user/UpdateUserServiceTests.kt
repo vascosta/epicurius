@@ -75,7 +75,7 @@ class UpdateUserServiceTests : UserServiceTest() {
         whenever(jdbiUserRepositoryMock.getUser(testUsername2, testUser2.email)).thenReturn(testUser)
 
         // when updating the user with an existing username
-        // then the user cannot be updated and an exception is thrown
+        // then the user cannot be updated and throws UserAlreadyExists exception
         assertFailsWith<UserAlreadyExists> {
             updateUser(
                 testUser.name,
@@ -86,7 +86,7 @@ class UpdateUserServiceTests : UserServiceTest() {
         }
 
         // when updating the user with an existing email
-        // then the user cannot be updated and an exception is thrown
+        // then the user cannot be updated and throws UserAlreadyExists exception
         assertFailsWith<UserAlreadyExists> {
             updateUser(
                 testUser.name,
@@ -97,7 +97,7 @@ class UpdateUserServiceTests : UserServiceTest() {
         }
 
         // when updating the user with an existing username and email
-        // then the user cannot be updated and an exception is thrown
+        // then the user cannot be updated and throws UserAlreadyExists exception
         assertFailsWith<UserAlreadyExists> {
             updateUser(
                 testUser.name,

@@ -44,7 +44,7 @@ class GetUserProfileServiceTests : UserServiceTest() {
         whenever(jdbiUserRepositoryMock.getUser(nonExistingUsername)).thenReturn(null)
 
         // when getting the user profile
-        // then the user profile cannot be retrieved and throws UserNotFound Exception
+        // then the user profile cannot be retrieved and throws UserNotFound exception
         assertFailsWith<UserNotFound> { getUserProfile(nonExistingUsername) }
     }
 }

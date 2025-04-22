@@ -27,7 +27,7 @@ class SearchRecipesRepositoryTests : RecipeRepositoryTest() {
         assertEquals(1, nameResults.size)
         assertEquals(testRecipe.name, nameResults[0].name)
 
-        // when searching for the recipe by a different name
+        // when searching for a nonexistent recipe name
         val searchDifferentName = SearchRecipesModel(name = "Nonexistent Recipe")
         val differentNameResults = searchRecipes(testUser.id, searchDifferentName)
 

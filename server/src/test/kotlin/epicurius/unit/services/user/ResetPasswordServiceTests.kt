@@ -32,7 +32,7 @@ class ResetPasswordServiceTests : UserServiceTest() {
         val password2 = generateSecurePassword()
 
         // when resetting the password with different passwords
-        // then the password cannot be reset and throws PasswordsDoNotMatch Exception
+        // then the password cannot be reset and throws PasswordsDoNotMatch exception
         assertFailsWith<PasswordsDoNotMatch> {
             resetPassword(testUser.email, password1, password2)
         }
