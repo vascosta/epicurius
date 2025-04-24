@@ -23,8 +23,8 @@ class UpdateUserRepositoryTests : UserRepositoryTest() {
         val newPassword = generateSecurePassword()
         val newPasswordHash = userDomain.encodePassword(newPassword)
         val newPrivacy = true
-        val newIntolerances = listOf(Intolerance.GLUTEN)
-        val newDiet = listOf(Diet.VEGAN)
+        val newIntolerances = setOf(Intolerance.GLUTEN)
+        val newDiet = setOf(Diet.VEGAN)
 
         // when updating the user (testUser)
         val updatedUser = updateUser(

@@ -32,8 +32,8 @@ class CreateUserRepositoryTests : UserRepositoryTest() {
         assertEquals(country, userByName.country)
         assertEquals(passwordHash, userByName.passwordHash)
         assertFalse(userByName.privacy)
-        assertEquals(emptyList(), userByName.intolerances)
-        assertEquals(emptyList(), userByName.diets)
+        assertEquals(emptySet(), userByName.intolerances)
+        assertEquals(emptySet(), userByName.diets)
         assertNull(userByName.profilePictureName)
     }
 }

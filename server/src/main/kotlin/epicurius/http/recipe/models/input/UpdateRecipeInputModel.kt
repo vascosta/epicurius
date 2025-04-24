@@ -7,6 +7,7 @@ import epicurius.domain.recipe.Ingredient
 import epicurius.domain.recipe.Instructions
 import epicurius.domain.recipe.MealType
 import epicurius.domain.recipe.RecipeDomain
+import epicurius.domain.user.UserDomain
 import epicurius.repository.firestore.recipe.models.FirestoreUpdateRecipeModel
 import epicurius.repository.jdbi.recipe.models.JdbiUpdateRecipeModel
 import jakarta.validation.constraints.Size
@@ -22,8 +23,8 @@ data class UpdateRecipeInputModel(
     val preparationTime: Int? = null,
     val cuisine: Cuisine? = null,
     val mealType: MealType? = null,
-    val intolerances: List<Intolerance>? = null,
-    val diets: List<Diet>? = null,
+    val intolerances: Set<Intolerance>? = null,
+    val diets: Set<Diet>? = null,
     val ingredients: List<Ingredient>? = null,
     val calories: Int? = null,
     val protein: Int? = null,
@@ -31,6 +32,16 @@ data class UpdateRecipeInputModel(
     val carbs: Int? = null,
     val instructions: Instructions? = null,
 ) {
+    init {
+        if (intolerances != null && intolerances.size > UserDomain.MAX_INTOLERANCE_SIZE) {
+            throw IllegalArgumentException(UserDomain.MAX_INTOLERANCE_SIZE_MSG)
+        }
+
+        if (diets != null && diets.size > UserDomain.MAX_DIET_SIZE) {
+            throw IllegalArgumentException(UserDomain.MAX_DIET_SIZE_MSG)
+        }
+    }
+
     fun toJdbiUpdateRecipeModel(recipeId: Int, pictureNames: List<String>?) =
         JdbiUpdateRecipeModel(
             recipeId,
@@ -39,8 +50,8 @@ data class UpdateRecipeInputModel(
             preparationTime,
             cuisine?.ordinal,
             mealType?.ordinal,
-            intolerances?.map { it.ordinal },
-            diets?.map { it.ordinal },
+            intolerances?.map { it.ordinal }?.toSet(),
+            diets?.map { it.ordinal }?.toSet(),
             ingredients,
             calories,
             protein,

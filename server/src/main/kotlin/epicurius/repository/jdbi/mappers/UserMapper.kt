@@ -9,12 +9,12 @@ import org.jdbi.v3.core.statement.StatementContext
 import java.sql.ResultSet
 
 class UserMapper(
-    private val intoleranceListMapper: ColumnMapper<List<Intolerance>>,
-    private val dietListMapper: ColumnMapper<List<Diet>>
+    private val intoleranceSetMapper: ColumnMapper<Set<Intolerance>>,
+    private val dietSetMapper: ColumnMapper<Set<Diet>>
 ) : RowMapper<User> {
     override fun map(rs: ResultSet, ctx: StatementContext): User {
-        val intoleranceList = intoleranceListMapper.map(rs, 8, ctx)
-        val dietList = dietListMapper.map(rs, 9, ctx)
+        val intoleranceSet = intoleranceSetMapper.map(rs, 8, ctx)
+        val dietSet = dietSetMapper.map(rs, 9, ctx)
         return User(
             id = rs.getInt("id"),
             name = rs.getString("name"),
@@ -23,8 +23,8 @@ class UserMapper(
             tokenHash = rs.getString("token_hash"),
             country = rs.getString("country"),
             privacy = rs.getBoolean("privacy"),
-            intolerances = intoleranceList,
-            diets = dietList,
+            intolerances = intoleranceSet,
+            diets = dietSet,
             profilePictureName = rs.getString("profile_picture_name")
         )
     }

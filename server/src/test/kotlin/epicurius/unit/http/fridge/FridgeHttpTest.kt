@@ -33,8 +33,8 @@ open class FridgeHttpTest : HttpTest() {
                 userDomain.hashToken(token),
                 "PT",
                 false,
-                listOf(Intolerance.GLUTEN),
-                listOf(Diet.GLUTEN_FREE),
+                setOf(Intolerance.GLUTEN),
+                setOf(Diet.GLUTEN_FREE),
                 randomUUID().toString()
             ),
             token,

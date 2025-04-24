@@ -8,7 +8,7 @@ data class UserInfo(
     val email: String,
     val country: String,
     val privacy: Boolean,
-    val intolerances: List<Intolerance>,
-    val diets: List<Diet>,
+    val intolerances: Set<Intolerance>,
+    val diets: Set<Diet>,
     val profilePictureName: String?
 )

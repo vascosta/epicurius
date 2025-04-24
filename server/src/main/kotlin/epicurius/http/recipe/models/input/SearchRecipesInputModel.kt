@@ -7,6 +7,7 @@ import epicurius.domain.recipe.MealType
 import epicurius.domain.recipe.RecipeDomain.Companion.MAX_RECIPE_NAME_LENGTH
 import epicurius.domain.recipe.RecipeDomain.Companion.RECIPE_NAME_LENGTH_MSG
 import epicurius.domain.recipe.SearchRecipesModel
+import epicurius.domain.user.UserDomain
 
 data class SearchRecipesInputModel(
     val name: String? = null,
@@ -27,6 +28,16 @@ data class SearchRecipesInputModel(
     val maxTime: Int? = null,
     val maxResults: Int = 10,
 ) {
+    init {
+        if (intolerances != null && intolerances.size > UserDomain.MAX_INTOLERANCE_SIZE) {
+            throw IllegalArgumentException(UserDomain.MAX_INTOLERANCE_SIZE_MSG)
+        }
+
+        if (diets != null && diets.size > UserDomain.MAX_DIET_SIZE) {
+            throw IllegalArgumentException(UserDomain.MAX_DIET_SIZE_MSG)
+        }
+    }
+
     fun toSearchRecipe(name: String?): SearchRecipesModel {
         if (name != null && name.length > MAX_RECIPE_NAME_LENGTH) {
             throw IllegalArgumentException(RECIPE_NAME_LENGTH_MSG)

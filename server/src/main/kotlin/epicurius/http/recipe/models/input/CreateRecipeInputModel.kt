@@ -7,6 +7,7 @@ import epicurius.domain.recipe.Ingredient
 import epicurius.domain.recipe.Instructions
 import epicurius.domain.recipe.MealType
 import epicurius.domain.recipe.RecipeDomain
+import epicurius.domain.user.UserDomain
 import epicurius.repository.firestore.recipe.models.FirestoreRecipeModel
 import epicurius.repository.jdbi.recipe.models.JdbiCreateRecipeModel
 import jakarta.validation.constraints.Positive
@@ -23,8 +24,8 @@ data class CreateRecipeInputModel(
     val preparationTime: Int,
     val cuisine: Cuisine,
     val mealType: MealType,
-    val intolerances: List<Intolerance>,
-    val diets: List<Diet>,
+    val intolerances: Set<Intolerance>,
+    val diets: Set<Diet>,
     val ingredients: List<Ingredient>,
 
     @field:Positive(message = RecipeDomain.CALORIES_MSG)
@@ -40,6 +41,16 @@ data class CreateRecipeInputModel(
     val carbs: Int? = null,
     val instructions: Instructions
 ) {
+
+    init {
+        if (intolerances.size > UserDomain.MAX_INTOLERANCE_SIZE) {
+            throw IllegalArgumentException(UserDomain.MAX_INTOLERANCE_SIZE_MSG)
+        }
+
+        if (diets.size > UserDomain.MAX_DIET_SIZE) {
+            throw IllegalArgumentException(UserDomain.MAX_DIET_SIZE_MSG)
+        }
+    }
 
     fun toJdbiCreateRecipeModel(authorId: Int, picturesNames: List<String>): JdbiCreateRecipeModel {
         return JdbiCreateRecipeModel(

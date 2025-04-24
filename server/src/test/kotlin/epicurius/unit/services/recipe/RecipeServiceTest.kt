@@ -30,8 +30,8 @@ open class RecipeServiceTest : ServiceTest() {
             30,
             Cuisine.MEDITERRANEAN,
             MealType.DESSERT,
-            listOf(Intolerance.EGG, Intolerance.GLUTEN, Intolerance.DAIRY),
-            listOf(Diet.OVO_VEGETARIAN, Diet.LACTO_VEGETARIAN),
+            setOf(Intolerance.EGG, Intolerance.GLUTEN, Intolerance.DAIRY),
+            setOf(Diet.OVO_VEGETARIAN, Diet.LACTO_VEGETARIAN),
             listOf(
                 Ingredient("Eggs", 4, IngredientUnit.X),
                 Ingredient("Sugar", 200, IngredientUnit.G),

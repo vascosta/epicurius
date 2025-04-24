@@ -27,8 +27,8 @@ class UpdateRecipeRepositoryTests : RecipeRepositoryTest() {
             1,
             Cuisine.ASIAN.ordinal,
             MealType.SOUP.ordinal,
-            listOf(Intolerance.PEANUT.ordinal),
-            listOf(Diet.KETOGENIC.ordinal),
+            setOf(Intolerance.PEANUT.ordinal),
+            setOf(Diet.KETOGENIC.ordinal),
             generateRandomRecipeIngredients(),
             1,
             9,
@@ -47,8 +47,8 @@ class UpdateRecipeRepositoryTests : RecipeRepositoryTest() {
         assertEquals(jdbiUpdateRecipeInfo.preparationTime, updatedJdbiRecipe.preparationTime)
         assertEquals(jdbiUpdateRecipeInfo.cuisine, updatedJdbiRecipe.cuisine.ordinal)
         assertEquals(jdbiUpdateRecipeInfo.mealType, updatedJdbiRecipe.mealType.ordinal)
-        assertEquals(jdbiUpdateRecipeInfo.intolerances, updatedJdbiRecipe.intolerances.map { it.ordinal })
-        assertEquals(jdbiUpdateRecipeInfo.diets, updatedJdbiRecipe.diets.map { it.ordinal })
+        assertEquals(jdbiUpdateRecipeInfo.intolerances, updatedJdbiRecipe.intolerances.map { it.ordinal }.toSet())
+        assertEquals(jdbiUpdateRecipeInfo.diets, updatedJdbiRecipe.diets.map { it.ordinal }.toSet())
         assertEquals(jdbiUpdateRecipeInfo.ingredients, updatedJdbiRecipe.ingredients)
         assertEquals(jdbiUpdateRecipeInfo.calories, updatedJdbiRecipe.calories)
         assertEquals(jdbiUpdateRecipeInfo.protein, updatedJdbiRecipe.protein)

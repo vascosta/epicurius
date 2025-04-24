@@ -29,8 +29,8 @@ class UpdateUserServiceTests : UserServiceTest() {
             password = newPassword,
             confirmPassword = newPassword,
             privacy = true,
-            intolerances = listOf(Intolerance.GLUTEN),
-            diets = listOf(Diet.VEGAN)
+            intolerances = setOf(Intolerance.GLUTEN),
+            diets = setOf(Diet.VEGAN)
         )
 
         // mock

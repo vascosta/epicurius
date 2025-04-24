@@ -1,5 +1,6 @@
 package epicurius.domain.user
 
+import epicurius.domain.Intolerance
 import epicurius.domain.token.TokenEncoder
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Component
@@ -23,7 +24,7 @@ class UserDomain(
 
     fun isToken(token: String): Boolean = try {
         Base64.getUrlDecoder().decode(token).size == TOKEN_SIZE_IN_BYTES
-    } catch (ex: IllegalArgumentException) {
+    } catch (_: IllegalArgumentException) {
         false
     }
 
@@ -41,5 +42,11 @@ class UserDomain(
         const val PASSWORD_LENGTH_MSG = "must be between $MIN_PASSWORD_LENGTH and $MAX_PASSWORD_LENGTH characters"
 
         const val TOKEN_SIZE_IN_BYTES = 32
+
+        val MAX_INTOLERANCE_SIZE = Intolerance.entries.size
+        val MAX_INTOLERANCE_SIZE_MSG = "must be between 0 and $MAX_INTOLERANCE_SIZE"
+
+        val MAX_DIET_SIZE = Intolerance.entries.size
+        val MAX_DIET_SIZE_MSG = "must be between 0 and $MAX_DIET_SIZE"
     }
 }

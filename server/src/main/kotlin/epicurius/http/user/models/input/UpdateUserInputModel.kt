@@ -34,10 +34,20 @@ data class UpdateUserInputModel(
 
     val privacy: Boolean? = null,
 
-    val intolerances: List<Intolerance>? = null,
+    val intolerances: Set<Intolerance>? = null,
 
-    val diets: List<Diet>? = null
+    val diets: Set<Diet>? = null
 ) {
+    init {
+        if (intolerances != null && intolerances.size > UserDomain.MAX_INTOLERANCE_SIZE) {
+            throw IllegalArgumentException(UserDomain.MAX_INTOLERANCE_SIZE_MSG)
+        }
+
+        if (diets != null && diets.size > UserDomain.MAX_DIET_SIZE) {
+            throw IllegalArgumentException(UserDomain.MAX_DIET_SIZE_MSG)
+        }
+    }
+
     fun toJdbiUpdateUser(passwordHash: String?) =
         JdbiUpdateUserModel(
             name, email, country, passwordHash, privacy, intolerances?.map { it.ordinal }, diets?.map { it.ordinal }
