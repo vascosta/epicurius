@@ -23,7 +23,7 @@ open class ServiceTest : EpicuriusUnitTest() {
 
         fun getUserProfile(username: String) = userService.getUserProfile(username)
 
-        fun getProfilePicture(profilePictureName: String) = userService.getProfilePicture(profilePictureName)
+        fun getProfilePicture(profilePictureName: String?) = userService.getProfilePicture(profilePictureName)
 
         fun searchUsers(partialUsername: String, pagingParams: PagingParams) = userService.searchUsers(partialUsername, pagingParams)
 
@@ -51,7 +51,7 @@ open class ServiceTest : EpicuriusUnitTest() {
 
         fun unfollow(userId: Int, usernameToUnfollow: String) = userService.unfollow(userId, usernameToUnfollow)
 
-        fun followRequest(userId: Int, username: String) =
+        fun cancelFollowRequest(userId: Int, username: String) =
             userService.followRequest(userId, username, FollowRequestType.CANCEL)
 
         // FRIDGE

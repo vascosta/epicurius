@@ -11,7 +11,7 @@ class ResetPasswordServiceTests : UserServiceTest() {
 
     @Test
     fun `Should reset a user's password successfully`() {
-        // given an existing user (testUser) and a new password
+        // given a user (publicTestUser) and a new password
         val newPassword = generateSecurePassword()
 
         // mock
@@ -19,22 +19,23 @@ class ResetPasswordServiceTests : UserServiceTest() {
         whenever(userDomainMock.encodePassword(newPassword)).thenReturn(mockPasswordHash)
 
         // when resetting the password
+        resetPassword(publicTestUser.email, newPassword, newPassword)
+
         // then the password was reset successfully
-        resetPassword(testUser.email, newPassword, newPassword)
-        verify(jdbiUserRepositoryMock).resetPassword(testUser.email, mockPasswordHash)
-        verify(jdbiTokenRepositoryMock).deleteToken(email = testUser.email)
+        verify(jdbiUserRepositoryMock).resetPassword(publicTestUser.email, mockPasswordHash)
+        verify(jdbiTokenRepositoryMock).deleteToken(email = publicTestUser.email)
     }
 
     @Test
     fun `Should throw PasswordsDoNotMatch when resetting a user's password with different passwords`() {
-        // given an existing user (testUser) and different passwords
+        // given a user (publicTestUser) and different passwords
         val password1 = generateSecurePassword()
         val password2 = generateSecurePassword()
 
         // when resetting the password with different passwords
         // then the password cannot be reset and throws PasswordsDoNotMatch exception
         assertFailsWith<PasswordsDoNotMatch> {
-            resetPassword(testUser.email, password1, password2)
+            resetPassword(publicTestUser.email, password1, password2)
         }
     }
 }

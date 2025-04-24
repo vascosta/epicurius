@@ -1,7 +1,6 @@
 package epicurius.services.user
 
 import epicurius.domain.PagingParams
-import epicurius.domain.PictureDomain
 import epicurius.domain.exceptions.FollowRequestAlreadyBeenSent
 import epicurius.domain.exceptions.FollowRequestNotFound
 import epicurius.domain.exceptions.IncorrectPassword
@@ -14,6 +13,7 @@ import epicurius.domain.exceptions.UserAlreadyExists
 import epicurius.domain.exceptions.UserAlreadyLoggedIn
 import epicurius.domain.exceptions.UserNotFollowed
 import epicurius.domain.exceptions.UserNotFound
+import epicurius.domain.picture.PictureDomain
 import epicurius.domain.user.AuthenticatedUser
 import epicurius.domain.user.CountriesDomain
 import epicurius.domain.user.FollowRequestType
@@ -31,7 +31,6 @@ import epicurius.repository.jdbi.user.models.JdbiUpdateUserModel
 import epicurius.repository.transaction.TransactionManager
 import org.springframework.stereotype.Component
 import org.springframework.web.multipart.MultipartFile
-import java.util.UUID
 
 @Component
 class UserService(
@@ -127,7 +126,7 @@ class UserService(
         return when {
             profilePictureName == null && profilePicture != null -> { // add new profile picture
                 pictureDomain.validatePicture(profilePicture)
-                val newProfilePictureName = UUID.randomUUID().toString()
+                val newProfilePictureName = pictureDomain.generatePictureName()
 
                 cs.pictureRepository.updatePicture(newProfilePictureName, profilePicture, PictureDomain.USERS_FOLDER)
                 tm.run {
@@ -164,8 +163,8 @@ class UserService(
     fun followRequest(userId: Int, username: String, type: FollowRequestType) {
         when (type) {
             FollowRequestType.CANCEL -> cancelFollowRequest(userId, username)
-            // "accept" -> userService.acceptFollowRequest(authenticatedUser.user.id, username)
-            // "reject" -> userService.rejectFollowRequest(authenticatedUser.user.id, username)
+            // "accept" -> acceptFollowRequest(authenticatedUser.user.id, username)
+            // "reject" -> rejectFollowRequest(authenticatedUser.user.id, username)
             else -> throw InvalidFollowRequestType()
         }
     }

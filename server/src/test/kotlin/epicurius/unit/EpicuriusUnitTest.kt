@@ -1,8 +1,8 @@
 package epicurius.unit
 
 import epicurius.EpicuriusTest
-import epicurius.domain.picture.PictureDomain
 import epicurius.domain.fridge.FridgeDomain
+import epicurius.domain.picture.PictureDomain
 import epicurius.domain.user.CountriesDomain
 import epicurius.domain.user.UserDomain
 import epicurius.http.fridge.FridgeController
@@ -25,11 +25,31 @@ import epicurius.services.fridge.FridgeService
 import epicurius.services.recipe.RecipeService
 import epicurius.services.user.UserService
 import org.junit.jupiter.api.BeforeAll
+import org.junit.jupiter.api.BeforeEach
 import org.mockito.kotlin.any
 import org.mockito.kotlin.mock
+import org.mockito.kotlin.reset
 import org.mockito.kotlin.whenever
 
 open class EpicuriusUnitTest : EpicuriusTest() {
+
+    @BeforeEach
+    fun resetMocks() {
+        reset(
+            jdbiUserRepositoryMock,
+            jdbiTokenRepositoryMock,
+            jdbiFridgeRepositoryMock,
+            jdbiRecipeRepositoryMock,
+            jdbiMealPlannerRepositoryMock,
+            firestoreRecipeRepositoryMock,
+            pictureRepositoryMock,
+            spoonacularRepositoryMock,
+            userDomainMock,
+            pictureDomainMock,
+            countriesDomainMock,
+            fridgeDomainMock,
+        )
+    }
 
     companion object {
 
@@ -46,6 +66,8 @@ open class EpicuriusUnitTest : EpicuriusTest() {
                     override val mealPlannerRepository = jdbiMealPlannerRepositoryMock
                 })
             }
+
+
         }
 
         val jdbiUserRepositoryMock: JdbiUserRepository = mock()

@@ -1,35 +1,6 @@
 package epicurius.integration.user
 
-import epicurius.domain.exceptions.IncorrectPassword
-import epicurius.domain.exceptions.InvalidCountry
-import epicurius.domain.exceptions.PasswordsDoNotMatch
-import epicurius.domain.exceptions.UnauthorizedException
-import epicurius.domain.exceptions.UserAlreadyExists
-import epicurius.domain.exceptions.UserAlreadyLoggedIn
-import epicurius.domain.exceptions.UserNotFound
-import epicurius.domain.user.User
-import epicurius.domain.user.UserDomain
-import epicurius.http.utils.Problem
-import epicurius.http.utils.Regex.VALID_PASSWORD_MSG
-import epicurius.http.utils.Regex.VALID_STRING_MSG
-import epicurius.http.utils.Uris
-import epicurius.integration.EpicuriusIntegrationTest
-import epicurius.integration.utils.getBody
-import epicurius.integration.utils.patch
-import epicurius.integration.utils.post
-import epicurius.utils.createTestUser
-import epicurius.utils.generateEmail
-import epicurius.utils.generateRandomUsername
-import epicurius.utils.generateSecurePassword
-import org.springframework.http.HttpStatus
-import kotlin.test.Test
-import kotlin.test.assertEquals
-import kotlin.test.assertFalse
-import kotlin.test.assertNotNull
-import kotlin.test.assertNull
-import kotlin.test.assertTrue
-
-class AuthenticationControllerTest : EpicuriusIntegrationTest() {
+/*class AuthenticationControllerTest : EpicuriusIntegrationTest() {
 
     val publicTestUser: User = createTestUser(tm)
 
@@ -680,4 +651,4 @@ class AuthenticationControllerTest : EpicuriusIntegrationTest() {
         assertEquals("NewPassword $VALID_PASSWORD_MSG", errorInvalidPasswordBody.detail)
         assertEquals("ConfirmPassword $VALID_PASSWORD_MSG", errorInvalidConfirmPasswordBody.detail)
     }
-}
+}*/

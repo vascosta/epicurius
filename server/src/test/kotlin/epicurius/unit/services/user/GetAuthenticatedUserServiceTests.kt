@@ -21,14 +21,14 @@ class GetAuthenticatedUserServiceTests : UserServiceTest() {
         val mockTokenHash = userDomain.hashToken(testUserToken)
         whenever(userDomainMock.isToken(testUserToken)).thenReturn(true)
         whenever(userDomainMock.hashToken(testUserToken)).thenReturn(mockTokenHash)
-        whenever(jdbiUserRepositoryMock.getUser(tokenHash = mockTokenHash)).thenReturn(testUser)
+        whenever(jdbiUserRepositoryMock.getUser(tokenHash = mockTokenHash)).thenReturn(publicTestUser)
 
         // when retrieving the authenticated user
         val authenticatedUser = getAuthenticatedUser(testUserToken)
 
         // then the user is retrieved successfully
         assertNotNull(authenticatedUser)
-        assertEquals(AuthenticatedUser(testUser, testUserToken), authenticatedUser)
+        assertEquals(AuthenticatedUser(publicTestUser, testUserToken), authenticatedUser)
     }
 
     @Test

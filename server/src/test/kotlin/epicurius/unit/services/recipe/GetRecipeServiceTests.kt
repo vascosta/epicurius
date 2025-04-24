@@ -1,7 +1,7 @@
 package epicurius.unit.services.recipe
 
-import epicurius.domain.PictureDomain.Companion.RECIPES_FOLDER
 import epicurius.domain.exceptions.RecipeNotFound
+import epicurius.domain.picture.PictureDomain.Companion.RECIPES_FOLDER
 import kotlinx.coroutines.runBlocking
 import org.mockito.kotlin.whenever
 import kotlin.test.Test

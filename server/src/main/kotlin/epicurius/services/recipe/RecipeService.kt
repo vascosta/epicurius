@@ -1,10 +1,10 @@
 package epicurius.services.recipe
 
-import epicurius.domain.picture.PictureDomain
-import epicurius.domain.picture.PictureDomain.Companion.RECIPES_FOLDER
 import epicurius.domain.exceptions.InvalidNumberOfRecipePictures
 import epicurius.domain.exceptions.NotTheAuthor
 import epicurius.domain.exceptions.RecipeNotFound
+import epicurius.domain.picture.PictureDomain
+import epicurius.domain.picture.PictureDomain.Companion.RECIPES_FOLDER
 import epicurius.domain.recipe.Recipe
 import epicurius.domain.recipe.RecipeDomain.Companion.MAX_PICTURES
 import epicurius.domain.recipe.RecipeDomain.Companion.MIN_PICTURES

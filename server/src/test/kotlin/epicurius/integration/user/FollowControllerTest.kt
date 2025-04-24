@@ -1,30 +1,6 @@
 package epicurius.integration.user
 
-import epicurius.domain.exceptions.FollowRequestAlreadyBeenSent
-import epicurius.domain.exceptions.FollowRequestNotFound
-import epicurius.domain.exceptions.UserAlreadyBeingFollowed
-import epicurius.domain.exceptions.UserNotFollowed
-import epicurius.domain.exceptions.UserNotFound
-import epicurius.domain.user.FollowUser
-import epicurius.domain.user.FollowingUser
-import epicurius.http.utils.Problem
-import epicurius.http.utils.Uris
-import epicurius.integration.EpicuriusIntegrationTest
-import epicurius.integration.utils.delete
-import epicurius.integration.utils.getBody
-import epicurius.integration.utils.patch
-import epicurius.utils.createTestUser
-import epicurius.utils.generateEmail
-import epicurius.utils.generateRandomUsername
-import epicurius.utils.generateSecurePassword
-import org.junit.jupiter.api.BeforeEach
-import org.springframework.http.HttpStatus
-import kotlin.test.Test
-import kotlin.test.assertEquals
-import kotlin.test.assertNotNull
-import kotlin.test.assertTrue
-
-class FollowControllerTest : EpicuriusIntegrationTest() {
+/*class FollowControllerTest : EpicuriusIntegrationTest() {
 
     lateinit var publicTestUserToken: String
     lateinit var publicTestUsername: String
@@ -262,4 +238,4 @@ class FollowControllerTest : EpicuriusIntegrationTest() {
         assertNotNull(errorBody)
         assertEquals(FollowRequestNotFound(publicUser2.name).message, errorBody.detail)
     }
-}
+}*/

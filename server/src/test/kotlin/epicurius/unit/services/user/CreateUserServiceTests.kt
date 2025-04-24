@@ -37,10 +37,10 @@ class CreateUserServiceTests : UserServiceTest() {
 
         // when creating a user
         val createToken = createUser(username, email, country, password, password)
-        verify(jdbiUserRepositoryMock).createUser(username, email, country, passwordHash)
-        verify(jdbiTokenRepositoryMock).createToken(tokenHash, username, email)
 
         // then the user is created successfully
+        verify(jdbiUserRepositoryMock).createUser(username, email, country, passwordHash)
+        verify(jdbiTokenRepositoryMock).createToken(tokenHash, username, email)
         assertNotNull(createToken)
         assertEquals(token, createToken)
     }
@@ -52,26 +52,26 @@ class CreateUserServiceTests : UserServiceTest() {
         val randomEmail = generateEmail(randomUsername)
 
         // mocks
-        whenever(jdbiUserRepositoryMock.getUser(testUsername, randomEmail)).thenReturn(testUser)
-        whenever(jdbiUserRepositoryMock.getUser(randomUsername, testUser.email)).thenReturn(testUser)
-        whenever(jdbiUserRepositoryMock.getUser(testUsername, testUser.email)).thenReturn(testUser)
+        whenever(jdbiUserRepositoryMock.getUser(publicTestUsername, randomEmail)).thenReturn(publicTestUser)
+        whenever(jdbiUserRepositoryMock.getUser(randomUsername, publicTestUser.email)).thenReturn(publicTestUser)
+        whenever(jdbiUserRepositoryMock.getUser(publicTestUsername, publicTestUser.email)).thenReturn(publicTestUser)
 
         // when creating a user with an existing username
         // then the user cannot be created and throws UserAlreadyExists exception
         assertFailsWith<UserAlreadyExists> {
-            createUser(testUsername, randomEmail, "PT", password, password)
+            createUser(publicTestUsername, randomEmail, "PT", password, password)
         }
 
         // when creating a user with an existing email
         // then the user cannot be created and throws UserAlreadyExists exception
         assertFailsWith<UserAlreadyExists> {
-            createUser(randomUsername, testUser.email, "PT", password, password)
+            createUser(randomUsername, publicTestUser.email, "PT", password, password)
         }
 
         // when creating a user with an existing username and email
         // then the user cannot be created and throws UserAlreadyExists exception
         assertFailsWith<UserAlreadyExists> {
-            createUser(testUsername, testUser.email, "PT", password, password)
+            createUser(publicTestUsername, publicTestUser.email, "PT", password, password)
         }
     }
 

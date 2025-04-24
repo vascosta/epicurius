@@ -10,11 +10,11 @@ import java.util.UUID.randomUUID
 
 open class UserServiceTest : ServiceTest() {
 
-    val testUsername = generateRandomUsername()
-    val testUser = User(
+    val publicTestUsername = generateRandomUsername()
+    val publicTestUser = User(
         1,
-        testUsername,
-        generateEmail(testUsername),
+        publicTestUsername,
+        generateEmail(publicTestUsername),
         userDomain.encodePassword(randomUUID().toString()),
         userDomain.hashToken(randomUUID().toString()),
         "PT",
@@ -24,15 +24,15 @@ open class UserServiceTest : ServiceTest() {
         randomUUID().toString()
     )
 
-    val testUsername2 = generateRandomUsername()
-    val testUser2 = User(
+    val privateTestUsername = generateRandomUsername()
+    val privateTestUser = User(
         2,
-        testUsername2,
-        generateEmail(testUsername2),
+        privateTestUsername,
+        generateEmail(privateTestUsername),
         userDomain.encodePassword(randomUUID().toString()),
         userDomain.hashToken(randomUUID().toString()),
         "PT",
-        false,
+        true,
         listOf(Intolerance.GLUTEN),
         listOf(Diet.GLUTEN_FREE),
         randomUUID().toString()

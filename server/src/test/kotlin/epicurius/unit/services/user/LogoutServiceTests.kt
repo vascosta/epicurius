@@ -7,11 +7,12 @@ class LogoutServiceTests : UserServiceTest() {
 
     @Test
     fun `Should logout a user successfully`() {
-        // given an existing logged-in user (testUser)
+        // given a logged-in user (publicTestUser)
 
         // when logging out
+        logout(publicTestUsername)
+
         // then the user is logged out successfully
-        logout(testUsername)
-        verify(jdbiTokenRepositoryMock).deleteToken(testUsername)
+        verify(jdbiTokenRepositoryMock).deleteToken(publicTestUsername)
     }
 }

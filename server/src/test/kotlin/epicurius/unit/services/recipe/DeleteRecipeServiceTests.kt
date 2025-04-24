@@ -18,8 +18,9 @@ class DeleteRecipeServiceTests : RecipeServiceTest() {
         whenever(jdbiRecipeRepositoryMock.getRecipe(RECIPE_ID)).thenReturn(jdbiRecipeModel)
 
         // when deleting the recipe
-        // then the recipe is deleted successfully
         deleteRecipe(AUTHOR_ID, RECIPE_ID)
+
+        // then the recipe is deleted successfully
         verify(jdbiRecipeRepositoryMock).deleteRecipe(RECIPE_ID)
         verify(firestoreRecipeRepositoryMock).deleteRecipe(RECIPE_ID)
     }

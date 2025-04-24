@@ -1,7 +1,7 @@
 package epicurius.unit.services.recipe
 
-import epicurius.domain.PictureDomain.Companion.RECIPES_FOLDER
 import epicurius.domain.exceptions.InvalidNumberOfRecipePictures
+import epicurius.domain.picture.PictureDomain.Companion.RECIPES_FOLDER
 import org.mockito.kotlin.argThat
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
@@ -42,10 +42,10 @@ class CreateRecipeServiceTests : RecipeServiceTest() {
 
         // when creating the recipe
         val recipe = createRecipe(AUTHOR_ID, authorName, createRecipeInfo, recipePictures)
-        verify(firestoreRecipeRepositoryMock).createRecipe(firestoreRecipeInfo)
-        verify(pictureRepositoryMock).updatePicture(recipePicturesNames.first(), recipePictures.first(), RECIPES_FOLDER)
 
         // then the recipe is created successfully
+        verify(firestoreRecipeRepositoryMock).createRecipe(firestoreRecipeInfo)
+        verify(pictureRepositoryMock).updatePicture(recipePicturesNames.first(), recipePictures.first(), RECIPES_FOLDER)
         assertEquals(RECIPE_ID, recipe.id)
         assertEquals(createRecipeInfo.name, recipe.name)
         assertEquals(authorName, recipe.authorUsername)

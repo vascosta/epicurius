@@ -22,7 +22,7 @@ class CloudStorageRepositoryTest : RepositoryTest() {
     }
 
     @Test
-    fun `Should add a picture to the Cloud Storage, retrieves it and then deletes it successfully`() {
+    fun `Should add a picture to the Cloud Storage, retrieve it and then delete it successfully`() {
         // given a picture
         val picture = testPicture
         val pictureName = randomUUID().toString()

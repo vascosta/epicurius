@@ -2,8 +2,8 @@ package epicurius.repository.spoonacular
 
 import epicurius.Environment
 import epicurius.config.HttpClientConfigurer
-import epicurius.repository.spoonacular.models.SpoonacularIngredientModel
 import epicurius.repository.spoonacular.contract.SpoonacularRepository
+import epicurius.repository.spoonacular.models.SpoonacularIngredientModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.withContext

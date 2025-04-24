@@ -1,162 +1,88 @@
 package epicurius.unit.services.user
 
 import epicurius.domain.exceptions.FollowRequestAlreadyBeenSent
-import epicurius.domain.exceptions.FollowRequestNotFound
 import epicurius.domain.exceptions.UserAlreadyBeingFollowed
-import epicurius.domain.exceptions.UserNotFollowed
 import epicurius.domain.exceptions.UserNotFound
-import epicurius.domain.user.FollowUser
-import epicurius.domain.user.FollowingUser
-import epicurius.domain.user.User
-import epicurius.unit.services.ServiceTest
-import epicurius.utils.createTestUser
-import org.junit.jupiter.api.BeforeEach
-import java.util.UUID
+import epicurius.domain.user.FollowingStatus
+import org.mockito.kotlin.verify
+import org.mockito.kotlin.whenever
 import kotlin.test.Test
-import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
-import kotlin.test.assertTrue
 
-class FollowServiceTest : ServiceTest() {
-
-    private lateinit var publicTestUser: User
-    private lateinit var privateTestUser: User
-
-    @BeforeEach
-    fun setup() {
-        publicTestUser = createTestUser(tm)
-        privateTestUser = createTestUser(tm, true)
-    }
+class FollowServiceTest : UserServiceTest() {
 
     @Test
-    fun `Follow a public user, unfollows him and then retrieve its followers and following successfully`() {
-        // given two existing users
-        val publicUser = publicTestUser
-        val privateUser = privateTestUser
+    fun `Should follow a public user successfully`() {
+        // given two users (publicTestUser and privateTestUser)
+
+        // mocks
+        whenever(jdbiUserRepositoryMock.getUser(publicTestUsername)).thenReturn(publicTestUser)
+        whenever(jdbiUserRepositoryMock.checkIfUserIsBeingFollowedBy(publicTestUser.id, privateTestUser.id))
+            .thenReturn(false)
 
         // when following a public user
-        follow(privateUser.id, publicUser.name)
+        follow(privateTestUser.id, publicTestUsername)
 
         // then the user is followed successfully
-        val publicUserFollowers = getFollowers(publicUser.id)
-        val privateUserFollowing = getFollowing(privateUser.id)
-        assertTrue(publicUserFollowers.isNotEmpty())
-        assertTrue(privateUserFollowing.isNotEmpty())
-        assertEquals(1, publicUserFollowers.size)
-        assertEquals(1, privateUserFollowing.size)
-        assertTrue(publicUserFollowers.contains(FollowUser(privateUser.name, null)))
-        assertTrue(privateUserFollowing.contains(FollowingUser(publicUser.name, null)))
-
-        // when unfollowing the user
-        unfollow(privateUser.id, publicUser.name)
-
-        // then the user is unfollowed successfully
-        val publicUserFollowersAfterUnfollow = getFollowers(publicUser.id)
-        val privateUserFollowingAfterUnfollow = getFollowing(privateUser.id)
-        assertTrue(publicUserFollowersAfterUnfollow.isEmpty())
-        assertTrue(privateUserFollowingAfterUnfollow.isEmpty())
+        verify(jdbiUserRepositoryMock).followUser(privateTestUser.id, publicTestUser.id, FollowingStatus.ACCEPTED.ordinal)
     }
 
     @Test
-    fun `Try to follow a private user, get added to its follow requests and then cancel the request successfully`() {
-        // given two existing users
-        val publicUser = publicTestUser
-        val privateUser = privateTestUser
+    fun `Should get added to a private user follow requests when following him successfully`() {
+        // given two (publicTestUser and privateTestUser)
+
+        // mocks
+        whenever(jdbiUserRepositoryMock.getUser(privateTestUsername)).thenReturn(privateTestUser)
+        whenever(jdbiUserRepositoryMock.checkIfUserIsBeingFollowedBy(privateTestUser.id, publicTestUser.id))
+            .thenReturn(false)
 
         // when following a private user
-        follow(publicUser.id, privateUser.name)
+        follow(publicTestUser.id, privateTestUsername)
 
-        // then the follow request is sent successfully
-        val privateUserFollowRequests = getFollowRequests(privateUser.id)
-        assertTrue(privateUserFollowRequests.isNotEmpty())
-        assertEquals(1, privateUserFollowRequests.size)
-        assertTrue(privateUserFollowRequests.contains(FollowUser(publicUser.name, null)))
-
-        // when cancelling the follow request
-        followRequest(publicUser.id, privateUser.name)
-
-        // then the follow request is cancelled successfully
-        val privateUserFollowRequestsAfterCancel = getFollowRequests(privateUser.id)
-        assertTrue(privateUserFollowRequestsAfterCancel.isEmpty())
+        // then a follow request is sent
+        verify(jdbiUserRepositoryMock).followUser(publicTestUser.id, privateTestUser.id, FollowingStatus.PENDING.ordinal)
     }
 
     @Test
-    fun `Try to follow a non-existing user and throws UserNotFound Exception`() {
-        // given an existing users
-        val publicUser = publicTestUser
+    fun `Should throw UserNotFound exception when following a non-existing user`() {
+        // given a user (publicTestUser) and a non-existing user
+        val nonExistingUser = "nonExistingUser"
+
+        // mocks
+        whenever(jdbiUserRepositoryMock.getUser(nonExistingUser)).thenReturn(null)
 
         // when following a non-existing user
-        // then the user cannot be followed and throws UserNotFound Exception
-        assertFailsWith<UserNotFound> { follow(publicUser.id, UUID.randomUUID().toString()) }
+        // then the user cannot be followed and throws UserNotFound exception
+        assertFailsWith<UserNotFound> { follow(publicTestUser.id, nonExistingUser) }
     }
 
     @Test
-    fun `Try to follow a user twice and throws UserAlreadyBeingFollowed Exception`() {
-        // given two existing users
-        val publicUser1 = publicTestUser
-        val publicUser2 = createTestUser(tm)
+    fun `Should throw UserAlreadyBeingFollowed exception when following a user twice`() {
+        // given two users (publicTestUser and privateTestUser)
+
+        // mocks
+        whenever(jdbiUserRepositoryMock.getUser(publicTestUsername)).thenReturn(publicTestUser)
+        whenever(jdbiUserRepositoryMock.checkIfUserIsBeingFollowedBy(publicTestUser.id, privateTestUser.id))
+            .thenReturn(true)
 
         // when following a user twice
-        follow(publicUser1.id, publicUser2.name)
-
-        // then the user cannot be followed and throws UserAlreadyBeingFollowed Exception
-        assertFailsWith<UserAlreadyBeingFollowed> { follow(publicUser1.id, publicUser2.name) }
+        // then the user cannot be followed again and throws UserAlreadyBeingFollowed exception
+        assertFailsWith<UserAlreadyBeingFollowed> { follow(privateTestUser.id, publicTestUsername) }
     }
 
     @Test
-    fun `Try to follow a private user twice and throws FollowRequestAlreadyBeenSent Exception`() {
-        // given two existing users
-        val publicUser = publicTestUser
-        val privateUser = privateTestUser
+    fun `Should throw FollowRequestAlreadyBeenSent when following a private user twice`() {
+        // given two users (publicTestUser and privateTestUser)
+
+        // mocks
+        whenever(jdbiUserRepositoryMock.getUser(privateTestUsername)).thenReturn(privateTestUser)
+        whenever(jdbiUserRepositoryMock.checkIfUserIsBeingFollowedBy(privateTestUser.id, publicTestUser.id))
+            .thenReturn(false)
+        whenever(jdbiUserRepositoryMock.checkIfUserAlreadySentFollowRequest(privateTestUser.id, publicTestUser.id))
+            .thenReturn(true)
 
         // when trying to follow a private user twice
-        follow(publicUser.id, privateUser.name)
-
-        // then another follow request cannot be sent and throws FollowRequestAlreadyBeenSent Exception
-        assertFailsWith<FollowRequestAlreadyBeenSent> {
-            follow(publicUser.id, privateUser.name)
-        }
-    }
-
-    @Test
-    fun `Try to unfollow a non-existing user and throws UserNotFound Exception`() {
-        // given an existing users
-        val publicUser = publicTestUser
-
-        // when following a non-existing user
-        // then the user cannot be followed and throws UserNotFound Exception
-        assertFailsWith<UserNotFound> { unfollow(publicUser.id, UUID.randomUUID().toString()) }
-    }
-
-    @Test
-    fun `Try to unfollow a user that is not being followed and throws UserNotFollowed Exception`() {
-        // given two existing users
-        val publicUser = publicTestUser
-        val privateUser = privateTestUser
-
-        // when trying to unfollow a user that is not being followed
-        // then the user cannot be unfollowed and throws UserNotFollowed Exception
-        assertFailsWith<UserNotFollowed> { unfollow(publicUser.id, privateUser.name) }
-    }
-
-    @Test
-    fun `Try to cancel a follow request to a non-existing user and throws UserNotFound Exception`() {
-        // given an existing user
-        val publicUser = publicTestUser
-
-        // when cancelling a follow request to a non-existing user
-        // then the follow request cannot be cancelled and throws UserNotFound Exception
-        assertFailsWith<UserNotFound> { followRequest(publicUser.id, UUID.randomUUID().toString()) }
-    }
-
-    @Test
-    fun `Try to cancel a non-existing follow request and throws FollowRequestNotFound Exception`() {
-        // given an existing user
-        val publicUser = publicTestUser
-        val privateUsername = privateTestUser.name
-
-        // when cancelling a follow request to a non-existing user
-        // then the follow request cannot be cancelled and throws UserNotFound Exception
-        assertFailsWith<FollowRequestNotFound> { followRequest(publicUser.id, privateUsername) }
+        // then another follow request cannot be sent again and throws FollowRequestAlreadyBeenSent exception
+        assertFailsWith<FollowRequestAlreadyBeenSent> { follow(publicTestUser.id, privateTestUsername) }
     }
 }

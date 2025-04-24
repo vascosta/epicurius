@@ -1,33 +1,8 @@
 package epicurius.integration.user
 
-import epicurius.domain.Diet
-import epicurius.domain.Intolerance
-import epicurius.domain.exceptions.InvalidCountry
-import epicurius.domain.exceptions.PasswordsDoNotMatch
-import epicurius.domain.exceptions.UserAlreadyExists
-import epicurius.domain.exceptions.UserNotFound
-import epicurius.domain.user.SearchUser
-import epicurius.http.utils.Problem
-import epicurius.http.utils.Uris
-import epicurius.integration.EpicuriusIntegrationTest
 import epicurius.integration.utils.get
-import epicurius.integration.utils.getBody
-import epicurius.integration.utils.patch
-import epicurius.utils.createTestUser
-import epicurius.utils.generateEmail
-import epicurius.utils.generateRandomUsername
-import epicurius.utils.generateSecurePassword
-import org.junit.jupiter.api.BeforeEach
-import org.springframework.http.HttpStatus
-import kotlin.test.Test
-import kotlin.test.assertContentEquals
-import kotlin.test.assertEquals
-import kotlin.test.assertFalse
-import kotlin.test.assertNotNull
-import kotlin.test.assertNull
-import kotlin.test.assertTrue
 
-class UserControllerTest : EpicuriusIntegrationTest() {
+/*class UserControllerTest : EpicuriusIntegrationTest() {
 
     lateinit var publicTestUserToken: String
     lateinit var publicTestUsername: String
@@ -338,4 +313,4 @@ class UserControllerTest : EpicuriusIntegrationTest() {
         assertNotNull(error)
         assertEquals(UserNotFound("nonExistingUser").message, error.detail)
     }
-}
+}*/

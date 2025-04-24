@@ -2,7 +2,7 @@ package epicurius.unit.services.recipe
 
 import epicurius.domain.Diet
 import epicurius.domain.Intolerance
-import epicurius.domain.PictureDomain.Companion.RECIPES_FOLDER
+import epicurius.domain.picture.PictureDomain.Companion.RECIPES_FOLDER
 import epicurius.domain.recipe.Cuisine
 import epicurius.domain.recipe.MealType
 import epicurius.http.recipe.models.input.SearchRecipesInputModel

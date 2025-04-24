@@ -1,6 +1,5 @@
 package epicurius.services.mealPlanner
 
-import epicurius.domain.picture.PictureDomain.Companion.RECIPES_FOLDER
 import epicurius.domain.exceptions.MealPlannerAlreadyExists
 import epicurius.domain.exceptions.MealPlannerNotFound
 import epicurius.domain.exceptions.MealTimeAlreadyExistsInPlanner
@@ -11,6 +10,7 @@ import epicurius.domain.exceptions.RecipeNotFound
 import epicurius.domain.mealPlanner.DailyMealPlanner
 import epicurius.domain.mealPlanner.MealPlanner
 import epicurius.domain.mealPlanner.MealTime
+import epicurius.domain.picture.PictureDomain.Companion.RECIPES_FOLDER
 import epicurius.http.mealPlanner.models.input.AddMealPlannerInputModel
 import epicurius.repository.cloudStorage.manager.CloudStorageManager
 import epicurius.repository.jdbi.mealPlanner.models.JdbiDailyMealPlanner

@@ -1,7 +1,7 @@
 package epicurius.unit.services.user
 
-import epicurius.domain.PictureDomain
 import epicurius.domain.exceptions.UserNotFound
+import epicurius.domain.picture.PictureDomain
 import org.mockito.kotlin.whenever
 import java.util.UUID
 import kotlin.test.Test
@@ -14,22 +14,22 @@ class GetUserProfileServiceTests : UserServiceTest() {
 
     @Test
     fun `Should retrieve the user profile successfully`() {
-        // given an existing user (testUser)
+        // given a user (publicTestUser)
 
         // mocks
-        whenever(jdbiUserRepositoryMock.getUser(testUsername)).thenReturn(testUser)
-        whenever(jdbiUserRepositoryMock.getFollowers(testUser.id)).thenReturn(emptyList())
-        whenever(jdbiUserRepositoryMock.getFollowing(testUser.id)).thenReturn(emptyList())
-        whenever(pictureRepositoryMock.getPicture(testUser.profilePictureName!!, PictureDomain.USERS_FOLDER))
+        whenever(jdbiUserRepositoryMock.getUser(publicTestUsername)).thenReturn(publicTestUser)
+        whenever(jdbiUserRepositoryMock.getFollowers(publicTestUser.id)).thenReturn(emptyList())
+        whenever(jdbiUserRepositoryMock.getFollowing(publicTestUser.id)).thenReturn(emptyList())
+        whenever(pictureRepositoryMock.getPicture(publicTestUser.profilePictureName!!, PictureDomain.USERS_FOLDER))
             .thenReturn(testPicture.bytes)
 
         // when retrieving the user profile
-        val userProfile = getUserProfile(testUsername)
+        val userProfile = getUserProfile(publicTestUsername)
 
         // then the user profile is retrieved successfully
-        assertEquals(testUsername, userProfile.name)
-        assertEquals(testUser.country, userProfile.country)
-        assertEquals(testUser.privacy, userProfile.privacy)
+        assertEquals(publicTestUsername, userProfile.name)
+        assertEquals(publicTestUser.country, userProfile.country)
+        assertEquals(publicTestUser.privacy, userProfile.privacy)
         assertContentEquals(testPicture.bytes, userProfile.profilePicture)
         assertTrue(userProfile.followers.isEmpty())
         assertTrue(userProfile.following.isEmpty())
