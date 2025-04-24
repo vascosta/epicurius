@@ -2,7 +2,7 @@ package epicurius.repository.spoonacular
 
 import epicurius.Environment
 import epicurius.config.HttpClientConfigurer
-import epicurius.domain.fridge.Ingredient
+import epicurius.repository.spoonacular.models.SpoonacularIngredientModel
 import epicurius.repository.spoonacular.contract.SpoonacularRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
@@ -19,7 +19,7 @@ class SpoonacularRepository(private val httpClient: HttpClientConfigurer) : Spoo
 
         return withContext(Dispatchers.IO) {
             val request = async { httpClient.get(uriCompleted) }.await()
-            val ingredientsList = Json.decodeFromString<List<Ingredient>>(request)
+            val ingredientsList = Json.decodeFromString<List<SpoonacularIngredientModel>>(request)
             ingredientsList.map { it.name.lowercase() }
         }
     }

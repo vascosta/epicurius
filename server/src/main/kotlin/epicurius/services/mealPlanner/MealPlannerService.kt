@@ -1,6 +1,6 @@
 package epicurius.services.mealPlanner
 
-import epicurius.domain.PictureDomain.Companion.RECIPES_FOLDER
+import epicurius.domain.picture.PictureDomain.Companion.RECIPES_FOLDER
 import epicurius.domain.exceptions.MealPlannerAlreadyExists
 import epicurius.domain.exceptions.MealPlannerNotFound
 import epicurius.domain.exceptions.MealTimeAlreadyExistsInPlanner

@@ -1,7 +1,7 @@
 package epicurius.services.recipe
 
-import epicurius.domain.PictureDomain
-import epicurius.domain.PictureDomain.Companion.RECIPES_FOLDER
+import epicurius.domain.picture.PictureDomain
+import epicurius.domain.picture.PictureDomain.Companion.RECIPES_FOLDER
 import epicurius.domain.exceptions.InvalidNumberOfRecipePictures
 import epicurius.domain.exceptions.NotTheAuthor
 import epicurius.domain.exceptions.RecipeNotFound

@@ -1,7 +1,7 @@
 package epicurius.services.ingredients
 
-import epicurius.domain.PictureDomain
-import epicurius.domain.PictureDomain.Companion.INGREDIENTS_FOLDER
+import epicurius.domain.picture.PictureDomain
+import epicurius.domain.picture.PictureDomain.Companion.INGREDIENTS_FOLDER
 import epicurius.repository.cloudFunction.manager.CloudFunctionManager
 import epicurius.repository.cloudStorage.manager.CloudStorageManager
 import epicurius.repository.spoonacular.manager.SpoonacularManager

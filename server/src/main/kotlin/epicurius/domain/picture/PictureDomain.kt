@@ -1,4 +1,4 @@
-package epicurius.domain
+package epicurius.domain.picture
 
 import org.springframework.stereotype.Component
 import org.springframework.web.multipart.MultipartFile
