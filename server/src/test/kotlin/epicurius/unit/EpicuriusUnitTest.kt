@@ -1,7 +1,7 @@
 package epicurius.unit
 
 import epicurius.EpicuriusTest
-import epicurius.domain.PictureDomain
+import epicurius.domain.picture.PictureDomain
 import epicurius.domain.fridge.FridgeDomain
 import epicurius.domain.user.CountriesDomain
 import epicurius.domain.user.UserDomain

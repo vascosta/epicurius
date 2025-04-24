@@ -9,14 +9,31 @@ import epicurius.domain.fridge.ProductInfo
 import epicurius.domain.fridge.UpdateProductInfo
 import epicurius.repository.cloudStorage.manager.CloudStorageManager
 import epicurius.repository.firestore.FirestoreManager
+import epicurius.repository.jdbi.config.configureWithAppRequirements
+import epicurius.repository.transaction.jdbi.JdbiTransactionManager
 import epicurius.unit.EpicuriusUnitTest
+import org.jdbi.v3.core.Jdbi
+import org.postgresql.ds.PGSimpleDataSource
 import java.io.FileInputStream
 
 open class RepositoryTest : EpicuriusUnitTest() {
 
     companion object {
 
-/*        init {
+        private const val POSTGRES_TEST_DATABASE_URL = "jdbc:postgresql://localhost/postgres?user=postgres&password=postgres"
+        private const val FIRESTORE_TEST_DATABASE_ID = "epicurius-test-database"
+        private const val GOOGLE_CLOUD_STORAGE_TEST_BUCKET = "epicurius-test-bucket"
+        private const val GOOGLE_CLOUD_CREDENTIALS_LOCATION = "src/main/resources/epicurius-credentials.json"
+
+        private val jdbi = Jdbi.create(
+            PGSimpleDataSource().apply {
+                setURL(POSTGRES_TEST_DATABASE_URL)
+            }
+        ).configureWithAppRequirements()
+        private val firestore = getFirestoreService()
+        private val cloudStorage = getCloudStorageService()
+
+        init {
             jdbi.useHandle<Exception> {
                 it.execute("DELETE FROM dbo.calories")
                 it.execute("DELETE FROM dbo.meal_planner_recipe")
@@ -29,15 +46,9 @@ open class RepositoryTest : EpicuriusUnitTest() {
                 it.execute("DELETE FROM dbo.fridge")
                 it.execute("DELETE FROM dbo.user")
             }
-        }*/
+        }
 
-        private const val FIRESTORE_TEST_DATABASE_ID = "epicurius-test-database"
-        private const val GOOGLE_CLOUD_STORAGE_TEST_BUCKET = "epicurius-test-bucket"
-        private const val GOOGLE_CLOUD_CREDENTIALS_LOCATION = "src/main/resources/epicurius-credentials.json"
-
-        private val firestore = getFirestoreService()
-        private val cloudStorage = getCloudStorageService()
-
+        val tm = JdbiTransactionManager(jdbi)
         val fs = FirestoreManager(firestore)
         val cs = CloudStorageManager(cloudStorage)
 

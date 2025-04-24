@@ -1,6 +1,6 @@
 package epicurius.unit.repository.cloudStorage
 
-import epicurius.domain.PictureDomain
+import epicurius.domain.picture.PictureDomain
 import epicurius.unit.repository.RepositoryTest
 import org.springframework.web.multipart.MultipartFile
 import java.util.UUID.randomUUID
