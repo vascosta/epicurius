@@ -16,7 +16,7 @@ class GetUserProfileServiceTests : UserServiceTest() {
     fun `Should retrieve the user profile successfully`() {
         // given a user (publicTestUser)
 
-        // mocks
+        // mock
         whenever(jdbiUserRepositoryMock.getUser(publicTestUsername)).thenReturn(publicTestUser)
         whenever(jdbiUserRepositoryMock.getFollowers(publicTestUser.id)).thenReturn(emptyList())
         whenever(jdbiUserRepositoryMock.getFollowing(publicTestUser.id)).thenReturn(emptyList())
@@ -40,7 +40,7 @@ class GetUserProfileServiceTests : UserServiceTest() {
         // given a non-existing username
         val nonExistingUsername = UUID.randomUUID().toString()
 
-        // mocks
+        // mock
         whenever(jdbiUserRepositoryMock.getUser(nonExistingUsername)).thenReturn(null)
 
         // when getting the user profile

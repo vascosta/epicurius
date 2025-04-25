@@ -6,13 +6,14 @@ import epicurius.utils.generateEmail
 import epicurius.utils.generateSecurePassword
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 
 class SearchUsersRepositoryTests : UserRepositoryTest() {
 
     @Test
     fun `Should search for users and retrieve them successfully`() {
-        // given two users with their names containing a common string
+        // given two users with their names containing a common string and a user (publicTestUser) searching for them
         val username = "partial"
         val username2 = "partialUsername"
         val email = generateEmail(username)
@@ -23,12 +24,13 @@ class SearchUsersRepositoryTests : UserRepositoryTest() {
         createUser(username2, email2, country, passwordHash)
 
         // when retrieving the users by a partial username
-        val users = searchUsers("partial", PagingParams())
+        val users = searchUsers(publicTestUser.id, "partial", PagingParams())
 
         // then the users are retrieved successfully
         assertTrue(users.isNotEmpty())
         assertEquals(2, users.size)
         assertTrue(users.contains(SearchUserModel(username, null)))
         assertTrue(users.contains(SearchUserModel(username2, null)))
+        assertFalse(users.contains(SearchUserModel(publicTestUser.name, publicTestUser.profilePictureName)))
     }
 }

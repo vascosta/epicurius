@@ -42,7 +42,7 @@ class CancelFollowRequestServiceTests : UserServiceTest() {
 
     @Test
     fun `Should throw FollowRequestNotFound exception when canceling a follow request that does not exist`() {
-        // given a user that has not sent a follow request (publicTestUser)
+        // given a user that has not sent a follow request (publicTestUser) to other user (privateTestUser)
 
         // mock
         whenever(jdbiUserRepositoryMock.getUser(privateTestUsername)).thenReturn(privateTestUser)

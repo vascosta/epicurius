@@ -9,13 +9,13 @@ import org.mockito.kotlin.whenever
 import kotlin.test.Test
 import kotlin.test.assertFailsWith
 
-class FollowServiceTest : UserServiceTest() {
+class FollowServiceTests : UserServiceTest() {
 
     @Test
     fun `Should follow a public user successfully`() {
         // given two users (publicTestUser and privateTestUser)
 
-        // mocks
+        // mock
         whenever(jdbiUserRepositoryMock.getUser(publicTestUsername)).thenReturn(publicTestUser)
         whenever(jdbiUserRepositoryMock.checkIfUserIsBeingFollowedBy(publicTestUser.id, privateTestUser.id))
             .thenReturn(false)
@@ -28,10 +28,10 @@ class FollowServiceTest : UserServiceTest() {
     }
 
     @Test
-    fun `Should get added to a private user follow requests when following him successfully`() {
+    fun `Should get added to a private user follow requests list when following him successfully`() {
         // given two (publicTestUser and privateTestUser)
 
-        // mocks
+        // mock
         whenever(jdbiUserRepositoryMock.getUser(privateTestUsername)).thenReturn(privateTestUser)
         whenever(jdbiUserRepositoryMock.checkIfUserIsBeingFollowedBy(privateTestUser.id, publicTestUser.id))
             .thenReturn(false)
@@ -48,7 +48,7 @@ class FollowServiceTest : UserServiceTest() {
         // given a user (publicTestUser) and a non-existing user
         val nonExistingUser = "nonExistingUser"
 
-        // mocks
+        // mock
         whenever(jdbiUserRepositoryMock.getUser(nonExistingUser)).thenReturn(null)
 
         // when following a non-existing user
@@ -60,7 +60,7 @@ class FollowServiceTest : UserServiceTest() {
     fun `Should throw UserAlreadyBeingFollowed exception when following a user twice`() {
         // given two users (publicTestUser and privateTestUser)
 
-        // mocks
+        // mock
         whenever(jdbiUserRepositoryMock.getUser(publicTestUsername)).thenReturn(publicTestUser)
         whenever(jdbiUserRepositoryMock.checkIfUserIsBeingFollowedBy(publicTestUser.id, privateTestUser.id))
             .thenReturn(true)
@@ -74,7 +74,7 @@ class FollowServiceTest : UserServiceTest() {
     fun `Should throw FollowRequestAlreadyBeenSent when following a private user twice`() {
         // given two users (publicTestUser and privateTestUser)
 
-        // mocks
+        // mock
         whenever(jdbiUserRepositoryMock.getUser(privateTestUsername)).thenReturn(privateTestUser)
         whenever(jdbiUserRepositoryMock.checkIfUserIsBeingFollowedBy(privateTestUser.id, publicTestUser.id))
             .thenReturn(false)

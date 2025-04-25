@@ -13,7 +13,7 @@ class GetProfilePictureServiceTests : UserServiceTest() {
     fun `Should retrieve the profile picture of an user successfully`() {
         // given a user (publicTestUser) with a profile picture
 
-        // mocks
+        // mock
         whenever(pictureRepositoryMock.getPicture(publicTestUser.profilePictureName!!, PictureDomain.USERS_FOLDER))
             .thenReturn(testPicture.bytes)
 

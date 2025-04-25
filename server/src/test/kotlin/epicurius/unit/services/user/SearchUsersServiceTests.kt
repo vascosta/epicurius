@@ -13,13 +13,14 @@ class SearchUsersServiceTests : UserServiceTest() {
 
     @Test
     fun `Should search for users and retrieve them successfully`() {
-        // given users (publicTestUser, privateTestUser) with their names containing a common string
+        // given two users with their names containing a common string and a user searching for them
+        val userId = 1904
         val commonName = "test"
 
         // mock
         val mockSearchUserModel = SearchUserModel(publicTestUsername, publicTestUser.profilePictureName)
         val mockSearchUserModel2 = SearchUserModel(privateTestUsername, privateTestUser.profilePictureName)
-        whenever(jdbiUserRepositoryMock.searchUsers(commonName, PagingParams()))
+        whenever(jdbiUserRepositoryMock.searchUsers(userId, commonName, PagingParams()))
             .thenReturn(listOf(mockSearchUserModel, mockSearchUserModel2))
         whenever(pictureRepositoryMock.getPicture(publicTestUser.profilePictureName!!, PictureDomain.USERS_FOLDER))
             .thenReturn(byteArrayOf(1, 2, 3))
@@ -27,7 +28,7 @@ class SearchUsersServiceTests : UserServiceTest() {
             .thenReturn(byteArrayOf(1, 2, 3))
 
         // when retrieving the users by a common string
-        val users = searchUsers(commonName, PagingParams())
+        val users = searchUsers(userId, commonName, PagingParams())
 
         // then the users are retrieved successfully
         assertTrue(users.isNotEmpty())

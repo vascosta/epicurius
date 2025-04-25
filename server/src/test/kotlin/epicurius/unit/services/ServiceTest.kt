@@ -25,7 +25,8 @@ open class ServiceTest : EpicuriusUnitTest() {
 
         fun getProfilePicture(profilePictureName: String?) = userService.getProfilePicture(profilePictureName)
 
-        fun searchUsers(partialUsername: String, pagingParams: PagingParams) = userService.searchUsers(partialUsername, pagingParams)
+        fun searchUsers(userId: Int, partialUsername: String, pagingParams: PagingParams) =
+            userService.searchUsers(userId, partialUsername, pagingParams)
 
         fun getFollowers(userId: Int) = userService.getFollowers(userId)
 
@@ -42,7 +43,7 @@ open class ServiceTest : EpicuriusUnitTest() {
             userService.updateUser(username, userUpdate)
 
         fun updateProfilePicture(username: String, profilePictureName: String? = null, profilePicture: MultipartFile? = null) =
-            userService.updateProfilePicture(username, profilePictureName, profilePicture)
+            userService.updateUserProfilePicture(username, profilePictureName, profilePicture)
 
         fun resetPassword(email: String, newPassword: String, confirmPassword: String) =
             userService.resetPassword(email, newPassword, confirmPassword)

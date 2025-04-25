@@ -18,8 +18,8 @@ open class UserRepositoryTest : RepositoryTest() {
         fun getUserByEmail(email: String) = tm.run { it.userRepository.getUser(email = email) }
         fun getUserByTokenHash(tokenHash: String) = tm.run { it.userRepository.getUser(tokenHash = tokenHash) }
 
-        fun searchUsers(partialUsername: String, pagingParams: PagingParams) =
-            tm.run { it.userRepository.searchUsers(partialUsername, pagingParams) }
+        fun searchUsers(userId: Int, partialUsername: String, pagingParams: PagingParams) =
+            tm.run { it.userRepository.searchUsers(userId, partialUsername, pagingParams) }
 
         fun getFollowers(userId: Int) = tm.run { it.userRepository.getFollowers(userId) }
         fun getFollowing(userId: Int) = tm.run { it.userRepository.getFollowing(userId) }

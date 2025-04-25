@@ -18,7 +18,7 @@ class LoginServiceTests : UserServiceTest() {
     fun `Should login a user by name successfully`() {
         // given a user (publicTestUser)
 
-        // mocks
+        // mock
         val mockPassword = generateSecurePassword()
         val mockToken = randomUUID().toString()
         val mockTokenHash = userDomain.hashToken(mockToken)
@@ -42,7 +42,7 @@ class LoginServiceTests : UserServiceTest() {
     fun `Should login a user by email successfully`() {
         // given a user (publicTestUser)
 
-        // mocks
+        // mock
         val mockPassword = generateSecurePassword()
         val mockToken = randomUUID().toString()
         val mockTokenHash = userDomain.hashToken(mockToken)

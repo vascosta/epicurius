@@ -2,20 +2,18 @@ package epicurius.unit.services.user
 
 import epicurius.domain.exceptions.UserNotFollowed
 import epicurius.domain.exceptions.UserNotFound
-import epicurius.domain.user.FollowingStatus
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
-import java.util.UUID
 import kotlin.test.Test
 import kotlin.test.assertFailsWith
 
-class UnfollowServiceTests: UserServiceTest() {
+class UnfollowServiceTests : UserServiceTest() {
 
     @Test
     fun `Should unfollow a user successfully`() {
         // given two users (publicTestUser and privateTestUser)
 
-        // mocks
+        // mock
         whenever(jdbiUserRepositoryMock.getUser(publicTestUsername)).thenReturn(publicTestUser)
         whenever(jdbiUserRepositoryMock.checkIfUserIsBeingFollowedBy(publicTestUser.id, privateTestUser.id))
             .thenReturn(true)
@@ -27,7 +25,6 @@ class UnfollowServiceTests: UserServiceTest() {
         verify(jdbiUserRepositoryMock).unfollowUser(privateTestUser.id, publicTestUser.id)
     }
 
-
     @Test
     fun `Should throw UserNotFound exception when unfollowing a non-existing user`() {
         // given a user (publicTestUser) and a non-existing user
@@ -37,7 +34,7 @@ class UnfollowServiceTests: UserServiceTest() {
         whenever(jdbiUserRepositoryMock.getUser(nonExistingUser)).thenReturn(null)
 
         // when following a non-existing user
-        // then the user cannot be followed and throws UserNotFound Exception
+        // then the user cannot be followed and throws UserNotFound exception
         assertFailsWith<UserNotFound> { unfollow(publicTestUser.id, nonExistingUser) }
     }
 
@@ -51,7 +48,7 @@ class UnfollowServiceTests: UserServiceTest() {
             .thenReturn(false)
 
         // when trying to unfollow a user that is not being followed
-        // then the user cannot be unfollowed and throws UserNotFollowed Exception
+        // then the user cannot be unfollowed and throws UserNotFollowed exception
         assertFailsWith<UserNotFollowed> { unfollow(privateTestUser.id, publicTestUsername) }
     }
 }

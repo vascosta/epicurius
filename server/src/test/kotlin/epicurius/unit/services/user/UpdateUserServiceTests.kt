@@ -48,7 +48,7 @@ class UpdateUserServiceTests : UserServiceTest() {
             publicTestUser.profilePictureName
         )
         whenever(jdbiUserRepositoryMock.getUser(newUsername)).thenReturn(null)
-        whenever(countriesDomainMock.checkIfCountryCodeIsValid(updateUserInfo.country!!)).thenReturn(true)
+        whenever(countriesDomainMock.checkIfCountryCodeIsValid(updateUserInfo.country)).thenReturn(true)
         whenever(userDomainMock.encodePassword(newPassword)).thenReturn(mockPasswordHash)
         whenever(jdbiUserRepositoryMock.updateUser(publicTestUsername, updateUserInfo.toJdbiUpdateUser(mockPasswordHash)))
             .thenReturn(mockUser)

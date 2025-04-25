@@ -23,35 +23,35 @@ class CreateUserServiceTests : UserServiceTest() {
     @Test
     fun `Should create new user and retrieve it successfully`() {
         // given information to create a user (username, email, country, password)
-        val passwordHash = userDomain.encodePassword(password)
-        val token = userDomain.generateTokenValue()
-        val tokenHash = userDomain.hashToken(token)
 
-        // mocks
+        // mock
+        val mockPasswordHash = userDomain.encodePassword(password)
+        val mockToken = userDomain.generateTokenValue()
+        val mockTokenHash = userDomain.hashToken(mockToken)
         whenever(jdbiUserRepositoryMock.getUser(username, email)).thenReturn(null)
         whenever(countriesDomainMock.checkIfCountryCodeIsValid(country)).thenReturn(true)
-        whenever(userDomainMock.encodePassword(password)).thenReturn(passwordHash)
+        whenever(userDomainMock.encodePassword(password)).thenReturn(mockPasswordHash)
         whenever(jdbiUserRepositoryMock.checkIfUserIsLoggedIn(username, email)).thenReturn(false)
-        whenever(userDomainMock.generateTokenValue()).thenReturn(token)
-        whenever(userDomainMock.hashToken(token)).thenReturn(tokenHash)
+        whenever(userDomainMock.generateTokenValue()).thenReturn(mockToken)
+        whenever(userDomainMock.hashToken(mockToken)).thenReturn(mockTokenHash)
 
         // when creating a user
         val createToken = createUser(username, email, country, password, password)
 
         // then the user is created successfully
-        verify(jdbiUserRepositoryMock).createUser(username, email, country, passwordHash)
-        verify(jdbiTokenRepositoryMock).createToken(tokenHash, username, email)
+        verify(jdbiUserRepositoryMock).createUser(username, email, country, mockPasswordHash)
+        verify(jdbiTokenRepositoryMock).createToken(mockTokenHash, username, email)
         assertNotNull(createToken)
-        assertEquals(token, createToken)
+        assertEquals(mockToken, createToken)
     }
 
     @Test
     fun `Should throw UserAlreadyExists exception when creating an user with an existing username or email`() {
-        // given an existing user and a different username and email
+        // given an existing user (publicTestUser) and a different username and email
         val randomUsername = generateRandomUsername()
         val randomEmail = generateEmail(randomUsername)
 
-        // mocks
+        // mock
         whenever(jdbiUserRepositoryMock.getUser(publicTestUsername, randomEmail)).thenReturn(publicTestUser)
         whenever(jdbiUserRepositoryMock.getUser(randomUsername, publicTestUser.email)).thenReturn(publicTestUser)
         whenever(jdbiUserRepositoryMock.getUser(publicTestUsername, publicTestUser.email)).thenReturn(publicTestUser)
@@ -80,7 +80,7 @@ class CreateUserServiceTests : UserServiceTest() {
         // given an invalid country
         val invalidCounty = "XX"
 
-        // mocks
+        // mock
         whenever(jdbiUserRepositoryMock.getUser(username, email)).thenReturn(null)
         whenever(countriesDomainMock.checkIfCountryCodeIsValid(invalidCounty)).thenReturn(false)
 
@@ -90,12 +90,12 @@ class CreateUserServiceTests : UserServiceTest() {
     }
 
     @Test
-    fun `Try to create user with different passwords and throws PasswordsDoNotMatch Exception`() {
-        // given a different passwords
+    fun `Should throw PasswordsDoNotMatch exception when creating an user with different passwords`() {
+        // given different passwords
         val password1 = generateSecurePassword()
         val password2 = generateSecurePassword()
 
-        // mocks
+        // mock
         whenever(jdbiUserRepositoryMock.getUser(username, email)).thenReturn(null)
         whenever(countriesDomainMock.checkIfCountryCodeIsValid(country)).thenReturn(true)
 

@@ -15,7 +15,7 @@ class UpdateProfilePictureServiceTests : UserServiceTest() {
     fun `Should add a profile picture to an user successfully`() {
         // given a user and a picture (publicTestUser, testPicture)
 
-        // mocks
+        // mock
         val mockPictureName = pictureDomain.generatePictureName()
         whenever(pictureDomainMock.generatePictureName()).thenReturn(mockPictureName)
         whenever(jdbiUserRepositoryMock.updateUser(publicTestUsername, JdbiUpdateUserModel(profilePictureName = mockPictureName)))
@@ -49,7 +49,7 @@ class UpdateProfilePictureServiceTests : UserServiceTest() {
     fun `Should remove the profile picture of an user successfully`() {
         // given a user and a picture (publicTestUser, testPicture)
 
-        // mocks
+        // mock
         whenever(jdbiUserRepositoryMock.updateUser(publicTestUsername, JdbiUpdateUserModel(profilePictureName = null)))
             .thenReturn(publicTestUser.copy(profilePictureName = null))
 
