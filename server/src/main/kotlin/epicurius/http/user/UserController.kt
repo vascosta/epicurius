@@ -9,9 +9,9 @@ import epicurius.http.user.models.input.ResetPasswordInputModel
 import epicurius.http.user.models.input.SignUpInputModel
 import epicurius.http.user.models.input.UpdateUserInputModel
 import epicurius.http.user.models.output.GetUserDietsOutputModel
-import epicurius.http.user.models.output.GetFollowRequestsOutputModel
-import epicurius.http.user.models.output.GetFollowersOutputModel
-import epicurius.http.user.models.output.GetFollowingOutputModel
+import epicurius.http.user.models.output.GetUserFollowRequestsOutputModel
+import epicurius.http.user.models.output.GetUserFollowersOutputModel
+import epicurius.http.user.models.output.GetUserFollowingOutputModel
 import epicurius.http.user.models.output.GetUserIntolerancesOutputModel
 import epicurius.http.user.models.output.GetUserOutputModel
 import epicurius.http.user.models.output.GetUserProfileOutputModel
@@ -96,19 +96,19 @@ class UserController(val userService: UserService) {
     @GetMapping(Uris.User.USER_FOLLOWERS)
     fun getUserFollowers(authenticatedUser: AuthenticatedUser): ResponseEntity<*> {
         val followers = userService.getFollowers(authenticatedUser.user.id)
-        return ResponseEntity.ok().body(GetFollowersOutputModel(followers))
+        return ResponseEntity.ok().body(GetUserFollowersOutputModel(followers))
     }
 
     @GetMapping(Uris.User.USER_FOLLOWING)
     fun getUserFollowing(authenticatedUser: AuthenticatedUser): ResponseEntity<*> {
         val following = userService.getFollowing(authenticatedUser.user.id)
-        return ResponseEntity.ok().body(GetFollowingOutputModel(following))
+        return ResponseEntity.ok().body(GetUserFollowingOutputModel(following))
     }
 
     @GetMapping(Uris.User.USER_FOLLOW_REQUESTS)
     fun getUserFollowRequests(authenticatedUser: AuthenticatedUser): ResponseEntity<*> {
         val followRequests = userService.getFollowRequests(authenticatedUser.user.id)
-        return ResponseEntity.ok().body(GetFollowRequestsOutputModel(followRequests))
+        return ResponseEntity.ok().body(GetUserFollowRequestsOutputModel(followRequests))
     }
 
     @PostMapping(Uris.User.SIGNUP)

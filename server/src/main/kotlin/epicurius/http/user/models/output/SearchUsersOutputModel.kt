@@ -4,8 +4,8 @@ import epicurius.domain.user.SearchUser
 
 data class SearchUsersOutputModel(val users: List<SearchUser>)
 
-typealias GetFollowersOutputModel = SearchUsersOutputModel
+typealias GetUserFollowersOutputModel = SearchUsersOutputModel
 
-typealias GetFollowingOutputModel = SearchUsersOutputModel
+typealias GetUserFollowingOutputModel = SearchUsersOutputModel
 
-typealias GetFollowRequestsOutputModel = SearchUsersOutputModel
+typealias GetUserFollowRequestsOutputModel = SearchUsersOutputModel
