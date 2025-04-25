@@ -11,7 +11,7 @@ import java.time.LocalDate
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 
-class AddProductFridgeHttpTests : FridgeHttpTest() {
+class AddProductFridgeControllerTests : FridgeHttpTest() {
 
     @Test
     fun `Should add new product to user's fridge successfully`() {

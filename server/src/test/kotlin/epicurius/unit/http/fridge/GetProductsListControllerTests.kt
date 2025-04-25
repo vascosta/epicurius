@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test
 import org.mockito.kotlin.whenever
 import org.springframework.http.HttpStatus
 
-class GetProductsListHttpTests : FridgeHttpTest() {
+class GetProductsListControllerTests : FridgeHttpTest() {
 
     @Test
     fun `Should get products list successfully`() {

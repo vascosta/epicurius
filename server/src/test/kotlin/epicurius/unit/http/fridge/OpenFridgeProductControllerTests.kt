@@ -9,7 +9,7 @@ import org.mockito.kotlin.whenever
 import org.springframework.http.HttpStatus
 import kotlin.test.assertFailsWith
 
-class OpenFridgeProductHttpTests : FridgeHttpTest() {
+class OpenFridgeProductControllerTests : FridgeHttpTest() {
 
     @Test
     fun `Should open an existing product successfully`() {
