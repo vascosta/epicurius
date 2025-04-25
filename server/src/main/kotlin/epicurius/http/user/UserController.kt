@@ -138,9 +138,7 @@ class UserController(val userService: UserService) {
         @Valid @RequestBody body: UpdateUserInputModel
     ): ResponseEntity<*> {
         val updatedUserInfo = userService.updateUser(authenticatedUser.user.name, body)
-        return ResponseEntity.ok().body(
-            UpdateUserOutputModel(updatedUserInfo)
-        )
+        return ResponseEntity.ok().body(UpdateUserOutputModel(updatedUserInfo))
     }
 
     @PatchMapping(Uris.User.USER_PICTURE, consumes = [MediaType.MULTIPART_FORM_DATA_VALUE])

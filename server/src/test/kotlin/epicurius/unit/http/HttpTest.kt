@@ -2,20 +2,63 @@ package epicurius.unit.http
 
 import epicurius.domain.Diet
 import epicurius.domain.Intolerance
+import epicurius.domain.PagingParams
 import epicurius.domain.recipe.Cuisine
 import epicurius.domain.recipe.MealType
 import epicurius.domain.user.AuthenticatedUser
+import epicurius.domain.user.FollowRequestType
 import epicurius.http.fridge.models.input.OpenProductInputModel
 import epicurius.http.fridge.models.input.ProductInputModel
 import epicurius.http.fridge.models.input.UpdateProductInputModel
 import epicurius.http.recipe.models.input.UpdateRecipeInputModel
+import epicurius.http.user.models.input.LoginInputModel
+import epicurius.http.user.models.input.ResetPasswordInputModel
+import epicurius.http.user.models.input.SignUpInputModel
+import epicurius.http.user.models.input.UpdateUserInputModel
 import epicurius.unit.EpicuriusUnitTest
+import jakarta.servlet.http.HttpServletResponse
 import org.springframework.web.multipart.MultipartFile
 
 open class HttpTest : EpicuriusUnitTest() {
 
     companion object {
         // USER
+        fun getUserInfo(authenticatedUser: AuthenticatedUser) = userController.getUserInfo(authenticatedUser)
+
+        fun getUserProfile(authenticatedUser: AuthenticatedUser, name: String) =
+            userController.getUserProfile(authenticatedUser, name)
+
+        fun searchUsers(
+            authenticatedUser: AuthenticatedUser,
+            partialUsername: String,
+            pagingParams: PagingParams
+        ) = userController.searchUsers(authenticatedUser, partialUsername, pagingParams.skip, pagingParams.limit)
+
+        fun getUserIntolerances(authenticatedUser: AuthenticatedUser) = userController.getUserIntolerances(authenticatedUser)
+        fun getUserDiet(authenticatedUser: AuthenticatedUser) = userController.getUserDiet(authenticatedUser)
+
+        fun getUserFollowers(authenticatedUser: AuthenticatedUser) = userController.getUserFollowers(authenticatedUser)
+        fun getUserFollowing(authenticatedUser: AuthenticatedUser) = userController.getUserFollowing(authenticatedUser)
+        fun getUserFollowRequests(authenticatedUser: AuthenticatedUser) = userController.getUserFollowRequests(authenticatedUser)
+
+        fun signUp(body: SignUpInputModel, response: HttpServletResponse) = userController.signUp(body, response)
+        fun login(body: LoginInputModel, response: HttpServletResponse) = userController.login(body, response)
+        fun logout(authenticatedUser: AuthenticatedUser, response: HttpServletResponse) = userController.logout(authenticatedUser, response)
+
+        fun updateUser(authenticatedUser: AuthenticatedUser, body: UpdateUserInputModel) =
+            userController.updateUser(authenticatedUser, body)
+
+        fun updateUserProfilePicture(authenticatedUser: AuthenticatedUser, profilePicture: MultipartFile) =
+            userController.updateUserProfilePicture(authenticatedUser, profilePicture)
+
+        fun resetPassword(body: ResetPasswordInputModel) = userController.resetPassword(body)
+
+        fun follow(authenticatedUser: AuthenticatedUser, username: String) = userController.follow(authenticatedUser, username)
+
+        fun cancelFollowRequest(authenticatedUser: AuthenticatedUser, username: String) =
+            userController.followRequest(authenticatedUser, username, FollowRequestType.CANCEL)
+
+        fun unfollow(authenticatedUser: AuthenticatedUser, username: String) = userController.unfollow(authenticatedUser, username)
 
         // FRIDGE
         fun getFridge(authenticatedUser: AuthenticatedUser) = fridgeController.getFridge(authenticatedUser)

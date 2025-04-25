@@ -7,6 +7,7 @@ import epicurius.domain.user.CountriesDomain
 import epicurius.domain.user.UserDomain
 import epicurius.http.fridge.FridgeController
 import epicurius.http.recipe.RecipeController
+import epicurius.http.user.UserController
 import epicurius.repository.cloudFunction.manager.CloudFunctionManager
 import epicurius.repository.cloudStorage.manager.CloudStorageManager
 import epicurius.repository.cloudStorage.picture.CloudStoragePictureRepository
@@ -36,6 +37,9 @@ open class EpicuriusUnitTest : EpicuriusTest() {
     @BeforeEach
     fun resetMocks() {
         reset(
+            userServiceMock,
+            fridgeServiceMock,
+            recipeServiceMock,
             jdbiUserRepositoryMock,
             jdbiTokenRepositoryMock,
             jdbiFridgeRepositoryMock,
@@ -66,8 +70,6 @@ open class EpicuriusUnitTest : EpicuriusTest() {
                     override val mealPlannerRepository = jdbiMealPlannerRepositoryMock
                 })
             }
-
-
         }
 
         val jdbiUserRepositoryMock: JdbiUserRepository = mock()
@@ -105,9 +107,11 @@ open class EpicuriusUnitTest : EpicuriusTest() {
             transactionManagerMock, firestoreManagerMock, cloudStorageManagerMock, spoonacularStorageManagerMock, cloudFunctionManager, pictureDomainMock
         )
 
+        val userServiceMock: UserService = mock()
         val fridgeServiceMock: FridgeService = mock()
         val recipeServiceMock: RecipeService = mock()
 
+        val userController = UserController(userServiceMock)
         val fridgeController = FridgeController(fridgeServiceMock)
         val recipeController = RecipeController(recipeServiceMock)
     }

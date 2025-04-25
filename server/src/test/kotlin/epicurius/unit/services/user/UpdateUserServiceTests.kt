@@ -22,7 +22,7 @@ class UpdateUserServiceTests : UserServiceTest() {
         // given information to update a user
         val newUsername = generateRandomUsername()
         val newPassword = generateSecurePassword()
-        val updateUserInfo = UpdateUserInputModel(
+        val updateUserInputInfo = UpdateUserInputModel(
             name = newUsername,
             email = generateEmail(newUsername),
             country = "ES",
@@ -37,32 +37,32 @@ class UpdateUserServiceTests : UserServiceTest() {
         val mockPasswordHash = userDomain.encodePassword(newPassword)
         val mockUser = User(
             publicTestUser.id,
-            updateUserInfo.name!!,
-            updateUserInfo.email!!,
+            updateUserInputInfo.name!!,
+            updateUserInputInfo.email!!,
             mockPasswordHash,
             publicTestUser.tokenHash,
-            updateUserInfo.country!!,
-            updateUserInfo.privacy!!,
-            updateUserInfo.intolerances!!,
-            updateUserInfo.diets!!,
+            updateUserInputInfo.country!!,
+            updateUserInputInfo.privacy!!,
+            updateUserInputInfo.intolerances!!,
+            updateUserInputInfo.diets!!,
             publicTestUser.profilePictureName
         )
         whenever(jdbiUserRepositoryMock.getUser(newUsername)).thenReturn(null)
-        whenever(countriesDomainMock.checkIfCountryCodeIsValid(updateUserInfo.country!!)).thenReturn(true)
+        whenever(countriesDomainMock.checkIfCountryCodeIsValid(updateUserInputInfo.country!!)).thenReturn(true)
         whenever(userDomainMock.encodePassword(newPassword)).thenReturn(mockPasswordHash)
-        whenever(jdbiUserRepositoryMock.updateUser(publicTestUsername, updateUserInfo.toJdbiUpdateUser(mockPasswordHash)))
+        whenever(jdbiUserRepositoryMock.updateUser(publicTestUsername, updateUserInputInfo.toJdbiUpdateUser(mockPasswordHash)))
             .thenReturn(mockUser)
 
         // when updating the user
-        val updatedUser = updateUser(publicTestUsername, updateUserInfo)
+        val updatedUser = updateUser(publicTestUsername, updateUserInputInfo)
 
         // then the user is updated successfully
         assertEquals(newUsername, updatedUser.name)
-        assertEquals(updateUserInfo.email, updatedUser.email)
-        assertEquals(updateUserInfo.country, updatedUser.country)
-        assertEquals(updateUserInfo.privacy, updatedUser.privacy)
-        assertEquals(updateUserInfo.intolerances, updatedUser.intolerances)
-        assertEquals(updateUserInfo.diets, updatedUser.diets)
+        assertEquals(updateUserInputInfo.email, updatedUser.email)
+        assertEquals(updateUserInputInfo.country, updatedUser.country)
+        assertEquals(updateUserInputInfo.privacy, updatedUser.privacy)
+        assertEquals(updateUserInputInfo.intolerances, updatedUser.intolerances)
+        assertEquals(updateUserInputInfo.diets, updatedUser.diets)
     }
 
     @Test
@@ -132,7 +132,7 @@ class UpdateUserServiceTests : UserServiceTest() {
 
     @Test
     fun `Should throw PasswordsDoNotMatch exception when updating a user with different passwords`() {
-        // given a user (publicTestUser)
+        // given a user (publicTestUser) and different passwords
         val password1 = generateSecurePassword()
         val password2 = generateSecurePassword()
 

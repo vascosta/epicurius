@@ -24,7 +24,7 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 
-class UpdateRecipeHttpTests : RecipeHttpTest() {
+class UpdateRecipeControllerTests : RecipeHttpTest() {
 
     private val updateRecipeInfo = UpdateRecipeInputModel(
         generateRandomRecipeName(),

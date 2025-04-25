@@ -4,16 +4,16 @@ import epicurius.EpicuriusTest
 import epicurius.domain.Diet
 import epicurius.domain.Intolerance
 import epicurius.http.fridge.models.output.FridgeOutputModel
-import epicurius.http.user.models.output.GetDietsOutputModel
-import epicurius.http.user.models.output.GetFollowRequestsOutputModel
-import epicurius.http.user.models.output.GetFollowersOutputModel
-import epicurius.http.user.models.output.GetFollowingOutputModel
-import epicurius.http.user.models.output.GetIntolerancesOutputModel
+import epicurius.http.user.models.output.GetUserDietsOutputModel
+import epicurius.http.user.models.output.GetUserFollowRequestsOutputModel
+import epicurius.http.user.models.output.GetUserFollowersOutputModel
+import epicurius.http.user.models.output.GetUserFollowingOutputModel
+import epicurius.http.user.models.output.GetUserIntolerancesOutputModel
 import epicurius.http.user.models.output.GetUserOutputModel
 import epicurius.http.user.models.output.GetUserProfileOutputModel
 import epicurius.http.user.models.output.SearchUsersOutputModel
-import epicurius.http.user.models.output.UpdateProfilePictureOutputModel
 import epicurius.http.user.models.output.UpdateUserOutputModel
+import epicurius.http.user.models.output.UpdateUserProfilePictureOutputModel
 import epicurius.http.utils.Uris
 import epicurius.integration.utils.delete
 import epicurius.integration.utils.get
@@ -57,18 +57,18 @@ class EpicuriusIntegrationTest : EpicuriusTest() {
         )
 
     fun getIntolerances(token: String) =
-        get<GetIntolerancesOutputModel>(client, api(Uris.User.USER_INTOLERANCES), token = token)
+        get<GetUserIntolerancesOutputModel>(client, api(Uris.User.USER_INTOLERANCES), token = token)
 
-    fun getDiets(token: String) = get<GetDietsOutputModel>(client, api(Uris.User.USER_DIETS), token = token)
+    fun getDiets(token: String) = get<GetUserDietsOutputModel>(client, api(Uris.User.USER_DIETS), token = token)
 
     fun getFollowers(token: String) =
-        get<GetFollowersOutputModel>(client, api(Uris.User.USER_FOLLOWERS), token = token)
+        get<GetUserFollowersOutputModel>(client, api(Uris.User.USER_FOLLOWERS), token = token)
 
     fun getFollowing(token: String) =
-        get<GetFollowingOutputModel>(client, api(Uris.User.USER_FOLLOWING), token = token)
+        get<GetUserFollowingOutputModel>(client, api(Uris.User.USER_FOLLOWING), token = token)
 
     fun getFollowRequests(token: String) =
-        get<GetFollowRequestsOutputModel>(
+        get<GetUserFollowRequestsOutputModel>(
             client,
             api(Uris.User.USER_FOLLOW_REQUESTS),
             token = token
@@ -140,8 +140,8 @@ class EpicuriusIntegrationTest : EpicuriusTest() {
     fun updateProfilePicture(
         token: String,
         profilePicture: MultipartFile
-    ): UpdateProfilePictureOutputModel? {
-        val result = patchMultiPart<UpdateProfilePictureOutputModel>(
+    ): UpdateUserProfilePictureOutputModel? {
+        val result = patchMultiPart<UpdateUserProfilePictureOutputModel>(
             client,
             api(Uris.User.USER_PICTURE),
             BodyInserters.fromMultipartData("profilePicture", profilePicture.resource),
