@@ -47,16 +47,17 @@ class JdbiUserRepository(private val handle: Handle) : UserRepository {
             .firstOrNull()
     }
 
-    override fun searchUsers(partialUsername: String, pagingParams: PagingParams): List<SearchUserModel> {
+    override fun searchUsers(userId: Int, partialUsername: String, pagingParams: PagingParams): List<SearchUserModel> {
         return handle.createQuery(
             """
                 SELECT name, profile_picture_name
                 FROM dbo.user
-                WHERE LOWER(name) LIKE LOWER(:partialUsername)
+                WHERE LOWER(name) LIKE LOWER(:partialUsername) AND id <> :userId
                 LIMIT :limit OFFSET :skip
             """
         )
             .bind("partialUsername", "%$partialUsername%")
+            .bind("userId", userId)
             .bind("limit", pagingParams.limit)
             .bind("skip", pagingParams.skip)
             .mapTo<SearchUserModel>()

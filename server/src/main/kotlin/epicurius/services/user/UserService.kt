@@ -73,8 +73,8 @@ class UserService(
         return cs.pictureRepository.getPicture(profilePictureName, PictureDomain.USERS_FOLDER)
     }
 
-    fun searchUsers(partialUsername: String, pagingParams: PagingParams): List<SearchUser> {
-        return tm.run { it.userRepository.searchUsers(partialUsername, pagingParams) }
+    fun searchUsers(userId: Int, partialUsername: String, pagingParams: PagingParams): List<SearchUser> {
+        return tm.run { it.userRepository.searchUsers(userId, partialUsername, pagingParams) }
             .map { user -> SearchUser(user.name, getProfilePicture(user.profilePictureName)) }
     }
 
@@ -122,7 +122,7 @@ class UserService(
         }
     }
 
-    fun updateProfilePicture(username: String, profilePictureName: String? = null, profilePicture: MultipartFile?): String? {
+    fun updateUserProfilePicture(username: String, profilePictureName: String? = null, profilePicture: MultipartFile?): String? {
         return when {
             profilePictureName == null && profilePicture != null -> { // add new profile picture
                 pictureDomain.validatePicture(profilePicture)

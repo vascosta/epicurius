@@ -16,8 +16,8 @@ import epicurius.http.user.models.output.GetIntolerancesOutputModel
 import epicurius.http.user.models.output.GetUserOutputModel
 import epicurius.http.user.models.output.GetUserProfileOutputModel
 import epicurius.http.user.models.output.SearchUsersOutputModel
-import epicurius.http.user.models.output.UpdateProfilePictureOutputModel
 import epicurius.http.user.models.output.UpdateUserOutputModel
+import epicurius.http.user.models.output.UpdateUserProfilePictureOutputModel
 import epicurius.http.utils.Uris
 import epicurius.services.user.UserService
 import jakarta.servlet.http.HttpServletResponse
@@ -77,36 +77,36 @@ class UserController(val userService: UserService) {
         @RequestParam limit: Int
     ): ResponseEntity<*> {
         val pagingParams = PagingParams(skip, limit)
-        val users = userService.searchUsers(partialUsername, pagingParams)
+        val users = userService.searchUsers(authenticatedUser.user.id, partialUsername, pagingParams)
         return ResponseEntity.ok().body(SearchUsersOutputModel(users))
     }
 
     @GetMapping(Uris.User.USER_INTOLERANCES)
-    fun getIntolerances(authenticatedUser: AuthenticatedUser): ResponseEntity<*> {
+    fun getUserIntolerances(authenticatedUser: AuthenticatedUser): ResponseEntity<*> {
         val intolerances = authenticatedUser.user.intolerances
         return ResponseEntity.ok().body(GetIntolerancesOutputModel(intolerances))
     }
 
     @GetMapping(Uris.User.USER_DIETS)
-    fun getDiet(authenticatedUser: AuthenticatedUser): ResponseEntity<*> {
+    fun getUserDiet(authenticatedUser: AuthenticatedUser): ResponseEntity<*> {
         val diet = authenticatedUser.user.diets
         return ResponseEntity.ok().body(GetDietsOutputModel(diet))
     }
 
     @GetMapping(Uris.User.USER_FOLLOWERS)
-    fun getFollowers(authenticatedUser: AuthenticatedUser): ResponseEntity<*> {
+    fun getUserFollowers(authenticatedUser: AuthenticatedUser): ResponseEntity<*> {
         val followers = userService.getFollowers(authenticatedUser.user.id)
         return ResponseEntity.ok().body(GetFollowersOutputModel(followers))
     }
 
     @GetMapping(Uris.User.USER_FOLLOWING)
-    fun getFollowing(authenticatedUser: AuthenticatedUser): ResponseEntity<*> {
+    fun getUserFollowing(authenticatedUser: AuthenticatedUser): ResponseEntity<*> {
         val following = userService.getFollowing(authenticatedUser.user.id)
         return ResponseEntity.ok().body(GetFollowingOutputModel(following))
     }
 
     @GetMapping(Uris.User.USER_FOLLOW_REQUESTS)
-    fun getFollowRequests(authenticatedUser: AuthenticatedUser): ResponseEntity<*> {
+    fun getUserFollowRequests(authenticatedUser: AuthenticatedUser): ResponseEntity<*> {
         val followRequests = userService.getFollowRequests(authenticatedUser.user.id)
         return ResponseEntity.ok().body(GetFollowRequestsOutputModel(followRequests))
     }
@@ -144,11 +144,11 @@ class UserController(val userService: UserService) {
     }
 
     @PatchMapping(Uris.User.USER_PICTURE, consumes = [MediaType.MULTIPART_FORM_DATA_VALUE])
-    fun updateProfilePicture(
+    fun updateUserProfilePicture(
         authenticatedUser: AuthenticatedUser,
         @RequestPart("profilePicture", required = false) profilePicture: MultipartFile?
     ): ResponseEntity<*> {
-        val newProfilePicture = userService.updateProfilePicture(
+        val newProfilePicture = userService.updateUserProfilePicture(
             authenticatedUser.user.name,
             authenticatedUser.user.profilePictureName,
             profilePicture
@@ -156,7 +156,7 @@ class UserController(val userService: UserService) {
         return if (newProfilePicture == null) {
             ResponseEntity.noContent().build<Unit>()
         } else {
-            ResponseEntity.ok().body(UpdateProfilePictureOutputModel(newProfilePicture))
+            ResponseEntity.ok().body(UpdateUserProfilePictureOutputModel(newProfilePicture))
         }
     }
 
