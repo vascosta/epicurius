@@ -31,6 +31,9 @@ class UserDomain(
     fun hashToken(token: String): String = tokenEncoder.hash(token)
 
     companion object {
+        const val VALID_STRING = "(?=.*[a-zA-Z])[a-zA-Z0-9]*$"
+        const val VALID_STRING_MSG = "must be in a valid string format"
+
         const val MIN_USERNAME_LENGTH = 3
         const val MAX_USERNAME_LENGTH = 25
         const val USERNAME_LENGTH_MSG = "must be between $MIN_USERNAME_LENGTH and $MAX_USERNAME_LENGTH characters"
@@ -39,6 +42,8 @@ class UserDomain(
 
         const val MIN_PASSWORD_LENGTH = 8
         const val MAX_PASSWORD_LENGTH = 30
+        const val VALID_PASSWORD = "(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%^&*()\\-__+.]).*$"
+        const val VALID_PASSWORD_MSG = "must have uppercase and lowercase letters, at least a number and a special character"
         const val PASSWORD_LENGTH_MSG = "must be between $MIN_PASSWORD_LENGTH and $MAX_PASSWORD_LENGTH characters"
 
         const val TOKEN_SIZE_IN_BYTES = 32

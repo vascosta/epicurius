@@ -1,6 +1,5 @@
 package epicurius.domain
 
-import epicurius.domain.exceptions.InvalidIntolerance
 import epicurius.domain.exceptions.InvalidIntolerancesIdx
 
 enum class Intolerance {
