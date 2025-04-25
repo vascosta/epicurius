@@ -8,11 +8,11 @@ import epicurius.http.user.models.input.LoginInputModel
 import epicurius.http.user.models.input.ResetPasswordInputModel
 import epicurius.http.user.models.input.SignUpInputModel
 import epicurius.http.user.models.input.UpdateUserInputModel
-import epicurius.http.user.models.output.GetDietsOutputModel
+import epicurius.http.user.models.output.GetUserDietsOutputModel
 import epicurius.http.user.models.output.GetFollowRequestsOutputModel
 import epicurius.http.user.models.output.GetFollowersOutputModel
 import epicurius.http.user.models.output.GetFollowingOutputModel
-import epicurius.http.user.models.output.GetIntolerancesOutputModel
+import epicurius.http.user.models.output.GetUserIntolerancesOutputModel
 import epicurius.http.user.models.output.GetUserOutputModel
 import epicurius.http.user.models.output.GetUserProfileOutputModel
 import epicurius.http.user.models.output.SearchUsersOutputModel
@@ -41,7 +41,7 @@ import org.springframework.web.multipart.MultipartFile
 class UserController(val userService: UserService) {
 
     @GetMapping(Uris.User.USER)
-    fun getUser(authenticatedUser: AuthenticatedUser): ResponseEntity<*> {
+    fun getUserInfo(authenticatedUser: AuthenticatedUser): ResponseEntity<*> {
         return ResponseEntity.ok().body(GetUserOutputModel(authenticatedUser.user.toUserInfo()))
     }
 
@@ -84,13 +84,13 @@ class UserController(val userService: UserService) {
     @GetMapping(Uris.User.USER_INTOLERANCES)
     fun getUserIntolerances(authenticatedUser: AuthenticatedUser): ResponseEntity<*> {
         val intolerances = authenticatedUser.user.intolerances
-        return ResponseEntity.ok().body(GetIntolerancesOutputModel(intolerances))
+        return ResponseEntity.ok().body(GetUserIntolerancesOutputModel(intolerances))
     }
 
     @GetMapping(Uris.User.USER_DIETS)
     fun getUserDiet(authenticatedUser: AuthenticatedUser): ResponseEntity<*> {
-        val diet = authenticatedUser.user.diets
-        return ResponseEntity.ok().body(GetDietsOutputModel(diet))
+        val diets = authenticatedUser.user.diets
+        return ResponseEntity.ok().body(GetUserDietsOutputModel(diets))
     }
 
     @GetMapping(Uris.User.USER_FOLLOWERS)
