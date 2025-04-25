@@ -9,7 +9,7 @@ import org.springframework.http.HttpStatus
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 
-class RemoveFridgeProductHttpTests : FridgeHttpTest() {
+class RemoveFridgeProductControllerTests : FridgeHttpTest() {
 
     @Test
     fun `Should remove product from user's fridge successfully`() {

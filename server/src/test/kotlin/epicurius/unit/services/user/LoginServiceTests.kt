@@ -65,18 +65,18 @@ class LoginServiceTests : UserServiceTest() {
     @Test
     fun `Should throw UserNotFound exception when login with an non existing user `() {
         // given a non-existing username and email
-        val username = ""
-        val email = ""
+        val nonExistingUsername = ""
+        val nonExistingEmail = ""
         val password = generateSecurePassword()
 
         // mock
-        whenever(jdbiUserRepositoryMock.getUser(username)).thenReturn(null)
-        whenever(jdbiUserRepositoryMock.getUser(email = email)).thenReturn(null)
+        whenever(jdbiUserRepositoryMock.getUser(nonExistingUsername)).thenReturn(null)
+        whenever(jdbiUserRepositoryMock.getUser(email = nonExistingEmail)).thenReturn(null)
 
         // when logging in
         // then the user cannot be logged in and throws UserNotFound exception
-        assertFailsWith<UserNotFound> { login(username, password = password) }
-        assertFailsWith<UserNotFound> { login(email = email, password = password) }
+        assertFailsWith<UserNotFound> { login(nonExistingUsername, password = password) }
+        assertFailsWith<UserNotFound> { login(email = nonExistingEmail, password = password) }
     }
 
     @Test
