@@ -5,7 +5,9 @@ import epicurius.domain.exceptions.UserNotFound
 import epicurius.domain.user.FollowRequestType
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
+import org.springframework.http.HttpStatusCode
 import kotlin.test.Test
+import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 
 class CancelFollowRequestControllerTests : UserHttpTest() {
@@ -15,10 +17,11 @@ class CancelFollowRequestControllerTests : UserHttpTest() {
         // given two users (publicTestUser and privateTestUser)
 
         // when canceling the follow request
-        cancelFollowRequest(publicTestUser, privateTestUsername)
+        val response = cancelFollowRequest(publicTestUser, privateTestUsername)
 
         // then the follow request is canceled successfully
         verify(userServiceMock).followRequest(publicTestUser.user.id, privateTestUsername, FollowRequestType.CANCEL)
+        assertEquals(HttpStatusCode.valueOf(204), response.statusCode)
     }
 
     @Test

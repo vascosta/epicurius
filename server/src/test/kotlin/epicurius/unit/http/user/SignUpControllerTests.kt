@@ -9,7 +9,9 @@ import epicurius.utils.generateRandomUsername
 import epicurius.utils.generateSecurePassword
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
+import org.springframework.http.HttpStatusCode
 import kotlin.test.Test
+import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 
 class SignUpControllerTests : UserHttpTest() {
@@ -36,10 +38,11 @@ class SignUpControllerTests : UserHttpTest() {
         ).thenReturn(mockToken)
 
         // when creating a user
-        signUp(signUpInfo, mockResponse).headers.getFirst("Authorization")
+        val response = signUp(signUpInfo, mockResponse)
 
         // then the user is created successfully
         verify(mockResponse).addHeader("Authorization", "Bearer $mockToken")
+        assertEquals(HttpStatusCode.valueOf(201), response.statusCode)
     }
 
     @Test

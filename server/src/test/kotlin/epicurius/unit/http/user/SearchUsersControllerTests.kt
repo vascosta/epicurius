@@ -6,11 +6,13 @@ import epicurius.domain.user.SearchUser
 import epicurius.domain.user.User
 import epicurius.http.user.models.output.SearchUsersOutputModel
 import org.mockito.kotlin.whenever
+import org.springframework.http.HttpStatusCode
 import java.util.UUID.randomUUID
 import kotlin.test.Test
 import kotlin.test.assertContentEquals
+import kotlin.test.assertEquals
 
-class SearchUsersControllerTests: UserHttpTest() {
+class SearchUsersControllerTests : UserHttpTest() {
 
     @Test
     fun `Should search for users and retrieve them successfully`() {
@@ -29,9 +31,11 @@ class SearchUsersControllerTests: UserHttpTest() {
             .thenReturn(mockSearchUsers)
 
         // when retrieving the users by a common string
-        val body = searchUsers(authenticatedUser, commonName, PagingParams()).body as SearchUsersOutputModel
+        val response = searchUsers(authenticatedUser, commonName, PagingParams())
+        val body = response.body as SearchUsersOutputModel
 
         // then the users are retrieved successfully
+        assertEquals(HttpStatusCode.valueOf(200), response.statusCode)
         assertContentEquals(mockSearchUsers, body.users)
     }
 }

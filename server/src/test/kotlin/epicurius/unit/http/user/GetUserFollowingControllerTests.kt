@@ -1,13 +1,14 @@
 package epicurius.unit.http.user
 
-import epicurius.domain.user.SearchUser
 import epicurius.domain.user.FollowUser
+import epicurius.domain.user.SearchUser
 import epicurius.http.user.models.output.GetUserFollowingOutputModel
 import org.mockito.kotlin.whenever
+import org.springframework.http.HttpStatusCode
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
-class GetUserFollowingControllerTests: UserHttpTest() {
+class GetUserFollowingControllerTests : UserHttpTest() {
 
     @Test
     fun `Should retrieve the following of an user successfully`() {
@@ -19,9 +20,11 @@ class GetUserFollowingControllerTests: UserHttpTest() {
         whenever(userServiceMock.getFollowing(publicTestUser.user.id)).thenReturn(mockFollowings)
 
         // when retrieving the following of the user
-        val body = getUserFollowing(publicTestUser).body as GetUserFollowingOutputModel
+        val response = getUserFollowing(publicTestUser)
+        val body = response.body as GetUserFollowingOutputModel
 
         // then the following are retrieved successfully
+        assertEquals(HttpStatusCode.valueOf(200), response.statusCode)
         assertEquals(mockFollowings.size, body.users.size)
         assertEquals(SearchUser(mockFollowing.name, null), body.users.first())
     }

@@ -4,14 +4,15 @@ import epicurius.domain.exceptions.IncorrectPassword
 import epicurius.domain.exceptions.UserAlreadyLoggedIn
 import epicurius.domain.exceptions.UserNotFound
 import epicurius.http.user.models.input.LoginInputModel
-import epicurius.unit.services.ServiceTest
 import epicurius.utils.generateSecurePassword
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
+import org.springframework.http.HttpStatusCode
 import kotlin.test.Test
+import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 
-class LoginControllerTests: UserHttpTest() {
+class LoginControllerTests : UserHttpTest() {
 
     private val loginInputInfo = LoginInputModel(publicTestUsername, publicTestUser.user.email, generateSecurePassword())
 
@@ -24,10 +25,11 @@ class LoginControllerTests: UserHttpTest() {
         whenever(userServiceMock.login(loginInputInfo.name, null, loginInputInfo.password)).thenReturn(mockToken)
 
         // when logging in by name
-        login(loginInputInfo.copy(email = null), mockResponse)
+        val response = login(loginInputInfo.copy(email = null), mockResponse)
 
         // then the user is logged in successfully
         verify(mockResponse).addHeader("Authorization", "Bearer $mockToken")
+        assertEquals(HttpStatusCode.valueOf(204), response.statusCode)
     }
 
     @Test
@@ -39,10 +41,11 @@ class LoginControllerTests: UserHttpTest() {
         whenever(userServiceMock.login(null, loginInputInfo.email, loginInputInfo.password)).thenReturn(mockToken)
 
         // when logging in by email
-        login(loginInputInfo.copy(name = null), mockResponse)
+        val response = login(loginInputInfo.copy(name = null), mockResponse)
 
         // then the user is logged in successfully
         verify(mockResponse).addHeader("Authorization", "Bearer $mockToken")
+        assertEquals(HttpStatusCode.valueOf(204), response.statusCode)
     }
 
     @Test

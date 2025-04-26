@@ -48,10 +48,10 @@ open class HttpTest : EpicuriusUnitTest() {
         fun updateUser(authenticatedUser: AuthenticatedUser, body: UpdateUserInputModel) =
             userController.updateUser(authenticatedUser, body)
 
-        fun updateUserProfilePicture(authenticatedUser: AuthenticatedUser, profilePicture: MultipartFile) =
+        fun updateUserProfilePicture(authenticatedUser: AuthenticatedUser, profilePicture: MultipartFile?) =
             userController.updateUserProfilePicture(authenticatedUser, profilePicture)
 
-        fun resetPassword(body: ResetPasswordInputModel) = userController.resetPassword(body)
+        fun resetUserPassword(body: ResetPasswordInputModel) = userController.resetUserPassword(body)
 
         fun follow(authenticatedUser: AuthenticatedUser, username: String) = userController.follow(authenticatedUser, username)
 

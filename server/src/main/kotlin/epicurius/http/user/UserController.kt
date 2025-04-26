@@ -159,7 +159,7 @@ class UserController(val userService: UserService) {
     }
 
     @PatchMapping(Uris.User.USER_RESET_PASSWORD)
-    fun resetPassword(
+    fun resetUserPassword(
         @Valid @RequestBody body: ResetPasswordInputModel
     ): ResponseEntity<*> {
         userService.resetPassword(body.email, body.newPassword, body.confirmPassword)
