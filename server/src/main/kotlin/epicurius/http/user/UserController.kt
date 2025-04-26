@@ -146,7 +146,7 @@ class UserController(val userService: UserService) {
         authenticatedUser: AuthenticatedUser,
         @RequestPart("profilePicture", required = false) profilePicture: MultipartFile?
     ): ResponseEntity<*> {
-        val newProfilePicture = userService.updateUserProfilePicture(
+        val newProfilePicture = userService.updateProfilePicture(
             authenticatedUser.user.name,
             authenticatedUser.user.profilePictureName,
             profilePicture

@@ -68,7 +68,7 @@ class UserService(
         }
     }
 
-    fun getProfilePicture(profilePictureName: String?): ByteArray? {
+    fun getProfilePicture(profilePictureName: String? = null): ByteArray? {
         if (profilePictureName == null) return null
         return cs.pictureRepository.getPicture(profilePictureName, PictureDomain.USERS_FOLDER)
     }
@@ -90,7 +90,7 @@ class UserService(
         tm.run { it.userRepository.getFollowRequests(userId) }
             .map { user -> FollowUser(user.name, getProfilePicture(user.profilePictureName)) }
 
-    fun login(name: String?, email: String?, password: String): String {
+    fun login(name: String? = null, email: String? = null, password: String): String {
         val user = checkIfUserExists(name, email) ?: throw UserNotFound(name ?: email)
         checkIfUserIsLoggedIn(name, email)
 
@@ -122,7 +122,11 @@ class UserService(
         }
     }
 
-    fun updateUserProfilePicture(username: String, profilePictureName: String? = null, profilePicture: MultipartFile?): String? {
+    fun updateProfilePicture(
+        username: String,
+        profilePictureName: String? = null,
+        profilePicture: MultipartFile? = null
+    ): String? {
         return when {
             profilePictureName == null && profilePicture != null -> { // add new profile picture
                 pictureDomain.validatePicture(profilePicture)
