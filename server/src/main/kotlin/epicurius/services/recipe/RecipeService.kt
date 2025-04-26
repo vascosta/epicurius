@@ -1,10 +1,12 @@
 package epicurius.services.recipe
 
+import epicurius.domain.exceptions.InvalidIngredient
 import epicurius.domain.exceptions.InvalidNumberOfRecipePictures
 import epicurius.domain.exceptions.NotTheAuthor
 import epicurius.domain.exceptions.RecipeNotFound
 import epicurius.domain.picture.PictureDomain
 import epicurius.domain.picture.PictureDomain.Companion.RECIPES_FOLDER
+import epicurius.domain.recipe.Ingredient
 import epicurius.domain.recipe.Recipe
 import epicurius.domain.recipe.RecipeDomain.Companion.MAX_PICTURES
 import epicurius.domain.recipe.RecipeDomain.Companion.MIN_PICTURES
@@ -34,11 +36,11 @@ class RecipeService(
     private val pictureDomain: PictureDomain
 ) {
 
-    fun createRecipe(authorId: Int, authorName: String, recipeInfo: CreateRecipeInputModel, pictures: List<MultipartFile>): Recipe {
-
+    suspend fun createRecipe(authorId: Int, authorName: String, recipeInfo: CreateRecipeInputModel, pictures: List<MultipartFile>): Recipe {
         if (pictures.size !in MIN_PICTURES..MAX_PICTURES) {
             throw InvalidNumberOfRecipePictures()
         } else {
+            validateIngredients(recipeInfo.ingredients)
             pictures.forEach { pictureDomain.validatePicture(it) }
             val picturesNames = pictures.map { pictureDomain.generatePictureName() }
 
@@ -108,6 +110,10 @@ class RecipeService(
     }
 
     suspend fun updateRecipe(userId: Int, recipeId: Int, recipeInfo: UpdateRecipeInputModel): UpdateRecipeModel {
+        if (recipeInfo.ingredients != null) {
+            validateIngredients(recipeInfo.ingredients)
+        }
+
         val jdbiRecipeModel = checkIfRecipeExists(recipeId) ?: throw RecipeNotFound()
         checkIfUserIsAuthor(userId, jdbiRecipeModel.authorId)
 
@@ -186,6 +192,14 @@ class RecipeService(
         checkIfUserIsAuthor(userId, recipe.authorId)
         tm.run { it.recipeRepository.deleteRecipe(recipeId) }
         fs.recipeRepository.deleteRecipe(recipeId)
+    }
+
+    private suspend fun validateIngredients(ingredients: List<Ingredient>) {
+        ingredients.forEach { ingredient ->
+            val lowerCaseIngredient = ingredient.name.lowercase()
+            val productList = sm.spoonacularRepository.getProductsList(lowerCaseIngredient)
+            if (!productList.contains(lowerCaseIngredient)) throw InvalidIngredient(ingredient.name)
+        }
     }
 
     private fun checkIfRecipeExists(recipeId: Int): JdbiRecipeModel? =
