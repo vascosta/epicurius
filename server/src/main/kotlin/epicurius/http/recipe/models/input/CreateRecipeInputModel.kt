@@ -20,7 +20,10 @@ data class CreateRecipeInputModel(
     @field:Size(min = RecipeDomain.MIN_RECIPE_DESCRIPTION_LENGTH, max = RecipeDomain.MAX_RECIPE_DESCRIPTION_LENGTH, message = RecipeDomain.RECIPE_DESCRIPTION_LENGTH_MSG)
     val description: String,
 
+    @field:Positive(message = UserDomain.POSITIVE_NUMBER_MSG)
     val servings: Int,
+
+    @field:Positive(message = UserDomain.POSITIVE_NUMBER_MSG)
     val preparationTime: Int,
     val cuisine: Cuisine,
     val mealType: MealType,
@@ -28,16 +31,16 @@ data class CreateRecipeInputModel(
     val diets: Set<Diet>,
     val ingredients: List<Ingredient>,
 
-    @field:Positive(message = RecipeDomain.CALORIES_MSG)
+    @field:Positive(message = UserDomain.POSITIVE_NUMBER_MSG)
     val calories: Int? = null,
 
-    @field:Positive(message = RecipeDomain.PROTEIN_MSG)
+    @field:Positive(message = UserDomain.POSITIVE_NUMBER_MSG)
     val protein: Int? = null,
 
-    @field:Positive(message = RecipeDomain.FAT_MSG)
+    @field:Positive(message = UserDomain.POSITIVE_NUMBER_MSG)
     val fat: Int? = null,
 
-    @field:Positive(message = RecipeDomain.CARBS_MSG)
+    @field:Positive(message = UserDomain.POSITIVE_NUMBER_MSG)
     val carbs: Int? = null,
     val instructions: Instructions
 ) {
@@ -49,6 +52,14 @@ data class CreateRecipeInputModel(
 
         if (diets.size > UserDomain.MAX_DIET_SIZE) {
             throw IllegalArgumentException(UserDomain.MAX_DIET_SIZE_MSG)
+        }
+
+        if (ingredients.size > RecipeDomain.MAX_NUMBER_OF_INGREDIENTS) {
+            throw IllegalArgumentException(RecipeDomain.INGREDIENTS_SIZE_MSG)
+        }
+
+        if (instructions.steps.size > RecipeDomain.MAX_NUMBER_OF_INSTRUCTIONS_STEPS) {
+            throw IllegalArgumentException(RecipeDomain.INSTRUCTIONS_STEPS_SIZE_MSG)
         }
     }
 

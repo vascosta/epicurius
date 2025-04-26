@@ -33,6 +33,7 @@ class UserDomain(
     companion object {
         const val VALID_STRING = "(?=.*[a-zA-Z])[a-zA-Z0-9]*$"
         const val VALID_STRING_MSG = "must be in a valid string format"
+        const val POSITIVE_NUMBER_MSG = "must be a positive number"
 
         const val MIN_USERNAME_LENGTH = 3
         const val MAX_USERNAME_LENGTH = 25
