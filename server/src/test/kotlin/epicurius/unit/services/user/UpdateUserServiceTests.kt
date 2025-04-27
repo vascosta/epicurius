@@ -43,8 +43,8 @@ class UpdateUserServiceTests : UserServiceTest() {
             publicTestUser.tokenHash,
             updateUserInputInfo.country!!,
             updateUserInputInfo.privacy!!,
-            updateUserInputInfo.intolerances!!,
-            updateUserInputInfo.diets!!,
+            updateUserInputInfo.intolerances!!.toList(),
+            updateUserInputInfo.diets!!.toList(),
             publicTestUser.profilePictureName
         )
         whenever(jdbiUserRepositoryMock.getUser(newUsername)).thenReturn(null)
@@ -61,8 +61,8 @@ class UpdateUserServiceTests : UserServiceTest() {
         assertEquals(updateUserInputInfo.email, updatedUser.email)
         assertEquals(updateUserInputInfo.country, updatedUser.country)
         assertEquals(updateUserInputInfo.privacy, updatedUser.privacy)
-        assertEquals(updateUserInputInfo.intolerances, updatedUser.intolerances)
-        assertEquals(updateUserInputInfo.diets, updatedUser.diets)
+        assertEquals(updateUserInputInfo.intolerances?.toList(), updatedUser.intolerances)
+        assertEquals(updateUserInputInfo.diets?.toList(), updatedUser.diets)
     }
 
     @Test

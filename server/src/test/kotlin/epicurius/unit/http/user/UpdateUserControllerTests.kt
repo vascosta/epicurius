@@ -42,8 +42,8 @@ class UpdateUserControllerTests : UserHttpTest() {
             updateUserInputInfo.email!!,
             updateUserInputInfo.country!!,
             updateUserInputInfo.privacy!!,
-            updateUserInputInfo.intolerances!!,
-            updateUserInputInfo.diets!!,
+            updateUserInputInfo.intolerances!!.toList(),
+            updateUserInputInfo.diets!!.toList(),
             publicTestUser.user.profilePictureName
         )
         whenever(userServiceMock.updateUser(publicTestUsername, updateUserInputInfo))
@@ -59,8 +59,8 @@ class UpdateUserControllerTests : UserHttpTest() {
         assertEquals(updateUserInputInfo.email, body.userInfo.email)
         assertEquals(updateUserInputInfo.country, body.userInfo.country)
         assertEquals(updateUserInputInfo.privacy, body.userInfo.privacy)
-        assertEquals(updateUserInputInfo.intolerances, body.userInfo.intolerances)
-        assertEquals(updateUserInputInfo.diets, body.userInfo.diets)
+        assertEquals(updateUserInputInfo.intolerances?.toList(), body.userInfo.intolerances)
+        assertEquals(updateUserInputInfo.diets?.toList(), body.userInfo.diets)
     }
 
     @Test

@@ -19,8 +19,8 @@ open class UserServiceTest : ServiceTest() {
         userDomain.hashToken(randomUUID().toString()),
         "PT",
         false,
-        setOf(Intolerance.GLUTEN),
-        setOf(Diet.GLUTEN_FREE),
+        listOf(Intolerance.GLUTEN),
+        listOf(Diet.GLUTEN_FREE),
         randomUUID().toString()
     )
 
@@ -33,8 +33,8 @@ open class UserServiceTest : ServiceTest() {
         userDomain.hashToken(randomUUID().toString()),
         "PT",
         true,
-        setOf(Intolerance.GLUTEN),
-        setOf(Diet.GLUTEN_FREE),
+        listOf(Intolerance.GLUTEN),
+        listOf(Diet.GLUTEN_FREE),
         randomUUID().toString()
     )
 }

@@ -25,8 +25,8 @@ open class UserHttpTest : HttpTest() {
                 userDomain.hashToken(publicTestUserToken),
                 "PT",
                 false,
-                setOf(Intolerance.GLUTEN),
-                setOf(Diet.GLUTEN_FREE),
+                listOf(Intolerance.GLUTEN),
+                listOf(Diet.GLUTEN_FREE),
                 randomUUID().toString()
             ),
             publicTestUserToken
@@ -43,8 +43,8 @@ open class UserHttpTest : HttpTest() {
                 userDomain.hashToken(privateTestUserToken),
                 "PT",
                 true,
-                setOf(Intolerance.GLUTEN),
-                setOf(Diet.GLUTEN_FREE),
+                listOf(Intolerance.GLUTEN),
+                listOf(Diet.GLUTEN_FREE),
                 randomUUID().toString(),
             ),
             privateTestUserToken

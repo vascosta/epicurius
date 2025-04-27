@@ -46,7 +46,7 @@ class UpdateUserRepositoryTests : UserRepositoryTest() {
         assertEquals(newCountry, updatedUser.country)
         assertEquals(newPasswordHash, updatedUser.passwordHash)
         assertEquals(newPrivacy, updatedUser.privacy)
-        assertEquals(newIntolerances, updatedUser.intolerances)
-        assertEquals(newDiet, updatedUser.diets)
+        assertEquals(newIntolerances.toList(), updatedUser.intolerances)
+        assertEquals(newDiet.toList(), updatedUser.diets)
     }
 }

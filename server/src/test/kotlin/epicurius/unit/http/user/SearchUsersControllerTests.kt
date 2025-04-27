@@ -18,7 +18,7 @@ class SearchUsersControllerTests : UserHttpTest() {
     fun `Should search for users and retrieve them successfully`() {
         // given two users with their names containing a common string and a user searching for them
         val authenticatedUser = AuthenticatedUser(
-            User(1904, "", "", "", "", "", false, emptySet(), emptySet(), ""),
+            User(1904, "", "", "", "", "", false, emptyList(), emptyList(), ""),
             randomUUID().toString(),
         )
         val commonName = "test"
