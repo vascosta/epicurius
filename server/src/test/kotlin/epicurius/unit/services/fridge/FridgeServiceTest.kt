@@ -3,7 +3,6 @@ package epicurius.unit.services.fridge
 import epicurius.domain.fridge.Product
 import epicurius.domain.fridge.ProductInfo
 import epicurius.domain.fridge.UpdateProductInfo
-import epicurius.http.fridge.models.input.OpenProductInputModel
 import epicurius.http.fridge.models.input.ProductInputModel
 import epicurius.http.fridge.models.input.UpdateProductInputModel
 import epicurius.unit.services.ServiceTest
@@ -72,14 +71,14 @@ open class FridgeServiceTest : ServiceTest() {
             expirationDate = newExpiration
         )
 
-        val openProductInputModel = OpenProductInputModel(
+        val openProductInputModel = UpdateProductInputModel(
             openDate = open,
             duration = duration
         )
 
         val decreaseQuantity = UpdateProductInfo(
             entryNumber = ENTRY_NUMBER,
-            quantity = 0,
+            quantity = 1,
             expirationDate = expirationDate
         )
 

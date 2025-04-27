@@ -13,7 +13,7 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 
-class UpdateRecipePicturesServiceTests: RecipeServiceTest() {
+class UpdateRecipePicturesServiceTests : RecipeServiceTest() {
 
     @Test
     fun `Should maintain the pictures when updating the recipe pictures with the same ones successfully`() {

@@ -226,7 +226,7 @@ class EpicuriusIntegrationTest : EpicuriusTest() {
         duration: Period
     ) = patch<FridgeOutputModel>(
         client,
-        api(Uris.Fridge.OPEN_PRODUCT.take(13) + entryNumber),
+        api(Uris.Fridge.PRODUCT.take(16) + entryNumber),
         body = mapOf("openDate" to openDate, "duration" to duration),
         responseStatus = HttpStatus.OK,
         token = token

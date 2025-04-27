@@ -65,7 +65,7 @@ create table dbo.ingredient(
     name varchar(20) not null,
     quantity int not null,
     unit int not null,
-    primary key (recipe_id, name)
+    primary key (recipe_id, name),
     foreign key (recipe_id) references dbo.recipe(id)
 );
 

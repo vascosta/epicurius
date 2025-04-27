@@ -2,7 +2,6 @@ package epicurius.unit.services
 
 import epicurius.domain.PagingParams
 import epicurius.domain.user.FollowRequestType
-import epicurius.http.fridge.models.input.OpenProductInputModel
 import epicurius.http.fridge.models.input.ProductInputModel
 import epicurius.http.fridge.models.input.UpdateProductInputModel
 import epicurius.http.recipe.models.input.CreateRecipeInputModel
@@ -66,8 +65,8 @@ open class ServiceTest : EpicuriusUnitTest() {
         fun updateProductInfo(userId: Int, entryNumber: Int, product: UpdateProductInputModel) =
             fridgeService.updateProductInfo(userId, entryNumber, product)
 
-        fun openProduct(userId: Int, entryNumber: Int, product: OpenProductInputModel) =
-            fridgeService.openProduct(userId, entryNumber, product)
+        fun openProduct(userId: Int, entryNumber: Int, product: UpdateProductInputModel) =
+            fridgeService.updateProductInfo(userId, entryNumber, product)
 
         fun removeProduct(userId: Int, entryNumber: Int) = fridgeService.removeProduct(userId, entryNumber)
 

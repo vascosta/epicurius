@@ -1,7 +1,6 @@
 package epicurius.http.fridge
 
 import epicurius.domain.user.AuthenticatedUser
-import epicurius.http.fridge.models.input.OpenProductInputModel
 import epicurius.http.fridge.models.input.ProductInputModel
 import epicurius.http.fridge.models.input.UpdateProductInputModel
 import epicurius.http.fridge.models.output.FridgeOutputModel
@@ -54,16 +53,6 @@ class FridgeController(private val fridgeService: FridgeService) {
         @Valid @RequestBody body: UpdateProductInputModel
     ): ResponseEntity<*> {
         val updatedFridge = fridgeService.updateProductInfo(authenticatedUser.user.id, entryNumber, body)
-        return ResponseEntity.ok().body(updatedFridge)
-    }
-
-    @PatchMapping(Uris.Fridge.OPEN_PRODUCT)
-    fun openFridgeProduct(
-        authenticatedUser: AuthenticatedUser,
-        @PathVariable entryNumber: Int,
-        @Valid @RequestBody body: OpenProductInputModel
-    ): ResponseEntity<*> {
-        val updatedFridge = fridgeService.openProduct(authenticatedUser.user.id, entryNumber, body)
         return ResponseEntity.ok().body(updatedFridge)
     }
 

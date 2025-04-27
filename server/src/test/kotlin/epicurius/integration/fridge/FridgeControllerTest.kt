@@ -210,7 +210,7 @@ class FridgeControllerTest : EpicuriusIntegrationTest() {
     }
 
     @Test
-    fun `Open that already exists in the fridge with the same expiration date successfully with code 200`() {
+    fun `Open product that already exists in the fridge with the same expiration date successfully with code 200`() {
         // given a user token
         val token = testUserToken
 
@@ -244,7 +244,7 @@ class FridgeControllerTest : EpicuriusIntegrationTest() {
         val duration = Period.ofDays(3)
         val error = patch<Problem>(
             client,
-            api(Uris.Fridge.OPEN_PRODUCT.take(13) + 999999),
+            api(Uris.Fridge.PRODUCT.take(16) + 999999),
             body = mapOf("openDate" to openDate, "duration" to duration),
             responseStatus = HttpStatus.NOT_FOUND,
             token = token
@@ -270,7 +270,7 @@ class FridgeControllerTest : EpicuriusIntegrationTest() {
         val duration = Period.ofDays(3)
         val error = patch<Problem>(
             client,
-            api(Uris.Fridge.OPEN_PRODUCT.take(13) + newFridgeBody.products.first().entryNumber),
+            api(Uris.Fridge.PRODUCT.take(16) + newFridgeBody.products.first().entryNumber),
             body = mapOf("openDate" to openDate, "duration" to duration),
             responseStatus = HttpStatus.BAD_REQUEST,
             token = token

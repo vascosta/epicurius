@@ -8,12 +8,13 @@ import epicurius.domain.fridge.FridgeDomain
 import epicurius.domain.fridge.Product
 import epicurius.domain.fridge.ProductInfo
 import epicurius.domain.fridge.UpdateProductInfo
-import epicurius.http.fridge.models.input.OpenProductInputModel
 import epicurius.http.fridge.models.input.ProductInputModel
 import epicurius.http.fridge.models.input.UpdateProductInputModel
 import epicurius.repository.spoonacular.manager.SpoonacularManager
 import epicurius.repository.transaction.TransactionManager
 import org.springframework.stereotype.Component
+import java.time.LocalDate
+import java.time.Period
 
 @Component
 class FridgeService(
@@ -43,21 +44,22 @@ class FridgeService(
 
     fun updateProductInfo(userId: Int, entryNumber: Int, body: UpdateProductInputModel): Fridge {
         val observedProduct = checkIfProductExistsInFridge(userId, entryNumber) ?: throw ProductNotFound(entryNumber)
-        if (body.expirationDate != null) checkIfProductIsOpen(userId, entryNumber)
+        if (body.expirationDate != null || body.openDate != null) checkIfProductIsOpen(userId, entryNumber)
 
-        val updatedProduct = UpdateProductInfo(
-            entryNumber = entryNumber,
-            quantity = body.quantity ?: observedProduct.quantity,
-            expirationDate = body.expirationDate ?: observedProduct.expirationDate
-        )
+        return if (body.openDate != null) {
+            openProduct(userId, observedProduct, body.openDate, body.duration)
+        } else {
+            val updatedProduct = UpdateProductInfo(
+                entryNumber = entryNumber,
+                quantity = body.quantity ?: observedProduct.quantity,
+                expirationDate = body.expirationDate ?: observedProduct.expirationDate
+            )
 
-        return tm.run { it.fridgeRepository.updateProduct(userId, updatedProduct) }
+            tm.run { it.fridgeRepository.updateProduct(userId, updatedProduct) }
+        }
     }
 
-    fun openProduct(userId: Int, entryNumber: Int, body: OpenProductInputModel): Fridge {
-        val observedProduct = checkIfProductExistsInFridge(userId, entryNumber) ?: throw ProductNotFound(entryNumber)
-        checkIfProductIsOpen(userId, observedProduct.entryNumber)
-
+    private fun openProduct(userId: Int, observedProduct: Product, openDate: LocalDate, duration: Period?): Fridge {
         val decreaseQuantity = UpdateProductInfo(
             entryNumber = observedProduct.entryNumber,
             quantity = observedProduct.quantity - 1
@@ -67,8 +69,10 @@ class FridgeService(
         val newProduct = ProductInfo(
             productName = observedProduct.productName,
             quantity = 1,
-            openDate = body.openDate,
-            expirationDate = fridgeDomain.calculateExpirationDate(body.openDate, body.duration)
+            openDate = openDate,
+            expirationDate =
+            if (duration != null) fridgeDomain.calculateExpirationDate(openDate, duration)
+            else observedProduct.expirationDate
         )
 
         checkIfProductExistsInFridge(userId, product = newProduct)?.let { existingProduct ->
