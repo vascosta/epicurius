@@ -150,7 +150,7 @@ class RecipeService(
         val picturesBytes = recipe.picturesNames.map { cs.pictureRepository.getPicture(it, RECIPES_FOLDER) }
         val newPicturesBytes = newPictures.map { it.bytes }
 
-        if (newPictures == picturesBytes) { // if the pictures are equal and in the same order
+        if (newPicturesBytes == picturesBytes) { // if the pictures are equal and in the same order
             return UpdateRecipePicturesModel(picturesBytes)
         } else {
             val pictureNames = recipe.picturesNames

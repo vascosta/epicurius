@@ -11,6 +11,7 @@ import epicurius.domain.recipe.MealType
 import epicurius.domain.recipe.Recipe
 import epicurius.http.recipe.models.input.CreateRecipeInputModel
 import epicurius.http.recipe.models.output.CreateRecipeOutputModel
+import kotlinx.coroutines.runBlocking
 import org.mockito.kotlin.whenever
 import org.springframework.http.HttpStatus
 import org.springframework.web.multipart.MultipartFile
@@ -64,8 +65,8 @@ class CreateRecipeControllerTests : RecipeHttpTest() {
             createRecipeInfo.preparationTime,
             createRecipeInfo.cuisine,
             createRecipeInfo.mealType,
-            createRecipeInfo.intolerances,
-            createRecipeInfo.diets,
+            createRecipeInfo.intolerances.toList(),
+            createRecipeInfo.diets.toList(),
             createRecipeInfo.ingredients,
             createRecipeInfo.calories,
             createRecipeInfo.protein,
@@ -75,17 +76,22 @@ class CreateRecipeControllerTests : RecipeHttpTest() {
             recipePictures.map { it.bytes }
         )
         whenever(
-            recipeServiceMock
-                .createRecipe(
-                    testAuthenticatedUser.user.id,
-                    testAuthenticatedUser.user.name,
-                    createRecipeInfo,
-                    recipePictures
-                )
+            runBlocking {
+                recipeServiceMock
+                    .createRecipe(
+                        testAuthenticatedUser.user.id,
+                        testAuthenticatedUser.user.name,
+                        createRecipeInfo,
+                        recipePictures
+                    )
+            }
+
         ).thenReturn(recipeMock)
 
         // when creating the recipe
-        val response = createRecipe(testAuthenticatedUser, objectMapper.writeValueAsString(createRecipeInfo), recipePictures)
+        val response = runBlocking {
+            createRecipe(testAuthenticatedUser, objectMapper.writeValueAsString(createRecipeInfo), recipePictures)
+        }
 
         // then the recipe is created successfully
         assertEquals(HttpStatus.CREATED, response.statusCode)
@@ -95,21 +101,28 @@ class CreateRecipeControllerTests : RecipeHttpTest() {
     @Test
     fun `Should throw InvalidNumberOfRecipePictures exception when creating a recipe with an invalid number of pictures`() {
         // given information for a new recipe (createRecipeInfo, recipePictures) and an invalid number of pictures
-        val invalidNumberOfRecipePicturesList = emptyList<MultipartFile>()
+        val invalidNumberOfRecipePicturesSet = emptySet<MultipartFile>()
 
         // mock
         whenever(
-            recipeServiceMock.createRecipe(
-                testAuthenticatedUser.user.id,
-                testAuthenticatedUser.user.name,
-                createRecipeInfo,
-                invalidNumberOfRecipePicturesList
-            )
+            runBlocking {
+                recipeServiceMock.createRecipe(
+                    testAuthenticatedUser.user.id,
+                    testAuthenticatedUser.user.name,
+                    createRecipeInfo,
+                    invalidNumberOfRecipePicturesSet
+                )
+            }
+
         ).thenThrow(InvalidNumberOfRecipePictures())
 
         // when creating the recipe
         val exception = assertFailsWith<InvalidNumberOfRecipePictures> {
-            createRecipe(testAuthenticatedUser, objectMapper.writeValueAsString(createRecipeInfo), invalidNumberOfRecipePicturesList)
+            runBlocking {
+                createRecipe(
+                    testAuthenticatedUser, objectMapper.writeValueAsString(createRecipeInfo), invalidNumberOfRecipePicturesSet
+                )
+            }
         }
 
         // then an exception is thrown

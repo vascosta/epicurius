@@ -126,10 +126,10 @@ open class HttpTest : EpicuriusUnitTest() {
             maxTime
         )
 
-        fun createRecipe(
+        suspend fun createRecipe(
             authenticatedUser: AuthenticatedUser,
             createRecipeInputModel: String,
-            pictures: List<MultipartFile>
+            pictures: Set<MultipartFile>
         ) = recipeController.createRecipe(authenticatedUser, createRecipeInputModel, pictures)
 
         suspend fun updateRecipe(authenticatedUser: AuthenticatedUser, id: Int, updateRecipeInputModel: UpdateRecipeInputModel) =

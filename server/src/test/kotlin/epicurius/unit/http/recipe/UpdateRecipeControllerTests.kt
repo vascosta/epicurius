@@ -58,8 +58,8 @@ class UpdateRecipeControllerTests : RecipeHttpTest() {
             1,
             Cuisine.ASIAN,
             MealType.SOUP,
-            setOf(Intolerance.PEANUT),
-            setOf(Diet.KETOGENIC),
+            listOf(Intolerance.PEANUT),
+            listOf(Diet.KETOGENIC),
             updateRecipeInfo.ingredients!!,
             1,
             1,
@@ -102,7 +102,7 @@ class UpdateRecipeControllerTests : RecipeHttpTest() {
     fun `Should throw NotTheAuthor exception when updating a recipe that does not belong to the user`() {
         // given a user id and a recipe id (RECIPE_ID) that does not belong to him
         val notTheAuthorUser = AuthenticatedUser(
-            User(9999, "", "", "", "", "", false, emptySet(), emptySet(), ""),
+            User(9999, "", "", "", "", "", false, emptyList(), emptyList(), ""),
             ""
         )
 

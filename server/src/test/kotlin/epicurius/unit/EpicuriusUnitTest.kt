@@ -104,7 +104,7 @@ open class EpicuriusUnitTest : EpicuriusTest() {
         val userService = UserService(transactionManagerMock, cloudStorageManagerMock, userDomainMock, pictureDomainMock, countriesDomainMock)
         val fridgeService = FridgeService(transactionManagerMock, spoonacularStorageManagerMock, fridgeDomainMock)
         val recipeService = RecipeService(
-            transactionManagerMock, firestoreManagerMock, cloudStorageManagerMock, spoonacularStorageManagerMock, cloudFunctionManager, pictureDomainMock
+            transactionManagerMock, firestoreManagerMock, cloudStorageManagerMock, spoonacularStorageManagerMock, pictureDomainMock
         )
 
         val userServiceMock: UserService = mock()

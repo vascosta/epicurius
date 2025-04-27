@@ -29,13 +29,13 @@ open class RecipeHttpTest : HttpTest() {
                 userDomain.hashToken(token),
                 "PT",
                 false,
-                setOf(Intolerance.GLUTEN),
-                setOf(Diet.GLUTEN_FREE),
+                listOf(Intolerance.GLUTEN),
+                listOf(Diet.GLUTEN_FREE),
                 randomUUID().toString()
             ),
             token,
         )
 
-        val recipePictures = listOf(testPicture)
+        val recipePictures = setOf(testPicture)
     }
 }

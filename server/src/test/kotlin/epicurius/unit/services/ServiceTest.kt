@@ -72,7 +72,7 @@ open class ServiceTest : EpicuriusUnitTest() {
         fun removeProduct(userId: Int, entryNumber: Int) = fridgeService.removeProduct(userId, entryNumber)
 
         // RECIPE
-        fun createRecipe(authorId: Int, authorName: String, recipeInfo: CreateRecipeInputModel, pictures: List<MultipartFile>) =
+        suspend fun createRecipe(authorId: Int, authorName: String, recipeInfo: CreateRecipeInputModel, pictures: Set<MultipartFile>) =
             recipeService.createRecipe(authorId, authorName, recipeInfo, pictures)
 
         suspend fun getRecipe(recipeId: Int) = recipeService.getRecipe(recipeId)
@@ -83,7 +83,7 @@ open class ServiceTest : EpicuriusUnitTest() {
         suspend fun updateRecipe(userId: Int, recipeId: Int, recipeInfo: UpdateRecipeInputModel) =
             recipeService.updateRecipe(userId, recipeId, recipeInfo)
 
-        fun updateRecipePictures(userId: Int, recipeId: Int, pictures: List<MultipartFile>) =
+        fun updateRecipePictures(userId: Int, recipeId: Int, pictures: Set<MultipartFile>) =
             recipeService.updateRecipePictures(userId, recipeId, pictures)
 
         fun deleteRecipe(userId: Int, recipeId: Int) =
