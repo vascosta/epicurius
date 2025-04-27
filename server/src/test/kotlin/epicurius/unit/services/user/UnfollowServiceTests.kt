@@ -22,7 +22,7 @@ class UnfollowServiceTests : UserServiceTest() {
         unfollow(privateTestUser.id, publicTestUsername)
 
         // then the user is unfollowed successfully
-        verify(jdbiUserRepositoryMock).unfollowUser(privateTestUser.id, publicTestUser.id)
+        verify(jdbiUserRepositoryMock).unfollow(privateTestUser.id, publicTestUser.id)
     }
 
     @Test

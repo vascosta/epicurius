@@ -185,7 +185,7 @@ class UserService(
             }
 
         tm.run {
-            it.userRepository.followUser(userId, userToFollow.id, followingStatus.ordinal)
+            it.userRepository.follow(userId, userToFollow.id, followingStatus.ordinal)
         }
     }
 
@@ -193,7 +193,7 @@ class UserService(
         val userToUnfollow = checkIfUserExists(name = usernameToUnfollow) ?: throw UserNotFound(usernameToUnfollow)
         if (!checkIfUserIsBeingFollowedBy(userToUnfollow.id, userId)) throw UserNotFollowed(usernameToUnfollow)
         tm.run {
-            it.userRepository.unfollowUser(userId, userToUnfollow.id)
+            it.userRepository.unfollow(userId, userToUnfollow.id)
         }
     }
 

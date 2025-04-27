@@ -66,7 +66,7 @@ data class SearchRecipesInputModel(
         }
     }
 
-    fun toSearchRecipe(name: String?): SearchRecipesModel {
+    fun toSearchRecipeModel(name: String?): SearchRecipesModel {
         if (name != null && name.length > MAX_RECIPE_NAME_LENGTH) {
             throw IllegalArgumentException(RECIPE_NAME_LENGTH_MSG)
         }

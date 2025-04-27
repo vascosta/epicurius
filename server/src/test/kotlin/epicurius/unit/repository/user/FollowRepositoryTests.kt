@@ -6,7 +6,7 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
-class FollowUserRepositoryTests : UserRepositoryTest() {
+class FollowRepositoryTests : UserRepositoryTest() {
 
     @Test
     fun `Should follow a public user, unfollows him and then retrieve its followers and following successfully`() {

@@ -2,6 +2,7 @@ package epicurius.unit.http.recipe
 
 import epicurius.domain.Diet
 import epicurius.domain.Intolerance
+import epicurius.domain.exceptions.InvalidIngredient
 import epicurius.domain.exceptions.InvalidNumberOfRecipePictures
 import epicurius.domain.recipe.Cuisine
 import epicurius.domain.recipe.Ingredient
@@ -117,15 +118,40 @@ class CreateRecipeControllerTests : RecipeHttpTest() {
         ).thenThrow(InvalidNumberOfRecipePictures())
 
         // when creating the recipe
-        val exception = assertFailsWith<InvalidNumberOfRecipePictures> {
+        // then the recipe is not created and throws InvalidNumberOfRecipePictures exception
+        assertFailsWith<InvalidNumberOfRecipePictures> {
             runBlocking {
                 createRecipe(
                     testAuthenticatedUser, objectMapper.writeValueAsString(createRecipeInfo), invalidNumberOfRecipePicturesSet
                 )
             }
         }
+    }
 
-        // then an exception is thrown
-        assertEquals(InvalidNumberOfRecipePictures().message, exception.message)
+    @Test
+    fun `Should throw InvalidIngredient exception when creating a recipe with an invalid ingredient`() {
+        // given information for a new recipe (createRecipeInfo, recipePictures) and an invalid ingredient
+        val invalidIngredient = Ingredient("invalid", 1, IngredientUnit.G)
+
+        // mock
+        whenever(
+            runBlocking {
+                recipeServiceMock.createRecipe(
+                    testAuthenticatedUser.user.id,
+                    testAuthenticatedUser.user.name,
+                    createRecipeInfo,
+                    recipePictures
+                )
+            }
+
+        ).thenThrow(InvalidIngredient(invalidIngredient.name))
+
+        // when creating the recipe
+        // then the recipe is not created and throws InvalidIngredient exception
+        assertFailsWith<InvalidIngredient> {
+            runBlocking {
+                createRecipe(testAuthenticatedUser, objectMapper.writeValueAsString(createRecipeInfo), recipePictures)
+            }
+        }
     }
 }
