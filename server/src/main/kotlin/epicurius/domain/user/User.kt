@@ -11,8 +11,8 @@ data class User(
     val tokenHash: String?,
     val country: String,
     val privacy: Boolean,
-    val intolerances: Set<Intolerance>,
-    val diets: Set<Diet>,
+    val intolerances: List<Intolerance>,
+    val diets: List<Diet>,
     val profilePictureName: String?
 ) {
     fun toUserInfo(): UserInfo {

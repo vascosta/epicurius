@@ -14,7 +14,6 @@ import epicurius.domain.recipe.RecipeInfo
 import epicurius.http.recipe.models.input.CreateRecipeInputModel
 import epicurius.http.recipe.models.input.SearchRecipesInputModel
 import epicurius.http.recipe.models.input.UpdateRecipeInputModel
-import epicurius.repository.cloudFunction.manager.CloudFunctionManager
 import epicurius.repository.cloudStorage.manager.CloudStorageManager
 import epicurius.repository.firestore.FirestoreManager
 import epicurius.repository.jdbi.recipe.models.JdbiRecipeModel
@@ -32,11 +31,10 @@ class RecipeService(
     private val fs: FirestoreManager,
     private val cs: CloudStorageManager,
     private val sm: SpoonacularManager,
-    private val cf: CloudFunctionManager,
     private val pictureDomain: PictureDomain
 ) {
 
-    suspend fun createRecipe(authorId: Int, authorName: String, recipeInfo: CreateRecipeInputModel, pictures: List<MultipartFile>): Recipe {
+    suspend fun createRecipe(authorId: Int, authorName: String, recipeInfo: CreateRecipeInputModel, pictures: Set<MultipartFile>): Recipe {
         if (pictures.size !in MIN_PICTURES..MAX_PICTURES) {
             throw InvalidNumberOfRecipePictures()
         } else {
@@ -53,7 +51,7 @@ class RecipeService(
             picturesNames.forEachIndexed { index, pictureName ->
                 cs.pictureRepository.updatePicture(
                     pictureName,
-                    pictures[index],
+                    pictures.elementAt(index),
                     RECIPES_FOLDER
                 )
             }
@@ -68,8 +66,8 @@ class RecipeService(
                 recipeInfo.preparationTime,
                 recipeInfo.cuisine,
                 recipeInfo.mealType,
-                recipeInfo.intolerances,
-                recipeInfo.diets,
+                recipeInfo.intolerances.toList(),
+                recipeInfo.diets.toList(),
                 recipeInfo.ingredients,
                 recipeInfo.calories,
                 recipeInfo.protein,
@@ -130,8 +128,8 @@ class RecipeService(
             jdbiRecipe.preparationTime,
             jdbiRecipe.cuisine,
             jdbiRecipe.mealType,
-            jdbiRecipe.intolerances,
-            jdbiRecipe.diets,
+            jdbiRecipe.intolerances.toList(),
+            jdbiRecipe.diets.toList(),
             jdbiRecipe.ingredients,
             jdbiRecipe.calories,
             jdbiRecipe.protein,
@@ -141,7 +139,7 @@ class RecipeService(
         )
     }
 
-    fun updateRecipePictures(userId: Int, recipeId: Int, newPictures: List<MultipartFile>): UpdateRecipePicturesModel {
+    fun updateRecipePictures(userId: Int, recipeId: Int, newPictures: Set<MultipartFile>): UpdateRecipePicturesModel {
         if (newPictures.size !in MIN_PICTURES..MAX_PICTURES) {
             throw InvalidNumberOfRecipePictures()
         }
@@ -152,7 +150,7 @@ class RecipeService(
         val picturesBytes = recipe.picturesNames.map { cs.pictureRepository.getPicture(it, RECIPES_FOLDER) }
         val newPicturesBytes = newPictures.map { it.bytes }
 
-        if (picturesBytes == newPictures) { // if the pictures are equal and in the same order
+        if (newPictures == picturesBytes) { // if the pictures are equal and in the same order
             return UpdateRecipePicturesModel(picturesBytes)
         } else {
             val pictureNames = recipe.picturesNames
@@ -177,13 +175,13 @@ class RecipeService(
                 if (pictureIdx != -1) {
                     cs.pictureRepository.updatePicture(
                         pictureName,
-                        newPictures[pictureIdx],
+                        newPictures.elementAt(pictureIdx),
                         RECIPES_FOLDER
                     )
                 }
             }
 
-            return UpdateRecipePicturesModel(picturesBytes)
+            return UpdateRecipePicturesModel(newPicturesBytes)
         }
     }
 

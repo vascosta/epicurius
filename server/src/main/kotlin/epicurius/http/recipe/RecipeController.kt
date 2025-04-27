@@ -86,10 +86,10 @@ class RecipeController(private val recipeService: RecipeService) {
     }
 
     @PostMapping(Uris.Recipe.RECIPES, consumes = [MediaType.MULTIPART_FORM_DATA_VALUE])
-    fun createRecipe(
+    suspend fun createRecipe(
         authenticatedUser: AuthenticatedUser,
         @RequestPart("body") body: String,
-        @RequestPart("pictures") pictures: List<MultipartFile>
+        @RequestPart("pictures") pictures: Set<MultipartFile>
     ): ResponseEntity<*> {
         val objectMapper = jacksonObjectMapper()
         val recipeInfo = objectMapper.readValue(body, CreateRecipeInputModel::class.java)

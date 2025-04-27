@@ -9,8 +9,8 @@ import org.jdbi.v3.core.statement.StatementContext
 import java.sql.ResultSet
 
 class UserMapper(
-    private val intoleranceSetMapper: ColumnMapper<Set<Intolerance>>,
-    private val dietSetMapper: ColumnMapper<Set<Diet>>
+    private val intoleranceSetMapper: ColumnMapper<List<Intolerance>>,
+    private val dietSetMapper: ColumnMapper<List<Diet>>
 ) : RowMapper<User> {
     override fun map(rs: ResultSet, ctx: StatementContext): User {
         val intoleranceSet = intoleranceSetMapper.map(rs, 8, ctx)

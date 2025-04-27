@@ -15,8 +15,8 @@ import org.jdbi.v3.core.statement.StatementContext
 import java.sql.ResultSet
 
 class JdbiRecipeModelMapper(
-    private val intoleranceSetMapper: ColumnMapper<Set<Intolerance>>,
-    private val dietSetMapper: ColumnMapper<Set<Diet>>,
+    private val intoleranceSetMapper: ColumnMapper<List<Intolerance>>,
+    private val dietSetMapper: ColumnMapper<List<Diet>>,
     private val ingredientMapper: RowMapper<Ingredient>
 ) : RowMapper<JdbiRecipeModel> {
 

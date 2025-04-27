@@ -4,9 +4,9 @@ import epicurius.domain.fridge.Product
 import epicurius.domain.fridge.ProductInfo
 import epicurius.domain.recipe.Ingredient
 import epicurius.domain.user.User
-import epicurius.repository.jdbi.mappers.DietSetMapper
+import epicurius.repository.jdbi.mappers.DietListMapper
 import epicurius.repository.jdbi.mappers.IngredientMapper
-import epicurius.repository.jdbi.mappers.IntoleranceSetMapper
+import epicurius.repository.jdbi.mappers.IntoleranceListMapper
 import epicurius.repository.jdbi.mappers.JdbiDailyMealPlannerMapper
 import epicurius.repository.jdbi.mappers.JdbiRecipeInfoMapper
 import epicurius.repository.jdbi.mappers.JdbiRecipeModelMapper
@@ -24,10 +24,10 @@ fun Jdbi.configureWithAppRequirements(): Jdbi {
     installPlugin(KotlinPlugin())
     installPlugin(PostgresPlugin())
 
-    registerColumnMapper(IntoleranceSetMapper())
-    registerColumnMapper(DietSetMapper())
+    registerColumnMapper(IntoleranceListMapper())
+    registerColumnMapper(DietListMapper())
 
-    registerRowMapper(User::class.java, UserMapper(IntoleranceSetMapper(), DietSetMapper()))
+    registerRowMapper(User::class.java, UserMapper(IntoleranceListMapper(), DietListMapper()))
     registerRowMapper(Product::class.java, ProductMapper())
     registerRowMapper(ProductInfo::class.java, ProductInfoMapper())
     registerRowMapper(JdbiRecipeInfo::class.java, JdbiRecipeInfoMapper())
@@ -35,8 +35,8 @@ fun Jdbi.configureWithAppRequirements(): Jdbi {
     registerRowMapper(
         JdbiRecipeModel::class.java,
         JdbiRecipeModelMapper(
-            IntoleranceSetMapper(),
-            DietSetMapper(),
+            IntoleranceListMapper(),
+            DietListMapper(),
             IngredientMapper()
         )
     )
