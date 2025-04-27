@@ -13,6 +13,7 @@ import epicurius.http.recipe.models.output.CreateRecipeOutputModel
 import epicurius.http.recipe.models.output.GetRecipeOutputModel
 import epicurius.http.recipe.models.output.SearchRecipesOutputModel
 import epicurius.http.recipe.models.output.UpdateRecipeOutputModel
+import epicurius.http.recipe.models.output.UpdateRecipePicturesOutputModel
 import epicurius.http.utils.Uris
 import epicurius.http.utils.Uris.Recipe.recipe
 import epicurius.services.recipe.RecipeService
@@ -105,6 +106,16 @@ class RecipeController(private val recipeService: RecipeService) {
     ): ResponseEntity<*> {
         val updatedRecipe = recipeService.updateRecipe(authenticatedUser.user.id, id, body)
         return ResponseEntity.ok().body(UpdateRecipeOutputModel(updatedRecipe))
+    }
+
+    @PatchMapping(Uris.Recipe.RECIPE_PICTURES)
+    suspend fun updateRecipePictures(
+        authenticatedUser: AuthenticatedUser,
+        @PathVariable id: Int,
+        @RequestPart("pictures") pictures: Set<MultipartFile>
+    ): ResponseEntity<*> {
+        val updatedRecipe = recipeService.updateRecipePictures(authenticatedUser.user.id, id, pictures)
+        return ResponseEntity.ok().body(UpdateRecipePicturesOutputModel(updatedRecipe.pictures))
     }
 
     @DeleteMapping(Uris.Recipe.RECIPE)
