@@ -5,6 +5,7 @@ import epicurius.domain.exceptions.UserAlreadyBeingFollowed
 import epicurius.domain.exceptions.UserNotFound
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
+import org.springframework.http.HttpStatus
 import org.springframework.http.HttpStatusCode
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -21,7 +22,7 @@ class FollowControllerTests : UserHttpTest() {
 
         // then the user is followed successfully
         verify(userServiceMock).follow(privateTestUser.user.id, publicTestUsername)
-        assertEquals(HttpStatusCode.valueOf(204), response.statusCode)
+        assertEquals(HttpStatus.NO_CONTENT, response.statusCode)
     }
 
     @Test
@@ -33,7 +34,7 @@ class FollowControllerTests : UserHttpTest() {
 
         // then a follow request is sent
         verify(userServiceMock).follow(publicTestUser.user.id, privateTestUsername)
-        assertEquals(HttpStatusCode.valueOf(204), response.statusCode)
+        assertEquals(HttpStatus.NO_CONTENT, response.statusCode)
     }
 
     @Test

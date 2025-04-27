@@ -4,6 +4,7 @@ import epicurius.domain.exceptions.UserNotFollowed
 import epicurius.domain.exceptions.UserNotFound
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
+import org.springframework.http.HttpStatus
 import org.springframework.http.HttpStatusCode
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -20,7 +21,7 @@ class UnfollowControllerTests : UserHttpTest() {
 
         // then the user is unfollowed successfully
         verify(userServiceMock).unfollow(publicTestUser.user.id, privateTestUsername)
-        assertEquals(HttpStatusCode.valueOf(200), response.statusCode)
+        assertEquals(HttpStatus.OK, response.statusCode)
     }
 
     @Test

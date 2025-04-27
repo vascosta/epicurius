@@ -12,6 +12,7 @@ import epicurius.utils.generateEmail
 import epicurius.utils.generateRandomUsername
 import epicurius.utils.generateSecurePassword
 import org.mockito.kotlin.whenever
+import org.springframework.http.HttpStatus
 import org.springframework.http.HttpStatusCode
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -54,7 +55,7 @@ class UpdateUserControllerTests : UserHttpTest() {
         val body = response.body as UpdateUserOutputModel
 
         // then the user is updated successfully
-        assertEquals(HttpStatusCode.valueOf(200), response.statusCode)
+        assertEquals(HttpStatus.OK, response.statusCode)
         assertEquals(newUsername, body.userInfo.name)
         assertEquals(updateUserInputInfo.email, body.userInfo.email)
         assertEquals(updateUserInputInfo.country, body.userInfo.country)

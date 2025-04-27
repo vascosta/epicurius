@@ -1,6 +1,7 @@
 package epicurius.unit.http.user
 
 import org.mockito.kotlin.verify
+import org.springframework.http.HttpStatus
 import org.springframework.http.HttpStatusCode
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -16,6 +17,6 @@ class LogoutControllerTests : UserHttpTest() {
 
         // then the user is logged out successfully
         verify(mockResponse).addHeader("Authorization", "")
-        assertEquals(HttpStatusCode.valueOf(204), response.statusCode)
+        assertEquals(HttpStatus.NO_CONTENT, response.statusCode)
     }
 }

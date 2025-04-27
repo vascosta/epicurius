@@ -7,6 +7,7 @@ import epicurius.http.user.models.input.LoginInputModel
 import epicurius.utils.generateSecurePassword
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
+import org.springframework.http.HttpStatus
 import org.springframework.http.HttpStatusCode
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -29,7 +30,7 @@ class LoginControllerTests : UserHttpTest() {
 
         // then the user is logged in successfully
         verify(mockResponse).addHeader("Authorization", "Bearer $mockToken")
-        assertEquals(HttpStatusCode.valueOf(204), response.statusCode)
+        assertEquals(HttpStatus.NO_CONTENT, response.statusCode)
     }
 
     @Test
@@ -45,7 +46,7 @@ class LoginControllerTests : UserHttpTest() {
 
         // then the user is logged in successfully
         verify(mockResponse).addHeader("Authorization", "Bearer $mockToken")
-        assertEquals(HttpStatusCode.valueOf(204), response.statusCode)
+        assertEquals(HttpStatus.NO_CONTENT, response.statusCode)
     }
 
     @Test

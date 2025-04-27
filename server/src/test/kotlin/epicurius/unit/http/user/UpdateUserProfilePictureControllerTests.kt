@@ -3,6 +3,7 @@ package epicurius.unit.http.user
 import epicurius.domain.user.AuthenticatedUser
 import epicurius.http.user.models.output.UpdateUserProfilePictureOutputModel
 import org.mockito.kotlin.whenever
+import org.springframework.http.HttpStatus
 import org.springframework.http.HttpStatusCode
 import java.util.UUID.randomUUID
 import kotlin.test.Test
@@ -25,7 +26,7 @@ class UpdateUserProfilePictureControllerTests : UserHttpTest() {
         val body = response.body as UpdateUserProfilePictureOutputModel
 
         // then the profile picture is added successfully
-        assertEquals(HttpStatusCode.valueOf(200), response.statusCode)
+        assertEquals(HttpStatus.OK, response.statusCode)
         assertEquals(mockPictureName, body.profilePictureName)
     }
 
@@ -42,7 +43,7 @@ class UpdateUserProfilePictureControllerTests : UserHttpTest() {
         val body = response.body as UpdateUserProfilePictureOutputModel
 
         // then the profile picture is updated successfully
-        assertEquals(HttpStatusCode.valueOf(200), response.statusCode)
+        assertEquals(HttpStatus.OK, response.statusCode)
         assertEquals(publicTestUser.user.profilePictureName, body.profilePictureName)
     }
 
@@ -58,6 +59,6 @@ class UpdateUserProfilePictureControllerTests : UserHttpTest() {
         val response = updateUserProfilePicture(publicTestUser, null)
 
         // then the profile picture is removed successfully
-        assertEquals(HttpStatusCode.valueOf(204), response.statusCode)
+        assertEquals(HttpStatus.NO_CONTENT, response.statusCode)
     }
 }

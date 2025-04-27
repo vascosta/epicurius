@@ -1,6 +1,7 @@
 package epicurius.unit.http.user
 
 import epicurius.http.user.models.output.GetUserOutputModel
+import org.springframework.http.HttpStatus
 import org.springframework.http.HttpStatusCode
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -16,7 +17,7 @@ class GetUserInfoControllerTests : UserHttpTest() {
         val body = response.body as GetUserOutputModel
 
         // then the user info is retrieved successfully
-        assertEquals(HttpStatusCode.valueOf(200), response.statusCode)
+        assertEquals(HttpStatus.OK, response.statusCode)
         assertEquals(publicTestUser.user.toUserInfo(), body.userInfo)
     }
 }

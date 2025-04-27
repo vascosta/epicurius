@@ -4,6 +4,7 @@ import epicurius.domain.user.FollowUser
 import epicurius.domain.user.SearchUser
 import epicurius.http.user.models.output.GetUserFollowingOutputModel
 import org.mockito.kotlin.whenever
+import org.springframework.http.HttpStatus
 import org.springframework.http.HttpStatusCode
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -24,7 +25,7 @@ class GetUserFollowingControllerTests : UserHttpTest() {
         val body = response.body as GetUserFollowingOutputModel
 
         // then the following are retrieved successfully
-        assertEquals(HttpStatusCode.valueOf(200), response.statusCode)
+        assertEquals(HttpStatus.OK, response.statusCode)
         assertEquals(mockFollowings.size, body.users.size)
         assertEquals(SearchUser(mockFollowing.name, null), body.users.first())
     }

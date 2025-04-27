@@ -9,6 +9,7 @@ import epicurius.utils.generateRandomUsername
 import epicurius.utils.generateSecurePassword
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
+import org.springframework.http.HttpStatus
 import org.springframework.http.HttpStatusCode
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -42,7 +43,7 @@ class SignUpControllerTests : UserHttpTest() {
 
         // then the user is created successfully
         verify(mockResponse).addHeader("Authorization", "Bearer $mockToken")
-        assertEquals(HttpStatusCode.valueOf(201), response.statusCode)
+        assertEquals(HttpStatus.CREATED, response.statusCode)
     }
 
     @Test

@@ -6,6 +6,7 @@ import epicurius.domain.user.SearchUser
 import epicurius.domain.user.User
 import epicurius.http.user.models.output.SearchUsersOutputModel
 import org.mockito.kotlin.whenever
+import org.springframework.http.HttpStatus
 import org.springframework.http.HttpStatusCode
 import java.util.UUID.randomUUID
 import kotlin.test.Test
@@ -35,7 +36,7 @@ class SearchUsersControllerTests : UserHttpTest() {
         val body = response.body as SearchUsersOutputModel
 
         // then the users are retrieved successfully
-        assertEquals(HttpStatusCode.valueOf(200), response.statusCode)
+        assertEquals(HttpStatus.OK, response.statusCode)
         assertContentEquals(mockSearchUsers, body.users)
     }
 }

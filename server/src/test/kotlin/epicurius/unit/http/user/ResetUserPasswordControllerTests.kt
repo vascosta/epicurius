@@ -5,6 +5,7 @@ import epicurius.http.user.models.input.ResetPasswordInputModel
 import epicurius.utils.generateSecurePassword
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
+import org.springframework.http.HttpStatus
 import org.springframework.http.HttpStatusCode
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -25,7 +26,7 @@ class ResetUserPasswordControllerTests : UserHttpTest() {
         // then the password was reset successfully
         verify(userServiceMock)
             .resetPassword(resetPasswordInputInfo.email, resetPasswordInputInfo.newPassword, resetPasswordInputInfo.confirmPassword)
-        assertEquals(HttpStatusCode.valueOf(204), response.statusCode)
+        assertEquals(HttpStatus.NO_CONTENT, response.statusCode)
     }
 
     @Test

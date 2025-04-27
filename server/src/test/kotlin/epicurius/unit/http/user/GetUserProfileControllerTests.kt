@@ -4,6 +4,7 @@ import epicurius.domain.exceptions.UserNotFound
 import epicurius.domain.user.UserProfile
 import epicurius.http.user.models.output.GetUserProfileOutputModel
 import org.mockito.kotlin.whenever
+import org.springframework.http.HttpStatus
 import org.springframework.http.HttpStatusCode
 import java.util.UUID
 import kotlin.test.Test
@@ -28,7 +29,7 @@ class GetUserProfileControllerTests : UserHttpTest() {
         val body = response.body as GetUserProfileOutputModel
 
         // then the user profile is retrieved successfully
-        assertEquals(HttpStatusCode.valueOf(200), response.statusCode)
+        assertEquals(HttpStatus.OK, response.statusCode)
         assertEquals(publicTestUsername, body.userProfile.name)
         assertEquals(publicTestUser.user.country, body.userProfile.country)
         assertEquals(publicTestUser.user.privacy, body.userProfile.privacy)
@@ -57,7 +58,7 @@ class GetUserProfileControllerTests : UserHttpTest() {
         val body = response.body as GetUserProfileOutputModel
 
         // then the user profile is retrieved successfully
-        assertEquals(HttpStatusCode.valueOf(200), response.statusCode)
+        assertEquals(HttpStatus.OK, response.statusCode)
         assertEquals(mockUserProfile.name, body.userProfile.name)
         assertEquals(mockUserProfile.country, body.userProfile.country)
         assertEquals(mockUserProfile.privacy, body.userProfile.privacy)
