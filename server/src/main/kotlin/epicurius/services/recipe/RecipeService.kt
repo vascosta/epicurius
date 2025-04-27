@@ -90,7 +90,7 @@ class RecipeService(
     }
 
     fun searchRecipes(userId: Int, form: SearchRecipesInputModel): List<RecipeInfo> {
-        val fillForm = form.toSearchRecipe(form.name)
+        val fillForm = form.toSearchRecipeModel(form.name)
         val recipesList = tm.run { it.recipeRepository.searchRecipes(userId, fillForm) }
 
         val recipes = if (form.ingredients != null) {

@@ -17,8 +17,8 @@ interface UserRepository {
 
     fun updateUser(name: String, userUpdateInfo: JdbiUpdateUserModel): User
     fun resetPassword(email: String, passwordHash: String)
-    fun followUser(userId: Int, userIdToFollow: Int, status: Int)
-    fun unfollowUser(userId: Int, userIdToUnfollow: Int)
+    fun follow(userId: Int, userIdToFollow: Int, status: Int)
+    fun unfollow(userId: Int, userIdToUnfollow: Int)
     fun cancelFollowRequest(userId: Int, followerId: Int)
 
     fun checkIfUserIsLoggedIn(name: String? = null, email: String? = null): Boolean

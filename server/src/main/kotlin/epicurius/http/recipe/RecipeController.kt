@@ -114,8 +114,8 @@ class RecipeController(private val recipeService: RecipeService) {
         @PathVariable id: Int,
         @RequestPart("pictures") pictures: Set<MultipartFile>
     ): ResponseEntity<*> {
-        val updatedRecipe = recipeService.updateRecipePictures(authenticatedUser.user.id, id, pictures)
-        return ResponseEntity.ok().body(UpdateRecipePicturesOutputModel(updatedRecipe.pictures))
+        val updatedPictures = recipeService.updateRecipePictures(authenticatedUser.user.id, id, pictures)
+        return ResponseEntity.ok().body(UpdateRecipePicturesOutputModel(updatedPictures.pictures))
     }
 
     @DeleteMapping(Uris.Recipe.RECIPE)

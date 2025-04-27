@@ -45,10 +45,10 @@ open class UserRepositoryTest : RepositoryTest() {
             tm.run { it.userRepository.resetPassword(email, passwordHash) }
 
         fun follow(userId: Int, userIdToFollow: Int, status: Int) =
-            tm.run { it.userRepository.followUser(userId, userIdToFollow, status) }
+            tm.run { it.userRepository.follow(userId, userIdToFollow, status) }
 
         fun unfollow(userId: Int, userIdToUnfollow: Int) =
-            tm.run { it.userRepository.unfollowUser(userId, userIdToUnfollow) }
+            tm.run { it.userRepository.unfollow(userId, userIdToUnfollow) }
 
         fun cancelFollowRequest(userId: Int, userIdToCancelFollowRequest: Int) =
             tm.run { it.userRepository.cancelFollowRequest(userId, userIdToCancelFollowRequest) }

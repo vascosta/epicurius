@@ -128,6 +128,9 @@ open class HttpTest : EpicuriusUnitTest() {
         suspend fun updateRecipe(authenticatedUser: AuthenticatedUser, id: Int, updateRecipeInputModel: UpdateRecipeInputModel) =
             recipeController.updateRecipe(authenticatedUser, id, updateRecipeInputModel)
 
+        suspend fun updateRecipePictures(authenticatedUser: AuthenticatedUser, id: Int, pictures: Set<MultipartFile>) =
+            recipeController.updateRecipePictures(authenticatedUser, id, pictures)
+
         fun deleteRecipe(authenticatedUser: AuthenticatedUser, id: Int) =
             recipeController.deleteRecipe(authenticatedUser, id)
     }

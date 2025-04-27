@@ -24,7 +24,7 @@ class FollowServiceTests : UserServiceTest() {
         follow(privateTestUser.id, publicTestUsername)
 
         // then the user is followed successfully
-        verify(jdbiUserRepositoryMock).followUser(privateTestUser.id, publicTestUser.id, FollowingStatus.ACCEPTED.ordinal)
+        verify(jdbiUserRepositoryMock).follow(privateTestUser.id, publicTestUser.id, FollowingStatus.ACCEPTED.ordinal)
     }
 
     @Test
@@ -40,7 +40,7 @@ class FollowServiceTests : UserServiceTest() {
         follow(publicTestUser.id, privateTestUsername)
 
         // then a follow request is sent
-        verify(jdbiUserRepositoryMock).followUser(publicTestUser.id, privateTestUser.id, FollowingStatus.PENDING.ordinal)
+        verify(jdbiUserRepositoryMock).follow(publicTestUser.id, privateTestUser.id, FollowingStatus.PENDING.ordinal)
     }
 
     @Test

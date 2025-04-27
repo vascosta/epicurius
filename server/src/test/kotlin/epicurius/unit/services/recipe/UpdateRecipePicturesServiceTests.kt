@@ -85,7 +85,7 @@ class UpdateRecipePicturesServiceTests : RecipeServiceTest() {
 
     @Test
     fun `Should change the order of the recipe pictures successfully`() {
-        // given a new order of pictures
+        // given a new order for the recipe pictures
         val oldPictureNames = listOf(testPicture2.name, recipePicturesNames.first(), testTomatoPicture.name)
         val newPictures = setOf(recipePictures.first(), testTomatoPicture, testPicture2)
 

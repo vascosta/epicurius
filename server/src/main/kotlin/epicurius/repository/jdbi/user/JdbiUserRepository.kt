@@ -151,7 +151,7 @@ class JdbiUserRepository(private val handle: Handle) : UserRepository {
             .execute()
     }
 
-    override fun followUser(userId: Int, userIdToFollow: Int, status: Int) {
+    override fun follow(userId: Int, userIdToFollow: Int, status: Int) {
         handle.createUpdate(
             """
                 INSERT INTO dbo.followers(user_id, follower_id, status)
@@ -164,7 +164,7 @@ class JdbiUserRepository(private val handle: Handle) : UserRepository {
             .execute()
     }
 
-    override fun unfollowUser(userId: Int, userIdToUnfollow: Int) {
+    override fun unfollow(userId: Int, userIdToUnfollow: Int) {
         handle.createUpdate(
             """
                 DELETE FROM dbo.followers

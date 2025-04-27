@@ -2,9 +2,12 @@ package epicurius.unit.http.recipe
 
 import epicurius.domain.Diet
 import epicurius.domain.Intolerance
+import epicurius.domain.exceptions.InvalidIngredient
 import epicurius.domain.exceptions.NotTheAuthor
 import epicurius.domain.exceptions.RecipeNotFound
 import epicurius.domain.recipe.Cuisine
+import epicurius.domain.recipe.Ingredient
+import epicurius.domain.recipe.IngredientUnit
 import epicurius.domain.recipe.MealType
 import epicurius.domain.user.AuthenticatedUser
 import epicurius.domain.user.User
@@ -90,33 +93,51 @@ class UpdateRecipeControllerTests : RecipeHttpTest() {
         ).thenThrow(RecipeNotFound())
 
         // when updating the recipe
-        val exception = assertFailsWith<RecipeNotFound> {
+        // then the recipe is not updated and throws RecipeNotFound exception
+        assertFailsWith<RecipeNotFound> {
             runBlocking { updateRecipe(testAuthenticatedUser, nonExistingRecipeId, updateRecipeInfo) }
         }
-
-        // then an exception is thrown
-        assertEquals(RecipeNotFound().message, exception.message)
     }
 
     @Test
     fun `Should throw NotTheAuthor exception when updating a recipe that does not belong to the user`() {
         // given a user id and a recipe id (RECIPE_ID) that does not belong to him
-        val notTheAuthorUser = AuthenticatedUser(
-            User(9999, "", "", "", "", "", false, emptyList(), emptyList(), ""),
-            ""
-        )
+        val notTheAuthor = AuthenticatedUser(User(9999, "", "", "", "", "", false, emptyList(), emptyList(), ""), "")
 
         // mock
         whenever(
-            runBlocking { recipeServiceMock.updateRecipe(notTheAuthorUser.user.id, RECIPE_ID, updateRecipeInfo) }
+            runBlocking { recipeServiceMock.updateRecipe(notTheAuthor.user.id, RECIPE_ID, updateRecipeInfo) }
         ).thenThrow(NotTheAuthor())
 
         // when updating the recipe
-        val exception = assertFailsWith<NotTheAuthor> {
-            runBlocking { updateRecipe(notTheAuthorUser, RECIPE_ID, updateRecipeInfo) }
+        // then the recipe is not updated and throws NotTheAuthor exception
+        assertFailsWith<NotTheAuthor> {
+            runBlocking { updateRecipe(notTheAuthor, RECIPE_ID, updateRecipeInfo) }
         }
+    }
 
-        // then an exception is thrown
-        assertEquals(NotTheAuthor().message, exception.message)
+    @Test
+    fun `Should throw InvalidIngredient exception when updating a recipe with an invalid ingredients`() {
+        // given an invalid ingredient
+        val invalidIngredient = Ingredient("invalid", 1, IngredientUnit.G)
+
+        // mock
+        whenever(
+            runBlocking {
+                recipeServiceMock.updateRecipe(
+                    testAuthenticatedUser.user.id,
+                    RECIPE_ID,
+                    updateRecipeInfo.copy(ingredients = listOf(invalidIngredient))
+                )
+            }
+        ).thenThrow(InvalidIngredient(invalidIngredient.name))
+
+        // when updating the recipe
+        // then the recipe is not updated and throws IllegalArgumentException
+        assertFailsWith<InvalidIngredient> {
+            runBlocking {
+                updateRecipe(testAuthenticatedUser, RECIPE_ID, updateRecipeInfo.copy(ingredients = listOf(invalidIngredient)) )
+            }
+        }
     }
 }

@@ -11,7 +11,7 @@ import org.junit.jupiter.api.Test
 import org.mockito.kotlin.whenever
 import kotlin.test.assertEquals
 
-class SearchRecipeServiceTests : RecipeServiceTest() {
+class SearchRecipesServiceTests : RecipeServiceTest() {
 
     private val searchRecipesInputInfoWithoutIngredients = SearchRecipesInputModel(
         name = "Pastel de nata",
@@ -62,13 +62,13 @@ class SearchRecipeServiceTests : RecipeServiceTest() {
 
     @Test
     fun `Should search for a recipe without ingredients successfully`() {
-        // given a user id  (USER_ID) and a search form (searchRecipesInputInfoWithoutIngredients)
+        // given a user id (USER_ID) and a search form (searchRecipesInputInfoWithoutIngredients)
 
         // mock
         whenever(
             jdbiRecipeRepositoryMock.searchRecipes(
                 USER_ID,
-                searchRecipesInputInfoWithoutIngredients.toSearchRecipe(
+                searchRecipesInputInfoWithoutIngredients.toSearchRecipeModel(
                     searchRecipesInputInfoWithoutIngredients.name
                 )
             )
@@ -78,7 +78,7 @@ class SearchRecipeServiceTests : RecipeServiceTest() {
         // when searching for the recipe
         val results = searchRecipes(USER_ID, searchRecipesInputInfoWithoutIngredients)
 
-        // then a list containing the recipe is returned
+        // then a list containing the recipe is returned successfully
         assertEquals(1, results.size)
         assertEquals(searchRecipesInputInfoWithoutIngredients.name, results.first().name)
         assertEquals(searchRecipesInputInfoWithoutIngredients.cuisine, results.first().cuisine)
@@ -94,7 +94,7 @@ class SearchRecipeServiceTests : RecipeServiceTest() {
         whenever(
             jdbiRecipeRepositoryMock.searchRecipes(
                 USER_ID,
-                searchRecipesInputInfoWithIngredients.toSearchRecipe(
+                searchRecipesInputInfoWithIngredients.toSearchRecipeModel(
                     searchRecipesInputInfoWithIngredients.name
                 )
             )
@@ -109,7 +109,7 @@ class SearchRecipeServiceTests : RecipeServiceTest() {
         // when searching for the recipe
         val results = searchRecipes(USER_ID, searchRecipesInputInfoWithIngredients)
 
-        // then a list containing the recipe is returned
+        // then a list containing the recipe is returned successfully
         assertEquals(1, results.size)
         assertEquals(searchRecipesInputInfoWithIngredients.name, results.first().name)
         assertEquals(searchRecipesInputInfoWithIngredients.cuisine, results.first().cuisine)
