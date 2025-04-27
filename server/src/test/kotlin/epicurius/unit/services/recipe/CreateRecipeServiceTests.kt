@@ -1,7 +1,11 @@
 package epicurius.unit.services.recipe
 
+import epicurius.domain.exceptions.InvalidIngredient
 import epicurius.domain.exceptions.InvalidNumberOfRecipePictures
 import epicurius.domain.picture.PictureDomain.Companion.RECIPES_FOLDER
+import epicurius.domain.recipe.Ingredient
+import epicurius.domain.recipe.IngredientUnit
+import kotlinx.coroutines.runBlocking
 import org.mockito.kotlin.argThat
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
@@ -18,62 +22,92 @@ class CreateRecipeServiceTests : RecipeServiceTest() {
         // given information for a new recipe (jdbiCreateRecipeInfo, firestoreRecipeInfo)
 
         // mock
+        jdbiCreateRecipeInfo.ingredients.forEach { ingredient ->
+            whenever(
+                runBlocking {
+                    spoonacularRepositoryMock.getProductsList(ingredient.name.lowercase())
+                }
+            ).thenReturn(listOf(ingredient.name.lowercase()))
+        }
         whenever(pictureDomainMock.generatePictureName()).thenReturn(recipePicturesNames.first())
         whenever(
             jdbiRecipeRepositoryMock.createRecipe(
                 argThat { model ->
-                    model.name == createRecipeInfo.name &&
+                    model.name == createRecipeInputInfo.name &&
                         model.authorId == AUTHOR_ID &&
-                        model.servings == createRecipeInfo.servings &&
-                        model.preparationTime == createRecipeInfo.preparationTime &&
-                        model.cuisine == createRecipeInfo.cuisine.ordinal &&
-                        model.mealType == createRecipeInfo.mealType.ordinal &&
-                        model.intolerances == createRecipeInfo.intolerances.map { it.ordinal } &&
-                        model.diets == createRecipeInfo.diets.map { it.ordinal } &&
-                        model.ingredients == createRecipeInfo.ingredients &&
-                        model.calories == createRecipeInfo.calories &&
-                        model.protein == createRecipeInfo.protein &&
-                        model.fat == createRecipeInfo.fat &&
-                        model.carbs == createRecipeInfo.carbs &&
+                        model.servings == createRecipeInputInfo.servings &&
+                        model.preparationTime == createRecipeInputInfo.preparationTime &&
+                        model.cuisine == createRecipeInputInfo.cuisine.ordinal &&
+                        model.mealType == createRecipeInputInfo.mealType.ordinal &&
+                        model.intolerances == createRecipeInputInfo.intolerances.map { it.ordinal } &&
+                        model.diets == createRecipeInputInfo.diets.map { it.ordinal } &&
+                        model.ingredients == createRecipeInputInfo.ingredients &&
+                        model.calories == createRecipeInputInfo.calories &&
+                        model.protein == createRecipeInputInfo.protein &&
+                        model.fat == createRecipeInputInfo.fat &&
+                        model.carbs == createRecipeInputInfo.carbs &&
                         model.picturesNames == recipePicturesNames
                 }
             )
         ).thenReturn(RECIPE_ID)
 
         // when creating the recipe
-        val recipe = createRecipe(AUTHOR_ID, authorName, createRecipeInfo, recipePictures)
+        val recipe = runBlocking { createRecipe(AUTHOR_ID, authorName, createRecipeInputInfo, recipePictures) }
 
         // then the recipe is created successfully
         verify(firestoreRecipeRepositoryMock).createRecipe(firestoreRecipeInfo)
         verify(pictureRepositoryMock).updatePicture(recipePicturesNames.first(), recipePictures.first(), RECIPES_FOLDER)
         assertEquals(RECIPE_ID, recipe.id)
-        assertEquals(createRecipeInfo.name, recipe.name)
+        assertEquals(createRecipeInputInfo.name, recipe.name)
         assertEquals(authorName, recipe.authorUsername)
-        assertEquals(createRecipeInfo.description, recipe.description)
-        assertEquals(createRecipeInfo.servings, recipe.servings)
-        assertEquals(createRecipeInfo.preparationTime, recipe.preparationTime)
-        assertEquals(createRecipeInfo.cuisine, recipe.cuisine)
-        assertEquals(createRecipeInfo.mealType, recipe.mealType)
-        assertEquals(createRecipeInfo.intolerances, recipe.intolerances)
-        assertEquals(createRecipeInfo.diets, recipe.diets)
-        assertEquals(createRecipeInfo.ingredients, recipe.ingredients)
-        assertEquals(createRecipeInfo.calories, recipe.calories)
-        assertEquals(createRecipeInfo.protein, recipe.protein)
-        assertEquals(createRecipeInfo.fat, recipe.fat)
-        assertEquals(createRecipeInfo.carbs, recipe.carbs)
-        assertEquals(createRecipeInfo.instructions, recipe.instructions)
+        assertEquals(createRecipeInputInfo.description, recipe.description)
+        assertEquals(createRecipeInputInfo.servings, recipe.servings)
+        assertEquals(createRecipeInputInfo.preparationTime, recipe.preparationTime)
+        assertEquals(createRecipeInputInfo.cuisine, recipe.cuisine)
+        assertEquals(createRecipeInputInfo.mealType, recipe.mealType)
+        assertEquals(createRecipeInputInfo.intolerances.toList(), recipe.intolerances)
+        assertEquals(createRecipeInputInfo.diets.toList(), recipe.diets)
+        assertEquals(createRecipeInputInfo.ingredients, recipe.ingredients)
+        assertEquals(createRecipeInputInfo.calories, recipe.calories)
+        assertEquals(createRecipeInputInfo.protein, recipe.protein)
+        assertEquals(createRecipeInputInfo.fat, recipe.fat)
+        assertEquals(createRecipeInputInfo.carbs, recipe.carbs)
+        assertEquals(createRecipeInputInfo.instructions, recipe.instructions)
         assertContentEquals(recipePictures.map { it.bytes }, recipe.pictures)
     }
 
     @Test
     fun `Should throw InvalidNumberOfRecipePictures exception when creating a recipe with an invalid number of pictures`() {
         // given an invalid number of pictures
-        val invalidList = emptyList<MultipartFile>()
+        val invalidPictures = emptySet<MultipartFile>()
 
         // when creating the recipe with invalid number of pictures
         // then the recipe is not created and throws InvalidNumberOfRecipePictures exception
         assertFailsWith<InvalidNumberOfRecipePictures> {
-            createRecipe(AUTHOR_ID, authorName, createRecipeInfo, invalidList)
+            runBlocking {
+                createRecipe(AUTHOR_ID, authorName, createRecipeInputInfo, invalidPictures)
+            }
+        }
+    }
+
+    @Test
+    fun `Should throw InvalidIngredient exception when creating a recipe with an invalid ingredient`() {
+        // given an invalid ingredient
+        val invalidIngredient = Ingredient("invalid", 1, IngredientUnit.G)
+
+        // mock
+        whenever(
+            runBlocking {
+                spoonacularRepositoryMock.getProductsList(invalidIngredient.name)
+            }
+        ).thenReturn(emptyList())
+
+        // when creating the recipe with an invalid ingredient
+        // then the recipe is not created and throws InvalidIngredient exception
+        assertFailsWith<InvalidIngredient> {
+            runBlocking {
+                createRecipe(AUTHOR_ID, authorName, createRecipeInputInfo.copy(ingredients = listOf(invalidIngredient)), recipePictures)
+            }
         }
     }
 }

@@ -25,21 +25,21 @@ class GetRecipeServiceTests : RecipeServiceTest() {
 
         // then the recipe is retrieved successfully
         assertEquals(RECIPE_ID, recipe.id)
-        assertEquals(createRecipeInfo.name, recipe.name)
+        assertEquals(createRecipeInputInfo.name, recipe.name)
         assertEquals(authorName, recipe.authorUsername)
-        assertEquals(createRecipeInfo.description, recipe.description)
-        assertEquals(createRecipeInfo.servings, recipe.servings)
-        assertEquals(createRecipeInfo.preparationTime, recipe.preparationTime)
-        assertEquals(createRecipeInfo.cuisine, recipe.cuisine)
-        assertEquals(createRecipeInfo.mealType, recipe.mealType)
-        assertEquals(createRecipeInfo.intolerances, recipe.intolerances)
-        assertEquals(createRecipeInfo.diets, recipe.diets)
-        assertEquals(createRecipeInfo.ingredients, recipe.ingredients)
-        assertEquals(createRecipeInfo.calories, recipe.calories)
-        assertEquals(createRecipeInfo.protein, recipe.protein)
-        assertEquals(createRecipeInfo.fat, recipe.fat)
-        assertEquals(createRecipeInfo.carbs, recipe.carbs)
-        assertEquals(createRecipeInfo.instructions, recipe.instructions)
+        assertEquals(createRecipeInputInfo.description, recipe.description)
+        assertEquals(createRecipeInputInfo.servings, recipe.servings)
+        assertEquals(createRecipeInputInfo.preparationTime, recipe.preparationTime)
+        assertEquals(createRecipeInputInfo.cuisine, recipe.cuisine)
+        assertEquals(createRecipeInputInfo.mealType, recipe.mealType)
+        assertEquals(createRecipeInputInfo.intolerances.toList(), recipe.intolerances)
+        assertEquals(createRecipeInputInfo.diets.toList(), recipe.diets)
+        assertEquals(createRecipeInputInfo.ingredients, recipe.ingredients)
+        assertEquals(createRecipeInputInfo.calories, recipe.calories)
+        assertEquals(createRecipeInputInfo.protein, recipe.protein)
+        assertEquals(createRecipeInputInfo.fat, recipe.fat)
+        assertEquals(createRecipeInputInfo.carbs, recipe.carbs)
+        assertEquals(createRecipeInputInfo.instructions, recipe.instructions)
         assertContentEquals(recipePictures.map { it.bytes }, recipe.pictures)
     }
 
@@ -50,8 +50,7 @@ class GetRecipeServiceTests : RecipeServiceTest() {
 
         // mock
         whenever(jdbiRecipeRepositoryMock.getRecipe(nonExistingRecipeId))
-            .thenReturn(null)
-            .thenReturn(jdbiRecipeModel)
+            .thenReturn(null, jdbiRecipeModel)
 
         // when retrieving the recipe
         // then the recipe is not retrieved and throws RecipeNotFound exception

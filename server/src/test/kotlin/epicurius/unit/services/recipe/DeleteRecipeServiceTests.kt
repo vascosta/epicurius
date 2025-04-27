@@ -2,7 +2,6 @@ package epicurius.unit.services.recipe
 
 import epicurius.domain.exceptions.NotTheAuthor
 import epicurius.domain.exceptions.RecipeNotFound
-import kotlinx.coroutines.runBlocking
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import kotlin.test.Test
@@ -35,9 +34,7 @@ class DeleteRecipeServiceTests : RecipeServiceTest() {
 
         // when deleting the recipe
         // then the recipe is not deleted and throws RecipeNotFound exception
-        assertFailsWith<RecipeNotFound> {
-            deleteRecipe(AUTHOR_ID, nonExistingRecipeId)
-        }
+        assertFailsWith<RecipeNotFound> { deleteRecipe(AUTHOR_ID, nonExistingRecipeId) }
     }
 
     @Test
@@ -50,8 +47,6 @@ class DeleteRecipeServiceTests : RecipeServiceTest() {
 
         // when deleting the recipe
         // then the recipe is not deleted and throws NotTheAuthor exception
-        assertFailsWith<NotTheAuthor> {
-            runBlocking { deleteRecipe(userId, RECIPE_ID) }
-        }
+        assertFailsWith<NotTheAuthor> { deleteRecipe(userId, RECIPE_ID) }
     }
 }

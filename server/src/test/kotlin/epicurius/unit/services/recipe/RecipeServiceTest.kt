@@ -20,10 +20,10 @@ open class RecipeServiceTest : ServiceTest() {
         const val USER_ID = 6798
         val authorName = generateRandomUsername()
 
-        val recipePictures = listOf(testPicture)
+        val recipePictures = setOf(testPicture)
         val recipePicturesNames = recipePictures.map { it.name }
 
-        val createRecipeInfo = CreateRecipeInputModel(
+        val createRecipeInputInfo = CreateRecipeInputModel(
             "Pastel de nata",
             "A delicious Portuguese dessert",
             4,
@@ -53,26 +53,26 @@ open class RecipeServiceTest : ServiceTest() {
                 )
             )
         )
-        val jdbiCreateRecipeInfo = createRecipeInfo.toJdbiCreateRecipeModel(AUTHOR_ID, recipePicturesNames)
-        val firestoreRecipeInfo = createRecipeInfo.toFirestoreRecipeModel(RECIPE_ID)
+        val jdbiCreateRecipeInfo = createRecipeInputInfo.toJdbiCreateRecipeModel(AUTHOR_ID, recipePicturesNames)
+        val firestoreRecipeInfo = createRecipeInputInfo.toFirestoreRecipeModel(RECIPE_ID)
 
         val jdbiRecipeModel = JdbiRecipeModel(
             RECIPE_ID,
-            createRecipeInfo.name,
+            createRecipeInputInfo.name,
             AUTHOR_ID,
             authorName,
             jdbiCreateRecipeInfo.date,
-            createRecipeInfo.servings,
-            createRecipeInfo.preparationTime,
-            createRecipeInfo.cuisine,
-            createRecipeInfo.mealType,
-            createRecipeInfo.intolerances,
-            createRecipeInfo.diets,
-            createRecipeInfo.ingredients,
-            createRecipeInfo.calories,
-            createRecipeInfo.protein,
-            createRecipeInfo.fat,
-            createRecipeInfo.carbs,
+            createRecipeInputInfo.servings,
+            createRecipeInputInfo.preparationTime,
+            createRecipeInputInfo.cuisine,
+            createRecipeInputInfo.mealType,
+            createRecipeInputInfo.intolerances.toList(),
+            createRecipeInputInfo.diets.toList(),
+            createRecipeInputInfo.ingredients,
+            createRecipeInputInfo.calories,
+            createRecipeInputInfo.protein,
+            createRecipeInputInfo.fat,
+            createRecipeInputInfo.carbs,
             recipePicturesNames
         )
     }
