@@ -32,7 +32,6 @@ object Uris {
 
     object Fridge {
         const val FRIDGE = "/fridge"
-        const val PRODUCTS = "/products"
         const val PRODUCT = "/fridge/product/{entryNumber}"
     }
 

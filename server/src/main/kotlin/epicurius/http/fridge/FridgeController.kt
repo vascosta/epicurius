@@ -28,15 +28,6 @@ class FridgeController(private val fridgeService: FridgeService) {
         return ResponseEntity.ok().body(FridgeOutputModel(fridge.products))
     }
 
-    @GetMapping(Uris.Fridge.PRODUCTS)
-    suspend fun getProductsList(
-        authenticatedUser: AuthenticatedUser,
-        @RequestParam partial: String
-    ): ResponseEntity<*> {
-        val productsList = fridgeService.getProductsList(partial)
-        return ResponseEntity.ok().body(productsList)
-    }
-
     @PostMapping(Uris.Fridge.FRIDGE)
     suspend fun addProducts(
         authenticatedUser: AuthenticatedUser,

@@ -24,9 +24,6 @@ class FridgeService(
 ) {
     fun getFridge(userId: Int): Fridge = tm.run { it.fridgeRepository.getFridge(userId) }
 
-    suspend fun getProductsList(partial: String): List<String> =
-        sm.spoonacularRepository.getProductsList(partial)
-
     suspend fun addProduct(userId: Int, body: ProductInputModel): Fridge {
         checkIfProductIsValid(body.productName)
 

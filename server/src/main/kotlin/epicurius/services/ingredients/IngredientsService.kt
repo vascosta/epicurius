@@ -15,6 +15,8 @@ class IngredientsService(
     private val cf: CloudFunctionManager,
     private val pictureDomain: PictureDomain
 ) {
+    suspend fun getIngredientsList(partial: String): List<String> =
+        sm.spoonacularRepository.getProductsList(partial)
 
     suspend fun getIngredientsFromPicture(picture: MultipartFile): List<String> {
         pictureDomain.validatePicture(picture)
