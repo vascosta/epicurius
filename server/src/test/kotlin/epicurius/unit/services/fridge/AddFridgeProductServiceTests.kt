@@ -18,7 +18,7 @@ class AddFridgeProductServiceTests : FridgeServiceTest() {
         val validProductName = newFridge.products[0].productName
 
         // mock
-        whenever(runBlocking { spoonacularRepositoryMock.getProductsList(validProductName) }).thenReturn(productsList)
+        whenever(runBlocking { spoonacularRepositoryMock.getIngredients(validProductName) }).thenReturn(productsList)
         whenever(jdbiFridgeRepositoryMock.addProduct(USER_ID, productInfo)).thenReturn(newFridge)
 
         // when adding the new product to fridge
@@ -46,7 +46,7 @@ class AddFridgeProductServiceTests : FridgeServiceTest() {
         )
 
         // mock
-        whenever(runBlocking { spoonacularRepositoryMock.getProductsList(validProductName) }).thenReturn(productsList)
+        whenever(runBlocking { spoonacularRepositoryMock.getIngredients(validProductName) }).thenReturn(productsList)
         whenever(
             jdbiFridgeRepositoryMock.checkIfProductExistsInFridge(
                 USER_ID,
@@ -82,7 +82,7 @@ class AddFridgeProductServiceTests : FridgeServiceTest() {
         val invalidProductInputModel = productInputModel.copy(productName = invalidProductName)
 
         // mock
-        whenever(runBlocking { spoonacularRepositoryMock.getProductsList(invalidProductName) }).thenReturn(emptyList())
+        whenever(runBlocking { spoonacularRepositoryMock.getIngredients(invalidProductName) }).thenReturn(emptyList())
 
         // when adding the invalid product to fridge
         val exception = assertThrows<InvalidProduct> {

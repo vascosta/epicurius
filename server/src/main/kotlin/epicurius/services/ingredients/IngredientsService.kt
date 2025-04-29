@@ -15,8 +15,11 @@ class IngredientsService(
     private val cf: CloudFunctionManager,
     private val pictureDomain: PictureDomain
 ) {
-    suspend fun getIngredientsList(partial: String): List<String> =
-        sm.spoonacularRepository.getProductsList(partial)
+    suspend fun getIngredients(partial: String): List<String> =
+        sm.spoonacularRepository.getIngredients(partial)
+
+    suspend fun getSubstituteIngredients(name: String): List<String> =
+        sm.spoonacularRepository.getSubstituteIngredients(name)
 
     suspend fun getIngredientsFromPicture(picture: MultipartFile): List<String> {
         pictureDomain.validatePicture(picture)
@@ -25,7 +28,7 @@ class IngredientsService(
 
         val ingredients = cf.cloudFunctionRepository.getIngredientsFromPicture(pictureName)
         val validIngredients = ingredients.filter { ingredient ->
-            sm.spoonacularRepository.getProductsList(ingredient).contains(ingredient)
+            sm.spoonacularRepository.getIngredients(ingredient).contains(ingredient)
         }
 
         cs.pictureRepository.deletePicture(pictureName, INGREDIENTS_FOLDER)

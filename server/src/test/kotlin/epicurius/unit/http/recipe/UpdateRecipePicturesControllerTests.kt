@@ -147,6 +147,5 @@ class UpdateRecipePicturesControllerTests: RecipeHttpTest() {
         assertFailsWith<NotTheAuthor> {
             runBlocking { updateRecipePictures(notTheAuthor, RECIPE_ID, recipePictures) }
         }
-
     }
 }

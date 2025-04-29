@@ -195,8 +195,8 @@ class RecipeService(
     private suspend fun validateIngredients(ingredients: List<Ingredient>) {
         ingredients.forEach { ingredient ->
             val lowerCaseIngredient = ingredient.name.lowercase()
-            val productList = sm.spoonacularRepository.getProductsList(lowerCaseIngredient)
-            if (!productList.contains(lowerCaseIngredient)) throw InvalidIngredient(ingredient.name)
+            val ingredientsList = sm.spoonacularRepository.getIngredients(lowerCaseIngredient)
+            if (!ingredientsList.contains(lowerCaseIngredient)) throw InvalidIngredient(ingredient.name)
         }
     }
 

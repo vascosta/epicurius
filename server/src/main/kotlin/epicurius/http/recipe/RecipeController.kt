@@ -86,6 +86,11 @@ class RecipeController(private val recipeService: RecipeService) {
         return ResponseEntity.ok().body(SearchRecipesOutputModel(results))
     }
 
+/*    fun getDailyMenu(authenticatedUser: AuthenticatedUser): ResponseEntity<*> {
+        val dailyMenu = recipeService.getDailyMenu(authenticatedUser.user.id, date)
+        return ResponseEntity.ok().body(dailyMenu)
+    }*/
+
     @PostMapping(Uris.Recipe.RECIPES, consumes = [MediaType.MULTIPART_FORM_DATA_VALUE])
     suspend fun createRecipe(
         authenticatedUser: AuthenticatedUser,
@@ -108,7 +113,7 @@ class RecipeController(private val recipeService: RecipeService) {
         return ResponseEntity.ok().body(UpdateRecipeOutputModel(updatedRecipe))
     }
 
-    @PatchMapping(Uris.Recipe.RECIPE_PICTURES)
+    @PatchMapping(Uris.Recipe.RECIPE_PICTURES, consumes = [MediaType.MULTIPART_FORM_DATA_VALUE])
     suspend fun updateRecipePictures(
         authenticatedUser: AuthenticatedUser,
         @PathVariable id: Int,

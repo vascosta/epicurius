@@ -43,8 +43,9 @@ object Uris {
         fun recipe(id: Int) = UriTemplate(RECIPE).expand(id)
     }
 
-    object Ingredient {
+    object Ingredients {
         const val INGREDIENTS = "/ingredients"
+        const val INGREDIENTS_SUBSTITUTES = "/ingredients/substitutes"
     }
 
     object MealPlanner {

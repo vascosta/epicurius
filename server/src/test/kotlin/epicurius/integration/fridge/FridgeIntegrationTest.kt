@@ -22,7 +22,7 @@ import java.time.Period
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 
-class FridgeControllerTest : EpicuriusIntegrationTest() {
+class FridgeIntegrationTest : EpicuriusIntegrationTest() {
 
     lateinit var testUserToken: String
 

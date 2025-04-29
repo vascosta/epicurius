@@ -194,7 +194,7 @@ class EpicuriusIntegrationTest : EpicuriusTest() {
     fun getFridge(token: String) = get<FridgeOutputModel>(client, api(Uris.Fridge.FRIDGE), token = token)
 
     fun getProductsList(token: String, partial: String) =
-        get<List<String>>(client, api(Uris.Fridge.PRODUCTS) + "?partial=$partial", token = token)
+        get<List<String>>(client, api(Uris.Ingredients.INGREDIENTS) + "?partial=$partial", token = token)
 
     fun addProducts(token: String, productName: String, quantity: Int, openDate: LocalDate? = null, expirationDate: LocalDate) =
         post<FridgeOutputModel>(

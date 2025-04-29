@@ -25,7 +25,7 @@ class CreateRecipeServiceTests : RecipeServiceTest() {
         jdbiCreateRecipeInfo.ingredients.forEach { ingredient ->
             whenever(
                 runBlocking {
-                    spoonacularRepositoryMock.getProductsList(ingredient.name.lowercase())
+                    spoonacularRepositoryMock.getIngredients(ingredient.name.lowercase())
                 }
             ).thenReturn(listOf(ingredient.name.lowercase()))
         }
@@ -98,7 +98,7 @@ class CreateRecipeServiceTests : RecipeServiceTest() {
         // mock
         whenever(
             runBlocking {
-                spoonacularRepositoryMock.getProductsList(invalidIngredient.name)
+                spoonacularRepositoryMock.getIngredients(invalidIngredient.name)
             }
         ).thenReturn(emptyList())
 

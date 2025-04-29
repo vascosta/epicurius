@@ -2,5 +2,6 @@ package epicurius.repository.spoonacular.contract
 
 interface SpoonacularRepository {
 
-    suspend fun getProductsList(partialName: String): List<String>
+    suspend fun getIngredients(partialName: String): List<String>
+    suspend fun getSubstituteIngredients(name: String): List<String>
 }

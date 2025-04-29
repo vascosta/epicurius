@@ -89,7 +89,7 @@ class FridgeService(
     }
 
     private suspend fun checkIfProductIsValid(productName: String) {
-        val productList = sm.spoonacularRepository.getProductsList(productName)
+        val productList = sm.spoonacularRepository.getIngredients(productName)
         if (!productList.contains(productName)) throw InvalidProduct()
     }
 

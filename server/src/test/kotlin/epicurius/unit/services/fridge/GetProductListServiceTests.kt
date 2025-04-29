@@ -13,7 +13,7 @@ class GetProductListServiceTests : FridgeServiceTest() {
         val partial = "app"
 
         // mock
-        whenever(runBlocking { spoonacularRepositoryMock.getProductsList(partial) }).thenReturn(productsList)
+        whenever(runBlocking { spoonacularRepositoryMock.getIngredients(partial) }).thenReturn(productsList)
 
         // when retrieving the product list
         val retrievedProductList = runBlocking { fridgeService.getProductsList(partial) }
@@ -39,7 +39,7 @@ class GetProductListServiceTests : FridgeServiceTest() {
         val partial = "nonexistent"
 
         // mock
-        whenever(runBlocking { spoonacularRepositoryMock.getProductsList(partial) }).thenReturn(emptyList())
+        whenever(runBlocking { spoonacularRepositoryMock.getIngredients(partial) }).thenReturn(emptyList())
 
         // when retrieving the product list
         val retrievedProductList = runBlocking { fridgeService.getProductsList(partial) }
