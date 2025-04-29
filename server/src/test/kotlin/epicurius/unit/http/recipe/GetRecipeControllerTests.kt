@@ -5,12 +5,6 @@ import epicurius.domain.exceptions.RecipeNotFound
 import epicurius.domain.user.AuthenticatedUser
 import epicurius.domain.user.User
 import epicurius.http.recipe.models.output.GetRecipeOutputModel
-import epicurius.unit.services.ServiceTest
-import epicurius.unit.services.recipe.RecipeServiceTest
-import epicurius.unit.services.recipe.RecipeServiceTest.Companion.AUTHOR_ID
-import epicurius.unit.services.recipe.RecipeServiceTest.Companion.author
-import epicurius.unit.services.recipe.RecipeServiceTest.Companion.authorName
-import epicurius.unit.services.recipe.RecipeServiceTest.Companion.jdbiRecipeModel
 import kotlinx.coroutines.runBlocking
 import org.mockito.kotlin.whenever
 import org.springframework.http.HttpStatus

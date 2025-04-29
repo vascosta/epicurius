@@ -52,7 +52,7 @@ class UpdateRecipeServiceTests : RecipeServiceTest() {
             RECIPE_ID,
             updateRecipeInputInfo.name!!,
             AUTHOR_ID,
-            authorName,
+            authorUsername,
             jdbiCreateRecipeInfo.date,
             1,
             1,
@@ -89,7 +89,7 @@ class UpdateRecipeServiceTests : RecipeServiceTest() {
         // then the recipe is updated successfully
         assertEquals(RECIPE_ID, updatedRecipe.id)
         assertEquals(updateRecipeInputInfo.name, updatedRecipe.name)
-        assertEquals(authorName, updatedRecipe.authorUsername)
+        assertEquals(authorUsername, updatedRecipe.authorUsername)
         assertEquals(updateRecipeInputInfo.description, updatedRecipe.description)
         assertEquals(updateRecipeInputInfo.servings, updatedRecipe.servings)
         assertEquals(updateRecipeInputInfo.preparationTime, updatedRecipe.preparationTime)

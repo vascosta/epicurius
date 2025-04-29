@@ -2,6 +2,7 @@ package epicurius.repository.jdbi.recipe
 
 import epicurius.domain.recipe.Ingredient
 import epicurius.domain.recipe.SearchRecipesModel
+import epicurius.domain.user.FollowingStatus
 import epicurius.repository.jdbi.recipe.contract.RecipeRepository
 import epicurius.repository.jdbi.recipe.models.JdbiCreateRecipeModel
 import epicurius.repository.jdbi.recipe.models.JdbiRecipeInfo
@@ -70,7 +71,9 @@ class JdbiRecipeRepository(private val handle: Handle) : RecipeRepository {
                        r.cuisine, r.meal_type, r.intolerances, r.diets, r.calories, 
                        r.protein, r.fat, r.carbs, r.pictures_names, 
                        i.name AS ingredient_name, i.quantity, i.unit, u.name as author_username
-                FROM dbo.Recipe r JOIN dbo.Ingredient i on r.id = i.recipe_id JOIN dbo.user u on r.author_id = u.id
+                FROM dbo.Recipe r 
+                JOIN dbo.Ingredient i on r.id = i.recipe_id 
+                JOIN dbo.user u on r.author_id = u.id
                 WHERE r.id = :id
             """
         )

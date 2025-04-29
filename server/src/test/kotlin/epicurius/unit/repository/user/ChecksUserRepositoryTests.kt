@@ -1,6 +1,7 @@
 package epicurius.unit.repository.user
 
 import epicurius.domain.user.FollowingStatus
+import epicurius.utils.createTestRecipe
 import epicurius.utils.createTestUser
 import kotlin.test.Test
 import kotlin.test.assertFalse
@@ -10,6 +11,7 @@ class ChecksUserRepositoryTests : UserRepositoryTest() {
 
     private val publicTestUser = createTestUser(tm)
     private val privateTestUser = createTestUser(tm, false)
+    private val testRecipe = createTestRecipe(tm, fs, publicTestUser)
 
     @Test
     fun `Should checks if an existing user is logged in successfully`() {
@@ -47,5 +49,16 @@ class ChecksUserRepositoryTests : UserRepositoryTest() {
 
         // then a follow request was already sent
         assertTrue(userAlreadySentFollowRequest)
+    }
+
+    @Test
+    fun `Should check if an user has access to a recipe successfully`() {
+        // given 2 users (publicTestUser and privateTestUser)
+
+        // when checking if the user has access to a recipe
+        val recipeAccessibility = checkRecipeAccessibility(publicTestUser.name, publicTestUser.id, privateTestUser.name)
+
+        // then the user does not have access to the recipe
+        assertFalse(recipeAccessibility)
     }
 }

@@ -209,12 +209,8 @@ class RecipeService(
         tm.run { it.recipeRepository.getRecipe(recipeId) }
 
     private fun checkRecipeAccessibility(recipe: JdbiRecipeModel, username: String) {
-        val author = tm.run { it.userRepository.getUser(recipe.authorUsername) } ?: throw UserNotFound(recipe.authorUsername)
-        val authorFollowers = tm.run { it.userRepository.getFollowers(author.id) }
-
-        if (author.privacy && !authorFollowers.map { it.name }.contains(username)) {
+        if (!tm.run { it.userRepository.checkRecipeAccessibility(recipe.authorUsername, recipe.authorId, username) })
             throw RecipeNotAccessible(recipe.name)
-        }
     }
 
     private fun checkIfUserIsAuthor(userId: Int, authorId: Int) {

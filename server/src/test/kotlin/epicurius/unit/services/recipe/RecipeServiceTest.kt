@@ -21,11 +21,11 @@ open class RecipeServiceTest : ServiceTest() {
         const val AUTHOR_ID = 1
         const val USER_ID = 6798
 
-        val authorName = generateRandomUsername()
+        val authorUsername = generateRandomUsername()
         val author = User(
             AUTHOR_ID,
-            authorName,
-            generateEmail(authorName),
+            authorUsername,
+            generateEmail(authorUsername),
             "",
             "",
             "PT",
@@ -75,7 +75,7 @@ open class RecipeServiceTest : ServiceTest() {
             RECIPE_ID,
             createRecipeInputInfo.name,
             AUTHOR_ID,
-            authorName,
+            authorUsername,
             jdbiCreateRecipeInfo.date,
             createRecipeInputInfo.servings,
             createRecipeInputInfo.preparationTime,

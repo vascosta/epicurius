@@ -52,14 +52,14 @@ class CreateRecipeServiceTests : RecipeServiceTest() {
         ).thenReturn(RECIPE_ID)
 
         // when creating the recipe
-        val recipe = runBlocking { createRecipe(AUTHOR_ID, authorName, createRecipeInputInfo, recipePictures) }
+        val recipe = runBlocking { createRecipe(AUTHOR_ID, authorUsername, createRecipeInputInfo, recipePictures) }
 
         // then the recipe is created successfully
         verify(firestoreRecipeRepositoryMock).createRecipe(firestoreRecipeInfo)
         verify(pictureRepositoryMock).updatePicture(recipePicturesNames.first(), recipePictures.first(), RECIPES_FOLDER)
         assertEquals(RECIPE_ID, recipe.id)
         assertEquals(createRecipeInputInfo.name, recipe.name)
-        assertEquals(authorName, recipe.authorUsername)
+        assertEquals(authorUsername, recipe.authorUsername)
         assertEquals(createRecipeInputInfo.description, recipe.description)
         assertEquals(createRecipeInputInfo.servings, recipe.servings)
         assertEquals(createRecipeInputInfo.preparationTime, recipe.preparationTime)
@@ -85,7 +85,7 @@ class CreateRecipeServiceTests : RecipeServiceTest() {
         // then the recipe is not created and throws InvalidNumberOfRecipePictures exception
         assertFailsWith<InvalidNumberOfRecipePictures> {
             runBlocking {
-                createRecipe(AUTHOR_ID, authorName, createRecipeInputInfo, invalidPictures)
+                createRecipe(AUTHOR_ID, authorUsername, createRecipeInputInfo, invalidPictures)
             }
         }
     }
@@ -106,7 +106,7 @@ class CreateRecipeServiceTests : RecipeServiceTest() {
         // then the recipe is not created and throws InvalidIngredient exception
         assertFailsWith<InvalidIngredient> {
             runBlocking {
-                createRecipe(AUTHOR_ID, authorName, createRecipeInputInfo.copy(ingredients = listOf(invalidIngredient)), recipePictures)
+                createRecipe(AUTHOR_ID, authorUsername, createRecipeInputInfo.copy(ingredients = listOf(invalidIngredient)), recipePictures)
             }
         }
     }

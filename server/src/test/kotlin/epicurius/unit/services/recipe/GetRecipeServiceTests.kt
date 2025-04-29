@@ -18,18 +18,17 @@ class GetRecipeServiceTests : RecipeServiceTest() {
 
         // mock
         whenever(jdbiRecipeRepositoryMock.getRecipe(RECIPE_ID)).thenReturn(jdbiRecipeModel)
-        whenever(jdbiUserRepositoryMock.getUser(authorName)).thenReturn(author)
-        whenever(jdbiUserRepositoryMock.getFollowers(AUTHOR_ID)).thenReturn(emptyList())
+        whenever(jdbiUserRepositoryMock.checkRecipeAccessibility(authorUsername, AUTHOR_ID, authorUsername)).thenReturn(true)
         whenever(runBlocking { firestoreRecipeRepositoryMock.getRecipe(RECIPE_ID) }).thenReturn(firestoreRecipeInfo)
         whenever(pictureRepositoryMock.getPicture(testPicture.name, RECIPES_FOLDER)).thenReturn(testPicture.bytes)
 
         // when retrieving the recipe
-        val recipe = runBlocking { getRecipe(RECIPE_ID, authorName) }
+        val recipe = runBlocking { getRecipe(RECIPE_ID, authorUsername) }
 
         // then the recipe is retrieved successfully
         assertEquals(RECIPE_ID, recipe.id)
         assertEquals(createRecipeInputInfo.name, recipe.name)
-        assertEquals(authorName, recipe.authorUsername)
+        assertEquals(authorUsername, recipe.authorUsername)
         assertEquals(createRecipeInputInfo.description, recipe.description)
         assertEquals(createRecipeInputInfo.servings, recipe.servings)
         assertEquals(createRecipeInputInfo.preparationTime, recipe.preparationTime)
@@ -53,13 +52,12 @@ class GetRecipeServiceTests : RecipeServiceTest() {
 
         // mock
         whenever(jdbiRecipeRepositoryMock.getRecipe(nonExistingRecipeId)).thenReturn(null, jdbiRecipeModel)
-        whenever(jdbiUserRepositoryMock.getUser(authorName)).thenReturn(author)
-        whenever(jdbiUserRepositoryMock.getFollowers(AUTHOR_ID)).thenReturn(emptyList())
+        whenever(jdbiUserRepositoryMock.checkRecipeAccessibility(authorUsername, AUTHOR_ID, authorUsername)).thenReturn(true)
 
         // when retrieving the recipe
         // then the recipe is not retrieved and throws RecipeNotFound exception
-        assertFailsWith<RecipeNotFound> { runBlocking { getRecipe(nonExistingRecipeId, authorName) } } // jdbi
-        assertFailsWith<RecipeNotFound> { runBlocking { getRecipe(nonExistingRecipeId, authorName) } } // firestore
+        assertFailsWith<RecipeNotFound> { runBlocking { getRecipe(nonExistingRecipeId, authorUsername) } } // jdbi
+        assertFailsWith<RecipeNotFound> { runBlocking { getRecipe(nonExistingRecipeId, authorUsername) } } // firestore
     }
 
     @Test
@@ -69,8 +67,7 @@ class GetRecipeServiceTests : RecipeServiceTest() {
 
         // mock
         whenever(jdbiRecipeRepositoryMock.getRecipe(RECIPE_ID)).thenReturn(jdbiRecipeModel)
-        whenever(jdbiUserRepositoryMock.getUser(authorName)).thenReturn(author)
-        whenever(jdbiUserRepositoryMock.getFollowers(AUTHOR_ID)).thenReturn(emptyList())
+        whenever(jdbiUserRepositoryMock.checkRecipeAccessibility(authorUsername, AUTHOR_ID, user)).thenReturn(false)
 
         // when retrieving the recipe
         // then the recipe is not retrieved and throws RecipeNotAccessible exception
