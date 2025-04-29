@@ -1,5 +1,6 @@
 package epicurius.unit.services.recipe
 
+import epicurius.domain.exceptions.RecipeNotAccessible
 import epicurius.domain.exceptions.RecipeNotFound
 import epicurius.domain.picture.PictureDomain.Companion.RECIPES_FOLDER
 import kotlinx.coroutines.runBlocking
@@ -17,11 +18,13 @@ class GetRecipeServiceTests : RecipeServiceTest() {
 
         // mock
         whenever(jdbiRecipeRepositoryMock.getRecipe(RECIPE_ID)).thenReturn(jdbiRecipeModel)
+        whenever(jdbiUserRepositoryMock.getUser(authorName)).thenReturn(author)
+        whenever(jdbiUserRepositoryMock.getFollowers(AUTHOR_ID)).thenReturn(emptyList())
         whenever(runBlocking { firestoreRecipeRepositoryMock.getRecipe(RECIPE_ID) }).thenReturn(firestoreRecipeInfo)
         whenever(pictureRepositoryMock.getPicture(testPicture.name, RECIPES_FOLDER)).thenReturn(testPicture.bytes)
 
         // when retrieving the recipe
-        val recipe = runBlocking { getRecipe(RECIPE_ID) }
+        val recipe = runBlocking { getRecipe(RECIPE_ID, authorName) }
 
         // then the recipe is retrieved successfully
         assertEquals(RECIPE_ID, recipe.id)
@@ -49,12 +52,28 @@ class GetRecipeServiceTests : RecipeServiceTest() {
         val nonExistingRecipeId = 9999
 
         // mock
-        whenever(jdbiRecipeRepositoryMock.getRecipe(nonExistingRecipeId))
-            .thenReturn(null, jdbiRecipeModel)
+        whenever(jdbiRecipeRepositoryMock.getRecipe(nonExistingRecipeId)).thenReturn(null, jdbiRecipeModel)
+        whenever(jdbiUserRepositoryMock.getUser(authorName)).thenReturn(author)
+        whenever(jdbiUserRepositoryMock.getFollowers(AUTHOR_ID)).thenReturn(emptyList())
 
         // when retrieving the recipe
         // then the recipe is not retrieved and throws RecipeNotFound exception
-        assertFailsWith<RecipeNotFound> { runBlocking { getRecipe(nonExistingRecipeId) } } // jdbi
-        assertFailsWith<RecipeNotFound> { runBlocking { getRecipe(nonExistingRecipeId) } } // firestore
+        assertFailsWith<RecipeNotFound> { runBlocking { getRecipe(nonExistingRecipeId, authorName) } } // jdbi
+        assertFailsWith<RecipeNotFound> { runBlocking { getRecipe(nonExistingRecipeId, authorName) } } // firestore
+    }
+
+    @Test
+    fun `Should throw RecipeNotAccessible exception when retrieving a recipe from a private user not followed`() {
+        // given a user not following the author and a recipe id (RECIPE_ID)
+        val user = "user"
+
+        // mock
+        whenever(jdbiRecipeRepositoryMock.getRecipe(RECIPE_ID)).thenReturn(jdbiRecipeModel)
+        whenever(jdbiUserRepositoryMock.getUser(authorName)).thenReturn(author)
+        whenever(jdbiUserRepositoryMock.getFollowers(AUTHOR_ID)).thenReturn(emptyList())
+
+        // when retrieving the recipe
+        // then the recipe is not retrieved and throws RecipeNotAccessible exception
+        assertFailsWith<RecipeNotAccessible> { runBlocking { getRecipe(RECIPE_ID, user) } }
     }
 }

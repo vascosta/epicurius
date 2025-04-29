@@ -3,7 +3,9 @@ package epicurius.services.recipe
 import epicurius.domain.exceptions.InvalidIngredient
 import epicurius.domain.exceptions.InvalidNumberOfRecipePictures
 import epicurius.domain.exceptions.NotTheAuthor
+import epicurius.domain.exceptions.RecipeNotAccessible
 import epicurius.domain.exceptions.RecipeNotFound
+import epicurius.domain.exceptions.UserNotFound
 import epicurius.domain.picture.PictureDomain
 import epicurius.domain.picture.PictureDomain.Companion.RECIPES_FOLDER
 import epicurius.domain.recipe.Ingredient
@@ -79,8 +81,11 @@ class RecipeService(
         }
     }
 
-    suspend fun getRecipe(recipeId: Int): Recipe {
+    suspend fun getRecipe(recipeId: Int, username: String): Recipe {
         val jdbiRecipe = tm.run { it.recipeRepository.getRecipe(recipeId) } ?: throw RecipeNotFound()
+
+        checkRecipeAccessibility(jdbiRecipe, username)
+
         val firestoreRecipe = fs.recipeRepository.getRecipe(recipeId) ?: throw RecipeNotFound()
         val recipePictures = jdbiRecipe.picturesNames.map {
             cs.pictureRepository.getPicture(it, RECIPES_FOLDER)
@@ -202,6 +207,15 @@ class RecipeService(
 
     private fun checkIfRecipeExists(recipeId: Int): JdbiRecipeModel? =
         tm.run { it.recipeRepository.getRecipe(recipeId) }
+
+    private fun checkRecipeAccessibility(recipe: JdbiRecipeModel, username: String) {
+        val author = tm.run { it.userRepository.getUser(recipe.authorUsername) } ?: throw UserNotFound(recipe.authorUsername)
+        val authorFollowers = tm.run { it.userRepository.getFollowers(author.id) }
+
+        if (author.privacy && !authorFollowers.map { it.name }.contains(username)) {
+            throw RecipeNotAccessible(recipe.name)
+        }
+    }
 
     private fun checkIfUserIsAuthor(userId: Int, authorId: Int) {
         if (userId != authorId) throw NotTheAuthor()

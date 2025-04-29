@@ -71,7 +71,7 @@ open class ServiceTest : EpicuriusUnitTest() {
         suspend fun createRecipe(authorId: Int, authorName: String, recipeInfo: CreateRecipeInputModel, pictures: Set<MultipartFile>) =
             recipeService.createRecipe(authorId, authorName, recipeInfo, pictures)
 
-        suspend fun getRecipe(recipeId: Int) = recipeService.getRecipe(recipeId)
+        suspend fun getRecipe(recipeId: Int, username: String) = recipeService.getRecipe(recipeId, username)
 
         fun searchRecipes(userId: Int, form: SearchRecipesInputModel) =
             recipeService.searchRecipes(userId, form)

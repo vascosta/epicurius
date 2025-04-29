@@ -7,9 +7,11 @@ import epicurius.domain.recipe.Ingredient
 import epicurius.domain.recipe.IngredientUnit
 import epicurius.domain.recipe.Instructions
 import epicurius.domain.recipe.MealType
+import epicurius.domain.user.User
 import epicurius.http.recipe.models.input.CreateRecipeInputModel
 import epicurius.repository.jdbi.recipe.models.JdbiRecipeModel
 import epicurius.unit.services.ServiceTest
+import epicurius.utils.generateEmail
 import epicurius.utils.generateRandomUsername
 
 open class RecipeServiceTest : ServiceTest() {
@@ -18,7 +20,20 @@ open class RecipeServiceTest : ServiceTest() {
         const val RECIPE_ID = 1
         const val AUTHOR_ID = 1
         const val USER_ID = 6798
+
         val authorName = generateRandomUsername()
+        val author = User(
+            AUTHOR_ID,
+            authorName,
+            generateEmail(authorName),
+            "",
+            "",
+            "PT",
+            true,
+            emptyList(),
+            emptyList(),
+            ""
+        )
 
         val recipePictures = setOf(testPicture)
         val recipePicturesNames = recipePictures.map { it.name }

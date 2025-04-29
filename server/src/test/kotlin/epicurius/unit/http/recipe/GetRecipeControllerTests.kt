@@ -1,7 +1,16 @@
 package epicurius.unit.http.recipe
 
+import epicurius.domain.exceptions.RecipeNotAccessible
 import epicurius.domain.exceptions.RecipeNotFound
+import epicurius.domain.user.AuthenticatedUser
+import epicurius.domain.user.User
 import epicurius.http.recipe.models.output.GetRecipeOutputModel
+import epicurius.unit.services.ServiceTest
+import epicurius.unit.services.recipe.RecipeServiceTest
+import epicurius.unit.services.recipe.RecipeServiceTest.Companion.AUTHOR_ID
+import epicurius.unit.services.recipe.RecipeServiceTest.Companion.author
+import epicurius.unit.services.recipe.RecipeServiceTest.Companion.authorName
+import epicurius.unit.services.recipe.RecipeServiceTest.Companion.jdbiRecipeModel
 import kotlinx.coroutines.runBlocking
 import org.mockito.kotlin.whenever
 import org.springframework.http.HttpStatus
@@ -16,7 +25,7 @@ class GetRecipeControllerTests : RecipeHttpTest() {
         // given a recipe id (RECIPE_ID)
 
         // mock
-        whenever(runBlocking { recipeServiceMock.getRecipe(RECIPE_ID) }).thenReturn(testRecipe)
+        whenever(runBlocking { recipeServiceMock.getRecipe(RECIPE_ID, testAuthenticatedUser.user.name) }).thenReturn(testRecipe)
 
         // when retrieving the recipe
         val response = runBlocking { getRecipe(testAuthenticatedUser, RECIPE_ID) }
@@ -33,10 +42,23 @@ class GetRecipeControllerTests : RecipeHttpTest() {
         val nonExistingRecipeId = 9999
 
         // mock
-        whenever(runBlocking { recipeServiceMock.getRecipe(nonExistingRecipeId) }).thenThrow(RecipeNotFound())
+        whenever(runBlocking { recipeServiceMock.getRecipe(nonExistingRecipeId, testAuthenticatedUser.user.name) }).thenThrow(RecipeNotFound())
 
         // when retrieving the recipe
         // then the recipe is not retrieved and throws RecipeNotFound exception
         assertFailsWith<RecipeNotFound> { runBlocking { getRecipe(testAuthenticatedUser, nonExistingRecipeId) } }
+    }
+
+    @Test
+    fun `Should throw RecipeNotAccessible exception when retrieving a recipe from a private user not followed`() {
+        // given a user not following the author and a recipe id (RECIPE_ID)
+        val user = AuthenticatedUser(User(9999, "user", "", "", "", "", false, emptyList(), emptyList(), ""), "")
+
+        // mock
+        whenever(runBlocking { recipeServiceMock.getRecipe(RECIPE_ID, user.user.name) }).thenThrow(RecipeNotAccessible(testRecipe.name))
+
+        // when retrieving the recipe
+        // then the recipe is not retrieved and throws RecipeNotAccessible exception
+        assertFailsWith<RecipeNotAccessible> { runBlocking { getRecipe(user, RECIPE_ID) } }
     }
 }
