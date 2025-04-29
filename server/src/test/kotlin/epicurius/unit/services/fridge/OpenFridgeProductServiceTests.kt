@@ -13,7 +13,7 @@ class OpenFridgeProductServiceTests : FridgeServiceTest() {
 
     @Test
     fun `Should open product and add new one in fridge successfully`() {
-        // given an existing product with ENTRY_NUMBER in the fridge and a new product info
+        // given an open date and a new product info
         val open = openProductInputModel.openDate
         assertNotNull(open)
         val openedProduct = productInfo.copy(openDate = open, expirationDate = newExpiration)
@@ -34,7 +34,7 @@ class OpenFridgeProductServiceTests : FridgeServiceTest() {
         whenever(jdbiFridgeRepositoryMock.addProduct(USER_ID, openedProduct)).thenReturn(newFridge)
 
         // when opening the product
-        val updatedFridge = fridgeService.updateProductInfo(USER_ID, ENTRY_NUMBER, openProductInputModel)
+        val updatedFridge = updateProductInfo(USER_ID, ENTRY_NUMBER, openProductInputModel)
 
         // then the product is opened
         assertEquals(product.productName, updatedFridge.products[0].productName)
@@ -46,7 +46,7 @@ class OpenFridgeProductServiceTests : FridgeServiceTest() {
 
     @Test
     fun `Should open product and update existing product in fridge successfully`() {
-        // given an existing product with ENTRY_NUMBER in the fridge and a new product info
+        // given an open date and a new product info
         val open = openProductInputModel.openDate
         assertNotNull(open)
         val openedInfoProduct = productInfo.copy(openDate = open, expirationDate = newExpiration)
@@ -71,14 +71,14 @@ class OpenFridgeProductServiceTests : FridgeServiceTest() {
         ).thenReturn(updatedFridge)
 
         // when opening the product
-        val newFridge = fridgeService.updateProductInfo(USER_ID, ENTRY_NUMBER, openProductInputModel)
+        val newFridge = updateProductInfo(USER_ID, ENTRY_NUMBER, openProductInputModel)
 
         // then the product is opened
-        assertEquals(product.productName, newFridge.products[0].productName)
-        assertEquals(ENTRY_NUMBER, newFridge.products[0].entryNumber)
-        assertEquals(product.quantity, newFridge.products[0].quantity)
-        assertEquals(openProductInputModel.openDate, newFridge.products[0].openDate)
-        assertEquals(newExpiration, newFridge.products[0].expirationDate)
+        assertEquals(product.productName, newFridge.products[1].productName)
+        assertEquals(NEW_ENTRY_NUMBER, newFridge.products[1].entryNumber)
+        assertEquals(increaseQuantity.quantity, newFridge.products[1].quantity)
+        assertEquals(openProductInputModel.openDate, newFridge.products[1].openDate)
+        assertEquals(newExpiration, newFridge.products[1].expirationDate)
     }
 
     @Test
@@ -93,7 +93,7 @@ class OpenFridgeProductServiceTests : FridgeServiceTest() {
 
         // when opening the product
         val exception = assertThrows<ProductNotFound> {
-            fridgeService.updateProductInfo(USER_ID, entryNumber, openProductInputModel)
+            updateProductInfo(USER_ID, entryNumber, openProductInputModel)
         }
 
         // then the exception is thrown
@@ -105,7 +105,7 @@ class OpenFridgeProductServiceTests : FridgeServiceTest() {
         // given an existing product with ENTRY_NUMBER in the fridge
         val open = openProductInputModel.openDate
         assertNotNull(open)
-        val entryNumber = 1
+        val entryNumber = 2
 
         // mock
         whenever(jdbiFridgeRepositoryMock.checkIfProductExistsInFridge(USER_ID, entryNumber, null)).thenReturn(product)
@@ -113,7 +113,7 @@ class OpenFridgeProductServiceTests : FridgeServiceTest() {
 
         // when opening the product
         val exception = assertThrows<ProductIsAlreadyOpen> {
-            fridgeService.updateProductInfo(USER_ID, entryNumber, openProductInputModel)
+            updateProductInfo(USER_ID, entryNumber, openProductInputModel)
         }
 
         // then the exception is thrown

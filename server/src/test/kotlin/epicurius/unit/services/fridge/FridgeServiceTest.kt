@@ -66,7 +66,7 @@ open class FridgeServiceTest : ServiceTest() {
         val openedProduct = Product(
             productName = PRODUCT_NAME,
             entryNumber = NEW_ENTRY_NUMBER,
-            quantity = PRODUCT_QUANTITY + 1,
+            quantity = PRODUCT_QUANTITY,
             openDate = open,
             expirationDate = newExpiration
         )
@@ -78,15 +78,12 @@ open class FridgeServiceTest : ServiceTest() {
 
         val decreaseQuantity = UpdateProductInfo(
             entryNumber = ENTRY_NUMBER,
-            quantity = 1,
-            expirationDate = expirationDate
+            quantity = 1
         )
 
         val increaseQuantity = UpdateProductInfo(
             entryNumber = NEW_ENTRY_NUMBER,
-            quantity = PRODUCT_QUANTITY + 1,
-            openDate = open,
-            expirationDate = newExpiration
+            quantity = PRODUCT_QUANTITY + 1
         )
     }
 }
