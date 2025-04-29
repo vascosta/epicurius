@@ -58,7 +58,7 @@ open class FridgeHttpTest : HttpTest() {
         val product = Product(
             productName = "apple",
             entryNumber = ENTRY_NUMBER,
-            quantity = testAuthenticatedUser.user.id,
+            quantity = 1,
             openDate = null,
             expirationDate = LocalDate.now().plusDays(7)
         )

@@ -13,7 +13,7 @@ class AddFridgeProductServiceTests : FridgeServiceTest() {
 
     @Test
     fun `Should add a new product to user's fridge successfully`() {
-        // given a product info and a new fridge
+        // given a new fridge and a valid
         val newFridge = Fridge(listOf(product))
         val validProductName = newFridge.products[0].productName
 
@@ -22,7 +22,7 @@ class AddFridgeProductServiceTests : FridgeServiceTest() {
         whenever(jdbiFridgeRepositoryMock.addProduct(USER_ID, productInfo)).thenReturn(newFridge)
 
         // when adding the new product to fridge
-        val retrievedFridge = runBlocking { fridgeService.addProduct(USER_ID, productInputModel) }
+        val retrievedFridge = runBlocking { addProduct(USER_ID, productInputModel) }
 
         // then the product is added to the fridge
         assertEquals(newFridge.products.size, retrievedFridge.products.size)
@@ -34,7 +34,7 @@ class AddFridgeProductServiceTests : FridgeServiceTest() {
 
     @Test
     fun `Should add an existing product to user's successfully`() {
-        // given a product info and a new fridge
+        // given a product info, a new product info and a fridge with an existing product
         val existingProduct = productInfo
         val newProduct = productInfo.copy(quantity = 2)
         val oldFridge = Fridge(listOf(product))
@@ -59,12 +59,12 @@ class AddFridgeProductServiceTests : FridgeServiceTest() {
         whenever(jdbiFridgeRepositoryMock.updateProduct(USER_ID, updateProductInfo)).thenReturn(newFridge)
 
         // when adding the new product to fridge
-        val retrievedFridge = runBlocking { fridgeService.addProduct(USER_ID, productInputModel) }
+        val retrievedFridge = runBlocking { addProduct(USER_ID, productInputModel) }
 
         // when adding the existing product to fridge
         val retrievedExistingProduct =
             runBlocking {
-                fridgeService.addProduct(USER_ID, productInputModel.copy(quantity = 2))
+                addProduct(USER_ID, productInputModel.copy(quantity = 2))
             }
 
         // then the existing product in the fridge is updated
@@ -77,7 +77,7 @@ class AddFridgeProductServiceTests : FridgeServiceTest() {
 
     @Test
     fun `Should throw InvalidProduct exception when adding an invalid product to fridge`() {
-        // given an invalid product name
+        // given an invalid product name and the product input model
         val invalidProductName = "invalid-product-name"
         val invalidProductInputModel = productInputModel.copy(productName = invalidProductName)
 
@@ -86,7 +86,7 @@ class AddFridgeProductServiceTests : FridgeServiceTest() {
 
         // when adding the invalid product to fridge
         val exception = assertThrows<InvalidProduct> {
-            runBlocking { fridgeService.addProduct(USER_ID, invalidProductInputModel) }
+            runBlocking { addProduct(USER_ID, invalidProductInputModel) }
         }
 
         // then an exception is thrown

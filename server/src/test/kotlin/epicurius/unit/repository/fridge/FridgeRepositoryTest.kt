@@ -5,7 +5,6 @@ import epicurius.domain.fridge.UpdateProductInfo
 import epicurius.domain.user.User
 import epicurius.unit.repository.RepositoryTest
 import epicurius.utils.createTestUser
-import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import java.time.LocalDate
@@ -52,13 +51,11 @@ class FridgeRepositoryTest : RepositoryTest() {
         val fridge = addProduct(user.id, product)
 
         // then the fridge should contain the added product
-        assertTrue(fridge.products.isNotEmpty())
-
-        val productInfoList = fridge.products.map {
-            ProductInfo(it.productName, it.quantity, it.openDate, it.expirationDate)
-        }
-
-        assertTrue(productInfoList.contains(product))
+        assertEquals(1, fridge.products.size)
+        assertEquals(product.productName, fridge.products.first().productName)
+        assertEquals(product.quantity, fridge.products.first().quantity)
+        assertEquals(product.openDate, fridge.products.first().openDate)
+        assertEquals(product.expirationDate, fridge.products.first().expirationDate)
     }
 
     @Test
@@ -75,10 +72,7 @@ class FridgeRepositoryTest : RepositoryTest() {
         )
         val fridge = addProduct(user.id, product)
 
-        val entryNumber = fridge.products.first {
-            it.productName == product.productName && it.quantity == product.quantity &&
-                it.openDate == product.openDate && it.expirationDate == product.expirationDate
-        }.entryNumber
+        val entryNumber = fridge.products.first().entryNumber
 
         // when updating the product in the user's fridge
         val newQuantity = 2
@@ -91,22 +85,11 @@ class FridgeRepositoryTest : RepositoryTest() {
         val updatedFridge = updateProduct(user.id, updatedProduct)
 
         // then the fridge should contain the updated product
-        assertTrue(fridge.products.isNotEmpty())
-
-        val productInfoList = updatedFridge.products.map {
-            ProductInfo(it.productName, it.quantity, it.openDate, it.expirationDate)
-        }
-
-        assertTrue(
-            productInfoList.contains(
-                ProductInfo(
-                    productName = product.productName,
-                    quantity = newQuantity,
-                    openDate = null,
-                    expirationDate = newExpirationDate
-                )
-            )
-        )
+        assertEquals(1, updatedFridge.products.size)
+        assertEquals(product.productName, updatedFridge.products.first().productName)
+        assertEquals(newQuantity, updatedFridge.products.first().quantity)
+        assertEquals(product.openDate, updatedFridge.products.first().openDate)
+        assertEquals(newExpirationDate, updatedFridge.products.first().expirationDate)
     }
 
     @Test
@@ -123,21 +106,13 @@ class FridgeRepositoryTest : RepositoryTest() {
         )
         val fridge = addProduct(user.id, product)
 
-        val entryNumber = fridge.products.first {
-            it.productName == product.productName && it.quantity == product.quantity &&
-                it.openDate == product.openDate && it.expirationDate == product.expirationDate
-        }.entryNumber
+        val entryNumber = fridge.products.first().entryNumber
 
         // when removing the product from the user's fridge
         val removedFridge = removeProduct(user.id, entryNumber)
 
         // then the fridge should be empty
-
-        val productInfoList = removedFridge.products.map {
-            ProductInfo(it.productName, it.quantity, it.openDate, it.expirationDate)
-        }
-
-        assertFalse(productInfoList.contains(product))
+        assertTrue(removedFridge.products.isEmpty())
     }
 
     @Test
@@ -192,10 +167,7 @@ class FridgeRepositoryTest : RepositoryTest() {
         )
         val fridge = addProduct(user.id, product)
 
-        val entryNumber = fridge.products.first {
-            it.productName == product.productName && it.quantity == product.quantity &&
-                it.openDate == product.openDate && it.expirationDate == product.expirationDate
-        }.entryNumber
+        val entryNumber = fridge.products.first().entryNumber
 
         // when checking if the product exists in the user's fridge
         val existingProduct = checkIfProductExistsInFridge(user.id, entryNumber, null)

@@ -14,7 +14,7 @@ class UpdateFridgeProduct : FridgeServiceTest() {
 
     @Test
     fun `Should update product info`() {
-        // given an existing product with ENTRY_NUMBER in the fridge and a new product info
+        // given an existing product and a user's fridge
         val existingProduct = product
         val newFridge = Fridge(listOf(existingProduct.copy(quantity = NEW_QUANTITY, expirationDate = newExpirationDate)))
 
@@ -32,7 +32,7 @@ class UpdateFridgeProduct : FridgeServiceTest() {
         // when updating the product info
         val updatedFridge =
             runBlocking {
-                fridgeService.updateProductInfo(USER_ID, ENTRY_NUMBER, updateProductInputModel)
+                updateProductInfo(USER_ID, ENTRY_NUMBER, updateProductInputModel)
             }
 
         // then the product info is updated
@@ -44,7 +44,7 @@ class UpdateFridgeProduct : FridgeServiceTest() {
 
     @Test
     fun `Should throw ProductNotFound exception when product does not exist in fridge`() {
-        // given a non-existing product
+        // given a non-existing product ENTRY_NUMBER
         val nonExistingEntryNumber = 9999
 
         // mock
@@ -58,7 +58,7 @@ class UpdateFridgeProduct : FridgeServiceTest() {
 
         // when updating the product info
         val exception = assertThrows<ProductNotFound> {
-            runBlocking { fridgeService.updateProductInfo(USER_ID, nonExistingEntryNumber, updateProductInputModel) }
+            runBlocking { updateProductInfo(USER_ID, nonExistingEntryNumber, updateProductInputModel) }
         }
 
         // then the exception is thrown
@@ -82,7 +82,7 @@ class UpdateFridgeProduct : FridgeServiceTest() {
 
         // when updating the product info
         val exception = assertThrows<ProductIsAlreadyOpen> {
-            runBlocking { fridgeService.updateProductInfo(USER_ID, ENTRY_NUMBER, updateProductInputModel) }
+            runBlocking { updateProductInfo(USER_ID, ENTRY_NUMBER, updateProductInputModel) }
         }
 
         // then the exception is thrown

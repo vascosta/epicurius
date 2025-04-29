@@ -15,7 +15,8 @@ import kotlin.test.assertNotNull
 class OpenFridgeProductControllerTests : FridgeHttpTest() {
 
     @Test
-    fun `Should open an existing product without duration`() {
+    fun `Should open an existing product without duration successfully`() {
+        // given a user with a fridge and an existing product to open
         val open = openProductInputModel.openDate
         assertNotNull(open)
         val openInput = UpdateProductInputModel(openDate = LocalDate.now())
@@ -63,7 +64,7 @@ class OpenFridgeProductControllerTests : FridgeHttpTest() {
 
     @Test
     fun `Should open an existing product and update its quantity successfully`() {
-        // given a user with a fridge and an existing product to open
+        // given a user with a fridge, an existing product to open and an existing open product
         val open = openProductInputModel.openDate
         assertNotNull(open)
         val productToOpen = product.copy(quantity = 2)

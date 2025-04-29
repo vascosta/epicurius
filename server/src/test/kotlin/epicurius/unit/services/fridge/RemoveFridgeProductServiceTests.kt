@@ -11,7 +11,7 @@ class RemoveFridgeProductServiceTests : FridgeServiceTest() {
 
     @Test
     fun `Should remove product from user's fridge`() {
-        // given a USER_ID and  an ENTRY_NUMBER
+        // given a USER_ID and an ENTRY_NUMBER
         // mock
         whenever(
             jdbiFridgeRepositoryMock.checkIfProductExistsInFridge(
@@ -23,7 +23,7 @@ class RemoveFridgeProductServiceTests : FridgeServiceTest() {
         whenever(jdbiFridgeRepositoryMock.removeProduct(USER_ID, ENTRY_NUMBER)).thenReturn(Fridge(emptyList()))
 
         // when removing the product from user's fridge
-        val fridge = fridgeService.removeProduct(USER_ID, ENTRY_NUMBER)
+        val fridge = removeProduct(USER_ID, ENTRY_NUMBER)
 
         // then the product should be removed from the fridge
         assert(fridge.products.isEmpty())
@@ -43,7 +43,7 @@ class RemoveFridgeProductServiceTests : FridgeServiceTest() {
         ).thenReturn(null)
 
         // when removing the product from user's fridge
-        val exception = assertThrows<ProductNotFound> { fridgeService.removeProduct(USER_ID, entryNumber) }
+        val exception = assertThrows<ProductNotFound> { removeProduct(USER_ID, entryNumber) }
 
         // then the exception should be thrown
         assertEquals(ProductNotFound(entryNumber).message, exception.message)

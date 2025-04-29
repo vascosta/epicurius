@@ -24,4 +24,20 @@ class GetFridgeControllerTests : FridgeHttpTest() {
         assertEquals(HttpStatus.OK, response.statusCode)
         assertEquals(FridgeOutputModel(emptyList()), response.body)
     }
+
+    @Test
+    fun `Should get user's fridge with products successfully`() {
+        // given a user with a fridge
+        val authenticatedUser = testAuthenticatedUser
+
+        // mock
+        whenever(fridgeServiceMock.getFridge(authenticatedUser.user.id)).thenReturn(Fridge(listOf(product)))
+
+        // when getting the fridge
+        val response = getFridge(authenticatedUser)
+
+        // then the fridge is retrieved successfully
+        assertEquals(HttpStatus.OK, response.statusCode)
+        assertEquals(FridgeOutputModel(listOf(product)), response.body)
+    }
 }

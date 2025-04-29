@@ -42,14 +42,28 @@ class AddProductFridgeControllerTests : FridgeHttpTest() {
             runBlocking {
                 fridgeServiceMock.addProduct(testAuthenticatedUser.user.id, productInputModel)
             }
+        ).thenReturn(Fridge(listOf(product)))
+
+        // when adding the product to the fridge
+        val oldFridge = runBlocking { addProducts(testAuthenticatedUser, productInputModel) }
+
+        // then the existing product is added successfully
+        assertEquals(HttpStatus.OK, oldFridge.statusCode)
+        assertEquals(Fridge(listOf(product)), oldFridge.body)
+
+        // mock
+        whenever(
+            runBlocking {
+                fridgeServiceMock.addProduct(testAuthenticatedUser.user.id, productInputModel)
+            }
         ).thenReturn(Fridge(listOf(product.copy(quantity = 2))))
 
         // when adding the existing product to the fridge
-        val response = runBlocking { addProducts(testAuthenticatedUser, productInputModel) }
+        val newFridge = runBlocking { addProducts(testAuthenticatedUser, productInputModel) }
 
-        // then the existing product is added successfully
-        assertEquals(HttpStatus.OK, response.statusCode)
-        assertEquals(Fridge(listOf(product.copy(quantity = 2))), response.body)
+        // then the product is updated successfully
+        assertEquals(HttpStatus.OK, newFridge.statusCode)
+        assertEquals(Fridge(listOf(product.copy(quantity = 2))), newFridge.body)
     }
 
     @Test

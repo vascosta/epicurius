@@ -17,11 +17,28 @@ class GetFridgeServiceTest : FridgeServiceTest() {
         whenever(jdbiFridgeRepositoryMock.getFridge(USER_ID)).thenReturn(fridge)
 
         // when retrieving the fridge
-        val retrievedFridge = fridgeService.getFridge(USER_ID)
+        val retrievedFridge = getFridge(USER_ID)
 
         // then the fridge is retrieved successfully
         assertEquals(fridge, retrievedFridge)
         assertEquals(fridge.products, retrievedFridge.products)
         assertTrue(retrievedFridge.products.isEmpty())
+    }
+
+    @Test
+    fun `Should retrieve the user's fridge with products successfully`() {
+        // given a user fridge
+        val fridge = Fridge(listOf(product))
+
+        // mock
+        whenever(jdbiFridgeRepositoryMock.getFridge(USER_ID)).thenReturn(fridge)
+
+        // when retrieving the fridge
+        val retrievedFridge = getFridge(USER_ID)
+
+        // then the fridge is retrieved successfully
+        assertEquals(fridge, retrievedFridge)
+        assertEquals(fridge.products, retrievedFridge.products)
+        assertTrue(retrievedFridge.products.isNotEmpty())
     }
 }
