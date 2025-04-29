@@ -168,7 +168,7 @@ class UserController(val userService: UserService) {
 
     @PatchMapping(Uris.User.USER_FOLLOW)
     fun follow(authenticatedUser: AuthenticatedUser, @PathVariable name: String): ResponseEntity<*> {
-        userService.follow(authenticatedUser.user.id, name)
+        userService.follow(authenticatedUser.user.id, authenticatedUser.user.name, name)
         return ResponseEntity.noContent().build<Unit>()
     }
 
@@ -178,13 +178,13 @@ class UserController(val userService: UserService) {
         @PathVariable name: String,
         @RequestParam type: FollowRequestType,
     ): ResponseEntity<*> {
-        userService.followRequest(authenticatedUser.user.id, name, type)
+        userService.followRequest(authenticatedUser.user.id, authenticatedUser.user.name, name, type)
         return ResponseEntity.noContent().build<Unit>()
     }
 
     @DeleteMapping(Uris.User.USER_FOLLOW)
     fun unfollow(authenticatedUser: AuthenticatedUser, @PathVariable name: String): ResponseEntity<*> {
-        userService.unfollow(authenticatedUser.user.id, name)
+        userService.unfollow(authenticatedUser.user.id, authenticatedUser.user.name, name)
         return ResponseEntity.ok().build<Unit>()
     }
 }
