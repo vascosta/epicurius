@@ -13,7 +13,7 @@ class IngredientMapper : RowMapper<Ingredient> {
 
         return Ingredient(
             name = rs.getString("ingredient_name"),
-            quantity = rs.getInt("quantity"),
+            quantity = rs.getDouble("quantity"),
             unit = unit
         )
     }

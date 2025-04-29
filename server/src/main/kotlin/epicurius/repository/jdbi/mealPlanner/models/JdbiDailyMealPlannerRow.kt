@@ -4,4 +4,4 @@ import epicurius.domain.mealPlanner.MealTime
 import epicurius.repository.jdbi.recipe.models.JdbiRecipeInfo
 import java.time.LocalDate
 
-data class JdbiDailyMealPlanner(val date: LocalDate, val meals: Map<MealTime, JdbiRecipeInfo>)
+data class JdbiDailyMealPlannerRow(val date: LocalDate, val mealTime: MealTime, val jdbiRecipeInfo: JdbiRecipeInfo)

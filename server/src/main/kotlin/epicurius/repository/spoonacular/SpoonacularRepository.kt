@@ -2,7 +2,6 @@ package epicurius.repository.spoonacular
 
 import epicurius.Environment
 import epicurius.config.HttpClientConfigurer
-import epicurius.domain.exceptions.InvalidIngredient
 import epicurius.repository.spoonacular.contract.SpoonacularRepository
 import epicurius.repository.spoonacular.models.SpoonacularIngredientModel
 import epicurius.repository.spoonacular.models.SpoonacularSubstituteIngredientsModel
@@ -21,7 +20,6 @@ class SpoonacularRepository(private val httpClient: HttpClientConfigurer) : Spoo
 
         return withContext(Dispatchers.IO) {
             val request = async { httpClient.get(uriCompleted) }.await()
-            println(request)
             val ingredients = Json.decodeFromString<List<SpoonacularIngredientModel>>(request)
             ingredients.map { it.name.lowercase() }
         }

@@ -136,7 +136,7 @@ class UpdateRecipeControllerTests : RecipeHttpTest() {
         // then the recipe is not updated and throws IllegalArgumentException
         assertFailsWith<InvalidIngredient> {
             runBlocking {
-                updateRecipe(testAuthenticatedUser, RECIPE_ID, updateRecipeInfo.copy(ingredients = listOf(invalidIngredient)) )
+                updateRecipe(testAuthenticatedUser, RECIPE_ID, updateRecipeInfo.copy(ingredients = listOf(invalidIngredient)))
             }
         }
     }

@@ -9,7 +9,7 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 
-class GetRecipeControllerTests: RecipeHttpTest() {
+class GetRecipeControllerTests : RecipeHttpTest() {
 
     @Test
     fun `Should retrieve the recipe successfully`() {

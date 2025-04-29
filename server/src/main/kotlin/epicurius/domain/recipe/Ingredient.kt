@@ -8,7 +8,7 @@ import epicurius.domain.recipe.RecipeDomain.Companion.MIN_INGREDIENT_QUANTITY
 
 data class Ingredient(
     val name: String,
-    val quantity: Int,
+    val quantity: Double,
     val unit: IngredientUnit
 ) {
 

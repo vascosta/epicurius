@@ -2,7 +2,6 @@ package epicurius.unit.http.user
 
 import epicurius.http.user.models.output.GetUserIntolerancesOutputModel
 import org.springframework.http.HttpStatus
-import org.springframework.http.HttpStatusCode
 import kotlin.test.Test
 import kotlin.test.assertEquals
 

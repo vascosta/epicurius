@@ -4,7 +4,6 @@ import epicurius.domain.user.AuthenticatedUser
 import epicurius.http.user.models.output.UpdateUserProfilePictureOutputModel
 import org.mockito.kotlin.whenever
 import org.springframework.http.HttpStatus
-import org.springframework.http.HttpStatusCode
 import java.util.UUID.randomUUID
 import kotlin.test.Test
 import kotlin.test.assertEquals

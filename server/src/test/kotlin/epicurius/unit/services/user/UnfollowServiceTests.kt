@@ -1,6 +1,5 @@
 package epicurius.unit.services.user
 
-import epicurius.domain.exceptions.InvalidSelfFollow
 import epicurius.domain.exceptions.InvalidSelfUnfollow
 import epicurius.domain.exceptions.UserNotFollowed
 import epicurius.domain.exceptions.UserNotFound

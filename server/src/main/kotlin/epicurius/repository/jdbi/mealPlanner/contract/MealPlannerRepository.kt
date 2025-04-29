@@ -11,6 +11,7 @@ interface MealPlannerRepository {
 
     fun getMealPlanner(userId: Int): JdbiMealPlanner
     fun addMealPlanner(userId: Int, date: LocalDate, recipeId: Int, mealTime: MealTime): JdbiMealPlanner
+    fun updateMealPlanner(userId: Int, date: LocalDate, recipeId: Int, mealTime: MealTime): JdbiMealPlanner
 
     fun getDailyCalories(userId: Int, date: LocalDate): JdbiCalories
 

@@ -1,11 +1,11 @@
-//package epicurius.unit.services.fridge
+// package epicurius.unit.services.fridge
 //
-//import kotlinx.coroutines.runBlocking
-//import org.junit.jupiter.api.Assertions.assertEquals
-//import org.mockito.kotlin.whenever
-//import kotlin.test.Test
+// import kotlinx.coroutines.runBlocking
+// import org.junit.jupiter.api.Assertions.assertEquals
+// import org.mockito.kotlin.whenever
+// import kotlin.test.Test
 //
-//class GetProductListServiceTests : FridgeServiceTest() {
+// class GetProductListServiceTests : FridgeServiceTest() {
 //
 //    @Test
 //    fun `Should retrieve a list of products successfully`() {
@@ -47,4 +47,4 @@
 //        // then the product list is retrieved successfully
 //        assertEquals(emptyList<String>(), retrievedProductList)
 //    }
-//}
+// }

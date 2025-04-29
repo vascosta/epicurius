@@ -16,13 +16,11 @@ enum class MealTime {
             )
             LUNCH -> mealType in setOf(
                 MealType.MAIN_COURSE, MealType.SIDE_DISH, MealType.SALAD,
-                MealType.DESSERT, MealType.BEVERAGE, MealType.BREAD, MealType.SOUP,
-                MealType.SAUCE, MealType.MARINADE
+                MealType.BEVERAGE, MealType.BREAD, MealType.SOUP, MealType.MARINADE
             )
             DINNER -> mealType in setOf(
                 MealType.MAIN_COURSE, MealType.SIDE_DISH, MealType.SALAD,
-                MealType.DESSERT, MealType.BEVERAGE, MealType.BREAD, MealType.SOUP,
-                MealType.SAUCE, MealType.MARINADE
+                MealType.BEVERAGE, MealType.BREAD, MealType.SOUP, MealType.MARINADE
             )
             SNACK -> mealType in setOf(
                 MealType.SNACK, MealType.FINGERFOOD, MealType.BEVERAGE, MealType.DESSERT
