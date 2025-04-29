@@ -1,6 +1,5 @@
 package epicurius.domain
 
-import epicurius.domain.exceptions.InvalidDiet
 import epicurius.domain.exceptions.InvalidDietIdx
 
 enum class Diet {
@@ -19,14 +18,6 @@ enum class Diet {
     companion object {
         fun fromInt(value: Int): Diet {
             return Diet.entries.getOrNull(value) ?: throw InvalidDietIdx()
-        }
-
-        fun toInt(diet: Diet): Int {
-            val idx = Diet.entries.indexOf(diet)
-            if (idx == -1) {
-                throw InvalidDiet()
-            }
-            return idx
         }
     }
 }

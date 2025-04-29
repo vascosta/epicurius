@@ -1,6 +1,7 @@
 package epicurius.unit.services.user
 
 import epicurius.domain.exceptions.FollowRequestNotFound
+import epicurius.domain.exceptions.InvalidSelfCancelFollowRequest
 import epicurius.domain.exceptions.UserNotFound
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
@@ -19,10 +20,21 @@ class CancelFollowRequestServiceTests : UserServiceTest() {
             .thenReturn(true)
 
         // when canceling the follow request
-        cancelFollowRequest(publicTestUser.id, privateTestUsername)
+        cancelFollowRequest(publicTestUser.id, publicTestUsername, privateTestUsername)
 
         // then the follow request is canceled successfully
         verify(jdbiUserRepositoryMock).cancelFollowRequest(privateTestUser.id, publicTestUser.id)
+    }
+
+    @Test
+    fun `Should throw InvalidSelfCancelFollowRequest exception when canceling a follow request to himself`() {
+        // given a user (publicTestUser)
+
+        // when canceling the follow request
+        // then the follow request is not canceled and throws InvalidSelfCancelFollowRequest exception
+        assertFailsWith<InvalidSelfCancelFollowRequest> {
+            cancelFollowRequest(publicTestUser.id, publicTestUsername, publicTestUsername)
+        }
     }
 
     @Test
@@ -36,7 +48,7 @@ class CancelFollowRequestServiceTests : UserServiceTest() {
         // when canceling the follow request
         // then the follow request is not canceled and throws UserNotFound exception
         assertFailsWith<UserNotFound> {
-            cancelFollowRequest(publicTestUser.id, nonExistingUser)
+            cancelFollowRequest(publicTestUser.id, publicTestUsername, nonExistingUser)
         }
     }
 
@@ -52,7 +64,7 @@ class CancelFollowRequestServiceTests : UserServiceTest() {
         // when canceling the follow request
         // then the follow request is not canceled and throws FollowRequestNotFound exception
         assertFailsWith<FollowRequestNotFound> {
-            cancelFollowRequest(publicTestUser.id, privateTestUsername)
+            cancelFollowRequest(publicTestUser.id, publicTestUsername, privateTestUsername)
         }
     }
 }

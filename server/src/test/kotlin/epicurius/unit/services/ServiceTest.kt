@@ -47,20 +47,18 @@ open class ServiceTest : EpicuriusUnitTest() {
         fun resetPassword(email: String, newPassword: String, confirmPassword: String) =
             userService.resetPassword(email, newPassword, confirmPassword)
 
-        fun follow(userId: Int, usernameToFollow: String) = userService.follow(userId, usernameToFollow)
+        fun follow(userId: Int, username: String, usernameToFollow: String) = userService.follow(userId, username, usernameToFollow)
 
-        fun unfollow(userId: Int, usernameToUnfollow: String) = userService.unfollow(userId, usernameToUnfollow)
+        fun unfollow(userId: Int, username: String, usernameToUnfollow: String) = userService.unfollow(userId, username, usernameToUnfollow)
 
-        fun cancelFollowRequest(userId: Int, username: String) =
-            userService.followRequest(userId, username, FollowRequestType.CANCEL)
+        fun cancelFollowRequest(userId: Int, username: String, usernameToRequest: String) =
+            userService.followRequest(userId, username, usernameToRequest, FollowRequestType.CANCEL)
 
         // FRIDGE
         fun getFridge(userId: Int) = fridgeService.getFridge(userId)
 
         suspend fun addProduct(userId: Int, productName: ProductInputModel) =
             fridgeService.addProduct(userId, productName)
-
-        suspend fun getProductsList(partial: String) = fridgeService.getProductsList(partial)
 
         fun updateProductInfo(userId: Int, entryNumber: Int, product: UpdateProductInputModel) =
             fridgeService.updateProductInfo(userId, entryNumber, product)

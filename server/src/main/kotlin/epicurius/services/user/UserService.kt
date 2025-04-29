@@ -6,6 +6,9 @@ import epicurius.domain.exceptions.FollowRequestNotFound
 import epicurius.domain.exceptions.IncorrectPassword
 import epicurius.domain.exceptions.InvalidCountry
 import epicurius.domain.exceptions.InvalidFollowRequestType
+import epicurius.domain.exceptions.InvalidSelfCancelFollowRequest
+import epicurius.domain.exceptions.InvalidSelfFollow
+import epicurius.domain.exceptions.InvalidSelfUnfollow
 import epicurius.domain.exceptions.InvalidToken
 import epicurius.domain.exceptions.PasswordsDoNotMatch
 import epicurius.domain.exceptions.UserAlreadyBeingFollowed
@@ -164,16 +167,17 @@ class UserService(
         }
     }
 
-    fun followRequest(userId: Int, username: String, type: FollowRequestType) {
+    fun followRequest(userId: Int, username: String, usernameToRequest: String, type: FollowRequestType) {
         when (type) {
-            FollowRequestType.CANCEL -> cancelFollowRequest(userId, username)
+            FollowRequestType.CANCEL -> cancelFollowRequest(userId, username, usernameToRequest)
             // "accept" -> acceptFollowRequest(authenticatedUser.user.id, username)
             // "reject" -> rejectFollowRequest(authenticatedUser.user.id, username)
             else -> throw InvalidFollowRequestType()
         }
     }
 
-    fun follow(userId: Int, usernameToFollow: String) {
+    fun follow(userId: Int, username: String, usernameToFollow: String) {
+        if (checkSelf(username, usernameToFollow)) throw InvalidSelfFollow()
         val userToFollow = checkIfUserExists(name = usernameToFollow) ?: throw UserNotFound(usernameToFollow)
         if (checkIfUserIsBeingFollowedBy(userToFollow.id, userId)) throw UserAlreadyBeingFollowed(usernameToFollow)
         val followingStatus =
@@ -189,7 +193,8 @@ class UserService(
         }
     }
 
-    fun unfollow(userId: Int, usernameToUnfollow: String) {
+    fun unfollow(userId: Int, username: String, usernameToUnfollow: String) {
+        if (checkSelf(username, usernameToUnfollow)) throw InvalidSelfUnfollow()
         val userToUnfollow = checkIfUserExists(name = usernameToUnfollow) ?: throw UserNotFound(usernameToUnfollow)
         if (!checkIfUserIsBeingFollowedBy(userToUnfollow.id, userId)) throw UserNotFollowed(usernameToUnfollow)
         tm.run {
@@ -202,7 +207,8 @@ class UserService(
         tm.run { it.userRepository.updateUser(username, JdbiUpdateUserModel(profilePictureName = null)) }
     }
 
-    private fun cancelFollowRequest(userId: Int, usernameToCancelFollow: String) {
+    private fun cancelFollowRequest(userId: Int, username: String, usernameToCancelFollow: String) {
+        if (checkSelf(username, usernameToCancelFollow)) throw InvalidSelfCancelFollowRequest()
         val userToCancelFollow = checkIfUserExists(name = usernameToCancelFollow) ?: throw UserNotFound(usernameToCancelFollow)
         if (!checkIfUserAlreadySentFollowRequest(userToCancelFollow.id, userId)) throw FollowRequestNotFound(usernameToCancelFollow)
         tm.run {
@@ -243,4 +249,6 @@ class UserService(
     private fun checkIfPasswordsMatch(password: String, confirmPassword: String?) {
         if (password != confirmPassword) throw PasswordsDoNotMatch()
     }
+
+    private fun checkSelf(username: String, username2: String) = username == username2
 }

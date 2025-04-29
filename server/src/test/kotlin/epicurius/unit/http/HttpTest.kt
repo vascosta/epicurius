@@ -62,9 +62,6 @@ open class HttpTest : EpicuriusUnitTest() {
         // FRIDGE
         fun getFridge(authenticatedUser: AuthenticatedUser) = fridgeController.getFridge(authenticatedUser)
 
-        suspend fun getProductsList(authenticatedUser: AuthenticatedUser, partialName: String) =
-            fridgeController.getProductsList(authenticatedUser, partialName)
-
         suspend fun addProducts(authenticatedUser: AuthenticatedUser, product: ProductInputModel) =
             fridgeController.addProducts(authenticatedUser, product)
 
@@ -122,13 +119,13 @@ open class HttpTest : EpicuriusUnitTest() {
         suspend fun createRecipe(
             authenticatedUser: AuthenticatedUser,
             createRecipeInputModel: String,
-            pictures: Set<MultipartFile>
+            pictures: List<MultipartFile>
         ) = recipeController.createRecipe(authenticatedUser, createRecipeInputModel, pictures)
 
         suspend fun updateRecipe(authenticatedUser: AuthenticatedUser, id: Int, updateRecipeInputModel: UpdateRecipeInputModel) =
             recipeController.updateRecipe(authenticatedUser, id, updateRecipeInputModel)
 
-        suspend fun updateRecipePictures(authenticatedUser: AuthenticatedUser, id: Int, pictures: Set<MultipartFile>) =
+        suspend fun updateRecipePictures(authenticatedUser: AuthenticatedUser, id: Int, pictures: List<MultipartFile>) =
             recipeController.updateRecipePictures(authenticatedUser, id, pictures)
 
         fun deleteRecipe(authenticatedUser: AuthenticatedUser, id: Int) =

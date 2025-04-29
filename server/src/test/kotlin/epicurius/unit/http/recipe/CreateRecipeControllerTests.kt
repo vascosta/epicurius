@@ -83,7 +83,7 @@ class CreateRecipeControllerTests : RecipeHttpTest() {
                         testAuthenticatedUser.user.id,
                         testAuthenticatedUser.user.name,
                         createRecipeInfo,
-                        recipePictures
+                        recipePictures.toSet()
                     )
             }
 
@@ -102,7 +102,7 @@ class CreateRecipeControllerTests : RecipeHttpTest() {
     @Test
     fun `Should throw InvalidNumberOfRecipePictures exception when creating a recipe with an invalid number of pictures`() {
         // given information for a new recipe (createRecipeInfo, recipePictures) and an invalid number of pictures
-        val invalidNumberOfRecipePicturesSet = emptySet<MultipartFile>()
+        val invalidNumberOfRecipePicturesSet = emptyList<MultipartFile>()
 
         // mock
         whenever(
@@ -111,7 +111,7 @@ class CreateRecipeControllerTests : RecipeHttpTest() {
                     testAuthenticatedUser.user.id,
                     testAuthenticatedUser.user.name,
                     createRecipeInfo,
-                    invalidNumberOfRecipePicturesSet
+                    invalidNumberOfRecipePicturesSet.toSet()
                 )
             }
 
@@ -140,7 +140,7 @@ class CreateRecipeControllerTests : RecipeHttpTest() {
                     testAuthenticatedUser.user.id,
                     testAuthenticatedUser.user.name,
                     createRecipeInfo,
-                    recipePictures
+                    recipePictures.toSet()
                 )
             }
 

@@ -1,5 +1,7 @@
 package epicurius.unit.services.user
 
+import epicurius.domain.exceptions.InvalidSelfFollow
+import epicurius.domain.exceptions.InvalidSelfUnfollow
 import epicurius.domain.exceptions.UserNotFollowed
 import epicurius.domain.exceptions.UserNotFound
 import org.mockito.kotlin.verify
@@ -19,10 +21,21 @@ class UnfollowServiceTests : UserServiceTest() {
             .thenReturn(true)
 
         // when unfollowing a user
-        unfollow(privateTestUser.id, publicTestUsername)
+        unfollow(privateTestUser.id, privateTestUsername, publicTestUsername)
 
         // then the user is unfollowed successfully
         verify(jdbiUserRepositoryMock).unfollow(privateTestUser.id, publicTestUser.id)
+    }
+
+    @Test
+    fun `Should throw InvalidSelfUnfollow exception when unfollowing yourself`() {
+        // given a user (publicTestUser)
+
+        // when unfollowing himself
+        // then the user cannot unfollow himself and throws InvalidSelfUnfollow exception
+        assertFailsWith<InvalidSelfUnfollow> {
+            unfollow(publicTestUser.id, publicTestUsername, publicTestUsername)
+        }
     }
 
     @Test
@@ -35,7 +48,7 @@ class UnfollowServiceTests : UserServiceTest() {
 
         // when following a non-existing user
         // then the user cannot be followed and throws UserNotFound exception
-        assertFailsWith<UserNotFound> { unfollow(publicTestUser.id, nonExistingUser) }
+        assertFailsWith<UserNotFound> { unfollow(publicTestUser.id, publicTestUsername, nonExistingUser) }
     }
 
     @Test
@@ -49,6 +62,6 @@ class UnfollowServiceTests : UserServiceTest() {
 
         // when trying to unfollow a user that is not being followed
         // then the user cannot be unfollowed and throws UserNotFollowed exception
-        assertFailsWith<UserNotFollowed> { unfollow(privateTestUser.id, publicTestUsername) }
+        assertFailsWith<UserNotFollowed> { unfollow(privateTestUser.id, privateTestUsername, publicTestUsername) }
     }
 }

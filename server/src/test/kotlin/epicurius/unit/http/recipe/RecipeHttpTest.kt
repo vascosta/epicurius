@@ -44,7 +44,7 @@ open class RecipeHttpTest : HttpTest() {
             token,
         )
 
-        val recipePictures = setOf(testPicture, testPicture2, testTomatoPicture)
+        val recipePictures = listOf(testPicture, testPicture2, testTomatoPicture)
 
         val testRecipe = Recipe(
             RECIPE_ID,

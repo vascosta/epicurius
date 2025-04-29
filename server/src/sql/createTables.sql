@@ -15,7 +15,7 @@ create table dbo.user(
 
 create table dbo.followers(
     user_id int not null,
-    follower_id int not null,
+    follower_id int not null check ( user_id <> follower_id ),
     status int not null,
     foreign key (user_id) references dbo.user(id),
     foreign key (follower_id) references dbo.user(id)

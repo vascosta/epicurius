@@ -23,7 +23,7 @@ class UpdateRecipePicturesControllerTests: RecipeHttpTest() {
 
         // mock
         val mockUpdateRecipePicturesModel = UpdateRecipePicturesModel(recipePictures.map { it.bytes })
-        whenever(recipeServiceMock.updateRecipePictures(testAuthenticatedUser.user.id, RECIPE_ID, recipePictures))
+        whenever(recipeServiceMock.updateRecipePictures(testAuthenticatedUser.user.id, RECIPE_ID, recipePictures.toSet()))
             .thenReturn(mockUpdateRecipePicturesModel)
 
         // when updating the recipe pictures with the same ones
@@ -40,11 +40,11 @@ class UpdateRecipePicturesControllerTests: RecipeHttpTest() {
     @Test
     fun `Should add more pictures to a recipe successfully`() {
         // given new pictures to add to the recipe
-        val newPictures = setOf(testPicture2, testPicture, testTomatoPicture)
+        val newPictures = listOf(testPicture2, testPicture, testTomatoPicture)
 
         // mock
         val mockUpdateRecipePicturesModel = UpdateRecipePicturesModel(newPictures.map { it.bytes })
-        whenever(recipeServiceMock.updateRecipePictures(testAuthenticatedUser.user.id, RECIPE_ID, newPictures))
+        whenever(recipeServiceMock.updateRecipePictures(testAuthenticatedUser.user.id, RECIPE_ID, newPictures.toSet()))
             .thenReturn(mockUpdateRecipePicturesModel)
 
         // when adding the new pictures to the recipe
@@ -61,11 +61,11 @@ class UpdateRecipePicturesControllerTests: RecipeHttpTest() {
     @Test
     fun `Should remove some pictures of a recipe successfully`() {
         // given a new number of pictures, lower than the current number of pictures
-        val newPictures = setOf(testPicture2, testTomatoPicture)
+        val newPictures = listOf(testPicture2, testTomatoPicture)
 
         // mock
         val mockUpdateRecipePicturesModel = UpdateRecipePicturesModel(newPictures.map { it.bytes })
-        whenever(recipeServiceMock.updateRecipePictures(testAuthenticatedUser.user.id, RECIPE_ID, newPictures))
+        whenever(recipeServiceMock.updateRecipePictures(testAuthenticatedUser.user.id, RECIPE_ID, newPictures.toSet()))
             .thenReturn(mockUpdateRecipePicturesModel)
 
         // when removing some pictures of the recipe
@@ -82,11 +82,11 @@ class UpdateRecipePicturesControllerTests: RecipeHttpTest() {
     @Test
     fun `Should change the order of the recipe pictures successfully`() {
         // given a new order for the recipe pictures
-        val newPictures = setOf(testPicture2, testTomatoPicture, testPicture)
+        val newPictures = listOf(testPicture2, testTomatoPicture, testPicture)
 
         // mock
         val mockUpdateRecipePicturesModel = UpdateRecipePicturesModel(newPictures.map { it.bytes })
-        whenever(recipeServiceMock.updateRecipePictures(testAuthenticatedUser.user.id, RECIPE_ID, newPictures))
+        whenever(recipeServiceMock.updateRecipePictures(testAuthenticatedUser.user.id, RECIPE_ID, newPictures.toSet()))
             .thenReturn(mockUpdateRecipePicturesModel)
 
         // when changing the order of the recipe pictures
@@ -103,10 +103,10 @@ class UpdateRecipePicturesControllerTests: RecipeHttpTest() {
     @Test
     fun `Should throw InvalidNumberOfRecipePictures exception when updating the recipe pictures with an invalid number of pictures`() {
         // given an invalid number of pictures
-        val invalidNumberOfRecipePicturesSet = emptySet<MultipartFile>()
+        val invalidNumberOfRecipePicturesSet = emptyList<MultipartFile>()
 
         // mock
-        whenever(recipeServiceMock.updateRecipePictures(testAuthenticatedUser.user.id, RECIPE_ID, invalidNumberOfRecipePicturesSet))
+        whenever(recipeServiceMock.updateRecipePictures(testAuthenticatedUser.user.id, RECIPE_ID, invalidNumberOfRecipePicturesSet.toSet()))
             .thenThrow(InvalidNumberOfRecipePictures())
 
         // when updating the recipe pictures with an invalid number of pictures
@@ -122,7 +122,7 @@ class UpdateRecipePicturesControllerTests: RecipeHttpTest() {
         val nonExistingRecipeId = 9999
 
         // mock
-        whenever(recipeServiceMock.updateRecipePictures(testAuthenticatedUser.user.id, nonExistingRecipeId, recipePictures))
+        whenever(recipeServiceMock.updateRecipePictures(testAuthenticatedUser.user.id, nonExistingRecipeId, recipePictures.toSet()))
             .thenThrow(RecipeNotFound())
 
         // when updating the pictures of a non-existing recipe
@@ -139,7 +139,7 @@ class UpdateRecipePicturesControllerTests: RecipeHttpTest() {
 
 
         // mock
-        whenever(recipeServiceMock.updateRecipePictures(notTheAuthor.user.id, RECIPE_ID, recipePictures))
+        whenever(recipeServiceMock.updateRecipePictures(notTheAuthor.user.id, RECIPE_ID, recipePictures.toSet()))
             .thenThrow(NotTheAuthor())
 
         // when updating the recipe pictures that does not belong to the user

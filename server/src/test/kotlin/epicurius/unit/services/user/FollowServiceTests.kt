@@ -1,6 +1,8 @@
 package epicurius.unit.services.user
 
 import epicurius.domain.exceptions.FollowRequestAlreadyBeenSent
+import epicurius.domain.exceptions.InvalidSelfCancelFollowRequest
+import epicurius.domain.exceptions.InvalidSelfFollow
 import epicurius.domain.exceptions.UserAlreadyBeingFollowed
 import epicurius.domain.exceptions.UserNotFound
 import epicurius.domain.user.FollowingStatus
@@ -21,7 +23,7 @@ class FollowServiceTests : UserServiceTest() {
             .thenReturn(false)
 
         // when following a public user
-        follow(privateTestUser.id, publicTestUsername)
+        follow(privateTestUser.id, privateTestUsername, publicTestUsername)
 
         // then the user is followed successfully
         verify(jdbiUserRepositoryMock).follow(privateTestUser.id, publicTestUser.id, FollowingStatus.ACCEPTED.ordinal)
@@ -37,10 +39,21 @@ class FollowServiceTests : UserServiceTest() {
             .thenReturn(false)
 
         // when following a private user
-        follow(publicTestUser.id, privateTestUsername)
+        follow(publicTestUser.id, publicTestUsername, privateTestUsername)
 
         // then a follow request is sent
         verify(jdbiUserRepositoryMock).follow(publicTestUser.id, privateTestUser.id, FollowingStatus.PENDING.ordinal)
+    }
+
+    @Test
+    fun `Should throw InvalidSelfFollow exception when following yourself`() {
+        // given a user (publicTestUser)
+
+        // when following himself
+        // then the user cannot follow himself and throws InvalidSelfFollow exception
+        assertFailsWith<InvalidSelfFollow> {
+            follow(publicTestUser.id, publicTestUsername, publicTestUsername)
+        }
     }
 
     @Test
@@ -53,7 +66,7 @@ class FollowServiceTests : UserServiceTest() {
 
         // when following a non-existing user
         // then the user cannot be followed and throws UserNotFound exception
-        assertFailsWith<UserNotFound> { follow(publicTestUser.id, nonExistingUser) }
+        assertFailsWith<UserNotFound> { follow(publicTestUser.id, publicTestUsername, nonExistingUser) }
     }
 
     @Test
@@ -67,7 +80,7 @@ class FollowServiceTests : UserServiceTest() {
 
         // when following a user twice
         // then the user cannot be followed again and throws UserAlreadyBeingFollowed exception
-        assertFailsWith<UserAlreadyBeingFollowed> { follow(privateTestUser.id, publicTestUsername) }
+        assertFailsWith<UserAlreadyBeingFollowed> { follow(privateTestUser.id, privateTestUsername, publicTestUsername) }
     }
 
     @Test
@@ -83,6 +96,6 @@ class FollowServiceTests : UserServiceTest() {
 
         // when trying to follow a private user twice
         // then another follow request cannot be sent again and throws FollowRequestAlreadyBeenSent exception
-        assertFailsWith<FollowRequestAlreadyBeenSent> { follow(publicTestUser.id, privateTestUsername) }
+        assertFailsWith<FollowRequestAlreadyBeenSent> { follow(publicTestUser.id, publicTestUsername, privateTestUsername) }
     }
 }
