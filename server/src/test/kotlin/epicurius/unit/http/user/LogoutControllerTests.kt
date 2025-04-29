@@ -2,7 +2,6 @@ package epicurius.unit.http.user
 
 import org.mockito.kotlin.verify
 import org.springframework.http.HttpStatus
-import org.springframework.http.HttpStatusCode
 import kotlin.test.Test
 import kotlin.test.assertEquals
 

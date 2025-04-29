@@ -4,6 +4,7 @@ import epicurius.domain.mealPlanner.MealTime
 import epicurius.repository.jdbi.mealPlanner.contract.MealPlannerRepository
 import epicurius.repository.jdbi.mealPlanner.models.JdbiCalories
 import epicurius.repository.jdbi.mealPlanner.models.JdbiDailyMealPlanner
+import epicurius.repository.jdbi.mealPlanner.models.JdbiDailyMealPlannerRow
 import epicurius.repository.jdbi.mealPlanner.models.JdbiMealPlanner
 import org.jdbi.v3.core.Handle
 import org.jdbi.v3.core.kotlin.mapTo
@@ -35,16 +36,50 @@ class JdbiMealPlannerRepository(private val handle: Handle) : MealPlannerReposit
             """
         )
             .bind("id", userId)
-            .mapTo<JdbiDailyMealPlanner>()
+            .mapTo<JdbiDailyMealPlannerRow>()
             .list()
 
-        return JdbiMealPlanner(list)
+        val dailyPlanners = list
+            .groupBy { it.date }
+            .map { (date, dayRows) ->
+                val meals = dayRows.associate { it.mealTime to it.jdbiRecipeInfo }
+                JdbiDailyMealPlanner(date, meals)
+            }
+
+        return JdbiMealPlanner(dailyPlanners)
     }
 
     override fun addMealPlanner(userId: Int, date: LocalDate, recipeId: Int, mealTime: MealTime): JdbiMealPlanner {
         handle.createUpdate(
             """
                 INSERT INTO dbo.meal_planner_recipe (user_id, date, recipe_id, meal_time)
+                VALUES (:userId, :date, :recipeId, :mealTime)
+            """
+        )
+            .bind("userId", userId)
+            .bind("date", date)
+            .bind("recipeId", recipeId)
+            .bind("mealTime", mealTime.ordinal)
+            .execute()
+
+        return getMealPlanner(userId)
+    }
+
+    override fun updateMealPlanner(userId: Int, date: LocalDate, recipeId: Int, mealTime: MealTime): JdbiMealPlanner {
+        handle.createUpdate(
+            """
+                DELETE FROM dbo.meal_planner_recipe 
+                WHERE user_id = :userId AND date = :date AND meal_time = :mealTime
+            """
+        )
+            .bind("userId", userId)
+            .bind("date", date)
+            .bind("mealTime", mealTime.ordinal)
+            .execute()
+
+        handle.createUpdate(
+            """
+                INSERT INTO dbo.meal_planner_recipe(user_id, date, recipe_id, meal_time)
                 VALUES (:userId, :date, :recipeId, :mealTime)
             """
         )

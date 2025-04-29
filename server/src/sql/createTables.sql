@@ -34,7 +34,7 @@ create table dbo.fridge(
 
 create table dbo.recipe(
     id serial primary key,
-    name varchar(25) not null,
+    name varchar(50) not null,
     author_id int not null,
     date date not null,
     servings int not null,
@@ -63,7 +63,7 @@ create table dbo.recipe_rating(
 create table dbo.ingredient(
     recipe_id int not null,
     name varchar(20) not null,
-    quantity int not null,
+    quantity double precision not null,
     unit int not null,
     primary key (recipe_id, name),
     foreign key (recipe_id) references dbo.recipe(id)

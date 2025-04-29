@@ -1,7 +1,6 @@
 package epicurius.unit.services.user
 
 import epicurius.domain.exceptions.FollowRequestAlreadyBeenSent
-import epicurius.domain.exceptions.InvalidSelfCancelFollowRequest
 import epicurius.domain.exceptions.InvalidSelfFollow
 import epicurius.domain.exceptions.UserAlreadyBeingFollowed
 import epicurius.domain.exceptions.UserNotFound

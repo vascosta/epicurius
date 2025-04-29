@@ -8,7 +8,6 @@ class UserAlreadyLoggedIn : RuntimeException("User is already logged in")
 class UserAlreadyBeingFollowed(name: String) : RuntimeException("User $name is already being followed by you")
 class UserNotFollowed(name: String) : RuntimeException("User $name is not being followed by you")
 
-
 class FollowRequestAlreadyBeenSent(name: String) : RuntimeException("Follow request to user $name already been sent")
 class FollowRequestNotFound(name: String) : RuntimeException("Follow request to user $name not found")
 

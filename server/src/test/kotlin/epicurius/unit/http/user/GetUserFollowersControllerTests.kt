@@ -5,7 +5,6 @@ import epicurius.domain.user.SearchUser
 import epicurius.http.user.models.output.GetUserFollowersOutputModel
 import org.mockito.kotlin.whenever
 import org.springframework.http.HttpStatus
-import org.springframework.http.HttpStatusCode
 import kotlin.test.Test
 import kotlin.test.assertEquals
 

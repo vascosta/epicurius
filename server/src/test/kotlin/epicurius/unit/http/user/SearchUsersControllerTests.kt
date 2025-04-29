@@ -7,7 +7,6 @@ import epicurius.domain.user.User
 import epicurius.http.user.models.output.SearchUsersOutputModel
 import org.mockito.kotlin.whenever
 import org.springframework.http.HttpStatus
-import org.springframework.http.HttpStatusCode
 import java.util.UUID.randomUUID
 import kotlin.test.Test
 import kotlin.test.assertContentEquals

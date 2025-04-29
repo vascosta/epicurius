@@ -12,7 +12,7 @@ import org.mockito.kotlin.whenever
 import org.springframework.http.HttpStatus
 import kotlin.test.assertEquals
 
-class SearchRecipesControllerTests: RecipeHttpTest() {
+class SearchRecipesControllerTests : RecipeHttpTest() {
 
     val searchRecipesInputInfo = SearchRecipesInputModel(
         name = "Pastel de nata",
@@ -51,8 +51,9 @@ class SearchRecipesControllerTests: RecipeHttpTest() {
         )
 
         // mock
-        whenever(recipeServiceMock
-            .searchRecipes(testAuthenticatedUser.user.id, searchRecipesInputInfoWithoutIngredients)
+        whenever(
+            recipeServiceMock
+                .searchRecipes(testAuthenticatedUser.user.id, searchRecipesInputInfoWithoutIngredients)
         ).thenReturn(listOf(recipeInfo))
 
         // when searching for recipes without ingredients
@@ -87,8 +88,9 @@ class SearchRecipesControllerTests: RecipeHttpTest() {
         // given a search form with ingredients (searchRecipesInputInfo)
 
         // mock
-        whenever(recipeServiceMock
-            .searchRecipes(testAuthenticatedUser.user.id, searchRecipesInputInfo)
+        whenever(
+            recipeServiceMock
+                .searchRecipes(testAuthenticatedUser.user.id, searchRecipesInputInfo)
         ).thenReturn(listOf(recipeInfo))
 
         // when searching for recipes with ingredients

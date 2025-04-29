@@ -5,7 +5,6 @@ import epicurius.domain.user.UserProfile
 import epicurius.http.user.models.output.GetUserProfileOutputModel
 import org.mockito.kotlin.whenever
 import org.springframework.http.HttpStatus
-import org.springframework.http.HttpStatusCode
 import java.util.UUID
 import kotlin.test.Test
 import kotlin.test.assertContentEquals

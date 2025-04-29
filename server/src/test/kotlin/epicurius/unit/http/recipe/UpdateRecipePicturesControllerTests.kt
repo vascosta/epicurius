@@ -15,7 +15,7 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 
-class UpdateRecipePicturesControllerTests: RecipeHttpTest() {
+class UpdateRecipePicturesControllerTests : RecipeHttpTest() {
 
     @Test
     fun `Should maintain the pictures when updating the recipe pictures with the same ones successfully`() {
@@ -136,7 +136,6 @@ class UpdateRecipePicturesControllerTests: RecipeHttpTest() {
     fun `Should throw NotTheAuthor exception when updating the recipe pictures that does not belong to the user`() {
         // given a user id and a recipe id (RECIPE_ID) that does not belong to him
         val notTheAuthor = AuthenticatedUser(User(9999, "", "", "", "", "", false, emptyList(), emptyList(), ""), "")
-
 
         // mock
         whenever(recipeServiceMock.updateRecipePictures(notTheAuthor.user.id, RECIPE_ID, recipePictures.toSet()))

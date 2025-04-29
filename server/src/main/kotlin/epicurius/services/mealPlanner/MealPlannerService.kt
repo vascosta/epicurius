@@ -3,6 +3,7 @@ package epicurius.services.mealPlanner
 import epicurius.domain.exceptions.MealPlannerAlreadyExists
 import epicurius.domain.exceptions.MealPlannerNotFound
 import epicurius.domain.exceptions.MealTimeAlreadyExistsInPlanner
+import epicurius.domain.exceptions.MealTimeDoesNotExist
 import epicurius.domain.exceptions.RecipeDoesNotContainCaloriesInfo
 import epicurius.domain.exceptions.RecipeExceedsMaximumCalories
 import epicurius.domain.exceptions.RecipeIsInvalidForMealTime
@@ -12,6 +13,7 @@ import epicurius.domain.mealPlanner.MealPlanner
 import epicurius.domain.mealPlanner.MealTime
 import epicurius.domain.picture.PictureDomain.Companion.RECIPES_FOLDER
 import epicurius.http.mealPlanner.models.input.AddMealPlannerInputModel
+import epicurius.http.mealPlanner.models.input.UpdateMealPlannerInputModel
 import epicurius.repository.cloudStorage.manager.CloudStorageManager
 import epicurius.repository.jdbi.mealPlanner.models.JdbiDailyMealPlanner
 import epicurius.repository.jdbi.recipe.models.JdbiRecipeModel
@@ -38,13 +40,28 @@ class MealPlannerService(
 
     fun addMealPlanner(userId: Int, date: LocalDate, info: AddMealPlannerInputModel): MealPlanner {
         if (!checkIfMealPlannerExists(userId, date)) throw MealPlannerNotFound()
-        checkIfMealTimeAlreadyExistsInPlanner(userId, date, info.mealTime)
+        if (checkIfMealTimeAlreadyExistsInPlanner(userId, date, info.mealTime))
+            throw MealTimeAlreadyExistsInPlanner(info.mealTime)
         val recipe = checkIfRecipeExists(info.recipeId)
         if (!info.mealTime.isMealTypeAllowedForMealTime(recipe.mealType)) throw RecipeIsInvalidForMealTime()
         checkIfLimitOfCaloriesIsRespected(userId, date, recipe)
 
         val jdbiPlanner = tm.run {
             it.mealPlannerRepository.addMealPlanner(userId, date, info.recipeId, info.mealTime)
+        }
+        val planner = getRecipeInfoPicture(jdbiPlanner.planner)
+        return MealPlanner(planner)
+    }
+
+    fun updateMealPlanner(userId: Int, date: LocalDate, info: UpdateMealPlannerInputModel): MealPlanner {
+        if (!checkIfMealPlannerExists(userId, date)) throw MealPlannerNotFound()
+        if (!checkIfMealTimeAlreadyExistsInPlanner(userId, date, info.mealTime))
+            throw MealTimeDoesNotExist()
+        val recipe = checkIfRecipeExists(info.recipeId)
+        if (!info.mealTime.isMealTypeAllowedForMealTime(recipe.mealType)) throw RecipeIsInvalidForMealTime()
+
+        val jdbiPlanner = tm.run {
+            it.mealPlannerRepository.updateMealPlanner(userId, date, info.recipeId, info.mealTime)
         }
         val planner = getRecipeInfoPicture(jdbiPlanner.planner)
         return MealPlanner(planner)
@@ -65,12 +82,8 @@ class MealPlannerService(
     private fun checkIfRecipeExists(recipeId: Int): JdbiRecipeModel =
         tm.run { it.recipeRepository.getRecipe(recipeId) } ?: throw RecipeNotFound()
 
-    private fun checkIfMealTimeAlreadyExistsInPlanner(userId: Int, date: LocalDate, mealTime: MealTime) {
-        val check = tm.run {
-            it.mealPlannerRepository.checkIfMealTimeAlreadyExistsInPlanner(userId, date, mealTime)
-        }
-        if (check) throw MealTimeAlreadyExistsInPlanner(mealTime)
-    }
+    private fun checkIfMealTimeAlreadyExistsInPlanner(userId: Int, date: LocalDate, mealTime: MealTime): Boolean =
+        tm.run { it.mealPlannerRepository.checkIfMealTimeAlreadyExistsInPlanner(userId, date, mealTime) }
 
     private fun checkIfLimitOfCaloriesIsRespected(userId: Int, date: LocalDate, recipe: JdbiRecipeModel) {
         val calories = tm.run { it.mealPlannerRepository.getDailyCalories(userId, date) }

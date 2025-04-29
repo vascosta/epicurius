@@ -7,7 +7,7 @@ class RecipeDomain {
 
     companion object {
         const val MIN_RECIPE_NAME_LENGTH = 3
-        const val MAX_RECIPE_NAME_LENGTH = 25
+        const val MAX_RECIPE_NAME_LENGTH = 50
         const val RECIPE_NAME_LENGTH_MSG = "must be between $MIN_RECIPE_NAME_LENGTH and $MAX_RECIPE_NAME_LENGTH characters"
 
         const val MIN_RECIPE_DESCRIPTION_LENGTH = 1
@@ -20,7 +20,7 @@ class RecipeDomain {
         const val INGREDIENTS_SIZE_MSG = "The number of ingredients must be at most $MAX_NUMBER_OF_INGREDIENTS"
         const val INGREDIENT_NAME_LENGTH_MSG = "Ingredient name must be between $MIN_INGREDIENT_NAME_LENGTH and $MAX_INGREDIENT_NAME_LENGTH characters"
 
-        const val MIN_INGREDIENT_QUANTITY = 1
+        const val MIN_INGREDIENT_QUANTITY = 0.1
         const val INGREDIENT_QUANTITY_MSG = "Ingredient quantity must be greater than $MIN_INGREDIENT_QUANTITY"
 
         const val MIN_INSTRUCTIONS_STEP_LENGTH = 1
