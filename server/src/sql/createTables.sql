@@ -7,7 +7,6 @@ create table dbo.user(
     password_hash varchar(80) not null,
     token_hash varchar(80) unique,
     country varchar(5) not null,
-    privacy boolean not null,
     intolerances int[] not null,
     diets int[] not null,
     profile_picture_name varchar(80)
@@ -16,7 +15,6 @@ create table dbo.user(
 create table dbo.followers(
     user_id int not null,
     follower_id int not null check ( user_id <> follower_id ),
-    status int not null,
     foreign key (user_id) references dbo.user(id),
     foreign key (follower_id) references dbo.user(id)
 );
@@ -36,6 +34,7 @@ create table dbo.recipe(
     id serial primary key,
     name varchar(50) not null,
     author_id int not null,
+    privacy boolean not null,
     date date not null,
     servings int not null,
     preparation_time int not null, -- in minutes, e.g if value is 30, it means 30 minutes
