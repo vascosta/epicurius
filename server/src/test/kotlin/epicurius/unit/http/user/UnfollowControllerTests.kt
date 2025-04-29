@@ -1,5 +1,6 @@
 package epicurius.unit.http.user
 
+import epicurius.domain.exceptions.InvalidSelfUnfollow
 import epicurius.domain.exceptions.UserNotFollowed
 import epicurius.domain.exceptions.UserNotFound
 import org.mockito.kotlin.verify
@@ -20,8 +21,23 @@ class UnfollowControllerTests : UserHttpTest() {
         val response = unfollow(publicTestUser, privateTestUsername)
 
         // then the user is unfollowed successfully
-        verify(userServiceMock).unfollow(publicTestUser.user.id, privateTestUsername)
+        verify(userServiceMock).unfollow(publicTestUser.user.id, publicTestUsername, privateTestUsername)
         assertEquals(HttpStatus.OK, response.statusCode)
+    }
+
+    @Test
+    fun `Should throw InvalidSelfUnfollow exception when unfollowing yourself`() {
+        // given a user (publicTestUser)
+
+        // mock
+        whenever(userServiceMock.unfollow(publicTestUser.user.id, publicTestUsername, publicTestUsername))
+            .thenThrow(InvalidSelfUnfollow())
+
+        // when unfollowing himself
+        // then the user cannot be unfollowed and throws InvalidSelfUnfollow exception
+        assertFailsWith<InvalidSelfUnfollow> {
+            unfollow(publicTestUser, publicTestUsername)
+        }
     }
 
     @Test
@@ -30,10 +46,10 @@ class UnfollowControllerTests : UserHttpTest() {
         val nonExistingUser = "nonExistingUser"
 
         // mock
-        whenever(userServiceMock.unfollow(publicTestUser.user.id, nonExistingUser)).thenThrow(UserNotFound(nonExistingUser))
+        whenever(userServiceMock.unfollow(publicTestUser.user.id, publicTestUsername, nonExistingUser)).thenThrow(UserNotFound(nonExistingUser))
 
         // when following a non-existing user
-        // then the user cannot be followed and throws UserNotFound exception
+        // then the user cannot be unfollowed and throws UserNotFound exception
         assertFailsWith<UserNotFound> { unfollow(publicTestUser, nonExistingUser) }
     }
 
@@ -42,7 +58,7 @@ class UnfollowControllerTests : UserHttpTest() {
         // given two users (publicTestUser and privateTestUser)
 
         // mock
-        whenever(userServiceMock.unfollow(publicTestUser.user.id, privateTestUsername)).thenThrow(UserNotFollowed(privateTestUsername))
+        whenever(userServiceMock.unfollow(publicTestUser.user.id, publicTestUsername, privateTestUsername)).thenThrow(UserNotFollowed(privateTestUsername))
 
         // when trying to unfollow a user that is not being followed
         // then the user cannot be unfollowed and throws UserNotFollowed exception

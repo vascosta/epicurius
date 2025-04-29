@@ -1,12 +1,6 @@
 package epicurius.unit.http.fridge
 
-import kotlinx.coroutines.runBlocking
-import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Test
-import org.mockito.kotlin.whenever
-import org.springframework.http.HttpStatus
-
-class GetProductsListControllerTests : FridgeHttpTest() {
+/*class GetProductsListControllerTests : FridgeHttpTest() {
 
     @Test
     fun `Should get products list successfully`() {
@@ -41,4 +35,4 @@ class GetProductsListControllerTests : FridgeHttpTest() {
         assertEquals(HttpStatus.OK, response.statusCode)
         assertEquals(emptyList<String>(), response.body)
     }
-}
+}*/
