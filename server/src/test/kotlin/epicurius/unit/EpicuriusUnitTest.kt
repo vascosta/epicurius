@@ -23,6 +23,7 @@ import epicurius.repository.spoonacular.manager.SpoonacularManager
 import epicurius.repository.transaction.Transaction
 import epicurius.repository.transaction.jdbi.JdbiTransactionManager
 import epicurius.services.fridge.FridgeService
+import epicurius.services.ingredients.IngredientsService
 import epicurius.services.recipe.RecipeService
 import epicurius.services.user.UserService
 import org.junit.jupiter.api.BeforeAll
@@ -105,6 +106,12 @@ open class EpicuriusUnitTest : EpicuriusTest() {
         val fridgeService = FridgeService(transactionManagerMock, spoonacularStorageManagerMock, fridgeDomainMock)
         val recipeService = RecipeService(
             transactionManagerMock, firestoreManagerMock, cloudStorageManagerMock, spoonacularStorageManagerMock, pictureDomainMock
+        )
+        val ingredientsService = IngredientsService(
+            cloudStorageManagerMock,
+            spoonacularStorageManagerMock,
+            cloudFunctionManager,
+            pictureDomainMock
         )
 
         val userServiceMock: UserService = mock()

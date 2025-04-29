@@ -8,6 +8,8 @@ import epicurius.http.recipe.models.input.CreateRecipeInputModel
 import epicurius.http.recipe.models.input.SearchRecipesInputModel
 import epicurius.http.recipe.models.input.UpdateRecipeInputModel
 import epicurius.http.user.models.input.UpdateUserInputModel
+import epicurius.repository.spoonacular.SpoonacularRepository
+import epicurius.repository.spoonacular.manager.SpoonacularManager
 import epicurius.unit.EpicuriusUnitTest
 import org.springframework.web.multipart.MultipartFile
 
@@ -63,9 +65,6 @@ open class ServiceTest : EpicuriusUnitTest() {
         fun updateProductInfo(userId: Int, entryNumber: Int, product: UpdateProductInputModel) =
             fridgeService.updateProductInfo(userId, entryNumber, product)
 
-        fun openProduct(userId: Int, entryNumber: Int, product: UpdateProductInputModel) =
-            fridgeService.updateProductInfo(userId, entryNumber, product)
-
         fun removeProduct(userId: Int, entryNumber: Int) = fridgeService.removeProduct(userId, entryNumber)
 
         // RECIPE
@@ -85,5 +84,8 @@ open class ServiceTest : EpicuriusUnitTest() {
 
         fun deleteRecipe(userId: Int, recipeId: Int) =
             recipeService.deleteRecipe(userId, recipeId)
+
+        // INGREDIENTS
+        suspend fun getIngredientsList(partial: String) = ingredientsService.getIngredients(partial)
     }
 }
