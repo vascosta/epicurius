@@ -119,7 +119,7 @@ class UpdateRecipeControllerTests : RecipeHttpTest() {
     @Test
     fun `Should throw InvalidIngredient exception when updating a recipe with an invalid ingredients`() {
         // given an invalid ingredient
-        val invalidIngredient = Ingredient("invalid", 1, IngredientUnit.G)
+        val invalidIngredient = Ingredient("invalid", 1.0, IngredientUnit.G)
 
         // mock
         whenever(

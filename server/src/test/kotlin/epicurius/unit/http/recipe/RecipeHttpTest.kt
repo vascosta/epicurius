@@ -59,11 +59,11 @@ open class RecipeHttpTest : HttpTest() {
             listOf(Intolerance.EGG, Intolerance.GLUTEN, Intolerance.DAIRY),
             listOf(Diet.OVO_VEGETARIAN, Diet.LACTO_VEGETARIAN),
             listOf(
-                Ingredient("Eggs", 4, IngredientUnit.X),
-                Ingredient("Sugar", 200, IngredientUnit.G),
-                Ingredient("Flour", 100, IngredientUnit.G),
-                Ingredient("Milk", 500, IngredientUnit.ML),
-                Ingredient("Butter", 50, IngredientUnit.G)
+                Ingredient("Eggs", 4.0, IngredientUnit.X),
+                Ingredient("Sugar", 200.0, IngredientUnit.G),
+                Ingredient("Flour", 100.0, IngredientUnit.G),
+                Ingredient("Milk", 500.0, IngredientUnit.ML),
+                Ingredient("Butter", 50.0, IngredientUnit.G)
             ),
             300,
             8,

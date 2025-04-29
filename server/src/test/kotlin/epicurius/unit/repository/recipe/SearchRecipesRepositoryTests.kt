@@ -48,10 +48,10 @@ class SearchRecipesRepositoryTests : RecipeRepositoryTest() {
             intolerances = listOf(Intolerance.PEANUT.ordinal),
             diets = listOf(Diet.VEGAN.ordinal, Diet.PALEO.ordinal),
             ingredients = listOf(
-                Ingredient("Cauliflower", 1, IngredientUnit.X),
-                Ingredient("Buffalo Sauce", 100, IngredientUnit.ML),
-                Ingredient("Flour", 200, IngredientUnit.G),
-                Ingredient("Spices", 10, IngredientUnit.G)
+                Ingredient("Cauliflower", 1.0, IngredientUnit.X),
+                Ingredient("Buffalo Sauce", 100.0, IngredientUnit.ML),
+                Ingredient("Flour", 200.0, IngredientUnit.G),
+                Ingredient("Spices", 10.0, IngredientUnit.G)
             ),
             calories = 200,
             protein = 5,
@@ -126,10 +126,10 @@ class SearchRecipesRepositoryTests : RecipeRepositoryTest() {
             intolerances = listOf(Intolerance.SESAME, Intolerance.WHEAT).map { it.ordinal },
             diets = listOf(Diet.VEGAN, Diet.VEGETARIAN).map { it.ordinal },
             ingredients = listOf(
-                Ingredient("Tortilla", 1, IngredientUnit.X),
-                Ingredient("Beans", 100, IngredientUnit.G),
-                Ingredient("Rice", 200, IngredientUnit.G),
-                Ingredient("Guacamole", 50, IngredientUnit.G)
+                Ingredient("Tortilla", 1.0, IngredientUnit.X),
+                Ingredient("Beans", 100.0, IngredientUnit.G),
+                Ingredient("Rice", 200.0, IngredientUnit.G),
+                Ingredient("Guacamole", 50.0, IngredientUnit.G)
             ),
             calories = 300,
             protein = 10,

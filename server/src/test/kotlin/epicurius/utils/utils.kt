@@ -93,8 +93,8 @@ fun generateSecurePassword() = ("P" + randomUUID().toString()).take(MAX_PASSWORD
 fun generateRandomRecipeName() = randomUUID().toString().take(RecipeDomain.MAX_RECIPE_NAME_LENGTH)
 fun generateRandomRecipeDescription() = randomUUID().toString().take(RecipeDomain.MAX_RECIPE_DESCRIPTION_LENGTH)
 fun generateRandomRecipeIngredients() = listOf(
-    Ingredient(randomUUID().toString().take(RecipeDomain.MAX_INGREDIENT_NAME_LENGTH), 1, IngredientUnit.TSP),
-    Ingredient(randomUUID().toString().take(RecipeDomain.MAX_INGREDIENT_NAME_LENGTH), 1, IngredientUnit.TSP)
+    Ingredient(randomUUID().toString().take(RecipeDomain.MAX_INGREDIENT_NAME_LENGTH), 1.0, IngredientUnit.TSP),
+    Ingredient(randomUUID().toString().take(RecipeDomain.MAX_INGREDIENT_NAME_LENGTH), 1.0, IngredientUnit.TSP)
 )
 fun generateRandomRecipeInstructions() = Instructions(
     mapOf(
