@@ -144,12 +144,12 @@ class UserController(val userService: UserService) {
     @PatchMapping(Uris.User.USER_PICTURE, consumes = [MediaType.MULTIPART_FORM_DATA_VALUE])
     fun updateUserProfilePicture(
         authenticatedUser: AuthenticatedUser,
-        @RequestPart("profilePicture", required = false) profilePicture: MultipartFile?
+        @RequestPart("picture", required = false) picture: MultipartFile?
     ): ResponseEntity<*> {
         val newProfilePicture = userService.updateProfilePicture(
             authenticatedUser.user.name,
             authenticatedUser.user.profilePictureName,
-            profilePicture
+            picture
         )
         return if (newProfilePicture == null) {
             ResponseEntity.noContent().build<Unit>()

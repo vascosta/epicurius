@@ -86,20 +86,15 @@ class RecipeController(private val recipeService: RecipeService) {
         return ResponseEntity.ok().body(SearchRecipesOutputModel(results))
     }
 
-/*    fun getDailyMenu(authenticatedUser: AuthenticatedUser): ResponseEntity<*> {
-        val dailyMenu = recipeService.getDailyMenu(authenticatedUser.user.id, date)
-        return ResponseEntity.ok().body(dailyMenu)
-    }*/
-
     @PostMapping(Uris.Recipe.RECIPES, consumes = [MediaType.MULTIPART_FORM_DATA_VALUE])
     suspend fun createRecipe(
         authenticatedUser: AuthenticatedUser,
         @RequestPart("body") body: String,
-        @RequestPart("pictures") pictures: Set<MultipartFile>
+        @RequestPart("pictures") pictures: List<MultipartFile>
     ): ResponseEntity<*> {
         val objectMapper = jacksonObjectMapper()
         val recipeInfo = objectMapper.readValue(body, CreateRecipeInputModel::class.java)
-        val recipe = recipeService.createRecipe(authenticatedUser.user.id, authenticatedUser.user.name, recipeInfo, pictures)
+        val recipe = recipeService.createRecipe(authenticatedUser.user.id, authenticatedUser.user.name, recipeInfo, pictures.toSet())
         return ResponseEntity.created(recipe(recipe.id)).body(CreateRecipeOutputModel(recipe))
     }
 
@@ -117,9 +112,9 @@ class RecipeController(private val recipeService: RecipeService) {
     suspend fun updateRecipePictures(
         authenticatedUser: AuthenticatedUser,
         @PathVariable id: Int,
-        @RequestPart("pictures") pictures: Set<MultipartFile>
+        @RequestPart("pictures") pictures: List<MultipartFile>
     ): ResponseEntity<*> {
-        val updatedPictures = recipeService.updateRecipePictures(authenticatedUser.user.id, id, pictures)
+        val updatedPictures = recipeService.updateRecipePictures(authenticatedUser.user.id, id, pictures.toSet())
         return ResponseEntity.ok().body(UpdateRecipePicturesOutputModel(updatedPictures.pictures))
     }
 
