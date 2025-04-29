@@ -105,6 +105,12 @@ class UserController(val userService: UserService) {
         return ResponseEntity.ok().body(GetUserFollowingOutputModel(following))
     }
 
+    @GetMapping(Uris.User.USER_FOLLOW_REQUESTS)
+    fun getUserFollowRequests(authenticatedUser: AuthenticatedUser): ResponseEntity<*> {
+        val followRequests = userService.getFollowRequests(authenticatedUser.user.id)
+        return ResponseEntity.ok().body(GetUserFollowRequestsOutputModel(followRequests))
+    }
+
     @PostMapping(Uris.User.SIGNUP)
     fun signUp(@Valid @RequestBody body: SignUpInputModel, response: HttpServletResponse): ResponseEntity<*> {
         val token = userService.createUser(body.name, body.email, body.country, body.password, body.confirmPassword)
@@ -162,13 +168,23 @@ class UserController(val userService: UserService) {
 
     @PatchMapping(Uris.User.USER_FOLLOW)
     fun follow(authenticatedUser: AuthenticatedUser, @PathVariable name: String): ResponseEntity<*> {
-        userService.follow(authenticatedUser.user.id, authenticatedUser.user.name, name)
+        userService.follow(authenticatedUser.user.id, name)
+        return ResponseEntity.noContent().build<Unit>()
+    }
+
+    @PatchMapping(Uris.User.USER_FOLLOW_REQUEST)
+    fun followRequest(
+        authenticatedUser: AuthenticatedUser,
+        @PathVariable name: String,
+        @RequestParam type: FollowRequestType,
+    ): ResponseEntity<*> {
+        userService.followRequest(authenticatedUser.user.id, name, type)
         return ResponseEntity.noContent().build<Unit>()
     }
 
     @DeleteMapping(Uris.User.USER_FOLLOW)
     fun unfollow(authenticatedUser: AuthenticatedUser, @PathVariable name: String): ResponseEntity<*> {
-        userService.unfollow(authenticatedUser.user.id, authenticatedUser.user.name, name)
+        userService.unfollow(authenticatedUser.user.id, name)
         return ResponseEntity.ok().build<Unit>()
     }
 }
