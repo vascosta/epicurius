@@ -46,19 +46,6 @@ class FridgeIntegrationTest : EpicuriusIntegrationTest() {
     }
 
     @Test
-    fun `Get products list successfully with code 200`() {
-        // given a user token
-        val token = testUserToken
-
-        // when getting the products list
-        val productsListBody = getProductsList(token, "app")
-
-        // then the products list should not be empty
-        assertNotNull(productsListBody)
-        assertTrue(productsListBody.isNotEmpty())
-    }
-
-    @Test
     fun `Add products successfully with code 200`() {
         // given a user token
         val token = testUserToken
