@@ -15,6 +15,7 @@ import epicurius.unit.http.HttpTest
 import epicurius.utils.generateEmail
 import epicurius.utils.generateRandomUsername
 import java.time.Instant
+import java.time.LocalDate
 import java.util.Date
 import java.util.UUID.randomUUID
 
@@ -50,7 +51,7 @@ open class RecipeHttpTest : HttpTest() {
             RECIPE_ID,
             "Pastel de nata",
             generateRandomUsername(),
-            Date.from(Instant.now()),
+            LocalDate.now(),
             "A delicious Portuguese dessert",
             4,
             30,

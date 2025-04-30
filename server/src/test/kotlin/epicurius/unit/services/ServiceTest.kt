@@ -8,8 +8,6 @@ import epicurius.http.recipe.models.input.CreateRecipeInputModel
 import epicurius.http.recipe.models.input.SearchRecipesInputModel
 import epicurius.http.recipe.models.input.UpdateRecipeInputModel
 import epicurius.http.user.models.input.UpdateUserInputModel
-import epicurius.repository.spoonacular.SpoonacularRepository
-import epicurius.repository.spoonacular.manager.SpoonacularManager
 import epicurius.unit.EpicuriusUnitTest
 import org.springframework.web.multipart.MultipartFile
 

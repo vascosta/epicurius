@@ -7,6 +7,7 @@ import epicurius.domain.recipe.Ingredient
 import epicurius.domain.recipe.Instructions
 import epicurius.domain.recipe.MealType
 import epicurius.domain.recipe.Recipe
+import java.time.LocalDate
 import java.util.Date
 
 data class JdbiRecipeModel(
@@ -14,7 +15,7 @@ data class JdbiRecipeModel(
     val name: String,
     val authorId: Int,
     val authorUsername: String,
-    val date: Date,
+    val date: LocalDate,
     val servings: Int,
     val preparationTime: Int,
     val cuisine: Cuisine,

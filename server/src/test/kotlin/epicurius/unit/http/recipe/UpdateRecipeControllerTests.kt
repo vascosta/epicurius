@@ -22,6 +22,7 @@ import kotlinx.coroutines.runBlocking
 import org.mockito.kotlin.whenever
 import org.springframework.http.HttpStatus
 import java.time.Instant
+import java.time.LocalDate
 import java.util.Date
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -55,7 +56,7 @@ class UpdateRecipeControllerTests : RecipeHttpTest() {
             RECIPE_ID,
             updateRecipeInfo.name!!,
             testAuthenticatedUser.user.name,
-            Date.from(Instant.now()),
+            LocalDate.now(),
             updateRecipeInfo.description!!,
             1,
             1,

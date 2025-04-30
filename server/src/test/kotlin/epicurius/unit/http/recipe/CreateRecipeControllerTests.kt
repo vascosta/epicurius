@@ -17,6 +17,7 @@ import org.mockito.kotlin.whenever
 import org.springframework.http.HttpStatus
 import org.springframework.web.multipart.MultipartFile
 import java.time.Instant
+import java.time.LocalDate
 import java.util.Date
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -60,7 +61,7 @@ class CreateRecipeControllerTests : RecipeHttpTest() {
             RECIPE_ID,
             createRecipeInfo.name,
             testAuthenticatedUser.user.name,
-            Date.from(Instant.now()),
+            LocalDate.now(),
             createRecipeInfo.description,
             createRecipeInfo.servings,
             createRecipeInfo.preparationTime,

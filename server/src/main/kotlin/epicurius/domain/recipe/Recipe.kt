@@ -2,13 +2,14 @@ package epicurius.domain.recipe
 
 import epicurius.domain.Diet
 import epicurius.domain.Intolerance
+import java.time.LocalDate
 import java.util.Date
 
 data class Recipe(
     val id: Int,
     val name: String,
     val authorUsername: String,
-    val date: Date,
+    val date: LocalDate,
     val description: String,
     val servings: Int,
     val preparationTime: Int,

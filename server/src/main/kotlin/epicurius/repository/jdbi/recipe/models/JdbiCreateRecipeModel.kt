@@ -1,13 +1,12 @@
 package epicurius.repository.jdbi.recipe.models
 
 import epicurius.domain.recipe.Ingredient
-import java.time.Instant
-import java.util.Date
+import java.time.LocalDate
 
 data class JdbiCreateRecipeModel(
     val name: String,
     val authorId: Int,
-    val date: Date = Date.from(Instant.now()),
+    val date: LocalDate = LocalDate.now(),
     val servings: Int,
     val preparationTime: Int,
     val cuisine: Int,
