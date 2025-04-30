@@ -5,6 +5,7 @@ import epicurius.domain.fridge.FridgeDomain
 import epicurius.domain.picture.PictureDomain
 import epicurius.domain.user.CountriesDomain
 import epicurius.domain.user.UserDomain
+import epicurius.http.feed.FeedController
 import epicurius.http.fridge.FridgeController
 import epicurius.http.recipe.RecipeController
 import epicurius.http.user.UserController
@@ -23,6 +24,7 @@ import epicurius.repository.spoonacular.SpoonacularRepository
 import epicurius.repository.spoonacular.manager.SpoonacularManager
 import epicurius.repository.transaction.Transaction
 import epicurius.repository.transaction.jdbi.JdbiTransactionManager
+import epicurius.services.feed.FeedService
 import epicurius.services.fridge.FridgeService
 import epicurius.services.ingredients.IngredientsService
 import epicurius.services.recipe.RecipeService
@@ -106,6 +108,7 @@ open class EpicuriusUnitTest : EpicuriusTest() {
         val fridgeDomainMock: FridgeDomain = mock()
 
         val userService = UserService(transactionManagerMock, cloudStorageManagerMock, userDomainMock, pictureDomainMock, countriesDomainMock)
+        val feedService = FeedService(transactionManagerMock, cloudStorageManagerMock)
         val fridgeService = FridgeService(transactionManagerMock, spoonacularStorageManagerMock, fridgeDomainMock)
         val recipeService = RecipeService(
             transactionManagerMock, firestoreManagerMock, cloudStorageManagerMock, spoonacularStorageManagerMock, pictureDomainMock
@@ -120,9 +123,11 @@ open class EpicuriusUnitTest : EpicuriusTest() {
         val userServiceMock: UserService = mock()
         val fridgeServiceMock: FridgeService = mock()
         val recipeServiceMock: RecipeService = mock()
+        val feedServiceMock: FeedService = mock()
 
         val userController = UserController(userServiceMock)
         val fridgeController = FridgeController(fridgeServiceMock)
         val recipeController = RecipeController(recipeServiceMock)
+        val feedController = FeedController(feedServiceMock)
     }
 }

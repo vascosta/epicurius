@@ -54,6 +54,9 @@ open class ServiceTest : EpicuriusUnitTest() {
         fun cancelFollowRequest(userId: Int, username: String, usernameToRequest: String) =
             userService.followRequest(userId, username, usernameToRequest, FollowRequestType.CANCEL)
 
+        // FEED
+        fun getFeed(userId: Int, pagingParams: PagingParams) = feedService.getFeed(userId, pagingParams)
+
         // FRIDGE
         fun getFridge(userId: Int) = fridgeService.getFridge(userId)
 

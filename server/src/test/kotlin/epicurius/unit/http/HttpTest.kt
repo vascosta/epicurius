@@ -59,6 +59,10 @@ open class HttpTest : EpicuriusUnitTest() {
 
         fun unfollow(authenticatedUser: AuthenticatedUser, username: String) = userController.unfollow(authenticatedUser, username)
 
+        // FEED
+        fun getFeed(authenticatedUser: AuthenticatedUser, skip: Int, limit: Int) =
+            feedController.getFeed(authenticatedUser, skip, limit)
+
         // FRIDGE
         fun getFridge(authenticatedUser: AuthenticatedUser) = fridgeController.getFridge(authenticatedUser)
 
