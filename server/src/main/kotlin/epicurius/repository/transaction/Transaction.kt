@@ -1,5 +1,6 @@
 package epicurius.repository.transaction
 
+import epicurius.repository.jdbi.feed.contract.FeedRepository
 import epicurius.repository.jdbi.fridge.contract.FridgeRepository
 import epicurius.repository.jdbi.mealPlanner.contract.MealPlannerRepository
 import epicurius.repository.jdbi.recipe.contract.RecipeRepository
@@ -12,4 +13,5 @@ interface Transaction {
     val fridgeRepository: FridgeRepository
     val recipeRepository: RecipeRepository
     val mealPlannerRepository: MealPlannerRepository
+    val feedRepository: FeedRepository
 }
