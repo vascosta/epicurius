@@ -27,11 +27,11 @@ open class RecipeRepositoryTest : RepositoryTest() {
 
         suspend fun getFirestoreRecipe(recipeId: Int) = fs.recipeRepository.getRecipe(recipeId)
 
-        fun getRandomRecipeFromFollowing(userId: Int, mealType: MealType) =
-            tm.run { it.recipeRepository.getRandomRecipeFromFollowing(userId, mealType) }
+        fun getRandomRecipesFromFollowing(userId: Int, mealType: MealType, limit: Int) =
+            tm.run { it.recipeRepository.getRandomRecipesFromFollowing(userId, mealType, limit) }
 
-        fun getRandomRecipeFromPublicUsers(mealType: MealType) =
-            tm.run { it.recipeRepository.getRandomRecipeFromPublicUsers(mealType) }
+        fun getRandomRecipesFromPublicUsers(mealType: MealType, limit: Int) =
+            tm.run { it.recipeRepository.getRandomRecipesFromPublicUsers(mealType, limit) }
 
         fun searchRecipes(userId: Int, form: SearchRecipesModel) =
             tm.run { it.recipeRepository.searchRecipes(userId, form) }

@@ -3,8 +3,8 @@ package epicurius.unit.repository.recipe
 import epicurius.domain.recipe.MealType
 import epicurius.domain.user.FollowingStatus
 import kotlin.test.Test
-import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
+import kotlin.test.assertTrue
 
 class GetRandomRecipeFromFollowingRepositoryTests : RecipeRepositoryTest() {
 
@@ -14,9 +14,10 @@ class GetRandomRecipeFromFollowingRepositoryTests : RecipeRepositoryTest() {
         tm.run { it.userRepository.follow(testUser.id, testAuthor.id, FollowingStatus.ACCEPTED.ordinal) }
 
         // when retrieving a random recipe from the followed users
-        val retrievedRecipe = getRandomRecipeFromFollowing(testUser.id, MealType.DESSERT)
+        val retrievedRecipe = getRandomRecipesFromFollowing(testUser.id, MealType.DESSERT, 1)
 
         // then the recipe is retrieved successfully
-        assertNotNull(retrievedRecipe) // there is at least one recipe with mealType DESSERT (testRecipe)
+        assertNotNull(retrievedRecipe)
+        assertTrue(retrievedRecipe.isNotEmpty())
     }
 }

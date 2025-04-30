@@ -12,8 +12,8 @@ interface RecipeRepository {
     fun createRecipe(recipeInfo: JdbiCreateRecipeModel): Int
 
     fun getRecipe(recipeId: Int): JdbiRecipeModel?
-    fun getRandomRecipeFromFollowing(userId: Int, mealType: MealType): JdbiRecipeModel?
-    fun getRandomRecipeFromPublicUsers(mealType: MealType): JdbiRecipeModel?
+    fun getRandomRecipesFromFollowing(userId: Int, mealType: MealType, limit: Int): List<JdbiRecipeModel>
+    fun getRandomRecipesFromPublicUsers(mealType: MealType, limit: Int): List<JdbiRecipeModel>
     fun searchRecipes(userId: Int, form: SearchRecipesModel): List<JdbiRecipeInfo>
     fun searchRecipesByIngredients(userId: Int, ingredientsList: List<String>): List<JdbiRecipeInfo>
 

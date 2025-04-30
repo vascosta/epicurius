@@ -82,7 +82,7 @@ class JdbiRecipeRepository(private val handle: Handle) : RecipeRepository {
             .mapTo<JdbiRecipeModel>()
             .firstOrNull()
 
-    override fun getRandomRecipeFromFollowing(userId: Int, mealType: MealType): JdbiRecipeModel? =
+    override fun getRandomRecipesFromFollowing(userId: Int, mealType: MealType, limit: Int): List<JdbiRecipeModel> =
         handle.createQuery(
             """
                 WITH random_recipe AS (
@@ -95,7 +95,7 @@ class JdbiRecipeRepository(private val handle: Handle) : RecipeRepository {
                     JOIN dbo.followers f ON f.user_id = r.author_id AND f.follower_id = :userId
                     WHERE f.status = :status AND r.meal_type = :mealType
                     ORDER BY RANDOM()
-                    LIMIT 1
+                    LIMIT :limit
                 )
                 SELECT r.*, i.name AS ingredient_name, i.quantity, i.unit
                 FROM random_recipe r
@@ -105,10 +105,11 @@ class JdbiRecipeRepository(private val handle: Handle) : RecipeRepository {
             .bind("userId", userId)
             .bind("status", FollowingStatus.ACCEPTED.ordinal)
             .bind("mealType", mealType.ordinal)
+            .bind("limit", limit)
             .mapTo<JdbiRecipeModel>()
-            .firstOrNull()
+            .list()
 
-    override fun getRandomRecipeFromPublicUsers(mealType: MealType): JdbiRecipeModel? =
+    override fun getRandomRecipesFromPublicUsers(mealType: MealType, limit: Int): List<JdbiRecipeModel> =
         handle.createQuery(
             """
                 WITH random_recipe AS (
@@ -120,7 +121,7 @@ class JdbiRecipeRepository(private val handle: Handle) : RecipeRepository {
                     JOIN dbo.user u ON u.id = r.author_id
                     WHERE u.privacy = false AND r.meal_type = :mealType
                     ORDER BY RANDOM()
-                    LIMIT 1
+                    LIMIT :limit
                 )
                 SELECT r.*, i.name AS ingredient_name, i.quantity, i.unit
                 FROM random_recipe r
@@ -128,8 +129,9 @@ class JdbiRecipeRepository(private val handle: Handle) : RecipeRepository {
             """
         )
             .bind("mealType", mealType.ordinal)
+            .bind("limit", limit)
             .mapTo<JdbiRecipeModel>()
-            .firstOrNull()
+            .list()
 
     override fun searchRecipes(userId: Int, form: SearchRecipesModel): List<JdbiRecipeInfo> {
         val query = StringBuilder(
