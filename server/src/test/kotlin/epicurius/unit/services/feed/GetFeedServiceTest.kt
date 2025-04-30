@@ -2,17 +2,12 @@ package epicurius.unit.services.feed
 
 import epicurius.domain.PagingParams
 import epicurius.domain.picture.PictureDomain.Companion.RECIPES_FOLDER
-import epicurius.domain.recipe.Cuisine
-import epicurius.domain.recipe.MealType
-import epicurius.domain.recipe.RecipeInfo
-import epicurius.repository.jdbi.recipe.models.JdbiRecipeInfo
-import epicurius.unit.services.ServiceTest
 import org.mockito.kotlin.whenever
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
-class GetFeedServiceTests: ServiceTest() {
+class GetFeedServiceTest : FeedServiceTest() {
 
     @Test
     fun `Should retrieve user's empty feed`() {
@@ -80,49 +75,5 @@ class GetFeedServiceTests: ServiceTest() {
         assertEquals(recipeInfo.mealType, feed.last().mealType)
         assertEquals(recipeInfo.preparationTime, feed.last().preparationTime)
         assertEquals(recipeInfo.servings, feed.last().servings)
-    }
-
-    companion object {
-        private const val USER_ID = 1
-
-        private val jdbiRecipeInfo = JdbiRecipeInfo(
-            id = 1,
-            name = "Carbonara",
-            cuisine = Cuisine.ITALIAN,
-            mealType = MealType.MAIN_COURSE,
-            preparationTime = 30,
-            servings = 4,
-            pictures = listOf("")
-        )
-
-        private val recipeInfo = RecipeInfo(
-            id = 1,
-            name = "Carbonara",
-            cuisine = Cuisine.ITALIAN,
-            mealType = MealType.MAIN_COURSE,
-            preparationTime = 30,
-            servings = 4,
-            picture = ByteArray(0)
-        )
-
-        private val jdbiRecipeInfo2 = JdbiRecipeInfo(
-            id = 2,
-            name = "Spring Rolls",
-            cuisine = Cuisine.CHINESE,
-            mealType = MealType.APPETIZER,
-            preparationTime = 20,
-            servings = 2,
-            pictures = listOf("")
-        )
-
-        private val recipeInfo2 = RecipeInfo(
-            id = 2,
-            name = "Spring Rolls",
-            cuisine = Cuisine.CHINESE,
-            mealType = MealType.APPETIZER,
-            preparationTime = 20,
-            servings = 2,
-            picture = ByteArray(0)
-        )
     }
 }

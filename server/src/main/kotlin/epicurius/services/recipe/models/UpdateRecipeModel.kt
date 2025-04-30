@@ -7,7 +7,6 @@ import epicurius.domain.recipe.Ingredient
 import epicurius.domain.recipe.Instructions
 import epicurius.domain.recipe.MealType
 import java.time.LocalDate
-import java.util.Date
 
 data class UpdateRecipeModel(
     val id: Int,

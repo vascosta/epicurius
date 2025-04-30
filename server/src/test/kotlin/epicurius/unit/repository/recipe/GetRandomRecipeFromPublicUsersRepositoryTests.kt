@@ -5,7 +5,7 @@ import kotlin.test.Test
 import kotlin.test.assertNotNull
 import kotlin.test.assertTrue
 
-class GetRandomRecipeFromPublicUsersRepositoryTests: RecipeRepositoryTest() {
+class GetRandomRecipeFromPublicUsersRepositoryTests : RecipeRepositoryTest() {
 
     @Test
     fun `Should retrieve a random recipe from public users`() {

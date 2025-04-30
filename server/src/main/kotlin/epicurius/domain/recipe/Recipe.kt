@@ -3,7 +3,6 @@ package epicurius.domain.recipe
 import epicurius.domain.Diet
 import epicurius.domain.Intolerance
 import java.time.LocalDate
-import java.util.Date
 
 data class Recipe(
     val id: Int,

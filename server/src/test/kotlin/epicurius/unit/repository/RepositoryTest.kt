@@ -5,8 +5,6 @@ import com.google.cloud.firestore.Firestore
 import com.google.cloud.firestore.FirestoreOptions
 import com.google.cloud.storage.StorageOptions
 import epicurius.config.CloudStorage
-import epicurius.domain.fridge.ProductInfo
-import epicurius.domain.fridge.UpdateProductInfo
 import epicurius.repository.cloudStorage.manager.CloudStorageManager
 import epicurius.repository.firestore.FirestoreManager
 import epicurius.repository.jdbi.config.configureWithAppRequirements

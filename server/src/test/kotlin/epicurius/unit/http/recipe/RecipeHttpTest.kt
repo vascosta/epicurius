@@ -14,9 +14,7 @@ import epicurius.domain.user.User
 import epicurius.unit.http.HttpTest
 import epicurius.utils.generateEmail
 import epicurius.utils.generateRandomUsername
-import java.time.Instant
 import java.time.LocalDate
-import java.util.Date
 import java.util.UUID.randomUUID
 
 open class RecipeHttpTest : HttpTest() {

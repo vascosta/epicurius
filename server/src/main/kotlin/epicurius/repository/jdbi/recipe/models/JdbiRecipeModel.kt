@@ -8,7 +8,6 @@ import epicurius.domain.recipe.Instructions
 import epicurius.domain.recipe.MealType
 import epicurius.domain.recipe.Recipe
 import java.time.LocalDate
-import java.util.Date
 
 data class JdbiRecipeModel(
     val id: Int,
