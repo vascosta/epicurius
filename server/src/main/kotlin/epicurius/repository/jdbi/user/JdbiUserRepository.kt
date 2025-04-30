@@ -1,11 +1,9 @@
 package epicurius.repository.jdbi.user
 
 import epicurius.domain.PagingParams
-import epicurius.domain.exceptions.RecipeNotAccessible
 import epicurius.domain.exceptions.UserNotFound
 import epicurius.domain.user.FollowingStatus
 import epicurius.domain.user.User
-import epicurius.repository.jdbi.recipe.models.JdbiRecipeModel
 import epicurius.repository.jdbi.user.contract.UserRepository
 import epicurius.repository.jdbi.user.models.JdbiUpdateUserModel
 import epicurius.repository.jdbi.user.models.SearchUserModel
@@ -229,10 +227,10 @@ class JdbiUserRepository(private val handle: Handle) : UserRepository {
             .mapTo<Int>()
             .one() == 1
 
-    override fun checkRecipeAccessibility(authorUsername: String, authorId: Int, username: String): Boolean {
-        val author = getUser(authorUsername) ?: throw UserNotFound(authorUsername)
-        val authorFollowers = getFollowers(author.id)
+    override fun checkUserVisibility(username: String, userId: Int, followerName: String): Boolean {
+        val user = getUser(username) ?: throw UserNotFound(username)
+        val userFollowers = getFollowers(user.id)
 
-        return author.privacy && !authorFollowers.map { it.name }.contains(username)
+        return user.privacy && !userFollowers.map { it.name }.contains(followerName)
     }
 }

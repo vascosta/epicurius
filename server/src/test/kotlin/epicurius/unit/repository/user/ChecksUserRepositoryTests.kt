@@ -52,13 +52,13 @@ class ChecksUserRepositoryTests : UserRepositoryTest() {
     }
 
     @Test
-    fun `Should check if an user has access to a recipe successfully`() {
+    fun `Should check if an user has access to a user profile successfully`() {
         // given 2 users (publicTestUser and privateTestUser)
 
-        // when checking if the user has access to a recipe
-        val recipeAccessibility = checkRecipeAccessibility(publicTestUser.name, publicTestUser.id, privateTestUser.name)
+        // when checking if the user has access to the other user's profile
+        val userVisibility = checkUserVisibility(publicTestUser.name, publicTestUser.id, privateTestUser.name)
 
-        // then the user does not have access to the recipe
-        assertFalse(recipeAccessibility)
+        // then the user does not have access to the other user's profile
+        assertFalse(userVisibility)
     }
 }

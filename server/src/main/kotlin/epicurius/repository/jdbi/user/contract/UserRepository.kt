@@ -24,5 +24,5 @@ interface UserRepository {
     fun checkIfUserIsLoggedIn(name: String? = null, email: String? = null): Boolean
     fun checkIfUserIsBeingFollowedBy(userId: Int, followerId: Int): Boolean
     fun checkIfUserAlreadySentFollowRequest(userId: Int, followerId: Int): Boolean
-    fun checkRecipeAccessibility(authorUsername: String, authorId: Int, username: String): Boolean
+    fun checkUserVisibility(username: String, userId: Int, followerName: String): Boolean
 }

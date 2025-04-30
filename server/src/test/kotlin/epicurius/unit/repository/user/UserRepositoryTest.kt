@@ -62,7 +62,7 @@ open class UserRepositoryTest : RepositoryTest() {
         fun checkIfUserAlreadySentFollowRequest(userId: Int, followerId: Int) =
             tm.run { it.userRepository.checkIfUserAlreadySentFollowRequest(userId, followerId) }
 
-        fun checkRecipeAccessibility(authorUsername: String, authorId: Int, username: String) =
-            tm.run { it.userRepository.checkRecipeAccessibility(authorUsername, authorId, username) }
+        fun checkUserVisibility(authorUsername: String, authorId: Int, username: String) =
+            tm.run { it.userRepository.checkUserVisibility(authorUsername, authorId, username) }
     }
 }

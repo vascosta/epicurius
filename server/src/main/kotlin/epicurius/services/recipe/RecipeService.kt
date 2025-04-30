@@ -5,7 +5,6 @@ import epicurius.domain.exceptions.InvalidNumberOfRecipePictures
 import epicurius.domain.exceptions.NotTheAuthor
 import epicurius.domain.exceptions.RecipeNotAccessible
 import epicurius.domain.exceptions.RecipeNotFound
-import epicurius.domain.exceptions.UserNotFound
 import epicurius.domain.picture.PictureDomain
 import epicurius.domain.picture.PictureDomain.Companion.RECIPES_FOLDER
 import epicurius.domain.recipe.Ingredient
@@ -209,7 +208,7 @@ class RecipeService(
         tm.run { it.recipeRepository.getRecipe(recipeId) }
 
     private fun checkRecipeAccessibility(recipe: JdbiRecipeModel, username: String) {
-        if (!tm.run { it.userRepository.checkRecipeAccessibility(recipe.authorUsername, recipe.authorId, username) })
+        if (!tm.run { it.userRepository.checkUserVisibility(recipe.authorUsername, recipe.authorId, username) })
             throw RecipeNotAccessible(recipe.name)
     }
 
