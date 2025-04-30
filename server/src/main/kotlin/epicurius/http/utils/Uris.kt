@@ -47,6 +47,10 @@ object Uris {
         const val FEED = "/feed"
     }
 
+    object Menu {
+        const val MENU = "/menu"
+    }
+
     object Ingredients {
         const val INGREDIENTS = "/ingredients"
         const val INGREDIENTS_SUBSTITUTES = "/ingredients/substitutes"
