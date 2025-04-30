@@ -1,5 +1,6 @@
 package epicurius.unit.repository.recipe
 
+import epicurius.domain.recipe.MealType
 import epicurius.domain.recipe.SearchRecipesModel
 import epicurius.repository.firestore.recipe.models.FirestoreRecipeModel
 import epicurius.repository.firestore.recipe.models.FirestoreUpdateRecipeModel
@@ -25,6 +26,12 @@ open class RecipeRepositoryTest : RepositoryTest() {
         fun getJdbiRecipe(recipeId: Int) = tm.run { it.recipeRepository.getRecipe(recipeId) }
 
         suspend fun getFirestoreRecipe(recipeId: Int) = fs.recipeRepository.getRecipe(recipeId)
+
+        fun getRandomRecipeFromFollowing(userId: Int, mealType: MealType) =
+            tm.run { it.recipeRepository.getRandomRecipeFromFollowing(userId, mealType) }
+
+        fun getRandomRecipeFromPublicUsers(mealType: MealType) =
+            tm.run { it.recipeRepository.getRandomRecipeFromPublicUsers(mealType) }
 
         fun searchRecipes(userId: Int, form: SearchRecipesModel) =
             tm.run { it.recipeRepository.searchRecipes(userId, form) }

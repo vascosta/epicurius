@@ -1,6 +1,7 @@
 package epicurius.repository.jdbi.recipe
 
 import epicurius.domain.recipe.Ingredient
+import epicurius.domain.recipe.MealType
 import epicurius.domain.recipe.SearchRecipesModel
 import epicurius.domain.user.FollowingStatus
 import epicurius.repository.jdbi.recipe.contract.RecipeRepository
@@ -78,6 +79,55 @@ class JdbiRecipeRepository(private val handle: Handle) : RecipeRepository {
             """
         )
             .bind("id", recipeId)
+            .mapTo<JdbiRecipeModel>()
+            .firstOrNull()
+
+    override fun getRandomRecipeFromFollowing(userId: Int, mealType: MealType): JdbiRecipeModel? =
+        handle.createQuery(
+            """
+                WITH random_recipe AS (
+                    SELECT r.id, r.name, r.author_id, r.date, r.servings, r.preparation_time, 
+                            r.cuisine, r.meal_type, r.intolerances, r.diets, r.calories, 
+                            r.protein, r.fat, r.carbs, r.pictures_names, u.name as author_username
+                            
+                    FROM dbo.Recipe r
+                    JOIN dbo.user u ON u.id = r.author_id
+                    JOIN dbo.followers f ON f.user_id = r.author_id AND f.follower_id = :userId
+                    WHERE f.status = :status AND r.meal_type = :mealType
+                    ORDER BY RANDOM()
+                    LIMIT 1
+                )
+                SELECT r.*, i.name AS ingredient_name, i.quantity, i.unit
+                FROM random_recipe r
+                JOIN dbo.Ingredient i ON r.id = i.recipe_id
+            """
+        )
+            .bind("userId", userId)
+            .bind("status", FollowingStatus.ACCEPTED.ordinal)
+            .bind("mealType", mealType.ordinal)
+            .mapTo<JdbiRecipeModel>()
+            .firstOrNull()
+
+    override fun getRandomRecipeFromPublicUsers(mealType: MealType): JdbiRecipeModel? =
+        handle.createQuery(
+            """
+                WITH random_recipe AS (
+                    SELECT r.id, r.name, r.author_id, r.date, r.servings, r.preparation_time, 
+                            r.cuisine, r.meal_type, r.intolerances, r.diets, r.calories, 
+                            r.protein, r.fat, r.carbs, r.pictures_names, u.name as author_username
+                            
+                    FROM dbo.Recipe r
+                    JOIN dbo.user u ON u.id = r.author_id
+                    WHERE u.privacy = false AND r.meal_type = :mealType
+                    ORDER BY RANDOM()
+                    LIMIT 1
+                )
+                SELECT r.*, i.name AS ingredient_name, i.quantity, i.unit
+                FROM random_recipe r
+                JOIN dbo.Ingredient i ON r.id = i.recipe_id
+            """
+        )
+            .bind("mealType", mealType.ordinal)
             .mapTo<JdbiRecipeModel>()
             .firstOrNull()
 
