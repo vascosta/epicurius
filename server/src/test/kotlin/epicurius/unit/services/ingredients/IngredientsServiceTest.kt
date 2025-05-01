@@ -6,7 +6,8 @@ open class IngredientsServiceTest : ServiceTest() {
 
     companion object {
         const val PARTIAL_NAME = "app"
-        val productsList = listOf(
+
+        val testIngredients = listOf(
             "apple",
             "applesauce",
             "apple juice",
@@ -18,5 +19,7 @@ open class IngredientsServiceTest : ServiceTest() {
             "apple cider vinegar",
             "applewood smoked bacon"
         )
+
+        val testSubstituteIngredients = listOf("1 cup quinces", "1 cup pears")
     }
 }

@@ -12,24 +12,24 @@ class GetIngredientsServiceTests : IngredientsServiceTest() {
         // given a partial name (PARTIAL_NAME)
 
         // mock
-        whenever(runBlocking { spoonacularRepositoryMock.getIngredients(PARTIAL_NAME) }).thenReturn(productsList)
+        whenever(runBlocking { spoonacularRepositoryMock.getIngredients(PARTIAL_NAME) }).thenReturn(testIngredients)
 
         // when retrieving the ingredients
-        val ingredients = runBlocking { getIngredientsList(PARTIAL_NAME) }
+        val ingredients = runBlocking { getIngredients(PARTIAL_NAME) }
 
         // then the product list is retrieved successfully
-        assertEquals(productsList, ingredients)
-        assertEquals(productsList.size, ingredients.size)
-        assertEquals(productsList[0], ingredients[0])
-        assertEquals(productsList[1], ingredients[1])
-        assertEquals(productsList[2], ingredients[2])
-        assertEquals(productsList[3], ingredients[3])
-        assertEquals(productsList[4], ingredients[4])
-        assertEquals(productsList[5], ingredients[5])
-        assertEquals(productsList[6], ingredients[6])
-        assertEquals(productsList[7], ingredients[7])
-        assertEquals(productsList[8], ingredients[8])
-        assertEquals(productsList[9], ingredients[9])
+        assertEquals(testIngredients, ingredients)
+        assertEquals(testIngredients.size, ingredients.size)
+        assertEquals(testIngredients[0], ingredients[0])
+        assertEquals(testIngredients[1], ingredients[1])
+        assertEquals(testIngredients[2], ingredients[2])
+        assertEquals(testIngredients[3], ingredients[3])
+        assertEquals(testIngredients[4], ingredients[4])
+        assertEquals(testIngredients[5], ingredients[5])
+        assertEquals(testIngredients[6], ingredients[6])
+        assertEquals(testIngredients[7], ingredients[7])
+        assertEquals(testIngredients[8], ingredients[8])
+        assertEquals(testIngredients[9], ingredients[9])
     }
 
     @Test
@@ -41,7 +41,7 @@ class GetIngredientsServiceTests : IngredientsServiceTest() {
         whenever(runBlocking { spoonacularRepositoryMock.getIngredients(partial) }).thenReturn(emptyList())
 
         // when retrieving the ingredients
-        val ingredients = runBlocking { getIngredientsList(partial) }
+        val ingredients = runBlocking { getIngredients(partial) }
 
         // then an empty list is retrieved successfully
         assertEquals(emptyList<String>(), ingredients)

@@ -23,7 +23,7 @@ class GetIngredientsRepositoryTests : SpoonacularRepositoryTest() {
     @Test
     fun `Should retrieve ingredients given a partial name successfully`() {
         // given a partial name
-        val partialName = "apple"
+        val partialName = "app"
 
         // when retrieving ingredients
         val ingredients = runBlocking { getIngredients(partialName) }

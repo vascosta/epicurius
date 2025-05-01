@@ -94,7 +94,9 @@ open class ServiceTest : EpicuriusUnitTest() {
             recipeService.deleteRecipe(userId, recipeId)
 
         // INGREDIENTS
-        suspend fun getIngredientsList(partial: String) = ingredientsService.getIngredients(partial)
+        suspend fun getIngredients(partial: String) = ingredientsService.getIngredients(partial)
+        suspend fun getSubstituteIngredients(name: String) = ingredientsService.getSubstituteIngredients(name)
+        suspend fun getIngredientsFromPicture(picture: MultipartFile) = ingredientsService.getIngredientsFromPicture(picture)
 
         // MENU
         fun getDailyMenu(intolerances: List<Intolerance>, diets: List<Diet>) = menuService.getDailyMenu(intolerances, diets)
