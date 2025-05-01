@@ -227,7 +227,8 @@ class JdbiUserRepository(private val handle: Handle) : UserRepository {
             .mapTo<Int>()
             .one() == 1
 
-    override fun checkUserVisibility(username: String, userId: Int, followerName: String): Boolean {
+    override fun checkUserVisibility(username: String, followerName: String): Boolean {
+        if (username == followerName) return true
         val user = getUser(username) ?: throw UserNotFound(username)
         val userFollowers = getFollowers(user.id)
 

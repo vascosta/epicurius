@@ -18,7 +18,7 @@ class GetRecipeServiceTests : RecipeServiceTest() {
 
         // mock
         whenever(jdbiRecipeRepositoryMock.getRecipe(RECIPE_ID)).thenReturn(jdbiRecipeModel)
-        whenever(jdbiUserRepositoryMock.checkUserVisibility(authorUsername, AUTHOR_ID, authorUsername)).thenReturn(true)
+        whenever(jdbiUserRepositoryMock.checkUserVisibility(authorUsername, authorUsername)).thenReturn(true)
         whenever(runBlocking { firestoreRecipeRepositoryMock.getRecipe(RECIPE_ID) }).thenReturn(firestoreRecipeInfo)
         whenever(pictureRepositoryMock.getPicture(testPicture.name, RECIPES_FOLDER)).thenReturn(testPicture.bytes)
 
@@ -52,7 +52,7 @@ class GetRecipeServiceTests : RecipeServiceTest() {
 
         // mock
         whenever(jdbiRecipeRepositoryMock.getRecipe(nonExistingRecipeId)).thenReturn(null, jdbiRecipeModel)
-        whenever(jdbiUserRepositoryMock.checkUserVisibility(authorUsername, AUTHOR_ID, authorUsername)).thenReturn(true)
+        whenever(jdbiUserRepositoryMock.checkUserVisibility(authorUsername, authorUsername)).thenReturn(true)
 
         // when retrieving the recipe
         // then the recipe is not retrieved and throws RecipeNotFound exception
@@ -67,7 +67,7 @@ class GetRecipeServiceTests : RecipeServiceTest() {
 
         // mock
         whenever(jdbiRecipeRepositoryMock.getRecipe(RECIPE_ID)).thenReturn(jdbiRecipeModel)
-        whenever(jdbiUserRepositoryMock.checkUserVisibility(authorUsername, AUTHOR_ID, user)).thenReturn(false)
+        whenever(jdbiUserRepositoryMock.checkUserVisibility(authorUsername, user)).thenReturn(false)
 
         // when retrieving the recipe
         // then the recipe is not retrieved and throws RecipeNotAccessible exception
