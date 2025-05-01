@@ -31,7 +31,7 @@ class MenuService(private val tm: TransactionManager) {
             it.recipeRepository.getRandomRecipesFromPublicUsers(MealType.BREAKFAST, intolerances, diets, 1)
         }
 
-        return if (breakfastFromPublicUsers.size > 1) {
+        return if (breakfastFromPublicUsers.isNotEmpty()) {
             breakfastFromPublicUsers.first()
         } else {
             null
@@ -43,7 +43,7 @@ class MenuService(private val tm: TransactionManager) {
             it.recipeRepository.getRandomRecipesFromPublicUsers(MealType.SOUP, intolerances, diets, 1)
         }
 
-        return if (soupFromPublicUsers.size > 1) {
+        return if (soupFromPublicUsers.isNotEmpty()) {
             soupFromPublicUsers.first()
         } else {
             null
@@ -55,7 +55,7 @@ class MenuService(private val tm: TransactionManager) {
             it.recipeRepository.getRandomRecipesFromPublicUsers(MealType.DESSERT, intolerances, diets, 1)
         }
 
-        return if (dessertFromPublicUsers.size > 1) {
+        return if (dessertFromPublicUsers.isNotEmpty()) {
             dessertFromPublicUsers.first()
         } else {
             null

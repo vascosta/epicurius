@@ -95,5 +95,8 @@ open class ServiceTest : EpicuriusUnitTest() {
 
         // INGREDIENTS
         suspend fun getIngredientsList(partial: String) = ingredientsService.getIngredients(partial)
+
+        // MENU
+        fun getDailyMenu(intolerances: List<Intolerance>, diets: List<Diet>) = menuService.getDailyMenu(intolerances, diets)
     }
 }
