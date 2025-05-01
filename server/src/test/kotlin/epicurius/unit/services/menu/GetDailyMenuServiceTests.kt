@@ -8,7 +8,7 @@ import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 import kotlin.test.assertNull
 
-class GetDailyMenuServiceTests: MenuServiceTest() {
+class GetDailyMenuServiceTests : MenuServiceTest() {
 
     @Test
     fun `Should retrieve the daily menu for a given user successfully`() {
@@ -127,7 +127,6 @@ class GetDailyMenuServiceTests: MenuServiceTest() {
         whenever(
             pictureRepositoryMock.getPicture(publicLunchJdbiRecipeModel.picturesNames.first(), RECIPES_FOLDER)
         ).thenReturn(byteArrayOf())
-
 
         // when retrieving the daily menu
         val dailyMenu = menuService.getDailyMenu(userIntolerances, userDiets)

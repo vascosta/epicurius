@@ -34,11 +34,9 @@ class SpoonacularRepository(private val httpClient: HttpClientConfigurer) : Spoo
             val request = async { httpClient.get(uriCompleted) }.await()
             if (request.contains(SUBSTITUTES_NOT_FOUND)) {
                 emptyList()
-            }
-            else if (request.contains(INGREDIENT_NOT_FOUND)) {
+            } else if (request.contains(INGREDIENT_NOT_FOUND)) {
                 throw InvalidIngredient(name)
-            }
-            else {
+            } else {
                 val ingredients = Json.decodeFromString<SpoonacularSubstituteIngredientsModel>(request)
                 ingredients.substitutes.map { it.substringAfter("= ").lowercase() }
             }

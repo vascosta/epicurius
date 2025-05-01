@@ -12,21 +12,21 @@ import org.springframework.stereotype.Component
 @Component
 class MenuService(private val tm: TransactionManager, private val cs: CloudStorageManager) {
 
-        fun getDailyMenu(intolerances: List<Intolerance>, diets: List<Diet>): Map<String, RecipeInfo?> {
-            val breakfast = getBreakfastRecipe(intolerances, diets)
-            val soup = getSoupRecipe(intolerances, diets)
-            val dessert = getDessertRecipe(intolerances, diets)
-            val mainCourses = getMainCourseRecipes(intolerances, diets)
-            val lunch = mainCourses[0]
-            val dinner = mainCourses[1]
-            return mapOf(
-                "breakfast" to breakfast,
-                "soup" to soup,
-                "dessert" to dessert,
-                "lunch" to lunch,
-                "dinner" to dinner
-            )
-        }
+    fun getDailyMenu(intolerances: List<Intolerance>, diets: List<Diet>): Map<String, RecipeInfo?> {
+        val breakfast = getBreakfastRecipe(intolerances, diets)
+        val soup = getSoupRecipe(intolerances, diets)
+        val dessert = getDessertRecipe(intolerances, diets)
+        val mainCourses = getMainCourseRecipes(intolerances, diets)
+        val lunch = mainCourses[0]
+        val dinner = mainCourses[1]
+        return mapOf(
+            "breakfast" to breakfast,
+            "soup" to soup,
+            "dessert" to dessert,
+            "lunch" to lunch,
+            "dinner" to dinner
+        )
+    }
 
     private fun getBreakfastRecipe(intolerances: List<Intolerance>, diets: List<Diet>): RecipeInfo? {
         val breakfastFromPublicUsers = tm.run {
@@ -84,7 +84,7 @@ class MenuService(private val tm: TransactionManager, private val cs: CloudStora
                 listOf(jdbiLunchRecipeModel.toRecipeInfo(lunchPicture), jdbiDinnerRecipeModel.toRecipeInfo(dinnerPicture))
             }
             1 -> {
-                val lunchRecipeModel = mainCourseFromPublicUsers.first()  // lunch has priority over dinner
+                val lunchRecipeModel = mainCourseFromPublicUsers.first() // lunch has priority over dinner
                 val lunchPicture = cs.pictureRepository.getPicture(lunchRecipeModel.picturesNames.first(), RECIPES_FOLDER)
                 listOf(lunchRecipeModel.toRecipeInfo(lunchPicture), null)
             }

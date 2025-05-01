@@ -56,7 +56,7 @@ class ChecksUserRepositoryTests : UserRepositoryTest() {
         // given 2 users (publicTestUser and privateTestUser)
 
         // when checking if the user has access to the other user's profile
-        val userVisibility = checkUserVisibility(publicTestUser.name, publicTestUser.id, privateTestUser.name)
+        val userVisibility = checkUserVisibility(publicTestUser.name, privateTestUser.name)
 
         // then the user does not have access to the other user's profile
         assertFalse(userVisibility)

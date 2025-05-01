@@ -13,7 +13,7 @@ import epicurius.utils.generateRandomRecipeName
 import epicurius.utils.generateRandomUsername
 import java.util.UUID.randomUUID
 
-open class MenuHttpTest: HttpTest() {
+open class MenuHttpTest : HttpTest() {
 
     companion object {
         private val authenticatedUsername = generateRandomUsername()

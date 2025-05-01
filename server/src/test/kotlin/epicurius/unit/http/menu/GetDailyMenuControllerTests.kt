@@ -7,7 +7,7 @@ import org.springframework.http.HttpStatus
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
-class GetDailyMenuControllerTests: MenuHttpTest() {
+class GetDailyMenuControllerTests : MenuHttpTest() {
 
     @Test
     fun `Should retrieve the daily menu for a given user successfully`() {

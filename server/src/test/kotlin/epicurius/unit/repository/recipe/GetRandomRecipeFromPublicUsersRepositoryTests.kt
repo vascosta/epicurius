@@ -1,7 +1,5 @@
 package epicurius.unit.repository.recipe
 
-import epicurius.domain.Diet
-import epicurius.domain.Intolerance
 import epicurius.domain.recipe.MealType
 import kotlin.test.Test
 import kotlin.test.assertNotNull

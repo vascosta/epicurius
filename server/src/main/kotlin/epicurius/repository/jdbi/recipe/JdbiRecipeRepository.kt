@@ -5,7 +5,6 @@ import epicurius.domain.Intolerance
 import epicurius.domain.recipe.Ingredient
 import epicurius.domain.recipe.MealType
 import epicurius.domain.recipe.SearchRecipesModel
-import epicurius.domain.user.FollowingStatus
 import epicurius.repository.jdbi.recipe.contract.RecipeRepository
 import epicurius.repository.jdbi.recipe.models.JdbiCreateRecipeModel
 import epicurius.repository.jdbi.recipe.models.JdbiRecipeInfo
@@ -85,7 +84,10 @@ class JdbiRecipeRepository(private val handle: Handle) : RecipeRepository {
             .firstOrNull()
 
     override fun getRandomRecipesFromPublicUsers(
-        mealType: MealType, intolerances: List<Intolerance>, diets: List<Diet>, limit: Int
+        mealType: MealType,
+        intolerances: List<Intolerance>,
+        diets: List<Diet>,
+        limit: Int
     ): List<JdbiRecipeModel> =
         handle.createQuery(
             """

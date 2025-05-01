@@ -11,7 +11,7 @@ import epicurius.utils.generateRandomRecipeName
 import epicurius.utils.generateRandomUsername
 import java.time.LocalDate
 
-open class MenuServiceTest: ServiceTest() {
+open class MenuServiceTest : ServiceTest() {
 
     companion object {
         private const val PUBLIC_AUTHOR_ID = 1

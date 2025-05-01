@@ -189,16 +189,16 @@ class ExceptionHandler {
             detail = "Something went wrong, please try again later."
         ).also { ex.printStackTrace() }
 
-       @ExceptionHandler(
-           value = [
-               RecipeNotAccessible::class,
-           ]
-       )
-       fun handleForbidden(request: HttpServletRequest, ex: Exception): ResponseEntity<Problem> =
-           ex.handle(
-               request = request,
-               status = HttpStatus.FORBIDDEN
-           )
+    @ExceptionHandler(
+        value = [
+            RecipeNotAccessible::class,
+        ]
+    )
+    fun handleForbidden(request: HttpServletRequest, ex: Exception): ResponseEntity<Problem> =
+        ex.handle(
+            request = request,
+            status = HttpStatus.FORBIDDEN
+        )
 
     companion object {
         const val PROBLEMS_DOCS_URI = "" // TODO: Add the URI to the documentation
