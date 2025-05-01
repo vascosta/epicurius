@@ -9,6 +9,7 @@ import epicurius.domain.exceptions.IncorrectPassword
 import epicurius.domain.exceptions.InvalidCountry
 import epicurius.domain.exceptions.InvalidCuisineIdx
 import epicurius.domain.exceptions.InvalidDietIdx
+import epicurius.domain.exceptions.InvalidIngredient
 import epicurius.domain.exceptions.InvalidIngredientUnitIdx
 import epicurius.domain.exceptions.InvalidIntolerancesIdx
 import epicurius.domain.exceptions.InvalidMealPlannerDate
@@ -26,6 +27,7 @@ import epicurius.domain.exceptions.ProductNotFound
 import epicurius.domain.exceptions.RecipeDoesNotContainCaloriesInfo
 import epicurius.domain.exceptions.RecipeExceedsMaximumCalories
 import epicurius.domain.exceptions.RecipeIsInvalidForMealTime
+import epicurius.domain.exceptions.RecipeNotAccessible
 import epicurius.domain.exceptions.RecipeNotFound
 import epicurius.domain.exceptions.UnauthorizedException
 import epicurius.domain.exceptions.UserAlreadyBeingFollowed
@@ -136,9 +138,8 @@ class ExceptionHandler {
             MealTimeAlreadyExistsInPlanner::class,
             MealPlannerAlreadyExists::class,
             InvalidMealPlannerDate::class,
-            // RECIPE
             InvalidNumberOfRecipePictures::class,
-
+            InvalidIngredient::class,
         ]
     )
     fun handleBadRequest(request: HttpServletRequest, ex: Exception) =
@@ -188,21 +189,19 @@ class ExceptionHandler {
             detail = "Something went wrong, please try again later."
         ).also { ex.printStackTrace() }
 
-    /*
-
        @ExceptionHandler(
            value = [
-               //ADD
+               RecipeNotAccessible::class,
            ]
        )
        fun handleForbidden(request: HttpServletRequest, ex: Exception): ResponseEntity<Problem> =
            ex.handle(
                request = request,
                status = HttpStatus.FORBIDDEN
-           )*/
+           )
 
     companion object {
-        const val PROBLEMS_DOCS_URI = ""
+        const val PROBLEMS_DOCS_URI = "" // TODO: Add the URI to the documentation
 
         private fun Exception.handle(
             request: HttpServletRequest,
@@ -217,9 +216,7 @@ class ExceptionHandler {
                 title = title,
                 detail = detail,
                 instance = URI.create(request.requestURI)
-            ).toResponse(status, headers).also {
-                // logger.warn("Handled Exception: {}", message)
-            }
+            ).toResponse(status, headers)
 
         private fun Exception.getName(): String =
             (this::class.simpleName ?: "Unknown")

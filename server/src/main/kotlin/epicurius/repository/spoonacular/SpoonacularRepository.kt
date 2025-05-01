@@ -2,6 +2,7 @@ package epicurius.repository.spoonacular
 
 import epicurius.Environment
 import epicurius.config.HttpClientConfigurer
+import epicurius.domain.exceptions.InvalidIngredient
 import epicurius.repository.spoonacular.contract.SpoonacularRepository
 import epicurius.repository.spoonacular.models.SpoonacularIngredientModel
 import epicurius.repository.spoonacular.models.SpoonacularSubstituteIngredientsModel
@@ -27,15 +28,20 @@ class SpoonacularRepository(private val httpClient: HttpClientConfigurer) : Spoo
 
     override suspend fun getSubstituteIngredients(name: String): List<String> {
         val validName = name.replace(" ", "-").lowercase()
-        val uriCompleted = "$GET_INGREDIENT_SUBSTITUTES?apiKey=$spoonacularApiKey&ingredientName=$validName"
+        val uriCompleted = "$GET_INGREDIENT_SUBSTITUTES_URL?apiKey=$spoonacularApiKey&ingredientName=$validName"
 
         return withContext(Dispatchers.IO) {
             val request = async { httpClient.get(uriCompleted) }.await()
-            if (request.contains("failure")) {
-                emptyList<String>()
+            if (request.contains(SUBSTITUTES_NOT_FOUND)) {
+                emptyList()
             }
-            val ingredients = Json.decodeFromString<SpoonacularSubstituteIngredientsModel>(request)
-            ingredients.substitutes.map { it.lowercase() }
+            else if (request.contains(INGREDIENT_NOT_FOUND)) {
+                throw InvalidIngredient(name)
+            }
+            else {
+                val ingredients = Json.decodeFromString<SpoonacularSubstituteIngredientsModel>(request)
+                ingredients.substitutes.map { it.lowercase() }
+            }
         }
     }
 
@@ -43,6 +49,9 @@ class SpoonacularRepository(private val httpClient: HttpClientConfigurer) : Spoo
         val spoonacularApiKey = Environment.getSpoonacularAPIKey().readAllBytes().decodeToString().trim()
 
         const val AUTOCOMPLETE_INGREDIENTS_URL = "https://api.spoonacular.com/food/ingredients/autocomplete"
-        const val GET_INGREDIENT_SUBSTITUTES = "https://api.spoonacular.com/food/ingredients/substitutes"
+        const val GET_INGREDIENT_SUBSTITUTES_URL = "https://api.spoonacular.com/food/ingredients/substitutes"
+
+        const val SUBSTITUTES_NOT_FOUND = "Could not find any substitutes for that ingredient."
+        const val INGREDIENT_NOT_FOUND = "Could not find any ingredient by that id."
     }
 }
