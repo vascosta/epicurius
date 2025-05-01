@@ -7,6 +7,19 @@ import kotlin.test.assertEquals
 
 class GetIngredientsRepositoryTests: SpoonacularRepositoryTest() {
 
+    private val testIngredients = listOf(
+        "apple",
+        "applesauce",
+        "apple juice",
+        "apple cider",
+        "apple jelly",
+        "apple butter",
+        "apple pie spice",
+        "apple pie filling",
+        "apple cider vinegar",
+        "applewood smoked bacon"
+    )
+
     @Test
     fun `Should retrieve ingredients successfully`() {
         // given a partial name

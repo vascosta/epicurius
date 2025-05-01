@@ -40,7 +40,7 @@ class SpoonacularRepository(private val httpClient: HttpClientConfigurer) : Spoo
             }
             else {
                 val ingredients = Json.decodeFromString<SpoonacularSubstituteIngredientsModel>(request)
-                ingredients.substitutes.map { it.lowercase() }
+                ingredients.substitutes.map { it.substringAfter("= ").lowercase() }
             }
         }
     }
