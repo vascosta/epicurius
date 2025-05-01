@@ -15,10 +15,7 @@ class MenuController(private val menuService: MenuService) {
 
     @GetMapping(Uris.Menu.MENU)
     fun getDailyMenu(authenticatedUser: AuthenticatedUser): ResponseEntity<*> {
-        val dailyMenu = menuService.getDailyMenu(
-            authenticatedUser.user.intolerances,
-            authenticatedUser.user.diets
-        )
+        val dailyMenu = menuService.getDailyMenu(authenticatedUser.user.intolerances, authenticatedUser.user.diets)
         return ResponseEntity.ok().body(GetDailyMenuOutputModel(dailyMenu))
     }
 }

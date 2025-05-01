@@ -14,7 +14,7 @@ import java.time.LocalDate
 open class MenuServiceTest: ServiceTest() {
 
     companion object {
-        const val PUBLIC_AUTHOR_ID = 1
+        private const val PUBLIC_AUTHOR_ID = 1
         val publicAuthorUsername = generateRandomUsername()
         val userIntolerances = listOf(Intolerance.EGG)
         val userDiets = listOf(Diet.GLUTEN_FREE)
@@ -32,7 +32,7 @@ open class MenuServiceTest: ServiceTest() {
             emptyList(),
             emptyList(),
             generateRandomRecipeIngredients(),
-            picturesNames = emptyList()
+            picturesNames = listOf("")
         )
 
         val publicSoupJdbiRecipeModel = JdbiRecipeModel(
@@ -48,7 +48,7 @@ open class MenuServiceTest: ServiceTest() {
             emptyList(),
             emptyList(),
             generateRandomRecipeIngredients(),
-            picturesNames = emptyList()
+            picturesNames = listOf("")
         )
 
         val publicDessertJdbiRecipeModel = JdbiRecipeModel(
@@ -64,10 +64,10 @@ open class MenuServiceTest: ServiceTest() {
             emptyList(),
             emptyList(),
             generateRandomRecipeIngredients(),
-            picturesNames = emptyList()
+            picturesNames = listOf("")
         )
 
-        val publicMainCourseJdbiRecipeModel = JdbiRecipeModel(
+        val publicLunchJdbiRecipeModel = JdbiRecipeModel(
             4,
             generateRandomRecipeName(),
             PUBLIC_AUTHOR_ID,
@@ -80,26 +80,27 @@ open class MenuServiceTest: ServiceTest() {
             emptyList(),
             emptyList(),
             generateRandomRecipeIngredients(),
-            picturesNames = emptyList()
+            picturesNames = listOf("")
         )
 
-        val publicMainCourseJdbiRecipeModel2 = publicDessertJdbiRecipeModel.copy(
+        val publicDinnerJdbiRecipeModel2 = publicDessertJdbiRecipeModel.copy(
             id = 5,
             name = generateRandomRecipeName(),
             authorId = PUBLIC_AUTHOR_ID,
             authorUsername = publicAuthorUsername
         )
 
-        val breakfastRecipes = listOf(publicBreakfastJdbiRecipeModel)
-        val soupRecipes = listOf(publicSoupJdbiRecipeModel)
-        val dessertRecipes = listOf(publicDessertJdbiRecipeModel)
-        val mainCourseRecipes = listOf(publicMainCourseJdbiRecipeModel, publicMainCourseJdbiRecipeModel2)
+        private val breakfastRecipes = listOf(publicBreakfastJdbiRecipeModel.toRecipeInfo(byteArrayOf()))
+        private val soupRecipes = listOf(publicSoupJdbiRecipeModel.toRecipeInfo(byteArrayOf()))
+        private val dessertRecipes = listOf(publicDessertJdbiRecipeModel.toRecipeInfo(byteArrayOf()))
+        private val lunchRecipes = listOf(publicLunchJdbiRecipeModel.toRecipeInfo(byteArrayOf()))
+        private val dinnerRecipes = listOf(publicDinnerJdbiRecipeModel2.toRecipeInfo(byteArrayOf()))
         val testDailyMenu = mapOf(
             "breakfast" to breakfastRecipes,
             "soup" to soupRecipes,
             "dessert" to dessertRecipes,
-            "lunch" to mainCourseRecipes,
-            "dinner" to mainCourseRecipes
+            "lunch" to lunchRecipes,
+            "dinner" to dinnerRecipes
         )
     }
 }
