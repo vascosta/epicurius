@@ -27,6 +27,7 @@ import epicurius.repository.transaction.jdbi.JdbiTransactionManager
 import epicurius.services.feed.FeedService
 import epicurius.services.fridge.FridgeService
 import epicurius.services.ingredients.IngredientsService
+import epicurius.services.menu.MenuService
 import epicurius.services.recipe.RecipeService
 import epicurius.services.user.UserService
 import org.junit.jupiter.api.BeforeAll
@@ -119,6 +120,7 @@ open class EpicuriusUnitTest : EpicuriusTest() {
             cloudFunctionManager,
             pictureDomainMock
         )
+        val menuService = MenuService(transactionManagerMock)
 
         val userServiceMock: UserService = mock()
         val fridgeServiceMock: FridgeService = mock()

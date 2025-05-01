@@ -1,5 +1,7 @@
 package epicurius.unit.repository.recipe
 
+import epicurius.domain.Diet
+import epicurius.domain.Intolerance
 import epicurius.domain.recipe.MealType
 import kotlin.test.Test
 import kotlin.test.assertNotNull
@@ -11,8 +13,8 @@ class GetRandomRecipeFromPublicUsersRepositoryTests : RecipeRepositoryTest() {
     fun `Should retrieve a random recipe from public users`() {
         // given a user public user (testUser)
 
-        // when retrieving a random recipe from the followed users
-        val retrievedRecipe = getRandomRecipesFromPublicUsers(MealType.DESSERT, 1)
+        // when retrieving a random recipe from public users
+        val retrievedRecipe = getRandomRecipesFromPublicUsers(MealType.DESSERT, testUser.intolerances, testUser.diets, 1)
 
         // then the recipe is retrieved successfully
         assertNotNull(retrievedRecipe)
