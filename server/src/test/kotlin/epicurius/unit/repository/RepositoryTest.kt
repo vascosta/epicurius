@@ -5,9 +5,11 @@ import com.google.cloud.firestore.Firestore
 import com.google.cloud.firestore.FirestoreOptions
 import com.google.cloud.storage.StorageOptions
 import epicurius.config.CloudStorage
+import epicurius.config.HttpClientConfigurer
 import epicurius.repository.cloudStorage.manager.CloudStorageManager
 import epicurius.repository.firestore.FirestoreManager
 import epicurius.repository.jdbi.config.configureWithAppRequirements
+import epicurius.repository.spoonacular.manager.SpoonacularManager
 import epicurius.repository.transaction.jdbi.JdbiTransactionManager
 import epicurius.unit.EpicuriusUnitTest
 import org.jdbi.v3.core.Jdbi
@@ -30,6 +32,7 @@ open class RepositoryTest : EpicuriusUnitTest() {
         ).configureWithAppRequirements()
         private val firestore = getFirestoreService()
         private val cloudStorage = getCloudStorageService()
+        private val httpClient = HttpClientConfigurer()
 
         init {
             jdbi.useHandle<Exception> {
@@ -49,6 +52,7 @@ open class RepositoryTest : EpicuriusUnitTest() {
         val tm = JdbiTransactionManager(jdbi)
         val fs = FirestoreManager(firestore)
         val cs = CloudStorageManager(cloudStorage)
+        val sm = SpoonacularManager(httpClient)
 
         private fun getFirestoreService(): Firestore {
             val serviceAccount = FileInputStream(GOOGLE_CLOUD_CREDENTIALS_LOCATION)
