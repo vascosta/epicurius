@@ -7,6 +7,7 @@ import epicurius.domain.recipe.Ingredient
 import epicurius.domain.recipe.Instructions
 import epicurius.domain.recipe.MealType
 import epicurius.domain.recipe.Recipe
+import epicurius.domain.recipe.RecipeInfo
 import java.time.LocalDate
 
 data class JdbiRecipeModel(
@@ -48,4 +49,7 @@ data class JdbiRecipeModel(
         carbs = carbs,
         pictures = pictures,
     )
+
+    fun toRecipeInfo(picture: ByteArray): RecipeInfo =
+        RecipeInfo(id, name, cuisine, mealType, preparationTime, servings, picture)
 }

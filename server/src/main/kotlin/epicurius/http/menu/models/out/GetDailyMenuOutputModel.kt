@@ -1,5 +1,5 @@
 package epicurius.http.menu.models.out
 
-import epicurius.repository.jdbi.recipe.models.JdbiRecipeModel
+import epicurius.domain.recipe.RecipeInfo
 
-data class GetDailyMenuOutputModel(val menu: Map<String, JdbiRecipeModel?>)
+data class GetDailyMenuOutputModel(val menu: Map<String, RecipeInfo?>)
