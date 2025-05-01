@@ -1,5 +1,7 @@
 package epicurius.services.menu
 
+import epicurius.domain.Diet
+import epicurius.domain.Intolerance
 import epicurius.domain.recipe.MealType
 import epicurius.repository.jdbi.recipe.models.JdbiRecipeModel
 import epicurius.repository.transaction.TransactionManager
@@ -8,11 +10,11 @@ import org.springframework.stereotype.Component
 @Component
 class MenuService(private val tm: TransactionManager) {
 
-        fun getDailyMenu(userId: Int): Map<String, JdbiRecipeModel?> {
-            val breakfast = getBreakfastRecipes(userId)
-            val soup = getSoupRecipes(userId)
-            val dessert = getDessertRecipes(userId)
-            val mainCourses = getMainCourseRecipes(userId)
+        fun getDailyMenu(intolerances: List<Intolerance>, diets: List<Diet>): Map<String, JdbiRecipeModel?> {
+            val breakfast = getBreakfastRecipes(intolerances, diets)
+            val soup = getSoupRecipes(intolerances, diets)
+            val dessert = getDessertRecipes(intolerances, diets)
+            val mainCourses = getMainCourseRecipes(intolerances, diets)
             val lunch = mainCourses[0]
             val dinner = mainCourses[1]
             return mapOf(
@@ -24,70 +26,53 @@ class MenuService(private val tm: TransactionManager) {
             )
         }
 
-    private fun getBreakfastRecipes(userId: Int): JdbiRecipeModel? {
-        val breakfastFromPublicUsers = tm.run { it.recipeRepository.getRandomRecipesFromPublicUsers(MealType.BREAKFAST, 1) }
-        val breakfastFromFollowing = tm.run { it.recipeRepository.getRandomRecipesFromFollowing(userId, MealType.BREAKFAST, 1) }
+    private fun getBreakfastRecipes(intolerances: List<Intolerance>, diets: List<Diet>): JdbiRecipeModel? {
+        val breakfastFromPublicUsers = tm.run {
+            it.recipeRepository.getRandomRecipesFromPublicUsers(MealType.BREAKFAST, intolerances, diets, 1)
+        }
 
-        return if (breakfastFromPublicUsers.isEmpty() && breakfastFromFollowing.isEmpty()) {
-            null
+        return if (breakfastFromPublicUsers.size > 1) {
+            breakfastFromPublicUsers.first()
         } else {
-            (breakfastFromPublicUsers + breakfastFromFollowing).random()
+            null
         }
     }
 
-    private fun getSoupRecipes(userId: Int): JdbiRecipeModel? {
-        val soupFromPublicUsers = tm.run { it.recipeRepository.getRandomRecipesFromPublicUsers(MealType.SOUP, 1) }
-        val soupFromFollowing = tm.run { it.recipeRepository.getRandomRecipesFromFollowing(userId, MealType.SOUP, 1) }
+    private fun getSoupRecipes(intolerances: List<Intolerance>, diets: List<Diet>): JdbiRecipeModel? {
+        val soupFromPublicUsers = tm.run {
+            it.recipeRepository.getRandomRecipesFromPublicUsers(MealType.SOUP, intolerances, diets, 1)
+        }
 
-        return if (soupFromPublicUsers.isEmpty() && soupFromFollowing.isEmpty()) {
-            null
+        return if (soupFromPublicUsers.size > 1) {
+            soupFromPublicUsers.first()
         } else {
-            (soupFromPublicUsers + soupFromFollowing).random()
+            null
         }
     }
 
-    private fun getDessertRecipes(userId: Int): JdbiRecipeModel? {
-        val dessertFromPublicUsers = tm.run { it.recipeRepository.getRandomRecipesFromPublicUsers(MealType.DESSERT, 1) }
-        val dessertFromFollowing = tm.run { it.recipeRepository.getRandomRecipesFromFollowing(userId, MealType.DESSERT, 1) }
+    private fun getDessertRecipes(intolerances: List<Intolerance>, diets: List<Diet>): JdbiRecipeModel? {
+        val dessertFromPublicUsers = tm.run {
+            it.recipeRepository.getRandomRecipesFromPublicUsers(MealType.DESSERT, intolerances, diets, 1)
+        }
 
-        return if (dessertFromPublicUsers.isEmpty() && dessertFromFollowing.isEmpty()) {
-            null
+        return if (dessertFromPublicUsers.size > 1) {
+            dessertFromPublicUsers.first()
         } else {
-            (dessertFromPublicUsers + dessertFromFollowing).random()
+            null
         }
     }
 
-    private fun getMainCourseRecipes(userId: Int): List<JdbiRecipeModel?> {
-        val mainCourseFromPublicUsers = tm.run { it.recipeRepository.getRandomRecipesFromPublicUsers(MealType.MAIN_COURSE, 2) }
-        val mainCourseFromFollowing = tm.run { it.recipeRepository.getRandomRecipesFromFollowing(userId, MealType.MAIN_COURSE, 2) }
+    private fun getMainCourseRecipes(intolerances: List<Intolerance>, diets: List<Diet>): List<JdbiRecipeModel?> {
+        val mainCourseFromPublicUsers = tm.run {
+            it.recipeRepository.getRandomRecipesFromPublicUsers(MealType.MAIN_COURSE, intolerances, diets, 2)
+        }
 
-        return when {
-            mainCourseFromPublicUsers.isEmpty() && mainCourseFromFollowing.isEmpty() -> {
-                listOf(null, null)
-            }
-            mainCourseFromPublicUsers.size == 1 && mainCourseFromFollowing.isEmpty() -> {
-                listOf(mainCourseFromPublicUsers.first(), null)
-            }
-            mainCourseFromPublicUsers.isEmpty() && mainCourseFromFollowing.size == 1 -> {
-                listOf(null, mainCourseFromFollowing.first())
-            }
-            mainCourseFromPublicUsers.size == 2 && mainCourseFromFollowing.isEmpty() -> {
+        return when (mainCourseFromPublicUsers.size) {
+            2 -> {
                 listOf(mainCourseFromPublicUsers[0], mainCourseFromPublicUsers[1])
             }
-            mainCourseFromPublicUsers.isEmpty() && mainCourseFromFollowing.size == 2 -> {
-                listOf(mainCourseFromFollowing[0], mainCourseFromFollowing[1])
-            }
-            mainCourseFromPublicUsers.size == 1 && mainCourseFromFollowing.size == 1 -> {
-                listOf(mainCourseFromPublicUsers.first(), mainCourseFromFollowing.first())
-            }
-            mainCourseFromPublicUsers.size == 2 && mainCourseFromFollowing.size == 1 -> {
-                listOf(mainCourseFromPublicUsers.random(), mainCourseFromFollowing.first())
-            }
-            mainCourseFromPublicUsers.size == 1 && mainCourseFromFollowing.size == 2 -> {
-                listOf(mainCourseFromPublicUsers.first(), mainCourseFromFollowing.random())
-            }
-            mainCourseFromPublicUsers.size == 2 && mainCourseFromFollowing.size == 2 -> {
-                listOf(mainCourseFromPublicUsers.random(), mainCourseFromFollowing.random())
+            1 -> {
+                listOf(mainCourseFromPublicUsers.first(), null) // lunch has priority over dinner
             }
             else -> { listOf(null, null) }
         }

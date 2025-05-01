@@ -1,5 +1,7 @@
 package epicurius.repository.jdbi.recipe
 
+import epicurius.domain.Diet
+import epicurius.domain.Intolerance
 import epicurius.domain.recipe.Ingredient
 import epicurius.domain.recipe.MealType
 import epicurius.domain.recipe.SearchRecipesModel
@@ -82,44 +84,21 @@ class JdbiRecipeRepository(private val handle: Handle) : RecipeRepository {
             .mapTo<JdbiRecipeModel>()
             .firstOrNull()
 
-    override fun getRandomRecipesFromFollowing(userId: Int, mealType: MealType, limit: Int): List<JdbiRecipeModel> =
+    override fun getRandomRecipesFromPublicUsers(
+        mealType: MealType, intolerances: List<Intolerance>, diets: List<Diet>, limit: Int
+    ): List<JdbiRecipeModel> =
         handle.createQuery(
             """
                 WITH random_recipe AS (
                     SELECT r.id, r.name, r.author_id, r.date, r.servings, r.preparation_time, 
                             r.cuisine, r.meal_type, r.intolerances, r.diets, r.calories, 
                             r.protein, r.fat, r.carbs, r.pictures_names, u.name as author_username
-                            
                     FROM dbo.Recipe r
                     JOIN dbo.user u ON u.id = r.author_id
-                    JOIN dbo.followers f ON f.user_id = r.author_id AND f.follower_id = :userId
-                    WHERE f.status = :status AND r.meal_type = :mealType
-                    ORDER BY RANDOM()
-                    LIMIT :limit
-                )
-                SELECT r.*, i.name AS ingredient_name, i.quantity, i.unit
-                FROM random_recipe r
-                JOIN dbo.Ingredient i ON r.id = i.recipe_id
-            """
-        )
-            .bind("userId", userId)
-            .bind("status", FollowingStatus.ACCEPTED.ordinal)
-            .bind("mealType", mealType.ordinal)
-            .bind("limit", limit)
-            .mapTo<JdbiRecipeModel>()
-            .list()
-
-    override fun getRandomRecipesFromPublicUsers(mealType: MealType, limit: Int): List<JdbiRecipeModel> =
-        handle.createQuery(
-            """
-                WITH random_recipe AS (
-                    SELECT r.id, r.name, r.author_id, r.date, r.servings, r.preparation_time, 
-                            r.cuisine, r.meal_type, r.intolerances, r.diets, r.calories, 
-                            r.protein, r.fat, r.carbs, r.pictures_names, u.name as author_username
-                            
-                    FROM dbo.Recipe r
-                    JOIN dbo.user u ON u.id = r.author_id
-                    WHERE u.privacy = false AND r.meal_type = :mealType
+                    WHERE u.privacy = false 
+                    AND r.meal_type = :mealType 
+                    AND NOT (r.intolerances && :intolerances)
+                    AND r.diets @> :diets
                     ORDER BY RANDOM()
                     LIMIT :limit
                 )
@@ -129,6 +108,8 @@ class JdbiRecipeRepository(private val handle: Handle) : RecipeRepository {
             """
         )
             .bind("mealType", mealType.ordinal)
+            .bind("intolerances", intolerances.map { it.ordinal }.toTypedArray())
+            .bind("diets", diets.map { it.ordinal }.toTypedArray())
             .bind("limit", limit)
             .mapTo<JdbiRecipeModel>()
             .list()
