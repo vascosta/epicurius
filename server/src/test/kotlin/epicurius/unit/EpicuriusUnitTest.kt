@@ -135,6 +135,6 @@ open class EpicuriusUnitTest : EpicuriusTest() {
         val fridgeController = FridgeController(fridgeServiceMock)
         val recipeController = RecipeController(recipeServiceMock)
         val feedController = FeedController(feedServiceMock)
-        val menuController = MenuController(menuService)
+        val menuController = MenuController(menuServiceMock)
     }
 }

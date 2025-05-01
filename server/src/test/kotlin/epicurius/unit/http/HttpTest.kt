@@ -134,5 +134,9 @@ open class HttpTest : EpicuriusUnitTest() {
 
         fun deleteRecipe(authenticatedUser: AuthenticatedUser, id: Int) =
             recipeController.deleteRecipe(authenticatedUser, id)
+
+        // MENU
+        fun getDailyMenu(authenticatedUser: AuthenticatedUser) =
+            menuController.getDailyMenu(authenticatedUser)
     }
 }

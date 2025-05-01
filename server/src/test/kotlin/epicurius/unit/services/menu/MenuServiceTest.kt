@@ -83,7 +83,7 @@ open class MenuServiceTest: ServiceTest() {
             picturesNames = listOf("")
         )
 
-        val publicDinnerJdbiRecipeModel2 = publicDessertJdbiRecipeModel.copy(
+        val publicDinnerJdbiRecipeModel2 = publicLunchJdbiRecipeModel.copy(
             id = 5,
             name = generateRandomRecipeName(),
             authorId = PUBLIC_AUTHOR_ID,
