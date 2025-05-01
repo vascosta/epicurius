@@ -22,7 +22,12 @@ class FeedController(val feedService: FeedService) {
         @RequestParam limit: Int
     ): ResponseEntity<*> {
         val pagingParams = PagingParams(skip, limit)
-        val feed = feedService.getFeed(authenticatedUser.user.id, pagingParams)
+        val feed = feedService.getFeed(
+            authenticatedUser.user.id,
+            authenticatedUser.user.intolerances,
+            authenticatedUser.user.diets,
+            pagingParams
+        )
         return ResponseEntity.ok().body(FeedOutputModel(feed))
     }
 }

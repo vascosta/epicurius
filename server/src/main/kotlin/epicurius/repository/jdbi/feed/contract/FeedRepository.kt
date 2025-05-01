@@ -1,9 +1,9 @@
 package epicurius.repository.jdbi.feed.contract
 
-import epicurius.domain.PagingParams
 import epicurius.repository.jdbi.recipe.models.JdbiRecipeInfo
+import epicurius.services.feed.models.GetFeedModel
 
 interface FeedRepository {
 
-    fun getFeed(userId: Int, pagingParams: PagingParams): List<JdbiRecipeInfo>
+    fun getFeed(info: GetFeedModel): List<JdbiRecipeInfo>
 }
