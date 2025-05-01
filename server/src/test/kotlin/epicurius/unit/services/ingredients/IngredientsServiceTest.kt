@@ -5,7 +5,7 @@ import epicurius.unit.services.ServiceTest
 open class IngredientsServiceTest : ServiceTest() {
 
     companion object {
-        const val PARTIAL = "app"
+        const val PARTIAL_NAME = "app"
         val productsList = listOf(
             "apple",
             "applesauce",

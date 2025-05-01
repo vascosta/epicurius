@@ -5,7 +5,7 @@ import kotlin.test.Test
 import kotlin.test.assertContains
 import kotlin.test.assertEquals
 
-class GetIngredientsRepositoryTests: SpoonacularRepositoryTest() {
+class GetIngredientsRepositoryTests : SpoonacularRepositoryTest() {
 
     private val testIngredients = listOf(
         "apple",
@@ -21,7 +21,7 @@ class GetIngredientsRepositoryTests: SpoonacularRepositoryTest() {
     )
 
     @Test
-    fun `Should retrieve ingredients successfully`() {
+    fun `Should retrieve ingredients given a partial name successfully`() {
         // given a partial name
         val partialName = "apple"
 
