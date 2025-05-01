@@ -7,6 +7,7 @@ import epicurius.repository.jdbi.recipe.models.JdbiRecipeInfo
 import epicurius.unit.services.ServiceTest
 
 open class FeedServiceTest : ServiceTest() {
+
     companion object {
         const val USER_ID = 1
 

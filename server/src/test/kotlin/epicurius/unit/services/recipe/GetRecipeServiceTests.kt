@@ -3,6 +3,7 @@ package epicurius.unit.services.recipe
 import epicurius.domain.exceptions.RecipeNotAccessible
 import epicurius.domain.exceptions.RecipeNotFound
 import epicurius.domain.picture.PictureDomain.Companion.RECIPES_FOLDER
+import epicurius.utils.generateRandomUsername
 import kotlinx.coroutines.runBlocking
 import org.mockito.kotlin.whenever
 import kotlin.test.Test
@@ -13,7 +14,7 @@ import kotlin.test.assertFailsWith
 class GetRecipeServiceTests : RecipeServiceTest() {
 
     @Test
-    fun `Should retrieve the recipe successfully`() {
+    fun `Should the author retrieve the recipe successfully`() {
         // given a recipe id (RECIPE_ID)
 
         // mock
@@ -24,6 +25,40 @@ class GetRecipeServiceTests : RecipeServiceTest() {
 
         // when retrieving the recipe
         val recipe = runBlocking { getRecipe(RECIPE_ID, authorUsername) }
+
+        // then the recipe is retrieved successfully
+        assertEquals(RECIPE_ID, recipe.id)
+        assertEquals(createRecipeInputInfo.name, recipe.name)
+        assertEquals(authorUsername, recipe.authorUsername)
+        assertEquals(createRecipeInputInfo.description, recipe.description)
+        assertEquals(createRecipeInputInfo.servings, recipe.servings)
+        assertEquals(createRecipeInputInfo.preparationTime, recipe.preparationTime)
+        assertEquals(createRecipeInputInfo.cuisine, recipe.cuisine)
+        assertEquals(createRecipeInputInfo.mealType, recipe.mealType)
+        assertEquals(createRecipeInputInfo.intolerances.toList(), recipe.intolerances)
+        assertEquals(createRecipeInputInfo.diets.toList(), recipe.diets)
+        assertEquals(createRecipeInputInfo.ingredients, recipe.ingredients)
+        assertEquals(createRecipeInputInfo.calories, recipe.calories)
+        assertEquals(createRecipeInputInfo.protein, recipe.protein)
+        assertEquals(createRecipeInputInfo.fat, recipe.fat)
+        assertEquals(createRecipeInputInfo.carbs, recipe.carbs)
+        assertEquals(createRecipeInputInfo.instructions, recipe.instructions)
+        assertContentEquals(recipePictures.map { it.bytes }, recipe.pictures)
+    }
+
+    @Test
+    fun `Should a follower of the author retrieve the recipe successfully`() {
+        // given a recipe id (RECIPE_ID) and a user following the author
+        val user = generateRandomUsername()
+
+        // mock
+        whenever(jdbiRecipeRepositoryMock.getRecipe(RECIPE_ID)).thenReturn(jdbiRecipeModel)
+        whenever(jdbiUserRepositoryMock.checkUserVisibility(authorUsername, user)).thenReturn(true)
+        whenever(runBlocking { firestoreRecipeRepositoryMock.getRecipe(RECIPE_ID) }).thenReturn(firestoreRecipeInfo)
+        whenever(pictureRepositoryMock.getPicture(testPicture.name, RECIPES_FOLDER)).thenReturn(testPicture.bytes)
+
+        // when retrieving the recipe
+        val recipe = runBlocking { getRecipe(RECIPE_ID, user) }
 
         // then the recipe is retrieved successfully
         assertEquals(RECIPE_ID, recipe.id)

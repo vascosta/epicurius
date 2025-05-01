@@ -10,6 +10,7 @@ import epicurius.utils.createTestRecipe
 import epicurius.utils.createTestUser
 
 open class FeedRepositoryTest : RepositoryTest() {
+
     companion object {
         val anotherTestUser = createTestUser(tm)
 

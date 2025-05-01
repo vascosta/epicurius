@@ -15,8 +15,24 @@ import kotlin.test.assertFailsWith
 class GetRecipeControllerTests : RecipeHttpTest() {
 
     @Test
-    fun `Should retrieve the recipe successfully`() {
+    fun `Should the author retrieve the recipe successfully`() {
         // given a recipe id (RECIPE_ID)
+
+        // mock
+        whenever(runBlocking { recipeServiceMock.getRecipe(RECIPE_ID, testAuthorAuthenticatedUser.user.name) }).thenReturn(testRecipe)
+
+        // when retrieving the recipe
+        val response = runBlocking { getRecipe(testAuthorAuthenticatedUser, RECIPE_ID) }
+        val body = response.body as GetRecipeOutputModel
+
+        // then the recipe is retrieved successfully
+        assertEquals(HttpStatus.OK, response.statusCode)
+        assertEquals(testRecipe, body.recipe)
+    }
+
+    @Test
+    fun `Should a follower of the author retrieve the recipe successfully`() {
+        // given a recipe id and a user following the author (RECIPE_ID, testAuthenticatedUser)
 
         // mock
         whenever(runBlocking { recipeServiceMock.getRecipe(RECIPE_ID, testAuthenticatedUser.user.name) }).thenReturn(testRecipe)

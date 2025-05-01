@@ -13,6 +13,7 @@ import epicurius.utils.generateRandomUsername
 import java.util.UUID.randomUUID
 
 open class FeedHttpTest : HttpTest() {
+
     companion object {
         val token = randomUUID().toString()
 

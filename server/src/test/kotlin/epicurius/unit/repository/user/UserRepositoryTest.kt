@@ -63,6 +63,6 @@ open class UserRepositoryTest : RepositoryTest() {
             tm.run { it.userRepository.checkIfUserAlreadySentFollowRequest(userId, followerId) }
 
         fun checkUserVisibility(authorUsername: String, authorId: Int, username: String) =
-            tm.run { it.userRepository.checkUserVisibility(authorUsername, authorId, username) }
+            tm.run { it.userRepository.checkUserVisibility(authorUsername, username) }
     }
 }

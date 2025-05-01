@@ -1,5 +1,7 @@
 package epicurius.unit.repository.recipe
 
+import epicurius.domain.Diet
+import epicurius.domain.Intolerance
 import epicurius.domain.recipe.MealType
 import epicurius.domain.recipe.SearchRecipesModel
 import epicurius.repository.firestore.recipe.models.FirestoreRecipeModel
@@ -27,11 +29,8 @@ open class RecipeRepositoryTest : RepositoryTest() {
 
         suspend fun getFirestoreRecipe(recipeId: Int) = fs.recipeRepository.getRecipe(recipeId)
 
-        fun getRandomRecipesFromFollowing(userId: Int, mealType: MealType, limit: Int) =
-            tm.run { it.recipeRepository.getRandomRecipesFromFollowing(userId, mealType, limit) }
-
-        fun getRandomRecipesFromPublicUsers(mealType: MealType, limit: Int) =
-            tm.run { it.recipeRepository.getRandomRecipesFromPublicUsers(mealType, limit) }
+        fun getRandomRecipesFromPublicUsers(mealType: MealType, intolerances: List<Intolerance>, diets: List<Diet>, limit: Int) =
+            tm.run { it.recipeRepository.getRandomRecipesFromPublicUsers(mealType, intolerances, diets, limit) }
 
         fun searchRecipes(userId: Int, form: SearchRecipesModel) =
             tm.run { it.recipeRepository.searchRecipes(userId, form) }

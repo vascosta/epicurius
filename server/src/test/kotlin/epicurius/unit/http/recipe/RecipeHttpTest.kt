@@ -43,12 +43,21 @@ open class RecipeHttpTest : HttpTest() {
             token,
         )
 
+        private val authorUsername = generateRandomUsername()
+        val testAuthorAuthenticatedUser = testAuthenticatedUser.copy(
+            user = testAuthenticatedUser.user.copy(
+                id = 2,
+                name = authorUsername,
+                email = generateEmail(authorUsername),
+            ),
+        )
+
         val recipePictures = listOf(testPicture, testPicture2, testTomatoPicture)
 
         val testRecipe = Recipe(
             RECIPE_ID,
             "Pastel de nata",
-            generateRandomUsername(),
+            testAuthorAuthenticatedUser.user.name,
             LocalDate.now(),
             "A delicious Portuguese dessert",
             4,

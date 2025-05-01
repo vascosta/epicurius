@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus
 import kotlin.test.Test
 
 class GetFeedHttpTests : FeedHttpTest() {
+
     @Test
     fun `Should retrieve user's empty feed`() {
         // given a user that follows no users and pagination params
