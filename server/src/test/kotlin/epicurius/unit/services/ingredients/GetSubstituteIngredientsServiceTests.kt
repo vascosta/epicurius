@@ -1,13 +1,16 @@
 package epicurius.unit.services.ingredients
 
 import epicurius.domain.exceptions.InvalidIngredient
+import epicurius.unit.services.ServiceTest
 import kotlinx.coroutines.runBlocking
 import org.mockito.kotlin.whenever
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 
-class GetSubstituteIngredientsServiceTests: IngredientsServiceTest() {
+class GetSubstituteIngredientsServiceTests: ServiceTest() {
+
+    private val testSubstituteIngredients = listOf("1 cup quinces", "1 cup pears")
 
     @Test
     fun `Should retrieve substitute ingredients for a valid ingredient successfully`() {

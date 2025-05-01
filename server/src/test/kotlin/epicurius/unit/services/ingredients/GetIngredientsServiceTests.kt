@@ -1,21 +1,37 @@
 package epicurius.unit.services.ingredients
 
+import epicurius.unit.services.ServiceTest
 import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.mockito.kotlin.whenever
 import kotlin.test.Test
 
-class GetIngredientsServiceTests : IngredientsServiceTest() {
+class GetIngredientsServiceTests : ServiceTest() {
+
+    private val partialName = "app"
+
+    private val testIngredients = listOf(
+        "apple",
+        "applesauce",
+        "apple juice",
+        "apple cider",
+        "apple jelly",
+        "apple butter",
+        "apple pie spice",
+        "apple pie filling",
+        "apple cider vinegar",
+        "applewood smoked bacon"
+    )
 
     @Test
     fun `Should retrieve ingredients given a partial name successfully`() {
         // given a partial name (PARTIAL_NAME)
 
         // mock
-        whenever(runBlocking { spoonacularRepositoryMock.getIngredients(PARTIAL_NAME) }).thenReturn(testIngredients)
+        whenever(runBlocking { spoonacularRepositoryMock.getIngredients(partialName) }).thenReturn(testIngredients)
 
         // when retrieving the ingredients
-        val ingredients = runBlocking { getIngredients(PARTIAL_NAME) }
+        val ingredients = runBlocking { getIngredients(partialName) }
 
         // then the product list is retrieved successfully
         assertEquals(testIngredients, ingredients)
