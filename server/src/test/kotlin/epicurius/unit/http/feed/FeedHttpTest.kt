@@ -14,24 +14,28 @@ import java.util.UUID.randomUUID
 
 open class FeedHttpTest : HttpTest() {
     companion object {
-        private val authenticatedUsername = generateRandomUsername()
         val token = randomUUID().toString()
 
-        val testAuthenticatedUser = AuthenticatedUser(
-            User(
-                1,
-                authenticatedUsername,
-                generateEmail(authenticatedUsername),
-                userDomain.encodePassword(randomUUID().toString()),
-                userDomain.hashToken(token),
-                "PT",
-                false,
-                listOf(Intolerance.GLUTEN),
-                listOf(Diet.GLUTEN_FREE),
-                randomUUID().toString()
-            ),
-            token,
-        )
+        fun createAuthenticatedUser(
+            intolerances: List<Intolerance> = emptyList(),
+            diets: List<Diet> = emptyList()
+        ): AuthenticatedUser {
+            return AuthenticatedUser(
+                User(
+                    id = 1,
+                    name = generateRandomUsername(),
+                    email = generateEmail(generateRandomUsername()),
+                    passwordHash = userDomain.encodePassword(randomUUID().toString()),
+                    tokenHash = userDomain.hashToken(token),
+                    country = "PT",
+                    privacy = false,
+                    intolerances = intolerances,
+                    diets = diets,
+                    profilePictureName = randomUUID().toString()
+                ),
+                token = token
+            )
+        }
 
         val recipeInfo = RecipeInfo(
             id = 1,

@@ -1,5 +1,7 @@
 package epicurius.unit.services
 
+import epicurius.domain.Diet
+import epicurius.domain.Intolerance
 import epicurius.domain.PagingParams
 import epicurius.domain.user.FollowRequestType
 import epicurius.http.fridge.models.input.ProductInputModel
@@ -55,7 +57,12 @@ open class ServiceTest : EpicuriusUnitTest() {
             userService.followRequest(userId, username, usernameToRequest, FollowRequestType.CANCEL)
 
         // FEED
-        fun getFeed(userId: Int, pagingParams: PagingParams) = feedService.getFeed(userId, pagingParams)
+        fun getFeed(
+            userId: Int,
+            intolerances: List<Intolerance>,
+            diets: List<Diet>,
+            pagingParams: PagingParams
+        ) = feedService.getFeed(userId, intolerances, diets, pagingParams)
 
         // FRIDGE
         fun getFridge(userId: Int) = fridgeService.getFridge(userId)

@@ -1,5 +1,7 @@
 package epicurius.unit.repository.feed
 
+import epicurius.domain.Diet
+import epicurius.domain.Intolerance
 import epicurius.domain.PagingParams
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
@@ -13,7 +15,7 @@ class GetFeedRepositoryTests : FeedRepositoryTest() {
         val pagingParams = PagingParams(0, 10)
 
         // when retrieving the feed
-        val feed = getFeed(anotherTestUser.id, pagingParams)
+        val feed = getFeed(anotherTestUser.id, emptyList(), emptyList(), pagingParams)
 
         // then feed should be empty
         assert(feed.isEmpty())
@@ -28,11 +30,45 @@ class GetFeedRepositoryTests : FeedRepositoryTest() {
         followUser(userFollows.id, userFollowed.id)
 
         // when retrieving the feed
-        val feed = getFeed(userFollows.id, pagingParams)
+        val feed = getFeed(userFollows.id, emptyList(), emptyList(), pagingParams)
 
         // then feed should contain recipes ordered by most recent
         assertTrue(feed.isNotEmpty())
         assertEquals(recipe2.id, feed.first().id)
         assertEquals(recipe1.id, feed.last().id)
+    }
+
+    @Test
+    fun `Should retrieve user's feed according to intolerances and diets`() {
+        // given a user with intolerances and diets that will follow another user, pagination params and a recipe
+        val pagingParams = PagingParams(0, 10)
+
+        // when user follows another user
+        followUser(userFollows.id, userFollowed.id)
+
+        // when retrieving the feed with intolerance and no diets
+        val feedWithIntolerances = getFeed(userFollows.id, listOf(Intolerance.GLUTEN), emptyList(), pagingParams)
+
+        // then feed should be empty
+        assertTrue(feedWithIntolerances.isEmpty())
+
+        // when retrieving the feed with diets and no intolerances
+        val feedWithDiets = getFeed(userFollows.id, emptyList(), listOf(Diet.LACTO_VEGETARIAN), pagingParams)
+
+        // then feed should be empty
+        assertTrue(feedWithDiets.isNotEmpty())
+        assertEquals(recipe2.id, feedWithDiets.first().id)
+        assertEquals(recipe1.id, feedWithDiets.last().id)
+
+        // when retrieving the feed with both intolerances and diets
+        val feedWithIntolerancesAndDiets = getFeed(
+            userFollows.id,
+            listOf(Intolerance.GLUTEN),
+            listOf(Diet.LACTO_VEGETARIAN),
+            pagingParams
+        )
+
+        // then feed should be empty
+        assertTrue(feedWithIntolerancesAndDiets.isEmpty())
     }
 }
