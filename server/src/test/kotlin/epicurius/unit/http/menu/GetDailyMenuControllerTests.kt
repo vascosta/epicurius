@@ -55,7 +55,7 @@ class GetDailyMenuControllerTests : MenuHttpTest() {
         // given a user (testAuthenticatedUser)
 
         // mock
-        val mockDailyMenu = mapOf<String, RecipeInfo?>(
+        val mockDailyMenu = mapOf(
             "breakfast" to publicBreakfastRecipeInfo,
             "soup" to publicSoupRecipeInfo,
             "dessert" to publicDessertRecipeInfo,

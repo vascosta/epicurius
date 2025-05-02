@@ -3,6 +3,7 @@ package epicurius.http.ingredients
 import epicurius.domain.user.AuthenticatedUser
 import epicurius.http.ingredients.models.output.GetIngredientsFromPictureOutputModel
 import epicurius.http.ingredients.models.output.GetIngredientsOutputModel
+import epicurius.http.ingredients.models.output.GetSubstituteIngredientsOutputModel
 import epicurius.http.utils.Uris
 import epicurius.services.ingredients.IngredientsService
 import org.springframework.http.MediaType
@@ -24,8 +25,8 @@ class IngredientsController(private val ingredientsService: IngredientsService) 
         authenticatedUser: AuthenticatedUser,
         @RequestParam partial: String
     ): ResponseEntity<*> {
-        val productsList = ingredientsService.getIngredients(partial)
-        return ResponseEntity.ok().body(GetIngredientsOutputModel(productsList))
+        val ingredients = ingredientsService.getIngredients(partial)
+        return ResponseEntity.ok().body(GetIngredientsOutputModel(ingredients))
     }
 
     @GetMapping(Uris.Ingredients.INGREDIENTS_SUBSTITUTES)
@@ -33,12 +34,13 @@ class IngredientsController(private val ingredientsService: IngredientsService) 
         authenticatedUser: AuthenticatedUser,
         @RequestParam name: String
     ): ResponseEntity<*> {
-        val productsList = ingredientsService.getSubstituteIngredients(name)
-        return ResponseEntity.ok().body(GetIngredientsOutputModel(productsList))
+        val substituteIngredients = ingredientsService.getSubstituteIngredients(name)
+        return ResponseEntity.ok().body(GetSubstituteIngredientsOutputModel(substituteIngredients))
     }
 
     @PostMapping(Uris.Ingredients.INGREDIENTS, consumes = [MediaType.MULTIPART_FORM_DATA_VALUE])
     suspend fun getIngredientsFromPicture(
+        authenticatedUser: AuthenticatedUser,
         @RequestPart("picture") picture: MultipartFile,
     ): ResponseEntity<*> {
         val ingredients = ingredientsService.getIngredientsFromPicture(picture)

@@ -7,6 +7,7 @@ import epicurius.domain.user.CountriesDomain
 import epicurius.domain.user.UserDomain
 import epicurius.http.feed.FeedController
 import epicurius.http.fridge.FridgeController
+import epicurius.http.ingredients.IngredientsController
 import epicurius.http.menu.MenuController
 import epicurius.http.recipe.RecipeController
 import epicurius.http.user.UserController
@@ -49,6 +50,7 @@ open class EpicuriusUnitTest : EpicuriusTest() {
             recipeServiceMock,
             feedServiceMock,
             menuServiceMock,
+            ingredientsServiceMock,
             jdbiUserRepositoryMock,
             jdbiTokenRepositoryMock,
             jdbiFridgeRepositoryMock,
@@ -133,11 +135,13 @@ open class EpicuriusUnitTest : EpicuriusTest() {
         val recipeServiceMock: RecipeService = mock()
         val feedServiceMock: FeedService = mock()
         val menuServiceMock: MenuService = mock()
+        val ingredientsServiceMock: IngredientsService = mock()
 
         val userController = UserController(userServiceMock)
         val fridgeController = FridgeController(fridgeServiceMock)
         val recipeController = RecipeController(recipeServiceMock)
         val feedController = FeedController(feedServiceMock)
         val menuController = MenuController(menuServiceMock)
+        val ingredientsController = IngredientsController(ingredientsServiceMock)
     }
 }

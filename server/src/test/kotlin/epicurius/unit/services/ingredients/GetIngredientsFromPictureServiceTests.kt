@@ -3,7 +3,6 @@ package epicurius.unit.services.ingredients
 import epicurius.domain.picture.PictureDomain.Companion.INGREDIENTS_FOLDER
 import epicurius.unit.services.ServiceTest
 import kotlinx.coroutines.runBlocking
-import org.mockito.kotlin.mock
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import java.util.UUID.randomUUID
@@ -47,7 +46,6 @@ class GetIngredientsFromPictureServiceTests: ServiceTest() {
     @Test
     fun `Should return an empty list for a picture with no ingredients`() {
         // given a picture with no ingredients (testPicture)
-
 
         // mock
         val mockPictureName = randomUUID().toString() + "." + testPicture.contentType?.substringAfter("/")

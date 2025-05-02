@@ -135,6 +135,16 @@ open class HttpTest : EpicuriusUnitTest() {
         fun deleteRecipe(authenticatedUser: AuthenticatedUser, id: Int) =
             recipeController.deleteRecipe(authenticatedUser, id)
 
+        // INGREDIENTS
+        suspend fun getIngredients(authenticatedUser: AuthenticatedUser, partial: String) =
+            ingredientsController.getIngredients(authenticatedUser, partial)
+
+        suspend fun getSubstituteIngredients(authenticatedUser: AuthenticatedUser, name: String) =
+            ingredientsController.getSubstituteIngredients(authenticatedUser, name)
+
+        suspend fun getIngredientsFromPicture(authenticatedUser: AuthenticatedUser, picture: MultipartFile) =
+            ingredientsController.getIngredientsFromPicture(authenticatedUser, picture)
+
         // MENU
         fun getDailyMenu(authenticatedUser: AuthenticatedUser) =
             menuController.getDailyMenu(authenticatedUser)
