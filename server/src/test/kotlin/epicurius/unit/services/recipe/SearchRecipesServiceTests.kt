@@ -2,6 +2,7 @@ package epicurius.unit.services.recipe
 
 import epicurius.domain.Diet
 import epicurius.domain.Intolerance
+import epicurius.domain.PagingParams
 import epicurius.domain.picture.PictureDomain.Companion.RECIPES_FOLDER
 import epicurius.domain.recipe.Cuisine
 import epicurius.domain.recipe.MealType
@@ -10,13 +11,14 @@ import epicurius.repository.jdbi.recipe.models.JdbiRecipeInfo
 import org.junit.jupiter.api.Test
 import org.mockito.kotlin.whenever
 import kotlin.test.assertEquals
+import kotlin.test.assertTrue
 
 class SearchRecipesServiceTests : RecipeServiceTest() {
 
     private val searchRecipesInputInfoWithoutIngredients = SearchRecipesInputModel(
         name = "Pastel de nata",
-        cuisine = Cuisine.MEDITERRANEAN,
-        mealType = MealType.DESSERT,
+        cuisine = listOf(Cuisine.MEDITERRANEAN),
+        mealType = listOf(MealType.DESSERT),
         intolerances = listOf(Intolerance.EGG, Intolerance.GLUTEN),
         diets = listOf(Diet.OVO_VEGETARIAN, Diet.LACTO_VEGETARIAN),
         minCalories = 200,
@@ -33,8 +35,8 @@ class SearchRecipesServiceTests : RecipeServiceTest() {
 
     private val searchRecipesInputInfoWithIngredients = SearchRecipesInputModel(
         name = "Pastel de nata",
-        cuisine = Cuisine.MEDITERRANEAN,
-        mealType = MealType.DESSERT,
+        cuisine = listOf(Cuisine.MEDITERRANEAN),
+        mealType = listOf(MealType.DESSERT),
         ingredients = listOf("Eggs", "Sugar"),
         intolerances = listOf(Intolerance.EGG, Intolerance.GLUTEN),
         diets = listOf(Diet.OVO_VEGETARIAN, Diet.LACTO_VEGETARIAN),
@@ -62,7 +64,8 @@ class SearchRecipesServiceTests : RecipeServiceTest() {
 
     @Test
     fun `Should search for a recipe without ingredients successfully`() {
-        // given a user id (USER_ID) and a search form (searchRecipesInputInfoWithoutIngredients)
+        // given a user id (USER_ID) and a search form (searchRecipesInputInfoWithoutIngredients) and paging params
+        val pagingParams = PagingParams()
 
         // mock
         whenever(
@@ -70,25 +73,27 @@ class SearchRecipesServiceTests : RecipeServiceTest() {
                 USER_ID,
                 searchRecipesInputInfoWithoutIngredients.toSearchRecipeModel(
                     searchRecipesInputInfoWithoutIngredients.name
-                )
+                ),
+                pagingParams
             )
         ).thenReturn(listOf(recipeInfo))
         whenever(pictureRepositoryMock.getPicture(testPicture.name, RECIPES_FOLDER)).thenReturn(testPicture.bytes)
 
         // when searching for the recipe
-        val results = searchRecipes(USER_ID, searchRecipesInputInfoWithoutIngredients)
+        val results = searchRecipes(USER_ID, searchRecipesInputInfoWithoutIngredients, pagingParams.skip, pagingParams.limit)
 
         // then a list containing the recipe is returned successfully
         assertEquals(1, results.size)
         assertEquals(searchRecipesInputInfoWithoutIngredients.name, results.first().name)
-        assertEquals(searchRecipesInputInfoWithoutIngredients.cuisine, results.first().cuisine)
-        assertEquals(searchRecipesInputInfoWithoutIngredients.mealType, results.first().mealType)
+        assertTrue(searchRecipesInputInfoWithoutIngredients.cuisine!!.contains(results.first().cuisine))
+        assertTrue(searchRecipesInputInfoWithoutIngredients.mealType!!.contains(results.first().mealType))
         assertEquals(testPicture.bytes, results.first().picture)
     }
 
     @Test
     fun `Should search for a recipe with ingredients successfully`() {
-        // given a user id (USER_ID) and a search form (searchRecipesInputInfoWithIngredients)
+        // given a user id (USER_ID) and a search form (searchRecipesInputInfoWithIngredients) and paging params
+        val pagingParams = PagingParams()
 
         // mock
         whenever(
@@ -96,24 +101,20 @@ class SearchRecipesServiceTests : RecipeServiceTest() {
                 USER_ID,
                 searchRecipesInputInfoWithIngredients.toSearchRecipeModel(
                     searchRecipesInputInfoWithIngredients.name
-                )
+                ),
+                pagingParams
             )
-        ).thenReturn(listOf(recipeInfo))
-        whenever(
-            searchRecipesInputInfoWithIngredients.ingredients?.let {
-                jdbiRecipeRepositoryMock.searchRecipesByIngredients(USER_ID, it)
-            }
         ).thenReturn(listOf(recipeInfo))
         whenever(pictureRepositoryMock.getPicture(testPicture.name, RECIPES_FOLDER)).thenReturn(testPicture.bytes)
 
         // when searching for the recipe
-        val results = searchRecipes(USER_ID, searchRecipesInputInfoWithIngredients)
+        val results = searchRecipes(USER_ID, searchRecipesInputInfoWithIngredients, pagingParams.skip, pagingParams.limit)
 
         // then a list containing the recipe is returned successfully
         assertEquals(1, results.size)
         assertEquals(searchRecipesInputInfoWithIngredients.name, results.first().name)
-        assertEquals(searchRecipesInputInfoWithIngredients.cuisine, results.first().cuisine)
-        assertEquals(searchRecipesInputInfoWithIngredients.mealType, results.first().mealType)
+        assertTrue(searchRecipesInputInfoWithIngredients.cuisine!!.contains(results.first().cuisine))
+        assertTrue(searchRecipesInputInfoWithIngredients.mealType!!.contains(results.first().mealType))
         assertEquals(testPicture.bytes, results.first().picture)
     }
 }

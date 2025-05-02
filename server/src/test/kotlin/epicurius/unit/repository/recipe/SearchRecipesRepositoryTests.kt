@@ -2,26 +2,26 @@ package epicurius.unit.repository.recipe
 
 import epicurius.domain.Diet
 import epicurius.domain.Intolerance
+import epicurius.domain.PagingParams
 import epicurius.domain.recipe.Cuisine
 import epicurius.domain.recipe.Cuisine.Companion.fromInt
-import epicurius.domain.recipe.Ingredient
-import epicurius.domain.recipe.IngredientUnit
 import epicurius.domain.recipe.MealType
 import epicurius.domain.recipe.MealType.Companion.fromInt
 import epicurius.domain.recipe.SearchRecipesModel
-import epicurius.repository.jdbi.recipe.models.JdbiCreateRecipeModel
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertTrue
 
 class SearchRecipesRepositoryTests : RecipeRepositoryTest() {
 
     @Test
     fun `Should search a recipe by name`() {
-        // given a user and a recipe (testUser, testRecipe)
+        // given a user and a recipe (testUserPublic, testRecipe) and paging params
+        val pagingParams = PagingParams()
 
         // when searching for the recipe by name
         val searchName = SearchRecipesModel(name = testRecipe.name)
-        val nameResults = searchRecipes(testUser.id, searchName)
+        val nameResults = searchRecipes(testUserPublic.id, searchName, pagingParams)
 
         // then the recipe is found
         assertEquals(1, nameResults.size)
@@ -29,44 +29,55 @@ class SearchRecipesRepositoryTests : RecipeRepositoryTest() {
 
         // when searching for a nonexistent recipe name
         val searchDifferentName = SearchRecipesModel(name = "Nonexistent Recipe")
-        val differentNameResults = searchRecipes(testUser.id, searchDifferentName)
+        val differentNameResults = searchRecipes(testUserPublic.id, searchDifferentName, pagingParams)
 
         // then no recipes are found
         assertEquals(0, differentNameResults.size)
     }
 
     @Test
+    fun `Should search for a recipe according to user's intolerances`() {
+        // given a user (testUserPublic) and a recipe
+        jdbiCreateRecipe(jdbiRecipeInfo1)
+
+        // given user intolerances that correspond to the recipe
+        val filtersToTest = SearchRecipesModel(intolerances = listOf(Intolerance.GLUTEN.ordinal))
+
+        // given paging params
+        val pagingParams = PagingParams()
+
+        // when searching for the recipe with the current filter
+        val emptyList = searchRecipes(testUserPublic.id, filtersToTest, pagingParams)
+
+        // then the recipe is not found
+        assertTrue(emptyList.isEmpty())
+
+        // given user intolerances that do not correspond to the recipe
+        val nonMatchingFilters = SearchRecipesModel(intolerances = listOf(Intolerance.DAIRY.ordinal))
+
+        // when searching for the recipe with the current filter
+        val recipeList = searchRecipes(testUserPublic.id, nonMatchingFilters, pagingParams)
+
+        // then no recipes are found
+        assertEquals(1, recipeList.size)
+        assertEquals(jdbiRecipeInfo1.name, recipeList[0].name)
+        assertEquals(Cuisine.fromInt(jdbiRecipeInfo1.cuisine), recipeList[0].cuisine)
+        assertEquals(MealType.fromInt(jdbiRecipeInfo1.mealType), recipeList[0].mealType)
+        assertEquals(jdbiRecipeInfo1.preparationTime, recipeList[0].preparationTime)
+        assertEquals(jdbiRecipeInfo1.servings, recipeList[0].servings)
+    }
+
+    @Test
     fun `Should search for a recipe by multiple filters without ingredients`() {
-        // given a user (testUser) and a recipe
-        val jdbiRecipeInfo = JdbiCreateRecipeModel(
-            name = "Buffalo Cauliflower Wings",
-            authorId = testAuthor.id,
-            servings = 4,
-            preparationTime = 30,
-            cuisine = Cuisine.ASIAN.ordinal,
-            mealType = MealType.APPETIZER.ordinal,
-            intolerances = listOf(Intolerance.PEANUT.ordinal),
-            diets = listOf(Diet.VEGAN.ordinal, Diet.PALEO.ordinal),
-            ingredients = listOf(
-                Ingredient("Cauliflower", 1.0, IngredientUnit.X),
-                Ingredient("Buffalo Sauce", 100.0, IngredientUnit.ML),
-                Ingredient("Flour", 200.0, IngredientUnit.G),
-                Ingredient("Spices", 10.0, IngredientUnit.G)
-            ),
-            calories = 200,
-            protein = 5,
-            fat = 10,
-            carbs = 30,
-            picturesNames = listOf("")
-        )
-        jdbiCreateRecipe(jdbiRecipeInfo)
+        // given a user (testUserPublic) and a recipe
+        jdbiCreateRecipe(jdbiRecipeInfo2)
 
         // given multiple filters to test
         val filtersToTest =
             SearchRecipesModel(
-                cuisine = Cuisine.ASIAN.ordinal,
-                mealType = MealType.APPETIZER.ordinal,
-                intolerances = listOf(Intolerance.PEANUT.ordinal),
+                cuisine = listOf(Cuisine.ASIAN.ordinal),
+                mealType = listOf(MealType.APPETIZER.ordinal),
+                intolerances = emptyList(),
                 diets = listOf(Diet.PALEO.ordinal),
                 minCalories = 100,
                 maxCalories = 500,
@@ -78,22 +89,25 @@ class SearchRecipesRepositoryTests : RecipeRepositoryTest() {
                 maxCarbs = 100
             )
 
+        // given paging params
+        val pagingParams = PagingParams()
+
         // when searching for the recipe with the current filter
-        val recipeList = searchRecipes(testUser.id, filtersToTest)
+        val recipeList = searchRecipes(testUserPublic.id, filtersToTest, pagingParams)
 
         // then the recipe is found
         assertEquals(1, recipeList.size)
-        assertEquals(jdbiRecipeInfo.name, recipeList[0].name)
-        assertEquals(Cuisine.fromInt(jdbiRecipeInfo.cuisine), recipeList[0].cuisine)
-        assertEquals(MealType.fromInt(jdbiRecipeInfo.mealType), recipeList[0].mealType)
-        assertEquals(jdbiRecipeInfo.preparationTime, recipeList[0].preparationTime)
-        assertEquals(jdbiRecipeInfo.servings, recipeList[0].servings)
+        assertEquals(jdbiRecipeInfo2.name, recipeList[0].name)
+        assertEquals(Cuisine.fromInt(jdbiRecipeInfo2.cuisine), recipeList[0].cuisine)
+        assertEquals(MealType.fromInt(jdbiRecipeInfo2.mealType), recipeList[0].mealType)
+        assertEquals(jdbiRecipeInfo2.preparationTime, recipeList[0].preparationTime)
+        assertEquals(jdbiRecipeInfo2.servings, recipeList[0].servings)
 
         // given multiple filters that do not match the recipe
         val nonMatchingFilters =
             SearchRecipesModel(
-                cuisine = Cuisine.AMERICAN.ordinal,
-                mealType = MealType.BEVERAGE.ordinal,
+                cuisine = listOf(Cuisine.AMERICAN.ordinal),
+                mealType = listOf(MealType.BEVERAGE.ordinal),
                 intolerances = listOf(Intolerance.SULFITE.ordinal),
                 diets = listOf(Diet.LOW_FODMAP.ordinal),
                 minCalories = 1000,
@@ -107,7 +121,7 @@ class SearchRecipesRepositoryTests : RecipeRepositoryTest() {
             )
 
         // when searching for the recipe with the current filter
-        val emptyList = searchRecipes(testUser.id, nonMatchingFilters)
+        val emptyList = searchRecipes(testUserPublic.id, nonMatchingFilters, pagingParams)
 
         // then no recipes are found
         assertEquals(0, emptyList.size)
@@ -115,37 +129,16 @@ class SearchRecipesRepositoryTests : RecipeRepositoryTest() {
 
     @Test
     fun `Should search for a recipe by multiple filters with ingredients`() {
-        // given a user (testUser) and a recipe
-        val jdbiRecipeInfo = JdbiCreateRecipeModel(
-            name = "Burrito",
-            authorId = testAuthor.id,
-            servings = 2,
-            preparationTime = 20,
-            cuisine = Cuisine.MEXICAN.ordinal,
-            mealType = MealType.SIDE_DISH.ordinal,
-            intolerances = listOf(Intolerance.SESAME, Intolerance.WHEAT).map { it.ordinal },
-            diets = listOf(Diet.VEGAN, Diet.VEGETARIAN).map { it.ordinal },
-            ingredients = listOf(
-                Ingredient("Tortilla", 1.0, IngredientUnit.X),
-                Ingredient("Beans", 100.0, IngredientUnit.G),
-                Ingredient("Rice", 200.0, IngredientUnit.G),
-                Ingredient("Guacamole", 50.0, IngredientUnit.G)
-            ),
-            calories = 300,
-            protein = 10,
-            fat = 15,
-            carbs = 40,
-            picturesNames = listOf("")
-        )
-        jdbiCreateRecipe(jdbiRecipeInfo)
+        // given a user (testUserPublic) and a recipe
+        jdbiCreateRecipe(jdbiRecipeInfo3)
 
         // given multiple filters to test
         val filtersToTest =
             SearchRecipesModel(
                 name = "Burrito",
-                cuisine = Cuisine.MEXICAN.ordinal,
-                mealType = MealType.SIDE_DISH.ordinal,
-                intolerances = listOf(Intolerance.SESAME.ordinal, Intolerance.WHEAT.ordinal),
+                cuisine = listOf(Cuisine.MEXICAN.ordinal),
+                mealType = listOf(MealType.SIDE_DISH.ordinal),
+                intolerances = emptyList(),
                 diets = listOf(Diet.VEGAN.ordinal, Diet.VEGETARIAN.ordinal),
                 ingredients = listOf("Tortilla", "Beans"),
                 minCalories = 200,
@@ -158,22 +151,103 @@ class SearchRecipesRepositoryTests : RecipeRepositoryTest() {
                 maxCarbs = 50
             )
 
+        // given paging params
+        val pagingParams = PagingParams()
+
         // when searching for the recipe with the current filter
-        val recipeList = searchRecipes(testUser.id, filtersToTest)
-
-        // when searching for the recipe by ingredients
-        val ingredientsResults = filtersToTest.ingredients?.let { searchRecipesByIngredients(testUser.id, it) }
-
-        // when intersecting the two results
-        val intersectedResults = recipeList.intersect((ingredientsResults?.toSet() ?: emptySet()).toSet()).toList()
+        val recipeList = searchRecipes(testUserPublic.id, filtersToTest, pagingParams)
 
         // then the recipe is found
-        assertEquals(1, intersectedResults.size)
-        assertEquals(jdbiRecipeInfo.name, intersectedResults[0].name)
-        assertEquals(Cuisine.fromInt(jdbiRecipeInfo.cuisine), intersectedResults[0].cuisine)
-        assertEquals(MealType.fromInt(jdbiRecipeInfo.mealType), intersectedResults[0].mealType)
-        assertEquals(jdbiRecipeInfo.preparationTime, intersectedResults[0].preparationTime)
-        assertEquals(jdbiRecipeInfo.servings, intersectedResults[0].servings)
-        assertEquals(jdbiRecipeInfo.picturesNames, intersectedResults[0].pictures)
+        assertEquals(1, recipeList.size)
+        assertEquals(jdbiRecipeInfo3.name, recipeList[0].name)
+        assertEquals(Cuisine.fromInt(jdbiRecipeInfo3.cuisine), recipeList[0].cuisine)
+        assertEquals(MealType.fromInt(jdbiRecipeInfo3.mealType), recipeList[0].mealType)
+        assertEquals(jdbiRecipeInfo3.preparationTime, recipeList[0].preparationTime)
+        assertEquals(jdbiRecipeInfo3.servings, recipeList[0].servings)
+        assertEquals(jdbiRecipeInfo3.picturesNames, recipeList[0].pictures)
+    }
+
+    @Test
+    fun `Should search for recipes of public users`(){
+        // given a user (testUserPublic) and a recipe
+        jdbiCreateRecipe(jdbiRecipeInfo5)
+
+        // given multiple filters to test that match the recipe 5
+        val filtersToTest2 =
+            SearchRecipesModel(
+                cuisine = listOf(Cuisine.CHINESE.ordinal),
+                mealType = listOf(MealType.SIDE_DISH.ordinal),
+                intolerances = emptyList(),
+                diets = listOf(Diet.VEGAN.ordinal, Diet.PALEO.ordinal),
+                minCalories = 100,
+                maxCalories = 1000,
+                minProtein = 5,
+                maxProtein = 50,
+                minFat = 5,
+                maxFat = 50,
+                minCarbs = 20,
+                maxCarbs = 100
+            )
+
+        // given paging params
+        val pagingParams = PagingParams()
+
+        // when private user searches for public user recipe
+        val recipeList = searchRecipes(testUserPrivate.id, filtersToTest2, pagingParams)
+
+        // then the recipe is found
+        assertEquals(1, recipeList.size)
+        assertEquals(jdbiRecipeInfo5.name, recipeList[0].name)
+        assertEquals(Cuisine.fromInt(jdbiRecipeInfo5.cuisine), recipeList[0].cuisine)
+        assertEquals(MealType.fromInt(jdbiRecipeInfo5.mealType), recipeList[0].mealType)
+        assertEquals(jdbiRecipeInfo5.preparationTime, recipeList[0].preparationTime)
+        assertEquals(jdbiRecipeInfo5.servings, recipeList[0].servings)
+    }
+
+    @Test
+    fun `Should search for recipes from private users when followed`() {
+        // given two users (testUserPublic and testUserPrivate) and a recipe from a private user and another from a public user
+        jdbiCreateRecipe(jdbiRecipeInfo4)
+        jdbiCreateRecipe(jdbiRecipeInfo5)
+
+        // given multiple filters to test that match the recipe
+        val filtersToTest =
+            SearchRecipesModel(
+                cuisine = listOf(Cuisine.INDIAN.ordinal),
+                mealType = listOf(MealType.MAIN_COURSE.ordinal),
+                intolerances = emptyList(),
+                diets = listOf(Diet.VEGETARIAN.ordinal),
+                minCalories = 100,
+                maxCalories = 1000,
+                minProtein = 5,
+                maxProtein = 50,
+                minFat = 5,
+                maxFat = 50,
+                minCarbs = 20,
+                maxCarbs = 100
+            )
+
+        // given paging params
+        val pagingParams = PagingParams()
+
+        // when searching for the recipe with the current filter
+        val emptyList = searchRecipes(testUserPublic.id, filtersToTest, pagingParams)
+
+        // then the recipe is found, public user does not follow private user
+        assertTrue(emptyList.isEmpty())
+
+        // when public user starts following private user
+        followUser(testUserPublic.id, testUserPrivate.id)
+
+        // when searching for the recipe that match the private user recipe
+        val recipeList2 = searchRecipes(testUserPublic.id, filtersToTest, pagingParams)
+
+        // then the recipe is found
+        assertEquals(1, recipeList2.size)
+        assertEquals(jdbiRecipeInfo4.name, recipeList2[0].name)
+        assertEquals(Cuisine.fromInt(jdbiRecipeInfo4.cuisine), recipeList2[0].cuisine)
+        assertEquals(MealType.fromInt(jdbiRecipeInfo4.mealType), recipeList2[0].mealType)
+        assertEquals(jdbiRecipeInfo4.preparationTime, recipeList2[0].preparationTime)
+        assertEquals(jdbiRecipeInfo4.servings, recipeList2[0].servings)
     }
 }

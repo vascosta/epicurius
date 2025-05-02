@@ -85,8 +85,8 @@ open class HttpTest : EpicuriusUnitTest() {
         fun searchRecipes(
             authenticatedUser: AuthenticatedUser,
             name: String?,
-            cuisine: Cuisine?,
-            mealType: MealType?,
+            cuisine: List<Cuisine>?,
+            mealType: List<MealType>?,
             ingredients: List<String>?,
             intolerances: List<Intolerance>?,
             diets: List<Diet>?,
@@ -117,7 +117,9 @@ open class HttpTest : EpicuriusUnitTest() {
             minProtein,
             maxProtein,
             minTime,
-            maxTime
+            maxTime,
+            skip = 0,
+            limit = 5
         )
 
         suspend fun createRecipe(

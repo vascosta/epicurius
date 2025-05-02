@@ -2,6 +2,7 @@ package epicurius.unit.http.recipe
 
 import epicurius.domain.Diet
 import epicurius.domain.Intolerance
+import epicurius.domain.PagingParams
 import epicurius.domain.recipe.Cuisine
 import epicurius.domain.recipe.MealType
 import epicurius.domain.recipe.RecipeInfo
@@ -16,8 +17,8 @@ class SearchRecipesControllerTests : RecipeHttpTest() {
 
     val searchRecipesInputInfo = SearchRecipesInputModel(
         name = "Pastel de nata",
-        cuisine = Cuisine.MEDITERRANEAN,
-        mealType = MealType.DESSERT,
+        cuisine = listOf(Cuisine.MEDITERRANEAN),
+        mealType = listOf(MealType.DESSERT),
         ingredients = listOf("egg", "flour"),
         intolerances = listOf(Intolerance.EGG, Intolerance.GLUTEN),
         diets = listOf(Diet.OVO_VEGETARIAN, Diet.LACTO_VEGETARIAN),
@@ -45,15 +46,16 @@ class SearchRecipesControllerTests : RecipeHttpTest() {
 
     @Test
     fun `Should search for a recipe without ingredients successfully`() {
-        // given a search form without ingredients
+        // given a search form without ingredients and paging params
         val searchRecipesInputInfoWithoutIngredients = searchRecipesInputInfo.copy(
             ingredients = null
         )
+        val pagingParams = PagingParams()
 
         // mock
         whenever(
             recipeServiceMock
-                .searchRecipes(testAuthenticatedUser.user.id, searchRecipesInputInfoWithoutIngredients)
+                .searchRecipes(testAuthenticatedUser.user.id, searchRecipesInputInfoWithoutIngredients, pagingParams)
         ).thenReturn(listOf(recipeInfo))
 
         // when searching for recipes without ingredients
@@ -85,12 +87,13 @@ class SearchRecipesControllerTests : RecipeHttpTest() {
 
     @Test
     fun `Should search for a recipe with ingredients successfully`() {
-        // given a search form with ingredients (searchRecipesInputInfo)
+        // given a search form with ingredients (searchRecipesInputInfo) and paging params
+        val pagingParams = PagingParams()
 
         // mock
         whenever(
             recipeServiceMock
-                .searchRecipes(testAuthenticatedUser.user.id, searchRecipesInputInfo)
+                .searchRecipes(testAuthenticatedUser.user.id, searchRecipesInputInfo, pagingParams)
         ).thenReturn(listOf(recipeInfo))
 
         // when searching for recipes with ingredients
