@@ -13,8 +13,8 @@ import jakarta.validation.constraints.Positive
 
 data class SearchRecipesInputModel(
     val name: String? = null,
-    val cuisine: Cuisine? = null,
-    val mealType: MealType? = null,
+    val cuisine: List<Cuisine>? = null,
+    val mealType: List<MealType>? = null,
     val ingredients: List<String>? = null,
     val intolerances: List<Intolerance>? = null,
     val diets: List<Diet>? = null,
@@ -48,9 +48,6 @@ data class SearchRecipesInputModel(
 
     @field:Positive(message = UserDomain.POSITIVE_NUMBER_MSG)
     val maxTime: Int? = null,
-
-    @field:Positive(message = UserDomain.POSITIVE_NUMBER_MSG)
-    val maxResults: Int = 10,
 ) {
     init {
         if (ingredients != null && ingredients.size > RecipeDomain.MAX_NUMBER_OF_INGREDIENTS) {
@@ -72,8 +69,8 @@ data class SearchRecipesInputModel(
         }
         return SearchRecipesModel(
             name,
-            this.cuisine?.ordinal,
-            this.mealType?.ordinal,
+            this.cuisine?.map { it.ordinal },
+            this.mealType?.map { it.ordinal },
             this.ingredients,
             this.intolerances?.map { it.ordinal },
             this.diets?.map { it.ordinal },
@@ -86,8 +83,7 @@ data class SearchRecipesInputModel(
             this.minProtein,
             this.maxProtein,
             this.minTime,
-            this.maxTime,
-            this.maxResults
+            this.maxTime
         )
     }
 }

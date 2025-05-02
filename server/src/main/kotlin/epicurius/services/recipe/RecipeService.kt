@@ -1,5 +1,6 @@
 package epicurius.services.recipe
 
+import epicurius.domain.PagingParams
 import epicurius.domain.exceptions.InvalidIngredient
 import epicurius.domain.exceptions.InvalidNumberOfRecipePictures
 import epicurius.domain.exceptions.NotTheAuthor
@@ -93,18 +94,9 @@ class RecipeService(
         return jdbiRecipe.toRecipe(firestoreRecipe.description, firestoreRecipe.instructions, recipePictures)
     }
 
-    fun searchRecipes(userId: Int, form: SearchRecipesInputModel): List<RecipeInfo> {
+    fun searchRecipes(userId: Int, form: SearchRecipesInputModel, pagingParams: PagingParams): List<RecipeInfo> {
         val fillForm = form.toSearchRecipeModel(form.name)
-        val recipesList = tm.run { it.recipeRepository.searchRecipes(userId, fillForm) }
-
-        val recipes = if (form.ingredients != null) {
-            val recipesByIngredients = tm.run {
-                it.recipeRepository.searchRecipesByIngredients(userId, form.ingredients)
-            }
-            recipesList.intersect(recipesByIngredients.toSet()).toList()
-        } else {
-            recipesList
-        }
+        val recipes = tm.run { it.recipeRepository.searchRecipes(userId, fillForm, pagingParams) }
 
         return recipes.map {
             it.toRecipeInfo(cs.pictureRepository.getPicture(it.pictures.first(), RECIPES_FOLDER))

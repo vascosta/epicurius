@@ -3,6 +3,7 @@ package epicurius.http.recipe
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import epicurius.domain.Diet
 import epicurius.domain.Intolerance
+import epicurius.domain.PagingParams
 import epicurius.domain.recipe.Cuisine
 import epicurius.domain.recipe.MealType
 import epicurius.domain.user.AuthenticatedUser
@@ -46,8 +47,8 @@ class RecipeController(private val recipeService: RecipeService) {
     fun searchRecipes(
         authenticatedUser: AuthenticatedUser,
         @RequestParam name: String?,
-        @RequestParam cuisine: Cuisine?,
-        @RequestParam mealType: MealType?,
+        @RequestParam cuisine: List<Cuisine>?,
+        @RequestParam mealType: List<MealType>?,
         @RequestParam ingredients: List<String>?,
         @RequestParam intolerances: List<Intolerance>?,
         @RequestParam diets: List<Diet>?,
@@ -61,8 +62,10 @@ class RecipeController(private val recipeService: RecipeService) {
         @RequestParam maxProtein: Int?,
         @RequestParam minTime: Int?,
         @RequestParam maxTime: Int?,
-        @RequestParam maxResults: Int = 10 // change to pagingParams
+        @RequestParam skip: Int,
+        @RequestParam limit: Int
     ): ResponseEntity<*> {
+        val pagingParams = PagingParams(skip, limit)
         val searchForm = SearchRecipesInputModel(
             name = name,
             cuisine = cuisine,
@@ -79,10 +82,9 @@ class RecipeController(private val recipeService: RecipeService) {
             minProtein = minProtein,
             maxProtein = maxProtein,
             minTime = minTime,
-            maxTime = maxTime,
-            maxResults = maxResults
+            maxTime = maxTime
         )
-        val results = recipeService.searchRecipes(authenticatedUser.user.id, searchForm)
+        val results = recipeService.searchRecipes(authenticatedUser.user.id, searchForm, pagingParams)
         return ResponseEntity.ok().body(SearchRecipesOutputModel(results))
     }
 
