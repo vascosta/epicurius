@@ -1,3 +1,5 @@
+package epicurius;
+
 import com.google.cloud.functions.HttpFunction;
 import com.google.cloud.functions.HttpRequest;
 import com.google.cloud.functions.HttpResponse;
@@ -7,7 +9,6 @@ import com.google.gson.JsonObject;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.PrintWriter;
 import java.util.*;
 
 public class GetIngredientsFromPicture implements HttpFunction {
@@ -20,6 +21,12 @@ public class GetIngredientsFromPicture implements HttpFunction {
 
     @Override
     public void service(HttpRequest request, HttpResponse response) throws Exception {
+        if (!request.getMethod().equals("POST")) {
+            response.setStatusCode(405);
+            response.getWriter().write(gson.toJson(Map.of("error", "Method not allowed")));
+            return;
+        }
+
         response.appendHeader("Content-Type", "application/json");
 
         BufferedReader reader = request.getReader();
