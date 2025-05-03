@@ -6,6 +6,7 @@ import com.google.cloud.firestore.FirestoreOptions
 import com.google.cloud.storage.StorageOptions
 import epicurius.config.CloudStorage
 import epicurius.config.HttpClientConfigurer
+import epicurius.repository.cloudFunction.manager.CloudFunctionManager
 import epicurius.repository.cloudStorage.manager.CloudStorageManager
 import epicurius.repository.firestore.FirestoreManager
 import epicurius.repository.jdbi.config.configureWithAppRequirements
@@ -52,6 +53,7 @@ open class RepositoryTest : EpicuriusUnitTest() {
         val tm = JdbiTransactionManager(jdbi)
         val fs = FirestoreManager(firestore)
         val cs = CloudStorageManager(cloudStorage)
+        val cf = CloudFunctionManager(httpClient)
         val sm = SpoonacularManager(httpClient)
 
         private fun getFirestoreService(): Firestore {

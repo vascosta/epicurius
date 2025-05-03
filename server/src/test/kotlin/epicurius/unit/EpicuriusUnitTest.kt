@@ -14,7 +14,7 @@ import epicurius.http.user.UserController
 import epicurius.repository.cloudFunction.CloudFunctionRepository
 import epicurius.repository.cloudFunction.manager.CloudFunctionManager
 import epicurius.repository.cloudStorage.manager.CloudStorageManager
-import epicurius.repository.cloudStorage.picture.CloudStoragePictureRepository
+import epicurius.repository.cloudStorage.picture.PictureRepository
 import epicurius.repository.firestore.FirestoreManager
 import epicurius.repository.firestore.recipe.FirestoreRecipeRepository
 import epicurius.repository.jdbi.feed.JdbiFeedRepository
@@ -93,7 +93,7 @@ open class EpicuriusUnitTest : EpicuriusTest() {
         val jdbiFeedRepositoryMock: JdbiFeedRepository = mock()
 
         val firestoreRecipeRepositoryMock: FirestoreRecipeRepository = mock()
-        val pictureRepositoryMock: CloudStoragePictureRepository = mock()
+        val pictureRepositoryMock: PictureRepository = mock()
         val spoonacularRepositoryMock: SpoonacularRepository = mock()
         val cloudFunctionRepositoryMock: CloudFunctionRepository = mock()
 

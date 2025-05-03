@@ -1,6 +1,7 @@
 package epicurius.repository.cloudFunction
 
 import epicurius.config.HttpClientConfigurer
+import epicurius.domain.exceptions.ErrorOnCloudFunction
 import epicurius.repository.cloudFunction.contract.CloudFunctionRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -11,6 +12,9 @@ class CloudFunctionRepository(private val httpClient: HttpClientConfigurer) : Cl
     override suspend fun getIngredientsFromPicture(pictureName: String): List<String> {
         return withContext(Dispatchers.IO) {
             val requestBody = httpClient.post(CLOUD_FUNCTION_ENDPOINT, mapOf("pictureName" to pictureName))
+            if (requestBody.contains("error")) {
+                throw ErrorOnCloudFunction(requestBody)
+            }
             val ingredients = Json.decodeFromString<List<String>>(requestBody)
             ingredients.map { it.lowercase() }
         }
