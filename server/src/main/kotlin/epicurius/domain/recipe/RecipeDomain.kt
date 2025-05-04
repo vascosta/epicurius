@@ -33,5 +33,9 @@ class RecipeDomain {
 
         const val MIN_PICTURES = 1
         const val MAX_PICTURES = 3
+
+        const val MIN_RATING = 1
+        const val MAX_RATING = 5
+        const val RATING_MSG = "Rating must be between $MIN_RATING and $MAX_RATING"
     }
 }

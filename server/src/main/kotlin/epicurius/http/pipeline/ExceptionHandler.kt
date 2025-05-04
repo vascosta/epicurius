@@ -29,10 +29,12 @@ import epicurius.domain.exceptions.RecipeExceedsMaximumCalories
 import epicurius.domain.exceptions.RecipeIsInvalidForMealTime
 import epicurius.domain.exceptions.RecipeNotAccessible
 import epicurius.domain.exceptions.RecipeNotFound
+import epicurius.domain.exceptions.RecipesAuthorCannotRateSelf
 import epicurius.domain.exceptions.UnauthorizedException
 import epicurius.domain.exceptions.UserAlreadyBeingFollowed
 import epicurius.domain.exceptions.UserAlreadyExists
 import epicurius.domain.exceptions.UserAlreadyLoggedIn
+import epicurius.domain.exceptions.UserAlreadyRated
 import epicurius.domain.exceptions.UserNotFollowed
 import epicurius.domain.exceptions.UserNotFound
 import epicurius.http.pipeline.authentication.AuthenticationInterceptor.Companion.WWW_AUTHENTICATE_HEADER
@@ -140,6 +142,8 @@ class ExceptionHandler {
             InvalidMealPlannerDate::class,
             InvalidNumberOfRecipePictures::class,
             InvalidIngredient::class,
+            RecipesAuthorCannotRateSelf::class,
+            UserAlreadyRated::class
         ]
     )
     fun handleBadRequest(request: HttpServletRequest, ex: Exception) =

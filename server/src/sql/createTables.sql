@@ -54,7 +54,8 @@ create table dbo.recipe(
 create table dbo.recipe_rating(
     recipe_id int not null,
     user_id int not null, -- cannot be the same as the author
-    rating int not null,
+    rating int not null check (rating BETWEEN 1 AND 5),
+    created_at date not null,
     primary key (recipe_id, user_id),
     foreign key (recipe_id) references dbo.recipe(id),
     foreign key (user_id) references dbo.user(id)

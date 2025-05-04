@@ -43,6 +43,10 @@ object Uris {
         fun recipe(id: Int) = UriTemplate(RECIPE).expand(id)
     }
 
+    object RateRecipe {
+        const val RATE = "/recipes/{id}/rate"
+    }
+
     object Feed {
         const val FEED = "/feed"
     }
