@@ -29,7 +29,7 @@ import epicurius.domain.exceptions.RecipeExceedsMaximumCalories
 import epicurius.domain.exceptions.RecipeIsInvalidForMealTime
 import epicurius.domain.exceptions.RecipeNotAccessible
 import epicurius.domain.exceptions.RecipeNotFound
-import epicurius.domain.exceptions.RecipesAuthorCannotRateSelf
+import epicurius.domain.exceptions.AuthorCannotRateOwnRecipe
 import epicurius.domain.exceptions.UnauthorizedException
 import epicurius.domain.exceptions.UserAlreadyBeingFollowed
 import epicurius.domain.exceptions.UserAlreadyExists
@@ -142,7 +142,7 @@ class ExceptionHandler {
             InvalidMealPlannerDate::class,
             InvalidNumberOfRecipePictures::class,
             InvalidIngredient::class,
-            RecipesAuthorCannotRateSelf::class,
+            AuthorCannotRateOwnRecipe::class,
             UserAlreadyRated::class
         ]
     )

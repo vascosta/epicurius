@@ -58,6 +58,7 @@ open class EpicuriusUnitTest : EpicuriusTest() {
             jdbiFridgeRepositoryMock,
             jdbiRecipeRepositoryMock,
             jdbiMealPlannerRepositoryMock,
+            jdbiRateRecipeRepositoryMock,
             firestoreRecipeRepositoryMock,
             pictureRepositoryMock,
             spoonacularRepositoryMock,

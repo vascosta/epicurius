@@ -2,7 +2,7 @@ package epicurius.services.rateRecipe
 
 import epicurius.domain.exceptions.RecipeNotAccessible
 import epicurius.domain.exceptions.RecipeNotFound
-import epicurius.domain.exceptions.RecipesAuthorCannotRateSelf
+import epicurius.domain.exceptions.AuthorCannotRateOwnRecipe
 import epicurius.domain.exceptions.UserAlreadyRated
 import epicurius.repository.jdbi.recipe.models.JdbiRecipeModel
 import epicurius.repository.transaction.TransactionManager
@@ -13,7 +13,7 @@ class RateRecipeService(private val tm: TransactionManager) {
 
     fun rateRecipe(userId: Int, username: String, recipeId: Int, rating: Int) {
         val recipe = checkIfRecipeExists(recipeId) ?: throw RecipeNotFound()
-        if (userId == recipe.authorId) throw RecipesAuthorCannotRateSelf()
+        if (userId == recipe.authorId) throw AuthorCannotRateOwnRecipe()
         checkRecipeAccessibility(recipe.authorUsername, username)
         if (checkIfUserAlreadyRated(userId, recipeId)) throw UserAlreadyRated(userId, recipeId)
 
@@ -30,11 +30,4 @@ class RateRecipeService(private val tm: TransactionManager) {
 
     private fun checkIfUserAlreadyRated(userId: Int, recipeId: Int) =
         tm.run { it.rateRecipeRepository.checkIfUserAlreadyRated(userId, recipeId) }
-
-    /*
-    private fun checkIfUserAlreadyRated(userId: Int, recipeId: Int): Boolean {
-        return tm.run { it.recipeRepository.checkIfUserAlreadyRated(userId, recipeId) }
-    }
-
-     */
 }
