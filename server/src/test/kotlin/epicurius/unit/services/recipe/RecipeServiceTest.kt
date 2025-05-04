@@ -38,6 +38,8 @@ open class RecipeServiceTest : ServiceTest() {
         val recipePictures = setOf(testPicture)
         val recipePicturesNames = recipePictures.map { it.name }
 
+        val intoleranceList = listOf(Intolerance.EGG, Intolerance.GLUTEN, Intolerance.DAIRY)
+
         val createRecipeInputInfo = CreateRecipeInputModel(
             "Pastel de nata",
             "A delicious Portuguese dessert",
