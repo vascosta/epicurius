@@ -232,6 +232,6 @@ class JdbiUserRepository(private val handle: Handle) : UserRepository {
         val user = getUser(username) ?: throw UserNotFound(username)
         val userFollowers = getFollowers(user.id)
 
-        return user.privacy && !userFollowers.map { it.name }.contains(followerName)
+        return !user.privacy || userFollowers.any { it.name == followerName }
     }
 }

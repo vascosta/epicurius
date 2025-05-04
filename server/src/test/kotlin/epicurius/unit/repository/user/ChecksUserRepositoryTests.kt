@@ -10,7 +10,7 @@ import kotlin.test.assertTrue
 class ChecksUserRepositoryTests : UserRepositoryTest() {
 
     private val publicTestUser = createTestUser(tm)
-    private val privateTestUser = createTestUser(tm, false)
+    private val privateTestUser = createTestUser(tm, true)
     private val testRecipe = createTestRecipe(tm, fs, publicTestUser)
 
     @Test
@@ -52,11 +52,22 @@ class ChecksUserRepositoryTests : UserRepositoryTest() {
     }
 
     @Test
-    fun `Should check if an user has access to a user profile successfully`() {
+    fun `Should check if an user has access to a public user profile successfully`() {
         // given 2 users (publicTestUser and privateTestUser)
 
         // when checking if the user has access to the other user's profile
         val userVisibility = checkUserVisibility(publicTestUser.name, privateTestUser.name)
+
+        // then the user does not have access to the other user's profile
+        assertTrue(userVisibility)
+    }
+
+    @Test
+    fun `Should check if an user has access to a private user profile successfully`() {
+        // given 2 users (publicTestUser and privateTestUser)
+
+        // when checking if the user has access to the other user's profile
+        val userVisibility = checkUserVisibility(privateTestUser.name, publicTestUser.name)
 
         // then the user does not have access to the other user's profile
         assertFalse(userVisibility)

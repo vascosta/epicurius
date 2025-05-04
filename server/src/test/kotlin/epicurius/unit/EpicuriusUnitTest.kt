@@ -20,6 +20,8 @@ import epicurius.repository.firestore.recipe.FirestoreRecipeRepository
 import epicurius.repository.jdbi.feed.JdbiFeedRepository
 import epicurius.repository.jdbi.fridge.JdbiFridgeRepository
 import epicurius.repository.jdbi.mealPlanner.JdbiMealPlannerRepository
+import epicurius.repository.jdbi.rateRecipe.JdbiRateRecipeRepository
+import epicurius.repository.jdbi.rateRecipe.contract.RateRecipeRepository
 import epicurius.repository.jdbi.recipe.JdbiRecipeRepository
 import epicurius.repository.jdbi.token.JdbiTokenRepository
 import epicurius.repository.jdbi.user.JdbiUserRepository
@@ -79,6 +81,7 @@ open class EpicuriusUnitTest : EpicuriusTest() {
                     override val tokenRepository = jdbiTokenRepositoryMock
                     override val fridgeRepository = jdbiFridgeRepositoryMock
                     override val recipeRepository = jdbiRecipeRepositoryMock
+                    override val rateRecipeRepository = jdbiRateRecipeRepositoryMock
                     override val mealPlannerRepository = jdbiMealPlannerRepositoryMock
                     override val feedRepository = jdbiFeedRepositoryMock
                 })
@@ -89,6 +92,7 @@ open class EpicuriusUnitTest : EpicuriusTest() {
         val jdbiTokenRepositoryMock: JdbiTokenRepository = mock()
         val jdbiFridgeRepositoryMock: JdbiFridgeRepository = mock()
         val jdbiRecipeRepositoryMock: JdbiRecipeRepository = mock()
+        val jdbiRateRecipeRepositoryMock: JdbiRateRecipeRepository = mock()
         val jdbiMealPlannerRepositoryMock: JdbiMealPlannerRepository = mock()
         val jdbiFeedRepositoryMock: JdbiFeedRepository = mock()
 
