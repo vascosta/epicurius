@@ -1,5 +1,6 @@
 package epicurius.repository.transaction.jdbi
 
+import epicurius.repository.jdbi.collection.JdbiCollectionRepository
 import epicurius.repository.jdbi.feed.JdbiFeedRepository
 import epicurius.repository.jdbi.fridge.JdbiFridgeRepository
 import epicurius.repository.jdbi.mealPlanner.JdbiMealPlannerRepository
@@ -18,4 +19,5 @@ class JdbiTransaction(handle: Handle) : Transaction {
     override val rateRecipeRepository = JdbiRateRecipeRepository(handle)
     override val mealPlannerRepository = JdbiMealPlannerRepository(handle)
     override val feedRepository = JdbiFeedRepository(handle)
+    override val collectionRepository = JdbiCollectionRepository(handle)
 }

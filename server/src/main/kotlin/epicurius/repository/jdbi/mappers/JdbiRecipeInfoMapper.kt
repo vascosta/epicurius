@@ -1,9 +1,7 @@
 package epicurius.repository.jdbi.mappers
 
 import epicurius.domain.recipe.Cuisine
-import epicurius.domain.recipe.Cuisine.Companion.fromInt
 import epicurius.domain.recipe.MealType
-import epicurius.domain.recipe.MealType.Companion.fromInt
 import epicurius.repository.jdbi.recipe.models.JdbiRecipeInfo
 import epicurius.repository.jdbi.utils.getArray
 import org.jdbi.v3.core.mapper.RowMapper

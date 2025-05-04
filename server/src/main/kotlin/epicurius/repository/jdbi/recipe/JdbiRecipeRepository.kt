@@ -135,7 +135,7 @@ class JdbiRecipeRepository(private val handle: Handle) : RecipeRepository {
 
         val params = mutableMapOf<String, Any?>("id" to userId)
 
-        appendConditions(query, params, form)
+        appendSearchConditions(query, params, form)
 
         if (!form.ingredients.isNullOrEmpty()) appendIngredients(query, form.ingredients, params)
 
@@ -214,7 +214,7 @@ class JdbiRecipeRepository(private val handle: Handle) : RecipeRepository {
             .execute()
     }
 
-    private fun appendConditions(query: StringBuilder, params: MutableMap<String, Any?>, form: SearchRecipesModel) {
+    private fun appendSearchConditions(query: StringBuilder, params: MutableMap<String, Any?>, form: SearchRecipesModel) {
         addCondition(
             query,
             params,
@@ -250,13 +250,6 @@ class JdbiRecipeRepository(private val handle: Handle) : RecipeRepository {
         query.append(" AND lower(i.name) IN ($ingredientsBinding)")
 
         ingredientsList.forEachIndexed { idx, ingredient -> params["i$idx"] = ingredient.lowercase() }
-/*
-        query.append(
-            """
-                ORDER BY COUNT(DISTINCT lower(i.name)) DESC
-            """
-        )
- */
     }
 
     private fun addIngredients(recipeId: Int, ingredients: List<Ingredient>) {

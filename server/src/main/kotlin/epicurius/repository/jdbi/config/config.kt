@@ -4,9 +4,11 @@ import epicurius.domain.fridge.Product
 import epicurius.domain.fridge.ProductInfo
 import epicurius.domain.recipe.Ingredient
 import epicurius.domain.user.User
+import epicurius.repository.jdbi.collection.models.JdbiCollectionModel
 import epicurius.repository.jdbi.mappers.DietListMapper
 import epicurius.repository.jdbi.mappers.IngredientMapper
 import epicurius.repository.jdbi.mappers.IntoleranceListMapper
+import epicurius.repository.jdbi.mappers.JdbiCollectionMapper
 import epicurius.repository.jdbi.mappers.JdbiDailyMealPlannerRowMapper
 import epicurius.repository.jdbi.mappers.JdbiRecipeInfoMapper
 import epicurius.repository.jdbi.mappers.JdbiRecipeModelMapper
@@ -41,6 +43,7 @@ fun Jdbi.configureWithAppRequirements(): Jdbi {
         )
     )
     registerRowMapper(JdbiDailyMealPlannerRow::class.java, JdbiDailyMealPlannerRowMapper(JdbiRecipeInfoMapper()))
+    registerRowMapper(JdbiCollectionModel::class.java, JdbiCollectionMapper(JdbiRecipeInfoMapper()))
 
     return this
 }
