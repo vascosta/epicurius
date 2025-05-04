@@ -12,6 +12,7 @@ import org.junit.jupiter.api.Test
 import org.mockito.kotlin.whenever
 import org.springframework.http.HttpStatus
 import kotlin.test.assertEquals
+import kotlin.test.assertTrue
 
 class SearchRecipesControllerTests : RecipeHttpTest() {
 
@@ -43,6 +44,73 @@ class SearchRecipesControllerTests : RecipeHttpTest() {
         testRecipe.servings,
         testRecipe.pictures.first()
     )
+
+    @Test
+    fun `Should search for recipes by name`() {
+        // given a search form with name and paging params
+        val searchRecipesInputInfoWithName = SearchRecipesInputModel(name = "Pastel")
+        val pagingParams = PagingParams()
+
+        // mock
+        whenever(
+            recipeServiceMock
+                .searchRecipes(testAuthenticatedUser.user.id, searchRecipesInputInfoWithName, pagingParams)
+        ).thenReturn(listOf(recipeInfo))
+
+        // when searching for recipes by name
+        val response = searchRecipes(testAuthenticatedUser, searchRecipesInputInfoWithName.name)
+        val body = response.body as SearchRecipesOutputModel
+
+        // then a list containing the recipe should is returned successfully
+        assertEquals(HttpStatus.OK, response.statusCode)
+        assertEquals(1, body.recipes.size)
+        assertEquals(recipeInfo, body.recipes.first())
+    }
+
+    @Test
+    fun `Should search for a recipe according to user's intolerances`() {
+        // given a search form with intolerances that match the recipe and paging params
+        val sameIntolerances = SearchRecipesInputModel(intolerances = listOf(Intolerance.GLUTEN))
+        val pagingParams = PagingParams()
+
+        // mock
+        whenever(
+            recipeServiceMock
+                .searchRecipes(testAuthenticatedUser.user.id, sameIntolerances, pagingParams)
+        ).thenReturn(emptyList())
+
+        // when searching for recipes with intolerances
+        val response = searchRecipes(
+            authenticatedUser = testAuthenticatedUser,
+            intolerances = sameIntolerances.intolerances,
+        )
+        val body = response.body as SearchRecipesOutputModel
+
+        // then a list containing the recipe should is returned successfully
+        assertEquals(HttpStatus.OK, response.statusCode)
+        assertTrue(body.recipes.isEmpty())
+
+        // given a search form with intolerances that do not match the recipe and paging params
+        val differentIntolerances = SearchRecipesInputModel(intolerances = listOf(Intolerance.DAIRY))
+
+        // mock
+        whenever(
+            recipeServiceMock
+                .searchRecipes(testAuthenticatedUser.user.id, differentIntolerances, pagingParams)
+        ).thenReturn(listOf(recipeInfo))
+
+        // when searching for recipes with intolerances
+        val response2 = searchRecipes(
+            authenticatedUser = testAuthenticatedUser,
+            intolerances = differentIntolerances.intolerances,
+        )
+        val body2 = response2.body as SearchRecipesOutputModel
+
+        // then a list containing the recipe should is returned successfully
+        assertEquals(HttpStatus.OK, response2.statusCode)
+        assertEquals(1, body2.recipes.size)
+        assertEquals(recipeInfo, body2.recipes.first())
+    }
 
     @Test
     fun `Should search for a recipe without ingredients successfully`() {
@@ -120,6 +188,124 @@ class SearchRecipesControllerTests : RecipeHttpTest() {
 
         // then a list containing the recipe should is returned successfully
         assertEquals(HttpStatus.OK, response.statusCode)
+        assertEquals(recipeInfo, body.recipes.first())
+    }
+
+    @Test
+    fun `Should search for recipes of public users`() {
+        // given a search form with name and paging params
+        val pagingParams = PagingParams()
+
+        // mock
+        whenever(
+            recipeServiceMock
+                .searchRecipes(testAuthenticatedUser.user.id, searchRecipesInputInfo, pagingParams)
+        ).thenReturn(listOf(recipeInfo))
+
+        // when searching for public recipes
+        val response = searchRecipes(
+            testAuthenticatedUser,
+            searchRecipesInputInfo.name,
+            searchRecipesInputInfo.cuisine,
+            searchRecipesInputInfo.mealType,
+            searchRecipesInputInfo.ingredients,
+            searchRecipesInputInfo.intolerances,
+            searchRecipesInputInfo.diets,
+            searchRecipesInputInfo.minCalories,
+            searchRecipesInputInfo.maxCalories,
+            searchRecipesInputInfo.minCarbs,
+            searchRecipesInputInfo.maxCarbs,
+            searchRecipesInputInfo.minFat,
+            searchRecipesInputInfo.maxFat,
+            searchRecipesInputInfo.minProtein,
+            searchRecipesInputInfo.maxProtein,
+            searchRecipesInputInfo.minTime,
+            searchRecipesInputInfo.maxTime
+        )
+        val body = response.body as SearchRecipesOutputModel
+
+        // then a list containing the recipe should is returned successfully
+        assertEquals(HttpStatus.OK, response.statusCode)
+        assertEquals(1, body.recipes.size)
+        assertEquals(recipeInfo, body.recipes.first())
+    }
+
+    @Test
+    fun `Should search for recipes from private users when not followed`() {
+        // given a search form with name and paging params
+        val pagingParams = PagingParams()
+
+        // mock
+        whenever(
+            recipeServiceMock
+                .searchRecipes(testAuthenticatedUser.user.id, searchRecipesInputInfo, pagingParams)
+        ).thenReturn(emptyList())
+
+        // when searching for recipes from private users
+        val response = searchRecipes(
+            testAuthenticatedUser,
+            searchRecipesInputInfo.name,
+            searchRecipesInputInfo.cuisine,
+            searchRecipesInputInfo.mealType,
+            searchRecipesInputInfo.ingredients,
+            searchRecipesInputInfo.intolerances,
+            searchRecipesInputInfo.diets,
+            searchRecipesInputInfo.minCalories,
+            searchRecipesInputInfo.maxCalories,
+            searchRecipesInputInfo.minCarbs,
+            searchRecipesInputInfo.maxCarbs,
+            searchRecipesInputInfo.minFat,
+            searchRecipesInputInfo.maxFat,
+            searchRecipesInputInfo.minProtein,
+            searchRecipesInputInfo.maxProtein,
+            searchRecipesInputInfo.minTime,
+            searchRecipesInputInfo.maxTime
+        )
+        val body = response.body as SearchRecipesOutputModel
+
+        // then an empty list should be returned,
+        // testAuthenticatedUser does not follow the private user, recipe's author
+        assertEquals(HttpStatus.OK, response.statusCode)
+        assertEquals(0, body.recipes.size)
+    }
+
+    @Test
+    fun `Should search for recipes from private users when followed`() {
+        // given a search form with name and paging params
+        val pagingParams = PagingParams()
+
+        // mock
+        whenever(
+            recipeServiceMock
+                .searchRecipes(testAuthenticatedUser.user.id, searchRecipesInputInfo, pagingParams)
+        ).thenReturn(listOf(recipeInfo))
+
+        // when searching for recipes from private users
+        val response = searchRecipes(
+            testAuthenticatedUser,
+            searchRecipesInputInfo.name,
+            searchRecipesInputInfo.cuisine,
+            searchRecipesInputInfo.mealType,
+            searchRecipesInputInfo.ingredients,
+            searchRecipesInputInfo.intolerances,
+            searchRecipesInputInfo.diets,
+            searchRecipesInputInfo.minCalories,
+            searchRecipesInputInfo.maxCalories,
+            searchRecipesInputInfo.minCarbs,
+            searchRecipesInputInfo.maxCarbs,
+            searchRecipesInputInfo.minFat,
+            searchRecipesInputInfo.maxFat,
+            searchRecipesInputInfo.minProtein,
+            searchRecipesInputInfo.maxProtein,
+            searchRecipesInputInfo.minTime,
+            searchRecipesInputInfo.maxTime
+        )
+        val body = response.body as SearchRecipesOutputModel
+
+        // then a list containing the recipe should is returned successfully
+        // testAuthenticatedUser follows the private user, recipe's author
+        assertEquals(HttpStatus.OK, response.statusCode)
+        assertEquals(1, body.recipes.size)
         assertEquals(recipeInfo, body.recipes.first())
     }
 }

@@ -93,7 +93,7 @@ class SearchRecipesServiceTests : RecipeServiceTest() {
     @Test
     fun `Should search for a recipe according to user's intolerances`() {
         // given a user id (USER_ID) and a search form with recipe intolerance and paging params
-        val recipeInput = searchRecipesInputInfoWithoutIngredients.copy(intolerances = intoleranceList)
+        val recipeInput = SearchRecipesInputModel(intolerances = intoleranceList)
         val pagingParams = PagingParams()
 
         // mock
@@ -113,9 +113,7 @@ class SearchRecipesServiceTests : RecipeServiceTest() {
         assertTrue(results.isEmpty())
 
         // given a search form that do not match the recipe intolerance
-        val recipeInputWithoutIntolerance = searchRecipesInputInfoWithoutIngredients.copy(
-            intolerances = listOf(Intolerance.WHEAT)
-        )
+        val recipeInputWithoutIntolerance = SearchRecipesInputModel(intolerances = listOf(Intolerance.WHEAT))
 
         // mock
         whenever(
@@ -199,7 +197,7 @@ class SearchRecipesServiceTests : RecipeServiceTest() {
     }
 
     @Test
-    fun `Should for recipes of public users`() {
+    fun `Should search for recipes of public users`() {
         // given an id of a public user (USER_ID) and a search form (searchRecipesInputInfoWithIngredients) and paging params
         val pagingParams = PagingParams()
 
