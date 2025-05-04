@@ -64,4 +64,11 @@ object Uris {
         const val PLANNER = "/planner"
         const val MEAL_PLANNER = "/planner/{date}"
     }
+
+    object Collection {
+        const val COLLECTIONS = "/collections"
+        const val COLLECTION = "/collections/{id}"
+
+        fun collection(id: Int) = UriTemplate(COLLECTION).expand(id)
+    }
 }
