@@ -22,7 +22,7 @@ class FeedService(private val tm: TransactionManager, private val cs: CloudStora
         val recipes = tm.run { it.feedRepository.getFeed(GetFeedModel(userId, intolerances, diets, pagingParams)) }
 
         return recipes.map {
-            it.toRecipeInfo(cs.pictureRepository.getPicture(it.pictures.first(), RECIPES_FOLDER))
+            it.toRecipeInfo(cs.pictureRepository.getPicture(it.picturesNames.first(), RECIPES_FOLDER))
         }
     }
 }

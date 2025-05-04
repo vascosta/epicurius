@@ -18,7 +18,7 @@ open class FeedServiceTest : ServiceTest() {
             mealType = MealType.MAIN_COURSE,
             preparationTime = 30,
             servings = 4,
-            pictures = listOf("")
+            picturesNames = listOf("")
         )
 
         val recipeInfo = RecipeInfo(
@@ -38,7 +38,7 @@ open class FeedServiceTest : ServiceTest() {
             mealType = MealType.APPETIZER,
             preparationTime = 20,
             servings = 2,
-            pictures = listOf("")
+            picturesNames = listOf("")
         )
 
         val recipeInfo2 = RecipeInfo(

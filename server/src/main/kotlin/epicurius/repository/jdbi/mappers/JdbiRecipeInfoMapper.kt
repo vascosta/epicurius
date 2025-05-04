@@ -20,7 +20,7 @@ class JdbiRecipeInfoMapper : RowMapper<JdbiRecipeInfo> {
             mealType = mealType,
             preparationTime = rs.getInt("preparation_time"),
             servings = rs.getInt("servings"),
-            pictures = pictures
+            picturesNames = pictures
         )
     }
 }

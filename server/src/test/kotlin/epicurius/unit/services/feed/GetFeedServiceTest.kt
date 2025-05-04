@@ -38,7 +38,7 @@ class GetFeedServiceTest : FeedServiceTest() {
         // mock
         whenever(jdbiFeedRepositoryMock.getFeed(info)).thenReturn(listOf(jdbiRecipeInfo))
         whenever(
-            pictureRepositoryMock.getPicture(jdbiRecipeInfo.pictures.first(), RECIPES_FOLDER)
+            pictureRepositoryMock.getPicture(jdbiRecipeInfo.picturesNames.first(), RECIPES_FOLDER)
         ).thenReturn(ByteArray(0))
 
         // when retrieving the feed
@@ -63,10 +63,10 @@ class GetFeedServiceTest : FeedServiceTest() {
         // mock
         whenever(jdbiFeedRepositoryMock.getFeed(info)).thenReturn(listOf(jdbiRecipeInfo2, jdbiRecipeInfo))
         whenever(
-            pictureRepositoryMock.getPicture(jdbiRecipeInfo.pictures.first(), RECIPES_FOLDER)
+            pictureRepositoryMock.getPicture(jdbiRecipeInfo.picturesNames.first(), RECIPES_FOLDER)
         ).thenReturn(ByteArray(0))
         whenever(
-            pictureRepositoryMock.getPicture(jdbiRecipeInfo2.pictures.first(), RECIPES_FOLDER)
+            pictureRepositoryMock.getPicture(jdbiRecipeInfo2.picturesNames.first(), RECIPES_FOLDER)
         ).thenReturn(ByteArray(0))
 
         // when retrieving the feed
@@ -98,7 +98,7 @@ class GetFeedServiceTest : FeedServiceTest() {
         // mock
         whenever(jdbiFeedRepositoryMock.getFeed(info)).thenReturn(emptyList())
         whenever(
-            pictureRepositoryMock.getPicture(jdbiRecipeInfo.pictures.first(), RECIPES_FOLDER)
+            pictureRepositoryMock.getPicture(jdbiRecipeInfo.picturesNames.first(), RECIPES_FOLDER)
         ).thenReturn(ByteArray(0))
 
         // when retrieving the feed
@@ -117,7 +117,7 @@ class GetFeedServiceTest : FeedServiceTest() {
         // mock
         whenever(jdbiFeedRepositoryMock.getFeed(info)).thenReturn(listOf(jdbiRecipeInfo))
         whenever(
-            pictureRepositoryMock.getPicture(jdbiRecipeInfo.pictures.first(), RECIPES_FOLDER)
+            pictureRepositoryMock.getPicture(jdbiRecipeInfo.picturesNames.first(), RECIPES_FOLDER)
         ).thenReturn(ByteArray(0))
 
         // when retrieving the feed
@@ -142,7 +142,7 @@ class GetFeedServiceTest : FeedServiceTest() {
         // mock
         whenever(jdbiFeedRepositoryMock.getFeed(info)).thenReturn(emptyList())
         whenever(
-            pictureRepositoryMock.getPicture(jdbiRecipeInfo.pictures.first(), RECIPES_FOLDER)
+            pictureRepositoryMock.getPicture(jdbiRecipeInfo.picturesNames.first(), RECIPES_FOLDER)
         ).thenReturn(ByteArray(0))
 
         // when retrieving the feed

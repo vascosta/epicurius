@@ -4,9 +4,7 @@ import epicurius.domain.Diet
 import epicurius.domain.Intolerance
 import epicurius.domain.PagingParams
 import epicurius.domain.recipe.Cuisine
-import epicurius.domain.recipe.Cuisine.Companion.fromInt
 import epicurius.domain.recipe.MealType
-import epicurius.domain.recipe.MealType.Companion.fromInt
 import epicurius.domain.recipe.SearchRecipesModel
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -164,7 +162,7 @@ class SearchRecipesRepositoryTests : RecipeRepositoryTest() {
         assertEquals(MealType.fromInt(jdbiRecipeInfo3.mealType), recipeList[0].mealType)
         assertEquals(jdbiRecipeInfo3.preparationTime, recipeList[0].preparationTime)
         assertEquals(jdbiRecipeInfo3.servings, recipeList[0].servings)
-        assertEquals(jdbiRecipeInfo3.picturesNames, recipeList[0].pictures)
+        assertEquals(jdbiRecipeInfo3.picturesNames, recipeList[0].picturesNames)
     }
 
     @Test

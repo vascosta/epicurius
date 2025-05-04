@@ -99,7 +99,7 @@ class RecipeService(
         val recipes = tm.run { it.recipeRepository.searchRecipes(userId, fillForm, pagingParams) }
 
         return recipes.map {
-            it.toRecipeInfo(cs.pictureRepository.getPicture(it.pictures.first(), RECIPES_FOLDER))
+            it.toRecipeInfo(cs.pictureRepository.getPicture(it.picturesNames.first(), RECIPES_FOLDER))
         }
     }
 

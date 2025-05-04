@@ -59,7 +59,7 @@ class SearchRecipesServiceTests : RecipeServiceTest() {
         mealType = MealType.DESSERT,
         preparationTime = 30,
         servings = 4,
-        pictures = recipePicturesNames
+        picturesNames = recipePicturesNames
     )
 
     @Test
