@@ -32,7 +32,7 @@ enum class Cuisine {
     VIETNAMESE;
 
     companion object {
-        fun Companion.fromInt(value: Int): Cuisine {
+        fun fromInt(value: Int): Cuisine {
             return Cuisine.entries.getOrNull(value) ?: throw InvalidCuisineIdx()
         }
     }

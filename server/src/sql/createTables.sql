@@ -71,14 +71,20 @@ create table dbo.ingredient(
 );
 
 create table dbo.collection(
+    id serial primary key,
     owner_id int not null,
-    recipe_id int not null,
-    collection_name varchar(20) not null,
-    collection_type int not null, -- favourite or kitchen book
-    privacy boolean not null,
-    primary key (owner_id, recipe_id, collection_name, collection_type),
+    name varchar(20) not null,
+    type int not null, -- favourite or kitchen book
     foreign key (owner_id) references dbo.user(id),
-    foreign key (recipe_id) references dbo.recipe(id)
+    foreign key (recipe_id) references dbo.recipe(id),
+);
+
+create table dbo.collection_recipe(
+   collection_id int not null,
+   recipe_id int not null,
+   primary key (collection_id, recipe_id),
+   foreign key (collection_id) references dbo.collection(id),
+   foreign key (recipe_id) references dbo.recipe(id)
 );
 
 create table dbo.meal_planner(

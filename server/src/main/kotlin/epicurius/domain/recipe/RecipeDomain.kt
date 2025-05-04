@@ -1,8 +1,5 @@
 package epicurius.domain.recipe
 
-import org.springframework.stereotype.Component
-
-@Component
 class RecipeDomain {
 
     companion object {

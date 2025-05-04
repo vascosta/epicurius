@@ -18,7 +18,7 @@ enum class MealType {
     SNACK;
 
     companion object {
-        fun Companion.fromInt(value: Int): MealType {
+        fun fromInt(value: Int): MealType {
             return MealType.entries.getOrNull(value) ?: throw InvalidMealTypeIdx()
         }
     }
