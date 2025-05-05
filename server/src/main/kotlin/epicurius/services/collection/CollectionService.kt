@@ -29,7 +29,9 @@ class CollectionService(private val tm: TransactionManager, private val cs: Clou
         if (checkIfCollectionAlreadyExists(ownerId, createCollectionInfo.name, createCollectionInfo.type) != null) {
             throw CollectionAlreadyExists()
         }
-        val collectionId = tm.run { it.collectionRepository.createCollection(ownerId, createCollectionInfo) }
+        val collectionId = tm.run {
+            it.collectionRepository.createCollection(ownerId, createCollectionInfo.name, createCollectionInfo.type)
+        }
 
         return Collection(
             collectionId,
@@ -55,7 +57,9 @@ class CollectionService(private val tm: TransactionManager, private val cs: Clou
         val jdbiCollectionModel = getJdbiCollectionModel(collectionId)
 
         if (userId == jdbiCollectionModel.ownerId) throw NotTheOwnerOfCollection()
-        val updatedCollection = tm.run { it.collectionRepository.updateCollection(collectionId, updateCollectionInfo) }
+        val updatedCollection = tm.run {
+            it.collectionRepository.updateCollection(collectionId, updateCollectionInfo.name)
+        }
         return Collection(
             updatedCollection.id,
             updatedCollection.name,

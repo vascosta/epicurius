@@ -11,7 +11,7 @@ import org.jdbi.v3.core.kotlin.mapTo
 
 class JdbiCollectionRepository(private val handle: Handle): CollectionRepository {
 
-    override fun createCollection(ownerId: Int, createCollectionInfo: CreateCollectionInputModel): Int =
+    override fun createCollection(ownerId: Int, name: String, type: CollectionType): Int =
         handle.createUpdate(
             """
                 INSERT INTO dbo.collection (owner_id, name, type)
@@ -20,8 +20,8 @@ class JdbiCollectionRepository(private val handle: Handle): CollectionRepository
             """
         )
             .bind("ownerId", ownerId)
-            .bind("name", createCollectionInfo.name)
-            .bind("type", createCollectionInfo.type.ordinal)
+            .bind("name", name)
+            .bind("type", type.ordinal)
             .executeAndReturnGeneratedKeys()
             .mapTo<Int>()
             .one()
@@ -55,7 +55,7 @@ class JdbiCollectionRepository(private val handle: Handle): CollectionRepository
             .firstOrNull()
     }
 
-    override fun updateCollection(collectionId: Int, updateCollectionInfo: UpdateCollectionInputModel): JdbiCollectionModel  {
+    override fun updateCollection(collectionId: Int, newName: String?): JdbiCollectionModel  {
         val query = StringBuilder(
             """
                 WITH updated_collection AS (
@@ -70,7 +70,7 @@ class JdbiCollectionRepository(private val handle: Handle): CollectionRepository
 
         return handle.createQuery(query)
             .bind("collectionId", collectionId)
-            .bind("name", updateCollectionInfo.name)
+            .bind("name", newName)
             .mapTo<JdbiCollectionModel>()
             .first()
     }
