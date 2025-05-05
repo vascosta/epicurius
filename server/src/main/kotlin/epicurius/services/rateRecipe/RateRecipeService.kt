@@ -1,5 +1,6 @@
 package epicurius.services.rateRecipe
 
+import epicurius.domain.exceptions.AuthorCannotDeleteRating
 import epicurius.domain.exceptions.AuthorCannotRateOwnRecipe
 import epicurius.domain.exceptions.AuthorCannotUpdateRating
 import epicurius.domain.exceptions.RecipeNotAccessible
@@ -35,6 +36,15 @@ class RateRecipeService(private val tm: TransactionManager) {
         if (!checkIfUserAlreadyRated(userId, recipeId)) throw UserHasNotRated(userId, recipeId)
 
         tm.run { it.rateRecipeRepository.updateRecipeRate(recipeId, userId, rating) }
+    }
+
+    fun deleteRecipeRate(userId: Int, username: String, recipeId: Int) {
+        val recipe = checkIfRecipeExists(recipeId) ?: throw RecipeNotFound()
+        if (userId == recipe.authorId) throw AuthorCannotDeleteRating()
+        checkRecipeAccessibility(recipe.authorUsername, username)
+        if (!checkIfUserAlreadyRated(userId, recipeId)) throw UserHasNotRated(userId, recipeId)
+
+        tm.run { it.rateRecipeRepository.deleteRecipeRate(recipeId, userId) }
     }
 
     private fun checkIfRecipeExists(recipeId: Int): JdbiRecipeModel? =

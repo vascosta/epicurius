@@ -2,6 +2,7 @@ package epicurius.http.pipeline
 
 import com.fasterxml.jackson.core.JsonParseException
 import com.fasterxml.jackson.databind.exc.MismatchedInputException
+import epicurius.domain.exceptions.AuthorCannotDeleteRating
 import epicurius.domain.exceptions.AuthorCannotRateOwnRecipe
 import epicurius.domain.exceptions.AuthorCannotUpdateRating
 import epicurius.domain.exceptions.DurationIsNull
@@ -199,7 +200,8 @@ class ExceptionHandler {
         value = [
             RecipeNotAccessible::class,
             AuthorCannotRateOwnRecipe::class,
-            AuthorCannotUpdateRating::class
+            AuthorCannotUpdateRating::class,
+            AuthorCannotDeleteRating::class
         ]
     )
     fun handleForbidden(request: HttpServletRequest, ex: Exception): ResponseEntity<Problem> =

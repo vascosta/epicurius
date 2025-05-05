@@ -7,6 +7,7 @@ import epicurius.http.utils.Uris
 import epicurius.services.rateRecipe.RateRecipeService
 import jakarta.validation.Valid
 import org.springframework.http.ResponseEntity
+import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PatchMapping
 import org.springframework.web.bind.annotation.PathVariable
@@ -42,6 +43,12 @@ class RateRecipeController(private val rateRecipeService: RateRecipeService) {
         @Valid @RequestBody body: RateRecipeInputModel
     ): ResponseEntity<*> {
         rateRecipeService.updateRecipeRate(authenticatedUser.user.id, authenticatedUser.user.name, id, body.rating)
+        return ResponseEntity.noContent().build<Unit>()
+    }
+
+    @DeleteMapping(Uris.RateRecipe.RATE)
+    fun deleteRecipeRate(authenticatedUser: AuthenticatedUser, @PathVariable id: Int): ResponseEntity<*> {
+        rateRecipeService.deleteRecipeRate(authenticatedUser.user.id, authenticatedUser.user.name, id)
         return ResponseEntity.noContent().build<Unit>()
     }
 }

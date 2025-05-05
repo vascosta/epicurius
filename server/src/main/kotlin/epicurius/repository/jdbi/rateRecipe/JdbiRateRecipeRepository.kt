@@ -47,6 +47,18 @@ class JdbiRateRecipeRepository(private val handle: Handle) : RateRecipeRepositor
             .execute()
     }
 
+    override fun deleteRecipeRate(recipeId: Int, userId: Int) {
+        handle.createUpdate(
+            """
+                DELETE FROM dbo.recipe_rating
+                WHERE recipe_id = :recipeId AND user_id = :userId
+            """
+        )
+            .bind("recipeId", recipeId)
+            .bind("userId", userId)
+            .execute()
+    }
+
     override fun checkIfUserAlreadyRated(userId: Int, recipeId: Int): Boolean =
         handle.createQuery(
             """
