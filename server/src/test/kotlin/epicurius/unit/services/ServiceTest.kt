@@ -93,6 +93,18 @@ open class ServiceTest : EpicuriusUnitTest() {
         fun deleteRecipe(userId: Int, recipeId: Int) =
             recipeService.deleteRecipe(userId, recipeId)
 
+        // RATE RECIPE
+        fun getRecipeRate(username: String, recipeId: Int) = rateRecipeService.getRecipeRate(username, recipeId)
+
+        fun rateRecipe(userId: Int, username: String, recipeId: Int, rating: Int) =
+            rateRecipeService.rateRecipe(userId, username, recipeId, rating)
+
+        fun updateRecipeRate(userId: Int, username: String, recipeId: Int, rating: Int) =
+            rateRecipeService.updateRecipeRate(userId, username, recipeId, rating)
+
+        fun deleteRecipeRate(userId: Int, username: String, recipeId: Int) =
+            rateRecipeService.deleteRecipeRate(userId, username, recipeId)
+
         // INGREDIENTS
         suspend fun getIngredients(partial: String) = ingredientsService.getIngredients(partial)
         suspend fun getSubstituteIngredients(name: String) = ingredientsService.getSubstituteIngredients(name)

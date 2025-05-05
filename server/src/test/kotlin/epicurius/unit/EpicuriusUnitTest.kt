@@ -18,12 +18,10 @@ import epicurius.repository.cloudStorage.picture.PictureRepository
 import epicurius.repository.firestore.FirestoreManager
 import epicurius.repository.firestore.recipe.FirestoreRecipeRepository
 import epicurius.repository.jdbi.collection.JdbiCollectionRepository
-import epicurius.repository.jdbi.collection.contract.CollectionRepository
 import epicurius.repository.jdbi.feed.JdbiFeedRepository
 import epicurius.repository.jdbi.fridge.JdbiFridgeRepository
 import epicurius.repository.jdbi.mealPlanner.JdbiMealPlannerRepository
 import epicurius.repository.jdbi.rateRecipe.JdbiRateRecipeRepository
-import epicurius.repository.jdbi.rateRecipe.contract.RateRecipeRepository
 import epicurius.repository.jdbi.recipe.JdbiRecipeRepository
 import epicurius.repository.jdbi.token.JdbiTokenRepository
 import epicurius.repository.jdbi.user.JdbiUserRepository
@@ -35,6 +33,7 @@ import epicurius.services.feed.FeedService
 import epicurius.services.fridge.FridgeService
 import epicurius.services.ingredients.IngredientsService
 import epicurius.services.menu.MenuService
+import epicurius.services.rateRecipe.RateRecipeService
 import epicurius.services.recipe.RecipeService
 import epicurius.services.user.UserService
 import org.junit.jupiter.api.BeforeAll
@@ -52,6 +51,7 @@ open class EpicuriusUnitTest : EpicuriusTest() {
             userServiceMock,
             fridgeServiceMock,
             recipeServiceMock,
+            rateRecipeServiceMock,
             feedServiceMock,
             menuServiceMock,
             ingredientsServiceMock,
@@ -59,8 +59,8 @@ open class EpicuriusUnitTest : EpicuriusTest() {
             jdbiTokenRepositoryMock,
             jdbiFridgeRepositoryMock,
             jdbiRecipeRepositoryMock,
-            jdbiMealPlannerRepositoryMock,
             jdbiRateRecipeRepositoryMock,
+            jdbiMealPlannerRepositoryMock,
             firestoreRecipeRepositoryMock,
             pictureRepositoryMock,
             spoonacularRepositoryMock,
@@ -131,6 +131,7 @@ open class EpicuriusUnitTest : EpicuriusTest() {
         val recipeService = RecipeService(
             transactionManagerMock, firestoreManagerMock, cloudStorageManagerMock, spoonacularStorageManagerMock, pictureDomainMock
         )
+        val rateRecipeService = RateRecipeService(transactionManagerMock)
         val ingredientsService = IngredientsService(
             cloudStorageManagerMock,
             spoonacularStorageManagerMock,
@@ -142,6 +143,7 @@ open class EpicuriusUnitTest : EpicuriusTest() {
         val userServiceMock: UserService = mock()
         val fridgeServiceMock: FridgeService = mock()
         val recipeServiceMock: RecipeService = mock()
+        val rateRecipeServiceMock: RateRecipeService = mock()
         val feedServiceMock: FeedService = mock()
         val menuServiceMock: MenuService = mock()
         val ingredientsServiceMock: IngredientsService = mock()

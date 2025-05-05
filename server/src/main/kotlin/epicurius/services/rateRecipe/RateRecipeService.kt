@@ -55,6 +55,6 @@ class RateRecipeService(private val tm: TransactionManager) {
             throw RecipeNotAccessible()
     }
 
-    private fun checkIfUserAlreadyRated(userId: Int, recipeId: Int) =
+    private fun checkIfUserAlreadyRated(userId: Int, recipeId: Int): Boolean =
         tm.run { it.rateRecipeRepository.checkIfUserAlreadyRated(userId, recipeId) }
 }
