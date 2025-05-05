@@ -10,7 +10,7 @@ class JdbiRateRecipeRepository(private val handle: Handle) : RateRecipeRepositor
     override fun getRecipeRate(recipeId: Int): Double =
         handle.createQuery(
             """
-                SELECT ROUND(AVG(rating), 1)
+                SELECT COALESCE(ROUND(AVG(rating), 2), 0) AS average_rating
                 FROM dbo.recipe_rating
                 WHERE recipe_id = :recipeId
             """
