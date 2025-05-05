@@ -48,6 +48,17 @@ class JdbiUserRepository(private val handle: Handle) : UserRepository {
             .firstOrNull()
     }
 
+    override fun getUserById(userId: Int) =
+        handle.createQuery(
+            """
+                SELECT * FROM dbo.user
+                WHERE id = :userId
+            """
+        )
+            .bind("userId", userId)
+            .mapTo<User>()
+            .firstOrNull()
+
     override fun searchUsers(userId: Int, partialUsername: String, pagingParams: PagingParams): List<SearchUserModel> {
         return handle.createQuery(
             """

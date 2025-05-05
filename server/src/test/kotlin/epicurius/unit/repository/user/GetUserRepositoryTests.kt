@@ -8,8 +8,11 @@ import kotlin.test.assertNotNull
 class GetUserRepositoryTests : UserRepositoryTest() {
 
     @Test
-    fun `Should retrieve an user by name, email and token hash successfully`() {
+    fun `Should retrieve an user by id, name, email and token hash successfully`() {
         // given an existing user (publicTestUser)
+
+        // when retrieving the user by id
+        val userById = getUserById(publicTestUser.id)
 
         // when retrieving the user by name
         val userByName = getUserByName(publicTestUser.name)
@@ -21,12 +24,15 @@ class GetUserRepositoryTests : UserRepositoryTest() {
         val userExistsByTokenHash = getUserByTokenHash(publicTestUser.tokenHash!!)
 
         // then the user is retrieved successfully
+        assertNotNull(userById)
         assertNotNull(userByName)
         assertNotNull(userByEmail)
         assertNotNull(userExistsByTokenHash)
+        assertEquals(publicTestUser.name, userById.name)
         assertEquals(publicTestUser.name, userByName.name)
         assertEquals(publicTestUser.name, userByEmail.name)
         assertEquals(publicTestUser.name, userExistsByTokenHash.name)
+        assertEquals(publicTestUser.email, userById.email)
         assertEquals(publicTestUser.email, userByName.email)
         assertEquals(publicTestUser.email, userByEmail.email)
         assertEquals(publicTestUser.email, userExistsByTokenHash.email)

@@ -47,14 +47,14 @@ create table dbo.recipe(
     protein int check ( protein >= 0),
     fat int check ( fat >= 0),
     carbs int check ( carbs >= 0),
-    pictures_names varchar(80)[] check (cardinality(pictures_names) BETWEEN 1 AND 3),
+    pictures_names varchar(80)[] check (cardinality(pictures_names) between 1 and 3),
     foreign key (author_id) references dbo.user(id)
 );
 
 create table dbo.recipe_rating(
     recipe_id int not null,
     user_id int not null, -- cannot be the same as the author
-    rating int not null check (rating BETWEEN 1 AND 5),
+    rating int not null check (rating between 1 and 5),
     created_at date not null,
     primary key (recipe_id, user_id),
     foreign key (recipe_id) references dbo.recipe(id),
@@ -75,8 +75,7 @@ create table dbo.collection(
     owner_id int not null,
     name varchar(20) not null,
     type int not null, -- favourite or kitchen book
-    foreign key (owner_id) references dbo.user(id),
-    foreign key (recipe_id) references dbo.recipe(id),
+    foreign key (owner_id) references dbo.user(id)
 );
 
 create table dbo.collection_recipe(
