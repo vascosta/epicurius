@@ -8,6 +8,7 @@ import epicurius.services.rateRecipe.RateRecipeService
 import jakarta.validation.Valid
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PatchMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
@@ -31,6 +32,16 @@ class RateRecipeController(private val rateRecipeService: RateRecipeService) {
         @Valid @RequestBody body: RateRecipeInputModel
     ): ResponseEntity<*> {
         rateRecipeService.rateRecipe(authenticatedUser.user.id, authenticatedUser.user.name, id, body.rating)
+        return ResponseEntity.noContent().build<Unit>()
+    }
+
+    @PatchMapping(Uris.RateRecipe.RATE)
+    fun updateRecipeRate(
+        authenticatedUser: AuthenticatedUser,
+        @PathVariable id: Int,
+        @Valid @RequestBody body: RateRecipeInputModel
+    ): ResponseEntity<*> {
+        rateRecipeService.updateRecipeRate(authenticatedUser.user.id, authenticatedUser.user.name, id, body.rating)
         return ResponseEntity.noContent().build<Unit>()
     }
 }

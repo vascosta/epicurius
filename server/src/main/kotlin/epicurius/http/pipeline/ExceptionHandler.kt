@@ -3,6 +3,7 @@ package epicurius.http.pipeline
 import com.fasterxml.jackson.core.JsonParseException
 import com.fasterxml.jackson.databind.exc.MismatchedInputException
 import epicurius.domain.exceptions.AuthorCannotRateOwnRecipe
+import epicurius.domain.exceptions.AuthorCannotUpdateRating
 import epicurius.domain.exceptions.DurationIsNull
 import epicurius.domain.exceptions.FollowRequestAlreadyBeenSent
 import epicurius.domain.exceptions.FollowRequestNotFound
@@ -35,6 +36,7 @@ import epicurius.domain.exceptions.UserAlreadyBeingFollowed
 import epicurius.domain.exceptions.UserAlreadyExists
 import epicurius.domain.exceptions.UserAlreadyLoggedIn
 import epicurius.domain.exceptions.UserAlreadyRated
+import epicurius.domain.exceptions.UserHasNotRated
 import epicurius.domain.exceptions.UserNotFollowed
 import epicurius.domain.exceptions.UserNotFound
 import epicurius.http.pipeline.authentication.AuthenticationInterceptor.Companion.WWW_AUTHENTICATE_HEADER
@@ -142,8 +144,8 @@ class ExceptionHandler {
             InvalidMealPlannerDate::class,
             InvalidNumberOfRecipePictures::class,
             InvalidIngredient::class,
-            AuthorCannotRateOwnRecipe::class,
-            UserAlreadyRated::class
+            UserAlreadyRated::class,
+            UserHasNotRated::class
         ]
     )
     fun handleBadRequest(request: HttpServletRequest, ex: Exception) =
@@ -196,6 +198,8 @@ class ExceptionHandler {
     @ExceptionHandler(
         value = [
             RecipeNotAccessible::class,
+            AuthorCannotRateOwnRecipe::class,
+            AuthorCannotUpdateRating::class
         ]
     )
     fun handleForbidden(request: HttpServletRequest, ex: Exception): ResponseEntity<Problem> =

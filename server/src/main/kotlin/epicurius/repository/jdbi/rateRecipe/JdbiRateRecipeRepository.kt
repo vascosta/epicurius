@@ -33,6 +33,20 @@ class JdbiRateRecipeRepository(private val handle: Handle) : RateRecipeRepositor
             .execute()
     }
 
+    override fun updateRecipeRate(recipeId: Int, userId: Int, rating: Int) {
+        handle.createUpdate(
+            """
+                UPDATE dbo.recipe_rating
+                SET rating = :rating
+                WHERE recipe_id = :recipeId AND user_id = :userId
+            """
+        )
+            .bind("rating", rating)
+            .bind("recipeId", recipeId)
+            .bind("userId", userId)
+            .execute()
+    }
+
     override fun checkIfUserAlreadyRated(userId: Int, recipeId: Int): Boolean =
         handle.createQuery(
             """
