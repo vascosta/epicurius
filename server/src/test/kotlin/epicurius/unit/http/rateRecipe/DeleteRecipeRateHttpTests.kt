@@ -12,7 +12,7 @@ import org.mockito.kotlin.whenever
 import org.springframework.http.HttpStatus
 import kotlin.test.assertEquals
 
-class DeleteRecipeRateHttpTests: RecipeHttpTest() {
+class DeleteRecipeRateHttpTests : RecipeHttpTest() {
 
     @Test
     fun `Should delete recipe rate successfully`() {

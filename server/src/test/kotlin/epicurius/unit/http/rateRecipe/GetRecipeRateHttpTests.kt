@@ -9,7 +9,7 @@ import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.springframework.http.HttpStatus
 
-class GetRecipeRateHttpTests: RateRecipeHttpTest() {
+class GetRecipeRateHttpTests : RateRecipeHttpTest() {
 
     @Test
     fun `Should get recipe rate successfully`() {

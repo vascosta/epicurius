@@ -25,11 +25,11 @@ class RateRecipeHttpTests : RateRecipeHttpTest() {
         verify(
             rateRecipeServiceMock
         ).rateRecipe(
-                testAuthenticatedUser.user.id,
-                testAuthenticatedUser.user.name,
-                RECIPE_ID,
-                RATING_5
-            )
+            testAuthenticatedUser.user.id,
+            testAuthenticatedUser.user.name,
+            RECIPE_ID,
+            RATING_5
+        )
 
         assertEquals(HttpStatus.NO_CONTENT, response.statusCode)
 
