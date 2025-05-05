@@ -24,6 +24,7 @@ import epicurius.domain.exceptions.InvalidToken
 import epicurius.domain.exceptions.MealPlannerAlreadyExists
 import epicurius.domain.exceptions.MealPlannerNotFound
 import epicurius.domain.exceptions.MealTimeAlreadyExistsInPlanner
+import epicurius.domain.exceptions.NotTheAuthor
 import epicurius.domain.exceptions.PasswordsDoNotMatch
 import epicurius.domain.exceptions.ProductIsAlreadyOpen
 import epicurius.domain.exceptions.ProductNotFound
@@ -201,7 +202,8 @@ class ExceptionHandler {
             RecipeNotAccessible::class,
             AuthorCannotRateOwnRecipe::class,
             AuthorCannotUpdateRating::class,
-            AuthorCannotDeleteRating::class
+            AuthorCannotDeleteRating::class,
+            NotTheAuthor::class
         ]
     )
     fun handleForbidden(request: HttpServletRequest, ex: Exception): ResponseEntity<Problem> =
