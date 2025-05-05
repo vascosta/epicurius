@@ -79,7 +79,7 @@ class UpdateRecipeServiceTests : RecipeServiceTest() {
                 }
             ).thenReturn(listOf(ingredient.name.lowercase()))
         }
-        whenever(jdbiRecipeRepositoryMock.getRecipe(RECIPE_ID)).thenReturn(mockJdbiRecipeModel)
+        whenever(jdbiRecipeRepositoryMock.getRecipeById(RECIPE_ID)).thenReturn(mockJdbiRecipeModel)
         whenever(jdbiRecipeRepositoryMock.updateRecipe(jdbiUpdateRecipeInfo)).thenReturn(mockJdbiRecipeModel)
         whenever(runBlocking { firestoreRecipeRepositoryMock.updateRecipe(firestoreUpdateRecipeInfo) }).thenReturn(mockFirestoreRecipeModel)
 
@@ -118,7 +118,7 @@ class UpdateRecipeServiceTests : RecipeServiceTest() {
                 }
             ).thenReturn(listOf(ingredient.name.lowercase()))
         }
-        whenever(jdbiRecipeRepositoryMock.getRecipe(nonExistingRecipeId)).thenReturn(null)
+        whenever(jdbiRecipeRepositoryMock.getRecipeById(nonExistingRecipeId)).thenReturn(null)
 
         // when updating the recipe
         // then the recipe is not updated and throws RecipeNotFound exception
@@ -140,7 +140,7 @@ class UpdateRecipeServiceTests : RecipeServiceTest() {
                 }
             ).thenReturn(listOf(ingredient.name.lowercase()))
         }
-        whenever(jdbiRecipeRepositoryMock.getRecipe(RECIPE_ID)).thenReturn(jdbiRecipeModel)
+        whenever(jdbiRecipeRepositoryMock.getRecipeById(RECIPE_ID)).thenReturn(jdbiRecipeModel)
 
         // when updating the recipe
         // then the recipe is not updated and throws NotTheAuthor exception

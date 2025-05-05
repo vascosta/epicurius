@@ -14,6 +14,7 @@ open class UserRepositoryTest : RepositoryTest() {
         fun createUser(username: String, email: String, country: String, passwordHash: String) =
             tm.run { it.userRepository.createUser(username, email, country, passwordHash) }
 
+        fun getUserById(userId: Int) = tm.run { it.userRepository.getUserById(userId) }
         fun getUserByName(username: String) = tm.run { it.userRepository.getUser(username) }
         fun getUserByEmail(email: String) = tm.run { it.userRepository.getUser(email = email) }
         fun getUserByTokenHash(tokenHash: String) = tm.run { it.userRepository.getUser(tokenHash = tokenHash) }

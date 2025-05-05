@@ -18,7 +18,7 @@ class FirestoreRecipeRepository(private val firestore: Firestore) : RecipeReposi
         getDocumentReference(RECIPES_COLLECTION, recipe.id.toString()).set(recipe).get()
     }
 
-    override suspend fun getRecipe(recipeId: Int): FirestoreRecipeModel? {
+    override suspend fun getRecipeById(recipeId: Int): FirestoreRecipeModel? {
         val doc = withContext(Dispatchers.IO) {
             getDocumentReference(RECIPES_COLLECTION, recipeId.toString()).get().await()
         }
@@ -36,7 +36,7 @@ class FirestoreRecipeRepository(private val firestore: Firestore) : RecipeReposi
     }
 
     override suspend fun updateRecipe(recipeInfo: FirestoreUpdateRecipeModel): FirestoreRecipeModel {
-        val oldRecipe = getRecipe(recipeInfo.id) ?: throw RecipeNotFound()
+        val oldRecipe = getRecipeById(recipeInfo.id) ?: throw RecipeNotFound()
 
         if (recipeInfo.description != null) {
             withContext(Dispatchers.IO) {

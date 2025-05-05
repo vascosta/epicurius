@@ -44,7 +44,7 @@ class CreateRecipeRepositoryTests : RecipeRepositoryTest() {
         val recipeId = jdbiCreateRecipe(jdbiCreateRecipeInfo)
 
         // then the recipe is created successfully
-        val jdbiRecipe = getJdbiRecipe(recipeId)
+        val jdbiRecipe = getJdbiRecipeById(recipeId)
         assertNotNull(jdbiRecipe)
         assertEquals(jdbiCreateRecipeInfo.name, jdbiRecipe.name)
         assertEquals(jdbiCreateRecipeInfo.authorId, jdbiRecipe.authorId)
@@ -80,7 +80,7 @@ class CreateRecipeRepositoryTests : RecipeRepositoryTest() {
         firestoreCreateRecipe(firestoreRecipeInfo)
 
         // then the recipe is created successfully
-        val firestoreRecipe = runBlocking { getFirestoreRecipe(recipeId) }
+        val firestoreRecipe = runBlocking { getFirestoreRecipeById(recipeId) }
         assertNotNull(firestoreRecipe)
         assertEquals(firestoreRecipeInfo.description, firestoreRecipe.description)
         assertEquals(firestoreRecipeInfo.instructions, firestoreRecipe.instructions)
@@ -96,8 +96,8 @@ class CreateRecipeRepositoryTests : RecipeRepositoryTest() {
         deleteFirestoreRecipe(recipe.id)
 
         // then the recipe is deleted successfully
-        val jdbiRecipe = getJdbiRecipe(recipe.id)
-        val firestoreRecipe = runBlocking { getFirestoreRecipe(recipe.id) }
+        val jdbiRecipe = getJdbiRecipeById(recipe.id)
+        val firestoreRecipe = runBlocking { getFirestoreRecipeById(recipe.id) }
         assertNull(jdbiRecipe)
         assertNull(firestoreRecipe)
     }

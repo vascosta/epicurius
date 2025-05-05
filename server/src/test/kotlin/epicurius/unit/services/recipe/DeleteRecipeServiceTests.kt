@@ -14,7 +14,7 @@ class DeleteRecipeServiceTests : RecipeServiceTest() {
         // given a user id and a recipe id (AUTHOR_ID, RECIPE_ID)
 
         // mock
-        whenever(jdbiRecipeRepositoryMock.getRecipe(RECIPE_ID)).thenReturn(jdbiRecipeModel)
+        whenever(jdbiRecipeRepositoryMock.getRecipeById(RECIPE_ID)).thenReturn(jdbiRecipeModel)
 
         // when deleting the recipe
         deleteRecipe(AUTHOR_ID, RECIPE_ID)
@@ -30,7 +30,7 @@ class DeleteRecipeServiceTests : RecipeServiceTest() {
         val nonExistingRecipeId = 9999
 
         // mock
-        whenever(jdbiRecipeRepositoryMock.getRecipe(nonExistingRecipeId)).thenReturn(null)
+        whenever(jdbiRecipeRepositoryMock.getRecipeById(nonExistingRecipeId)).thenReturn(null)
 
         // when deleting the recipe
         // then the recipe is not deleted and throws RecipeNotFound exception
@@ -43,7 +43,7 @@ class DeleteRecipeServiceTests : RecipeServiceTest() {
         val userId = 9999
 
         // mock
-        whenever(jdbiRecipeRepositoryMock.getRecipe(RECIPE_ID)).thenReturn(jdbiRecipeModel)
+        whenever(jdbiRecipeRepositoryMock.getRecipeById(RECIPE_ID)).thenReturn(jdbiRecipeModel)
 
         // when deleting the recipe
         // then the recipe is not deleted and throws NotTheAuthor exception

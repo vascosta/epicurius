@@ -67,7 +67,7 @@ class JdbiRecipeRepository(private val handle: Handle) : RecipeRepository {
         return recipeId
     }
 
-    override fun getRecipe(recipeId: Int): JdbiRecipeModel? =
+    override fun getRecipeById(recipeId: Int): JdbiRecipeModel? =
         handle.createQuery(
             """
                 SELECT r.id, r.name, r.author_id, r.date, r.servings, r.preparation_time, 

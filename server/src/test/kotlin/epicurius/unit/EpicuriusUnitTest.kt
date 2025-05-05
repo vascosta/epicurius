@@ -17,6 +17,8 @@ import epicurius.repository.cloudStorage.manager.CloudStorageManager
 import epicurius.repository.cloudStorage.picture.PictureRepository
 import epicurius.repository.firestore.FirestoreManager
 import epicurius.repository.firestore.recipe.FirestoreRecipeRepository
+import epicurius.repository.jdbi.collection.JdbiCollectionRepository
+import epicurius.repository.jdbi.collection.contract.CollectionRepository
 import epicurius.repository.jdbi.feed.JdbiFeedRepository
 import epicurius.repository.jdbi.fridge.JdbiFridgeRepository
 import epicurius.repository.jdbi.mealPlanner.JdbiMealPlannerRepository
@@ -85,6 +87,7 @@ open class EpicuriusUnitTest : EpicuriusTest() {
                     override val rateRecipeRepository = jdbiRateRecipeRepositoryMock
                     override val mealPlannerRepository = jdbiMealPlannerRepositoryMock
                     override val feedRepository = jdbiFeedRepositoryMock
+                    override val collectionRepository = jdbiCollectionRepositoryMock
                 })
             }
         }
@@ -96,6 +99,7 @@ open class EpicuriusUnitTest : EpicuriusTest() {
         val jdbiRateRecipeRepositoryMock: JdbiRateRecipeRepository = mock()
         val jdbiMealPlannerRepositoryMock: JdbiMealPlannerRepository = mock()
         val jdbiFeedRepositoryMock: JdbiFeedRepository = mock()
+        val jdbiCollectionRepositoryMock: JdbiCollectionRepository = mock()
 
         val firestoreRecipeRepositoryMock: FirestoreRecipeRepository = mock()
         val pictureRepositoryMock: PictureRepository = mock()

@@ -20,7 +20,7 @@ class UpdateRecipePicturesServiceTests : RecipeServiceTest() {
         // given the same pictures (recipePictures)
 
         // mock
-        whenever(jdbiRecipeRepositoryMock.getRecipe(RECIPE_ID)).thenReturn(jdbiRecipeModel)
+        whenever(jdbiRecipeRepositoryMock.getRecipeById(RECIPE_ID)).thenReturn(jdbiRecipeModel)
         whenever(pictureRepositoryMock.getPicture(recipePicturesNames.first(), PictureDomain.RECIPES_FOLDER))
             .thenReturn(recipePictures.first().bytes)
 
@@ -39,7 +39,7 @@ class UpdateRecipePicturesServiceTests : RecipeServiceTest() {
         // mock
         val mockRecipePicturesNames = listOf(testPicture2.name, recipePicturesNames.first(), testTomatoPicture.name)
         val mockJdbiUpdateRecipeModel = JdbiUpdateRecipeModel(RECIPE_ID, picturesNames = mockRecipePicturesNames)
-        whenever(jdbiRecipeRepositoryMock.getRecipe(RECIPE_ID)).thenReturn(jdbiRecipeModel)
+        whenever(jdbiRecipeRepositoryMock.getRecipeById(RECIPE_ID)).thenReturn(jdbiRecipeModel)
         whenever(pictureRepositoryMock.getPicture(recipePicturesNames.first(), PictureDomain.RECIPES_FOLDER))
             .thenReturn(recipePictures.first().bytes)
         whenever(pictureDomainMock.generatePictureName()).thenReturn(testPicture2.name, testTomatoPicture.name)
@@ -65,7 +65,7 @@ class UpdateRecipePicturesServiceTests : RecipeServiceTest() {
         val mockRecipePicturesNames = listOf(testTomatoPicture.name, recipePicturesNames.first())
         val mockJdbiUpdateRecipeModel = JdbiUpdateRecipeModel(RECIPE_ID, picturesNames = mockRecipePicturesNames)
 
-        whenever(jdbiRecipeRepositoryMock.getRecipe(RECIPE_ID)).thenReturn(jdbiRecipeModel.copy(picturesNames = oldPictureNames))
+        whenever(jdbiRecipeRepositoryMock.getRecipeById(RECIPE_ID)).thenReturn(jdbiRecipeModel.copy(picturesNames = oldPictureNames))
         whenever(pictureRepositoryMock.getPicture(testPicture2.name, PictureDomain.RECIPES_FOLDER))
             .thenReturn(testPicture2.bytes)
         whenever(pictureRepositoryMock.getPicture(recipePicturesNames.first(), PictureDomain.RECIPES_FOLDER))
@@ -92,7 +92,7 @@ class UpdateRecipePicturesServiceTests : RecipeServiceTest() {
         // mock
         val mockPictureNames = listOf(recipePicturesNames.first(), testTomatoPicture.name, testPicture2.name)
         val mockJdbiUpdateRecipeModel = JdbiUpdateRecipeModel(RECIPE_ID, picturesNames = mockPictureNames)
-        whenever(jdbiRecipeRepositoryMock.getRecipe(RECIPE_ID)).thenReturn(jdbiRecipeModel.copy(picturesNames = oldPictureNames))
+        whenever(jdbiRecipeRepositoryMock.getRecipeById(RECIPE_ID)).thenReturn(jdbiRecipeModel.copy(picturesNames = oldPictureNames))
         whenever(pictureRepositoryMock.getPicture(recipePicturesNames.first(), PictureDomain.RECIPES_FOLDER))
             .thenReturn(recipePictures.first().bytes)
         whenever(pictureRepositoryMock.getPicture(testTomatoPicture.name, PictureDomain.RECIPES_FOLDER))
@@ -127,7 +127,7 @@ class UpdateRecipePicturesServiceTests : RecipeServiceTest() {
         val nonExistingRecipeId = 9999
 
         // mock
-        whenever(jdbiRecipeRepositoryMock.getRecipe(nonExistingRecipeId)).thenReturn(null)
+        whenever(jdbiRecipeRepositoryMock.getRecipeById(nonExistingRecipeId)).thenReturn(null)
 
         // when updating the recipe
         // then the recipe is not updated and throws RecipeNotFound exception
@@ -142,7 +142,7 @@ class UpdateRecipePicturesServiceTests : RecipeServiceTest() {
         val userId = 9999
 
         // mock
-        whenever(jdbiRecipeRepositoryMock.getRecipe(RECIPE_ID)).thenReturn(jdbiRecipeModel)
+        whenever(jdbiRecipeRepositoryMock.getRecipeById(RECIPE_ID)).thenReturn(jdbiRecipeModel)
 
         // when updating the recipe
         // then the recipe is not updated and throws NotTheAuthor exception

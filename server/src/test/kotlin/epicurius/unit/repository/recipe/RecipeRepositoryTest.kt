@@ -141,9 +141,9 @@ open class RecipeRepositoryTest : RepositoryTest() {
             fs.recipeRepository.createRecipe(recipeInfo)
         }
 
-        fun getJdbiRecipe(recipeId: Int) = tm.run { it.recipeRepository.getRecipe(recipeId) }
+        fun getJdbiRecipeById(recipeId: Int) = tm.run { it.recipeRepository.getRecipeById(recipeId) }
 
-        suspend fun getFirestoreRecipe(recipeId: Int) = fs.recipeRepository.getRecipe(recipeId)
+        suspend fun getFirestoreRecipeById(recipeId: Int) = fs.recipeRepository.getRecipeById(recipeId)
 
         fun getRandomRecipesFromPublicUsers(mealType: MealType, intolerances: List<Intolerance>, diets: List<Diet>, limit: Int) =
             tm.run { it.recipeRepository.getRandomRecipesFromPublicUsers(mealType, intolerances, diets, limit) }

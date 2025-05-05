@@ -80,7 +80,7 @@ class MealPlannerService(
         tm.run { it.mealPlannerRepository.checkIfMealPlannerAlreadyExists(userId, date) }
 
     private fun checkIfRecipeExists(recipeId: Int): JdbiRecipeModel =
-        tm.run { it.recipeRepository.getRecipe(recipeId) } ?: throw RecipeNotFound()
+        tm.run { it.recipeRepository.getRecipeById(recipeId) } ?: throw RecipeNotFound()
 
     private fun checkIfMealTimeAlreadyExistsInPlanner(userId: Int, date: LocalDate, mealTime: MealTime): Boolean =
         tm.run { it.mealPlannerRepository.checkIfMealTimeAlreadyExistsInPlanner(userId, date, mealTime) }

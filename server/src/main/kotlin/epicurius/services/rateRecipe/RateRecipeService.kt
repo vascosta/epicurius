@@ -48,7 +48,7 @@ class RateRecipeService(private val tm: TransactionManager) {
     }
 
     private fun checkIfRecipeExists(recipeId: Int): JdbiRecipeModel? =
-        tm.run { it.recipeRepository.getRecipe(recipeId) }
+        tm.run { it.recipeRepository.getRecipeById(recipeId) }
 
     private fun checkRecipeAccessibility(authorUsername: String, username: String) {
         if (!tm.run { it.userRepository.checkUserVisibility(authorUsername, username) })

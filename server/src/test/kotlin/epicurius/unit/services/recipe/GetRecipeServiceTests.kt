@@ -18,9 +18,9 @@ class GetRecipeServiceTests : RecipeServiceTest() {
         // given a recipe id (RECIPE_ID)
 
         // mock
-        whenever(jdbiRecipeRepositoryMock.getRecipe(RECIPE_ID)).thenReturn(jdbiRecipeModel)
+        whenever(jdbiRecipeRepositoryMock.getRecipeById(RECIPE_ID)).thenReturn(jdbiRecipeModel)
         whenever(jdbiUserRepositoryMock.checkUserVisibility(authorUsername, authorUsername)).thenReturn(true)
-        whenever(runBlocking { firestoreRecipeRepositoryMock.getRecipe(RECIPE_ID) }).thenReturn(firestoreRecipeInfo)
+        whenever(runBlocking { firestoreRecipeRepositoryMock.getRecipeById(RECIPE_ID) }).thenReturn(firestoreRecipeInfo)
         whenever(pictureRepositoryMock.getPicture(testPicture.name, RECIPES_FOLDER)).thenReturn(testPicture.bytes)
 
         // when retrieving the recipe
@@ -52,9 +52,9 @@ class GetRecipeServiceTests : RecipeServiceTest() {
         val user = generateRandomUsername()
 
         // mock
-        whenever(jdbiRecipeRepositoryMock.getRecipe(RECIPE_ID)).thenReturn(jdbiRecipeModel)
+        whenever(jdbiRecipeRepositoryMock.getRecipeById(RECIPE_ID)).thenReturn(jdbiRecipeModel)
         whenever(jdbiUserRepositoryMock.checkUserVisibility(authorUsername, user)).thenReturn(true)
-        whenever(runBlocking { firestoreRecipeRepositoryMock.getRecipe(RECIPE_ID) }).thenReturn(firestoreRecipeInfo)
+        whenever(runBlocking { firestoreRecipeRepositoryMock.getRecipeById(RECIPE_ID) }).thenReturn(firestoreRecipeInfo)
         whenever(pictureRepositoryMock.getPicture(testPicture.name, RECIPES_FOLDER)).thenReturn(testPicture.bytes)
 
         // when retrieving the recipe
@@ -86,7 +86,7 @@ class GetRecipeServiceTests : RecipeServiceTest() {
         val nonExistingRecipeId = 9999
 
         // mock
-        whenever(jdbiRecipeRepositoryMock.getRecipe(nonExistingRecipeId)).thenReturn(null, jdbiRecipeModel)
+        whenever(jdbiRecipeRepositoryMock.getRecipeById(nonExistingRecipeId)).thenReturn(null, jdbiRecipeModel)
         whenever(jdbiUserRepositoryMock.checkUserVisibility(authorUsername, authorUsername)).thenReturn(true)
 
         // when retrieving the recipe
@@ -101,7 +101,7 @@ class GetRecipeServiceTests : RecipeServiceTest() {
         val user = "user"
 
         // mock
-        whenever(jdbiRecipeRepositoryMock.getRecipe(RECIPE_ID)).thenReturn(jdbiRecipeModel)
+        whenever(jdbiRecipeRepositoryMock.getRecipeById(RECIPE_ID)).thenReturn(jdbiRecipeModel)
         whenever(jdbiUserRepositoryMock.checkUserVisibility(authorUsername, user)).thenReturn(false)
 
         // when retrieving the recipe
