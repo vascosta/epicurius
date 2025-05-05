@@ -7,3 +7,5 @@ data class CreateCollectionOutputModel(val collection: Collection)
 typealias GetCollectionOutputModel = CreateCollectionOutputModel
 
 typealias UpdateCollectionOutputModel = CreateCollectionOutputModel
+
+typealias AddRecipeToCollectionOutputModel = CreateCollectionOutputModel

@@ -72,7 +72,7 @@ object Uris {
         const val COLLECTIONS = "/collections"
         const val COLLECTION = "/$COLLECTIONS/{id}"
         const val COLLECTION_RECIPES = "$COLLECTION/recipes"
-        const val COLLECTION_RECIPE = "$COLLECTION/recipes/{id}"
+        const val COLLECTION_RECIPE = "$COLLECTION/recipes/{recipeId}"
 
         fun collection(id: Int) = UriTemplate(COLLECTION).expand(id)
     }

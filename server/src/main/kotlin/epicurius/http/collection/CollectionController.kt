@@ -1,8 +1,10 @@
 package epicurius.http.collection
 
 import epicurius.domain.user.AuthenticatedUser
+import epicurius.http.collection.models.input.AddRecipeToCollectionInputModel
 import epicurius.http.collection.models.input.CreateCollectionInputModel
 import epicurius.http.collection.models.input.UpdateCollectionInputModel
+import epicurius.http.collection.models.output.AddRecipeToCollectionOutputModel
 import epicurius.http.collection.models.output.CreateCollectionOutputModel
 import epicurius.http.collection.models.output.GetCollectionOutputModel
 import epicurius.http.collection.models.output.UpdateCollectionOutputModel
@@ -10,6 +12,7 @@ import epicurius.http.utils.Uris
 import epicurius.http.utils.Uris.Collection.collection
 import epicurius.services.collection.CollectionService
 import org.springframework.http.ResponseEntity
+import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PatchMapping
 import org.springframework.web.bind.annotation.PathVariable
@@ -38,19 +41,33 @@ class CollectionController(val collectionService: CollectionService) {
         return ResponseEntity.created(collection(collection.id)).body(CreateCollectionOutputModel(collection))
     }
 
+    @PostMapping(Uris.Collection.COLLECTION_RECIPES)
+    fun addRecipeToCollection(
+        authenticatedUser: AuthenticatedUser, @PathVariable id: Int, @RequestBody body: AddRecipeToCollectionInputModel
+    ): ResponseEntity<*> {
+        val updatedCollection = collectionService.addRecipeToCollection(authenticatedUser.user.name, id, body.recipeId)
+        return ResponseEntity.ok().body(AddRecipeToCollectionOutputModel(updatedCollection))
+    }
+
     @PatchMapping(Uris.Collection.COLLECTION)
     fun updateCollection(
         authenticatedUser: AuthenticatedUser, @PathVariable id: Int, @RequestBody body: UpdateCollectionInputModel
     ): ResponseEntity<*> {
-        val collection = collectionService.updateCollection(authenticatedUser.user.id, id, body)
-        return ResponseEntity.ok(UpdateCollectionOutputModel(collection))
+        val updatedCollection = collectionService.updateCollection(authenticatedUser.user.id, id, body)
+        return ResponseEntity.ok().body(UpdateCollectionOutputModel(updatedCollection))
     }
 
-    @PatchMapping(Uris.Collection.COLLECTION_RECIPES)
-    fun addRecipeToCollection(
-        authenticatedUser: AuthenticatedUser, @PathVariable id: Int, @RequestBody body: Int
+    @DeleteMapping(Uris.Collection.COLLECTION_RECIPE)
+    fun removeRecipeFromCollection(
+        authenticatedUser: AuthenticatedUser, @PathVariable id: Int, @PathVariable recipeId: Int,
     ): ResponseEntity<*> {
-        val collection = collectionService.addRecipeToCollection(authenticatedUser.user.id, id, body)
-        return ResponseEntity.ok(UpdateCollectionOutputModel(collection))
+        val updatedCollection = collectionService.removeRecipeFromCollection(authenticatedUser.user.name, id, recipeId)
+        return ResponseEntity.ok().body(AddRecipeToCollectionOutputModel(updatedCollection))
+    }
+
+    @DeleteMapping(Uris.Collection.COLLECTION)
+    fun deleteCollection(authenticatedUser: AuthenticatedUser, @PathVariable id: Int): ResponseEntity<*> {
+        collectionService.deleteCollection(authenticatedUser.user.id, id)
+        return ResponseEntity.noContent().build<Unit>()
     }
 }

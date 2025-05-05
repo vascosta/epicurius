@@ -65,7 +65,7 @@ class GetRecipeControllerTests : RecipeHttpTest() {
         val user = AuthenticatedUser(User(9999, "user", "", "", "", "", false, emptyList(), emptyList(), ""), "")
 
         // mock
-        whenever(runBlocking { recipeServiceMock.getRecipe(RECIPE_ID, user.user.name) }).thenThrow(RecipeNotAccessible(testRecipe.name))
+        whenever(runBlocking { recipeServiceMock.getRecipe(RECIPE_ID, user.user.name) }).thenThrow(RecipeNotAccessible())
 
         // when retrieving the recipe
         // then the recipe is not retrieved and throws RecipeNotAccessible exception
