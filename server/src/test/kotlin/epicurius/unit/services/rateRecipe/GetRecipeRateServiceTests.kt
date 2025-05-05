@@ -1,12 +1,13 @@
 package epicurius.unit.services.rateRecipe
 
+import epicurius.domain.exceptions.RecipeNotAccessible
 import epicurius.domain.exceptions.RecipeNotFound
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.mockito.kotlin.whenever
 import kotlin.test.assertEquals
 
-class GetRateRecipeServiceTests : RateRecipeServiceTest() {
+class GetRecipeRateServiceTests : RateRecipeServiceTest() {
 
     @Test
     fun `Should get recipe rating successfully`() {
@@ -37,5 +38,22 @@ class GetRateRecipeServiceTests : RateRecipeServiceTest() {
 
         // then the recipe rating is not returned and throws RecipeNotFound exception
         assertEquals(RecipeNotFound().message, exception.message)
+    }
+
+    @Test
+    fun `Should throw RecipeNotAccessible exception when recipe is from a private user that the user does not follow`() {
+        // given a recipe from a private user that the user does not follow
+        val privateUserId = 2
+        val privateRecipeId = 3
+
+        // mock
+        whenever(jdbiRecipeRepositoryMock.getRecipeById(privateRecipeId)).thenReturn(jdbiRecipeModel)
+        whenever(jdbiUserRepositoryMock.checkUserVisibility(AUTHOR_USERNAME, USERNAME)).thenReturn(false)
+
+        // when getting the recipe rating
+        val exception = assertThrows<RecipeNotAccessible> { getRecipeRate(USERNAME, privateRecipeId) }
+
+        // then the recipe rating is not returned and throws RecipeNotAccessible exception
+        assertEquals(RecipeNotAccessible().message, exception.message)
     }
 }
