@@ -5,7 +5,19 @@ import org.jdbi.v3.core.Handle
 import org.jdbi.v3.core.kotlin.mapTo
 import java.time.LocalDate
 
-class JdbiRateRecipeRepository(private val handle: Handle): RateRecipeRepository {
+class JdbiRateRecipeRepository(private val handle: Handle) : RateRecipeRepository {
+
+    override fun getRecipeRate(recipeId: Int): Double =
+        handle.createQuery(
+            """
+                SELECT ROUND(AVG(rating), 1)
+                FROM dbo.recipe_rating
+                WHERE recipe_id = :recipeId
+            """
+        )
+            .bind("recipeId", recipeId)
+            .mapTo<Double>()
+            .one()
 
     override fun rateRecipe(recipeId: Int, userId: Int, rating: Int) {
         handle.createUpdate(
@@ -21,8 +33,8 @@ class JdbiRateRecipeRepository(private val handle: Handle): RateRecipeRepository
             .execute()
     }
 
-    override fun checkIfUserAlreadyRated(userId: Int, recipeId: Int): Boolean {
-        return handle.createQuery(
+    override fun checkIfUserAlreadyRated(userId: Int, recipeId: Int): Boolean =
+        handle.createQuery(
             """
                 SELECT COUNT(*) > 0
                 FROM dbo.recipe_rating
@@ -33,5 +45,5 @@ class JdbiRateRecipeRepository(private val handle: Handle): RateRecipeRepository
             .bind("recipeId", recipeId)
             .mapTo<Boolean>()
             .one()
-    }
+
 }

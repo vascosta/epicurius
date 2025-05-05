@@ -1,8 +1,8 @@
 package epicurius.services.rateRecipe
 
+import epicurius.domain.exceptions.AuthorCannotRateOwnRecipe
 import epicurius.domain.exceptions.RecipeNotAccessible
 import epicurius.domain.exceptions.RecipeNotFound
-import epicurius.domain.exceptions.AuthorCannotRateOwnRecipe
 import epicurius.domain.exceptions.UserAlreadyRated
 import epicurius.repository.jdbi.recipe.models.JdbiRecipeModel
 import epicurius.repository.transaction.TransactionManager
@@ -10,6 +10,12 @@ import org.springframework.stereotype.Component
 
 @Component
 class RateRecipeService(private val tm: TransactionManager) {
+
+    fun getRecipeRate(username: String, recipeId: Int): Double {
+        val recipe = checkIfRecipeExists(recipeId) ?: throw RecipeNotFound()
+        checkRecipeAccessibility(recipe.authorUsername, username)
+        return tm.run { it.rateRecipeRepository.getRecipeRate(recipeId) }
+    }
 
     fun rateRecipe(userId: Int, username: String, recipeId: Int, rating: Int) {
         val recipe = checkIfRecipeExists(recipeId) ?: throw RecipeNotFound()

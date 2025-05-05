@@ -166,7 +166,7 @@ class SearchRecipesRepositoryTests : RecipeRepositoryTest() {
     }
 
     @Test
-    fun `Should search for recipes of public users`(){
+    fun `Should search for recipes of public users`() {
         // given a user (testUserPublic) and a recipe
         jdbiCreateRecipe(jdbiRecipeInfo5)
 
