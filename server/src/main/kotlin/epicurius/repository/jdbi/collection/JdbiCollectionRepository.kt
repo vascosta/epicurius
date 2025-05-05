@@ -2,6 +2,7 @@ package epicurius.repository.jdbi.collection
 
 import epicurius.domain.collection.CollectionType
 import epicurius.http.collection.models.input.CreateCollectionInputModel
+import epicurius.http.collection.models.input.UpdateCollectionInputModel
 import epicurius.repository.jdbi.collection.contract.CollectionRepository
 import epicurius.repository.jdbi.collection.models.JdbiCollectionModel
 import epicurius.repository.jdbi.collection.models.JdbiUpdateCollectionModel
@@ -28,7 +29,7 @@ class JdbiCollectionRepository(private val handle: Handle): CollectionRepository
     override fun getCollection(ownerId: Int, collectionName: String, collectionType: CollectionType) =
         handle.createQuery(
             """
-                SELECT c.id as collection_id, c.name as collection_name, c.type, 
+                SELECT c.id as collection_id, c.owner_id as owner_id, c.name as collection_name, c.type, 
                 r.id AS recipe_id, r.name AS recipe_name
                 r.cuisine, r.meal_type, r.preparation_time, r.servings, r.pictures_names
                 FROM dbo.collection c
@@ -54,7 +55,7 @@ class JdbiCollectionRepository(private val handle: Handle): CollectionRepository
             .firstOrNull()
     }
 
-    override fun updateCollection(collectionId: Int, updateCollectionInfo: JdbiUpdateCollectionModel): JdbiCollectionModel  {
+    override fun updateCollection(collectionId: Int, updateCollectionInfo: UpdateCollectionInputModel): JdbiCollectionModel  {
         val query = StringBuilder(
             """
                 WITH updated_collection AS (
@@ -124,7 +125,7 @@ class JdbiCollectionRepository(private val handle: Handle): CollectionRepository
     private fun applyGetJdbiCollectionModelQuery(query: StringBuilder) {
         query.append(
             """
-                SELECT c.id as collection_id, c.name as collection_name, c.type, 
+                SELECT c.id as collection_id, c.owner_id as owner_id, c.name as collection_name, c.type, 
                 r.id AS recipe_id, r.name AS recipe_name
                 r.cuisine, r.meal_type, r.preparation_time, r.servings, r.pictures_names
                 FROM dbo.collection c

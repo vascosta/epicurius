@@ -201,7 +201,7 @@ class RecipeService(
 
     private fun checkRecipeAccessibility(authorUsername: String, username: String) {
         if (!tm.run { it.userRepository.checkUserVisibility(authorUsername, username) })
-            throw RecipeNotAccessible(authorUsername)
+            throw RecipeNotAccessible()
     }
 
     private fun checkIfUserIsAuthor(userId: Int, authorId: Int) {

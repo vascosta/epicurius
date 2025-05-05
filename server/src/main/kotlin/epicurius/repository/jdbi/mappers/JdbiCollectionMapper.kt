@@ -19,6 +19,7 @@ class JdbiCollectionMapper(private val recipeInfo: JdbiRecipeInfoMapper): RowMap
 
         return JdbiCollectionModel(
             id = rs.getInt("collection_id"),
+            ownerId = rs.getInt("owner_id"),
             name = rs.getString("collection_name"),
             type = CollectionType.fromInt(rs.getInt("collection_type")),
             recipes = recipes
