@@ -9,6 +9,7 @@ import epicurius.domain.user.AuthenticatedUser
 import epicurius.domain.user.FollowRequestType
 import epicurius.http.fridge.models.input.ProductInputModel
 import epicurius.http.fridge.models.input.UpdateProductInputModel
+import epicurius.http.rateRecipe.models.input.RateRecipeInputModel
 import epicurius.http.recipe.models.input.UpdateRecipeInputModel
 import epicurius.http.user.models.input.LoginInputModel
 import epicurius.http.user.models.input.ResetPasswordInputModel
@@ -136,6 +137,20 @@ open class HttpTest : EpicuriusUnitTest() {
 
         fun deleteRecipe(authenticatedUser: AuthenticatedUser, id: Int) =
             recipeController.deleteRecipe(authenticatedUser, id)
+
+        // RATE RECIPE
+
+        fun getRecipeRate(authenticatedUser: AuthenticatedUser, id: Int) =
+            rateRecipeController.getRecipeRate(authenticatedUser, id)
+
+        fun rateRecipe(authenticatedUser: AuthenticatedUser, id: Int, rating: Int) =
+            rateRecipeController.rateRecipe(authenticatedUser, id, RateRecipeInputModel(rating))
+
+        fun updateRecipeRate(authenticatedUser: AuthenticatedUser, id: Int, rating: Int) =
+            rateRecipeController.updateRecipeRate(authenticatedUser, id, RateRecipeInputModel(rating))
+
+        fun deleteRecipeRate(authenticatedUser: AuthenticatedUser, id: Int) =
+            rateRecipeController.deleteRecipeRate(authenticatedUser, id)
 
         // INGREDIENTS
         suspend fun getIngredients(authenticatedUser: AuthenticatedUser, partial: String) =

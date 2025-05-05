@@ -9,6 +9,7 @@ import epicurius.http.feed.FeedController
 import epicurius.http.fridge.FridgeController
 import epicurius.http.ingredients.IngredientsController
 import epicurius.http.menu.MenuController
+import epicurius.http.rateRecipe.RateRecipeController
 import epicurius.http.recipe.RecipeController
 import epicurius.http.user.UserController
 import epicurius.repository.cloudFunction.CloudFunctionRepository
@@ -151,6 +152,7 @@ open class EpicuriusUnitTest : EpicuriusTest() {
         val userController = UserController(userServiceMock)
         val fridgeController = FridgeController(fridgeServiceMock)
         val recipeController = RecipeController(recipeServiceMock)
+        val rateRecipeController = RateRecipeController(rateRecipeServiceMock)
         val feedController = FeedController(feedServiceMock)
         val menuController = MenuController(menuServiceMock)
         val ingredientsController = IngredientsController(ingredientsServiceMock)

@@ -24,7 +24,7 @@ class RateRecipeController(private val rateRecipeService: RateRecipeService) {
     @GetMapping(Uris.RateRecipe.RATE)
     fun getRecipeRate(authenticatedUser: AuthenticatedUser, @PathVariable id: Int): ResponseEntity<*> {
         val rate = rateRecipeService.getRecipeRate(authenticatedUser.user.name, id)
-        return ResponseEntity.created(rateRecipe(id)).body(GetRecipeRateOutputModel(rate))
+        return ResponseEntity.ok().body(GetRecipeRateOutputModel(rate))
     }
 
     @PostMapping(Uris.RateRecipe.RATE)
