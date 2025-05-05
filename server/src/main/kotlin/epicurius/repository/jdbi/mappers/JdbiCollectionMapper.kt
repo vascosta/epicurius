@@ -7,7 +7,7 @@ import org.jdbi.v3.core.mapper.RowMapper
 import org.jdbi.v3.core.statement.StatementContext
 import java.sql.ResultSet
 
-class JdbiCollectionMapper(private val recipeInfo: JdbiRecipeInfoMapper): RowMapper<JdbiCollectionModel> {
+class JdbiCollectionMapper(private val recipeInfo: JdbiRecipeInfoMapper) : RowMapper<JdbiCollectionModel> {
 
     override fun map(rs: ResultSet, ctx: StatementContext): JdbiCollectionModel? {
         val recipes = mutableListOf<JdbiRecipeInfo>()

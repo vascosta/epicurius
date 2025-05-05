@@ -8,7 +8,7 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 
-class GetSubstituteIngredientsServiceTests: ServiceTest() {
+class GetSubstituteIngredientsServiceTests : ServiceTest() {
 
     private val testSubstituteIngredients = listOf("1 cup quinces", "1 cup pears")
 

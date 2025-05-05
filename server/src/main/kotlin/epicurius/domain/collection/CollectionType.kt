@@ -6,8 +6,8 @@ enum class CollectionType {
 
     companion object {
         fun fromInt(value: Int): CollectionType {
-            return CollectionType.entries.getOrNull(value) ?:
-                throw IllegalArgumentException("Invalid value for CollectionType: $value")
+            return CollectionType.entries.getOrNull(value)
+                ?: throw IllegalArgumentException("Invalid value for CollectionType: $value")
         }
     }
 }

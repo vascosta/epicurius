@@ -12,7 +12,7 @@ import org.springframework.http.HttpStatus
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
-class GetIngredientsFromPictureControllerTests: HttpTest() {
+class GetIngredientsFromPictureControllerTests : HttpTest() {
 
     private val testIngredients = listOf("tomato")
 
@@ -27,7 +27,8 @@ class GetIngredientsFromPictureControllerTests: HttpTest() {
         // given a picture (testTomatoPicture)
 
         // mock
-        whenever(runBlocking { ingredientsServiceMock.getIngredientsFromPicture(testTomatoPicture) }
+        whenever(
+            runBlocking { ingredientsServiceMock.getIngredientsFromPicture(testTomatoPicture) }
         ).thenReturn(testIngredients)
 
         // when retrieving the ingredients from the picture
@@ -44,7 +45,8 @@ class GetIngredientsFromPictureControllerTests: HttpTest() {
         // given a picture with no ingredients (testPicture)
 
         // mock
-        whenever(runBlocking { ingredientsServiceMock.getIngredientsFromPicture(testPicture) }
+        whenever(
+            runBlocking { ingredientsServiceMock.getIngredientsFromPicture(testPicture) }
         ).thenReturn(emptyList())
 
         // when retrieving the ingredients from the picture

@@ -27,7 +27,6 @@ class CloudFunctionRepositoryTests : RepositoryTest() {
             cf.cloudFunctionRepository.getIngredientsFromPicture(pictureName)
     }
 
-
     @Test
     fun `Should detect ingredients in a picture successfully`() {
         // given a picture (testTomatoPicture) in the cloud storage

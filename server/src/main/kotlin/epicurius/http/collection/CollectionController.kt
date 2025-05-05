@@ -27,7 +27,8 @@ class CollectionController(val collectionService: CollectionService) {
 
     @GetMapping(Uris.Collection.COLLECTION)
     fun getCollection(
-        authenticatedUser: AuthenticatedUser, @PathVariable id: Int
+        authenticatedUser: AuthenticatedUser,
+        @PathVariable id: Int
     ): ResponseEntity<*> {
         val collection = collectionService.getCollection(authenticatedUser.user.id, authenticatedUser.user.name, id)
         return ResponseEntity.ok(GetCollectionOutputModel(collection))
@@ -35,7 +36,8 @@ class CollectionController(val collectionService: CollectionService) {
 
     @PostMapping(Uris.Collection.COLLECTIONS)
     fun createCollection(
-        authenticatedUser: AuthenticatedUser, @RequestBody body: CreateCollectionInputModel
+        authenticatedUser: AuthenticatedUser,
+        @RequestBody body: CreateCollectionInputModel
     ): ResponseEntity<*> {
         val collection = collectionService.createCollection(authenticatedUser.user.id, body)
         return ResponseEntity.created(collection(collection.id)).body(CreateCollectionOutputModel(collection))
@@ -43,7 +45,9 @@ class CollectionController(val collectionService: CollectionService) {
 
     @PostMapping(Uris.Collection.COLLECTION_RECIPES)
     fun addRecipeToCollection(
-        authenticatedUser: AuthenticatedUser, @PathVariable id: Int, @RequestBody body: AddRecipeToCollectionInputModel
+        authenticatedUser: AuthenticatedUser,
+        @PathVariable id: Int,
+        @RequestBody body: AddRecipeToCollectionInputModel
     ): ResponseEntity<*> {
         val updatedCollection = collectionService.addRecipeToCollection(authenticatedUser.user.name, id, body.recipeId)
         return ResponseEntity.ok().body(AddRecipeToCollectionOutputModel(updatedCollection))
@@ -51,7 +55,9 @@ class CollectionController(val collectionService: CollectionService) {
 
     @PatchMapping(Uris.Collection.COLLECTION)
     fun updateCollection(
-        authenticatedUser: AuthenticatedUser, @PathVariable id: Int, @RequestBody body: UpdateCollectionInputModel
+        authenticatedUser: AuthenticatedUser,
+        @PathVariable id: Int,
+        @RequestBody body: UpdateCollectionInputModel
     ): ResponseEntity<*> {
         val updatedCollection = collectionService.updateCollection(authenticatedUser.user.id, id, body)
         return ResponseEntity.ok().body(UpdateCollectionOutputModel(updatedCollection))
@@ -59,7 +65,9 @@ class CollectionController(val collectionService: CollectionService) {
 
     @DeleteMapping(Uris.Collection.COLLECTION_RECIPE)
     fun removeRecipeFromCollection(
-        authenticatedUser: AuthenticatedUser, @PathVariable id: Int, @PathVariable recipeId: Int,
+        authenticatedUser: AuthenticatedUser,
+        @PathVariable id: Int,
+        @PathVariable recipeId: Int,
     ): ResponseEntity<*> {
         val updatedCollection = collectionService.removeRecipeFromCollection(authenticatedUser.user.name, id, recipeId)
         return ResponseEntity.ok().body(AddRecipeToCollectionOutputModel(updatedCollection))

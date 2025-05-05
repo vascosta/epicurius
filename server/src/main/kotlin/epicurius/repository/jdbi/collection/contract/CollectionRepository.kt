@@ -1,11 +1,7 @@
 package epicurius.repository.jdbi.collection.contract
 
 import epicurius.domain.collection.CollectionType
-import epicurius.http.collection.models.input.CreateCollectionInputModel
-import epicurius.http.collection.models.input.UpdateCollectionInputModel
 import epicurius.repository.jdbi.collection.models.JdbiCollectionModel
-import epicurius.repository.jdbi.collection.models.JdbiCreateCollectionModel
-import epicurius.repository.jdbi.collection.models.JdbiUpdateCollectionModel
 
 interface CollectionRepository {
 

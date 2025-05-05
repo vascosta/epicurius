@@ -110,7 +110,7 @@ class CollectionService(private val tm: TransactionManager, private val cs: Clou
     private fun getJdbiCollectionModel(collectionId: Int): JdbiCollectionModel {
         return tm.run { it.collectionRepository.getCollectionById(collectionId) } ?: throw CollectionNotFound()
     }
-    
+
     private fun checkIfCollectionAlreadyExists(ownerId: Int, collectionName: String, collectionType: CollectionType) =
         tm.run { it.collectionRepository.getCollection(ownerId, collectionName, collectionType) }
 
@@ -123,7 +123,6 @@ class CollectionService(private val tm: TransactionManager, private val cs: Clou
 
     private fun getJdbiRecipeModel(recipeId: Int): JdbiRecipeModel =
         tm.run { it.recipeRepository.getRecipeById(recipeId) } ?: throw RecipeNotFound()
-
 
     private fun getRecipesInfo(recipes: List<JdbiRecipeInfo>): List<RecipeInfo> {
         return recipes.map {

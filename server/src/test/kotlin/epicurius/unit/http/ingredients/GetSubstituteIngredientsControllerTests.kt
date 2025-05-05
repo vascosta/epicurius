@@ -5,7 +5,6 @@ import epicurius.domain.user.AuthenticatedUser
 import epicurius.domain.user.User
 import epicurius.http.ingredients.models.output.GetSubstituteIngredientsOutputModel
 import epicurius.unit.http.HttpTest
-import epicurius.unit.services.ServiceTest
 import epicurius.utils.generateEmail
 import epicurius.utils.generateRandomUsername
 import kotlinx.coroutines.runBlocking
@@ -15,7 +14,7 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 
-class GetSubstituteIngredientsControllerTests: HttpTest() {
+class GetSubstituteIngredientsControllerTests : HttpTest() {
 
     private val testSubstituteIngredients = listOf("1 cup quinces", "1 cup pears")
 
@@ -31,7 +30,8 @@ class GetSubstituteIngredientsControllerTests: HttpTest() {
         val ingredient = "apple"
 
         // mock
-        whenever(runBlocking { ingredientsServiceMock.getSubstituteIngredients(ingredient) }
+        whenever(
+            runBlocking { ingredientsServiceMock.getSubstituteIngredients(ingredient) }
         ).thenReturn(testSubstituteIngredients)
 
         // when retrieving substitute ingredients
@@ -49,7 +49,8 @@ class GetSubstituteIngredientsControllerTests: HttpTest() {
         val ingredientWithNoSubstitutes = "water"
 
         // mock
-        whenever(runBlocking { ingredientsServiceMock.getSubstituteIngredients(ingredientWithNoSubstitutes) }
+        whenever(
+            runBlocking { ingredientsServiceMock.getSubstituteIngredients(ingredientWithNoSubstitutes) }
         ).thenReturn(emptyList())
 
         // when retrieving substitute ingredients
@@ -67,7 +68,8 @@ class GetSubstituteIngredientsControllerTests: HttpTest() {
         val invalidIngredient = "invalid-ingredient"
 
         // mock
-        whenever(runBlocking { ingredientsServiceMock.getSubstituteIngredients(invalidIngredient) }
+        whenever(
+            runBlocking { ingredientsServiceMock.getSubstituteIngredients(invalidIngredient) }
         ).thenThrow(InvalidIngredient(invalidIngredient))
 
         // when retrieving substitute ingredients

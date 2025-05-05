@@ -9,7 +9,7 @@ import java.util.UUID.randomUUID
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
-class GetIngredientsFromPictureServiceTests: ServiceTest() {
+class GetIngredientsFromPictureServiceTests : ServiceTest() {
 
     private val testIngredients = listOf("tomato")
 

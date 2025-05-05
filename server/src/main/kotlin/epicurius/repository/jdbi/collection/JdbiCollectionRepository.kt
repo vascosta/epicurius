@@ -1,15 +1,12 @@
 package epicurius.repository.jdbi.collection
 
 import epicurius.domain.collection.CollectionType
-import epicurius.http.collection.models.input.CreateCollectionInputModel
-import epicurius.http.collection.models.input.UpdateCollectionInputModel
 import epicurius.repository.jdbi.collection.contract.CollectionRepository
 import epicurius.repository.jdbi.collection.models.JdbiCollectionModel
-import epicurius.repository.jdbi.collection.models.JdbiUpdateCollectionModel
 import org.jdbi.v3.core.Handle
 import org.jdbi.v3.core.kotlin.mapTo
 
-class JdbiCollectionRepository(private val handle: Handle): CollectionRepository {
+class JdbiCollectionRepository(private val handle: Handle) : CollectionRepository {
 
     override fun createCollection(ownerId: Int, name: String, type: CollectionType): Int =
         handle.createUpdate(
@@ -44,7 +41,6 @@ class JdbiCollectionRepository(private val handle: Handle): CollectionRepository
             .mapTo<JdbiCollectionModel>()
             .firstOrNull()
 
-
     override fun getCollectionById(collectionId: Int): JdbiCollectionModel? {
         val query = StringBuilder()
         applyGetJdbiCollectionModelQuery(query)
@@ -55,7 +51,7 @@ class JdbiCollectionRepository(private val handle: Handle): CollectionRepository
             .firstOrNull()
     }
 
-    override fun updateCollection(collectionId: Int, newName: String?): JdbiCollectionModel  {
+    override fun updateCollection(collectionId: Int, newName: String?): JdbiCollectionModel {
         val query = StringBuilder(
             """
                 WITH updated_collection AS (
