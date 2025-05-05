@@ -71,5 +71,4 @@ class JdbiRateRecipeRepository(private val handle: Handle) : RateRecipeRepositor
             .bind("recipeId", recipeId)
             .mapTo<Boolean>()
             .one()
-
 }
