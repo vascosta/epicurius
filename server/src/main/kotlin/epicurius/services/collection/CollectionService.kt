@@ -3,12 +3,27 @@ package epicurius.services.collection
 import epicurius.domain.collection.Collection
 import epicurius.domain.collection.CollectionType
 import epicurius.domain.exceptions.CollectionAlreadyExists
+import epicurius.domain.exceptions.CollectionNotAccessible
+import epicurius.domain.exceptions.CollectionNotFound
+import epicurius.domain.exceptions.NotTheOwnerOfCollection
+import epicurius.domain.exceptions.RecipeAlreadyInCollection
+import epicurius.domain.exceptions.RecipeNotAccessible
+import epicurius.domain.exceptions.RecipeNotFound
+import epicurius.domain.exceptions.RecipeNotInCollection
+import epicurius.domain.exceptions.UserNotFound
+import epicurius.domain.picture.PictureDomain.Companion.RECIPES_FOLDER
+import epicurius.domain.recipe.RecipeInfo
 import epicurius.http.collection.models.input.CreateCollectionInputModel
+import epicurius.http.collection.models.input.UpdateCollectionInputModel
+import epicurius.repository.cloudStorage.manager.CloudStorageManager
+import epicurius.repository.jdbi.collection.models.JdbiCollectionModel
+import epicurius.repository.jdbi.recipe.models.JdbiRecipeInfo
+import epicurius.repository.jdbi.recipe.models.JdbiRecipeModel
 import epicurius.repository.transaction.TransactionManager
 import org.springframework.stereotype.Component
 
 @Component
-class CollectionService(private val tm: TransactionManager) {
+class CollectionService(private val tm: TransactionManager, private val cs: CloudStorageManager) {
 
     fun createCollection(ownerId: Int, createCollectionInfo: CreateCollectionInputModel): Collection {
         if (checkIfCollectionAlreadyExists(ownerId, createCollectionInfo.name, createCollectionInfo.type) != null) {
@@ -24,11 +39,100 @@ class CollectionService(private val tm: TransactionManager) {
         )
     }
 
+    fun getCollection(userId: Int, username: String, collectionId: Int): Collection {
+        val jdbiCollectionModel = getJdbiCollectionModel(collectionId)
 
-    private fun checkIfCollectionAlreadyExistsById(collectionId: Int) =
-        tm.run { it.collectionRepository.getCollectionById(collectionId) }
+        if (!checkCollectionVisibility(userId, username, jdbiCollectionModel)) throw CollectionNotAccessible()
+        return Collection(
+            jdbiCollectionModel.id,
+            jdbiCollectionModel.name,
+            jdbiCollectionModel.type,
+            getRecipesInfo(jdbiCollectionModel.recipes)
+        )
+    }
 
+    fun updateCollection(userId: Int, collectionId: Int, updateCollectionInfo: UpdateCollectionInputModel): Collection {
+        val jdbiCollectionModel = getJdbiCollectionModel(collectionId)
+
+        if (userId == jdbiCollectionModel.ownerId) throw NotTheOwnerOfCollection()
+        val updatedCollection = tm.run { it.collectionRepository.updateCollection(collectionId, updateCollectionInfo) }
+        return Collection(
+            updatedCollection.id,
+            updatedCollection.name,
+            updatedCollection.type,
+            getRecipesInfo(updatedCollection.recipes)
+        )
+    }
+
+    fun addRecipeToCollection(username: String, collectionId: Int, recipeId: Int): Collection {
+        val jdbiCollectionModel = getJdbiCollectionModel(collectionId)
+        val jdbiRecipeModel = getJdbiRecipeModel(recipeId)
+
+        if (checkIfRecipeInCollection(recipeId, jdbiCollectionModel)) throw RecipeAlreadyInCollection()
+        checkRecipeAccessibility(jdbiRecipeModel.authorUsername, username)
+
+        val updatedCollection = tm.run { it.collectionRepository.addRecipeToCollection(collectionId, recipeId) }
+        return Collection(
+            updatedCollection.id,
+            updatedCollection.name,
+            updatedCollection.type,
+            getRecipesInfo(updatedCollection.recipes)
+        )
+    }
+
+    fun removeRecipeFromCollection(username: String, collectionId: Int, recipeId: Int): Collection {
+        val jdbiCollectionModel = getJdbiCollectionModel(collectionId)
+        val jdbiRecipeModel = getJdbiRecipeModel(recipeId)
+
+        if (!checkIfRecipeInCollection(recipeId, jdbiCollectionModel)) throw RecipeNotInCollection()
+        checkRecipeAccessibility(jdbiRecipeModel.authorUsername, username)
+
+        val updatedCollection = tm.run { it.collectionRepository.removeRecipeFromCollection(collectionId, recipeId) }
+        return Collection(
+            updatedCollection.id,
+            updatedCollection.name,
+            updatedCollection.type,
+            getRecipesInfo(updatedCollection.recipes)
+        )
+    }
+
+    fun deleteCollection(userId: Int, collectionId: Int) {
+        val jdbiCollectionModel = getJdbiCollectionModel(collectionId)
+
+        if (userId == jdbiCollectionModel.ownerId) throw NotTheOwnerOfCollection()
+        tm.run { it.collectionRepository.deleteCollection(collectionId) }
+    }
+
+    private fun getJdbiCollectionModel(collectionId: Int): JdbiCollectionModel {
+        return tm.run { it.collectionRepository.getCollectionById(collectionId) } ?: throw CollectionNotFound()
+    }
+    
     private fun checkIfCollectionAlreadyExists(ownerId: Int, collectionName: String, collectionType: CollectionType) =
         tm.run { it.collectionRepository.getCollection(ownerId, collectionName, collectionType) }
 
+    private fun checkCollectionVisibility(userId: Int, username: String, jdbiCollectionModel: JdbiCollectionModel): Boolean {
+        if (userId == jdbiCollectionModel.ownerId) throw NotTheOwnerOfCollection()
+        if (jdbiCollectionModel.type == CollectionType.FAVOURITE) return false
+        val owner = tm.run { it.userRepository.getUserById(jdbiCollectionModel.ownerId) } ?: throw UserNotFound(null)
+        return tm.run { it.userRepository.checkUserVisibility(owner.name, username) }
+    }
+
+    private fun getJdbiRecipeModel(recipeId: Int): JdbiRecipeModel =
+        tm.run { it.recipeRepository.getRecipeById(recipeId) } ?: throw RecipeNotFound()
+
+
+    private fun getRecipesInfo(recipes: List<JdbiRecipeInfo>): List<RecipeInfo> {
+        return recipes.map {
+            val recipePicture = cs.pictureRepository.getPicture(it.picturesNames.first(), RECIPES_FOLDER)
+            it.toRecipeInfo(recipePicture)
+        }
+    }
+
+    private fun checkIfRecipeInCollection(recipeId: Int, collection: JdbiCollectionModel) =
+        !collection.recipes.any { it.id == recipeId }
+
+    private fun checkRecipeAccessibility(authorUsername: String, username: String) {
+        if (!tm.run { it.userRepository.checkUserVisibility(authorUsername, username) })
+            throw RecipeNotAccessible()
+    }
 }
