@@ -71,9 +71,7 @@ class CollectionController(val collectionService: CollectionService) {
         @PathVariable id: Int,
         @PathVariable recipeId: Int,
     ): ResponseEntity<*> {
-        val updatedCollection = collectionService.removeRecipeFromCollection(
-            authenticatedUser.user.id, authenticatedUser.user.name, id, recipeId
-        )
+        val updatedCollection = collectionService.removeRecipeFromCollection(authenticatedUser.user.id, id, recipeId)
         return ResponseEntity.ok().body(AddRecipeToCollectionOutputModel(updatedCollection))
     }
 
