@@ -109,6 +109,20 @@ class JdbiCollectionRepository(private val handle: Handle) : CollectionRepositor
             .execute()
     }
 
+    override fun checkIfUserIsCollectionOwner(collectionId: Int, userId: Int): Boolean {
+        return handle.createQuery(
+            """
+                SELECT COUNT(*)
+                FROM dbo.collection
+                WHERE id = :collectionId AND owner_id = :userId
+            """
+        )
+            .bind("collectionId", collectionId)
+            .bind("userId", userId)
+            .mapTo<Int>()
+            .one() == 1
+    }
+
     private fun applyGetJdbiCollectionModelByIdQuery(query: StringBuilder, collection: String? = "dbo.collection") {
         query.append(
             """

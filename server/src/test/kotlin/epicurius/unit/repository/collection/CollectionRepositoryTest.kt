@@ -38,5 +38,8 @@ open class CollectionRepositoryTest : RepositoryTest() {
             tm.run { it.collectionRepository.removeRecipeFromCollection(collectionId, recipeId) }
 
         fun deleteCollection(collectionId: Int) = tm.run { it.collectionRepository.deleteCollection(collectionId) }
+
+        fun checkIfUserIsCollectionOwner(collectionId: Int, userId: Int) =
+            tm.run { it.collectionRepository.checkIfUserIsCollectionOwner(collectionId, userId) }
     }
 }

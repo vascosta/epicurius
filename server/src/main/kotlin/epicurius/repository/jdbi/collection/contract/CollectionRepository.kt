@@ -16,4 +16,6 @@ interface CollectionRepository {
     fun removeRecipeFromCollection(collectionId: Int, recipeId: Int): JdbiCollectionModel
 
     fun deleteCollection(collectionId: Int)
+
+    fun checkIfUserIsCollectionOwner(collectionId: Int, userId: Int): Boolean
 }
