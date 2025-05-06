@@ -1,6 +1,7 @@
 package epicurius.repository.jdbi.collection
 
 import epicurius.domain.collection.CollectionType
+import epicurius.domain.exceptions.CollectionNotFound
 import epicurius.repository.jdbi.collection.contract.CollectionRepository
 import epicurius.repository.jdbi.collection.models.JdbiCollectionModel
 import org.jdbi.v3.core.Handle
@@ -8,7 +9,7 @@ import org.jdbi.v3.core.kotlin.mapTo
 
 class JdbiCollectionRepository(private val handle: Handle) : CollectionRepository {
 
-    override fun createCollection(ownerId: Int, name: String, type: CollectionType): Int =
+    override fun createCollection(ownerId: Int, collectionName: String, collectionType: CollectionType): Int =
         handle.createUpdate(
             """
                 INSERT INTO dbo.collection (owner_id, name, type)
@@ -17,8 +18,8 @@ class JdbiCollectionRepository(private val handle: Handle) : CollectionRepositor
             """
         )
             .bind("ownerId", ownerId)
-            .bind("name", name)
-            .bind("type", type.ordinal)
+            .bind("name", collectionName)
+            .bind("type", collectionType.ordinal)
             .executeAndReturnGeneratedKeys()
             .mapTo<Int>()
             .one()
@@ -26,12 +27,12 @@ class JdbiCollectionRepository(private val handle: Handle) : CollectionRepositor
     override fun getCollection(ownerId: Int, collectionName: String, collectionType: CollectionType) =
         handle.createQuery(
             """
-                SELECT c.id as collection_id, c.owner_id as owner_id, c.name as collection_name, c.type, 
-                r.id AS recipe_id, r.name AS recipe_name
+                SELECT c.id as collection_id, c.owner_id as owner_id, c.name as collection_name, c.type as collection_type,
+                r.id AS recipe_id, r.name AS recipe_name,
                 r.cuisine, r.meal_type, r.preparation_time, r.servings, r.pictures_names
                 FROM dbo.collection c
-                JOIN dbo.collection_recipe cr ON cr.collection_id = c.id
-                JOIN dbo.recipes r ON r.id = cr.recipe_id
+                LEFT JOIN dbo.collection_recipe cr ON cr.collection_id = c.id
+                LEFT JOIN dbo.recipe r ON r.id = cr.recipe_id
                 WHERE c.owner_id = :ownerId AND c.name = :collectionName AND c.type = :collectionType
             """
         )
@@ -43,7 +44,7 @@ class JdbiCollectionRepository(private val handle: Handle) : CollectionRepositor
 
     override fun getCollectionById(collectionId: Int): JdbiCollectionModel? {
         val query = StringBuilder()
-        applyGetJdbiCollectionModelQuery(query)
+        applyGetJdbiCollectionModelByIdQuery(query)
 
         return handle.createQuery(query)
             .bind("collectionId", collectionId)
@@ -62,7 +63,7 @@ class JdbiCollectionRepository(private val handle: Handle) : CollectionRepositor
                 )
             """
         )
-        applyGetJdbiCollectionModelQuery(query)
+        applyGetJdbiCollectionModelByIdQuery(query, "updated_collection")
 
         return handle.createQuery(query)
             .bind("collectionId", collectionId)
@@ -72,39 +73,29 @@ class JdbiCollectionRepository(private val handle: Handle) : CollectionRepositor
     }
 
     override fun addRecipeToCollection(collectionId: Int, recipeId: Int): JdbiCollectionModel {
-        val query = StringBuilder(
+        handle.createUpdate(
             """
-                WITH new_recipe as (
-                    INSERT INTO dbo.collection_recipe (collection_id, recipe_id)
-                    VALUES (:collectionId, :recipeId)
-                )
+                INSERT INTO dbo.collection_recipe (collection_id, recipe_id)
+                VALUES (:collectionId, :recipeId)
             """
         )
-        applyGetJdbiCollectionModelQuery(query)
-
-        return handle.createQuery(query)
             .bind("collectionId", collectionId)
             .bind("recipeId", recipeId)
-            .mapTo<JdbiCollectionModel>()
-            .first()
+            .execute()
+        return getCollectionById(collectionId) ?: throw CollectionNotFound()
     }
 
     override fun removeRecipeFromCollection(collectionId: Int, recipeId: Int): JdbiCollectionModel {
-        val query = StringBuilder(
+        handle.createUpdate(
             """
-                WITH recipe_to_remove AS (
-                    DELETE FROM dbo.collection_recipe
-                    WHERE collection_id = :collectionId AND recipe_id = :recipeId
-                )
+               DELETE FROM dbo.collection_recipe
+               WHERE collection_id = :collectionId AND recipe_id = :recipeId
             """
         )
-        applyGetJdbiCollectionModelQuery(query)
-
-        return handle.createQuery(query)
             .bind("collectionId", collectionId)
             .bind("recipeId", recipeId)
-            .mapTo<JdbiCollectionModel>()
-            .first()
+            .execute()
+        return getCollectionById(collectionId) ?: throw CollectionNotFound()
     }
 
     override fun deleteCollection(collectionId: Int) {
@@ -118,16 +109,16 @@ class JdbiCollectionRepository(private val handle: Handle) : CollectionRepositor
             .execute()
     }
 
-    private fun applyGetJdbiCollectionModelQuery(query: StringBuilder) {
+    private fun applyGetJdbiCollectionModelByIdQuery(query: StringBuilder, collection: String? = "dbo.collection") {
         query.append(
             """
-                SELECT c.id as collection_id, c.owner_id as owner_id, c.name as collection_name, c.type, 
-                r.id AS recipe_id, r.name AS recipe_name
+                SELECT c.id as collection_id, c.owner_id as owner_id, c.name as collection_name, c.type as collection_type,
+                r.id AS recipe_id, r.name AS recipe_name,
                 r.cuisine, r.meal_type, r.preparation_time, r.servings, r.pictures_names
-                FROM dbo.collection c
-                JOIN dbo.collection_recipe cr ON cr.collection_id = c.id
-                JOIN dbo.recipes r ON r.id = cr.recipe_id
-                WHERE c.collection_id = :collectionId
+                FROM $collection c
+                LEFT JOIN dbo.collection_recipe cr ON cr.collection_id = c.id
+                LEFT JOIN dbo.recipe r ON r.id = cr.recipe_id
+                WHERE c.id = :collectionId
             """
         )
     }

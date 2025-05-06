@@ -5,7 +5,7 @@ import epicurius.repository.jdbi.collection.models.JdbiCollectionModel
 
 interface CollectionRepository {
 
-    fun createCollection(ownerId: Int, name: String, type: CollectionType): Int
+    fun createCollection(ownerId: Int, collectionName: String, collectionType: CollectionType): Int
 
     fun getCollection(ownerId: Int, collectionName: String, collectionType: CollectionType): JdbiCollectionModel?
     fun getCollectionById(collectionId: Int): JdbiCollectionModel?

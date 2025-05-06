@@ -12,17 +12,21 @@ class JdbiCollectionMapper(private val recipeInfo: JdbiRecipeInfoMapper) : RowMa
     override fun map(rs: ResultSet, ctx: StatementContext): JdbiCollectionModel? {
         val recipes = mutableListOf<JdbiRecipeInfo>()
 
-        do {
-            val recipe = recipeInfo.map(rs, ctx)
-            recipes.add(recipe)
-        } while (rs.next())
-
-        return JdbiCollectionModel(
+        val jdbiCollectionModel = JdbiCollectionModel(
             id = rs.getInt("collection_id"),
             ownerId = rs.getInt("owner_id"),
             name = rs.getString("collection_name"),
             type = CollectionType.fromInt(rs.getInt("collection_type")),
-            recipes = recipes
+            recipes = emptyList()
         )
+
+        if (rs.getInt("recipe_id") != 0) {
+            do {
+                val recipe = recipeInfo.map(rs, ctx)
+                recipes.add(recipe)
+            } while (rs.next())
+        }
+
+        return jdbiCollectionModel.copy(recipes = recipes)
     }
 }
