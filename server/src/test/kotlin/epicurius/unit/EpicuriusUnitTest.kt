@@ -30,6 +30,7 @@ import epicurius.repository.spoonacular.SpoonacularRepository
 import epicurius.repository.spoonacular.manager.SpoonacularManager
 import epicurius.repository.transaction.Transaction
 import epicurius.repository.transaction.jdbi.JdbiTransactionManager
+import epicurius.services.collection.CollectionService
 import epicurius.services.feed.FeedService
 import epicurius.services.fridge.FridgeService
 import epicurius.services.ingredients.IngredientsService
@@ -56,12 +57,14 @@ open class EpicuriusUnitTest : EpicuriusTest() {
             feedServiceMock,
             menuServiceMock,
             ingredientsServiceMock,
+            collectionServiceMock,
             jdbiUserRepositoryMock,
             jdbiTokenRepositoryMock,
             jdbiFridgeRepositoryMock,
             jdbiRecipeRepositoryMock,
             jdbiRateRecipeRepositoryMock,
             jdbiMealPlannerRepositoryMock,
+            jdbiCollectionRepositoryMock,
             firestoreRecipeRepositoryMock,
             pictureRepositoryMock,
             spoonacularRepositoryMock,
@@ -140,6 +143,7 @@ open class EpicuriusUnitTest : EpicuriusTest() {
             pictureDomainMock
         )
         val menuService = MenuService(transactionManagerMock, cloudStorageManagerMock)
+        val collectionService = CollectionService(transactionManagerMock, cloudStorageManagerMock)
 
         val userServiceMock: UserService = mock()
         val fridgeServiceMock: FridgeService = mock()
@@ -148,6 +152,7 @@ open class EpicuriusUnitTest : EpicuriusTest() {
         val feedServiceMock: FeedService = mock()
         val menuServiceMock: MenuService = mock()
         val ingredientsServiceMock: IngredientsService = mock()
+        val collectionServiceMock: CollectionService = mock()
 
         val userController = UserController(userServiceMock)
         val fridgeController = FridgeController(fridgeServiceMock)
@@ -156,5 +161,6 @@ open class EpicuriusUnitTest : EpicuriusTest() {
         val feedController = FeedController(feedServiceMock)
         val menuController = MenuController(menuServiceMock)
         val ingredientsController = IngredientsController(ingredientsServiceMock)
+        val collectionController = epicurius.http.collection.CollectionController(collectionServiceMock)
     }
 }
