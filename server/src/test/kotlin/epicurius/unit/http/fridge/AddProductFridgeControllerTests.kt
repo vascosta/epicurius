@@ -62,7 +62,7 @@ class AddProductFridgeControllerTests : FridgeHttpTest() {
         val newFridge = runBlocking { addProducts(testAuthenticatedUser, productInputModel) }
 
         // then the product is updated successfully
-        assertEquals(HttpStatus.OK, newFridge.statusCode)
+        assertEquals(HttpStatus.CREATED, newFridge.statusCode)
         assertEquals(Fridge(listOf(product.copy(quantity = 2))), newFridge.body)
     }
 
