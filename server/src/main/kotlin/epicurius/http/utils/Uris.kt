@@ -68,7 +68,8 @@ object Uris {
     object MealPlanner {
         const val PLANNER = "/planner"
         const val MEAL_PLANNER = "$PLANNER/{date}"
-        const val CLEAN_MEAL_PLANNER = "$MEAL_PLANNER/remove/{mealTime}"
+        const val CLEAN_MEAL_PLANNER = "$MEAL_PLANNER/remove"
+        const val CLEAN_MEAL_TIME = "$CLEAN_MEAL_PLANNER/{mealTime}"
     }
 
     object Collection {

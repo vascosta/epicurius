@@ -7,12 +7,13 @@ import java.time.LocalDate
 
 interface MealPlannerRepository {
 
-    fun createDailyMealPlanner(userId: Int, date: LocalDate)
-
     fun getWeeklyMealPlanner(userId: Int): JdbiMealPlanner
-    fun addDailyMealPlanner(userId: Int, date: LocalDate, recipeId: Int, mealTime: MealTime)
+
+    fun createDailyMealPlanner(userId: Int, date: LocalDate)
+    fun addDailyMealPlanner(userId: Int, date: LocalDate, recipeId: Int, mealTime: MealTime): JdbiMealPlanner
     fun updateDailyMealPlanner(userId: Int, date: LocalDate, recipeId: Int, mealTime: MealTime): JdbiMealPlanner
     fun removeMealTimeDailyMealPlanner(userId: Int, date: LocalDate, mealTime: MealTime): JdbiMealPlanner
+    fun deleteDailyMealPlanner(userId: Int, date: LocalDate): JdbiMealPlanner
 
     fun getDailyCalories(userId: Int, date: LocalDate): JdbiCalories
 

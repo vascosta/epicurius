@@ -59,13 +59,22 @@ class MealPlannerController(private val mealPlannerService: MealPlannerService) 
         return ResponseEntity.ok().body(MealPlannerOutputModel(mealPlanner.planner))
     }
 
-    @DeleteMapping(Uris.MealPlanner.CLEAN_MEAL_PLANNER)
+    @DeleteMapping(Uris.MealPlanner.CLEAN_MEAL_TIME)
     fun removeMealTimeDailyMealPlanner(
         authenticatedUser: AuthenticatedUser,
         @PathVariable date: LocalDate,
         @PathVariable mealTime: MealTime
     ): ResponseEntity<*> {
         val mealPlanner = mealPlannerService.removeMealTimeDailyMealPlanner(authenticatedUser.user.id, date, mealTime)
+        return ResponseEntity.ok().body(MealPlannerOutputModel(mealPlanner.planner))
+    }
+
+    @DeleteMapping(Uris.MealPlanner.CLEAN_MEAL_PLANNER)
+    fun deleteDailyMealPlanner(
+        authenticatedUser: AuthenticatedUser,
+        @PathVariable date: LocalDate
+    ): ResponseEntity<*> {
+        val mealPlanner = mealPlannerService.deleteDailyMealPlanner(authenticatedUser.user.id, date)
         return ResponseEntity.ok().body(MealPlannerOutputModel(mealPlanner.planner))
     }
 }

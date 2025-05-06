@@ -48,7 +48,6 @@ class MealPlannerService(
 
         val jdbiPlanner = tm.run {
             it.mealPlannerRepository.addDailyMealPlanner(userId, date, info.recipeId, info.mealTime)
-            it.mealPlannerRepository.getWeeklyMealPlanner(userId)
         }
         val planner = getRecipeInfoPicture(jdbiPlanner.planner)
         return MealPlanner(planner)
@@ -75,6 +74,16 @@ class MealPlannerService(
 
         val jdbiPlanner = tm.run {
             it.mealPlannerRepository.removeMealTimeDailyMealPlanner(userId, date, mealTime)
+        }
+        val planner = getRecipeInfoPicture(jdbiPlanner.planner)
+        return MealPlanner(planner)
+    }
+
+    fun deleteDailyMealPlanner(userId: Int, date: LocalDate): MealPlanner {
+        if (!checkIfMealPlannerExists(userId, date)) throw MealPlannerNotFound()
+
+        val jdbiPlanner = tm.run {
+            it.mealPlannerRepository.deleteDailyMealPlanner(userId, date)
         }
         val planner = getRecipeInfoPicture(jdbiPlanner.planner)
         return MealPlanner(planner)

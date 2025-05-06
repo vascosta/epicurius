@@ -34,6 +34,7 @@ class JdbiMealPlannerRepository(private val handle: Handle) : MealPlannerReposit
                 JOIN dbo.meal_planner_recipe mpr ON mp.user_id = mpr.user_id AND mp.date = mpr.date
                 JOIN dbo.recipe r ON mpr.recipe_id = r.id
                 WHERE mp.user_id = :id
+                ORDER BY mp.date ASC
             """
         )
             .bind("id", userId)
@@ -50,7 +51,7 @@ class JdbiMealPlannerRepository(private val handle: Handle) : MealPlannerReposit
         return JdbiMealPlanner(dailyPlanners)
     }
 
-    override fun addDailyMealPlanner(userId: Int, date: LocalDate, recipeId: Int, mealTime: MealTime) {
+    override fun addDailyMealPlanner(userId: Int, date: LocalDate, recipeId: Int, mealTime: MealTime): JdbiMealPlanner {
         handle.createUpdate(
             """
                 INSERT INTO dbo.meal_planner_recipe (user_id, date, recipe_id, meal_time)
@@ -62,6 +63,8 @@ class JdbiMealPlannerRepository(private val handle: Handle) : MealPlannerReposit
             .bind("recipeId", recipeId)
             .bind("mealTime", mealTime.ordinal)
             .execute()
+
+        return getWeeklyMealPlanner(userId)
     }
 
     override fun updateDailyMealPlanner(userId: Int, date: LocalDate, recipeId: Int, mealTime: MealTime): JdbiMealPlanner {
@@ -101,6 +104,23 @@ class JdbiMealPlannerRepository(private val handle: Handle) : MealPlannerReposit
             .bind("userId", userId)
             .bind("date", date)
             .bind("mealTime", mealTime.ordinal)
+            .execute()
+
+        return getWeeklyMealPlanner(userId)
+    }
+
+    override fun deleteDailyMealPlanner(userId: Int, date: LocalDate): JdbiMealPlanner {
+        handle.createUpdate(
+            """
+                DELETE FROM dbo.meal_planner_recipe 
+                WHERE user_id = :userId AND date = :date;
+                
+                DELETE FROM dbo.meal_planner
+                WHERE user_id = :userId AND date = :date;
+            """
+        )
+            .bind("userId", userId)
+            .bind("date", date)
             .execute()
 
         return getWeeklyMealPlanner(userId)
