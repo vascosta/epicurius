@@ -120,11 +120,7 @@ class ExceptionHandler {
     @ExceptionHandler(
         value = [
             IllegalArgumentException::class,
-            UserAlreadyExists::class,
-            UserAlreadyLoggedIn::class,
-            UserAlreadyBeingFollowed::class,
             UserNotFollowed::class,
-            FollowRequestAlreadyBeenSent ::class,
             InvalidCountry::class,
             IncorrectPassword::class,
             PasswordsDoNotMatch::class,
@@ -132,7 +128,6 @@ class ExceptionHandler {
             InvalidDietIdx::class,
             InvalidProduct::class,
             DurationIsNull::class,
-            ProductIsAlreadyOpen::class,
             InvalidCuisineIdx::class,
             InvalidMealTypeIdx::class,
             InvalidIngredientUnitIdx::class,
@@ -141,11 +136,8 @@ class ExceptionHandler {
             RecipeIsInvalidForMealTime::class,
             RecipeExceedsMaximumCalories::class,
             RecipeDoesNotContainCaloriesInfo::class,
-            MealTimeAlreadyExistsInPlanner::class,
-            MealPlannerAlreadyExists::class,
             InvalidNumberOfRecipePictures::class,
             InvalidIngredient::class,
-            UserAlreadyRated::class,
             UserHasNotRated::class
         ]
     )
@@ -186,16 +178,6 @@ class ExceptionHandler {
             status = HttpStatus.NOT_FOUND
         )
 
-    @ExceptionHandler(value = [Exception::class])
-    fun handleUncaughtException(request: HttpServletRequest, ex: Exception) =
-        ex.handle(
-            request = request,
-            status = HttpStatus.INTERNAL_SERVER_ERROR,
-            type = "internal-server-error",
-            title = "Internal Server Error",
-            detail = "Something went wrong, please try again later."
-        ).also { ex.printStackTrace() }
-
     @ExceptionHandler(
         value = [
             RecipeNotAccessible::class,
@@ -210,6 +192,34 @@ class ExceptionHandler {
             request = request,
             status = HttpStatus.FORBIDDEN
         )
+
+    @ExceptionHandler(
+        value = [
+            UserAlreadyExists::class,
+            UserAlreadyLoggedIn::class,
+            UserAlreadyBeingFollowed::class,
+            UserAlreadyRated::class,
+            FollowRequestAlreadyBeenSent ::class,
+            ProductIsAlreadyOpen::class,
+            MealTimeAlreadyExistsInPlanner::class,
+            MealPlannerAlreadyExists::class,
+        ]
+    )
+    fun handleConflict(request: HttpServletRequest, ex: Exception): ResponseEntity<Problem> =
+        ex.handle(
+            request = request,
+            status = HttpStatus.CONFLICT
+        )
+
+    @ExceptionHandler(value = [Exception::class])
+    fun handleUncaughtException(request: HttpServletRequest, ex: Exception) =
+        ex.handle(
+            request = request,
+            status = HttpStatus.INTERNAL_SERVER_ERROR,
+            type = "internal-server-error",
+            title = "Internal Server Error",
+            detail = "Something went wrong, please try again later."
+        ).also { ex.printStackTrace() }
 
     companion object {
         const val PROBLEMS_DOCS_URI = "" // TODO: Add the URI to the documentation
