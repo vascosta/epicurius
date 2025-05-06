@@ -34,6 +34,8 @@ object Uris {
     object Fridge {
         const val FRIDGE = "/fridge"
         const val PRODUCT = "/$FRIDGE/product/{entryNumber}"
+
+        fun product(entryNumber: Int) = UriTemplate(PRODUCT).expand(entryNumber)
     }
 
     object Recipe {
@@ -65,7 +67,8 @@ object Uris {
 
     object MealPlanner {
         const val PLANNER = "/planner"
-        const val MEAL_PLANNER = "/$PLANNER/{date}"
+        const val MEAL_PLANNER = "/planner/{date}"
+        const val CLEAN_MEAL_PLANNER = "/$MEAL_PLANNER/remove/{mealTime}"
     }
 
     object Collection {
