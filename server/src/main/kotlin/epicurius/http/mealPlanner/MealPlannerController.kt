@@ -1,5 +1,6 @@
 package epicurius.http.mealPlanner
 
+import epicurius.domain.mealPlanner.MealTime
 import epicurius.domain.user.AuthenticatedUser
 import epicurius.http.mealPlanner.models.input.AddMealPlannerInputModel
 import epicurius.http.mealPlanner.models.input.CreateMealPlannerInputModel
@@ -9,6 +10,7 @@ import epicurius.http.utils.Uris
 import epicurius.services.mealPlanner.MealPlannerService
 import jakarta.validation.Valid
 import org.springframework.http.ResponseEntity
+import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PatchMapping
 import org.springframework.web.bind.annotation.PathVariable
@@ -23,37 +25,47 @@ import java.time.LocalDate
 class MealPlannerController(private val mealPlannerService: MealPlannerService) {
 
     @GetMapping(Uris.MealPlanner.PLANNER)
-    fun getMealPlanner(authenticatedUser: AuthenticatedUser): ResponseEntity<*> {
-        val mealPlanner = mealPlannerService.getMealPlanner(authenticatedUser.user.id)
+    fun getWeeklyMealPlanner(authenticatedUser: AuthenticatedUser): ResponseEntity<*> {
+        val mealPlanner = mealPlannerService.getWeeklyMealPlanner(authenticatedUser.user.id)
         return ResponseEntity.ok().body(MealPlannerOutputModel(mealPlanner.planner))
     }
 
     @PostMapping(Uris.MealPlanner.PLANNER)
-    fun createMealPlanner(
+    fun createDailyMealPlanner(
         authenticatedUser: AuthenticatedUser,
         @Valid @RequestBody body: CreateMealPlannerInputModel
     ): ResponseEntity<*> {
-        mealPlannerService.createMealPlanner(authenticatedUser.user.id, body.date)
+        mealPlannerService.createDailyMealPlanner(authenticatedUser.user.id, body.date)
         return ResponseEntity.noContent().build<Unit>()
     }
 
     @PostMapping(Uris.MealPlanner.MEAL_PLANNER)
-    fun addRecipeToMealPlanner(
+    fun addRecipeToDailyMealPlanner(
         authenticatedUser: AuthenticatedUser,
         @PathVariable date: LocalDate,
         @Valid @RequestBody body: AddMealPlannerInputModel
     ): ResponseEntity<*> {
-        val mealPlanner = mealPlannerService.addMealPlanner(authenticatedUser.user.id, date, body)
+        val mealPlanner = mealPlannerService.addDailyMealPlanner(authenticatedUser.user.id, date, body)
         return ResponseEntity.ok().body(MealPlannerOutputModel(mealPlanner.planner))
     }
 
     @PatchMapping(Uris.MealPlanner.MEAL_PLANNER)
-    fun updateMealPlanner(
+    fun updateDailyMealPlanner(
         authenticatedUser: AuthenticatedUser,
         @PathVariable date: LocalDate,
         @Valid @RequestBody body: UpdateMealPlannerInputModel
     ): ResponseEntity<*> {
-        val mealPlanner = mealPlannerService.updateMealPlanner(authenticatedUser.user.id, date, body)
+        val mealPlanner = mealPlannerService.updateDailyMealPlanner(authenticatedUser.user.id, date, body)
+        return ResponseEntity.ok().body(MealPlannerOutputModel(mealPlanner.planner))
+    }
+
+    @DeleteMapping(Uris.MealPlanner.CLEAN_MEAL_PLANNER)
+    fun removeMealTimeDailyMealPlanner(
+        authenticatedUser: AuthenticatedUser,
+        @PathVariable date: LocalDate,
+        @PathVariable mealTime: MealTime
+    ): ResponseEntity<*> {
+        val mealPlanner = mealPlannerService.removeMealTimeDailyMealPlanner(authenticatedUser.user.id, date, mealTime)
         return ResponseEntity.ok().body(MealPlannerOutputModel(mealPlanner.planner))
     }
 }

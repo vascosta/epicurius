@@ -143,7 +143,6 @@ class ExceptionHandler {
             RecipeDoesNotContainCaloriesInfo::class,
             MealTimeAlreadyExistsInPlanner::class,
             MealPlannerAlreadyExists::class,
-            InvalidMealPlannerDate::class,
             InvalidNumberOfRecipePictures::class,
             InvalidIngredient::class,
             UserAlreadyRated::class,

@@ -7,14 +7,15 @@ import java.time.LocalDate
 
 interface MealPlannerRepository {
 
-    fun createMealPlanner(userId: Int, date: LocalDate)
+    fun createDailyMealPlanner(userId: Int, date: LocalDate)
 
-    fun getMealPlanner(userId: Int): JdbiMealPlanner
-    fun addMealPlanner(userId: Int, date: LocalDate, recipeId: Int, mealTime: MealTime): JdbiMealPlanner
-    fun updateMealPlanner(userId: Int, date: LocalDate, recipeId: Int, mealTime: MealTime): JdbiMealPlanner
+    fun getWeeklyMealPlanner(userId: Int): JdbiMealPlanner
+    fun addDailyMealPlanner(userId: Int, date: LocalDate, recipeId: Int, mealTime: MealTime)
+    fun updateDailyMealPlanner(userId: Int, date: LocalDate, recipeId: Int, mealTime: MealTime): JdbiMealPlanner
+    fun removeMealTimeDailyMealPlanner(userId: Int, date: LocalDate, mealTime: MealTime): JdbiMealPlanner
 
     fun getDailyCalories(userId: Int, date: LocalDate): JdbiCalories
 
-    fun checkIfMealPlannerAlreadyExists(userId: Int, date: LocalDate): Boolean
+    fun checkIfDailyMealPlannerAlreadyExists(userId: Int, date: LocalDate): Boolean
     fun checkIfMealTimeAlreadyExistsInPlanner(userId: Int, date: LocalDate, mealTime: MealTime): Boolean
 }

@@ -27,18 +27,18 @@ class MealPlannerService(
     private val cs: CloudStorageManager
 ) {
 
-    fun createMealPlanner(userId: Int, date: LocalDate) {
+    fun createDailyMealPlanner(userId: Int, date: LocalDate) {
         if (checkIfMealPlannerExists(userId, date)) throw MealPlannerAlreadyExists(date)
-        tm.run { it.mealPlannerRepository.createMealPlanner(userId, date) }
+        tm.run { it.mealPlannerRepository.createDailyMealPlanner(userId, date) }
     }
 
-    fun getMealPlanner(userId: Int): MealPlanner {
-        val jdbiPlanner = tm.run { it.mealPlannerRepository.getMealPlanner(userId) }
+    fun getWeeklyMealPlanner(userId: Int): MealPlanner {
+        val jdbiPlanner = tm.run { it.mealPlannerRepository.getWeeklyMealPlanner(userId) }
         val planner = getRecipeInfoPicture(jdbiPlanner.planner)
         return MealPlanner(planner)
     }
 
-    fun addMealPlanner(userId: Int, date: LocalDate, info: AddMealPlannerInputModel): MealPlanner {
+    fun addDailyMealPlanner(userId: Int, date: LocalDate, info: AddMealPlannerInputModel): MealPlanner {
         if (!checkIfMealPlannerExists(userId, date)) throw MealPlannerNotFound()
         if (checkIfMealTimeAlreadyExistsInPlanner(userId, date, info.mealTime))
             throw MealTimeAlreadyExistsInPlanner(info.mealTime)
@@ -47,13 +47,14 @@ class MealPlannerService(
         checkIfLimitOfCaloriesIsRespected(userId, date, recipe)
 
         val jdbiPlanner = tm.run {
-            it.mealPlannerRepository.addMealPlanner(userId, date, info.recipeId, info.mealTime)
+            it.mealPlannerRepository.addDailyMealPlanner(userId, date, info.recipeId, info.mealTime)
+            it.mealPlannerRepository.getWeeklyMealPlanner(userId)
         }
         val planner = getRecipeInfoPicture(jdbiPlanner.planner)
         return MealPlanner(planner)
     }
 
-    fun updateMealPlanner(userId: Int, date: LocalDate, info: UpdateMealPlannerInputModel): MealPlanner {
+    fun updateDailyMealPlanner(userId: Int, date: LocalDate, info: UpdateMealPlannerInputModel): MealPlanner {
         if (!checkIfMealPlannerExists(userId, date)) throw MealPlannerNotFound()
         if (!checkIfMealTimeAlreadyExistsInPlanner(userId, date, info.mealTime))
             throw MealTimeDoesNotExist()
@@ -61,7 +62,19 @@ class MealPlannerService(
         if (!info.mealTime.isMealTypeAllowedForMealTime(recipe.mealType)) throw RecipeIsInvalidForMealTime()
 
         val jdbiPlanner = tm.run {
-            it.mealPlannerRepository.updateMealPlanner(userId, date, info.recipeId, info.mealTime)
+            it.mealPlannerRepository.updateDailyMealPlanner(userId, date, info.recipeId, info.mealTime)
+        }
+        val planner = getRecipeInfoPicture(jdbiPlanner.planner)
+        return MealPlanner(planner)
+    }
+
+    fun removeMealTimeDailyMealPlanner(userId: Int, date: LocalDate, mealTime: MealTime): MealPlanner {
+        if (!checkIfMealPlannerExists(userId, date)) throw MealPlannerNotFound()
+        if (!checkIfMealTimeAlreadyExistsInPlanner(userId, date, mealTime))
+            throw MealTimeDoesNotExist()
+
+        val jdbiPlanner = tm.run {
+            it.mealPlannerRepository.removeMealTimeDailyMealPlanner(userId, date, mealTime)
         }
         val planner = getRecipeInfoPicture(jdbiPlanner.planner)
         return MealPlanner(planner)
@@ -77,7 +90,7 @@ class MealPlannerService(
         }
 
     private fun checkIfMealPlannerExists(userId: Int, date: LocalDate): Boolean =
-        tm.run { it.mealPlannerRepository.checkIfMealPlannerAlreadyExists(userId, date) }
+        tm.run { it.mealPlannerRepository.checkIfDailyMealPlannerAlreadyExists(userId, date) }
 
     private fun checkIfRecipeExists(recipeId: Int): JdbiRecipeModel =
         tm.run { it.recipeRepository.getRecipeById(recipeId) } ?: throw RecipeNotFound()
