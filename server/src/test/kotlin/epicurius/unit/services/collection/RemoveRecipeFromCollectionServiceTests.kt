@@ -71,7 +71,7 @@ class RemoveRecipeFromCollectionServiceTests: CollectionServiceTest() {
     }
 
     @Test
-    fun `Should throw RecipeNotFound exception when removing a recipe to a collection that does not exist`() {
+    fun `Should throw RecipeNotFound exception when removing a non-existing recipe from a collection`() {
         // given a collection id (FAVOURITE_COLLECTION_ID) and a non-existing recipe id
         val nonExistingRecipeId = 1904
 

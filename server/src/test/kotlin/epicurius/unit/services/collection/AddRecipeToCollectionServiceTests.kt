@@ -75,13 +75,13 @@ class AddRecipeToCollectionServiceTests: CollectionServiceTest() {
         // then the recipe is not added and throws NotTheCollectionOwner exception
         assertFailsWith<NotTheCollectionOwner> {
             addRecipeToCollection(
-                testPrivateUser.id, testPublicUsername, FAVOURITE_COLLECTION_ID, RECIPE_ID
+                testPrivateUser.id, testPrivateUsername, FAVOURITE_COLLECTION_ID, RECIPE_ID
             )
         }
     }
 
     @Test
-    fun `Should throw RecipeNotFound exception when adding a recipe to a collection that does not exist`() {
+    fun `Should throw RecipeNotFound exception when adding a non-existing recipe to a collection`() {
         // given a collection id (FAVOURITE_COLLECTION_ID) and a non-existing recipe id
         val nonExistingRecipeId = 1904
 

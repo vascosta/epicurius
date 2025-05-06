@@ -14,8 +14,10 @@ class GetCollectionServiceTests: CollectionServiceTest() {
         // given a collection id (FAVOURITE_COLLECTION_ID)
 
         // mock
-        whenever(jdbiCollectionRepositoryMock.checkIfUserIsCollectionOwner(FAVOURITE_COLLECTION_ID, testPublicUser.id)).thenReturn(true)
-        whenever(jdbiCollectionRepositoryMock.getCollectionById(FAVOURITE_COLLECTION_ID)).thenReturn(testFavouriteJdbiCollectionModel)
+        whenever(jdbiCollectionRepositoryMock.checkIfUserIsCollectionOwner(FAVOURITE_COLLECTION_ID, testPublicUser.id))
+            .thenReturn(true)
+        whenever(jdbiCollectionRepositoryMock.getCollectionById(FAVOURITE_COLLECTION_ID))
+            .thenReturn(testFavouriteJdbiCollectionModel)
 
         // when retrieving the collection
         val collection = getCollection(PUBLIC_USER_ID, testPublicUsername, FAVOURITE_COLLECTION_ID)
@@ -26,15 +28,16 @@ class GetCollectionServiceTests: CollectionServiceTest() {
 
     @Test
     fun `Should throw CollectionNotFound when retrieving a collection that does not exist`() {
-        // given a collection id (FAVOURITE_COLLECTION_ID)
+        // given a non-existing collection id
+        val nonExistingCollectionId = 9999
 
         // mock
-        whenever(jdbiCollectionRepositoryMock.getCollectionById(FAVOURITE_COLLECTION_ID)).thenReturn(null)
+        whenever(jdbiCollectionRepositoryMock.getCollectionById(nonExistingCollectionId)).thenReturn(null)
 
         // when retrieving the collection
         // then the collection is not found and throws CollectionNotFound exception
         assertFailsWith<CollectionNotFound> {
-            getCollection(PUBLIC_USER_ID, testPublicUsername, FAVOURITE_COLLECTION_ID)
+            getCollection(PUBLIC_USER_ID, testPublicUsername, nonExistingCollectionId)
         }
     }
 
@@ -43,7 +46,8 @@ class GetCollectionServiceTests: CollectionServiceTest() {
         // given a collection id (FAVOURITE_COLLECTION_ID)
 
         // mock
-        whenever(jdbiCollectionRepositoryMock.getCollectionById(FAVOURITE_COLLECTION_ID)).thenReturn(testFavouriteJdbiCollectionModel)
+        whenever(jdbiCollectionRepositoryMock.getCollectionById(FAVOURITE_COLLECTION_ID))
+            .thenReturn(testFavouriteJdbiCollectionModel)
 
         // when retrieving the collection
         // then the collection is not accessible and throws CollectionNotAccessible exception
