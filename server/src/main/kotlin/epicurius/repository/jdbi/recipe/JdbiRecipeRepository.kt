@@ -127,7 +127,8 @@ class JdbiRecipeRepository(private val handle: Handle) : RecipeRepository {
                     LEFT JOIN dbo.followers f ON f.user_id = r.author_id AND f.follower_id = :id
                     WHERE u.privacy = false OR f.follower_id IS NOT NULL
                 ) 
-                SELECT DISTINCT r.id, r.name, r.cuisine, r.meal_type, r.preparation_time, r.servings, r.pictures_names
+                SELECT DISTINCT r.id as recipe_id, r.name as recipe_name, r.cuisine, 
+                r.meal_type, r.preparation_time, r.servings, r.pictures_names
                 FROM available_recipes r JOIN dbo.Ingredient i ON r.id = i.recipe_id
                 WHERE r.author_id <> :id
             """

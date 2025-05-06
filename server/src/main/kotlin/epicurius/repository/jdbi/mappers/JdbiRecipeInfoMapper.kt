@@ -14,8 +14,8 @@ class JdbiRecipeInfoMapper : RowMapper<JdbiRecipeInfo> {
         val mealType = MealType.fromInt(rs.getInt("meal_type"))
         val pictures = getArray<String>(rs.getArray("pictures_names")).toList()
         return JdbiRecipeInfo(
-            id = rs.getInt("id"),
-            name = rs.getString("name"),
+            id = rs.getInt("recipe_id"),
+            name = rs.getString("recipe_name"),
             cuisine = cuisine,
             mealType = mealType,
             preparationTime = rs.getInt("preparation_time"),

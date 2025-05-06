@@ -12,7 +12,7 @@ class JdbiFeedRepository(private val handle: Handle) : FeedRepository {
     override fun getFeed(info: GetFeedModel): List<JdbiRecipeInfo> {
         return handle.createQuery(
             """
-                SELECT r.id, r.name, r.cuisine, r.meal_type, r.preparation_time, r.servings, r.pictures_names
+                SELECT r.id as recipe_id, r.name as recipe_name, r.cuisine, r.meal_type, r.preparation_time, r.servings, r.pictures_names
                 FROM dbo.followers f 
                 JOIN dbo.recipe r ON f.user_id = r.author_id
                 WHERE f.follower_id = :userId 
