@@ -29,7 +29,7 @@ class AddProductFridgeControllerTests : FridgeHttpTest() {
         val response = runBlocking { addProducts(testAuthenticatedUser, productInputModel) }
 
         // then the product is added successfully
-        assertEquals(HttpStatus.OK, response.statusCode)
+        assertEquals(HttpStatus.CREATED, response.statusCode)
         assertEquals(fridge, response.body)
     }
 
@@ -48,7 +48,7 @@ class AddProductFridgeControllerTests : FridgeHttpTest() {
         val oldFridge = runBlocking { addProducts(testAuthenticatedUser, productInputModel) }
 
         // then the existing product is added successfully
-        assertEquals(HttpStatus.OK, oldFridge.statusCode)
+        assertEquals(HttpStatus.CREATED, oldFridge.statusCode)
         assertEquals(Fridge(listOf(product)), oldFridge.body)
 
         // mock

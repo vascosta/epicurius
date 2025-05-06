@@ -5,6 +5,7 @@ import epicurius.http.fridge.models.input.ProductInputModel
 import epicurius.http.fridge.models.input.UpdateProductInputModel
 import epicurius.http.fridge.models.output.FridgeOutputModel
 import epicurius.http.utils.Uris
+import epicurius.http.utils.Uris.Fridge.product
 import epicurius.services.fridge.FridgeService
 import jakarta.validation.Valid
 import org.springframework.http.ResponseEntity
@@ -33,7 +34,7 @@ class FridgeController(private val fridgeService: FridgeService) {
         @Valid @RequestBody body: ProductInputModel
     ): ResponseEntity<*> {
         val newFridge = fridgeService.addProduct(authenticatedUser.user.id, body)
-        return ResponseEntity.ok().body(newFridge)
+        return ResponseEntity.created(product(newFridge.products.last().entryNumber)).body(newFridge)
     }
 
     @PatchMapping(Uris.Fridge.PRODUCT)
