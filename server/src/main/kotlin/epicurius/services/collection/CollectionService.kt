@@ -26,7 +26,7 @@ import org.springframework.stereotype.Component
 class CollectionService(private val tm: TransactionManager, private val cs: CloudStorageManager) {
 
     fun createCollection(ownerId: Int, createCollectionInfo: CreateCollectionInputModel): Collection {
-        if (checkIfCollectionAlreadyExists(ownerId, createCollectionInfo.name, createCollectionInfo.type)) {
+        if (checkIfOwnedCollectionExists(ownerId, createCollectionInfo.name, createCollectionInfo.type)) {
             throw CollectionAlreadyExists()
         }
         val collectionId = tm.run {
@@ -42,7 +42,7 @@ class CollectionService(private val tm: TransactionManager, private val cs: Clou
     }
 
     fun getCollection(userId: Int, username: String, collectionId: Int): Collection {
-        val jdbiCollectionModel = getJdbiCollectionModel(collectionId)
+        val jdbiCollectionModel = checkIfCollectionExists(collectionId)
 
         if (!checkCollectionVisibility(userId, username, jdbiCollectionModel)) throw CollectionNotAccessible()
         return Collection(
@@ -54,6 +54,7 @@ class CollectionService(private val tm: TransactionManager, private val cs: Clou
     }
 
     fun updateCollection(userId: Int, collectionId: Int, updateCollectionInfo: UpdateCollectionInputModel): Collection {
+        checkIfCollectionExists(collectionId)
         if (!checkIfUserIsCollectionOwner(collectionId, userId)) throw NotTheCollectionOwner()
         val updatedCollection = tm.run {
             it.collectionRepository.updateCollection(collectionId, updateCollectionInfo.name)
@@ -67,6 +68,7 @@ class CollectionService(private val tm: TransactionManager, private val cs: Clou
     }
 
     fun addRecipeToCollection(userId: Int, username: String, collectionId: Int, recipeId: Int): Collection {
+        checkIfCollectionExists(collectionId)
         if (!checkIfUserIsCollectionOwner(collectionId, userId)) throw NotTheCollectionOwner()
 
         val jdbiRecipeModel = getJdbiRecipeModel(recipeId)
@@ -83,7 +85,8 @@ class CollectionService(private val tm: TransactionManager, private val cs: Clou
         )
     }
 
-    fun removeRecipeFromCollection(userId: Int, username: String, collectionId: Int, recipeId: Int): Collection {
+    fun removeRecipeFromCollection(userId: Int, collectionId: Int, recipeId: Int): Collection {
+        checkIfCollectionExists(collectionId)
         if (!checkIfUserIsCollectionOwner(collectionId, userId)) throw NotTheCollectionOwner()
 
         getJdbiRecipeModel(recipeId)
@@ -100,18 +103,18 @@ class CollectionService(private val tm: TransactionManager, private val cs: Clou
     }
 
     fun deleteCollection(userId: Int, collectionId: Int) {
+        checkIfCollectionExists(collectionId)
         if (!checkIfUserIsCollectionOwner(collectionId, userId)) throw NotTheCollectionOwner()
         tm.run { it.collectionRepository.deleteCollection(collectionId) }
-    }
-
-    private fun getJdbiCollectionModel(collectionId: Int): JdbiCollectionModel {
-        return tm.run { it.collectionRepository.getCollectionById(collectionId) } ?: throw CollectionNotFound()
     }
 
     private fun checkIfUserIsCollectionOwner(collectionId: Int, userId: Int) =
         tm.run { it.collectionRepository.checkIfUserIsCollectionOwner(collectionId, userId) }
 
-    private fun checkIfCollectionAlreadyExists(ownerId: Int, collectionName: String, collectionType: CollectionType) =
+    private fun checkIfCollectionExists(collectionId: Int) =
+        tm.run { it.collectionRepository.getCollectionById(collectionId) } ?: throw CollectionNotFound()
+
+    private fun checkIfOwnedCollectionExists(ownerId: Int, collectionName: String, collectionType: CollectionType) =
         tm.run { it.collectionRepository.getCollection(ownerId, collectionName, collectionType) } != null
 
     private fun checkCollectionVisibility(userId: Int, username: String, jdbiCollectionModel: JdbiCollectionModel): Boolean {

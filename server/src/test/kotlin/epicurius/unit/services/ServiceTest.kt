@@ -4,6 +4,8 @@ import epicurius.domain.Diet
 import epicurius.domain.Intolerance
 import epicurius.domain.PagingParams
 import epicurius.domain.user.FollowRequestType
+import epicurius.http.collection.models.input.CreateCollectionInputModel
+import epicurius.http.collection.models.input.UpdateCollectionInputModel
 import epicurius.http.fridge.models.input.ProductInputModel
 import epicurius.http.fridge.models.input.UpdateProductInputModel
 import epicurius.http.recipe.models.input.CreateRecipeInputModel
@@ -112,5 +114,23 @@ open class ServiceTest : EpicuriusUnitTest() {
 
         // MENU
         fun getDailyMenu(intolerances: List<Intolerance>, diets: List<Diet>) = menuService.getDailyMenu(intolerances, diets)
+
+        // COLLECTION
+        fun createCollection(ownerId: Int, createCollectionInfo: CreateCollectionInputModel) =
+            collectionService.createCollection(ownerId, createCollectionInfo)
+
+        fun getCollection(userId: Int, username: String, collectionId: Int) =
+            collectionService.getCollection(userId, username, collectionId)
+
+        fun updateCollection(userId: Int, collectionId: Int, updateCollectionInfo: UpdateCollectionInputModel) =
+            collectionService.updateCollection(userId, collectionId, updateCollectionInfo)
+
+        fun addRecipeToCollection(userId: Int, username: String, collectionId: Int, recipeId: Int) =
+            collectionService.addRecipeToCollection(userId, username, collectionId, recipeId)
+
+        fun removeRecipeFromCollection(userId: Int, collectionId: Int, recipeId: Int) =
+            collectionService.removeRecipeFromCollection(userId, collectionId, recipeId)
+
+        fun deleteCollection(userId: Int, collectionId: Int) = collectionService.deleteCollection(userId, collectionId)
     }
 }
