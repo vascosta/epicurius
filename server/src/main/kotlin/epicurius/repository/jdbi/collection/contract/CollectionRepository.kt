@@ -18,4 +18,5 @@ interface CollectionRepository {
     fun deleteCollection(collectionId: Int)
 
     fun checkIfUserIsCollectionOwner(collectionId: Int, userId: Int): Boolean
+    fun checkIfRecipeInCollection(collectionId: Int, recipeId: Int): Boolean
 }

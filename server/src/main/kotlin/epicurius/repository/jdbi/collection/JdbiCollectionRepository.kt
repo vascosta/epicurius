@@ -123,6 +123,20 @@ class JdbiCollectionRepository(private val handle: Handle) : CollectionRepositor
             .one() == 1
     }
 
+    override fun checkIfRecipeInCollection(collectionId: Int, recipeId: Int): Boolean {
+        return handle.createQuery(
+            """
+                SELECT COUNT(*)
+                FROM dbo.collection_recipe
+                WHERE collection_id = :collectionId AND recipe_id = :recipeId
+            """
+        )
+            .bind("collectionId", collectionId)
+            .bind("recipeId", recipeId)
+            .mapTo<Int>()
+            .one() == 1
+    }
+
     private fun applyGetJdbiCollectionModelByIdQuery(query: StringBuilder, collection: String? = "dbo.collection") {
         query.append(
             """
