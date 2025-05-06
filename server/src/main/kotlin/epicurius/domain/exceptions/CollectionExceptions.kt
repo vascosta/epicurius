@@ -7,4 +7,4 @@ class CollectionNotFound : RuntimeException("Collection not found")
 class RecipeAlreadyInCollection : RuntimeException("Recipe already in collection")
 class RecipeNotInCollection : RuntimeException("Recipe not in collection")
 
-class NotTheOwnerOfCollection : RuntimeException("You are not the owner of this collection")
+class NotTheCollectionOwner : RuntimeException("You are not the owner of this collection")
