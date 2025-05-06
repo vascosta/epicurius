@@ -3,6 +3,8 @@ package epicurius.utils
 import epicurius.EpicuriusTest.Companion.userDomain
 import epicurius.domain.Diet
 import epicurius.domain.Intolerance
+import epicurius.domain.collection.CollectionDomain.Companion.MAX_COLLECTION_NAME_LENGTH
+import epicurius.domain.collection.CollectionType
 import epicurius.domain.recipe.Cuisine
 import epicurius.domain.recipe.Cuisine.Companion.fromInt
 import epicurius.domain.recipe.Ingredient
@@ -85,6 +87,11 @@ fun createTestRecipe(tm: TransactionManager, fs: FirestoreManager, user: User): 
         listOf(ByteArray(1))
     )
 }
+
+fun createTestCollection(tm: TransactionManager, ownerId: Int, collectionType: CollectionType) =
+    tm.run {
+        it.collectionRepository.createCollection(ownerId, randomUUID().toString().take(MAX_COLLECTION_NAME_LENGTH), collectionType)
+    }
 
 fun generateRandomUsername() = "test${Math.random()}".replace(".", "").take(MAX_USERNAME_LENGTH)
 fun generateEmail(username: String) = "$username@email.com"

@@ -73,7 +73,7 @@ create table dbo.ingredient(
 create table dbo.collection(
     id serial primary key,
     owner_id int not null,
-    name varchar(20) not null,
+    name varchar(30) not null,
     type int not null, -- favourite or kitchen book
     foreign key (owner_id) references dbo.user(id)
 );
