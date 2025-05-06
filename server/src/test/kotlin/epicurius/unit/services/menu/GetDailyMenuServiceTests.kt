@@ -44,7 +44,7 @@ class GetDailyMenuServiceTests : MenuServiceTest() {
         ).thenReturn(byteArrayOf())
 
         // when retrieving the daily menu
-        val dailyMenu = menuService.getDailyMenu(userIntolerances, userDiets)
+        val dailyMenu = getDailyMenu(userIntolerances, userDiets)
         val breakfast = dailyMenu["breakfast"]
         val soup = dailyMenu["soup"]
         val dessert = dailyMenu["dessert"]
@@ -83,7 +83,7 @@ class GetDailyMenuServiceTests : MenuServiceTest() {
         ).thenReturn(emptyList())
 
         // when retrieving the daily menu
-        val dailyMenu = menuService.getDailyMenu(userIntolerances, userDiets)
+        val dailyMenu = getDailyMenu(userIntolerances, userDiets)
         val breakfast = dailyMenu["breakfast"]
         val soup = dailyMenu["soup"]
         val dessert = dailyMenu["dessert"]
@@ -129,7 +129,7 @@ class GetDailyMenuServiceTests : MenuServiceTest() {
         ).thenReturn(byteArrayOf())
 
         // when retrieving the daily menu
-        val dailyMenu = menuService.getDailyMenu(userIntolerances, userDiets)
+        val dailyMenu = getDailyMenu(userIntolerances, userDiets)
         val breakfast = dailyMenu["breakfast"]
         val soup = dailyMenu["soup"]
         val dessert = dailyMenu["dessert"]
