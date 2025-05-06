@@ -1,0 +1,32 @@
+package epicurius.unit.repository.fridge
+
+import epicurius.domain.fridge.ProductInfo
+import org.junit.jupiter.api.Assertions.assertTrue
+import java.time.LocalDate
+import kotlin.test.Test
+
+class RemoveFridgeProductRepositoryTests : FridgeRepositoryTest() {
+
+    @Test
+    fun `Remove product from user fridge successfully`() {
+        // given a user
+        val user = testUser4
+
+        // and a product in the user's fridge
+        val product = ProductInfo(
+            productName = "Peach",
+            quantity = 1,
+            openDate = null,
+            expirationDate = LocalDate.now().plusDays(7)
+        )
+        val fridge = addProduct(user.id, product)
+
+        val entryNumber = fridge.products.first().entryNumber
+
+        // when removing the product from the user's fridge
+        val removedFridge = removeProduct(user.id, entryNumber)
+
+        // then the fridge should be empty
+        assertTrue(removedFridge.products.isEmpty())
+    }
+}
