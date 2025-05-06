@@ -5,7 +5,7 @@ import epicurius.domain.collection.CollectionType
 import epicurius.domain.exceptions.CollectionAlreadyExists
 import epicurius.domain.exceptions.CollectionNotAccessible
 import epicurius.domain.exceptions.CollectionNotFound
-import epicurius.domain.exceptions.NotTheOwnerOfCollection
+import epicurius.domain.exceptions.NotTheCollectionOwner
 import epicurius.domain.exceptions.RecipeAlreadyInCollection
 import epicurius.domain.exceptions.RecipeNotAccessible
 import epicurius.domain.exceptions.RecipeNotFound
@@ -26,7 +26,7 @@ import org.springframework.stereotype.Component
 class CollectionService(private val tm: TransactionManager, private val cs: CloudStorageManager) {
 
     fun createCollection(ownerId: Int, createCollectionInfo: CreateCollectionInputModel): Collection {
-        if (checkIfCollectionAlreadyExists(ownerId, createCollectionInfo.name, createCollectionInfo.type) != null) {
+        if (checkIfCollectionAlreadyExists(ownerId, createCollectionInfo.name, createCollectionInfo.type)) {
             throw CollectionAlreadyExists()
         }
         val collectionId = tm.run {
@@ -54,9 +54,7 @@ class CollectionService(private val tm: TransactionManager, private val cs: Clou
     }
 
     fun updateCollection(userId: Int, collectionId: Int, updateCollectionInfo: UpdateCollectionInputModel): Collection {
-        val jdbiCollectionModel = getJdbiCollectionModel(collectionId)
-
-        if (userId == jdbiCollectionModel.ownerId) throw NotTheOwnerOfCollection()
+        if (!checkIfUserIsCollectionOwner(collectionId, userId)) throw NotTheCollectionOwner()
         val updatedCollection = tm.run {
             it.collectionRepository.updateCollection(collectionId, updateCollectionInfo.name)
         }
@@ -68,11 +66,12 @@ class CollectionService(private val tm: TransactionManager, private val cs: Clou
         )
     }
 
-    fun addRecipeToCollection(username: String, collectionId: Int, recipeId: Int): Collection {
-        val jdbiCollectionModel = getJdbiCollectionModel(collectionId)
+    fun addRecipeToCollection(userId: Int, username: String, collectionId: Int, recipeId: Int): Collection {
+        if (!checkIfUserIsCollectionOwner(collectionId, userId)) throw NotTheCollectionOwner()
+
         val jdbiRecipeModel = getJdbiRecipeModel(recipeId)
 
-        if (checkIfRecipeInCollection(recipeId, jdbiCollectionModel)) throw RecipeAlreadyInCollection()
+        if (checkIfRecipeInCollection(collectionId, recipeId)) throw RecipeAlreadyInCollection()
         checkRecipeAccessibility(jdbiRecipeModel.authorUsername, username)
 
         val updatedCollection = tm.run { it.collectionRepository.addRecipeToCollection(collectionId, recipeId) }
@@ -84,12 +83,12 @@ class CollectionService(private val tm: TransactionManager, private val cs: Clou
         )
     }
 
-    fun removeRecipeFromCollection(username: String, collectionId: Int, recipeId: Int): Collection {
-        val jdbiCollectionModel = getJdbiCollectionModel(collectionId)
-        val jdbiRecipeModel = getJdbiRecipeModel(recipeId)
+    fun removeRecipeFromCollection(userId: Int, username: String, collectionId: Int, recipeId: Int): Collection {
+        if (!checkIfUserIsCollectionOwner(collectionId, userId)) throw NotTheCollectionOwner()
 
-        if (!checkIfRecipeInCollection(recipeId, jdbiCollectionModel)) throw RecipeNotInCollection()
-        checkRecipeAccessibility(jdbiRecipeModel.authorUsername, username)
+        getJdbiRecipeModel(recipeId)
+
+        if (!checkIfRecipeInCollection(collectionId, recipeId)) throw RecipeNotInCollection()
 
         val updatedCollection = tm.run { it.collectionRepository.removeRecipeFromCollection(collectionId, recipeId) }
         return Collection(
@@ -101,9 +100,7 @@ class CollectionService(private val tm: TransactionManager, private val cs: Clou
     }
 
     fun deleteCollection(userId: Int, collectionId: Int) {
-        val jdbiCollectionModel = getJdbiCollectionModel(collectionId)
-
-        if (userId == jdbiCollectionModel.ownerId) throw NotTheOwnerOfCollection()
+        if (!checkIfUserIsCollectionOwner(collectionId, userId)) throw NotTheCollectionOwner()
         tm.run { it.collectionRepository.deleteCollection(collectionId) }
     }
 
@@ -111,11 +108,14 @@ class CollectionService(private val tm: TransactionManager, private val cs: Clou
         return tm.run { it.collectionRepository.getCollectionById(collectionId) } ?: throw CollectionNotFound()
     }
 
+    private fun checkIfUserIsCollectionOwner(collectionId: Int, userId: Int) =
+        tm.run { it.collectionRepository.checkIfUserIsCollectionOwner(collectionId, userId) }
+
     private fun checkIfCollectionAlreadyExists(ownerId: Int, collectionName: String, collectionType: CollectionType) =
-        tm.run { it.collectionRepository.getCollection(ownerId, collectionName, collectionType) }
+        tm.run { it.collectionRepository.getCollection(ownerId, collectionName, collectionType) } != null
 
     private fun checkCollectionVisibility(userId: Int, username: String, jdbiCollectionModel: JdbiCollectionModel): Boolean {
-        if (userId == jdbiCollectionModel.ownerId) throw NotTheOwnerOfCollection()
+        if (checkIfUserIsCollectionOwner(jdbiCollectionModel.id, userId)) return true
         if (jdbiCollectionModel.type == CollectionType.FAVOURITE) return false
         val owner = tm.run { it.userRepository.getUserById(jdbiCollectionModel.ownerId) } ?: throw UserNotFound(null)
         return tm.run { it.userRepository.checkUserVisibility(owner.name, username) }
@@ -131,8 +131,8 @@ class CollectionService(private val tm: TransactionManager, private val cs: Clou
         }
     }
 
-    private fun checkIfRecipeInCollection(recipeId: Int, collection: JdbiCollectionModel) =
-        !collection.recipes.any { it.id == recipeId }
+    private fun checkIfRecipeInCollection(collectionId: Int, recipeId: Int) =
+        tm.run { it.collectionRepository.checkIfRecipeInCollection(collectionId, recipeId) }
 
     private fun checkRecipeAccessibility(authorUsername: String, username: String) {
         if (!tm.run { it.userRepository.checkUserVisibility(authorUsername, username) })
