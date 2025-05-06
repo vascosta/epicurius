@@ -18,6 +18,7 @@ open class CollectionRepositoryTest : RepositoryTest() {
     companion object {
         val testOwner = createTestUser(tm)
         val testCollectionId = createTestCollection(tm, testOwner.id, CollectionType.FAVOURITE)
+        val testRecipe = createTestRecipe(tm, fs, testOwner)
 
         fun createCollection(ownerId: Int, collectionName: String, collectionType: CollectionType) =
             tm.run { it.collectionRepository.createCollection(ownerId, collectionName, collectionType) }
@@ -41,5 +42,8 @@ open class CollectionRepositoryTest : RepositoryTest() {
 
         fun checkIfUserIsCollectionOwner(collectionId: Int, userId: Int) =
             tm.run { it.collectionRepository.checkIfUserIsCollectionOwner(collectionId, userId) }
+
+        fun checkIfRecipeInCollection(collectionId: Int, recipeId: Int) =
+            tm.run { it.collectionRepository.checkIfRecipeInCollection(collectionId, recipeId) }
     }
 }
