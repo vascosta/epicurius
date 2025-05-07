@@ -50,11 +50,11 @@ class UpdateUserServiceTests : UserServiceTest() {
         whenever(jdbiUserRepositoryMock.getUser(newUsername)).thenReturn(null)
         whenever(countriesDomainMock.checkIfCountryCodeIsValid(updateUserInputInfo.country!!)).thenReturn(true)
         whenever(userDomainMock.encodePassword(newPassword)).thenReturn(mockPasswordHash)
-        whenever(jdbiUserRepositoryMock.updateUser(publicTestUsername, updateUserInputInfo.toJdbiUpdateUser(mockPasswordHash)))
+        whenever(jdbiUserRepositoryMock.updateUser(publicTestUser.id, updateUserInputInfo.toJdbiUpdateUser(mockPasswordHash)))
             .thenReturn(mockUser)
 
         // when updating the user
-        val updatedUser = updateUser(publicTestUsername, updateUserInputInfo)
+        val updatedUser = updateUser(publicTestUser.id, updateUserInputInfo)
 
         // then the user is updated successfully
         assertEquals(newUsername, updatedUser.name)
@@ -78,7 +78,7 @@ class UpdateUserServiceTests : UserServiceTest() {
         // then the user cannot be updated and throws UserAlreadyExists exception
         assertFailsWith<UserAlreadyExists> {
             updateUser(
-                publicTestUser.name,
+                publicTestUser.id,
                 UpdateUserInputModel(
                     name = privateTestUser.name
                 )
@@ -89,7 +89,7 @@ class UpdateUserServiceTests : UserServiceTest() {
         // then the user cannot be updated and throws UserAlreadyExists exception
         assertFailsWith<UserAlreadyExists> {
             updateUser(
-                publicTestUser.name,
+                publicTestUser.id,
                 UpdateUserInputModel(
                     email = privateTestUser.email
                 )
@@ -100,7 +100,7 @@ class UpdateUserServiceTests : UserServiceTest() {
         // then the user cannot be updated and throws UserAlreadyExists exception
         assertFailsWith<UserAlreadyExists> {
             updateUser(
-                publicTestUser.name,
+                publicTestUser.id,
                 UpdateUserInputModel(
                     name = privateTestUser.name,
                     email = privateTestUser.email
@@ -122,7 +122,7 @@ class UpdateUserServiceTests : UserServiceTest() {
         // then the user cannot be updated and throws InvalidCountry exception
         assertFailsWith<InvalidCountry> {
             updateUser(
-                publicTestUsername,
+                publicTestUser.id,
                 UpdateUserInputModel(
                     country = invalidCountry
                 )
@@ -144,7 +144,7 @@ class UpdateUserServiceTests : UserServiceTest() {
         // then the user cannot be updated and throws PasswordsDoNotMatch exception
         assertFailsWith<PasswordsDoNotMatch> {
             updateUser(
-                publicTestUsername,
+                publicTestUser.id,
                 UpdateUserInputModel(
                     password = password1,
                     confirmPassword = password2
@@ -154,7 +154,7 @@ class UpdateUserServiceTests : UserServiceTest() {
 
         assertFailsWith<PasswordsDoNotMatch> {
             updateUser(
-                publicTestUsername,
+                publicTestUser.id,
                 UpdateUserInputModel(
                     password = password1,
                     confirmPassword = null

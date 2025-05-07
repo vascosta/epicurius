@@ -47,6 +47,7 @@ open class RepositoryTest : EpicuriusUnitTest() {
                 it.execute("DELETE FROM dbo.recipe")
                 it.execute("DELETE FROM dbo.fridge")
                 it.execute("DELETE FROM dbo.followers")
+                it.execute("DELETE FROM dbo.token")
                 it.execute("DELETE FROM dbo.user")
             }
         }

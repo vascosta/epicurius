@@ -18,14 +18,10 @@ class ChecksUserRepositoryTests : UserRepositoryTest() {
         // given an existing user logged in (publicTestUser)
 
         // when checking if the user is logged in
-        val userExistsByName = checkIfUserIsLoggedIn(publicTestUser.name)
-
-        // when checking if the user exists by email
-        val userExistsByEmail = checkIfUserIsLoggedIn(email = publicTestUser.email)
+        val isLoggedIn = checkIfUserIsLoggedIn(publicTestUser.id)
 
         // then the user is logged in
-        assertTrue(userExistsByName)
-        assertTrue(userExistsByEmail)
+        assertTrue(isLoggedIn)
     }
 
     @Test

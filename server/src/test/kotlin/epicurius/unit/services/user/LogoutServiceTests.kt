@@ -10,9 +10,9 @@ class LogoutServiceTests : UserServiceTest() {
         // given a logged-in user (publicTestUser)
 
         // when logging out
-        logout(publicTestUsername)
+        logout(publicTestUser.id)
 
         // then the user is logged out successfully
-        verify(jdbiTokenRepositoryMock).deleteToken(publicTestUsername)
+        verify(jdbiTokenRepositoryMock).deleteToken(publicTestUser.id)
     }
 }

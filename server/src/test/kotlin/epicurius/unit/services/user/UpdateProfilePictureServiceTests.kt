@@ -18,11 +18,11 @@ class UpdateProfilePictureServiceTests : UserServiceTest() {
         // mock
         val mockPictureName = pictureDomain.generatePictureName()
         whenever(pictureDomainMock.generatePictureName()).thenReturn(mockPictureName)
-        whenever(jdbiUserRepositoryMock.updateUser(publicTestUsername, JdbiUpdateUserModel(profilePictureName = mockPictureName)))
+        whenever(jdbiUserRepositoryMock.updateUser(publicTestUser.id, JdbiUpdateUserModel(profilePictureName = mockPictureName)))
             .thenReturn(publicTestUser.copy(profilePictureName = mockPictureName))
 
         // when adding a profile picture to the user
-        val profilePictureName = updateProfilePicture(publicTestUsername, profilePicture = testPicture)
+        val profilePictureName = updateProfilePicture(publicTestUser.id, profilePicture = testPicture)
 
         // then the profile picture is added successfully
         verify(pictureDomainMock).validatePicture(testPicture)
@@ -36,7 +36,7 @@ class UpdateProfilePictureServiceTests : UserServiceTest() {
         // given a user and a picture (publicTestUser, testPicture)
 
         // when updating the profile picture of the user
-        val profilePictureName = updateProfilePicture(publicTestUsername, publicTestUser.profilePictureName, testPicture)
+        val profilePictureName = updateProfilePicture(publicTestUser.id, publicTestUser.profilePictureName, testPicture)
 
         // then the profile picture is updated successfully
         verify(pictureDomainMock).validatePicture(testPicture)
@@ -50,11 +50,11 @@ class UpdateProfilePictureServiceTests : UserServiceTest() {
         // given a user and a picture (publicTestUser, testPicture)
 
         // mock
-        whenever(jdbiUserRepositoryMock.updateUser(publicTestUsername, JdbiUpdateUserModel(profilePictureName = null)))
+        whenever(jdbiUserRepositoryMock.updateUser(publicTestUser.id, JdbiUpdateUserModel(profilePictureName = null)))
             .thenReturn(publicTestUser.copy(profilePictureName = null))
 
         // when removing the profile picture of the user
-        val profilePictureName = updateProfilePicture(publicTestUsername, publicTestUser.profilePictureName, null)
+        val profilePictureName = updateProfilePicture(publicTestUser.id, publicTestUser.profilePictureName, null)
 
         // then the profile picture is removed successfully
         verify(pictureRepositoryMock).deletePicture(publicTestUser.profilePictureName!!, PictureDomain.USERS_FOLDER)

@@ -40,13 +40,13 @@ open class ServiceTest : EpicuriusUnitTest() {
         fun login(username: String? = null, email: String? = null, password: String) =
             userService.login(username, email, password)
 
-        fun logout(username: String) = userService.logout(username)
+        fun logout(userId: Int) = userService.logout(userId)
 
-        fun updateUser(username: String, userUpdate: UpdateUserInputModel) =
-            userService.updateUser(username, userUpdate)
+        fun updateUser(userId: Int, userUpdate: UpdateUserInputModel) =
+            userService.updateUser(userId, userUpdate)
 
-        fun updateProfilePicture(username: String, profilePictureName: String? = null, profilePicture: MultipartFile? = null) =
-            userService.updateProfilePicture(username, profilePictureName, profilePicture)
+        fun updateProfilePicture(userId: Int, profilePictureName: String? = null, profilePicture: MultipartFile? = null) =
+            userService.updateProfilePicture(userId, profilePictureName, profilePicture)
 
         fun resetPassword(email: String, newPassword: String, confirmPassword: String) =
             userService.resetPassword(email, newPassword, confirmPassword)

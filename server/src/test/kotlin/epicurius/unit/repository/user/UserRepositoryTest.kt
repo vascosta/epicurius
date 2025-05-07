@@ -26,10 +26,10 @@ open class UserRepositoryTest : RepositoryTest() {
         fun getFollowing(userId: Int) = tm.run { it.userRepository.getFollowing(userId) }
         fun getFollowRequests(userId: Int) = tm.run { it.userRepository.getFollowRequests(userId) }
 
-        fun updateUser(username: String, userUpdate: JdbiUpdateUserModel) =
+        fun updateUser(userId: Int, userUpdate: JdbiUpdateUserModel) =
             tm.run {
                 it.userRepository.updateUser(
-                    username,
+                    userId,
                     JdbiUpdateUserModel(
                         userUpdate.name,
                         userUpdate.email,
@@ -42,8 +42,8 @@ open class UserRepositoryTest : RepositoryTest() {
                 )
             }
 
-        fun resetPassword(email: String, passwordHash: String) =
-            tm.run { it.userRepository.resetPassword(email, passwordHash) }
+        fun resetPassword(userId: Int, passwordHash: String) =
+            tm.run { it.userRepository.resetPassword(userId, passwordHash) }
 
         fun follow(userId: Int, userIdToFollow: Int, status: Int) =
             tm.run { it.userRepository.follow(userId, userIdToFollow, status) }
@@ -54,8 +54,8 @@ open class UserRepositoryTest : RepositoryTest() {
         fun cancelFollowRequest(userId: Int, userIdToCancelFollowRequest: Int) =
             tm.run { it.userRepository.cancelFollowRequest(userId, userIdToCancelFollowRequest) }
 
-        fun checkIfUserIsLoggedIn(username: String? = null, email: String? = null) =
-            tm.run { it.userRepository.checkIfUserIsLoggedIn(username, email) }
+        fun checkIfUserIsLoggedIn(userId: Int) =
+            tm.run { it.userRepository.checkIfUserIsLoggedIn(userId) }
 
         fun checkIfUserIsBeingFollowedBy(userId: Int, followerId: Int) =
             tm.run { it.userRepository.checkIfUserIsBeingFollowedBy(userId, followerId) }

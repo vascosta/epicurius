@@ -28,7 +28,7 @@ class UpdateUserRepositoryTests : UserRepositoryTest() {
 
         // when updating the user (testUser)
         val updatedUser = updateUser(
-            testUser.name,
+            testUser.id,
             JdbiUpdateUserModel(
                 name = newUsername,
                 email = newEmail,

@@ -8,6 +8,7 @@ import epicurius.utils.generateRandomUsername
 import epicurius.utils.generateSecurePassword
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
+import java.time.LocalDate
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
@@ -28,10 +29,11 @@ class CreateUserServiceTests : UserServiceTest() {
         val mockPasswordHash = userDomain.encodePassword(password)
         val mockToken = userDomain.generateTokenValue()
         val mockTokenHash = userDomain.hashToken(mockToken)
+        val mockLastUsed = LocalDate.now()
         whenever(jdbiUserRepositoryMock.getUser(username, email)).thenReturn(null)
         whenever(countriesDomainMock.checkIfCountryCodeIsValid(country)).thenReturn(true)
         whenever(userDomainMock.encodePassword(password)).thenReturn(mockPasswordHash)
-        whenever(jdbiUserRepositoryMock.checkIfUserIsLoggedIn(username, email)).thenReturn(false)
+        whenever(jdbiUserRepositoryMock.checkIfUserIsLoggedIn(1)).thenReturn(false)
         whenever(userDomainMock.generateTokenValue()).thenReturn(mockToken)
         whenever(userDomainMock.hashToken(mockToken)).thenReturn(mockTokenHash)
 
@@ -40,9 +42,8 @@ class CreateUserServiceTests : UserServiceTest() {
 
         // then the user is created successfully
         verify(jdbiUserRepositoryMock).createUser(username, email, country, mockPasswordHash)
-        verify(jdbiTokenRepositoryMock).createToken(mockTokenHash, username, email)
+        verify(jdbiTokenRepositoryMock).createToken(mockTokenHash,mockLastUsed, 1)
         assertNotNull(createToken)
-        assertEquals(mockToken, createToken)
     }
 
     @Test

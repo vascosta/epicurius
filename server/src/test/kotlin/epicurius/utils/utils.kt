@@ -5,15 +5,7 @@ import epicurius.domain.Diet
 import epicurius.domain.Intolerance
 import epicurius.domain.collection.CollectionDomain.Companion.MAX_COLLECTION_NAME_LENGTH
 import epicurius.domain.collection.CollectionType
-import epicurius.domain.recipe.Cuisine
-import epicurius.domain.recipe.Cuisine.Companion.fromInt
-import epicurius.domain.recipe.Ingredient
-import epicurius.domain.recipe.IngredientUnit
-import epicurius.domain.recipe.Instructions
-import epicurius.domain.recipe.MealType
-import epicurius.domain.recipe.MealType.Companion.fromInt
-import epicurius.domain.recipe.Recipe
-import epicurius.domain.recipe.RecipeDomain
+import epicurius.domain.recipe.*
 import epicurius.domain.user.User
 import epicurius.domain.user.UserDomain.Companion.MAX_PASSWORD_LENGTH
 import epicurius.domain.user.UserDomain.Companion.MAX_USERNAME_LENGTH
@@ -22,6 +14,7 @@ import epicurius.repository.firestore.recipe.models.FirestoreRecipeModel
 import epicurius.repository.jdbi.recipe.models.JdbiCreateRecipeModel
 import epicurius.repository.jdbi.user.models.JdbiUpdateUserModel
 import epicurius.repository.transaction.TransactionManager
+import java.time.LocalDate
 import java.util.UUID.randomUUID
 
 fun createTestUser(tm: TransactionManager, privacy: Boolean = false): User {
@@ -31,13 +24,14 @@ fun createTestUser(tm: TransactionManager, privacy: Boolean = false): User {
     val password = generateSecurePassword()
     val passwordHash = userDomain.encodePassword(password)
 
-    tm.run { it.userRepository.createUser(username, email, country, passwordHash) }
+    val userId = tm.run { it.userRepository.createUser(username, email, country, passwordHash) }
     if (privacy) {
-        tm.run { it.userRepository.updateUser(username, JdbiUpdateUserModel(privacy = true)) }
+        tm.run { it.userRepository.updateUser(userId, JdbiUpdateUserModel(privacy = true)) }
     }
 
     val tokenHash = userDomain.hashToken(randomUUID().toString())
-    tm.run { it.tokenRepository.createToken(tokenHash, username) }
+    val lastUsed = LocalDate.now()
+    tm.run { it.tokenRepository.createToken(tokenHash, lastUsed, userId) }
 
     return tm.run { it.userRepository.getUser(username) } ?: throw Exception("User not created")
 }

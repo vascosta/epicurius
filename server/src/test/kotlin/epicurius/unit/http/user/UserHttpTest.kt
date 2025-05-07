@@ -49,7 +49,5 @@ open class UserHttpTest : HttpTest() {
             ),
             privateTestUserToken
         )
-
-        val mockResponse: HttpServletResponse = mock()
     }
 }

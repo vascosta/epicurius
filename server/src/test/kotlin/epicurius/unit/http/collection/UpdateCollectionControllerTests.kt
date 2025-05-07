@@ -24,7 +24,7 @@ class UpdateCollectionControllerTests: CollectionHttpTest() {
         ).thenReturn(testFavouriteCollection.copy(name = updateCollectionInputInfo.name!!))
 
         // when updating the collection
-        val response = collectionController.updateCollection(
+        val response = updateCollection(
             testPublicAuthenticatedUser, FAVOURITE_COLLECTION_ID, updateCollectionInputInfo
         )
         val body = response.body as UpdateCollectionOutputModel
@@ -47,7 +47,7 @@ class UpdateCollectionControllerTests: CollectionHttpTest() {
         // when updating the collection
         // then the collection is not updated and throws CollectionNotFound exception
         assertFailsWith<CollectionNotFound> {
-            collectionController.updateCollection(
+            updateCollection(
                 testPublicAuthenticatedUser, nonExistingCollectionId, updateCollectionInputInfo
             )
         }
@@ -65,7 +65,7 @@ class UpdateCollectionControllerTests: CollectionHttpTest() {
         // when updating the collection
         // then the collection is not owned by the user and throws NotTheOwnerOfCollection exception
         assertFailsWith<NotTheCollectionOwner> {
-            collectionController.updateCollection(
+            updateCollection(
                 testPrivateAuthenticatedUser, FAVOURITE_COLLECTION_ID, updateCollectionInputInfo
             )
         }

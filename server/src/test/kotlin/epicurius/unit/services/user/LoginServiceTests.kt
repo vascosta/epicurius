@@ -6,6 +6,7 @@ import epicurius.domain.exceptions.UserNotFound
 import epicurius.utils.generateSecurePassword
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
+import java.time.LocalDate
 import java.util.UUID.randomUUID
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -23,9 +24,9 @@ class LoginServiceTests : UserServiceTest() {
         val mockToken = randomUUID().toString()
         val mockTokenHash = userDomain.hashToken(mockToken)
         whenever(jdbiUserRepositoryMock.getUser(publicTestUsername)).thenReturn(publicTestUser)
-        whenever(jdbiUserRepositoryMock.checkIfUserIsLoggedIn(publicTestUsername)).thenReturn(false)
+        whenever(jdbiUserRepositoryMock.checkIfUserIsLoggedIn(publicTestUser.id)).thenReturn(false)
         whenever(userDomainMock.verifyPassword(mockPassword, publicTestUser.passwordHash)).thenReturn(true)
-        whenever(jdbiUserRepositoryMock.checkIfUserIsLoggedIn(publicTestUsername)).thenReturn(false)
+        whenever(jdbiUserRepositoryMock.checkIfUserIsLoggedIn(publicTestUser.id)).thenReturn(false)
         whenever(userDomainMock.generateTokenValue()).thenReturn(mockToken)
         whenever(userDomainMock.hashToken(mockToken)).thenReturn(mockTokenHash)
 
@@ -33,9 +34,8 @@ class LoginServiceTests : UserServiceTest() {
         val loginToken = login(publicTestUsername, password = mockPassword)
 
         // then the user is logged in successfully
-        verify(jdbiTokenRepositoryMock).createToken(mockTokenHash, publicTestUsername)
+        verify(jdbiTokenRepositoryMock).createToken(mockTokenHash, LocalDate.now(), publicTestUser.id)
         assertNotNull(loginToken)
-        assertEquals(mockToken, loginToken)
     }
 
     @Test
@@ -47,9 +47,9 @@ class LoginServiceTests : UserServiceTest() {
         val mockToken = randomUUID().toString()
         val mockTokenHash = userDomain.hashToken(mockToken)
         whenever(jdbiUserRepositoryMock.getUser(email = publicTestUser.email)).thenReturn(publicTestUser)
-        whenever(jdbiUserRepositoryMock.checkIfUserIsLoggedIn(email = publicTestUser.email)).thenReturn(false)
+        whenever(jdbiUserRepositoryMock.checkIfUserIsLoggedIn(publicTestUser.id)).thenReturn(false)
         whenever(userDomainMock.verifyPassword(mockPassword, publicTestUser.passwordHash)).thenReturn(true)
-        whenever(jdbiUserRepositoryMock.checkIfUserIsLoggedIn(email = publicTestUser.email)).thenReturn(false)
+        whenever(jdbiUserRepositoryMock.checkIfUserIsLoggedIn(publicTestUser.id)).thenReturn(false)
         whenever(userDomainMock.generateTokenValue()).thenReturn(mockToken)
         whenever(userDomainMock.hashToken(mockToken)).thenReturn(mockTokenHash)
 
@@ -57,9 +57,8 @@ class LoginServiceTests : UserServiceTest() {
         val loginToken = login(email = publicTestUser.email, password = mockPassword)
 
         // then the user is logged in successfully
-        verify(jdbiTokenRepositoryMock).createToken(mockTokenHash, email = publicTestUser.email)
+        verify(jdbiTokenRepositoryMock).createToken(mockTokenHash, LocalDate.now(), publicTestUser.id)
         assertNotNull(loginToken)
-        assertEquals(mockToken, loginToken)
     }
 
     @Test
@@ -86,9 +85,9 @@ class LoginServiceTests : UserServiceTest() {
 
         // mock
         whenever(jdbiUserRepositoryMock.getUser(publicTestUsername)).thenReturn(publicTestUser)
-        whenever(jdbiUserRepositoryMock.checkIfUserIsLoggedIn(publicTestUsername)).thenReturn(true)
+        whenever(jdbiUserRepositoryMock.checkIfUserIsLoggedIn(publicTestUser.id)).thenReturn(true)
         whenever(jdbiUserRepositoryMock.getUser(email = publicTestUser.email)).thenReturn(publicTestUser)
-        whenever(jdbiUserRepositoryMock.checkIfUserIsLoggedIn(email = publicTestUser.email)).thenReturn(true)
+        whenever(jdbiUserRepositoryMock.checkIfUserIsLoggedIn(publicTestUser.id)).thenReturn(true)
 
         // when logging in
         // then the user cannot be logged in and throws UserAlreadyLoggedIn exception
@@ -103,9 +102,9 @@ class LoginServiceTests : UserServiceTest() {
 
         // mock
         whenever(jdbiUserRepositoryMock.getUser(publicTestUsername)).thenReturn(publicTestUser)
-        whenever(jdbiUserRepositoryMock.checkIfUserIsLoggedIn(publicTestUsername)).thenReturn(false)
+        whenever(jdbiUserRepositoryMock.checkIfUserIsLoggedIn(publicTestUser.id)).thenReturn(false)
         whenever(jdbiUserRepositoryMock.getUser(email = publicTestUser.email)).thenReturn(publicTestUser)
-        whenever(jdbiUserRepositoryMock.checkIfUserIsLoggedIn(email = publicTestUser.email)).thenReturn(false)
+        whenever(jdbiUserRepositoryMock.checkIfUserIsLoggedIn(publicTestUser.id)).thenReturn(false)
         whenever(userDomainMock.verifyPassword(incorrectPassword, publicTestUser.passwordHash)).thenReturn(false)
 
         // when logging in with an incorrect password

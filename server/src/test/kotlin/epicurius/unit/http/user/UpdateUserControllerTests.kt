@@ -46,7 +46,7 @@ class UpdateUserControllerTests : UserHttpTest() {
             updateUserInputInfo.diets!!.toList(),
             publicTestUser.user.profilePictureName
         )
-        whenever(userServiceMock.updateUser(publicTestUsername, updateUserInputInfo))
+        whenever(userServiceMock.updateUser(publicTestUser.user.id, updateUserInputInfo))
             .thenReturn(mockUserInfo)
 
         // when updating the user
@@ -68,15 +68,15 @@ class UpdateUserControllerTests : UserHttpTest() {
         // given two users (publicTestUser, privateTestUser)
 
         // mock
-        whenever(userServiceMock.updateUser(publicTestUsername, updateUserInputInfo.copy(name = privateTestUsername)))
+        whenever(userServiceMock.updateUser(publicTestUser.user.id, updateUserInputInfo.copy(name = privateTestUsername)))
             .thenThrow(UserAlreadyExists())
         whenever(
             userServiceMock
-                .updateUser(publicTestUsername, updateUserInputInfo.copy(email = privateTestUser.user.email))
+                .updateUser(publicTestUser.user.id, updateUserInputInfo.copy(email = privateTestUser.user.email))
         ).thenThrow(UserAlreadyExists())
         whenever(
             userServiceMock
-                .updateUser(publicTestUsername, updateUserInputInfo.copy(name = privateTestUsername, email = privateTestUser.user.email))
+                .updateUser(publicTestUser.user.id, updateUserInputInfo.copy(name = privateTestUsername, email = privateTestUser.user.email))
         ).thenThrow(UserAlreadyExists())
 
         // when updating the user with an existing username
@@ -107,7 +107,7 @@ class UpdateUserControllerTests : UserHttpTest() {
         val invalidCountry = "XX"
 
         // mock
-        whenever(userServiceMock.updateUser(publicTestUsername, updateUserInputInfo.copy(country = invalidCountry)))
+        whenever(userServiceMock.updateUser(publicTestUser.user.id, updateUserInputInfo.copy(country = invalidCountry)))
             .thenThrow(InvalidCountry())
 
         // when updating the user with an invalid country
@@ -124,11 +124,11 @@ class UpdateUserControllerTests : UserHttpTest() {
         // mock
         whenever(
             userServiceMock
-                .updateUser(publicTestUsername, updateUserInputInfo.copy(password = password1, confirmPassword = password2))
+                .updateUser(publicTestUser.user.id, updateUserInputInfo.copy(password = password1, confirmPassword = password2))
         ).thenThrow(PasswordsDoNotMatch())
         whenever(
             userServiceMock
-                .updateUser(publicTestUsername, updateUserInputInfo.copy(password = password1, confirmPassword = null))
+                .updateUser(publicTestUser.user.id, updateUserInputInfo.copy(password = password1, confirmPassword = null))
         ).thenThrow(PasswordsDoNotMatch())
 
         // when updating the user with different passwords

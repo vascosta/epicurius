@@ -17,7 +17,7 @@ class UpdateUserProfilePictureControllerTests : UserHttpTest() {
 
         // mock
         val mockPictureName = pictureDomain.generatePictureName()
-        whenever(userServiceMock.updateProfilePicture(authenticatedUser.user.name, profilePicture = testPicture))
+        whenever(userServiceMock.updateProfilePicture(authenticatedUser.user.id, profilePicture = testPicture))
             .thenReturn(mockPictureName)
 
         // when adding a profile picture to the user
@@ -34,7 +34,7 @@ class UpdateUserProfilePictureControllerTests : UserHttpTest() {
         // given a user and a picture (publicTestUser, testPicture)
 
         // mock
-        whenever(userServiceMock.updateProfilePicture(publicTestUsername, publicTestUser.user.profilePictureName, testPicture))
+        whenever(userServiceMock.updateProfilePicture(publicTestUser.user.id, publicTestUser.user.profilePictureName, testPicture))
             .thenReturn(publicTestUser.user.profilePictureName)
 
         // when updating the profile picture of the user
@@ -51,7 +51,7 @@ class UpdateUserProfilePictureControllerTests : UserHttpTest() {
         // given a user (publicTestUser)
 
         // mock
-        whenever(userServiceMock.updateProfilePicture(publicTestUsername, publicTestUser.user.profilePictureName))
+        whenever(userServiceMock.updateProfilePicture(publicTestUser.user.id, publicTestUser.user.profilePictureName))
             .thenReturn(null)
 
         // when removing the profile picture of the user

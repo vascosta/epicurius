@@ -22,8 +22,8 @@ class ResetPasswordServiceTests : UserServiceTest() {
         resetPassword(publicTestUser.email, newPassword, newPassword)
 
         // then the password was reset successfully
-        verify(jdbiUserRepositoryMock).resetPassword(publicTestUser.email, mockPasswordHash)
-        verify(jdbiTokenRepositoryMock).deleteToken(email = publicTestUser.email)
+        verify(jdbiUserRepositoryMock).resetPassword(publicTestUser.id, mockPasswordHash)
+        verify(jdbiTokenRepositoryMock).deleteToken(publicTestUser.id)
     }
 
     @Test

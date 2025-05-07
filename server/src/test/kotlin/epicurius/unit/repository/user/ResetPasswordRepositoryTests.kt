@@ -18,7 +18,7 @@ class ResetPasswordRepositoryTests : UserRepositoryTest() {
         // when resetting the password
         val newPassword = UUID.randomUUID().toString()
         val newPasswordHash = userDomain.encodePassword(newPassword)
-        resetPassword(testUser.email, newPasswordHash)
+        resetPassword(testUser.id, newPasswordHash)
 
         // when getting the user by name
         val userAfterResetPassword = getUserByName(testUser.name)
