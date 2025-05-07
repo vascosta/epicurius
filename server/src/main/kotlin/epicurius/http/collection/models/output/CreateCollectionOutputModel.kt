@@ -9,3 +9,5 @@ typealias GetCollectionOutputModel = CreateCollectionOutputModel
 typealias UpdateCollectionOutputModel = CreateCollectionOutputModel
 
 typealias AddRecipeToCollectionOutputModel = CreateCollectionOutputModel
+
+typealias RemoveRecipeFromCollectionOutputModel = CreateCollectionOutputModel

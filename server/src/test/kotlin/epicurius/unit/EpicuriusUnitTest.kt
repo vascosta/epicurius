@@ -5,6 +5,7 @@ import epicurius.domain.fridge.FridgeDomain
 import epicurius.domain.picture.PictureDomain
 import epicurius.domain.user.CountriesDomain
 import epicurius.domain.user.UserDomain
+import epicurius.http.collection.CollectionController
 import epicurius.http.feed.FeedController
 import epicurius.http.fridge.FridgeController
 import epicurius.http.ingredients.IngredientsController
@@ -161,6 +162,6 @@ open class EpicuriusUnitTest : EpicuriusTest() {
         val feedController = FeedController(feedServiceMock)
         val menuController = MenuController(menuServiceMock)
         val ingredientsController = IngredientsController(ingredientsServiceMock)
-        val collectionController = epicurius.http.collection.CollectionController(collectionServiceMock)
+        val collectionController = CollectionController(collectionServiceMock)
     }
 }

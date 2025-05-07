@@ -7,6 +7,7 @@ import epicurius.http.collection.models.input.UpdateCollectionInputModel
 import epicurius.http.collection.models.output.AddRecipeToCollectionOutputModel
 import epicurius.http.collection.models.output.CreateCollectionOutputModel
 import epicurius.http.collection.models.output.GetCollectionOutputModel
+import epicurius.http.collection.models.output.RemoveRecipeFromCollectionOutputModel
 import epicurius.http.collection.models.output.UpdateCollectionOutputModel
 import epicurius.http.utils.Uris
 import epicurius.http.utils.Uris.Collection.collection
@@ -72,7 +73,7 @@ class CollectionController(val collectionService: CollectionService) {
         @PathVariable recipeId: Int,
     ): ResponseEntity<*> {
         val updatedCollection = collectionService.removeRecipeFromCollection(authenticatedUser.user.id, id, recipeId)
-        return ResponseEntity.ok().body(AddRecipeToCollectionOutputModel(updatedCollection))
+        return ResponseEntity.ok().body(RemoveRecipeFromCollectionOutputModel(updatedCollection))
     }
 
     @DeleteMapping(Uris.Collection.COLLECTION)

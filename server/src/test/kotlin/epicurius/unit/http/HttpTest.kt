@@ -7,6 +7,9 @@ import epicurius.domain.recipe.Cuisine
 import epicurius.domain.recipe.MealType
 import epicurius.domain.user.AuthenticatedUser
 import epicurius.domain.user.FollowRequestType
+import epicurius.http.collection.models.input.AddRecipeToCollectionInputModel
+import epicurius.http.collection.models.input.CreateCollectionInputModel
+import epicurius.http.collection.models.input.UpdateCollectionInputModel
 import epicurius.http.fridge.models.input.ProductInputModel
 import epicurius.http.fridge.models.input.UpdateProductInputModel
 import epicurius.http.rateRecipe.models.input.RateRecipeInputModel
@@ -139,7 +142,6 @@ open class HttpTest : EpicuriusUnitTest() {
             recipeController.deleteRecipe(authenticatedUser, id)
 
         // RATE RECIPE
-
         fun getRecipeRate(authenticatedUser: AuthenticatedUser, id: Int) =
             rateRecipeController.getRecipeRate(authenticatedUser, id)
 
@@ -165,5 +167,27 @@ open class HttpTest : EpicuriusUnitTest() {
         // MENU
         fun getDailyMenu(authenticatedUser: AuthenticatedUser) =
             menuController.getDailyMenu(authenticatedUser)
+
+        // COLLECTION
+        fun getCollection(authenticatedUser: AuthenticatedUser, id: Int) =
+            collectionController.getCollection(authenticatedUser, id)
+
+        fun createCollection(authenticatedUser: AuthenticatedUser, body: CreateCollectionInputModel) =
+            collectionController.createCollection(authenticatedUser, body)
+
+        fun addRecipeToCollection(
+            authenticatedUser: AuthenticatedUser, id: Int, body: AddRecipeToCollectionInputModel
+        ) = collectionController.addRecipeToCollection(authenticatedUser, id, body)
+
+        fun updateCollection(
+            authenticatedUser: AuthenticatedUser, id: Int, body: UpdateCollectionInputModel
+        ) = collectionController.updateCollection(authenticatedUser, id, body)
+
+        fun removeRecipeFromCollection(
+            authenticatedUser: AuthenticatedUser, id: Int, recipeId: Int
+        ) = collectionController.removeRecipeFromCollection(authenticatedUser, id, recipeId)
+
+        fun deleteCollection(authenticatedUser: AuthenticatedUser, id: Int) =
+            collectionController.deleteCollection(authenticatedUser, id)
     }
 }
