@@ -8,32 +8,13 @@ import epicurius.http.user.models.input.LoginInputModel
 import epicurius.http.user.models.input.ResetPasswordInputModel
 import epicurius.http.user.models.input.SignUpInputModel
 import epicurius.http.user.models.input.UpdateUserInputModel
-import epicurius.http.user.models.output.GetUserDietsOutputModel
-import epicurius.http.user.models.output.GetUserFollowRequestsOutputModel
-import epicurius.http.user.models.output.GetUserFollowersOutputModel
-import epicurius.http.user.models.output.GetUserFollowingOutputModel
-import epicurius.http.user.models.output.GetUserIntolerancesOutputModel
-import epicurius.http.user.models.output.GetUserOutputModel
-import epicurius.http.user.models.output.GetUserProfileOutputModel
-import epicurius.http.user.models.output.SearchUsersOutputModel
-import epicurius.http.user.models.output.UpdateUserOutputModel
-import epicurius.http.user.models.output.UpdateUserProfilePictureOutputModel
+import epicurius.http.user.models.output.*
 import epicurius.http.utils.Uris
 import epicurius.services.user.UserService
-import jakarta.servlet.http.HttpServletResponse
 import jakarta.validation.Valid
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.DeleteMapping
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PatchMapping
-import org.springframework.web.bind.annotation.PathVariable
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RequestParam
-import org.springframework.web.bind.annotation.RequestPart
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 import org.springframework.web.multipart.MultipartFile
 
 @RestController
@@ -112,23 +93,20 @@ class UserController(val userService: UserService) {
     }
 
     @PostMapping(Uris.User.SIGNUP)
-    fun signUp(@Valid @RequestBody body: SignUpInputModel, response: HttpServletResponse): ResponseEntity<*> {
-        val token = userService.createUser(body.name, body.email, body.country, body.password, body.confirmPassword)
-        response.addHeader("Authorization", "Bearer $token")
+    fun signUp(@Valid @RequestBody body: SignUpInputModel): ResponseEntity<*> {
+        userService.createUser(body.name, body.email, body.country, body.password, body.confirmPassword)
         return ResponseEntity.created(Uris.User.userProfile(body.name)).build<Unit>()
     }
 
     @PostMapping(Uris.User.LOGIN)
-    fun login(@Valid @RequestBody body: LoginInputModel, response: HttpServletResponse): ResponseEntity<*> {
-        val token = userService.login(body.name, body.email, body.password)
-        response.addHeader("Authorization", "Bearer $token")
+    fun login(@Valid @RequestBody body: LoginInputModel): ResponseEntity<*> {
+        userService.login(body.name, body.email, body.password)
         return ResponseEntity.noContent().build<Unit>()
     }
 
     @PostMapping(Uris.User.LOGOUT)
-    fun logout(authenticatedUser: AuthenticatedUser, response: HttpServletResponse): ResponseEntity<*> {
-        userService.logout(authenticatedUser.user.name)
-        response.addHeader("Authorization", "")
+    fun logout(authenticatedUser: AuthenticatedUser): ResponseEntity<*> {
+        userService.logout(authenticatedUser.user.id)
         return ResponseEntity.noContent().build<Unit>()
     }
 
@@ -137,7 +115,7 @@ class UserController(val userService: UserService) {
         authenticatedUser: AuthenticatedUser,
         @Valid @RequestBody body: UpdateUserInputModel
     ): ResponseEntity<*> {
-        val updatedUserInfo = userService.updateUser(authenticatedUser.user.name, body)
+        val updatedUserInfo = userService.updateUser(authenticatedUser.user.id, body)
         return ResponseEntity.ok().body(UpdateUserOutputModel(updatedUserInfo))
     }
 
@@ -147,7 +125,7 @@ class UserController(val userService: UserService) {
         @RequestPart("picture", required = false) picture: MultipartFile?
     ): ResponseEntity<*> {
         val newProfilePicture = userService.updateProfilePicture(
-            authenticatedUser.user.name,
+            authenticatedUser.user.id,
             authenticatedUser.user.profilePictureName,
             picture
         )

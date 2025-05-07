@@ -34,6 +34,7 @@ import epicurius.repository.jdbi.user.models.JdbiUpdateUserModel
 import epicurius.repository.transaction.TransactionManager
 import org.springframework.stereotype.Component
 import org.springframework.web.multipart.MultipartFile
+import java.time.LocalDate
 
 @Component
 class UserService(
@@ -43,13 +44,13 @@ class UserService(
     private val pictureDomain: PictureDomain,
     private val countriesDomain: CountriesDomain
 ) {
-    fun createUser(name: String, email: String, country: String, password: String, confirmPassword: String): String {
+    fun createUser(name: String, email: String, country: String, password: String, confirmPassword: String) {
         if (checkIfUserExists(name, email) != null) throw UserAlreadyExists()
         if (!countriesDomain.checkIfCountryCodeIsValid(country)) throw InvalidCountry()
         checkIfPasswordsMatch(password, confirmPassword)
         val passwordHash = userDomain.encodePassword(password)
-        tm.run { it.userRepository.createUser(name, email, country, passwordHash) }
-        return createToken(name, email)
+        val userId = tm.run { it.userRepository.createUser(name, email, country, passwordHash) }
+        createToken(userId)
     }
 
     fun getAuthenticatedUser(token: String): AuthenticatedUser? {
@@ -93,19 +94,19 @@ class UserService(
         tm.run { it.userRepository.getFollowRequests(userId) }
             .map { user -> FollowUser(user.name, getProfilePicture(user.profilePictureName)) }
 
-    fun login(name: String? = null, email: String? = null, password: String): String {
+    fun login(name: String? = null, email: String? = null, password: String) {
         val user = checkIfUserExists(name, email) ?: throw UserNotFound(name ?: email)
-        checkIfUserIsLoggedIn(name, email)
+        checkIfUserIsLoggedIn(user.id)
 
         if (!userDomain.verifyPassword(password, user.passwordHash)) throw IncorrectPassword()
-        return createToken(name, email)
+        createToken(user.id)
     }
 
-    fun logout(name: String) {
-        deleteToken(name = name)
+    fun logout(userId: Int) {
+        deleteToken(userId)
     }
 
-    fun updateUser(name: String, userUpdateInfo: UpdateUserInputModel): UserInfo {
+    fun updateUser(userId: Int, userUpdateInfo: UpdateUserInputModel): UserInfo {
         if (checkIfUserExists(userUpdateInfo.name, userUpdateInfo.email) != null) throw UserAlreadyExists()
 
         if (userUpdateInfo.country != null)
@@ -117,7 +118,7 @@ class UserService(
 
         return tm.run {
             it.userRepository.updateUser(
-                name,
+                userId,
                 userUpdateInfo.toJdbiUpdateUser(
                     userUpdateInfo.password?.let { password -> userDomain.encodePassword(password) }
                 )
@@ -126,7 +127,7 @@ class UserService(
     }
 
     fun updateProfilePicture(
-        username: String,
+        userId: Int,
         profilePictureName: String? = null,
         profilePicture: MultipartFile? = null
     ): String? {
@@ -137,7 +138,7 @@ class UserService(
 
                 cs.pictureRepository.updatePicture(newProfilePictureName, profilePicture, PictureDomain.USERS_FOLDER)
                 tm.run {
-                    it.userRepository.updateUser(username, JdbiUpdateUserModel(profilePictureName = newProfilePictureName))
+                    it.userRepository.updateUser(userId, JdbiUpdateUserModel(profilePictureName = newProfilePictureName))
                 }
                 newProfilePictureName
             }
@@ -149,7 +150,7 @@ class UserService(
             }
 
             profilePictureName != null && profilePicture == null -> { // remove profile picture
-                removeProfilePicture(username, profilePictureName)
+                removeProfilePicture(userId, profilePictureName)
                 null
             }
 
@@ -158,13 +159,12 @@ class UserService(
     }
 
     fun resetPassword(email: String, newPassword: String, confirmPassword: String) {
+        val user = checkIfUserExists(email = email) ?: throw UserNotFound(email)
         checkIfPasswordsMatch(newPassword, confirmPassword)
         val passwordHash = userDomain.encodePassword(newPassword)
 
-        tm.run {
-            it.userRepository.resetPassword(email, passwordHash)
-            deleteToken(email = email)
-        }
+        tm.run { it.userRepository.resetPassword(user.id, passwordHash) }
+        deleteToken(user.id)
     }
 
     fun followRequest(userId: Int, username: String, usernameToRequest: String, type: FollowRequestType) {
@@ -202,9 +202,9 @@ class UserService(
         }
     }
 
-    private fun removeProfilePicture(username: String, profilePictureName: String) {
+    private fun removeProfilePicture(userId: Int, profilePictureName: String) {
         cs.pictureRepository.deletePicture(profilePictureName, PictureDomain.USERS_FOLDER)
-        tm.run { it.userRepository.updateUser(username, JdbiUpdateUserModel(profilePictureName = null)) }
+        tm.run { it.userRepository.updateUser(userId, JdbiUpdateUserModel(profilePictureName = null)) }
     }
 
     private fun cancelFollowRequest(userId: Int, username: String, usernameToCancelFollow: String) {
@@ -216,16 +216,23 @@ class UserService(
         }
     }
 
-    private fun createToken(name: String? = null, email: String? = null): String {
-        checkIfUserIsLoggedIn(name, email)
+    fun refreshToken(oldToken: String): String {
+        val authenticatedUser = getAuthenticatedUser(oldToken) ?: throw InvalidToken()
+        deleteToken(authenticatedUser.user.id)
+        return createToken(authenticatedUser.user.id)
+    }
+
+    private fun createToken(userId: Int): String {
+        checkIfUserIsLoggedIn(userId)
         val token = userDomain.generateTokenValue()
         val tokenHash = userDomain.hashToken(token)
-        tm.run { it.tokenRepository.createToken(tokenHash, name, email) }
+        val lastUsed = LocalDate.now()
+        tm.run { it.tokenRepository.createToken(tokenHash, lastUsed, userId) }
         return token
     }
 
-    private fun deleteToken(name: String? = null, email: String? = null) {
-        tm.run { it.tokenRepository.deleteToken(name, email) }
+    private fun deleteToken(userId: Int) {
+        tm.run { it.tokenRepository.deleteToken(userId) }
     }
 
     private fun checkIfTokenIsValid(token: String) {
@@ -235,8 +242,8 @@ class UserService(
     private fun checkIfUserExists(name: String? = null, email: String? = null, tokenHash: String? = null): User? =
         tm.run { it.userRepository.getUser(name, email, tokenHash) }
 
-    private fun checkIfUserIsLoggedIn(name: String? = null, email: String? = null) {
-        if (tm.run { it.userRepository.checkIfUserIsLoggedIn(name, email) })
+    private fun checkIfUserIsLoggedIn(userId: Int) {
+        if (tm.run { it.userRepository.checkIfUserIsLoggedIn(userId) })
             throw UserAlreadyLoggedIn()
     }
 
@@ -250,5 +257,5 @@ class UserService(
         if (password != confirmPassword) throw PasswordsDoNotMatch()
     }
 
-    private fun checkSelf(username: String, username2: String) = username == username2
+    private fun checkSelf(userId: String, userId2: String) = userId == userId2
 }
