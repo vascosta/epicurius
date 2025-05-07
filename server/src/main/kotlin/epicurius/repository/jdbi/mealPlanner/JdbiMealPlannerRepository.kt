@@ -34,7 +34,7 @@ class JdbiMealPlannerRepository(private val handle: Handle) : MealPlannerReposit
                 JOIN dbo.meal_planner_recipe mpr ON mp.user_id = mpr.user_id AND mp.date = mpr.date
                 JOIN dbo.recipe r ON mpr.recipe_id = r.id
                 WHERE mp.user_id = :id
-                ORDER BY mp.date ASC
+                ORDER BY mp.date ASC, mpr.meal_time ASC
             """
         )
             .bind("id", userId)
@@ -43,12 +43,41 @@ class JdbiMealPlannerRepository(private val handle: Handle) : MealPlannerReposit
 
         val dailyPlanners = list
             .groupBy { it.date }
-            .map { (date, dayRows) ->
-                val meals = dayRows.associate { it.mealTime to it.jdbiRecipeInfo }
+            .map { (date, dailyMeals) ->
+                val meals = dailyMeals.associate { it.mealTime to it.jdbiRecipeInfo }
                 JdbiDailyMealPlanner(date, meals)
             }
 
         return JdbiMealPlanner(dailyPlanners)
+    }
+
+    override fun getDailyMealPlanner(userId: Int, date: LocalDate): JdbiDailyMealPlanner {
+        val dailyRow = handle.createQuery(
+            """
+                SELECT mp.date, mpr.meal_time, 
+                       r.id AS recipe_id, r.name AS recipe_name, 
+                       r.cuisine, r.meal_type, r.preparation_time, r.servings, r.pictures_names
+                FROM dbo.meal_planner mp 
+                JOIN dbo.meal_planner_recipe mpr ON mp.user_id = mpr.user_id AND mp.date = mpr.date
+                JOIN dbo.recipe r ON mpr.recipe_id = r.id
+                WHERE mp.user_id = :userId AND mp.date = :date
+                ORDER BY mpr.meal_time ASC
+            """
+        )
+            .bind("userId", userId)
+            .bind("date", date)
+            .mapTo<JdbiDailyMealPlannerRow>()
+            .list()
+
+        val dailyPlanner = dailyRow
+            .groupBy { it.date }
+            .map { (date, dailyMeals) ->
+                val meals = dailyMeals.associate { it.mealTime to it.jdbiRecipeInfo }
+                JdbiDailyMealPlanner(date, meals)
+            }
+            .first()
+
+        return dailyPlanner
     }
 
     override fun addDailyMealPlanner(userId: Int, date: LocalDate, recipeId: Int, mealTime: MealTime): JdbiMealPlanner {

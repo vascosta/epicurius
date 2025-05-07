@@ -38,6 +38,17 @@ class MealPlannerService(
         return MealPlanner(planner)
     }
 
+    fun getDailyMealPlanner(userId: Int, date: LocalDate): DailyMealPlanner {
+        val jdbiDailyPlanner = tm.run { it.mealPlannerRepository.getDailyMealPlanner(userId, date) }
+
+        val dailyMeals = jdbiDailyPlanner.meals.mapValues { (_, recipe) ->
+            val picture = cs.pictureRepository.getPicture(recipe.picturesNames.first(), RECIPES_FOLDER)
+            recipe.toRecipeInfo(picture)
+        }
+
+        return DailyMealPlanner(date = jdbiDailyPlanner.date, meals = dailyMeals)
+    }
+
     fun addDailyMealPlanner(userId: Int, date: LocalDate, info: AddMealPlannerInputModel): MealPlanner {
         if (!checkIfMealPlannerExists(userId, date)) throw MealPlannerNotFound()
         if (checkIfMealTimeAlreadyExistsInPlanner(userId, date, info.mealTime))
@@ -89,7 +100,7 @@ class MealPlannerService(
         return MealPlanner(planner)
     }
 
-    private fun getRecipeInfoPicture(planner: List<JdbiDailyMealPlanner>) =
+    private fun getRecipeInfoPicture(planner: List<JdbiDailyMealPlanner>): List<DailyMealPlanner> =
         planner.map { daily ->
             val dailyMeals = daily.meals.mapValues { (_, recipe) ->
                 val picture = cs.pictureRepository.getPicture(recipe.picturesNames.first(), RECIPES_FOLDER)

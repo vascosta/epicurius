@@ -2,6 +2,7 @@ package epicurius.http.utils
 
 import epicurius.http.utils.Uris.Recipe.RECIPE
 import org.springframework.web.util.UriTemplate
+import java.time.LocalDate
 
 object Uris {
 
@@ -70,6 +71,8 @@ object Uris {
         const val MEAL_PLANNER = "$PLANNER/{date}"
         const val CLEAN_MEAL_PLANNER = "$MEAL_PLANNER/remove"
         const val CLEAN_MEAL_TIME = "$CLEAN_MEAL_PLANNER/{mealTime}"
+
+        fun mealPlanner(date: LocalDate) = UriTemplate(MEAL_PLANNER).expand(date)
     }
 
     object Collection {
