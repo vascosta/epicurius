@@ -96,6 +96,7 @@ create table dbo.collection_recipe(
 create table dbo.meal_planner(
     user_id int not null,
     date date not null,
+    max_calories int check ( max_calories >= 0 ),
     primary key (user_id, date),
     foreign key (user_id) references dbo.user(id)
 );
@@ -108,15 +109,6 @@ create table dbo.meal_planner_recipe(
     primary key (user_id, date, recipe_id, meal_time),
     foreign key (user_id, date) references dbo.meal_planner(user_id, date),
     foreign key (recipe_id) references dbo.recipe(id)
-);
-
-create table dbo.calories(
-    user_id int not null,
-    date date not null,
-    max_calories int not null check ( max_calories >= 0 ),
-    primary key (user_id, date),
-    foreign key (user_id) references dbo.user(id),
-    foreign key (user_id, date) references dbo.meal_planner(user_id, date)
 );
 
 create or replace function delete_product_with_no_quantity()

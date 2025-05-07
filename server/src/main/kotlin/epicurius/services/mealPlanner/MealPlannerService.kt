@@ -27,9 +27,9 @@ class MealPlannerService(
     private val cs: CloudStorageManager
 ) {
 
-    fun createDailyMealPlanner(userId: Int, date: LocalDate) {
+    fun createDailyMealPlanner(userId: Int, date: LocalDate, maxCalories: Int?) {
         if (checkIfMealPlannerExists(userId, date)) throw MealPlannerAlreadyExists(date)
-        tm.run { it.mealPlannerRepository.createDailyMealPlanner(userId, date) }
+        tm.run { it.mealPlannerRepository.createDailyMealPlanner(userId, date, maxCalories) }
     }
 
     fun getWeeklyMealPlanner(userId: Int): MealPlanner {
@@ -46,7 +46,11 @@ class MealPlannerService(
             recipe.toRecipeInfo(picture)
         }
 
-        return DailyMealPlanner(date = jdbiDailyPlanner.date, meals = dailyMeals)
+        return DailyMealPlanner(
+            date = jdbiDailyPlanner.date,
+            maxCalories = jdbiDailyPlanner.maxCalories,
+            meals = dailyMeals
+        )
     }
 
     fun addDailyMealPlanner(userId: Int, date: LocalDate, info: AddMealPlannerInputModel): MealPlanner {
@@ -55,7 +59,6 @@ class MealPlannerService(
             throw MealTimeAlreadyExistsInPlanner(info.mealTime)
         val recipe = checkIfRecipeExists(info.recipeId)
         if (!info.mealTime.isMealTypeAllowedForMealTime(recipe.mealType)) throw RecipeIsInvalidForMealTime()
-        checkIfLimitOfCaloriesIsRespected(userId, date, recipe)
 
         val jdbiPlanner = tm.run {
             it.mealPlannerRepository.addDailyMealPlanner(userId, date, info.recipeId, info.mealTime)
@@ -76,6 +79,25 @@ class MealPlannerService(
         }
         val planner = getRecipeInfoPicture(jdbiPlanner.planner)
         return MealPlanner(planner)
+    }
+
+    fun updateDailyCalories(userId: Int, date: LocalDate, maxCalories: Int?): DailyMealPlanner {
+        if (!checkIfMealPlannerExists(userId, date)) throw MealPlannerNotFound()
+
+        val jdbiDailyPlanner = tm.run {
+            it.mealPlannerRepository.updateDailyCalories(userId, date, maxCalories)
+        }
+
+        val dailyMeals = jdbiDailyPlanner.meals.mapValues { (_, recipe) ->
+            val picture = cs.pictureRepository.getPicture(recipe.picturesNames.first(), RECIPES_FOLDER)
+            recipe.toRecipeInfo(picture)
+        }
+
+        return DailyMealPlanner(
+            date = jdbiDailyPlanner.date,
+            maxCalories = jdbiDailyPlanner.maxCalories,
+            meals = dailyMeals
+        )
     }
 
     fun removeMealTimeDailyMealPlanner(userId: Int, date: LocalDate, mealTime: MealTime): MealPlanner {
@@ -106,7 +128,7 @@ class MealPlannerService(
                 val picture = cs.pictureRepository.getPicture(recipe.picturesNames.first(), RECIPES_FOLDER)
                 recipe.toRecipeInfo(picture)
             }
-            DailyMealPlanner(date = daily.date, meals = dailyMeals)
+            DailyMealPlanner(date = daily.date, maxCalories = daily.maxCalories, meals = dailyMeals)
         }
 
     private fun checkIfMealPlannerExists(userId: Int, date: LocalDate): Boolean =
@@ -117,12 +139,4 @@ class MealPlannerService(
 
     private fun checkIfMealTimeAlreadyExistsInPlanner(userId: Int, date: LocalDate, mealTime: MealTime): Boolean =
         tm.run { it.mealPlannerRepository.checkIfMealTimeAlreadyExistsInPlanner(userId, date, mealTime) }
-
-    private fun checkIfLimitOfCaloriesIsRespected(userId: Int, date: LocalDate, recipe: JdbiRecipeModel) {
-        val calories = tm.run { it.mealPlannerRepository.getDailyCalories(userId, date) }
-        if (calories.maxCalories != null) {
-            if (recipe.calories == null) throw RecipeDoesNotContainCaloriesInfo()
-            if (calories.reachedCalories + recipe.calories > calories.maxCalories) throw RecipeExceedsMaximumCalories()
-        }
-    }
 }

@@ -4,6 +4,7 @@ import epicurius.domain.mealPlanner.MealTime
 import epicurius.domain.user.AuthenticatedUser
 import epicurius.http.mealPlanner.models.input.AddMealPlannerInputModel
 import epicurius.http.mealPlanner.models.input.CreateMealPlannerInputModel
+import epicurius.http.mealPlanner.models.input.UpdateDailyCaloriesInputModel
 import epicurius.http.mealPlanner.models.input.UpdateMealPlannerInputModel
 import epicurius.http.mealPlanner.models.output.DailyMealPlannerOutputModel
 import epicurius.http.mealPlanner.models.output.MealPlannerOutputModel
@@ -43,7 +44,7 @@ class MealPlannerController(private val mealPlannerService: MealPlannerService) 
         authenticatedUser: AuthenticatedUser,
         @Valid @RequestBody body: CreateMealPlannerInputModel
     ): ResponseEntity<*> {
-        mealPlannerService.createDailyMealPlanner(authenticatedUser.user.id, body.date)
+        mealPlannerService.createDailyMealPlanner(authenticatedUser.user.id, body.date, body.maxCalories)
         return ResponseEntity.noContent().build<Unit>()
     }
 
@@ -65,6 +66,16 @@ class MealPlannerController(private val mealPlannerService: MealPlannerService) 
     ): ResponseEntity<*> {
         val mealPlanner = mealPlannerService.updateDailyMealPlanner(authenticatedUser.user.id, date, body)
         return ResponseEntity.ok().body(MealPlannerOutputModel(mealPlanner.planner))
+    }
+
+    @PatchMapping(Uris.MealPlanner.CALORIES)
+    fun updateDailyCalories(
+        authenticatedUser: AuthenticatedUser,
+        @PathVariable date: LocalDate,
+        @Valid @RequestBody body: UpdateDailyCaloriesInputModel
+    ): ResponseEntity<*> {
+        val dailyMealPlanner = mealPlannerService.updateDailyCalories(authenticatedUser.user.id, date, body.maxCalories)
+        return ResponseEntity.ok().body(DailyMealPlannerOutputModel(dailyMealPlanner))
     }
 
     @DeleteMapping(Uris.MealPlanner.CLEAN_MEAL_TIME)

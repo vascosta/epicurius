@@ -14,6 +14,7 @@ class JdbiDailyMealPlannerRowMapper(
     override fun map(rs: ResultSet, ctx: StatementContext): JdbiDailyMealPlannerRow {
         return JdbiDailyMealPlannerRow(
             date = rs.getDate("date").toLocalDate(),
+            maxCalories = rs.getInt("max_calories"),
             mealTime = MealTime.fromInt(rs.getInt("meal_time")),
             jdbiRecipeInfo = jdbiRecipeInfoMapper.map(rs, ctx)
         )

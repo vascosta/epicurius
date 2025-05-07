@@ -12,22 +12,23 @@ import java.time.LocalDate
 
 class JdbiMealPlannerRepository(private val handle: Handle) : MealPlannerRepository {
 
-    override fun createDailyMealPlanner(userId: Int, date: LocalDate) {
+    override fun createDailyMealPlanner(userId: Int, date: LocalDate, maxCalories: Int?) {
         handle.createUpdate(
             """
-                INSERT INTO dbo.meal_planner (user_id, date)
-                VALUES (:id, :date)
+                INSERT INTO dbo.meal_planner (user_id, date, max_calories)
+                VALUES (:id, :date, :calories)
             """
         )
             .bind("id", userId)
             .bind("date", date)
+            .bind("calories", maxCalories)
             .execute()
     }
 
     override fun getWeeklyMealPlanner(userId: Int): JdbiMealPlanner {
         val list = handle.createQuery(
             """
-                SELECT mp.date, mpr.meal_time, 
+                SELECT mp.date, mp.max_calories, mpr.meal_time, 
                        r.id AS recipe_id, r.name AS recipe_name, 
                        r.cuisine, r.meal_type, r.preparation_time, r.servings, r.pictures_names
                 FROM dbo.meal_planner mp 
@@ -47,7 +48,8 @@ class JdbiMealPlannerRepository(private val handle: Handle) : MealPlannerReposit
             .groupBy { it.date }
             .map { (date, dailyMeals) ->
                 val meals = dailyMeals.associate { it.mealTime to it.jdbiRecipeInfo }
-                JdbiDailyMealPlanner(date, meals)
+                val calories = dailyMeals.first { it.date == date }.maxCalories
+                JdbiDailyMealPlanner(date, calories, meals)
             }
 
         return JdbiMealPlanner(dailyPlanners)
@@ -56,7 +58,7 @@ class JdbiMealPlannerRepository(private val handle: Handle) : MealPlannerReposit
     override fun getDailyMealPlanner(userId: Int, date: LocalDate): JdbiDailyMealPlanner {
         val dailyRow = handle.createQuery(
             """
-                SELECT mp.date, mpr.meal_time, 
+                SELECT mp.date, mp.max_calories, mpr.meal_time, 
                        r.id AS recipe_id, r.name AS recipe_name, 
                        r.cuisine, r.meal_type, r.preparation_time, r.servings, r.pictures_names
                 FROM dbo.meal_planner mp 
@@ -75,7 +77,8 @@ class JdbiMealPlannerRepository(private val handle: Handle) : MealPlannerReposit
             .groupBy { it.date }
             .map { (date, dailyMeals) ->
                 val meals = dailyMeals.associate { it.mealTime to it.jdbiRecipeInfo }
-                JdbiDailyMealPlanner(date, meals)
+                val calories = dailyMeals.first { it.date == date }.maxCalories
+                JdbiDailyMealPlanner(date, calories, meals)
             }
             .first()
 
@@ -157,26 +160,26 @@ class JdbiMealPlannerRepository(private val handle: Handle) : MealPlannerReposit
         return getWeeklyMealPlanner(userId)
     }
 
-    override fun getDailyCalories(userId: Int, date: LocalDate): JdbiCalories =
-        handle.createQuery(
+    override fun updateDailyCalories(userId: Int, date: LocalDate, calories: Int?): JdbiDailyMealPlanner {
+        handle.createUpdate(
             """
-                SELECT c.max_calories, COALESCE(SUM(r.calories), 0) as reached_calories
-                FROM dbo.calories c 
-                LEFT JOIN dbo.meal_planner_recipe mpr ON c.user_id = mpr.user_id AND c.date = mpr.date
-                LEFT JOIN dbo.recipe r ON mpr.recipe_id = r.id
-                WHERE c.user_id = :id AND c.date = :date
-                GROUP BY c.date, c.max_calories
+                UPDATE dbo.meal_planner
+                SET max_calories = :calories
+                WHERE user_id = :userId AND date = :date
             """
         )
-            .bind("id", userId)
+            .bind("calories", calories)
+            .bind("userId", userId)
             .bind("date", date)
-            .mapTo<JdbiCalories>()
-            .firstOrNull() ?: JdbiCalories(maxCalories = null, reachedCalories = 0)
+            .execute()
+
+        return getDailyMealPlanner(userId, date)
+    }
 
     override fun checkIfDailyMealPlannerAlreadyExists(userId: Int, date: LocalDate): Boolean =
         handle.createQuery(
             """
-                SELECT COUNT(*)
+                SELECT COUNT(user_id)
                 FROM dbo.meal_planner
                 WHERE user_id = :id AND date = :date
             """
@@ -189,7 +192,7 @@ class JdbiMealPlannerRepository(private val handle: Handle) : MealPlannerReposit
     override fun checkIfMealTimeAlreadyExistsInPlanner(userId: Int, date: LocalDate, mealTime: MealTime): Boolean =
         handle.createQuery(
             """
-                SELECT COUNT(*)
+                SELECT COUNT(user_id)
                 FROM dbo.meal_planner_recipe
                 WHERE user_id = :id AND date = :date AND meal_time = :time
             """

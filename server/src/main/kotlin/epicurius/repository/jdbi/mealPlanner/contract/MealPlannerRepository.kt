@@ -11,13 +11,13 @@ interface MealPlannerRepository {
     fun getWeeklyMealPlanner(userId: Int): JdbiMealPlanner
 
     fun getDailyMealPlanner(userId: Int, date: LocalDate): JdbiDailyMealPlanner
-    fun createDailyMealPlanner(userId: Int, date: LocalDate)
+    fun createDailyMealPlanner(userId: Int, date: LocalDate, maxCalories: Int?)
     fun addDailyMealPlanner(userId: Int, date: LocalDate, recipeId: Int, mealTime: MealTime): JdbiMealPlanner
     fun updateDailyMealPlanner(userId: Int, date: LocalDate, recipeId: Int, mealTime: MealTime): JdbiMealPlanner
     fun removeMealTimeDailyMealPlanner(userId: Int, date: LocalDate, mealTime: MealTime): JdbiMealPlanner
     fun deleteDailyMealPlanner(userId: Int, date: LocalDate): JdbiMealPlanner
 
-    fun getDailyCalories(userId: Int, date: LocalDate): JdbiCalories
+    fun updateDailyCalories(userId: Int, date: LocalDate, calories: Int?): JdbiDailyMealPlanner
 
     fun checkIfDailyMealPlannerAlreadyExists(userId: Int, date: LocalDate): Boolean
     fun checkIfMealTimeAlreadyExistsInPlanner(userId: Int, date: LocalDate, mealTime: MealTime): Boolean
