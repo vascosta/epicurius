@@ -33,7 +33,9 @@ class JdbiMealPlannerRepository(private val handle: Handle) : MealPlannerReposit
                 FROM dbo.meal_planner mp 
                 JOIN dbo.meal_planner_recipe mpr ON mp.user_id = mpr.user_id AND mp.date = mpr.date
                 JOIN dbo.recipe r ON mpr.recipe_id = r.id
-                WHERE mp.user_id = :id
+                WHERE mp.user_id = :id 
+                AND mp.date >= DATE_TRUNC('week', CURRENT_DATE)
+                AND mp.date < DATE_TRUNC('week', CURRENT_DATE) + INTERVAL '1 week'
                 ORDER BY mp.date ASC, mpr.meal_time ASC
             """
         )
