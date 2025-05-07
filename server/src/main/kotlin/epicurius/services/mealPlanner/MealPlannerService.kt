@@ -7,6 +7,7 @@ import epicurius.domain.exceptions.MealTimeDoesNotExist
 import epicurius.domain.exceptions.RecipeDoesNotContainCaloriesInfo
 import epicurius.domain.exceptions.RecipeExceedsMaximumCalories
 import epicurius.domain.exceptions.RecipeIsInvalidForMealTime
+import epicurius.domain.exceptions.RecipeNotAccessible
 import epicurius.domain.exceptions.RecipeNotFound
 import epicurius.domain.mealPlanner.DailyMealPlanner
 import epicurius.domain.mealPlanner.MealPlanner
@@ -53,11 +54,12 @@ class MealPlannerService(
         )
     }
 
-    fun addDailyMealPlanner(userId: Int, date: LocalDate, info: AddMealPlannerInputModel): MealPlanner {
+    fun addDailyMealPlanner(userId: Int, username: String, date: LocalDate, info: AddMealPlannerInputModel): MealPlanner {
         if (!checkIfMealPlannerExists(userId, date)) throw MealPlannerNotFound()
         if (checkIfMealTimeAlreadyExistsInPlanner(userId, date, info.mealTime))
             throw MealTimeAlreadyExistsInPlanner(info.mealTime)
         val recipe = checkIfRecipeExists(info.recipeId)
+        checkRecipeAccessibility(recipe.authorUsername, username)
         if (!info.mealTime.isMealTypeAllowedForMealTime(recipe.mealType)) throw RecipeIsInvalidForMealTime()
 
         val jdbiPlanner = tm.run {
@@ -67,11 +69,12 @@ class MealPlannerService(
         return MealPlanner(planner)
     }
 
-    fun updateDailyMealPlanner(userId: Int, date: LocalDate, info: UpdateMealPlannerInputModel): MealPlanner {
+    fun updateDailyMealPlanner(userId: Int, username: String, date: LocalDate, info: UpdateMealPlannerInputModel): MealPlanner {
         if (!checkIfMealPlannerExists(userId, date)) throw MealPlannerNotFound()
         if (!checkIfMealTimeAlreadyExistsInPlanner(userId, date, info.mealTime))
             throw MealTimeDoesNotExist()
         val recipe = checkIfRecipeExists(info.recipeId)
+        checkRecipeAccessibility(recipe.authorUsername, username)
         if (!info.mealTime.isMealTypeAllowedForMealTime(recipe.mealType)) throw RecipeIsInvalidForMealTime()
 
         val jdbiPlanner = tm.run {
@@ -136,6 +139,11 @@ class MealPlannerService(
 
     private fun checkIfRecipeExists(recipeId: Int): JdbiRecipeModel =
         tm.run { it.recipeRepository.getRecipeById(recipeId) } ?: throw RecipeNotFound()
+
+    private fun checkRecipeAccessibility(authorUsername: String, username: String) {
+        if (!tm.run { it.userRepository.checkUserVisibility(authorUsername, username) })
+            throw RecipeNotAccessible()
+    }
 
     private fun checkIfMealTimeAlreadyExistsInPlanner(userId: Int, date: LocalDate, mealTime: MealTime): Boolean =
         tm.run { it.mealPlannerRepository.checkIfMealTimeAlreadyExistsInPlanner(userId, date, mealTime) }

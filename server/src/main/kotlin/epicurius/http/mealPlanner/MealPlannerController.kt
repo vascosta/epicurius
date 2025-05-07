@@ -54,7 +54,12 @@ class MealPlannerController(private val mealPlannerService: MealPlannerService) 
         @PathVariable date: LocalDate,
         @Valid @RequestBody body: AddMealPlannerInputModel
     ): ResponseEntity<*> {
-        val planner = mealPlannerService.addDailyMealPlanner(authenticatedUser.user.id, date, body)
+        val planner = mealPlannerService.addDailyMealPlanner(
+            authenticatedUser.user.id,
+            authenticatedUser.user.name,
+            date,
+            body
+        )
         return ResponseEntity.created(mealPlanner(date)).body(MealPlannerOutputModel(planner.planner))
     }
 
@@ -64,7 +69,12 @@ class MealPlannerController(private val mealPlannerService: MealPlannerService) 
         @PathVariable date: LocalDate,
         @Valid @RequestBody body: UpdateMealPlannerInputModel
     ): ResponseEntity<*> {
-        val mealPlanner = mealPlannerService.updateDailyMealPlanner(authenticatedUser.user.id, date, body)
+        val mealPlanner = mealPlannerService.updateDailyMealPlanner(
+            authenticatedUser.user.id,
+            authenticatedUser.user.name,
+            date,
+            body
+        )
         return ResponseEntity.ok().body(MealPlannerOutputModel(mealPlanner.planner))
     }
 
