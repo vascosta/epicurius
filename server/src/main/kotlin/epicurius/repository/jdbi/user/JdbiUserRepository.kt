@@ -45,7 +45,7 @@ class JdbiUserRepository(private val handle: Handle) : UserRepository {
                 u.intolerances, u.diets, u.profile_picture_name,
                 t.hash as token_hash
                 FROM dbo.user u
-                JOIN dbo.token t ON t.user_id = u.id
+                LEFT JOIN dbo.token t ON t.user_id = u.id
                 WHERE u.name = :name OR u.email = :email OR t.hash = :token_hash
             """
         )
@@ -61,7 +61,7 @@ class JdbiUserRepository(private val handle: Handle) : UserRepository {
                 u.intolerances, u.diets, u.profile_picture_name,
                 t.hash as token_hash
                 FROM dbo.user u
-                JOIN dbo.token t ON t.user_id = u.id
+                LEFT JOIN dbo.token t ON t.user_id = u.id
                 WHERE u.id = :userId
             """
         )
@@ -149,7 +149,7 @@ class JdbiUserRepository(private val handle: Handle) : UserRepository {
                 )
                 SELECT u.*, t.hash as token_hash
                 FROM updated_user u
-                JOIN dbo.token t ON t.user_id = u.id
+                LEFT JOIN dbo.token t ON t.user_id = u.id
             """
         )
             .bind("newUsername", userUpdateInfo.name)
@@ -219,8 +219,8 @@ class JdbiUserRepository(private val handle: Handle) : UserRepository {
         handle.createQuery(
             """
                 SELECT COUNT (*) FROM dbo.user u
-                JOIN dbo.token ON token.user_id = user.id
-                WHERE u.id = :userId AND token_hash IS NOT NULL
+                LEFT JOIN dbo.token t ON t.user_id = u.id
+                WHERE u.id = :userId AND t.hash IS NOT NULL
             
             """
         )

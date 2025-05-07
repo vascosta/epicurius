@@ -37,7 +37,6 @@ open class RepositoryTest : EpicuriusUnitTest() {
 
         init {
             jdbi.useHandle<Exception> {
-                it.execute("DELETE FROM dbo.calories")
                 it.execute("DELETE FROM dbo.meal_planner_recipe")
                 it.execute("DELETE FROM dbo.meal_planner")
                 it.execute("DELETE FROM dbo.collection_recipe")

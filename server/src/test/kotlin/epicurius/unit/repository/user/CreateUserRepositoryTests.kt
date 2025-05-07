@@ -20,13 +20,23 @@ class CreateUserRepositoryTests : UserRepositoryTest() {
         val passwordHash = userDomain.encodePassword(generateSecurePassword())
 
         // when creating a user
-        createUser(username, email, country, passwordHash)
+        val userId = createUser(username, email, country, passwordHash)
+
+        println(userId)
 
         // when getting the user by name
         val userByName = getUserByName(username)
 
+        // when getting the user by email
+        val userByEmail = getUserByEmail(email)
+
+        // when getting the user by id
+        val userById = getUserById(userId)
+
         // then the user is retrieved successfully
         assertNotNull(userByName)
+        assertNotNull(userByEmail)
+        assertNotNull(userById)
         assertEquals(username, userByName.name)
         assertEquals(email, userByName.email)
         assertEquals(country, userByName.country)
