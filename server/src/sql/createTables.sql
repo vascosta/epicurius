@@ -5,12 +5,19 @@ create table dbo.user(
     name varchar(25) unique not null ,
     email varchar(40) unique not null,
     password_hash varchar(80) not null,
-    token_hash varchar(80) unique,
     country varchar(5) not null,
     privacy boolean not null,
     intolerances int[] not null,
     diets int[] not null,
     profile_picture_name varchar(80)
+);
+
+create table dbo.token(
+    hash varchar(80) unique,
+    last_used date,
+    user_id int not null,
+    primary key (user_id),
+    foreign key (user_id) references dbo.user(id)
 );
 
 create table dbo.followers(
