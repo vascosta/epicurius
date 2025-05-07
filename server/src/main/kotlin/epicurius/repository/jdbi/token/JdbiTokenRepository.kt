@@ -2,33 +2,32 @@ package epicurius.repository.jdbi.token
 
 import epicurius.repository.jdbi.token.contract.TokenRepository
 import org.jdbi.v3.core.Handle
+import java.time.LocalDate
 
 class JdbiTokenRepository(private val handle: Handle) : TokenRepository {
 
-    override fun createToken(tokenHash: String, name: String?, email: String?) {
+    override fun createToken(tokenHash: String, lastUsed: LocalDate, userId: Int) {
         handle.createUpdate(
             """
-            UPDATE dbo.user
-            SET token_hash = :token_hash
-            WHERE name = :name OR email = :email
+                INSERT INTO dbo.token(hash, last_used, user_id)
+                VALUES (:token_hash, :last_used, :userId)
             """
         )
             .bind("token_hash", tokenHash)
-            .bind("name", name)
-            .bind("email", email)
+            .bind("last_used", lastUsed)
+            .bind("userId", userId)
             .execute()
     }
 
-    override fun deleteToken(name: String?, email: String?) {
+    override fun deleteToken(userId: Int) {
         handle.createUpdate(
             """
-            UPDATE dbo.user
-            SET token_hash = NULL
-            WHERE name = :name OR email = :email
+                UPDATE dbo.token
+                SET hash = NULL
+                WHERE user_id = :userId
             """
         )
-            .bind("name", name)
-            .bind("email", email)
+            .bind("userId", userId)
             .execute()
     }
 }
