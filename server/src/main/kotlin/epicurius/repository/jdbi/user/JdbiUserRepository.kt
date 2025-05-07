@@ -12,11 +12,12 @@ import org.jdbi.v3.core.kotlin.mapTo
 
 class JdbiUserRepository(private val handle: Handle) : UserRepository {
 
-    override fun createUser(name: String, email: String, country: String, passwordHash: String) {
+    override fun createUser(name: String, email: String, country: String, passwordHash: String): Int =
         handle.createUpdate(
             """
                INSERT INTO dbo.user(name, email, password_hash, country, privacy, intolerances, diets)
                VALUES (:name, :email, :password_hash, :country, :privacy, :intolerances, :diets)
+                RETURNING id
             """
         )
             .bind("name", name)
@@ -26,8 +27,9 @@ class JdbiUserRepository(private val handle: Handle) : UserRepository {
             .bind("privacy", false) // user is created with a public profile
             .bind("intolerances", emptyArray<Int>())
             .bind("diets", emptyArray<Int>())
-            .execute()
-    }
+            .executeAndReturnGeneratedKeys()
+            .mapTo<Int>()
+            .one()
 
     override fun getUser(name: String?, email: String?, tokenHash: String?): User? {
 
@@ -39,8 +41,12 @@ class JdbiUserRepository(private val handle: Handle) : UserRepository {
 
         return handle.createQuery(
             """
-                SELECT * FROM dbo.user
-                WHERE name = :name OR email = :email OR token_hash = :token_hash
+                SELECT u.id, u.name, u.email, u.password_hash, u.country, u.privacy, 
+                u.intolerances, u.diets, u.profile_picture_name,
+                t.hash as token_hash
+                FROM dbo.user u
+                JOIN dbo.token t ON t.user_id = u.id
+                WHERE u.name = :name OR u.email = :email OR t.hash = :token_hash
             """
         )
             .bindMap(bindings)
@@ -51,8 +57,12 @@ class JdbiUserRepository(private val handle: Handle) : UserRepository {
     override fun getUserById(userId: Int) =
         handle.createQuery(
             """
-                SELECT * FROM dbo.user
-                WHERE id = :userId
+                SELECT u.id, u.name, u.email, u.password_hash, u.country, u.privacy, 
+                u.intolerances, u.diets, u.profile_picture_name,
+                t.hash as token_hash
+                FROM dbo.user u
+                JOIN dbo.token t ON t.user_id = u.id
+                WHERE u.id = :userId
             """
         )
             .bind("userId", userId)
@@ -121,20 +131,25 @@ class JdbiUserRepository(private val handle: Handle) : UserRepository {
             .list()
     }
 
-    override fun updateUser(name: String, userUpdateInfo: JdbiUpdateUserModel): User {
+    override fun updateUser(userId: Int, userUpdateInfo: JdbiUpdateUserModel): User {
         return handle.createQuery(
             """
-                UPDATE dbo.user
-                SET name = COALESCE(:newUsername, name),
-                    email = COALESCE(:email, email),
-                    country = COALESCE(:country, country),
-                    password_hash = COALESCE(:password_hash, password_hash),
-                    privacy = COALESCE(:privacy, privacy),
-                    intolerances = COALESCE(:intolerances, intolerances),
-                    diets = COALESCE(:diets, diets),
-                    profile_picture_name = :profile_picture_name
-                WHERE name = :name
-                RETURNING *
+                WITH updated_user AS (
+                    UPDATE dbo.user
+                    SET name = COALESCE(:newUsername, name),
+                        email = COALESCE(:email, email),
+                        country = COALESCE(:country, country),
+                        password_hash = COALESCE(:password_hash, password_hash),
+                        privacy = COALESCE(:privacy, privacy),
+                        intolerances = COALESCE(:intolerances, intolerances),
+                        diets = COALESCE(:diets, diets),
+                        profile_picture_name = :profile_picture_name
+                    WHERE id = :userId
+                    RETURNING *
+                )
+                SELECT u.*, t.hash as token_hash
+                FROM updated_user u
+                JOIN dbo.token t ON t.user_id = u.id
             """
         )
             .bind("newUsername", userUpdateInfo.name)
@@ -145,20 +160,20 @@ class JdbiUserRepository(private val handle: Handle) : UserRepository {
             .bind("intolerances", userUpdateInfo.intolerances?.toTypedArray())
             .bind("diets", userUpdateInfo.diets?.toTypedArray())
             .bind("profile_picture_name", userUpdateInfo.profilePictureName)
-            .bind("name", name)
+            .bind("userId", userId)
             .mapTo<User>()
             .first()
     }
 
-    override fun resetPassword(email: String, passwordHash: String) {
+    override fun resetPassword(userId: Int, passwordHash: String) {
         handle.createUpdate(
             """
                 UPDATE dbo.user
                 SET password_hash = :password_hash
-                WHERE email = :email
+                WHERE id = :userId
             """
         )
-            .bind("email", email)
+            .bind("userId", userId)
             .bind("password_hash", passwordHash)
             .execute()
     }
@@ -200,15 +215,16 @@ class JdbiUserRepository(private val handle: Handle) : UserRepository {
             .execute()
     }
 
-    override fun checkIfUserIsLoggedIn(name: String?, email: String?) =
+    override fun checkIfUserIsLoggedIn(userId: Int) =
         handle.createQuery(
             """
-                SELECT COUNT (*) FROM dbo.user
-                WHERE (name = :name OR email = :email) AND token_hash IS NOT NULL
+                SELECT COUNT (*) FROM dbo.user u
+                JOIN dbo.token ON token.user_id = user.id
+                WHERE u.id = :userId AND token_hash IS NOT NULL
+            
             """
         )
-            .bind("name", name)
-            .bind("email", email)
+            .bind("userId", userId)
             .mapTo<Int>()
             .one() == 1
 
