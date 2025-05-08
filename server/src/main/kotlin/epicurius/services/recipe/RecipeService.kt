@@ -3,7 +3,7 @@ package epicurius.services.recipe
 import epicurius.domain.PagingParams
 import epicurius.domain.exceptions.InvalidIngredient
 import epicurius.domain.exceptions.InvalidNumberOfRecipePictures
-import epicurius.domain.exceptions.NotTheAuthor
+import epicurius.domain.exceptions.NotTheRecipeAuthor
 import epicurius.domain.exceptions.RecipeNotAccessible
 import epicurius.domain.exceptions.RecipeNotFound
 import epicurius.domain.picture.PictureDomain
@@ -205,6 +205,6 @@ class RecipeService(
     }
 
     private fun checkIfUserIsAuthor(userId: Int, authorId: Int) {
-        if (userId != authorId) throw NotTheAuthor()
+        if (userId != authorId) throw NotTheRecipeAuthor()
     }
 }

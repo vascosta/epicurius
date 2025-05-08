@@ -4,7 +4,7 @@ import epicurius.domain.recipe.RecipeDomain.Companion.MAX_PICTURES
 import epicurius.domain.recipe.RecipeDomain.Companion.MIN_PICTURES
 
 class RecipeNotFound : RuntimeException("Recipe not found")
-class NotTheAuthor : RuntimeException("You are not the author of this recipe")
+class NotTheRecipeAuthor : RuntimeException("You are not the author of this recipe")
 class RecipeNotAccessible : RuntimeException("Recipe not accessible")
 
 class InvalidCuisineIdx : RuntimeException("Invalid cuisine idx")

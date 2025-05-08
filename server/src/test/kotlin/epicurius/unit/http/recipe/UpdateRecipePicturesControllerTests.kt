@@ -1,7 +1,7 @@
 package epicurius.unit.http.recipe
 
 import epicurius.domain.exceptions.InvalidNumberOfRecipePictures
-import epicurius.domain.exceptions.NotTheAuthor
+import epicurius.domain.exceptions.NotTheRecipeAuthor
 import epicurius.domain.exceptions.RecipeNotFound
 import epicurius.domain.user.AuthenticatedUser
 import epicurius.domain.user.User
@@ -139,11 +139,11 @@ class UpdateRecipePicturesControllerTests : RecipeHttpTest() {
 
         // mock
         whenever(recipeServiceMock.updateRecipePictures(notTheAuthor.user.id, RECIPE_ID, recipePictures.toSet()))
-            .thenThrow(NotTheAuthor())
+            .thenThrow(NotTheRecipeAuthor())
 
         // when updating the recipe pictures that does not belong to the user
         // then the recipe is not updated and throws NotTheAuthor exception
-        assertFailsWith<NotTheAuthor> {
+        assertFailsWith<NotTheRecipeAuthor> {
             runBlocking { updateRecipePictures(notTheAuthor, RECIPE_ID, recipePictures) }
         }
     }

@@ -3,7 +3,7 @@ package epicurius.unit.http.recipe
 import epicurius.domain.Diet
 import epicurius.domain.Intolerance
 import epicurius.domain.exceptions.InvalidIngredient
-import epicurius.domain.exceptions.NotTheAuthor
+import epicurius.domain.exceptions.NotTheRecipeAuthor
 import epicurius.domain.exceptions.RecipeNotFound
 import epicurius.domain.recipe.Cuisine
 import epicurius.domain.recipe.Ingredient
@@ -106,11 +106,11 @@ class UpdateRecipeControllerTests : RecipeHttpTest() {
         // mock
         whenever(
             runBlocking { recipeServiceMock.updateRecipe(notTheAuthor.user.id, RECIPE_ID, updateRecipeInfo) }
-        ).thenThrow(NotTheAuthor())
+        ).thenThrow(NotTheRecipeAuthor())
 
         // when updating the recipe
         // then the recipe is not updated and throws NotTheAuthor exception
-        assertFailsWith<NotTheAuthor> {
+        assertFailsWith<NotTheRecipeAuthor> {
             runBlocking { updateRecipe(notTheAuthor, RECIPE_ID, updateRecipeInfo) }
         }
     }

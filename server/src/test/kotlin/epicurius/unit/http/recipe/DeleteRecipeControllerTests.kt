@@ -1,6 +1,6 @@
 package epicurius.unit.http.recipe
 
-import epicurius.domain.exceptions.NotTheAuthor
+import epicurius.domain.exceptions.NotTheRecipeAuthor
 import epicurius.domain.exceptions.RecipeNotFound
 import epicurius.domain.user.AuthenticatedUser
 import epicurius.domain.user.User
@@ -47,10 +47,10 @@ class DeleteRecipeControllerTests : RecipeHttpTest() {
         )
 
         // mock
-        whenever(recipeServiceMock.deleteRecipe(notTheAuthorUser.user.id, RECIPE_ID)).thenThrow(NotTheAuthor())
+        whenever(recipeServiceMock.deleteRecipe(notTheAuthorUser.user.id, RECIPE_ID)).thenThrow(NotTheRecipeAuthor())
 
         // when deleting the recipe
         // then the recipe is not deleted and throws NotTheAuthor exception
-        assertFailsWith<NotTheAuthor> { deleteRecipe(notTheAuthorUser, RECIPE_ID) }
+        assertFailsWith<NotTheRecipeAuthor> { deleteRecipe(notTheAuthorUser, RECIPE_ID) }
     }
 }
