@@ -50,7 +50,7 @@ open class CollectionServiceTest: ServiceTest() {
         )
 
         val testKitchenBookJdbiCollectionModel = testFavouriteJdbiCollectionModel.copy(
-            id = KITCHEN_BOOK_COLLECTION_ID, type = CollectionType.KITCHEN_BOOK
+            id = KITCHEN_BOOK_COLLECTION_ID, ownerId = PRIVATE_USER_ID, type = CollectionType.KITCHEN_BOOK
         )
 
         val testFavouriteCollection = Collection(

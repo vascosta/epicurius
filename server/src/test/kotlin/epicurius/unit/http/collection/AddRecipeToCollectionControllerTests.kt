@@ -96,6 +96,42 @@ class AddRecipeToCollectionControllerTests: CollectionHttpTest() {
     }
 
     @Test
+    fun `Should throw RecipeNotAccessible exception when adding a recipe that belongs to a private user not being followed to a Favourite type collection`() {
+        // given a collection id (FAVOURITE_COLLECTION_ID) and a recipe id (RECIPE_ID)
+
+        // mock
+        whenever(collectionServiceMock.addRecipeToCollection(
+            testPrivateAuthenticatedUser.user.id, testPrivateAuthenticatedUser.user.name, FAVOURITE_COLLECTION_ID, RECIPE_ID)
+        ).thenThrow(RecipeNotAccessible())
+
+        // when adding the recipe to the collection
+        // then the recipe is not added and throws RecipeNotFound exception
+        assertFailsWith<RecipeNotAccessible> {
+            addRecipeToCollection(
+                testPrivateAuthenticatedUser, FAVOURITE_COLLECTION_ID, addRecipeToCollectionInputInfo
+            )
+        }
+    }
+
+    @Test
+    fun `Should throw NotTheRecipeAuthor exception when adding a recipe that does not belong to the user to a Kitchen Book type collection`() {
+        // given a collection id (KITCHEN_BOOK_COLLECTION_ID) and a recipe id (RECIPE_ID)
+
+        // mock
+        whenever(collectionServiceMock.addRecipeToCollection(
+            testPublicAuthenticatedUser.user.id, testPublicAuthenticatedUser.user.name, KITCHEN_BOOK_COLLECTION_ID, RECIPE_ID)
+        ).thenThrow(RecipeNotFound())
+
+        // when adding the recipe to the collection
+        // then the recipe is not added and throws RecipeNotFound exception
+        assertFailsWith<RecipeNotFound> {
+            addRecipeToCollection(
+                testPublicAuthenticatedUser, KITCHEN_BOOK_COLLECTION_ID, addRecipeToCollectionInputInfo
+            )
+        }
+    }
+
+    @Test
     fun `Should throw RecipeAlreadyInCollection exception when adding a recipe that is already in the collection`() {
         // given a collection id (FAVOURITE_COLLECTION_ID) and a recipe id (RECIPE_ID)
 
@@ -109,24 +145,6 @@ class AddRecipeToCollectionControllerTests: CollectionHttpTest() {
         assertFailsWith<RecipeAlreadyInCollection> {
             addRecipeToCollection(
                 testPublicAuthenticatedUser, FAVOURITE_COLLECTION_ID, addRecipeToCollectionInputInfo
-            )
-        }
-    }
-
-    @Test
-    fun `Should throw RecipeNotAccessible exception when adding a recipe that belongs to a private user not being followed`() {
-        // given a collection id (FAVOURITE_COLLECTION_ID) and a recipe id (RECIPE_ID)
-
-        // mock
-        whenever(collectionServiceMock.addRecipeToCollection(
-            testPrivateAuthenticatedUser.user.id, testPrivateAuthenticatedUser.user.name, FAVOURITE_COLLECTION_ID, RECIPE_ID)
-        ).thenThrow(RecipeNotAccessible())
-
-        // when adding the recipe to the collection
-        // then the recipe is not added and throws RecipeNotFound exception
-        assertFailsWith<RecipeNotAccessible> {
-            addRecipeToCollection(
-                testPrivateAuthenticatedUser, FAVOURITE_COLLECTION_ID, addRecipeToCollectionInputInfo
             )
         }
     }
