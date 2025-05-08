@@ -26,6 +26,7 @@ class CreateUserServiceTests : UserServiceTest() {
         // given information to create a user (username, email, country, password)
 
         // mock
+        val mockUserId = 1
         val mockPasswordHash = userDomain.encodePassword(password)
         val mockToken = userDomain.generateTokenValue()
         val mockTokenHash = userDomain.hashToken(mockToken)
@@ -33,7 +34,9 @@ class CreateUserServiceTests : UserServiceTest() {
         whenever(jdbiUserRepositoryMock.getUser(username, email)).thenReturn(null)
         whenever(countriesDomainMock.checkIfCountryCodeIsValid(country)).thenReturn(true)
         whenever(userDomainMock.encodePassword(password)).thenReturn(mockPasswordHash)
-        whenever(jdbiUserRepositoryMock.checkIfUserIsLoggedIn(1)).thenReturn(false)
+        whenever(jdbiUserRepositoryMock.createUser(username, email, country, mockPasswordHash))
+            .thenReturn(mockUserId)
+        whenever(jdbiUserRepositoryMock.checkIfUserIsLoggedIn(mockUserId)).thenReturn(false)
         whenever(userDomainMock.generateTokenValue()).thenReturn(mockToken)
         whenever(userDomainMock.hashToken(mockToken)).thenReturn(mockTokenHash)
 
@@ -41,8 +44,7 @@ class CreateUserServiceTests : UserServiceTest() {
         val createToken = createUser(username, email, country, password, password)
 
         // then the user is created successfully
-        verify(jdbiUserRepositoryMock).createUser(username, email, country, mockPasswordHash)
-        verify(jdbiTokenRepositoryMock).createToken(mockTokenHash,mockLastUsed, 1)
+        verify(jdbiTokenRepositoryMock).createToken(mockTokenHash,mockLastUsed, mockUserId)
         assertNotNull(createToken)
     }
 

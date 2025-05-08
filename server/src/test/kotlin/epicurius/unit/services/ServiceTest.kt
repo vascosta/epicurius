@@ -58,6 +58,8 @@ open class ServiceTest : EpicuriusUnitTest() {
         fun cancelFollowRequest(userId: Int, username: String, usernameToRequest: String) =
             userService.followRequest(userId, username, usernameToRequest, FollowRequestType.CANCEL)
 
+        fun refreshUserToken(oldToken: String) = userService.refreshUserToken(oldToken)
+
         // FEED
         fun getFeed(
             userId: Int,

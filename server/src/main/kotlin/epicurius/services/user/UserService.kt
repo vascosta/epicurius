@@ -216,8 +216,8 @@ class UserService(
         }
     }
 
-    fun refreshToken(oldToken: String): String {
-        val authenticatedUser = getAuthenticatedUser(oldToken) ?: throw InvalidToken()
+    fun refreshUserToken(oldToken: String): String {
+        val authenticatedUser = getAuthenticatedUser(oldToken) ?: throw UserNotFound(null)
         deleteToken(authenticatedUser.user.id)
         return createToken(authenticatedUser.user.id)
     }

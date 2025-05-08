@@ -9,7 +9,7 @@ class RequestTokenProcessor(val userService: UserService) {
 
     fun getAuthenticatedUser(token: String): AuthenticatedUser? = userService.getAuthenticatedUser(token)
 
-    fun refreshToken(oldToken: String) = userService.refreshToken(oldToken)
+    fun refreshToken(oldToken: String) = userService.refreshUserToken(oldToken)
 
     fun parseAuthorizationHeader(value: String?): String? {
         if (value.isNullOrBlank()) return null
