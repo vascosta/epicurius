@@ -22,8 +22,7 @@ class JdbiTokenRepository(private val handle: Handle) : TokenRepository {
     override fun deleteToken(userId: Int) {
         handle.createUpdate(
             """
-                UPDATE dbo.token
-                SET hash = NULL
+                DELETE FROM dbo.token
                 WHERE user_id = :userId
             """
         )

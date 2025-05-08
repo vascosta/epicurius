@@ -5,6 +5,7 @@ import epicurius.utils.createTestUser
 import java.time.LocalDate
 import kotlin.test.Test
 import kotlin.test.assertNotNull
+import kotlin.test.assertNull
 
 class TokenRepositoryTest : RepositoryTest() {
 
@@ -19,20 +20,24 @@ class TokenRepositoryTest : RepositoryTest() {
     }
 
     @Test
-    fun `Should create a token for an user and then delete the token successfully`() {
+    fun `Should delete a token for an user and then create a new one successfully`() {
         // given an existing user (testUser)
 
-        // when creating a token for the user
-        val token = userDomain.generateTokenValue()
-        val tokenHash = userDomain.hashToken(token)
+        // when deleting the token
+        deleteToken(testUser.id)
+
+        // then the token is deleted successfully
+        val notFoundUser = tm.run { it.userRepository.getUser(tokenHash = testUser.tokenHash) }
+        assertNull(notFoundUser)
+
+        // when creating a new token
+        val newToken = userDomain.generateTokenValue()
+        val newTokenHash = userDomain.hashToken(newToken)
         val lastUsed = LocalDate.now()
-        createToken(tokenHash, lastUsed, testUser.id)
+        createToken(newTokenHash, lastUsed, testUser.id)
 
         // then the token is created successfully
-        assertNotNull(tokenHash)
-
-        // when deleting the token
-        // then the token is deleted successfully
-        deleteToken(testUser.id)
+        val userWithNewToken = tm.run { it.userRepository.getUser(tokenHash = newTokenHash) }
+        assertNotNull(userWithNewToken)
     }
 }
