@@ -4,6 +4,8 @@ import epicurius.domain.PagingParams
 import epicurius.domain.user.AuthenticatedUser
 import epicurius.domain.user.FollowRequestType
 import epicurius.domain.user.UserProfile
+import epicurius.http.pipeline.authentication.AuthenticationRefreshHandler
+import epicurius.http.pipeline.authentication.addCookie
 import epicurius.http.user.models.input.LoginInputModel
 import epicurius.http.user.models.input.ResetPasswordInputModel
 import epicurius.http.user.models.input.SignUpInputModel
@@ -11,6 +13,7 @@ import epicurius.http.user.models.input.UpdateUserInputModel
 import epicurius.http.user.models.output.*
 import epicurius.http.utils.Uris
 import epicurius.services.user.UserService
+import jakarta.servlet.http.Cookie
 import jakarta.servlet.http.HttpServletResponse
 import jakarta.validation.Valid
 import org.springframework.http.MediaType
@@ -20,17 +23,24 @@ import org.springframework.web.multipart.MultipartFile
 
 @RestController
 @RequestMapping(Uris.PREFIX)
-class UserController(val userService: UserService) {
+class UserController(val authenticationRefreshHandler: AuthenticationRefreshHandler, val userService: UserService) {
 
     @GetMapping(Uris.User.USER)
-    fun getUserInfo(authenticatedUser: AuthenticatedUser): ResponseEntity<*> {
-        return ResponseEntity.ok().body(GetUserOutputModel(authenticatedUser.user.toUserInfo()))
+    fun getUserInfo(
+        authenticatedUser: AuthenticatedUser,
+        response: HttpServletResponse
+    ): ResponseEntity<*> {
+        return ResponseEntity
+            .ok()
+            .body(GetUserOutputModel(authenticatedUser.user.toUserInfo()))
+            .addCookie(response, authenticationRefreshHandler.refreshToken(authenticatedUser.token))
     }
 
     @GetMapping(Uris.User.USER_PROFILE)
     fun getUserProfile(
         authenticatedUser: AuthenticatedUser,
-        @PathVariable name: String
+        @PathVariable name: String,
+        response: HttpServletResponse
     ): ResponseEntity<*> {
         return if (name == authenticatedUser.user.name) {
             val userProfilePicture = userService.getProfilePicture(authenticatedUser.user.profilePictureName)
@@ -44,10 +54,16 @@ class UserController(val userService: UserService) {
                 followers,
                 following,
             )
-            ResponseEntity.ok().body(GetUserProfileOutputModel(userProfile))
+            ResponseEntity
+                .ok()
+                .body(GetUserProfileOutputModel(userProfile))
+                .addCookie(response, authenticationRefreshHandler.refreshToken(authenticatedUser.token))
         } else {
             val userProfile = userService.getUserProfile(name)
-            ResponseEntity.ok().body(GetUserProfileOutputModel(userProfile))
+            ResponseEntity
+                .ok()
+                .body(GetUserProfileOutputModel(userProfile))
+                .addCookie(response, authenticationRefreshHandler.refreshToken(authenticatedUser.token))
         }
     }
 
@@ -56,77 +72,131 @@ class UserController(val userService: UserService) {
         authenticatedUser: AuthenticatedUser,
         @RequestParam partialUsername: String,
         @RequestParam skip: Int,
-        @RequestParam limit: Int
+        @RequestParam limit: Int,
+        response: HttpServletResponse
     ): ResponseEntity<*> {
         val pagingParams = PagingParams(skip, limit)
         val users = userService.searchUsers(authenticatedUser.user.id, partialUsername, pagingParams)
-        return ResponseEntity.ok().body(SearchUsersOutputModel(users))
+        return ResponseEntity
+            .ok()
+            .body(SearchUsersOutputModel(users))
+            .addCookie(response, authenticationRefreshHandler.refreshToken(authenticatedUser.token))
     }
 
     @GetMapping(Uris.User.USER_INTOLERANCES)
-    fun getUserIntolerances(authenticatedUser: AuthenticatedUser): ResponseEntity<*> {
+    fun getUserIntolerances(
+        authenticatedUser: AuthenticatedUser,
+        response: HttpServletResponse
+    ): ResponseEntity<*> {
         val intolerances = authenticatedUser.user.intolerances
-        return ResponseEntity.ok().body(GetUserIntolerancesOutputModel(intolerances))
+        return ResponseEntity
+            .ok()
+            .body(GetUserIntolerancesOutputModel(intolerances))
+            .addCookie(response, authenticationRefreshHandler.refreshToken(authenticatedUser.token))
     }
 
     @GetMapping(Uris.User.USER_DIETS)
-    fun getUserDiet(authenticatedUser: AuthenticatedUser): ResponseEntity<*> {
+    fun getUserDiet(
+        authenticatedUser: AuthenticatedUser,
+        response: HttpServletResponse
+    ): ResponseEntity<*> {
         val diets = authenticatedUser.user.diets
-        return ResponseEntity.ok().body(GetUserDietsOutputModel(diets))
+        return ResponseEntity
+            .ok()
+            .body(GetUserDietsOutputModel(diets))
+            .addCookie(response, authenticationRefreshHandler.refreshToken(authenticatedUser.token))
     }
 
     @GetMapping(Uris.User.USER_FOLLOWERS)
-    fun getUserFollowers(authenticatedUser: AuthenticatedUser): ResponseEntity<*> {
+    fun getUserFollowers(
+        authenticatedUser: AuthenticatedUser,
+        response: HttpServletResponse
+    ): ResponseEntity<*> {
         val followers = userService.getFollowers(authenticatedUser.user.id)
-        return ResponseEntity.ok().body(GetUserFollowersOutputModel(followers))
+        return ResponseEntity
+            .ok()
+            .body(GetUserFollowersOutputModel(followers))
+            .addCookie(response, authenticationRefreshHandler.refreshToken(authenticatedUser.token))
     }
 
     @GetMapping(Uris.User.USER_FOLLOWING)
-    fun getUserFollowing(authenticatedUser: AuthenticatedUser): ResponseEntity<*> {
+    fun getUserFollowing(
+        authenticatedUser: AuthenticatedUser,
+        response: HttpServletResponse
+    ): ResponseEntity<*> {
         val following = userService.getFollowing(authenticatedUser.user.id)
-        return ResponseEntity.ok().body(GetUserFollowingOutputModel(following))
+        return ResponseEntity
+            .ok()
+            .body(GetUserFollowingOutputModel(following))
+            .addCookie(response, authenticationRefreshHandler.refreshToken(authenticatedUser.token))
     }
 
     @GetMapping(Uris.User.USER_FOLLOW_REQUESTS)
-    fun getUserFollowRequests(authenticatedUser: AuthenticatedUser): ResponseEntity<*> {
+    fun getUserFollowRequests(
+        authenticatedUser: AuthenticatedUser,
+        response: HttpServletResponse
+    ): ResponseEntity<*> {
         val followRequests = userService.getFollowRequests(authenticatedUser.user.id)
-        return ResponseEntity.ok().body(GetUserFollowRequestsOutputModel(followRequests))
+        return ResponseEntity
+            .ok()
+            .body(GetUserFollowRequestsOutputModel(followRequests))
+            .addCookie(response, authenticationRefreshHandler.refreshToken(authenticatedUser.token))
     }
 
     @PostMapping(Uris.User.SIGNUP)
-    fun signUp(@Valid @RequestBody body: SignUpInputModel, response: HttpServletResponse): ResponseEntity<*> {
+    fun signUp(
+        @Valid @RequestBody body: SignUpInputModel,
+        response: HttpServletResponse
+    ): ResponseEntity<*> {
         val token = userService.createUser(body.name, body.email, body.country, body.password, body.confirmPassword)
-        response.addHeader("Authorization", "Bearer $token")
-        return ResponseEntity.created(Uris.User.userProfile(body.name)).build<Unit>()
+        return ResponseEntity
+            .created(Uris.User.userProfile(body.name))
+            .build<Unit>()
+            .addCookie(response, authenticationRefreshHandler.refreshToken(token))
     }
 
     @PostMapping(Uris.User.LOGIN)
-    fun login(@Valid @RequestBody body: LoginInputModel, response: HttpServletResponse): ResponseEntity<*> {
+    fun login(
+        @Valid @RequestBody body: LoginInputModel,
+        response: HttpServletResponse
+    ): ResponseEntity<*> {
         val token = userService.login(body.name, body.email, body.password)
-        response.addHeader("Authorization", "Bearer $token")
-        return ResponseEntity.noContent().build<Unit>()
+        return ResponseEntity
+            .noContent()
+            .build<Unit>()
+            .addCookie(response, authenticationRefreshHandler.refreshToken(token))
     }
 
     @PostMapping(Uris.User.LOGOUT)
-    fun logout(authenticatedUser: AuthenticatedUser, response: HttpServletResponse): ResponseEntity<*> {
+    fun logout(
+        authenticatedUser: AuthenticatedUser,
+        response: HttpServletResponse
+    ): ResponseEntity<*> {
         userService.logout(authenticatedUser.user.id)
-        response.addHeader("Authorization", "")
-        return ResponseEntity.noContent().build<Unit>()
+        return ResponseEntity
+            .noContent()
+            .build<Unit>()
+            .addCookie(response, Cookie("token", ""))
     }
 
     @PatchMapping(Uris.User.USER)
     fun updateUser(
         authenticatedUser: AuthenticatedUser,
-        @Valid @RequestBody body: UpdateUserInputModel
+        @Valid @RequestBody body: UpdateUserInputModel,
+        response: HttpServletResponse
     ): ResponseEntity<*> {
         val updatedUserInfo = userService.updateUser(authenticatedUser.user.id, body)
-        return ResponseEntity.ok().body(UpdateUserOutputModel(updatedUserInfo))
+        return ResponseEntity
+            .ok()
+            .body(UpdateUserOutputModel(updatedUserInfo))
+            .addCookie(response, authenticationRefreshHandler.refreshToken(authenticatedUser.token))
     }
 
     @PatchMapping(Uris.User.USER_PICTURE, consumes = [MediaType.MULTIPART_FORM_DATA_VALUE])
     fun updateUserProfilePicture(
         authenticatedUser: AuthenticatedUser,
-        @RequestPart("picture", required = false) picture: MultipartFile?
+        @RequestPart("picture", required = false) picture: MultipartFile?,
+        response: HttpServletResponse
     ): ResponseEntity<*> {
         val newProfilePicture = userService.updateProfilePicture(
             authenticatedUser.user.id,
@@ -134,9 +204,15 @@ class UserController(val userService: UserService) {
             picture
         )
         return if (newProfilePicture == null) {
-            ResponseEntity.noContent().build<Unit>()
+            ResponseEntity
+                .noContent()
+                .build<Unit>()
+                .addCookie(response, authenticationRefreshHandler.refreshToken(authenticatedUser.token))
         } else {
-            ResponseEntity.ok().body(UpdateUserProfilePictureOutputModel(newProfilePicture))
+            ResponseEntity
+                .ok()
+                .body(UpdateUserProfilePictureOutputModel(newProfilePicture))
+                .addCookie(response, authenticationRefreshHandler.refreshToken(authenticatedUser.token))
         }
     }
 
@@ -145,13 +221,22 @@ class UserController(val userService: UserService) {
         @Valid @RequestBody body: ResetPasswordInputModel
     ): ResponseEntity<*> {
         userService.resetPassword(body.email, body.newPassword, body.confirmPassword)
-        return ResponseEntity.noContent().build<Unit>()
+        return ResponseEntity
+            .noContent()
+            .build<Unit>()
     }
 
     @PatchMapping(Uris.User.USER_FOLLOW)
-    fun follow(authenticatedUser: AuthenticatedUser, @PathVariable name: String): ResponseEntity<*> {
+    fun follow(
+        authenticatedUser: AuthenticatedUser,
+        @PathVariable name: String,
+        response: HttpServletResponse
+    ): ResponseEntity<*> {
         userService.follow(authenticatedUser.user.id, authenticatedUser.user.name, name)
-        return ResponseEntity.noContent().build<Unit>()
+        return ResponseEntity
+            .noContent()
+            .build<Unit>()
+            .addCookie(response, authenticationRefreshHandler.refreshToken(authenticatedUser.token))
     }
 
     @PatchMapping(Uris.User.USER_FOLLOW_REQUEST)
@@ -159,14 +244,25 @@ class UserController(val userService: UserService) {
         authenticatedUser: AuthenticatedUser,
         @PathVariable name: String,
         @RequestParam type: FollowRequestType,
+        response: HttpServletResponse
     ): ResponseEntity<*> {
         userService.followRequest(authenticatedUser.user.id, authenticatedUser.user.name, name, type)
-        return ResponseEntity.noContent().build<Unit>()
+        return ResponseEntity
+            .noContent()
+            .build<Unit>()
+            .addCookie(response, authenticationRefreshHandler.refreshToken(authenticatedUser.token))
     }
 
     @DeleteMapping(Uris.User.USER_FOLLOW)
-    fun unfollow(authenticatedUser: AuthenticatedUser, @PathVariable name: String): ResponseEntity<*> {
+    fun unfollow(
+        authenticatedUser: AuthenticatedUser,
+        @PathVariable name: String,
+        response: HttpServletResponse
+    ): ResponseEntity<*> {
         userService.unfollow(authenticatedUser.user.id, authenticatedUser.user.name, name)
-        return ResponseEntity.ok().build<Unit>()
+        return ResponseEntity
+            .ok()
+            .build<Unit>()
+            .addCookie(response, authenticationRefreshHandler.refreshToken(authenticatedUser.token))
     }
 }

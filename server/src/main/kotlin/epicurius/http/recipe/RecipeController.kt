@@ -7,6 +7,8 @@ import epicurius.domain.PagingParams
 import epicurius.domain.recipe.Cuisine
 import epicurius.domain.recipe.MealType
 import epicurius.domain.user.AuthenticatedUser
+import epicurius.http.pipeline.authentication.AuthenticationRefreshHandler
+import epicurius.http.pipeline.authentication.addCookie
 import epicurius.http.recipe.models.input.CreateRecipeInputModel
 import epicurius.http.recipe.models.input.SearchRecipesInputModel
 import epicurius.http.recipe.models.input.UpdateRecipeInputModel
@@ -18,6 +20,7 @@ import epicurius.http.recipe.models.output.UpdateRecipePicturesOutputModel
 import epicurius.http.utils.Uris
 import epicurius.http.utils.Uris.Recipe.recipe
 import epicurius.services.recipe.RecipeService
+import jakarta.servlet.http.HttpServletResponse
 import jakarta.validation.Valid
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
@@ -35,12 +38,22 @@ import org.springframework.web.multipart.MultipartFile
 
 @RestController
 @RequestMapping(Uris.PREFIX)
-class RecipeController(private val recipeService: RecipeService) {
+class RecipeController(
+    private val authenticationRefreshHandler: AuthenticationRefreshHandler,
+    private val recipeService: RecipeService
+) {
 
     @GetMapping(Uris.Recipe.RECIPE)
-    suspend fun getRecipe(authenticatedUser: AuthenticatedUser, @PathVariable id: Int): ResponseEntity<*> {
+    suspend fun getRecipe(
+        authenticatedUser: AuthenticatedUser,
+        @PathVariable id: Int,
+        response: HttpServletResponse
+    ): ResponseEntity<*> {
         val recipe = recipeService.getRecipe(id, authenticatedUser.user.name)
-        return ResponseEntity.ok().body(GetRecipeOutputModel(recipe))
+        return ResponseEntity
+            .ok()
+            .body(GetRecipeOutputModel(recipe))
+            .addCookie(response, authenticationRefreshHandler.refreshToken(authenticatedUser.token))
     }
 
     @GetMapping(Uris.Recipe.RECIPES)
@@ -63,7 +76,8 @@ class RecipeController(private val recipeService: RecipeService) {
         @RequestParam minTime: Int?,
         @RequestParam maxTime: Int?,
         @RequestParam skip: Int,
-        @RequestParam limit: Int
+        @RequestParam limit: Int,
+        response: HttpServletResponse
     ): ResponseEntity<*> {
         val pagingParams = PagingParams(skip, limit)
         val searchForm = SearchRecipesInputModel(
@@ -85,19 +99,26 @@ class RecipeController(private val recipeService: RecipeService) {
             maxTime = maxTime
         )
         val results = recipeService.searchRecipes(authenticatedUser.user.id, searchForm, pagingParams)
-        return ResponseEntity.ok().body(SearchRecipesOutputModel(results))
+        return ResponseEntity
+            .ok()
+            .body(SearchRecipesOutputModel(results))
+            .addCookie(response, authenticationRefreshHandler.refreshToken(authenticatedUser.token))
     }
 
     @PostMapping(Uris.Recipe.RECIPES, consumes = [MediaType.MULTIPART_FORM_DATA_VALUE])
     suspend fun createRecipe(
         authenticatedUser: AuthenticatedUser,
         @RequestPart("body") body: String,
-        @RequestPart("pictures") pictures: List<MultipartFile>
+        @RequestPart("pictures") pictures: List<MultipartFile>,
+        response: HttpServletResponse
     ): ResponseEntity<*> {
         val objectMapper = jacksonObjectMapper()
         val recipeInfo = objectMapper.readValue(body, CreateRecipeInputModel::class.java)
         val recipe = recipeService.createRecipe(authenticatedUser.user.id, authenticatedUser.user.name, recipeInfo, pictures.toSet())
-        return ResponseEntity.created(recipe(recipe.id)).body(CreateRecipeOutputModel(recipe))
+        return ResponseEntity
+            .created(recipe(recipe.id))
+            .body(CreateRecipeOutputModel(recipe))
+            .addCookie(response, authenticationRefreshHandler.refreshToken(authenticatedUser.token))
     }
 
     @PatchMapping(Uris.Recipe.RECIPE)
@@ -105,27 +126,39 @@ class RecipeController(private val recipeService: RecipeService) {
         authenticatedUser: AuthenticatedUser,
         @PathVariable id: Int,
         @Valid @RequestBody body: UpdateRecipeInputModel,
+        response: HttpServletResponse
     ): ResponseEntity<*> {
         val updatedRecipe = recipeService.updateRecipe(authenticatedUser.user.id, id, body)
-        return ResponseEntity.ok().body(UpdateRecipeOutputModel(updatedRecipe))
+        return ResponseEntity
+            .ok()
+            .body(UpdateRecipeOutputModel(updatedRecipe))
+            .addCookie(response, authenticationRefreshHandler.refreshToken(authenticatedUser.token))
     }
 
     @PatchMapping(Uris.Recipe.RECIPE_PICTURES, consumes = [MediaType.MULTIPART_FORM_DATA_VALUE])
     suspend fun updateRecipePictures(
         authenticatedUser: AuthenticatedUser,
         @PathVariable id: Int,
-        @RequestPart("pictures") pictures: List<MultipartFile>
+        @RequestPart("pictures") pictures: List<MultipartFile>,
+        response: HttpServletResponse
     ): ResponseEntity<*> {
         val updatedPictures = recipeService.updateRecipePictures(authenticatedUser.user.id, id, pictures.toSet())
-        return ResponseEntity.ok().body(UpdateRecipePicturesOutputModel(updatedPictures.pictures))
+        return ResponseEntity
+            .ok()
+            .body(UpdateRecipePicturesOutputModel(updatedPictures.pictures))
+            .addCookie(response, authenticationRefreshHandler.refreshToken(authenticatedUser.token))
     }
 
     @DeleteMapping(Uris.Recipe.RECIPE)
     fun deleteRecipe(
         authenticatedUser: AuthenticatedUser,
-        @PathVariable id: Int
+        @PathVariable id: Int,
+        response: HttpServletResponse
     ): ResponseEntity<*> {
         recipeService.deleteRecipe(authenticatedUser.user.id, id)
-        return ResponseEntity.noContent().build<Unit>()
+        return ResponseEntity
+            .noContent()
+            .build<Unit>()
+            .addCookie(response, authenticationRefreshHandler.refreshToken(authenticatedUser.token))
     }
 }
