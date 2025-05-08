@@ -19,6 +19,7 @@ import epicurius.http.user.models.input.ResetPasswordInputModel
 import epicurius.http.user.models.input.SignUpInputModel
 import epicurius.http.user.models.input.UpdateUserInputModel
 import epicurius.unit.EpicuriusUnitTest
+import jakarta.servlet.http.HttpServletResponse
 import org.springframework.web.multipart.MultipartFile
 
 open class HttpTest : EpicuriusUnitTest() {
@@ -43,9 +44,9 @@ open class HttpTest : EpicuriusUnitTest() {
         fun getUserFollowing(authenticatedUser: AuthenticatedUser) = userController.getUserFollowing(authenticatedUser)
         fun getUserFollowRequests(authenticatedUser: AuthenticatedUser) = userController.getUserFollowRequests(authenticatedUser)
 
-        fun signUp(body: SignUpInputModel) = userController.signUp(body)
-        fun login(body: LoginInputModel) = userController.login(body)
-        fun logout(authenticatedUser: AuthenticatedUser) = userController.logout(authenticatedUser)
+        fun signUp(body: SignUpInputModel, response: HttpServletResponse) = userController.signUp(body, response)
+        fun login(body: LoginInputModel, response: HttpServletResponse) = userController.login(body, response)
+        fun logout(authenticatedUser: AuthenticatedUser, response: HttpServletResponse) = userController.logout(authenticatedUser, response)
 
         fun updateUser(authenticatedUser: AuthenticatedUser, body: UpdateUserInputModel) =
             userController.updateUser(authenticatedUser, body)

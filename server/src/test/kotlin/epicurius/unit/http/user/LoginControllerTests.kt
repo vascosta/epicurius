@@ -25,7 +25,7 @@ class LoginControllerTests : UserHttpTest() {
         //whenever(userServiceMock.login(loginInputInfo.name, null, loginInputInfo.password)).thenReturn(mockToken)
 
         // when logging in by name
-        val response = login(loginInputInfo.copy(email = null))
+        val response = login(loginInputInfo.copy(email = null), mockResponse)
 
         // then the user is logged in successfully
         //verify(mockResponse).addHeader("Authorization", "Bearer $mockToken")
@@ -41,7 +41,7 @@ class LoginControllerTests : UserHttpTest() {
         //whenever(userServiceMock.login(null, loginInputInfo.email, loginInputInfo.password)).thenReturn(mockToken)
 
         // when logging in by email
-        val response = login(loginInputInfo.copy(name = null))
+        val response = login(loginInputInfo.copy(email = null), mockResponse)
 
         // then the user is logged in successfully
         //verify(mockResponse).addHeader("Authorization", "Bearer $mockToken")
@@ -60,8 +60,8 @@ class LoginControllerTests : UserHttpTest() {
 
         // when logging in
         // then the user cannot be logged in and throws UserNotFound exception
-        assertFailsWith<UserNotFound> { login(loginInputInfo.copy(name = nonExistingUsername, email = null)) }
-        assertFailsWith<UserNotFound> { login(loginInputInfo.copy(name = null, email = nonExistingEmail)) }
+        assertFailsWith<UserNotFound> { login(loginInputInfo.copy(name = nonExistingUsername, email = null), mockResponse) }
+        assertFailsWith<UserNotFound> { login(loginInputInfo.copy(name = null, email = nonExistingEmail), mockResponse) }
     }
 
     @Test
@@ -74,8 +74,8 @@ class LoginControllerTests : UserHttpTest() {
 
         // when logging in
         // then the user cannot be logged in and throws UserAlreadyLoggedIn exception
-        assertFailsWith<UserAlreadyLoggedIn> { login(loginInputInfo.copy(name = publicTestUsername, email = null)) }
-        assertFailsWith<UserAlreadyLoggedIn> { login(loginInputInfo.copy(name = null, email = publicTestUser.user.email)) }
+        assertFailsWith<UserAlreadyLoggedIn> { login(loginInputInfo.copy(name = publicTestUsername, email = null), mockResponse) }
+        assertFailsWith<UserAlreadyLoggedIn> { login(loginInputInfo.copy(name = null, email = publicTestUser.user.email), mockResponse) }
     }
 
     @Test
@@ -90,10 +90,10 @@ class LoginControllerTests : UserHttpTest() {
         // when logging in with an incorrect password
         // then the user cannot be logged in and throws IncorrectPassword exception
         assertFailsWith<IncorrectPassword> {
-            login(loginInputInfo.copy(name = publicTestUsername, email = null, password = incorrectPassword))
+            login(loginInputInfo.copy(name = publicTestUsername, email = null, password = incorrectPassword), mockResponse)
         }
         assertFailsWith<IncorrectPassword> {
-            login(loginInputInfo.copy(name = null, email = publicTestUser.user.email, password = incorrectPassword))
+            login(loginInputInfo.copy(name = null, email = publicTestUser.user.email, password = incorrectPassword), mockResponse)
         }
     }
 }

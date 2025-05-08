@@ -32,11 +32,14 @@ class SignUpControllerTests : UserHttpTest() {
 
         // mock
         val mockToken = userDomain.generateTokenValue()
-        verify(userServiceMock).createUser(signUpInfo.name, signUpInfo.email, signUpInfo.country, signUpInfo.password, signUpInfo.confirmPassword)
+        whenever(
+            userServiceMock
+                .createUser(signUpInfo.name, signUpInfo.email, signUpInfo.country, signUpInfo.password, signUpInfo.confirmPassword)
+        ).thenReturn(mockToken)
 
 
         // when creating a user
-        val response = signUp(signUpInfo)
+        val response = signUp(signUpInfo, mockResponse)
 
         // then the user is created successfully
         assertEquals(HttpStatus.CREATED, response.statusCode)
@@ -66,19 +69,19 @@ class SignUpControllerTests : UserHttpTest() {
         // when creating a user with an existing username
         // then the user cannot be created and throws UserAlreadyExists exception
         assertFailsWith<UserAlreadyExists> {
-            signUp(signUpInfoExistingUsername)
+            signUp(signUpInfoExistingUsername, mockResponse)
         }
 
         // when creating a user with an existing email
         // then the user cannot be created and throws UserAlreadyExists exception
         assertFailsWith<UserAlreadyExists> {
-            signUp(signUpInfoExistingEmail)
+            signUp(signUpInfoExistingEmail, mockResponse)
         }
 
         // when creating a user with an existing username and email
         // then the user cannot be created and throws UserAlreadyExists exception
         assertFailsWith<UserAlreadyExists> {
-            signUp(signUpInfoExistingUsernameAndEmail)
+            signUp(signUpInfoExistingUsernameAndEmail, mockResponse)
         }
     }
 
@@ -95,7 +98,7 @@ class SignUpControllerTests : UserHttpTest() {
 
         // when creating a user with an invalid country
         // then the user cannot be created and throws InvalidCountry exception
-        assertFailsWith<InvalidCountry> { signUp(signUpInfoInvalidCountry) }
+        assertFailsWith<InvalidCountry> { signUp(signUpInfoInvalidCountry, mockResponse) }
     }
 
     @Test
@@ -112,7 +115,7 @@ class SignUpControllerTests : UserHttpTest() {
         // when creating a user with different passwords
         // then the user cannot be created and throws PasswordsDoNotMatch exception
         assertFailsWith<PasswordsDoNotMatch> {
-            signUp(signUpInfoDifferentPasswords)
+            signUp(signUpInfoDifferentPasswords, mockResponse)
         }
     }
 }

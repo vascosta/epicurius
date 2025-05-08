@@ -12,7 +12,7 @@ class LogoutControllerTests : UserHttpTest() {
         // given a logged-in user (publicTestUser)
 
         // when logging out
-        val response = logout(publicTestUser)
+        val response = logout(publicTestUser, mockResponse)
 
         // then the user is logged out successfully
         //verify(mockResponse).addHeader("Authorization", "")
