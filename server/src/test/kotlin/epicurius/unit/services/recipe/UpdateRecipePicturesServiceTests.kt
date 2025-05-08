@@ -1,7 +1,7 @@
 package epicurius.unit.services.recipe
 
 import epicurius.domain.exceptions.InvalidNumberOfRecipePictures
-import epicurius.domain.exceptions.NotTheAuthor
+import epicurius.domain.exceptions.NotTheRecipeAuthor
 import epicurius.domain.exceptions.RecipeNotFound
 import epicurius.domain.picture.PictureDomain
 import epicurius.repository.jdbi.recipe.models.JdbiUpdateRecipeModel
@@ -146,6 +146,6 @@ class UpdateRecipePicturesServiceTests : RecipeServiceTest() {
 
         // when updating the recipe
         // then the recipe is not updated and throws NotTheAuthor exception
-        assertFailsWith<NotTheAuthor> { runBlocking { updateRecipePictures(userId, RECIPE_ID, recipePictures) } }
+        assertFailsWith<NotTheRecipeAuthor> { runBlocking { updateRecipePictures(userId, RECIPE_ID, recipePictures) } }
     }
 }

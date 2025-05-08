@@ -42,6 +42,7 @@ class SignUpControllerTests : UserHttpTest() {
         val response = signUp(signUpInfo, mockResponse)
 
         // then the user is created successfully
+        verify(mockResponse).addHeader("Authorization", "Bearer $mockToken")
         assertEquals(HttpStatus.CREATED, response.statusCode)
     }
 

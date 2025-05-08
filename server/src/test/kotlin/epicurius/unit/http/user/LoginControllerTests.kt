@@ -22,13 +22,13 @@ class LoginControllerTests : UserHttpTest() {
 
         // mock
         val mockToken = userDomain.generateTokenValue()
-        //whenever(userServiceMock.login(loginInputInfo.name, null, loginInputInfo.password)).thenReturn(mockToken)
+        whenever(userServiceMock.login(loginInputInfo.name, null, loginInputInfo.password)).thenReturn(mockToken)
 
         // when logging in by name
         val response = login(loginInputInfo.copy(email = null), mockResponse)
 
         // then the user is logged in successfully
-        //verify(mockResponse).addHeader("Authorization", "Bearer $mockToken")
+        verify(mockResponse).addHeader("Authorization", "Bearer $mockToken")
         assertEquals(HttpStatus.NO_CONTENT, response.statusCode)
     }
 
@@ -38,13 +38,13 @@ class LoginControllerTests : UserHttpTest() {
 
         // mock
         val mockToken = userDomain.generateTokenValue()
-        //whenever(userServiceMock.login(null, loginInputInfo.email, loginInputInfo.password)).thenReturn(mockToken)
+        whenever(userServiceMock.login(null, loginInputInfo.email, loginInputInfo.password)).thenReturn(mockToken)
 
         // when logging in by email
-        val response = login(loginInputInfo.copy(email = null), mockResponse)
+        val response = login(loginInputInfo.copy(name = null), mockResponse)
 
         // then the user is logged in successfully
-        //verify(mockResponse).addHeader("Authorization", "Bearer $mockToken")
+        verify(mockResponse).addHeader("Authorization", "Bearer $mockToken")
         assertEquals(HttpStatus.NO_CONTENT, response.statusCode)
     }
 

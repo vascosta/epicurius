@@ -6,7 +6,6 @@ import org.mockito.kotlin.whenever
 import java.time.LocalDate
 import kotlin.test.Test
 import kotlin.test.assertEquals
-import kotlin.test.assertFails
 import kotlin.test.assertFailsWith
 
 class RefreshUserTokenServiceTests: UserServiceTest() {

@@ -3,7 +3,7 @@ package epicurius.unit.services.recipe
 import epicurius.domain.Diet
 import epicurius.domain.Intolerance
 import epicurius.domain.exceptions.InvalidIngredient
-import epicurius.domain.exceptions.NotTheAuthor
+import epicurius.domain.exceptions.NotTheRecipeAuthor
 import epicurius.domain.exceptions.RecipeNotFound
 import epicurius.domain.recipe.Cuisine
 import epicurius.domain.recipe.Ingredient
@@ -144,7 +144,7 @@ class UpdateRecipeServiceTests : RecipeServiceTest() {
 
         // when updating the recipe
         // then the recipe is not updated and throws NotTheAuthor exception
-        assertFailsWith<NotTheAuthor> {
+        assertFailsWith<NotTheRecipeAuthor> {
             runBlocking { updateRecipe(userId, RECIPE_ID, updateRecipeInputInfo) }
         }
     }
