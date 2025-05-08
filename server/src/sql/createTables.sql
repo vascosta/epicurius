@@ -2,7 +2,7 @@ create schema dbo
 
 create table dbo.user(
     id serial primary key,
-    name varchar(25) unique not null ,
+    name varchar(25) unique not null,
     email varchar(40) unique not null,
     password_hash varchar(80) not null,
     country varchar(5) not null,
@@ -13,7 +13,7 @@ create table dbo.user(
 );
 
 create table dbo.token(
-    hash varchar(80) unique,
+    hash varchar(80) unique not null,
     last_used date,
     user_id int not null,
     primary key (user_id),

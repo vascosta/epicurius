@@ -11,7 +11,6 @@ class ChecksUserRepositoryTests : UserRepositoryTest() {
 
     private val publicTestUser = createTestUser(tm)
     private val privateTestUser = createTestUser(tm, true)
-    private val testRecipe = createTestRecipe(tm, fs, publicTestUser)
 
     @Test
     fun `Should checks if an existing user is logged in successfully`() {

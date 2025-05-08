@@ -22,8 +22,6 @@ class CreateUserRepositoryTests : UserRepositoryTest() {
         // when creating a user
         val userId = createUser(username, email, country, passwordHash)
 
-        println(userId)
-
         // when getting the user by name
         val userByName = getUserByName(username)
 
