@@ -44,13 +44,13 @@ class UserService(
     private val pictureDomain: PictureDomain,
     private val countriesDomain: CountriesDomain
 ) {
-    fun createUser(name: String, email: String, country: String, password: String, confirmPassword: String) {
+    fun createUser(name: String, email: String, country: String, password: String, confirmPassword: String): String {
         if (checkIfUserExists(name, email) != null) throw UserAlreadyExists()
         if (!countriesDomain.checkIfCountryCodeIsValid(country)) throw InvalidCountry()
         checkIfPasswordsMatch(password, confirmPassword)
         val passwordHash = userDomain.encodePassword(password)
         val userId = tm.run { it.userRepository.createUser(name, email, country, passwordHash) }
-        createToken(userId)
+        return createToken(userId)
     }
 
     fun getAuthenticatedUser(token: String): AuthenticatedUser? {
@@ -94,12 +94,12 @@ class UserService(
         tm.run { it.userRepository.getFollowRequests(userId) }
             .map { user -> FollowUser(user.name, getProfilePicture(user.profilePictureName)) }
 
-    fun login(name: String? = null, email: String? = null, password: String) {
+    fun login(name: String? = null, email: String? = null, password: String): String {
         val user = checkIfUserExists(name, email) ?: throw UserNotFound(name ?: email)
         checkIfUserIsLoggedIn(user.id)
 
         if (!userDomain.verifyPassword(password, user.passwordHash)) throw IncorrectPassword()
-        createToken(user.id)
+        return createToken(user.id)
     }
 
     fun logout(userId: Int) {

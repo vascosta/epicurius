@@ -35,10 +35,10 @@ class AuthenticationInterceptor(
         modelAndView: ModelAndView?
     ) {
         if (handler is HandlerMethod && handler.hasParameterType<AuthenticatedUser>()) {
-            if (handler.method.name == "logout") {
-                response.addHeader("Authorization", "")
+            if (response.getHeader(AUTHORIZATION_HEADER).isEmpty()) {
                 return
             }
+
             val authenticatedUser = AuthenticatedUserArgumentResolver.getSession(request)
             if (authenticatedUser != null) {
                 val newToken = requestTokenProcessor.refreshToken(authenticatedUser.token)

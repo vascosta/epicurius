@@ -11,6 +11,7 @@ import epicurius.http.user.models.input.UpdateUserInputModel
 import epicurius.http.user.models.output.*
 import epicurius.http.utils.Uris
 import epicurius.services.user.UserService
+import jakarta.servlet.http.HttpServletResponse
 import jakarta.validation.Valid
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
@@ -93,20 +94,23 @@ class UserController(val userService: UserService) {
     }
 
     @PostMapping(Uris.User.SIGNUP)
-    fun signUp(@Valid @RequestBody body: SignUpInputModel): ResponseEntity<*> {
-        userService.createUser(body.name, body.email, body.country, body.password, body.confirmPassword)
+    fun signUp(@Valid @RequestBody body: SignUpInputModel, response: HttpServletResponse): ResponseEntity<*> {
+        val token = userService.createUser(body.name, body.email, body.country, body.password, body.confirmPassword)
+        response.addHeader("Authorization", "Bearer $token")
         return ResponseEntity.created(Uris.User.userProfile(body.name)).build<Unit>()
     }
 
     @PostMapping(Uris.User.LOGIN)
-    fun login(@Valid @RequestBody body: LoginInputModel): ResponseEntity<*> {
-        userService.login(body.name, body.email, body.password)
+    fun login(@Valid @RequestBody body: LoginInputModel, response: HttpServletResponse): ResponseEntity<*> {
+        val token = userService.login(body.name, body.email, body.password)
+        response.addHeader("Authorization", "Bearer $token")
         return ResponseEntity.noContent().build<Unit>()
     }
 
     @PostMapping(Uris.User.LOGOUT)
-    fun logout(authenticatedUser: AuthenticatedUser): ResponseEntity<*> {
+    fun logout(authenticatedUser: AuthenticatedUser, response: HttpServletResponse): ResponseEntity<*> {
         userService.logout(authenticatedUser.user.id)
+        response.addHeader("Authorization", "")
         return ResponseEntity.noContent().build<Unit>()
     }
 
