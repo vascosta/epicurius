@@ -72,9 +72,10 @@ class UpdateRecipeControllerTests : RecipeHttpTest() {
         whenever(
             runBlocking { recipeServiceMock.updateRecipe(testAuthenticatedUser.user.id, RECIPE_ID, updateRecipeInfo) }
         ).thenReturn(updateRecipeModelMock)
+        whenever(authenticationRefreshHandlerMock.refreshToken(testAuthenticatedUser.token)).thenReturn(mockCookie)
 
         // when updating the recipe
-        val response = runBlocking { updateRecipe(testAuthenticatedUser, RECIPE_ID, updateRecipeInfo) }
+        val response = runBlocking { updateRecipe(testAuthenticatedUser, RECIPE_ID, updateRecipeInfo, mockResponse) }
 
         // then the recipe is updated successfully
         assertEquals(HttpStatus.OK, response.statusCode)
@@ -94,7 +95,7 @@ class UpdateRecipeControllerTests : RecipeHttpTest() {
         // when updating the recipe
         // then the recipe is not updated and throws RecipeNotFound exception
         assertFailsWith<RecipeNotFound> {
-            runBlocking { updateRecipe(testAuthenticatedUser, nonExistingRecipeId, updateRecipeInfo) }
+            runBlocking { updateRecipe(testAuthenticatedUser, nonExistingRecipeId, updateRecipeInfo, mockResponse) }
         }
     }
 
@@ -111,7 +112,7 @@ class UpdateRecipeControllerTests : RecipeHttpTest() {
         // when updating the recipe
         // then the recipe is not updated and throws NotTheAuthor exception
         assertFailsWith<NotTheRecipeAuthor> {
-            runBlocking { updateRecipe(notTheAuthor, RECIPE_ID, updateRecipeInfo) }
+            runBlocking { updateRecipe(notTheAuthor, RECIPE_ID, updateRecipeInfo, mockResponse) }
         }
     }
 
@@ -135,7 +136,7 @@ class UpdateRecipeControllerTests : RecipeHttpTest() {
         // then the recipe is not updated and throws IllegalArgumentException
         assertFailsWith<InvalidIngredient> {
             runBlocking {
-                updateRecipe(testAuthenticatedUser, RECIPE_ID, updateRecipeInfo.copy(ingredients = listOf(invalidIngredient)))
+                updateRecipe(testAuthenticatedUser, RECIPE_ID, updateRecipeInfo.copy(ingredients = listOf(invalidIngredient)), mockResponse)
             }
         }
     }

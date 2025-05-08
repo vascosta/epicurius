@@ -5,6 +5,7 @@ import epicurius.domain.exceptions.UserAlreadyLoggedIn
 import epicurius.domain.exceptions.UserNotFound
 import epicurius.http.user.models.input.LoginInputModel
 import epicurius.utils.generateSecurePassword
+import jakarta.servlet.http.Cookie
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.springframework.http.HttpStatus
@@ -28,7 +29,7 @@ class LoginControllerTests : UserHttpTest() {
         val response = login(loginInputInfo.copy(email = null), mockResponse)
 
         // then the user is logged in successfully
-        verify(mockResponse).addHeader("Authorization", "Bearer $mockToken")
+        verify(mockResponse).addCookie(Cookie("token", mockToken))
         assertEquals(HttpStatus.NO_CONTENT, response.statusCode)
     }
 
@@ -44,7 +45,7 @@ class LoginControllerTests : UserHttpTest() {
         val response = login(loginInputInfo.copy(name = null), mockResponse)
 
         // then the user is logged in successfully
-        verify(mockResponse).addHeader("Authorization", "Bearer $mockToken")
+        verify(mockResponse).addCookie(Cookie("token", mockToken))
         assertEquals(HttpStatus.NO_CONTENT, response.statusCode)
     }
 

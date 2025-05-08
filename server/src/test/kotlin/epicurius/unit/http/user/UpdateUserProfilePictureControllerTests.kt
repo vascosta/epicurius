@@ -19,9 +19,10 @@ class UpdateUserProfilePictureControllerTests : UserHttpTest() {
         val mockPictureName = pictureDomain.generatePictureName()
         whenever(userServiceMock.updateProfilePicture(authenticatedUser.user.id, profilePicture = testPicture))
             .thenReturn(mockPictureName)
+        whenever(authenticationRefreshHandlerMock.refreshToken(authenticatedUser.token)).thenReturn(mockCookie)
 
         // when adding a profile picture to the user
-        val response = updateUserProfilePicture(authenticatedUser, testPicture)
+        val response = updateUserProfilePicture(authenticatedUser, testPicture, mockResponse)
         val body = response.body as UpdateUserProfilePictureOutputModel
 
         // then the profile picture is added successfully
@@ -36,9 +37,10 @@ class UpdateUserProfilePictureControllerTests : UserHttpTest() {
         // mock
         whenever(userServiceMock.updateProfilePicture(publicTestUser.user.id, publicTestUser.user.profilePictureName, testPicture))
             .thenReturn(publicTestUser.user.profilePictureName)
+        whenever(authenticationRefreshHandlerMock.refreshToken(publicTestUser.token)).thenReturn(mockCookie)
 
         // when updating the profile picture of the user
-        val response = updateUserProfilePicture(publicTestUser, testPicture)
+        val response = updateUserProfilePicture(publicTestUser, testPicture, mockResponse)
         val body = response.body as UpdateUserProfilePictureOutputModel
 
         // then the profile picture is updated successfully
@@ -53,9 +55,10 @@ class UpdateUserProfilePictureControllerTests : UserHttpTest() {
         // mock
         whenever(userServiceMock.updateProfilePicture(publicTestUser.user.id, publicTestUser.user.profilePictureName))
             .thenReturn(null)
+        whenever(authenticationRefreshHandlerMock.refreshToken(publicTestUser.token)).thenReturn(mockCookie)
 
         // when removing the profile picture of the user
-        val response = updateUserProfilePicture(publicTestUser, null)
+        val response = updateUserProfilePicture(publicTestUser, null, mockResponse)
 
         // then the profile picture is removed successfully
         assertEquals(HttpStatus.NO_CONTENT, response.statusCode)

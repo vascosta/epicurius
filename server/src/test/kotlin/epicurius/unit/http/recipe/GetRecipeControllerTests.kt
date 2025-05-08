@@ -20,9 +20,10 @@ class GetRecipeControllerTests : RecipeHttpTest() {
 
         // mock
         whenever(runBlocking { recipeServiceMock.getRecipe(RECIPE_ID, testAuthorAuthenticatedUser.user.name) }).thenReturn(testRecipe)
+        whenever(authenticationRefreshHandlerMock.refreshToken(testAuthenticatedUser.token)).thenReturn(mockCookie)
 
         // when retrieving the recipe
-        val response = runBlocking { getRecipe(testAuthorAuthenticatedUser, RECIPE_ID) }
+        val response = runBlocking { getRecipe(testAuthorAuthenticatedUser, RECIPE_ID, mockResponse) }
         val body = response.body as GetRecipeOutputModel
 
         // then the recipe is retrieved successfully
@@ -36,9 +37,10 @@ class GetRecipeControllerTests : RecipeHttpTest() {
 
         // mock
         whenever(runBlocking { recipeServiceMock.getRecipe(RECIPE_ID, testAuthenticatedUser.user.name) }).thenReturn(testRecipe)
+        whenever(authenticationRefreshHandlerMock.refreshToken(testAuthenticatedUser.token)).thenReturn(mockCookie)
 
         // when retrieving the recipe
-        val response = runBlocking { getRecipe(testAuthenticatedUser, RECIPE_ID) }
+        val response = runBlocking { getRecipe(testAuthenticatedUser, RECIPE_ID, mockResponse) }
         val body = response.body as GetRecipeOutputModel
 
         // then the recipe is retrieved successfully
@@ -56,7 +58,7 @@ class GetRecipeControllerTests : RecipeHttpTest() {
 
         // when retrieving the recipe
         // then the recipe is not retrieved and throws RecipeNotFound exception
-        assertFailsWith<RecipeNotFound> { runBlocking { getRecipe(testAuthenticatedUser, nonExistingRecipeId) } }
+        assertFailsWith<RecipeNotFound> { runBlocking { getRecipe(testAuthenticatedUser, nonExistingRecipeId, mockResponse) } }
     }
 
     @Test
@@ -69,6 +71,6 @@ class GetRecipeControllerTests : RecipeHttpTest() {
 
         // when retrieving the recipe
         // then the recipe is not retrieved and throws RecipeNotAccessible exception
-        assertFailsWith<RecipeNotAccessible> { runBlocking { getRecipe(user, RECIPE_ID) } }
+        assertFailsWith<RecipeNotAccessible> { runBlocking { getRecipe(user, RECIPE_ID, mockResponse) } }
     }
 }

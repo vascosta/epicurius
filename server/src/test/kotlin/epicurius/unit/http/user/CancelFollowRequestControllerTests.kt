@@ -4,6 +4,7 @@ import epicurius.domain.exceptions.FollowRequestNotFound
 import epicurius.domain.exceptions.InvalidSelfCancelFollowRequest
 import epicurius.domain.exceptions.UserNotFound
 import epicurius.domain.user.FollowRequestType
+import epicurius.unit.http.recipe.RecipeHttpTest.Companion.testAuthenticatedUser
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.springframework.http.HttpStatus
@@ -17,8 +18,11 @@ class CancelFollowRequestControllerTests : UserHttpTest() {
     fun `Should cancel a follow request successfully`() {
         // given two users (publicTestUser and privateTestUser)
 
+        // mock
+        whenever(authenticationRefreshHandlerMock.refreshToken(publicTestUser.token)).thenReturn(mockCookie)
+
         // when canceling the follow request
-        val response = cancelFollowRequest(publicTestUser, privateTestUsername)
+        val response = cancelFollowRequest(publicTestUser, privateTestUsername, mockResponse)
 
         // then the follow request is canceled successfully
         verify(userServiceMock).followRequest(publicTestUser.user.id, publicTestUsername, privateTestUsername, FollowRequestType.CANCEL)
@@ -36,7 +40,7 @@ class CancelFollowRequestControllerTests : UserHttpTest() {
         // when canceling the follow request
         // then the follow request is not canceled and throws InvalidSelfCancelFollowRequest exception
         assertFailsWith<InvalidSelfCancelFollowRequest> {
-            cancelFollowRequest(publicTestUser, publicTestUsername)
+            cancelFollowRequest(publicTestUser, publicTestUsername, mockResponse)
         }
     }
 
@@ -52,7 +56,7 @@ class CancelFollowRequestControllerTests : UserHttpTest() {
         // when canceling the follow request
         // then the follow request is not canceled and throws UserNotFound exception
         assertFailsWith<UserNotFound> {
-            cancelFollowRequest(publicTestUser, nonExistingUser)
+            cancelFollowRequest(publicTestUser, nonExistingUser, mockResponse)
         }
     }
 
@@ -67,7 +71,7 @@ class CancelFollowRequestControllerTests : UserHttpTest() {
         // when canceling the follow request
         // then the follow request is not canceled and throws FollowRequestNotFound exception
         assertFailsWith<FollowRequestNotFound> {
-            cancelFollowRequest(publicTestUser, privateTestUsername)
+            cancelFollowRequest(publicTestUser, privateTestUsername, mockResponse)
         }
     }
 }

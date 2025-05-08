@@ -32,7 +32,7 @@ class GetIngredientsFromPictureControllerTests : HttpTest() {
         ).thenReturn(testIngredients)
 
         // when retrieving the ingredients from the picture
-        val response = runBlocking { getIngredientsFromPicture(testAuthenticatedUser, testTomatoPicture) }
+        val response = runBlocking { getIngredientsFromPicture(testAuthenticatedUser, testTomatoPicture, mockResponse) }
         val body = response.body as GetIngredientsFromPictureOutputModel
 
         // then the ingredients are detected successfully
@@ -50,7 +50,7 @@ class GetIngredientsFromPictureControllerTests : HttpTest() {
         ).thenReturn(emptyList())
 
         // when retrieving the ingredients from the picture
-        val response = runBlocking { getIngredientsFromPicture(testAuthenticatedUser, testPicture) }
+        val response = runBlocking { getIngredientsFromPicture(testAuthenticatedUser, testPicture, mockResponse) }
         val body = response.body as GetIngredientsFromPictureOutputModel
 
         // then the ingredients are empty

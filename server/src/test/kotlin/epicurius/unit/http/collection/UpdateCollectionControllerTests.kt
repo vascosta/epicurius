@@ -22,10 +22,11 @@ class UpdateCollectionControllerTests: CollectionHttpTest() {
         whenever(collectionServiceMock
             .updateCollection(testPublicAuthenticatedUser.user.id, FAVOURITE_COLLECTION_ID, updateCollectionInputInfo)
         ).thenReturn(testFavouriteCollection.copy(name = updateCollectionInputInfo.name!!))
+        whenever(authenticationRefreshHandlerMock.refreshToken(testPublicAuthenticatedUser.token)).thenReturn(mockCookie)
 
         // when updating the collection
         val response = updateCollection(
-            testPublicAuthenticatedUser, FAVOURITE_COLLECTION_ID, updateCollectionInputInfo
+            testPublicAuthenticatedUser, FAVOURITE_COLLECTION_ID, updateCollectionInputInfo, mockResponse
         )
         val body = response.body as UpdateCollectionOutputModel
 
@@ -48,7 +49,7 @@ class UpdateCollectionControllerTests: CollectionHttpTest() {
         // then the collection is not updated and throws CollectionNotFound exception
         assertFailsWith<CollectionNotFound> {
             updateCollection(
-                testPublicAuthenticatedUser, nonExistingCollectionId, updateCollectionInputInfo
+                testPublicAuthenticatedUser, nonExistingCollectionId, updateCollectionInputInfo, mockResponse
             )
         }
     }
@@ -66,7 +67,7 @@ class UpdateCollectionControllerTests: CollectionHttpTest() {
         // then the collection is not owned by the user and throws NotTheOwnerOfCollection exception
         assertFailsWith<NotTheCollectionOwner> {
             updateCollection(
-                testPrivateAuthenticatedUser, FAVOURITE_COLLECTION_ID, updateCollectionInputInfo
+                testPrivateAuthenticatedUser, FAVOURITE_COLLECTION_ID, updateCollectionInputInfo, mockResponse
             )
         }
     }

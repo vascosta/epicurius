@@ -63,14 +63,14 @@ class GetCollectionServiceTests: CollectionServiceTest() {
         // mock
         whenever(jdbiCollectionRepositoryMock.getCollectionById(testKitchenBookCollection.id))
             .thenReturn(testKitchenBookJdbiCollectionModel)
-        whenever(jdbiUserRepositoryMock.getUserById(PUBLIC_USER_ID)).thenReturn(testPublicUser)
+        whenever(jdbiUserRepositoryMock.getUserById(PRIVATE_USER_ID)).thenReturn(testPublicUser)
         whenever(jdbiUserRepositoryMock.checkUserVisibility(testPublicUsername, testPrivateUsername))
             .thenReturn(false)
 
         // when retrieving the collection
         // then the collection is not accessible and throws CollectionNotAccessible exception
         assertFailsWith<CollectionNotAccessible> {
-            getCollection(PRIVATE_USER_ID, testPrivateUsername, testKitchenBookCollection.id)
+            getCollection(PUBLIC_USER_ID, testPublicUsername, testKitchenBookCollection.id)
         }
     }
 }

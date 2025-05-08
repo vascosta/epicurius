@@ -25,10 +25,11 @@ class UpdateRecipePicturesControllerTests : RecipeHttpTest() {
         val mockUpdateRecipePicturesModel = UpdateRecipePicturesModel(recipePictures.map { it.bytes })
         whenever(recipeServiceMock.updateRecipePictures(testAuthenticatedUser.user.id, RECIPE_ID, recipePictures.toSet()))
             .thenReturn(mockUpdateRecipePicturesModel)
+        whenever(authenticationRefreshHandlerMock.refreshToken(testAuthenticatedUser.token)).thenReturn(mockCookie)
 
         // when updating the recipe pictures with the same ones
         val response = runBlocking {
-            updateRecipePictures(testAuthenticatedUser, RECIPE_ID, recipePictures)
+            updateRecipePictures(testAuthenticatedUser, RECIPE_ID, recipePictures, mockResponse)
         }
         val body = response.body as UpdateRecipePicturesOutputModel
 
@@ -46,10 +47,11 @@ class UpdateRecipePicturesControllerTests : RecipeHttpTest() {
         val mockUpdateRecipePicturesModel = UpdateRecipePicturesModel(newPictures.map { it.bytes })
         whenever(recipeServiceMock.updateRecipePictures(testAuthenticatedUser.user.id, RECIPE_ID, newPictures.toSet()))
             .thenReturn(mockUpdateRecipePicturesModel)
+        whenever(authenticationRefreshHandlerMock.refreshToken(testAuthenticatedUser.token)).thenReturn(mockCookie)
 
         // when adding the new pictures to the recipe
         val response = runBlocking {
-            updateRecipePictures(testAuthenticatedUser, RECIPE_ID, newPictures)
+            updateRecipePictures(testAuthenticatedUser, RECIPE_ID, newPictures, mockResponse)
         }
         val body = response.body as UpdateRecipePicturesOutputModel
 
@@ -67,10 +69,11 @@ class UpdateRecipePicturesControllerTests : RecipeHttpTest() {
         val mockUpdateRecipePicturesModel = UpdateRecipePicturesModel(newPictures.map { it.bytes })
         whenever(recipeServiceMock.updateRecipePictures(testAuthenticatedUser.user.id, RECIPE_ID, newPictures.toSet()))
             .thenReturn(mockUpdateRecipePicturesModel)
+        whenever(authenticationRefreshHandlerMock.refreshToken(testAuthenticatedUser.token)).thenReturn(mockCookie)
 
         // when removing some pictures of the recipe
         val response = runBlocking {
-            updateRecipePictures(testAuthenticatedUser, RECIPE_ID, newPictures)
+            updateRecipePictures(testAuthenticatedUser, RECIPE_ID, newPictures, mockResponse)
         }
         val body = response.body as UpdateRecipePicturesOutputModel
 
@@ -88,10 +91,11 @@ class UpdateRecipePicturesControllerTests : RecipeHttpTest() {
         val mockUpdateRecipePicturesModel = UpdateRecipePicturesModel(newPictures.map { it.bytes })
         whenever(recipeServiceMock.updateRecipePictures(testAuthenticatedUser.user.id, RECIPE_ID, newPictures.toSet()))
             .thenReturn(mockUpdateRecipePicturesModel)
+        whenever(authenticationRefreshHandlerMock.refreshToken(testAuthenticatedUser.token)).thenReturn(mockCookie)
 
         // when changing the order of the recipe pictures
         val response = runBlocking {
-            updateRecipePictures(testAuthenticatedUser, RECIPE_ID, newPictures)
+            updateRecipePictures(testAuthenticatedUser, RECIPE_ID, newPictures, mockResponse)
         }
         val body = response.body as UpdateRecipePicturesOutputModel
 
@@ -112,7 +116,7 @@ class UpdateRecipePicturesControllerTests : RecipeHttpTest() {
         // when updating the recipe pictures with an invalid number of pictures
         // then the recipe is not updated and throws InvalidNumberOfRecipePictures exception
         assertFailsWith<InvalidNumberOfRecipePictures> {
-            runBlocking { updateRecipePictures(testAuthenticatedUser, RECIPE_ID, invalidNumberOfRecipePicturesSet) }
+            runBlocking { updateRecipePictures(testAuthenticatedUser, RECIPE_ID, invalidNumberOfRecipePicturesSet, mockResponse) }
         }
     }
 
@@ -128,7 +132,7 @@ class UpdateRecipePicturesControllerTests : RecipeHttpTest() {
         // when updating the pictures of a non-existing recipe
         // then the recipe is not updated and throws RecipeNotFound exception
         assertFailsWith<RecipeNotFound> {
-            runBlocking { updateRecipePictures(testAuthenticatedUser, nonExistingRecipeId, recipePictures) }
+            runBlocking { updateRecipePictures(testAuthenticatedUser, nonExistingRecipeId, recipePictures, mockResponse) }
         }
     }
 
@@ -144,7 +148,7 @@ class UpdateRecipePicturesControllerTests : RecipeHttpTest() {
         // when updating the recipe pictures that does not belong to the user
         // then the recipe is not updated and throws NotTheAuthor exception
         assertFailsWith<NotTheRecipeAuthor> {
-            runBlocking { updateRecipePictures(notTheAuthor, RECIPE_ID, recipePictures) }
+            runBlocking { updateRecipePictures(notTheAuthor, RECIPE_ID, recipePictures, mockResponse) }
         }
     }
 }

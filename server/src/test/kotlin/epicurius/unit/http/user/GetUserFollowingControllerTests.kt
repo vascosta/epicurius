@@ -3,6 +3,7 @@ package epicurius.unit.http.user
 import epicurius.domain.user.FollowUser
 import epicurius.domain.user.SearchUser
 import epicurius.http.user.models.output.GetUserFollowingOutputModel
+import epicurius.unit.http.recipe.RecipeHttpTest.Companion.testAuthenticatedUser
 import org.mockito.kotlin.whenever
 import org.springframework.http.HttpStatus
 import kotlin.test.Test
@@ -18,9 +19,10 @@ class GetUserFollowingControllerTests : UserHttpTest() {
         val mockFollowing = FollowUser(privateTestUsername, null)
         val mockFollowings = listOf(mockFollowing)
         whenever(userServiceMock.getFollowing(publicTestUser.user.id)).thenReturn(mockFollowings)
+        whenever(authenticationRefreshHandlerMock.refreshToken(publicTestUser.token)).thenReturn(mockCookie)
 
         // when retrieving the following of the user
-        val response = getUserFollowing(publicTestUser)
+        val response = getUserFollowing(publicTestUser, mockResponse)
         val body = response.body as GetUserFollowingOutputModel
 
         // then the following are retrieved successfully

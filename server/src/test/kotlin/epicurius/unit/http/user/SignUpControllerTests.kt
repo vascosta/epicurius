@@ -7,6 +7,7 @@ import epicurius.http.user.models.input.SignUpInputModel
 import epicurius.utils.generateEmail
 import epicurius.utils.generateRandomUsername
 import epicurius.utils.generateSecurePassword
+import jakarta.servlet.http.Cookie
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.springframework.http.HttpStatus
@@ -42,7 +43,7 @@ class SignUpControllerTests : UserHttpTest() {
         val response = signUp(signUpInfo, mockResponse)
 
         // then the user is created successfully
-        verify(mockResponse).addHeader("Authorization", "Bearer $mockToken")
+        verify(mockResponse).addCookie(Cookie("token", mockToken))
         assertEquals(HttpStatus.CREATED, response.statusCode)
     }
 

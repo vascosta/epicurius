@@ -19,11 +19,13 @@ class CreateCollectionControllerTests: CollectionHttpTest() {
         // given information for a new collection (createCollectionInputInfo)
 
         // mock
+
         whenever(collectionServiceMock.createCollection(testPublicAuthenticatedUser.user.id, createCollectionInputInfo))
             .thenReturn(testFavouriteCollection)
+        whenever(authenticationRefreshHandlerMock.refreshToken(testPublicAuthenticatedUser.token)).thenReturn(mockCookie)
 
         // when creating the collection
-        val response = createCollection(testPublicAuthenticatedUser, createCollectionInputInfo)
+        val response = createCollection(testPublicAuthenticatedUser, createCollectionInputInfo, mockResponse)
         val body = response.body as CreateCollectionOutputModel
 
         // then the collection is created successfully
@@ -42,7 +44,7 @@ class CreateCollectionControllerTests: CollectionHttpTest() {
         // when creating the collection
         // then the collection is not created and throws CollectionAlreadyExists exception
         assertFailsWith<CollectionAlreadyExists> {
-            createCollection(testPublicAuthenticatedUser, createCollectionInputInfo)
+            createCollection(testPublicAuthenticatedUser, createCollectionInputInfo, mockResponse)
         }
     }
 }

@@ -4,6 +4,7 @@ import epicurius.domain.exceptions.FollowRequestAlreadyBeenSent
 import epicurius.domain.exceptions.InvalidSelfFollow
 import epicurius.domain.exceptions.UserAlreadyBeingFollowed
 import epicurius.domain.exceptions.UserNotFound
+import epicurius.unit.http.recipe.RecipeHttpTest.Companion.testAuthenticatedUser
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.springframework.http.HttpStatus
@@ -17,8 +18,11 @@ class FollowControllerTests : UserHttpTest() {
     fun `Should follow a public user successfully`() {
         // given two users (publicTestUser and privateTestUser)
 
+        // mock
+        whenever(authenticationRefreshHandlerMock.refreshToken(privateTestUser.token)).thenReturn(mockCookie)
+
         // when following a public user
-        val response = follow(privateTestUser, publicTestUsername)
+        val response = follow(privateTestUser, publicTestUsername,  mockResponse)
 
         // then the user is followed successfully
         verify(userServiceMock).follow(privateTestUser.user.id, privateTestUsername, publicTestUsername)
@@ -29,8 +33,11 @@ class FollowControllerTests : UserHttpTest() {
     fun `Should get added to a private user follow requests list when following him successfully`() {
         // given two (publicTestUser and privateTestUser)
 
+        // mock
+        whenever(authenticationRefreshHandlerMock.refreshToken(publicTestUser.token)).thenReturn(mockCookie)
+
         // when following a private user
-        val response = follow(publicTestUser, privateTestUsername)
+        val response = follow(publicTestUser, privateTestUsername, mockResponse)
 
         // then a follow request is sent
         verify(userServiceMock).follow(publicTestUser.user.id, publicTestUsername, privateTestUsername)
@@ -48,7 +55,7 @@ class FollowControllerTests : UserHttpTest() {
         // when following himself
         // then the user cannot follow himself and throws InvalidSelfFollow exception
         assertFailsWith<InvalidSelfFollow> {
-            follow(publicTestUser, publicTestUsername)
+            follow(publicTestUser, publicTestUsername, mockResponse)
         }
     }
 
@@ -62,7 +69,7 @@ class FollowControllerTests : UserHttpTest() {
 
         // when following a non-existing user
         // then the user cannot be followed and throws UserNotFound exception
-        assertFailsWith<UserNotFound> { follow(publicTestUser, nonExistingUser) }
+        assertFailsWith<UserNotFound> { follow(publicTestUser, nonExistingUser, mockResponse) }
     }
 
     @Test
@@ -74,7 +81,7 @@ class FollowControllerTests : UserHttpTest() {
 
         // when following a user twice
         // then the user cannot be followed again and throws UserAlreadyBeingFollowed exception
-        assertFailsWith<UserAlreadyBeingFollowed> { follow(privateTestUser, publicTestUsername) }
+        assertFailsWith<UserAlreadyBeingFollowed> { follow(privateTestUser, publicTestUsername, mockResponse) }
     }
 
     @Test
@@ -87,6 +94,6 @@ class FollowControllerTests : UserHttpTest() {
 
         // when trying to follow a private user twice
         // then another follow request cannot be sent again and throws FollowRequestAlreadyBeenSent exception
-        assertFailsWith<FollowRequestAlreadyBeenSent> { follow(publicTestUser, privateTestUsername) }
+        assertFailsWith<FollowRequestAlreadyBeenSent> { follow(publicTestUser, privateTestUsername, mockResponse) }
     }
 }

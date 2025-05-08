@@ -48,9 +48,10 @@ class UpdateUserControllerTests : UserHttpTest() {
         )
         whenever(userServiceMock.updateUser(publicTestUser.user.id, updateUserInputInfo))
             .thenReturn(mockUserInfo)
+        whenever(authenticationRefreshHandlerMock.refreshToken(publicTestUser.token)).thenReturn(mockCookie)
 
         // when updating the user
-        val response = updateUser(publicTestUser, updateUserInputInfo)
+        val response = updateUser(publicTestUser, updateUserInputInfo, mockResponse)
         val body = response.body as UpdateUserOutputModel
 
         // then the user is updated successfully
@@ -82,13 +83,13 @@ class UpdateUserControllerTests : UserHttpTest() {
         // when updating the user with an existing username
         // then the user cannot be updated and throws UserAlreadyExists exception
         assertFailsWith<UserAlreadyExists> {
-            updateUser(publicTestUser, updateUserInputInfo.copy(name = privateTestUsername))
+            updateUser(publicTestUser, updateUserInputInfo.copy(name = privateTestUsername), mockResponse)
         }
 
         // when updating the user with an existing email
         // then the user cannot be updated and throws UserAlreadyExists exception
         assertFailsWith<UserAlreadyExists> {
-            updateUser(publicTestUser, updateUserInputInfo.copy(email = privateTestUser.user.email))
+            updateUser(publicTestUser, updateUserInputInfo.copy(email = privateTestUser.user.email), mockResponse)
         }
 
         // when updating the user with an existing username and email
@@ -96,7 +97,8 @@ class UpdateUserControllerTests : UserHttpTest() {
         assertFailsWith<UserAlreadyExists> {
             updateUser(
                 publicTestUser,
-                updateUserInputInfo.copy(name = privateTestUsername, email = privateTestUser.user.email)
+                updateUserInputInfo.copy(name = privateTestUsername, email = privateTestUser.user.email),
+                mockResponse
             )
         }
     }
@@ -112,7 +114,7 @@ class UpdateUserControllerTests : UserHttpTest() {
 
         // when updating the user with an invalid country
         // then the user cannot be updated and throws InvalidCountry exception
-        assertFailsWith<InvalidCountry> { updateUser(publicTestUser, updateUserInputInfo.copy(country = invalidCountry)) }
+        assertFailsWith<InvalidCountry> { updateUser(publicTestUser, updateUserInputInfo.copy(country = invalidCountry), mockResponse) }
     }
 
     @Test
@@ -134,11 +136,11 @@ class UpdateUserControllerTests : UserHttpTest() {
         // when updating the user with different passwords
         // then the user cannot be updated and throws PasswordsDoNotMatch exception
         assertFailsWith<PasswordsDoNotMatch> {
-            updateUser(publicTestUser, updateUserInputInfo.copy(password = password1, confirmPassword = password2))
+            updateUser(publicTestUser, updateUserInputInfo.copy(password = password1, confirmPassword = password2), mockResponse)
         }
 
         assertFailsWith<PasswordsDoNotMatch> {
-            updateUser(publicTestUser, updateUserInputInfo.copy(password = password1, confirmPassword = null))
+            updateUser(publicTestUser, updateUserInputInfo.copy(password = password1, confirmPassword = null), mockResponse)
         }
     }
 }

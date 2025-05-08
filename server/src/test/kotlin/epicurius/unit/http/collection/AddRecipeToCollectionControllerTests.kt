@@ -6,8 +6,11 @@ import epicurius.domain.exceptions.RecipeNotAccessible
 import epicurius.domain.exceptions.RecipeNotFound
 import epicurius.http.collection.models.input.AddRecipeToCollectionInputModel
 import epicurius.http.collection.models.output.AddRecipeToCollectionOutputModel
+import jakarta.servlet.http.Cookie
+import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
 import org.springframework.http.HttpStatus
+import java.util.UUID.randomUUID
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
@@ -27,10 +30,14 @@ class AddRecipeToCollectionControllerTests: CollectionHttpTest() {
         whenever(collectionServiceMock.addRecipeToCollection(
             testPublicAuthenticatedUser.user.id, testPublicAuthenticatedUser.user.name, FAVOURITE_COLLECTION_ID, RECIPE_ID)
         ).thenReturn(mockUpdatedCollection)
+        whenever(authenticationRefreshHandlerMock.refreshToken(testPublicAuthenticatedUser.token)).thenReturn(mockCookie)
 
         // when adding the recipe to the collection
         val response = addRecipeToCollection(
-            testPublicAuthenticatedUser, FAVOURITE_COLLECTION_ID, addRecipeToCollectionInputInfo
+            testPublicAuthenticatedUser,
+            FAVOURITE_COLLECTION_ID,
+            addRecipeToCollectionInputInfo,
+            mockResponse
         )
         val body = response.body as AddRecipeToCollectionOutputModel
 
@@ -53,7 +60,7 @@ class AddRecipeToCollectionControllerTests: CollectionHttpTest() {
         // then the recipe is not added and throws CollectionNotFound exception
         assertFailsWith<CollectionNotFound> {
             addRecipeToCollection(
-                testPublicAuthenticatedUser, nonExistingCollectionId, addRecipeToCollectionInputInfo
+                testPublicAuthenticatedUser, nonExistingCollectionId, addRecipeToCollectionInputInfo, mockResponse
             )
         }
     }
@@ -71,7 +78,7 @@ class AddRecipeToCollectionControllerTests: CollectionHttpTest() {
         // then the recipe is not added and throws CollectionNotFound exception
         assertFailsWith<CollectionNotFound> {
             addRecipeToCollection(
-                testPrivateAuthenticatedUser, FAVOURITE_COLLECTION_ID, addRecipeToCollectionInputInfo
+                testPrivateAuthenticatedUser, FAVOURITE_COLLECTION_ID, addRecipeToCollectionInputInfo, mockResponse
             )
         }
     }
@@ -90,7 +97,7 @@ class AddRecipeToCollectionControllerTests: CollectionHttpTest() {
         // then the recipe is not added and throws RecipeNotFound exception
         assertFailsWith<RecipeNotFound> {
             addRecipeToCollection(
-                testPublicAuthenticatedUser, FAVOURITE_COLLECTION_ID, addRecipeToCollectionInputInfo.copy(nonExistingRecipeId)
+                testPublicAuthenticatedUser, FAVOURITE_COLLECTION_ID, addRecipeToCollectionInputInfo.copy(nonExistingRecipeId), mockResponse
             )
         }
     }
@@ -108,7 +115,7 @@ class AddRecipeToCollectionControllerTests: CollectionHttpTest() {
         // then the recipe is not added and throws RecipeNotFound exception
         assertFailsWith<RecipeNotAccessible> {
             addRecipeToCollection(
-                testPrivateAuthenticatedUser, FAVOURITE_COLLECTION_ID, addRecipeToCollectionInputInfo
+                testPrivateAuthenticatedUser, FAVOURITE_COLLECTION_ID, addRecipeToCollectionInputInfo, mockResponse
             )
         }
     }
@@ -126,7 +133,7 @@ class AddRecipeToCollectionControllerTests: CollectionHttpTest() {
         // then the recipe is not added and throws RecipeNotFound exception
         assertFailsWith<RecipeNotFound> {
             addRecipeToCollection(
-                testPublicAuthenticatedUser, KITCHEN_BOOK_COLLECTION_ID, addRecipeToCollectionInputInfo
+                testPublicAuthenticatedUser, KITCHEN_BOOK_COLLECTION_ID, addRecipeToCollectionInputInfo, mockResponse
             )
         }
     }
@@ -144,7 +151,7 @@ class AddRecipeToCollectionControllerTests: CollectionHttpTest() {
         // then the recipe is not added and throws CollectionNotFound exception
         assertFailsWith<RecipeAlreadyInCollection> {
             addRecipeToCollection(
-                testPublicAuthenticatedUser, FAVOURITE_COLLECTION_ID, addRecipeToCollectionInputInfo
+                testPublicAuthenticatedUser, FAVOURITE_COLLECTION_ID, addRecipeToCollectionInputInfo, mockResponse
             )
         }
     }

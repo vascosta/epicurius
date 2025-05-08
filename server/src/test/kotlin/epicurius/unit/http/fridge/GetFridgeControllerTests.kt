@@ -16,9 +16,10 @@ class GetFridgeControllerTests : FridgeHttpTest() {
 
         // mock
         whenever(fridgeServiceMock.getFridge(authenticatedUser.user.id)).thenReturn(Fridge(emptyList()))
+        whenever(authenticationRefreshHandlerMock.refreshToken(authenticatedUser.token)).thenReturn(mockCookie)
 
         // when getting the fridge
-        val response = getFridge(authenticatedUser)
+        val response = getFridge(authenticatedUser, mockResponse)
 
         // then the fridge is retrieved successfully
         assertEquals(HttpStatus.OK, response.statusCode)
@@ -32,9 +33,10 @@ class GetFridgeControllerTests : FridgeHttpTest() {
 
         // mock
         whenever(fridgeServiceMock.getFridge(authenticatedUser.user.id)).thenReturn(Fridge(listOf(product)))
+        whenever(authenticationRefreshHandlerMock.refreshToken(authenticatedUser.token)).thenReturn(mockCookie)
 
         // when getting the fridge
-        val response = getFridge(authenticatedUser)
+        val response = getFridge(authenticatedUser, mockResponse)
 
         // then the fridge is retrieved successfully
         assertEquals(HttpStatus.OK, response.statusCode)

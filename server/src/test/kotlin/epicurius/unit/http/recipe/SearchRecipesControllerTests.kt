@@ -16,7 +16,7 @@ import kotlin.test.assertTrue
 
 class SearchRecipesControllerTests : RecipeHttpTest() {
 
-    val searchRecipesInputInfo = SearchRecipesInputModel(
+    private val searchRecipesInputInfo = SearchRecipesInputModel(
         name = "Pastel de nata",
         cuisine = listOf(Cuisine.MEDITERRANEAN),
         mealType = listOf(MealType.DESSERT),
@@ -35,7 +35,7 @@ class SearchRecipesControllerTests : RecipeHttpTest() {
         maxTime = 60
     )
 
-    val recipeInfo = RecipeInfo(
+    private val recipeInfo = RecipeInfo(
         RECIPE_ID,
         testRecipe.name,
         testRecipe.cuisine,
@@ -45,20 +45,22 @@ class SearchRecipesControllerTests : RecipeHttpTest() {
         testRecipe.pictures.first()
     )
 
+    private val pagingParams = PagingParams()
+
     @Test
     fun `Should search for recipes by name`() {
-        // given a search form with name and paging params
+        // given a search form with name and paging params (pagingParams)
         val searchRecipesInputInfoWithName = SearchRecipesInputModel(name = "Pastel")
-        val pagingParams = PagingParams()
 
         // mock
         whenever(
             recipeServiceMock
                 .searchRecipes(testAuthenticatedUser.user.id, searchRecipesInputInfoWithName, pagingParams)
         ).thenReturn(listOf(recipeInfo))
+        whenever(authenticationRefreshHandlerMock.refreshToken(testAuthenticatedUser.token)).thenReturn(mockCookie)
 
         // when searching for recipes by name
-        val response = searchRecipes(testAuthenticatedUser, searchRecipesInputInfoWithName.name)
+        val response = searchRecipes(testAuthenticatedUser, searchRecipesInputInfoWithName.name, response =  mockResponse)
         val body = response.body as SearchRecipesOutputModel
 
         // then a list containing the recipe should is returned successfully
@@ -69,7 +71,7 @@ class SearchRecipesControllerTests : RecipeHttpTest() {
 
     @Test
     fun `Should search for a recipe according to user's intolerances`() {
-        // given a search form with intolerances that match the recipe and paging params
+        // given a search form with intolerances that match the recipe and paging params (pagingParams)
         val sameIntolerances = SearchRecipesInputModel(intolerances = listOf(Intolerance.GLUTEN))
         val pagingParams = PagingParams()
 
@@ -78,11 +80,13 @@ class SearchRecipesControllerTests : RecipeHttpTest() {
             recipeServiceMock
                 .searchRecipes(testAuthenticatedUser.user.id, sameIntolerances, pagingParams)
         ).thenReturn(emptyList())
+        whenever(authenticationRefreshHandlerMock.refreshToken(testAuthenticatedUser.token)).thenReturn(mockCookie)
 
         // when searching for recipes with intolerances
         val response = searchRecipes(
             authenticatedUser = testAuthenticatedUser,
             intolerances = sameIntolerances.intolerances,
+            response = mockResponse
         )
         val body = response.body as SearchRecipesOutputModel
 
@@ -103,6 +107,7 @@ class SearchRecipesControllerTests : RecipeHttpTest() {
         val response2 = searchRecipes(
             authenticatedUser = testAuthenticatedUser,
             intolerances = differentIntolerances.intolerances,
+            response = mockResponse
         )
         val body2 = response2.body as SearchRecipesOutputModel
 
@@ -114,7 +119,7 @@ class SearchRecipesControllerTests : RecipeHttpTest() {
 
     @Test
     fun `Should search for a recipe without ingredients successfully`() {
-        // given a search form without ingredients and paging params
+        // given a search form without ingredients and paging params (pagingParams)
         val searchRecipesInputInfoWithoutIngredients = searchRecipesInputInfo.copy(
             ingredients = null
         )
@@ -125,6 +130,7 @@ class SearchRecipesControllerTests : RecipeHttpTest() {
             recipeServiceMock
                 .searchRecipes(testAuthenticatedUser.user.id, searchRecipesInputInfoWithoutIngredients, pagingParams)
         ).thenReturn(listOf(recipeInfo))
+        whenever(authenticationRefreshHandlerMock.refreshToken(testAuthenticatedUser.token)).thenReturn(mockCookie)
 
         // when searching for recipes without ingredients
         val response = searchRecipes(
@@ -144,7 +150,8 @@ class SearchRecipesControllerTests : RecipeHttpTest() {
             searchRecipesInputInfoWithoutIngredients.minProtein,
             searchRecipesInputInfoWithoutIngredients.maxProtein,
             searchRecipesInputInfoWithoutIngredients.minTime,
-            searchRecipesInputInfoWithoutIngredients.maxTime
+            searchRecipesInputInfoWithoutIngredients.maxTime,
+            mockResponse
         )
         val body = response.body as SearchRecipesOutputModel
 
@@ -155,7 +162,7 @@ class SearchRecipesControllerTests : RecipeHttpTest() {
 
     @Test
     fun `Should search for a recipe with ingredients successfully`() {
-        // given a search form with ingredients (searchRecipesInputInfo) and paging params
+        // given a search form with ingredients (searchRecipesInputInfo) and paging params (pagingParams)
         val pagingParams = PagingParams()
 
         // mock
@@ -182,7 +189,8 @@ class SearchRecipesControllerTests : RecipeHttpTest() {
             searchRecipesInputInfo.minProtein,
             searchRecipesInputInfo.maxProtein,
             searchRecipesInputInfo.minTime,
-            searchRecipesInputInfo.maxTime
+            searchRecipesInputInfo.maxTime,
+            mockResponse
         )
         val body = response.body as SearchRecipesOutputModel
 
@@ -193,7 +201,7 @@ class SearchRecipesControllerTests : RecipeHttpTest() {
 
     @Test
     fun `Should search for recipes of public users`() {
-        // given a search form with name and paging params
+        // given a search form with name and paging params (pagingParams)
         val pagingParams = PagingParams()
 
         // mock
@@ -201,6 +209,7 @@ class SearchRecipesControllerTests : RecipeHttpTest() {
             recipeServiceMock
                 .searchRecipes(testAuthenticatedUser.user.id, searchRecipesInputInfo, pagingParams)
         ).thenReturn(listOf(recipeInfo))
+        whenever(authenticationRefreshHandlerMock.refreshToken(testAuthenticatedUser.token)).thenReturn(mockCookie)
 
         // when searching for public recipes
         val response = searchRecipes(
@@ -220,7 +229,8 @@ class SearchRecipesControllerTests : RecipeHttpTest() {
             searchRecipesInputInfo.minProtein,
             searchRecipesInputInfo.maxProtein,
             searchRecipesInputInfo.minTime,
-            searchRecipesInputInfo.maxTime
+            searchRecipesInputInfo.maxTime,
+            mockResponse
         )
         val body = response.body as SearchRecipesOutputModel
 
@@ -232,7 +242,7 @@ class SearchRecipesControllerTests : RecipeHttpTest() {
 
     @Test
     fun `Should search for recipes from private users when not followed`() {
-        // given a search form with name and paging params
+        // given a search form with name and paging params (pagingParams)
         val pagingParams = PagingParams()
 
         // mock
@@ -240,6 +250,7 @@ class SearchRecipesControllerTests : RecipeHttpTest() {
             recipeServiceMock
                 .searchRecipes(testAuthenticatedUser.user.id, searchRecipesInputInfo, pagingParams)
         ).thenReturn(emptyList())
+        whenever(authenticationRefreshHandlerMock.refreshToken(testAuthenticatedUser.token)).thenReturn(mockCookie)
 
         // when searching for recipes from private users
         val response = searchRecipes(
@@ -259,7 +270,8 @@ class SearchRecipesControllerTests : RecipeHttpTest() {
             searchRecipesInputInfo.minProtein,
             searchRecipesInputInfo.maxProtein,
             searchRecipesInputInfo.minTime,
-            searchRecipesInputInfo.maxTime
+            searchRecipesInputInfo.maxTime,
+            mockResponse
         )
         val body = response.body as SearchRecipesOutputModel
 
@@ -271,7 +283,7 @@ class SearchRecipesControllerTests : RecipeHttpTest() {
 
     @Test
     fun `Should search for recipes from private users when followed`() {
-        // given a search form with name and paging params
+        // given a search form with name and paging params (pagingParams)
         val pagingParams = PagingParams()
 
         // mock
@@ -279,6 +291,7 @@ class SearchRecipesControllerTests : RecipeHttpTest() {
             recipeServiceMock
                 .searchRecipes(testAuthenticatedUser.user.id, searchRecipesInputInfo, pagingParams)
         ).thenReturn(listOf(recipeInfo))
+        whenever(authenticationRefreshHandlerMock.refreshToken(testAuthenticatedUser.token)).thenReturn(mockCookie)
 
         // when searching for recipes from private users
         val response = searchRecipes(
@@ -298,7 +311,8 @@ class SearchRecipesControllerTests : RecipeHttpTest() {
             searchRecipesInputInfo.minProtein,
             searchRecipesInputInfo.maxProtein,
             searchRecipesInputInfo.minTime,
-            searchRecipesInputInfo.maxTime
+            searchRecipesInputInfo.maxTime,
+            mockResponse
         )
         val body = response.body as SearchRecipesOutputModel
 

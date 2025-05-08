@@ -16,9 +16,10 @@ class GetDailyMenuControllerTests : MenuHttpTest() {
         // mock
         whenever(menuServiceMock.getDailyMenu(testAuthenticatedUser.user.intolerances, testAuthenticatedUser.user.diets))
             .thenReturn(testDailyMenu)
+        whenever(authenticationRefreshHandlerMock.refreshToken(testAuthenticatedUser.token)).thenReturn(mockCookie)
 
         // when retrieving the daily menu
-        val response = getDailyMenu(testAuthenticatedUser)
+        val response = getDailyMenu(testAuthenticatedUser, mockResponse)
         val body = response.body as GetDailyMenuOutputModel
 
         // then the menu is retrieved successfully
@@ -40,9 +41,10 @@ class GetDailyMenuControllerTests : MenuHttpTest() {
         )
         whenever(menuServiceMock.getDailyMenu(testAuthenticatedUser.user.intolerances, testAuthenticatedUser.user.diets))
             .thenReturn(mockDailyMenu)
+        whenever(authenticationRefreshHandlerMock.refreshToken(testAuthenticatedUser.token)).thenReturn(mockCookie)
 
         // when retrieving the daily menu
-        val response = getDailyMenu(testAuthenticatedUser)
+        val response = getDailyMenu(testAuthenticatedUser, mockResponse)
         val body = response.body as GetDailyMenuOutputModel
 
         // then the menu contains nulls
@@ -64,9 +66,10 @@ class GetDailyMenuControllerTests : MenuHttpTest() {
         )
         whenever(menuServiceMock.getDailyMenu(testAuthenticatedUser.user.intolerances, testAuthenticatedUser.user.diets))
             .thenReturn(mockDailyMenu)
+        whenever(authenticationRefreshHandlerMock.refreshToken(testAuthenticatedUser.token)).thenReturn(mockCookie)
 
         // when retrieving the daily menu
-        val response = getDailyMenu(testAuthenticatedUser)
+        val response = getDailyMenu(testAuthenticatedUser, mockResponse)
         val body = response.body as GetDailyMenuOutputModel
 
         // then the menu is retrieved successfully

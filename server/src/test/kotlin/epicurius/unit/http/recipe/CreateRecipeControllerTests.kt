@@ -12,6 +12,7 @@ import epicurius.domain.recipe.MealType
 import epicurius.domain.recipe.Recipe
 import epicurius.http.recipe.models.input.CreateRecipeInputModel
 import epicurius.http.recipe.models.output.CreateRecipeOutputModel
+import epicurius.unit.http.rateRecipe.RateRecipeHttpTest
 import kotlinx.coroutines.runBlocking
 import org.mockito.kotlin.whenever
 import org.springframework.http.HttpStatus
@@ -87,10 +88,11 @@ class CreateRecipeControllerTests : RecipeHttpTest() {
             }
 
         ).thenReturn(recipeMock)
+        whenever(authenticationRefreshHandlerMock.refreshToken(testAuthenticatedUser.token)).thenReturn(mockCookie)
 
         // when creating the recipe
         val response = runBlocking {
-            createRecipe(testAuthenticatedUser, objectMapper.writeValueAsString(createRecipeInfo), recipePictures)
+            createRecipe(testAuthenticatedUser, objectMapper.writeValueAsString(createRecipeInfo), recipePictures, mockResponse)
         }
 
         // then the recipe is created successfully
@@ -121,7 +123,7 @@ class CreateRecipeControllerTests : RecipeHttpTest() {
         assertFailsWith<InvalidNumberOfRecipePictures> {
             runBlocking {
                 createRecipe(
-                    testAuthenticatedUser, objectMapper.writeValueAsString(createRecipeInfo), invalidNumberOfRecipePicturesSet
+                    testAuthenticatedUser, objectMapper.writeValueAsString(createRecipeInfo), invalidNumberOfRecipePicturesSet, mockResponse
                 )
             }
         }
@@ -149,7 +151,7 @@ class CreateRecipeControllerTests : RecipeHttpTest() {
         // then the recipe is not created and throws InvalidIngredient exception
         assertFailsWith<InvalidIngredient> {
             runBlocking {
-                createRecipe(testAuthenticatedUser, objectMapper.writeValueAsString(createRecipeInfo), recipePictures)
+                createRecipe(testAuthenticatedUser, objectMapper.writeValueAsString(createRecipeInfo), recipePictures, mockResponse)
             }
         }
     }

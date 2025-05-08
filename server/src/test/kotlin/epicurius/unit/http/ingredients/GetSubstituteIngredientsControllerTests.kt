@@ -35,7 +35,7 @@ class GetSubstituteIngredientsControllerTests : HttpTest() {
         ).thenReturn(testSubstituteIngredients)
 
         // when retrieving substitute ingredients
-        val response = runBlocking { getSubstituteIngredients(testAuthenticatedUser, ingredient) }
+        val response = runBlocking { getSubstituteIngredients(testAuthenticatedUser, ingredient, mockResponse) }
         val body = response.body as GetSubstituteIngredientsOutputModel
 
         // then the substitute ingredients are retrieved successfully
@@ -54,7 +54,7 @@ class GetSubstituteIngredientsControllerTests : HttpTest() {
         ).thenReturn(emptyList())
 
         // when retrieving substitute ingredients
-        val response = runBlocking { getSubstituteIngredients(testAuthenticatedUser, ingredientWithNoSubstitutes) }
+        val response = runBlocking { getSubstituteIngredients(testAuthenticatedUser, ingredientWithNoSubstitutes, mockResponse) }
         val body = response.body as GetSubstituteIngredientsOutputModel
 
         // then the substitute ingredients are empty
@@ -75,7 +75,7 @@ class GetSubstituteIngredientsControllerTests : HttpTest() {
         // when retrieving substitute ingredients
         // then the substitute ingredients cannot be retrieved and throws InvalidIngredient exception
         assertFailsWith<InvalidIngredient> {
-            runBlocking { getSubstituteIngredients(testAuthenticatedUser, invalidIngredient) }
+            runBlocking { getSubstituteIngredients(testAuthenticatedUser, invalidIngredient, mockResponse) }
         }
     }
 }

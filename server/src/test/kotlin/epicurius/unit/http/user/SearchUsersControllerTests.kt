@@ -29,9 +29,10 @@ class SearchUsersControllerTests : UserHttpTest() {
         val mockSearchUsers = listOf(mockSearchUser, mockSearchUser2)
         whenever(userServiceMock.searchUsers(authenticatedUser.user.id, commonName, PagingParams()))
             .thenReturn(mockSearchUsers)
+        whenever(authenticationRefreshHandlerMock.refreshToken(authenticatedUser.token)).thenReturn(mockCookie)
 
         // when retrieving the users by a common string
-        val response = searchUsers(authenticatedUser, commonName, PagingParams())
+        val response = searchUsers(authenticatedUser, commonName, PagingParams(), mockResponse)
         val body = response.body as SearchUsersOutputModel
 
         // then the users are retrieved successfully

@@ -4,6 +4,7 @@ import epicurius.domain.user.AuthenticatedUser
 import epicurius.domain.user.User
 import epicurius.http.ingredients.models.output.GetIngredientsOutputModel
 import epicurius.unit.http.HttpTest
+import epicurius.unit.http.collection.CollectionHttpTest.Companion.testPublicAuthenticatedUser
 import epicurius.utils.generateEmail
 import epicurius.utils.generateRandomUsername
 import kotlinx.coroutines.runBlocking
@@ -40,9 +41,10 @@ class GetIngredientsControllerTests : HttpTest() {
 
         // mock
         whenever(runBlocking { ingredientsServiceMock.getIngredients(partialName) }).thenReturn(testIngredients)
+        whenever(authenticationRefreshHandlerMock.refreshToken(testAuthenticatedUser.token)).thenReturn(mockCookie)
 
         // when retrieving the ingredients
-        val response = runBlocking { getIngredients(testAuthenticatedUser, partialName) }
+        val response = runBlocking { getIngredients(testAuthenticatedUser, partialName, mockResponse) }
         val body = response.body as GetIngredientsOutputModel
 
         // then the products list is retrieved successfully
@@ -57,9 +59,10 @@ class GetIngredientsControllerTests : HttpTest() {
 
         // mock
         whenever(runBlocking { ingredientsServiceMock.getIngredients(nonExistingPartialName) }).thenReturn(emptyList())
+        whenever(authenticationRefreshHandlerMock.refreshToken(testAuthenticatedUser.token)).thenReturn(mockCookie)
 
         // when retrieving the ingredients
-        val response = runBlocking { getIngredients(testAuthenticatedUser, nonExistingPartialName) }
+        val response = runBlocking { getIngredients(testAuthenticatedUser, nonExistingPartialName, mockResponse) }
         val body = response.body as GetIngredientsOutputModel
 
         // then the products list is retrieved successfully
