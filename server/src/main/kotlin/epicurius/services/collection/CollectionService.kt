@@ -5,6 +5,7 @@ import epicurius.domain.collection.CollectionType
 import epicurius.domain.exceptions.CollectionAlreadyExists
 import epicurius.domain.exceptions.CollectionNotAccessible
 import epicurius.domain.exceptions.CollectionNotFound
+import epicurius.domain.exceptions.NotTheRecipeAuthor
 import epicurius.domain.exceptions.NotTheCollectionOwner
 import epicurius.domain.exceptions.RecipeAlreadyInCollection
 import epicurius.domain.exceptions.RecipeNotAccessible
@@ -68,13 +69,16 @@ class CollectionService(private val tm: TransactionManager, private val cs: Clou
     }
 
     fun addRecipeToCollection(userId: Int, username: String, collectionId: Int, recipeId: Int): Collection {
-        checkIfCollectionExists(collectionId)
+        val jdbiCollectionModel = checkIfCollectionExists(collectionId)
         if (!checkIfUserIsCollectionOwner(collectionId, userId)) throw NotTheCollectionOwner()
 
         val jdbiRecipeModel = getJdbiRecipeModel(recipeId)
+        if (jdbiCollectionModel.type == CollectionType.FAVOURITE) {
+            checkRecipeAccessibility(jdbiRecipeModel.authorUsername, username)
+        }
+        else if (jdbiRecipeModel.authorId != userId) throw NotTheRecipeAuthor()
 
         if (checkIfRecipeInCollection(collectionId, recipeId)) throw RecipeAlreadyInCollection()
-        checkRecipeAccessibility(jdbiRecipeModel.authorUsername, username)
 
         val updatedCollection = tm.run { it.collectionRepository.addRecipeToCollection(collectionId, recipeId) }
         return Collection(
