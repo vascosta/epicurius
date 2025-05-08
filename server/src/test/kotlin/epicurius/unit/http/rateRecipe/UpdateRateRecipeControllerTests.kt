@@ -11,14 +11,17 @@ import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.springframework.http.HttpStatus
 
-class UpdateRateRecipeHttpTests : RateRecipeHttpTest() {
+class UpdateRateRecipeControllerTests : RateRecipeHttpTest() {
 
     @Test
     fun `Should update rate recipe successfully`() {
         // given an authenticated user and a recipe
 
+        // mock
+        whenever(authenticationRefreshHandlerMock.refreshToken(testAuthenticatedUser.token)).thenReturn(mockCookie)
+
         // when the user updates the recipe with a rating of 3
-        val response = updateRecipeRate(testAuthenticatedUser, RECIPE_ID, RATING_3)
+        val response = updateRecipeRate(testAuthenticatedUser, RECIPE_ID, RATING_3, mockResponse)
 
         // then the recipe should be updated successfully
         verify(
@@ -50,7 +53,7 @@ class UpdateRateRecipeHttpTests : RateRecipeHttpTest() {
 
         // when updating the recipe rate
         // then RecipeNotFound exception is thrown
-        assertThrows<RecipeNotFound> { updateRecipeRate(testAuthenticatedUser, nonExistingRecipeId, RATING_3) }
+        assertThrows<RecipeNotFound> { updateRecipeRate(testAuthenticatedUser, nonExistingRecipeId, RATING_3, mockResponse) }
     }
 
     @Test
@@ -69,7 +72,7 @@ class UpdateRateRecipeHttpTests : RateRecipeHttpTest() {
 
         // when updating the recipe rate
         // then AuthorCannotUpdateRating exception is thrown
-        assertThrows<AuthorCannotUpdateRating> { updateRecipeRate(testAuthorAuthenticatedUser, RECIPE_ID, RATING_3) }
+        assertThrows<AuthorCannotUpdateRating> { updateRecipeRate(testAuthorAuthenticatedUser, RECIPE_ID, RATING_3, mockResponse) }
     }
 
     @Test
@@ -88,7 +91,7 @@ class UpdateRateRecipeHttpTests : RateRecipeHttpTest() {
 
         // when updating the recipe rate
         // then RecipeNotAccessible exception is thrown
-        assertThrows<RecipeNotAccessible> { updateRecipeRate(testAuthenticatedUser, RECIPE_ID, RATING_3) }
+        assertThrows<RecipeNotAccessible> { updateRecipeRate(testAuthenticatedUser, RECIPE_ID, RATING_3, mockResponse) }
     }
 
     @Test
@@ -107,6 +110,6 @@ class UpdateRateRecipeHttpTests : RateRecipeHttpTest() {
 
         // when updating the recipe rate
         // then UserHasNotRated exception is thrown
-        assertThrows<UserHasNotRated> { updateRecipeRate(testAuthenticatedUser, RECIPE_ID, RATING_3) }
+        assertThrows<UserHasNotRated> { updateRecipeRate(testAuthenticatedUser, RECIPE_ID, RATING_3, mockResponse) }
     }
 }

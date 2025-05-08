@@ -10,6 +10,7 @@ import epicurius.http.feed.FeedController
 import epicurius.http.fridge.FridgeController
 import epicurius.http.ingredients.IngredientsController
 import epicurius.http.menu.MenuController
+import epicurius.http.pipeline.authentication.AuthenticationRefreshHandler
 import epicurius.http.rateRecipe.RateRecipeController
 import epicurius.http.recipe.RecipeController
 import epicurius.http.user.UserController
@@ -155,13 +156,15 @@ open class EpicuriusUnitTest : EpicuriusTest() {
         val ingredientsServiceMock: IngredientsService = mock()
         val collectionServiceMock: CollectionService = mock()
 
-        val userController = UserController(userServiceMock)
-        val fridgeController = FridgeController(fridgeServiceMock)
-        val recipeController = RecipeController(recipeServiceMock)
-        val rateRecipeController = RateRecipeController(rateRecipeServiceMock)
-        val feedController = FeedController(feedServiceMock)
-        val menuController = MenuController(menuServiceMock)
-        val ingredientsController = IngredientsController(ingredientsServiceMock)
-        val collectionController = CollectionController(collectionServiceMock)
+        val authenticationRefreshHandlerMock: AuthenticationRefreshHandler = mock()
+
+        val userController = UserController(authenticationRefreshHandlerMock, userServiceMock)
+        val fridgeController = FridgeController(authenticationRefreshHandlerMock, fridgeServiceMock)
+        val recipeController = RecipeController(authenticationRefreshHandlerMock, recipeServiceMock)
+        val rateRecipeController = RateRecipeController(authenticationRefreshHandlerMock, rateRecipeServiceMock)
+        val feedController = FeedController(authenticationRefreshHandlerMock, feedServiceMock)
+        val menuController = MenuController(authenticationRefreshHandlerMock, menuServiceMock)
+        val ingredientsController = IngredientsController(authenticationRefreshHandlerMock, ingredientsServiceMock)
+        val collectionController = CollectionController(authenticationRefreshHandlerMock, collectionServiceMock)
     }
 }

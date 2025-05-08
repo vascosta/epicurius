@@ -149,10 +149,10 @@ class UserController(val authenticationRefreshHandler: AuthenticationRefreshHand
         response: HttpServletResponse
     ): ResponseEntity<*> {
         val token = userService.createUser(body.name, body.email, body.country, body.password, body.confirmPassword)
+        response.addCookie(Cookie("token", token))
         return ResponseEntity
             .created(Uris.User.userProfile(body.name))
             .build<Unit>()
-            .addCookie(response, authenticationRefreshHandler.refreshToken(token))
     }
 
     @PostMapping(Uris.User.LOGIN)
@@ -161,10 +161,10 @@ class UserController(val authenticationRefreshHandler: AuthenticationRefreshHand
         response: HttpServletResponse
     ): ResponseEntity<*> {
         val token = userService.login(body.name, body.email, body.password)
+        response.addCookie(Cookie("token", token))
         return ResponseEntity
             .noContent()
             .build<Unit>()
-            .addCookie(response, authenticationRefreshHandler.refreshToken(token))
     }
 
     @PostMapping(Uris.User.LOGOUT)
@@ -173,10 +173,10 @@ class UserController(val authenticationRefreshHandler: AuthenticationRefreshHand
         response: HttpServletResponse
     ): ResponseEntity<*> {
         userService.logout(authenticatedUser.user.id)
+        response.addCookie(Cookie("token", ""))
         return ResponseEntity
             .noContent()
             .build<Unit>()
-            .addCookie(response, Cookie("token", ""))
     }
 
     @PatchMapping(Uris.User.USER)

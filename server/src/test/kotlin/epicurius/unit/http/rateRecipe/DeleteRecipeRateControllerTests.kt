@@ -12,14 +12,17 @@ import org.mockito.kotlin.whenever
 import org.springframework.http.HttpStatus
 import kotlin.test.assertEquals
 
-class DeleteRecipeRateHttpTests : RecipeHttpTest() {
+class DeleteRecipeRateControllerTests : RecipeHttpTest() {
 
     @Test
     fun `Should delete recipe rate successfully`() {
         // given an authenticated user and a recipe
 
+        // mock
+        whenever(authenticationRefreshHandlerMock.refreshToken(testAuthenticatedUser.token)).thenReturn(mockCookie)
+
         // when the user deletes the recipe
-        val response = deleteRecipeRate(testAuthenticatedUser, RECIPE_ID)
+        val response = deleteRecipeRate(testAuthenticatedUser, RECIPE_ID, mockResponse)
 
         // then the recipe should be deleted successfully
         verify(
@@ -49,7 +52,7 @@ class DeleteRecipeRateHttpTests : RecipeHttpTest() {
 
         // when deleting the recipe rate
         // then RecipeNotFound exception is thrown
-        assertThrows<RecipeNotFound> { deleteRecipeRate(testAuthenticatedUser, nonExistingRecipeId) }
+        assertThrows<RecipeNotFound> { deleteRecipeRate(testAuthenticatedUser, nonExistingRecipeId, mockResponse) }
     }
 
     @Test
@@ -67,7 +70,7 @@ class DeleteRecipeRateHttpTests : RecipeHttpTest() {
 
         // when deleting the recipe rate
         // then AuthorCannotDeleteRating exception is thrown
-        assertThrows<AuthorCannotDeleteRating> { deleteRecipeRate(testAuthenticatedUser, RECIPE_ID) }
+        assertThrows<AuthorCannotDeleteRating> { deleteRecipeRate(testAuthenticatedUser, RECIPE_ID, mockResponse) }
     }
 
     @Test
@@ -85,7 +88,7 @@ class DeleteRecipeRateHttpTests : RecipeHttpTest() {
 
         // when deleting the recipe rate
         // then UserHasNotRated exception is thrown
-        assertThrows<UserHasNotRated> { deleteRecipeRate(testAuthenticatedUser, RECIPE_ID) }
+        assertThrows<UserHasNotRated> { deleteRecipeRate(testAuthenticatedUser, RECIPE_ID, mockResponse) }
     }
 
     @Test
@@ -103,6 +106,6 @@ class DeleteRecipeRateHttpTests : RecipeHttpTest() {
 
         // when deleting the recipe rate
         // then RecipeNotAccessible exception is thrown
-        assertThrows<RecipeNotAccessible> { deleteRecipeRate(testAuthenticatedUser, RECIPE_ID) }
+        assertThrows<RecipeNotAccessible> { deleteRecipeRate(testAuthenticatedUser, RECIPE_ID, mockResponse) }
     }
 }

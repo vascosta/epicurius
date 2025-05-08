@@ -9,13 +9,17 @@ import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.springframework.http.HttpStatus
 
-class GetRecipeRateHttpTests : RateRecipeHttpTest() {
+class GetRecipeRateControllerTests : RateRecipeHttpTest() {
 
     @Test
     fun `Should get recipe rate successfully`() {
         // given an authenticated user and a recipe
+
+        // mock
+        whenever(authenticationRefreshHandlerMock.refreshToken(testAuthenticatedUser.token)).thenReturn(mockCookie)
+
         // when the user gets the recipe rate
-        val response = getRecipeRate(testAuthenticatedUser, RECIPE_ID)
+        val response = getRecipeRate(testAuthenticatedUser, RECIPE_ID, mockResponse)
 
         // then the recipe rate should be returned successfully
         verify(rateRecipeServiceMock).getRecipeRate(testAuthenticatedUser.user.name, RECIPE_ID)
@@ -34,7 +38,7 @@ class GetRecipeRateHttpTests : RateRecipeHttpTest() {
 
         // when getting the recipe rate
         // then RecipeNotFound exception is thrown
-        assertThrows<RecipeNotFound> { getRecipeRate(testAuthenticatedUser, nonExistingRecipeId) }
+        assertThrows<RecipeNotFound> { getRecipeRate(testAuthenticatedUser, nonExistingRecipeId, mockResponse) }
     }
 
     @Test
@@ -48,6 +52,6 @@ class GetRecipeRateHttpTests : RateRecipeHttpTest() {
 
         // when getting the recipe rate
         // then RecipeNotFound exception is thrown
-        assertThrows<RecipeNotAccessible> { getRecipeRate(testAuthenticatedUser, RECIPE_ID) }
+        assertThrows<RecipeNotAccessible> { getRecipeRate(testAuthenticatedUser, RECIPE_ID, mockResponse) }
     }
 }
