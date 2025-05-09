@@ -17,7 +17,7 @@ import epicurius.http.controllers.recipe.models.input.CreateRecipeInputModel
 import epicurius.http.controllers.recipe.models.input.SearchRecipesInputModel
 import epicurius.http.controllers.recipe.models.input.UpdateRecipeInputModel
 import epicurius.repository.cloudStorage.manager.CloudStorageManager
-import epicurius.repository.firestore.FirestoreManager
+import epicurius.repository.firestore.manager.FirestoreManager
 import epicurius.repository.jdbi.recipe.models.JdbiRecipeModel
 import epicurius.repository.jdbi.recipe.models.JdbiUpdateRecipeModel
 import epicurius.repository.spoonacular.manager.SpoonacularManager

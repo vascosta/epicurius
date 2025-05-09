@@ -9,7 +9,7 @@ import epicurius.domain.recipe.*
 import epicurius.domain.user.User
 import epicurius.domain.user.UserDomain.Companion.MAX_PASSWORD_LENGTH
 import epicurius.domain.user.UserDomain.Companion.MAX_USERNAME_LENGTH
-import epicurius.repository.firestore.FirestoreManager
+import epicurius.repository.firestore.manager.FirestoreManager
 import epicurius.repository.firestore.recipe.models.FirestoreRecipeModel
 import epicurius.repository.jdbi.recipe.models.JdbiCreateRecipeModel
 import epicurius.repository.jdbi.user.models.JdbiUpdateUserModel

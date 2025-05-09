@@ -8,7 +8,7 @@ import epicurius.config.CloudStorage
 import epicurius.config.HttpClientConfigurer
 import epicurius.repository.cloudFunction.manager.CloudFunctionManager
 import epicurius.repository.cloudStorage.manager.CloudStorageManager
-import epicurius.repository.firestore.FirestoreManager
+import epicurius.repository.firestore.manager.FirestoreManager
 import epicurius.repository.jdbi.config.configureWithAppRequirements
 import epicurius.repository.spoonacular.manager.SpoonacularManager
 import epicurius.repository.transaction.jdbi.JdbiTransactionManager
