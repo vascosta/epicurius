@@ -12,10 +12,17 @@ class JdbiRecipeInfoMapper : RowMapper<JdbiRecipeInfo> {
     override fun map(rs: ResultSet, ctx: StatementContext): JdbiRecipeInfo {
         val cuisine = Cuisine.fromInt(rs.getInt("cuisine"))
         val mealType = MealType.fromInt(rs.getInt("meal_type"))
-        val pictures = getArray<String>(rs.getArray("pictures_names")).toList()
+
+        val array = rs.getArray("pictures_names")
+        val pictures: List<String> = if (array != null) {
+            getArray<String>(array).toList()
+        } else {
+            emptyList()
+        }
+
         return JdbiRecipeInfo(
             id = rs.getInt("recipe_id"),
-            name = rs.getString("recipe_name"),
+            name = rs.getString("recipe_name") ?: "",
             cuisine = cuisine,
             mealType = mealType,
             preparationTime = rs.getInt("preparation_time"),

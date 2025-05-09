@@ -5,7 +5,7 @@ import java.time.LocalDate
 
 class MealPlannerAlreadyExists(date: LocalDate) : RuntimeException("Meal planner already exists for date $date")
 class MealTimeAlreadyExistsInPlanner(mealTime: MealTime) : RuntimeException("Meal time $mealTime already exists in daily planner")
-class MealPlannerNotFound : RuntimeException("Meal planner not found")
+class DailyMealPlannerNotFound : RuntimeException("Meal planner not found")
 class MealTimeDoesNotExist : RuntimeException("Meal time does not exist in daily planner")
 
 class RecipeDoesNotContainCaloriesInfo : RuntimeException("Recipe doesn't contain calories info")

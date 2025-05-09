@@ -1,7 +1,7 @@
 package epicurius.services.mealPlanner
 
 import epicurius.domain.exceptions.MealPlannerAlreadyExists
-import epicurius.domain.exceptions.MealPlannerNotFound
+import epicurius.domain.exceptions.DailyMealPlannerNotFound
 import epicurius.domain.exceptions.MealTimeAlreadyExistsInPlanner
 import epicurius.domain.exceptions.MealTimeDoesNotExist
 import epicurius.domain.exceptions.RecipeIsInvalidForMealTime
@@ -27,18 +27,19 @@ class MealPlannerService(
 ) {
 
     fun createDailyMealPlanner(userId: Int, date: LocalDate, maxCalories: Int?) {
-        if (checkIfMealPlannerExists(userId, date)) throw MealPlannerAlreadyExists(date)
+        if (checkIfDailyMealPlannerExists(userId, date) != null) throw MealPlannerAlreadyExists(date)
         tm.run { it.mealPlannerRepository.createDailyMealPlanner(userId, date, maxCalories) }
     }
 
     fun getWeeklyMealPlanner(userId: Int): MealPlanner {
+        //if (!checkIfDailyMealPlannerExists(userId) return MealPlanner(emptyList())
         val jdbiPlanner = tm.run { it.mealPlannerRepository.getWeeklyMealPlanner(userId) }
         val planner = getRecipeInfoPicture(jdbiPlanner.planner)
         return MealPlanner(planner)
     }
 
     fun getDailyMealPlanner(userId: Int, date: LocalDate): DailyMealPlanner {
-        val jdbiDailyPlanner = tm.run { it.mealPlannerRepository.getDailyMealPlanner(userId, date) }
+        val jdbiDailyPlanner = checkIfDailyMealPlannerExists(userId, date) ?: throw DailyMealPlannerNotFound()
 
         val dailyMeals = jdbiDailyPlanner.meals.mapValues { (_, recipe) ->
             val picture = cs.pictureRepository.getPicture(recipe.picturesNames.first(), RECIPES_FOLDER)
@@ -53,7 +54,7 @@ class MealPlannerService(
     }
 
     fun addDailyMealPlanner(userId: Int, username: String, date: LocalDate, info: AddMealPlannerInputModel): MealPlanner {
-        if (!checkIfMealPlannerExists(userId, date)) throw MealPlannerNotFound()
+        if (checkIfDailyMealPlannerExists(userId, date) == null) throw DailyMealPlannerNotFound()
         if (checkIfMealTimeAlreadyExistsInPlanner(userId, date, info.mealTime))
             throw MealTimeAlreadyExistsInPlanner(info.mealTime)
         val recipe = checkIfRecipeExists(info.recipeId)
@@ -68,7 +69,7 @@ class MealPlannerService(
     }
 
     fun updateDailyMealPlanner(userId: Int, username: String, date: LocalDate, info: UpdateMealPlannerInputModel): MealPlanner {
-        if (!checkIfMealPlannerExists(userId, date)) throw MealPlannerNotFound()
+        if (checkIfDailyMealPlannerExists(userId, date) == null) throw DailyMealPlannerNotFound()
         if (!checkIfMealTimeAlreadyExistsInPlanner(userId, date, info.mealTime))
             throw MealTimeDoesNotExist()
         val recipe = checkIfRecipeExists(info.recipeId)
@@ -83,7 +84,7 @@ class MealPlannerService(
     }
 
     fun updateDailyCalories(userId: Int, date: LocalDate, maxCalories: Int?): DailyMealPlanner {
-        if (!checkIfMealPlannerExists(userId, date)) throw MealPlannerNotFound()
+        if (checkIfDailyMealPlannerExists(userId, date) == null) throw DailyMealPlannerNotFound()
 
         val jdbiDailyPlanner = tm.run {
             it.mealPlannerRepository.updateDailyCalories(userId, date, maxCalories)
@@ -102,7 +103,7 @@ class MealPlannerService(
     }
 
     fun removeMealTimeDailyMealPlanner(userId: Int, date: LocalDate, mealTime: MealTime): MealPlanner {
-        if (!checkIfMealPlannerExists(userId, date)) throw MealPlannerNotFound()
+        if (checkIfDailyMealPlannerExists(userId, date) == null) throw DailyMealPlannerNotFound()
         if (!checkIfMealTimeAlreadyExistsInPlanner(userId, date, mealTime))
             throw MealTimeDoesNotExist()
 
@@ -114,7 +115,7 @@ class MealPlannerService(
     }
 
     fun deleteDailyMealPlanner(userId: Int, date: LocalDate): MealPlanner {
-        if (!checkIfMealPlannerExists(userId, date)) throw MealPlannerNotFound()
+        if (checkIfDailyMealPlannerExists(userId, date) == null) throw DailyMealPlannerNotFound()
 
         val jdbiPlanner = tm.run {
             it.mealPlannerRepository.deleteDailyMealPlanner(userId, date)
@@ -132,8 +133,9 @@ class MealPlannerService(
             DailyMealPlanner(date = daily.date, maxCalories = daily.maxCalories, meals = dailyMeals)
         }
 
-    private fun checkIfMealPlannerExists(userId: Int, date: LocalDate): Boolean =
-        tm.run { it.mealPlannerRepository.checkIfDailyMealPlannerAlreadyExists(userId, date) }
+
+    private fun checkIfDailyMealPlannerExists(userId: Int, date: LocalDate): JdbiDailyMealPlanner? =
+        tm.run { it.mealPlannerRepository.getDailyMealPlanner(userId, date) }
 
     private fun checkIfRecipeExists(recipeId: Int): JdbiRecipeModel =
         tm.run { it.recipeRepository.getRecipeById(recipeId) } ?: throw RecipeNotFound()
