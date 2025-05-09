@@ -11,8 +11,6 @@ class UserNotFollowed(name: String) : RuntimeException("User $name is not being 
 class FollowRequestAlreadyBeenSent(name: String) : RuntimeException("Follow request to user $name already been sent")
 class FollowRequestNotFound(name: String) : RuntimeException("Follow request to user $name not found")
 
-class ProfilePictureNotFound : RuntimeException("Profile picture not found")
-
 class IncorrectPassword : RuntimeException("Incorrect password")
 class PasswordsDoNotMatch : RuntimeException("Passwords don't match")
 

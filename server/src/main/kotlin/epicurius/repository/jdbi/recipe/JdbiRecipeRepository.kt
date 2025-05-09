@@ -89,32 +89,26 @@ class JdbiRecipeRepository(private val handle: Handle) : RecipeRepository {
         intolerances: List<Intolerance>,
         diets: List<Diet>,
         limit: Int
-    ): List<JdbiRecipeModel> =
+    ): List<JdbiRecipeInfo> =
         handle.createQuery(
             """
-                WITH random_recipe AS (
-                    SELECT r.id, r.name, r.author_id, r.date, r.servings, r.preparation_time, 
-                            r.cuisine, r.meal_type, r.intolerances, r.diets, r.calories, 
-                            r.protein, r.fat, r.carbs, r.pictures_names, u.name as author_username
-                    FROM dbo.Recipe r
-                    JOIN dbo.user u ON u.id = r.author_id
-                    WHERE u.privacy = false 
-                    AND r.meal_type = :mealType 
-                    AND NOT (r.intolerances && :intolerances)
-                    AND r.diets @> :diets
-                    ORDER BY RANDOM()
-                    LIMIT :limit
-                )
-                SELECT r.*, i.name AS ingredient_name, i.quantity, i.unit
-                FROM random_recipe r
-                JOIN dbo.Ingredient i ON r.id = i.recipe_id
+                SELECT r.id as recipe_id, r.name as recipe_name, r.cuisine, r.meal_type,  
+                    r.preparation_time, r.servings, r.pictures_names
+                FROM dbo.Recipe r
+                JOIN dbo.user u ON u.id = r.author_id
+                WHERE u.privacy = false 
+                AND r.meal_type = :mealType 
+                AND NOT (r.intolerances && :intolerances)
+                AND r.diets @> :diets
+                ORDER BY RANDOM()
+                LIMIT :limit
             """
         )
             .bind("mealType", mealType.ordinal)
             .bind("intolerances", intolerances.map { it.ordinal }.toTypedArray())
             .bind("diets", diets.map { it.ordinal }.toTypedArray())
             .bind("limit", limit)
-            .mapTo<JdbiRecipeModel>()
+            .mapTo<JdbiRecipeInfo>()
             .list()
 
     override fun searchRecipes(userId: Int, form: SearchRecipesModel, pagingParams: PagingParams): List<JdbiRecipeInfo> {

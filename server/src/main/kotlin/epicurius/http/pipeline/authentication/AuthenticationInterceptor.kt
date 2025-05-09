@@ -16,7 +16,7 @@ class AuthenticationInterceptor(private val requestTokenProcessor: RequestTokenP
             val token = getToken(request) ?: throw UnauthorizedException("Missing user token")
             val authenticatedUser = requestTokenProcessor.getAuthenticatedUser(token)
             return if (authenticatedUser == null) {
-                throw UnauthorizedException("Invalid user token")
+                throw UnauthorizedException("Authenticated user not found")
             } else {
                 AuthenticatedUserArgumentResolver.addSession(authenticatedUser, request)
                 true

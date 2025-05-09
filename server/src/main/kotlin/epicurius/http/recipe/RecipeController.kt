@@ -81,7 +81,7 @@ class RecipeController(
     ): ResponseEntity<*> {
         val pagingParams = PagingParams(skip, limit)
         val searchForm = SearchRecipesInputModel(
-            name = name,
+            name = name?.replace("-", " "),
             cuisine = cuisine,
             mealType = mealType,
             ingredients = ingredients?.map { it.replace("-", " ") },

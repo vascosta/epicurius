@@ -20,7 +20,7 @@ interface RecipeRepository {
         intolerances: List<Intolerance>,
         diets: List<Diet>,
         limit: Int
-    ): List<JdbiRecipeModel>
+    ): List<JdbiRecipeInfo>
     fun searchRecipes(userId: Int, form: SearchRecipesModel, pagingParams: PagingParams): List<JdbiRecipeInfo>
 
     fun updateRecipe(recipeInfo: JdbiUpdateRecipeModel): JdbiRecipeModel
