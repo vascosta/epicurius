@@ -13,9 +13,9 @@ import org.springframework.stereotype.Component
 class MenuService(private val tm: TransactionManager, private val cs: CloudStorageManager) {
 
     fun getDailyMenu(intolerances: List<Intolerance>, diets: List<Diet>): Map<String, RecipeInfo?> {
-        val breakfast = getBreakfastRecipe(intolerances, diets)
-        val soup = getSoupRecipe(intolerances, diets)
-        val dessert = getDessertRecipe(intolerances, diets)
+        val breakfast = getRecipe(intolerances, diets, MealType.BREAKFAST)
+        val soup = getRecipe(intolerances, diets, MealType.SOUP)
+        val dessert = getRecipe(intolerances, diets, MealType.DESSERT)
         val mainCourses = getMainCourseRecipes(intolerances, diets)
         val lunch = mainCourses[0]
         val dinner = mainCourses[1]
@@ -28,43 +28,15 @@ class MenuService(private val tm: TransactionManager, private val cs: CloudStora
         )
     }
 
-    private fun getBreakfastRecipe(intolerances: List<Intolerance>, diets: List<Diet>): RecipeInfo? {
-        val breakfastFromPublicUsers = tm.run {
-            it.recipeRepository.getRandomRecipesFromPublicUsers(MealType.BREAKFAST, intolerances, diets, 1)
+    private fun getRecipe(intolerances: List<Intolerance>, diets: List<Diet>, mealType: MealType): RecipeInfo? {
+        val recipeFromPublicUsers = tm.run {
+            it.recipeRepository.getRandomRecipesFromPublicUsers(mealType, intolerances, diets, 1)
         }
 
-        return if (breakfastFromPublicUsers.isNotEmpty()) {
-            val jdbiBreakfastRecipeModel = breakfastFromPublicUsers.first()
-            val breakfastPicture = cs.pictureRepository.getPicture(jdbiBreakfastRecipeModel.picturesNames.first(), RECIPES_FOLDER)
-            jdbiBreakfastRecipeModel.toRecipeInfo(breakfastPicture)
-        } else {
-            null
-        }
-    }
-
-    private fun getSoupRecipe(intolerances: List<Intolerance>, diets: List<Diet>): RecipeInfo? {
-        val soupFromPublicUsers = tm.run {
-            it.recipeRepository.getRandomRecipesFromPublicUsers(MealType.SOUP, intolerances, diets, 1)
-        }
-
-        return if (soupFromPublicUsers.isNotEmpty()) {
-            val jdbiSoupRecipeModel = soupFromPublicUsers.first()
-            val soupPicture = cs.pictureRepository.getPicture(jdbiSoupRecipeModel.picturesNames.first(), RECIPES_FOLDER)
-            jdbiSoupRecipeModel.toRecipeInfo(soupPicture)
-        } else {
-            null
-        }
-    }
-
-    private fun getDessertRecipe(intolerances: List<Intolerance>, diets: List<Diet>): RecipeInfo? {
-        val dessertFromPublicUsers = tm.run {
-            it.recipeRepository.getRandomRecipesFromPublicUsers(MealType.DESSERT, intolerances, diets, 1)
-        }
-
-        return if (dessertFromPublicUsers.isNotEmpty()) {
-            val jdbiDessertRecipeModel = dessertFromPublicUsers.first()
-            val dessertPicture = cs.pictureRepository.getPicture(jdbiDessertRecipeModel.picturesNames.first(), RECIPES_FOLDER)
-            jdbiDessertRecipeModel.toRecipeInfo(dessertPicture)
+        return if (recipeFromPublicUsers.isNotEmpty()) {
+            val jdbiRecipeModel = recipeFromPublicUsers.first()
+            val recipePicture = cs.pictureRepository.getPicture(jdbiRecipeModel.picturesNames.first(), RECIPES_FOLDER)
+            jdbiRecipeModel.toRecipeInfo(recipePicture)
         } else {
             null
         }

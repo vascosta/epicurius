@@ -4,6 +4,7 @@ import epicurius.domain.Diet
 import epicurius.domain.Intolerance
 import epicurius.domain.recipe.Cuisine
 import epicurius.domain.recipe.MealType
+import epicurius.repository.jdbi.recipe.models.JdbiRecipeInfo
 import epicurius.repository.jdbi.recipe.models.JdbiRecipeModel
 import epicurius.unit.services.ServiceTest
 import epicurius.utils.generateRandomRecipeIngredients
@@ -14,80 +15,52 @@ import java.time.LocalDate
 open class MenuServiceTest : ServiceTest() {
 
     companion object {
-        private const val PUBLIC_AUTHOR_ID = 1
-        val publicAuthorUsername = generateRandomUsername()
         val userIntolerances = listOf(Intolerance.EGG)
         val userDiets = listOf(Diet.GLUTEN_FREE)
 
-        val publicBreakfastJdbiRecipeModel = JdbiRecipeModel(
+        val publicBreakfastJdbiRecipeModel = JdbiRecipeInfo(
             1,
             generateRandomRecipeName(),
-            PUBLIC_AUTHOR_ID,
-            publicAuthorUsername,
-            LocalDate.now(),
-            1,
-            1,
             Cuisine.MEDITERRANEAN,
             MealType.BREAKFAST,
-            emptyList(),
-            emptyList(),
-            generateRandomRecipeIngredients(),
+            1,
+            1,
             picturesNames = listOf("")
         )
 
-        val publicSoupJdbiRecipeModel = JdbiRecipeModel(
+        val publicSoupJdbiRecipeModel = JdbiRecipeInfo(
             2,
             generateRandomRecipeName(),
-            PUBLIC_AUTHOR_ID,
-            publicAuthorUsername,
-            LocalDate.now(),
-            1,
-            1,
             Cuisine.MEDITERRANEAN,
             MealType.SOUP,
-            emptyList(),
-            emptyList(),
-            generateRandomRecipeIngredients(),
+            1,
+            1,
             picturesNames = listOf("")
         )
 
-        val publicDessertJdbiRecipeModel = JdbiRecipeModel(
+        val publicDessertJdbiRecipeModel = JdbiRecipeInfo(
             3,
             generateRandomRecipeName(),
-            PUBLIC_AUTHOR_ID,
-            publicAuthorUsername,
-            LocalDate.now(),
-            1,
-            1,
             Cuisine.MEDITERRANEAN,
             MealType.DESSERT,
-            emptyList(),
-            emptyList(),
-            generateRandomRecipeIngredients(),
+            1,
+            1,
             picturesNames = listOf("")
         )
 
-        val publicLunchJdbiRecipeModel = JdbiRecipeModel(
+        val publicLunchJdbiRecipeModel = JdbiRecipeInfo(
             4,
             generateRandomRecipeName(),
-            PUBLIC_AUTHOR_ID,
-            publicAuthorUsername,
-            LocalDate.now(),
-            1,
-            1,
             Cuisine.MEDITERRANEAN,
             MealType.MAIN_COURSE,
-            emptyList(),
-            emptyList(),
-            generateRandomRecipeIngredients(),
+            1,
+            1,
             picturesNames = listOf("")
         )
 
         val publicDinnerJdbiRecipeModel2 = publicLunchJdbiRecipeModel.copy(
             id = 5,
             name = generateRandomRecipeName(),
-            authorId = PUBLIC_AUTHOR_ID,
-            authorUsername = publicAuthorUsername
         )
 
         private val breakfastRecipes = listOf(publicBreakfastJdbiRecipeModel.toRecipeInfo(byteArrayOf()))
