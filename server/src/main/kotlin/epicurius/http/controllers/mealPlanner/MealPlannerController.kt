@@ -86,7 +86,7 @@ class MealPlannerController(
         )
         return ResponseEntity
             .created(mealPlanner(date))
-            .body(MealPlannerOutputModel(planner.planner))
+            .body(DailyMealPlannerOutputModel(planner))
             .addCookie(response, authenticationRefreshHandler.refreshToken(authenticatedUser.token))
     }
 
@@ -105,7 +105,7 @@ class MealPlannerController(
         )
         return ResponseEntity
             .ok()
-            .body(MealPlannerOutputModel(mealPlanner.planner))
+            .body(DailyMealPlannerOutputModel(mealPlanner))
             .addCookie(response, authenticationRefreshHandler.refreshToken(authenticatedUser.token))
     }
 
@@ -133,7 +133,7 @@ class MealPlannerController(
         val mealPlanner = mealPlannerService.removeMealTimeDailyMealPlanner(authenticatedUser.user.id, date, mealTime)
         return ResponseEntity
             .ok()
-            .body(MealPlannerOutputModel(mealPlanner.planner))
+            .body(DailyMealPlannerOutputModel(mealPlanner))
             .addCookie(response, authenticationRefreshHandler.refreshToken(authenticatedUser.token))
     }
 

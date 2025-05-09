@@ -46,60 +46,17 @@ class JdbiMealPlannerRepository(private val handle: Handle) : MealPlannerReposit
 
         if (list.isEmpty()) return JdbiMealPlanner(emptyList())
 
-        val dailyPlanners = list
-            .groupBy { it.date }
-            .map { (date, dailyMeals) ->
-                val calories = dailyMeals.first { it.date == date }.maxCalories
-
-                if (dailyMeals.first().jdbiRecipeInfo.id == 0) {
-                    JdbiDailyMealPlanner(date, calories, emptyMap())
-                } else {
-                    val meals = dailyMeals.associate { it.mealTime to it.jdbiRecipeInfo }
-                    JdbiDailyMealPlanner(date, calories, meals)
-                }
-            }
-
-        return JdbiMealPlanner(dailyPlanners)
+        return JdbiMealPlanner(list.toJdbiDailyMealPlanner())
     }
 
-    override fun getDailyMealPlanner(userId: Int, date: LocalDate): JdbiDailyMealPlanner? {
-        val dailyRow = handle.createQuery(
-            """
-                SELECT mp.date, mp.max_calories, mpr.meal_time, 
-                       r.id AS recipe_id, r.name AS recipe_name, 
-                       r.cuisine, r.meal_type, r.preparation_time, r.servings, r.pictures_names
-                FROM dbo.meal_planner mp 
-                LEFT JOIN dbo.meal_planner_recipe mpr ON mp.user_id = mpr.user_id AND mp.date = mpr.date
-                LEFT JOIN dbo.recipe r ON mpr.recipe_id = r.id
-                WHERE mp.user_id = :userId AND mp.date = :date
-                ORDER BY mpr.meal_time ASC
-            """
-        )
-            .bind("userId", userId)
-            .bind("date", date)
-            .mapTo<JdbiDailyMealPlannerRow>()
-            .list()
+    override fun getDailyMealPlanner(userId: Int, date: LocalDate): JdbiDailyMealPlanner {
+        val dailyRow = dailyMealPlannerResults(userId, date)
+        if (dailyRow.isEmpty()) throw DailyMealPlannerNotFound()
 
-        if (dailyRow.isEmpty()) return null
-
-        val dailyPlanner = dailyRow
-            .groupBy { it.date }
-            .map { (date, dailyMeals) ->
-                val calories = dailyMeals.first { it.date == date }.maxCalories
-
-                if (dailyMeals.first().jdbiRecipeInfo.id == 0) {
-                    return JdbiDailyMealPlanner(date, calories, emptyMap())
-                }
-
-                val meals = dailyMeals.associate { it.mealTime to it.jdbiRecipeInfo }
-                JdbiDailyMealPlanner(date, calories, meals)
-            }
-            .first()
-
-        return dailyPlanner
+        return dailyRow.toJdbiDailyMealPlanner().first()
     }
 
-    override fun addDailyMealPlanner(userId: Int, date: LocalDate, recipeId: Int, mealTime: MealTime): JdbiMealPlanner {
+    override fun addDailyMealPlanner(userId: Int, date: LocalDate, recipeId: Int, mealTime: MealTime): JdbiDailyMealPlanner {
         handle.createUpdate(
             """
                 INSERT INTO dbo.meal_planner_recipe (user_id, date, recipe_id, meal_time)
@@ -112,10 +69,10 @@ class JdbiMealPlannerRepository(private val handle: Handle) : MealPlannerReposit
             .bind("mealTime", mealTime.ordinal)
             .execute()
 
-        return getWeeklyMealPlanner(userId)
+        return getDailyMealPlanner(userId, date)
     }
 
-    override fun updateDailyMealPlanner(userId: Int, date: LocalDate, recipeId: Int, mealTime: MealTime): JdbiMealPlanner {
+    override fun updateDailyMealPlanner(userId: Int, date: LocalDate, recipeId: Int, mealTime: MealTime): JdbiDailyMealPlanner{
         handle.createUpdate(
             """
                 DELETE FROM dbo.meal_planner_recipe 
@@ -131,10 +88,10 @@ class JdbiMealPlannerRepository(private val handle: Handle) : MealPlannerReposit
             .bind("mealTime", mealTime.ordinal)
             .execute()
 
-        return getWeeklyMealPlanner(userId)
+        return getDailyMealPlanner(userId, date)
     }
 
-    override fun removeMealTimeDailyMealPlanner(userId: Int, date: LocalDate, mealTime: MealTime): JdbiMealPlanner {
+    override fun removeMealTimeDailyMealPlanner(userId: Int, date: LocalDate, mealTime: MealTime): JdbiDailyMealPlanner {
         handle.createUpdate(
             """
                 DELETE FROM dbo.meal_planner_recipe
@@ -146,7 +103,7 @@ class JdbiMealPlannerRepository(private val handle: Handle) : MealPlannerReposit
             .bind("mealTime", mealTime.ordinal)
             .execute()
 
-        return getWeeklyMealPlanner(userId)
+        return getDailyMealPlanner(userId, date)
     }
 
     override fun deleteDailyMealPlanner(userId: Int, date: LocalDate): JdbiMealPlanner {
@@ -179,7 +136,14 @@ class JdbiMealPlannerRepository(private val handle: Handle) : MealPlannerReposit
             .bind("date", date)
             .execute()
 
-        return getDailyMealPlanner(userId, date) ?: throw DailyMealPlannerNotFound()
+        return getDailyMealPlanner(userId, date)
+    }
+
+    override fun checkIfDailyMealPlannerExists(userId: Int, date: LocalDate): JdbiDailyMealPlanner? {
+        val dailyRow = dailyMealPlannerResults(userId, date)
+        if (dailyRow.isEmpty()) return null
+
+        return dailyRow.toJdbiDailyMealPlanner().first()
     }
 
     override fun checkIfMealTimeAlreadyExistsInPlanner(userId: Int, date: LocalDate, mealTime: MealTime): Boolean =
@@ -195,4 +159,35 @@ class JdbiMealPlannerRepository(private val handle: Handle) : MealPlannerReposit
             .bind("time", mealTime.ordinal)
             .mapTo<Int>()
             .first() == 1
+
+    private fun dailyMealPlannerResults(userId: Int, date: LocalDate): List<JdbiDailyMealPlannerRow> =
+        handle.createQuery(
+            """
+                SELECT mp.date, mp.max_calories, mpr.meal_time, 
+                       r.id AS recipe_id, r.name AS recipe_name, 
+                       r.cuisine, r.meal_type, r.preparation_time, r.servings, r.pictures_names
+                FROM dbo.meal_planner mp 
+                LEFT JOIN dbo.meal_planner_recipe mpr ON mp.user_id = mpr.user_id AND mp.date = mpr.date
+                LEFT JOIN dbo.recipe r ON mpr.recipe_id = r.id
+                WHERE mp.user_id = :userId AND mp.date = :date
+                ORDER BY mpr.meal_time ASC
+            """
+        )
+            .bind("userId", userId)
+            .bind("date", date)
+            .mapTo<JdbiDailyMealPlannerRow>()
+            .list()
+
+    private fun List<JdbiDailyMealPlannerRow>.toJdbiDailyMealPlanner(): List<JdbiDailyMealPlanner> =
+        this.groupBy { it.date }
+            .map { (date, dailyMeals) ->
+                val calories = dailyMeals.first { it.date == date }.maxCalories
+
+                if (dailyMeals.first().jdbiRecipeInfo.id == 0) {
+                    JdbiDailyMealPlanner(date, calories, emptyMap())
+                } else {
+                    val meals = dailyMeals.associate { it.mealTime to it.jdbiRecipeInfo }
+                    JdbiDailyMealPlanner(date, calories, meals)
+                }
+            }
 }
