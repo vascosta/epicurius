@@ -4,8 +4,6 @@ import epicurius.domain.exceptions.MealPlannerAlreadyExists
 import epicurius.domain.exceptions.MealPlannerNotFound
 import epicurius.domain.exceptions.MealTimeAlreadyExistsInPlanner
 import epicurius.domain.exceptions.MealTimeDoesNotExist
-import epicurius.domain.exceptions.RecipeDoesNotContainCaloriesInfo
-import epicurius.domain.exceptions.RecipeExceedsMaximumCalories
 import epicurius.domain.exceptions.RecipeIsInvalidForMealTime
 import epicurius.domain.exceptions.RecipeNotAccessible
 import epicurius.domain.exceptions.RecipeNotFound
@@ -13,8 +11,8 @@ import epicurius.domain.mealPlanner.DailyMealPlanner
 import epicurius.domain.mealPlanner.MealPlanner
 import epicurius.domain.mealPlanner.MealTime
 import epicurius.domain.picture.PictureDomain.Companion.RECIPES_FOLDER
-import epicurius.http.mealPlanner.models.input.AddMealPlannerInputModel
-import epicurius.http.mealPlanner.models.input.UpdateMealPlannerInputModel
+import epicurius.http.controllers.mealPlanner.models.input.AddMealPlannerInputModel
+import epicurius.http.controllers.mealPlanner.models.input.UpdateMealPlannerInputModel
 import epicurius.repository.cloudStorage.manager.CloudStorageManager
 import epicurius.repository.jdbi.mealPlanner.models.JdbiDailyMealPlanner
 import epicurius.repository.jdbi.recipe.models.JdbiRecipeModel

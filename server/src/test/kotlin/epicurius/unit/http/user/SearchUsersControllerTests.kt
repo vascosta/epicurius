@@ -4,7 +4,7 @@ import epicurius.domain.PagingParams
 import epicurius.domain.user.AuthenticatedUser
 import epicurius.domain.user.SearchUser
 import epicurius.domain.user.User
-import epicurius.http.user.models.output.SearchUsersOutputModel
+import epicurius.http.controllers.user.models.output.SearchUsersOutputModel
 import org.mockito.kotlin.whenever
 import org.springframework.http.HttpStatus
 import java.util.UUID.randomUUID

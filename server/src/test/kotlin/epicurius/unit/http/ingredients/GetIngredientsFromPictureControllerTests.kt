@@ -2,7 +2,7 @@ package epicurius.unit.http.ingredients
 
 import epicurius.domain.user.AuthenticatedUser
 import epicurius.domain.user.User
-import epicurius.http.ingredients.models.output.GetIngredientsFromPictureOutputModel
+import epicurius.http.controllers.ingredients.models.output.GetIngredientsFromPictureOutputModel
 import epicurius.unit.http.HttpTest
 import epicurius.utils.generateEmail
 import epicurius.utils.generateRandomUsername

@@ -1,7 +1,7 @@
 package epicurius.unit.http.fridge
 
 import epicurius.domain.fridge.Fridge
-import epicurius.http.fridge.models.output.FridgeOutputModel
+import epicurius.http.controllers.fridge.models.output.FridgeOutputModel
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.mockito.kotlin.whenever

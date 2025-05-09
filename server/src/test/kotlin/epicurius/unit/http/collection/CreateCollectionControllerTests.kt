@@ -2,8 +2,8 @@ package epicurius.unit.http.collection
 
 import epicurius.domain.collection.CollectionType
 import epicurius.domain.exceptions.CollectionAlreadyExists
-import epicurius.http.collection.models.input.CreateCollectionInputModel
-import epicurius.http.collection.models.output.CreateCollectionOutputModel
+import epicurius.http.controllers.collection.models.input.CreateCollectionInputModel
+import epicurius.http.controllers.collection.models.output.CreateCollectionOutputModel
 import org.mockito.kotlin.whenever
 import org.springframework.http.HttpStatus
 import kotlin.test.Test

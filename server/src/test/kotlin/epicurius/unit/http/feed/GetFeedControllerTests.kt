@@ -5,7 +5,7 @@ import epicurius.domain.Intolerance
 import epicurius.domain.PagingParams
 import epicurius.domain.user.AuthenticatedUser
 import epicurius.domain.user.User
-import epicurius.http.feed.models.output.FeedOutputModel
+import epicurius.http.controllers.feed.models.output.FeedOutputModel
 import epicurius.utils.generateEmail
 import epicurius.utils.generateRandomUsername
 import org.junit.jupiter.api.Assertions.assertEquals

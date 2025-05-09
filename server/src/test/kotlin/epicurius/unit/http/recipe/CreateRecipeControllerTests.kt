@@ -10,9 +10,8 @@ import epicurius.domain.recipe.IngredientUnit
 import epicurius.domain.recipe.Instructions
 import epicurius.domain.recipe.MealType
 import epicurius.domain.recipe.Recipe
-import epicurius.http.recipe.models.input.CreateRecipeInputModel
-import epicurius.http.recipe.models.output.CreateRecipeOutputModel
-import epicurius.unit.http.rateRecipe.RateRecipeHttpTest
+import epicurius.http.controllers.recipe.models.input.CreateRecipeInputModel
+import epicurius.http.controllers.recipe.models.output.CreateRecipeOutputModel
 import kotlinx.coroutines.runBlocking
 import org.mockito.kotlin.whenever
 import org.springframework.http.HttpStatus

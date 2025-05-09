@@ -2,7 +2,7 @@ package epicurius.unit.services.collection
 
 import epicurius.domain.collection.CollectionType
 import epicurius.domain.exceptions.CollectionAlreadyExists
-import epicurius.http.collection.models.input.CreateCollectionInputModel
+import epicurius.http.controllers.collection.models.input.CreateCollectionInputModel
 import org.mockito.kotlin.whenever
 import kotlin.test.Test
 import kotlin.test.assertEquals

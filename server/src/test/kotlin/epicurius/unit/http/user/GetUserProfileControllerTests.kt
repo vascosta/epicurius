@@ -2,8 +2,7 @@ package epicurius.unit.http.user
 
 import epicurius.domain.exceptions.UserNotFound
 import epicurius.domain.user.UserProfile
-import epicurius.http.user.models.output.GetUserProfileOutputModel
-import epicurius.unit.http.recipe.RecipeHttpTest.Companion.testAuthenticatedUser
+import epicurius.http.controllers.user.models.output.GetUserProfileOutputModel
 import org.mockito.kotlin.whenever
 import org.springframework.http.HttpStatus
 import java.util.UUID

@@ -9,7 +9,7 @@ import epicurius.domain.recipe.Cuisine
 import epicurius.domain.recipe.Ingredient
 import epicurius.domain.recipe.IngredientUnit
 import epicurius.domain.recipe.MealType
-import epicurius.http.recipe.models.input.UpdateRecipeInputModel
+import epicurius.http.controllers.recipe.models.input.UpdateRecipeInputModel
 import epicurius.repository.firestore.recipe.models.FirestoreRecipeModel
 import epicurius.repository.jdbi.recipe.models.JdbiRecipeModel
 import epicurius.utils.generateRandomRecipeDescription

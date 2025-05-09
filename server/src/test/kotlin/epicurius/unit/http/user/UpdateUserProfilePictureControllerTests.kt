@@ -1,7 +1,7 @@
 package epicurius.unit.http.user
 
 import epicurius.domain.user.AuthenticatedUser
-import epicurius.http.user.models.output.UpdateUserProfilePictureOutputModel
+import epicurius.http.controllers.user.models.output.UpdateUserProfilePictureOutputModel
 import org.mockito.kotlin.whenever
 import org.springframework.http.HttpStatus
 import java.util.UUID.randomUUID

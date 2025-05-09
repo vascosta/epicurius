@@ -4,14 +4,14 @@ import epicurius.domain.Diet
 import epicurius.domain.Intolerance
 import epicurius.domain.PagingParams
 import epicurius.domain.user.FollowRequestType
-import epicurius.http.collection.models.input.CreateCollectionInputModel
-import epicurius.http.collection.models.input.UpdateCollectionInputModel
-import epicurius.http.fridge.models.input.ProductInputModel
-import epicurius.http.fridge.models.input.UpdateProductInputModel
-import epicurius.http.recipe.models.input.CreateRecipeInputModel
-import epicurius.http.recipe.models.input.SearchRecipesInputModel
-import epicurius.http.recipe.models.input.UpdateRecipeInputModel
-import epicurius.http.user.models.input.UpdateUserInputModel
+import epicurius.http.controllers.collection.models.input.CreateCollectionInputModel
+import epicurius.http.controllers.collection.models.input.UpdateCollectionInputModel
+import epicurius.http.controllers.fridge.models.input.ProductInputModel
+import epicurius.http.controllers.fridge.models.input.UpdateProductInputModel
+import epicurius.http.controllers.recipe.models.input.CreateRecipeInputModel
+import epicurius.http.controllers.recipe.models.input.SearchRecipesInputModel
+import epicurius.http.controllers.recipe.models.input.UpdateRecipeInputModel
+import epicurius.http.controllers.user.models.input.UpdateUserInputModel
 import epicurius.unit.EpicuriusUnitTest
 import org.springframework.web.multipart.MultipartFile
 

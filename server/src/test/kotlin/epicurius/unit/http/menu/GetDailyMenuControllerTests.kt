@@ -1,7 +1,7 @@
 package epicurius.unit.http.menu
 
 import epicurius.domain.recipe.RecipeInfo
-import epicurius.http.menu.models.out.GetDailyMenuOutputModel
+import epicurius.http.controllers.menu.models.out.GetDailyMenuOutputModel
 import org.mockito.kotlin.whenever
 import org.springframework.http.HttpStatus
 import kotlin.test.Test

@@ -28,7 +28,7 @@ import epicurius.domain.user.User
 import epicurius.domain.user.UserDomain
 import epicurius.domain.user.UserInfo
 import epicurius.domain.user.UserProfile
-import epicurius.http.user.models.input.UpdateUserInputModel
+import epicurius.http.controllers.user.models.input.UpdateUserInputModel
 import epicurius.repository.cloudStorage.manager.CloudStorageManager
 import epicurius.repository.jdbi.user.models.JdbiUpdateUserModel
 import epicurius.repository.transaction.TransactionManager

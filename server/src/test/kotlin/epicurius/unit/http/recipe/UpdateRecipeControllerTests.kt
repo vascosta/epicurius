@@ -11,8 +11,8 @@ import epicurius.domain.recipe.IngredientUnit
 import epicurius.domain.recipe.MealType
 import epicurius.domain.user.AuthenticatedUser
 import epicurius.domain.user.User
-import epicurius.http.recipe.models.input.UpdateRecipeInputModel
-import epicurius.http.recipe.models.output.UpdateRecipeOutputModel
+import epicurius.http.controllers.recipe.models.input.UpdateRecipeInputModel
+import epicurius.http.controllers.recipe.models.output.UpdateRecipeOutputModel
 import epicurius.services.recipe.models.UpdateRecipeModel
 import epicurius.utils.generateRandomRecipeDescription
 import epicurius.utils.generateRandomRecipeIngredients

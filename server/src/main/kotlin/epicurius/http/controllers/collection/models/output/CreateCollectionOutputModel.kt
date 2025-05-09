@@ -1,0 +1,13 @@
+package epicurius.http.controllers.collection.models.output
+
+import epicurius.domain.collection.Collection
+
+data class CreateCollectionOutputModel(val collection: Collection)
+
+typealias GetCollectionOutputModel = CreateCollectionOutputModel
+
+typealias UpdateCollectionOutputModel = CreateCollectionOutputModel
+
+typealias AddRecipeToCollectionOutputModel = CreateCollectionOutputModel
+
+typealias RemoveRecipeFromCollectionOutputModel = CreateCollectionOutputModel

@@ -1,7 +1,7 @@
 package epicurius.unit.http.user
 
 import epicurius.domain.exceptions.PasswordsDoNotMatch
-import epicurius.http.user.models.input.ResetPasswordInputModel
+import epicurius.http.controllers.user.models.input.ResetPasswordInputModel
 import epicurius.utils.generateSecurePassword
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever

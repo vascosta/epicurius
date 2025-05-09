@@ -4,13 +4,10 @@ import epicurius.domain.exceptions.CollectionNotFound
 import epicurius.domain.exceptions.RecipeAlreadyInCollection
 import epicurius.domain.exceptions.RecipeNotAccessible
 import epicurius.domain.exceptions.RecipeNotFound
-import epicurius.http.collection.models.input.AddRecipeToCollectionInputModel
-import epicurius.http.collection.models.output.AddRecipeToCollectionOutputModel
-import jakarta.servlet.http.Cookie
-import org.mockito.kotlin.mock
+import epicurius.http.controllers.collection.models.input.AddRecipeToCollectionInputModel
+import epicurius.http.controllers.collection.models.output.AddRecipeToCollectionOutputModel
 import org.mockito.kotlin.whenever
 import org.springframework.http.HttpStatus
-import java.util.UUID.randomUUID
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith

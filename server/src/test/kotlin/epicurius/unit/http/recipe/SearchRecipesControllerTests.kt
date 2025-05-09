@@ -6,8 +6,8 @@ import epicurius.domain.PagingParams
 import epicurius.domain.recipe.Cuisine
 import epicurius.domain.recipe.MealType
 import epicurius.domain.recipe.RecipeInfo
-import epicurius.http.recipe.models.input.SearchRecipesInputModel
-import epicurius.http.recipe.models.output.SearchRecipesOutputModel
+import epicurius.http.controllers.recipe.models.input.SearchRecipesInputModel
+import epicurius.http.controllers.recipe.models.output.SearchRecipesOutputModel
 import org.junit.jupiter.api.Test
 import org.mockito.kotlin.whenever
 import org.springframework.http.HttpStatus

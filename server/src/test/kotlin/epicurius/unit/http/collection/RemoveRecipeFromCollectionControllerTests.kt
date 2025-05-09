@@ -4,7 +4,7 @@ import epicurius.domain.exceptions.CollectionNotFound
 import epicurius.domain.exceptions.NotTheCollectionOwner
 import epicurius.domain.exceptions.RecipeNotFound
 import epicurius.domain.exceptions.RecipeNotInCollection
-import epicurius.http.collection.models.output.RemoveRecipeFromCollectionOutputModel
+import epicurius.http.controllers.collection.models.output.RemoveRecipeFromCollectionOutputModel
 import org.mockito.kotlin.whenever
 import org.springframework.http.HttpStatus
 import kotlin.test.Test

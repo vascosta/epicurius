@@ -1,7 +1,6 @@
 package epicurius.unit.http.user
 
-import epicurius.http.user.models.output.GetUserIntolerancesOutputModel
-import epicurius.unit.http.recipe.RecipeHttpTest.Companion.testAuthenticatedUser
+import epicurius.http.controllers.user.models.output.GetUserIntolerancesOutputModel
 import org.mockito.kotlin.whenever
 import org.springframework.http.HttpStatus
 import kotlin.test.Test

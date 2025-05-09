@@ -6,8 +6,8 @@ import epicurius.domain.Intolerance
 import epicurius.domain.fridge.Product
 import epicurius.domain.user.AuthenticatedUser
 import epicurius.domain.user.User
-import epicurius.http.fridge.models.input.ProductInputModel
-import epicurius.http.fridge.models.input.UpdateProductInputModel
+import epicurius.http.controllers.fridge.models.input.ProductInputModel
+import epicurius.http.controllers.fridge.models.input.UpdateProductInputModel
 import epicurius.unit.http.HttpTest
 import epicurius.utils.generateEmail
 import epicurius.utils.generateRandomUsername

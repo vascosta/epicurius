@@ -4,7 +4,7 @@ import epicurius.domain.exceptions.RecipeNotAccessible
 import epicurius.domain.exceptions.RecipeNotFound
 import epicurius.domain.user.AuthenticatedUser
 import epicurius.domain.user.User
-import epicurius.http.recipe.models.output.GetRecipeOutputModel
+import epicurius.http.controllers.recipe.models.output.GetRecipeOutputModel
 import kotlinx.coroutines.runBlocking
 import org.mockito.kotlin.whenever
 import org.springframework.http.HttpStatus

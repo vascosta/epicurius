@@ -2,7 +2,7 @@ package epicurius.unit.http.fridge
 
 import epicurius.domain.exceptions.InvalidProduct
 import epicurius.domain.fridge.Fridge
-import epicurius.http.fridge.models.input.ProductInputModel
+import epicurius.http.controllers.fridge.models.input.ProductInputModel
 import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Test
 import org.mockito.kotlin.whenever

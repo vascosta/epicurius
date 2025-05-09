@@ -8,7 +8,7 @@ import epicurius.domain.recipe.IngredientUnit
 import epicurius.domain.recipe.Instructions
 import epicurius.domain.recipe.MealType
 import epicurius.domain.user.User
-import epicurius.http.recipe.models.input.CreateRecipeInputModel
+import epicurius.http.controllers.recipe.models.input.CreateRecipeInputModel
 import epicurius.repository.jdbi.recipe.models.JdbiRecipeModel
 import epicurius.unit.services.ServiceTest
 import epicurius.utils.generateEmail

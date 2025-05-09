@@ -6,8 +6,8 @@ import epicurius.domain.exceptions.InvalidCountry
 import epicurius.domain.exceptions.PasswordsDoNotMatch
 import epicurius.domain.exceptions.UserAlreadyExists
 import epicurius.domain.user.UserInfo
-import epicurius.http.user.models.input.UpdateUserInputModel
-import epicurius.http.user.models.output.UpdateUserOutputModel
+import epicurius.http.controllers.user.models.input.UpdateUserInputModel
+import epicurius.http.controllers.user.models.output.UpdateUserOutputModel
 import epicurius.utils.generateEmail
 import epicurius.utils.generateRandomUsername
 import epicurius.utils.generateSecurePassword

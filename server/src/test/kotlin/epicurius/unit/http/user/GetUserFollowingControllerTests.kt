@@ -2,8 +2,7 @@ package epicurius.unit.http.user
 
 import epicurius.domain.user.FollowUser
 import epicurius.domain.user.SearchUser
-import epicurius.http.user.models.output.GetUserFollowingOutputModel
-import epicurius.unit.http.recipe.RecipeHttpTest.Companion.testAuthenticatedUser
+import epicurius.http.controllers.user.models.output.GetUserFollowingOutputModel
 import org.mockito.kotlin.whenever
 import org.springframework.http.HttpStatus
 import kotlin.test.Test

@@ -5,7 +5,7 @@ import epicurius.domain.exceptions.NotTheRecipeAuthor
 import epicurius.domain.exceptions.RecipeNotFound
 import epicurius.domain.user.AuthenticatedUser
 import epicurius.domain.user.User
-import epicurius.http.recipe.models.output.UpdateRecipePicturesOutputModel
+import epicurius.http.controllers.recipe.models.output.UpdateRecipePicturesOutputModel
 import epicurius.services.recipe.models.UpdateRecipePicturesModel
 import kotlinx.coroutines.runBlocking
 import org.mockito.kotlin.whenever

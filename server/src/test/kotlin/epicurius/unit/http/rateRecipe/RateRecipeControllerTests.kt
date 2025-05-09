@@ -4,7 +4,7 @@ import epicurius.domain.exceptions.AuthorCannotRateOwnRecipe
 import epicurius.domain.exceptions.RecipeNotAccessible
 import epicurius.domain.exceptions.RecipeNotFound
 import epicurius.domain.exceptions.UserAlreadyRated
-import epicurius.http.rateRecipe.models.output.GetRecipeRateOutputModel
+import epicurius.http.controllers.rateRecipe.models.output.GetRecipeRateOutputModel
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.mockito.kotlin.verify

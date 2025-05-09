@@ -1,7 +1,7 @@
 package epicurius.unit.http.collection
 
 import epicurius.domain.exceptions.CollectionNotFound
-import epicurius.http.collection.models.output.GetCollectionOutputModel
+import epicurius.http.controllers.collection.models.output.GetCollectionOutputModel
 import org.mockito.kotlin.whenever
 import org.springframework.http.HttpStatus
 import kotlin.test.Test

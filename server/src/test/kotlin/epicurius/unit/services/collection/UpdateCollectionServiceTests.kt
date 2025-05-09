@@ -2,7 +2,7 @@ package epicurius.unit.services.collection
 
 import epicurius.domain.exceptions.CollectionNotFound
 import epicurius.domain.exceptions.NotTheCollectionOwner
-import epicurius.http.collection.models.input.UpdateCollectionInputModel
+import epicurius.http.controllers.collection.models.input.UpdateCollectionInputModel
 import org.mockito.kotlin.whenever
 import kotlin.test.Test
 import kotlin.test.assertEquals

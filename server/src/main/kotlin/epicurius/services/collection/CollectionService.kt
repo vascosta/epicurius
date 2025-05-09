@@ -14,8 +14,8 @@ import epicurius.domain.exceptions.RecipeNotInCollection
 import epicurius.domain.exceptions.UserNotFound
 import epicurius.domain.picture.PictureDomain.Companion.RECIPES_FOLDER
 import epicurius.domain.recipe.RecipeInfo
-import epicurius.http.collection.models.input.CreateCollectionInputModel
-import epicurius.http.collection.models.input.UpdateCollectionInputModel
+import epicurius.http.controllers.collection.models.input.CreateCollectionInputModel
+import epicurius.http.controllers.collection.models.input.UpdateCollectionInputModel
 import epicurius.repository.cloudStorage.manager.CloudStorageManager
 import epicurius.repository.jdbi.collection.models.JdbiCollectionModel
 import epicurius.repository.jdbi.recipe.models.JdbiRecipeInfo

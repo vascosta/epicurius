@@ -8,8 +8,8 @@ import epicurius.domain.fridge.FridgeDomain
 import epicurius.domain.fridge.Product
 import epicurius.domain.fridge.ProductInfo
 import epicurius.domain.fridge.UpdateProductInfo
-import epicurius.http.fridge.models.input.ProductInputModel
-import epicurius.http.fridge.models.input.UpdateProductInputModel
+import epicurius.http.controllers.fridge.models.input.ProductInputModel
+import epicurius.http.controllers.fridge.models.input.UpdateProductInputModel
 import epicurius.repository.spoonacular.manager.SpoonacularManager
 import epicurius.repository.transaction.TransactionManager
 import org.springframework.stereotype.Component

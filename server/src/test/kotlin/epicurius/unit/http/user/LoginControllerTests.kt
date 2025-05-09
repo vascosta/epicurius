@@ -3,7 +3,7 @@ package epicurius.unit.http.user
 import epicurius.domain.exceptions.IncorrectPassword
 import epicurius.domain.exceptions.UserAlreadyLoggedIn
 import epicurius.domain.exceptions.UserNotFound
-import epicurius.http.user.models.input.LoginInputModel
+import epicurius.http.controllers.user.models.input.LoginInputModel
 import epicurius.utils.generateSecurePassword
 import jakarta.servlet.http.Cookie
 import org.mockito.kotlin.verify

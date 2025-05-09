@@ -6,7 +6,7 @@ import epicurius.domain.PagingParams
 import epicurius.domain.picture.PictureDomain.Companion.RECIPES_FOLDER
 import epicurius.domain.recipe.Cuisine
 import epicurius.domain.recipe.MealType
-import epicurius.http.recipe.models.input.SearchRecipesInputModel
+import epicurius.http.controllers.recipe.models.input.SearchRecipesInputModel
 import epicurius.repository.jdbi.recipe.models.JdbiRecipeInfo
 import org.junit.jupiter.api.Test
 import org.mockito.kotlin.whenever
