@@ -17,9 +17,11 @@ import epicurius.http.controllers.user.models.output.GetUserProfileOutputModel
 import epicurius.http.controllers.user.models.output.SearchUsersOutputModel
 import epicurius.http.controllers.user.models.output.UpdateUserOutputModel
 import epicurius.http.controllers.user.models.output.UpdateUserProfilePictureOutputModel
-import epicurius.http.user.models.output.*
 import epicurius.http.utils.Uris
 import epicurius.services.user.UserService
+import epicurius.http.controllers.user.models.output.GetUserFollowersOutputModel
+import epicurius.http.controllers.user.models.output.GetUserFollowRequestsOutputModel
+import epicurius.http.controllers.user.models.output.GetUserFollowingOutputModel
 import jakarta.servlet.http.Cookie
 import jakarta.servlet.http.HttpServletResponse
 import jakarta.validation.Valid
