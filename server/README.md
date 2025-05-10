@@ -130,38 +130,66 @@ This package also contains the specific custom exceptions that are thrown by the
 
 ## Open-API Specification
 
-The __routes__ for the __API__ are shown below:
+The __routes__ for the __API__ are organized as follow:
+* __Authentication__, which contains the authentication routes - [see more](#authentication)
+* __User__, which contains the user routes - [see more](#user)
+* __Fridge__, which contains the user routes - [see more](#fridge)
 
-| Method        | Route                                     | Description                               | Authenticated |
-|---------------|-------------------------------------------|-------------------------------------------|---------------|
-| GET           | ``/api/signup``                           | Signup new user to the system             | No            |
-| POST          | ``/api/login``                            | Login a user user                         | No            |
-| PATCH         | ``/api/user/password``                    | Reset user's password                     | No            |
-|               |                                           |                                           |               |
-|               |                                           |                                           |               |
-| GET           | ``/api/users``                            | Search user                               | Yes           |
-| GET           | ``/api/users/profiles/{username}``        | Get user's profile                        | Yes           |
-| GET           | ``/api/user``                             | Get a user                                | Yes           |
-| GET           | ``/api/user/intolerances``                | Get user's intolerances                   | Yes           |
-| GET           | ``/api/user/diets``                       | Get user's diets                          | Yes           |
-| GET           | ``/api/user/follow-requests``             | Get user's follow requests                | Yes           |
-| GET           | ``/api/user/followers``                   | Get user's followers                      | Yes           |
-| GET           | ``/api/user/following``                   | Get user's following users                | Yes           |
-| POST          | ``/api/logout``                           | Logout a user user                        | Yes           |
-| PATCH         | ``/api/user``                             | Update a user                             | Yes           |
-| PATCH         | ``/api/user/picture``                     | Update user's profile picture             | Yes           |
-| PATCH         | ``/api/user/follow/{username}``           | Follow a user                             | Yes           |
-| PATCH         | ``/api/user/follow-requests/{username}``  | Add a request to follow a user            | Yes           |
-| DELETE        | ``/api/user/follow/{username}``           | Unfollow a user                           | Yes           |
-|               |                                           |                                           |               |
-|               |                                           |                                           |               |
-| GET           | ``/api/fridge``                           | Get user's fridge                         | Yes           |
-| GET           | ``/api/products``                         | Get valid products to add                 | Yes           |
-| POST          | ``/api/fridge``                           | Add product to the fridge                 | Yes           |
-| PATCH         | ``/api/fridge/product/{entryNumber}``     | Update product in the fridge              | Yes           |
-| PATCH         | ``/api/fridge/open/{entryNumber}``        | Add open date to fridge product           | Yes           |
-| DELETE        | ``/api/fridge/product/{entryNumber}``     | Delete product from fridge                | Yes           |
+#### Authentication
 
+| Method | Route                  | Description                     | Authenticated |
+|--------|------------------------|---------------------------------|:-------------:|
+| GET    | ``/api/signup``        | Signup a new user to the system | No            |
+| POST   | ``/api/login``         | Login a user user               | No            |
+| POST   | ``/api/logout``        | Logout a user user              | Yes           |
+
+
+#### User
+
+| Method  | Route                                    | Description                               | Authenticated | 
+|---------|------------------------------------------|-------------------------------------------|:-------------:|
+| GET     | ``/api/users``                           | Search for users                          | Yes           |
+| GET     | ``/api/users/{username}``                | Get a user's profile                      | Yes           |
+| GET     | ``/api/user``                            | Get a user                                | Yes           |
+| GET     | ``/api/user/intolerances``               | Get a user's intolerances                 | Yes           |
+| GET     | ``/api/user/diets``                      | Get a user's diets                        | Yes           |
+| GET     | ``/api/user/follow-requests``            | Get a user's follow requests              | Yes           |
+| GET     | ``/api/user/followers``                  | Get a user's followers                    | Yes           |
+| GET     | ``/api/user/following``                  | Get a user's following users              | Yes           |
+| PATCH   | ``/api/user``                            | Update a user                             | Yes           |
+| PATCH   | ``/api/user/picture``                    | Update a user's profile picture           | Yes           |
+| PATCH   | ``/api/user/follow/{username}``          | Follow a user                             | Yes           |
+| PATCH   | ``/api/user/follow-requests/{username}`` | Accept, Reject or Cancel a follow request | Yes           |
+| PATCH   | ``/api/user/password``                   | Reset a user's password                   | No            |
+| DELETE  | ``/api/user/follow/{username}``          | Unfollow a user                           | Yes           |
+
+
+#### Fridge
+
+| Method  | Route                                 | Description                      | Authenticated | 
+|---------|---------------------------------------|----------------------------------|:-------------:|
+| GET     | ``/api/fridge``                       | Get a user's fridge              | Yes           |
+| POST    | ``/api/fridge``                       | Add a product to the fridge      | Yes           |
+| PATCH   | ``/api/fridge/product/{entryNumber}`` | Update a product in the fridge   | Yes           |
+| DELETE  | ``/api/fridge/product/{entryNumber}`` | Delete a product from the fridge | Yes           |
+
+
+### Recipe
+
+
+### Collection
+
+
+### MealPlanner
+
+
+### Ingredients
+
+
+### Feed
+
+
+### Menu
 
 ### Authentication
 
