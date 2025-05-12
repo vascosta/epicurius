@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.exc.MismatchedInputException
 import epicurius.domain.exceptions.AuthorCannotDeleteRating
 import epicurius.domain.exceptions.AuthorCannotRateOwnRecipe
 import epicurius.domain.exceptions.AuthorCannotUpdateRating
+import epicurius.domain.exceptions.DailyMealPlannerNotFound
 import epicurius.domain.exceptions.DurationIsNull
 import epicurius.domain.exceptions.FollowRequestAlreadyBeenSent
 import epicurius.domain.exceptions.FollowRequestNotFound
@@ -22,7 +23,6 @@ import epicurius.domain.exceptions.InvalidNumberOfRecipePictures
 import epicurius.domain.exceptions.InvalidProduct
 import epicurius.domain.exceptions.InvalidToken
 import epicurius.domain.exceptions.MealPlannerAlreadyExists
-import epicurius.domain.exceptions.DailyMealPlannerNotFound
 import epicurius.domain.exceptions.MealTimeAlreadyExistsInPlanner
 import epicurius.domain.exceptions.NotTheRecipeAuthor
 import epicurius.domain.exceptions.PasswordsDoNotMatch

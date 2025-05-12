@@ -9,7 +9,6 @@ import org.mockito.kotlin.whenever
 import java.time.LocalDate
 import java.util.UUID.randomUUID
 import kotlin.test.Test
-import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 import kotlin.test.assertNotNull
 

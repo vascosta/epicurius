@@ -8,7 +8,7 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 
-class UpdateCollectionServiceTests: CollectionServiceTest() {
+class UpdateCollectionServiceTests : CollectionServiceTest() {
 
     private val updateCollectionInputInfo = UpdateCollectionInputModel("New Name")
 

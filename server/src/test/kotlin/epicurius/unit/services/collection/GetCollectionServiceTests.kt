@@ -7,7 +7,7 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 
-class GetCollectionServiceTests: CollectionServiceTest() {
+class GetCollectionServiceTests : CollectionServiceTest() {
 
     @Test
     fun `Should retrieve a collection successfully`() {

@@ -10,7 +10,6 @@ import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import java.time.LocalDate
 import kotlin.test.Test
-import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 import kotlin.test.assertNotNull
 
@@ -44,7 +43,7 @@ class CreateUserServiceTests : UserServiceTest() {
         val createToken = createUser(username, email, country, password, password)
 
         // then the user is created successfully
-        verify(jdbiTokenRepositoryMock).createToken(mockTokenHash,mockLastUsed, mockUserId)
+        verify(jdbiTokenRepositoryMock).createToken(mockTokenHash, mockLastUsed, mockUserId)
         assertNotNull(createToken)
     }
 

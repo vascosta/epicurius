@@ -7,8 +7,6 @@ import epicurius.domain.user.User
 import epicurius.unit.http.HttpTest
 import epicurius.utils.generateEmail
 import epicurius.utils.generateRandomUsername
-import jakarta.servlet.http.HttpServletResponse
-import org.mockito.Mockito.mock
 import java.util.UUID.randomUUID
 
 open class UserHttpTest : HttpTest() {

@@ -38,7 +38,6 @@ class SignUpControllerTests : UserHttpTest() {
                 .createUser(signUpInfo.name, signUpInfo.email, signUpInfo.country, signUpInfo.password, signUpInfo.confirmPassword)
         ).thenReturn(mockToken)
 
-
         // when creating a user
         val response = signUp(signUpInfo, mockResponse)
 

@@ -12,7 +12,7 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 
-class AddRecipeToCollectionControllerTests: CollectionHttpTest() {
+class AddRecipeToCollectionControllerTests : CollectionHttpTest() {
 
     private val addRecipeToCollectionInputInfo = AddRecipeToCollectionInputModel(RECIPE_ID)
 
@@ -24,8 +24,10 @@ class AddRecipeToCollectionControllerTests: CollectionHttpTest() {
         val mockUpdatedCollection = testFavouriteCollection.copy(
             recipes = listOf(testRecipeInfo)
         )
-        whenever(collectionServiceMock.addRecipeToCollection(
-            testPublicAuthenticatedUser.user.id, testPublicAuthenticatedUser.user.name, FAVOURITE_COLLECTION_ID, RECIPE_ID)
+        whenever(
+            collectionServiceMock.addRecipeToCollection(
+                testPublicAuthenticatedUser.user.id, testPublicAuthenticatedUser.user.name, FAVOURITE_COLLECTION_ID, RECIPE_ID
+            )
         ).thenReturn(mockUpdatedCollection)
         whenever(authenticationRefreshHandlerMock.refreshToken(testPublicAuthenticatedUser.token)).thenReturn(mockCookie)
 
@@ -49,8 +51,10 @@ class AddRecipeToCollectionControllerTests: CollectionHttpTest() {
         val nonExistingCollectionId = 1904
 
         // mock
-        whenever(collectionServiceMock.addRecipeToCollection(
-            testPublicAuthenticatedUser.user.id, testPublicAuthenticatedUser.user.name, nonExistingCollectionId, RECIPE_ID)
+        whenever(
+            collectionServiceMock.addRecipeToCollection(
+                testPublicAuthenticatedUser.user.id, testPublicAuthenticatedUser.user.name, nonExistingCollectionId, RECIPE_ID
+            )
         ).thenThrow(CollectionNotFound())
 
         // when adding the recipe to the collection
@@ -67,8 +71,10 @@ class AddRecipeToCollectionControllerTests: CollectionHttpTest() {
         // given a collection id (FAVOURITE_COLLECTION_ID) and a recipe id (RECIPE_ID)
 
         // mock
-        whenever(collectionServiceMock.addRecipeToCollection(
-            testPrivateAuthenticatedUser.user.id, testPrivateAuthenticatedUser.user.name, FAVOURITE_COLLECTION_ID, RECIPE_ID)
+        whenever(
+            collectionServiceMock.addRecipeToCollection(
+                testPrivateAuthenticatedUser.user.id, testPrivateAuthenticatedUser.user.name, FAVOURITE_COLLECTION_ID, RECIPE_ID
+            )
         ).thenThrow(CollectionNotFound())
 
         // when adding the recipe to the collection
@@ -86,8 +92,10 @@ class AddRecipeToCollectionControllerTests: CollectionHttpTest() {
         val nonExistingRecipeId = 1904
 
         // mock
-        whenever(collectionServiceMock.addRecipeToCollection(
-            testPublicAuthenticatedUser.user.id, testPublicAuthenticatedUser.user.name, FAVOURITE_COLLECTION_ID, nonExistingRecipeId)
+        whenever(
+            collectionServiceMock.addRecipeToCollection(
+                testPublicAuthenticatedUser.user.id, testPublicAuthenticatedUser.user.name, FAVOURITE_COLLECTION_ID, nonExistingRecipeId
+            )
         ).thenThrow(RecipeNotFound())
 
         // when adding the recipe to the collection
@@ -104,8 +112,10 @@ class AddRecipeToCollectionControllerTests: CollectionHttpTest() {
         // given a collection id (FAVOURITE_COLLECTION_ID) and a recipe id (RECIPE_ID)
 
         // mock
-        whenever(collectionServiceMock.addRecipeToCollection(
-            testPrivateAuthenticatedUser.user.id, testPrivateAuthenticatedUser.user.name, FAVOURITE_COLLECTION_ID, RECIPE_ID)
+        whenever(
+            collectionServiceMock.addRecipeToCollection(
+                testPrivateAuthenticatedUser.user.id, testPrivateAuthenticatedUser.user.name, FAVOURITE_COLLECTION_ID, RECIPE_ID
+            )
         ).thenThrow(RecipeNotAccessible())
 
         // when adding the recipe to the collection
@@ -122,8 +132,10 @@ class AddRecipeToCollectionControllerTests: CollectionHttpTest() {
         // given a collection id (KITCHEN_BOOK_COLLECTION_ID) and a recipe id (RECIPE_ID)
 
         // mock
-        whenever(collectionServiceMock.addRecipeToCollection(
-            testPublicAuthenticatedUser.user.id, testPublicAuthenticatedUser.user.name, KITCHEN_BOOK_COLLECTION_ID, RECIPE_ID)
+        whenever(
+            collectionServiceMock.addRecipeToCollection(
+                testPublicAuthenticatedUser.user.id, testPublicAuthenticatedUser.user.name, KITCHEN_BOOK_COLLECTION_ID, RECIPE_ID
+            )
         ).thenThrow(RecipeNotFound())
 
         // when adding the recipe to the collection
@@ -140,8 +152,10 @@ class AddRecipeToCollectionControllerTests: CollectionHttpTest() {
         // given a collection id (FAVOURITE_COLLECTION_ID) and a recipe id (RECIPE_ID)
 
         // mock
-        whenever(collectionServiceMock.addRecipeToCollection(
-            testPublicAuthenticatedUser.user.id, testPublicAuthenticatedUser.user.name, FAVOURITE_COLLECTION_ID, RECIPE_ID)
+        whenever(
+            collectionServiceMock.addRecipeToCollection(
+                testPublicAuthenticatedUser.user.id, testPublicAuthenticatedUser.user.name, FAVOURITE_COLLECTION_ID, RECIPE_ID
+            )
         ).thenThrow(RecipeAlreadyInCollection())
 
         // when adding the recipe to the collection

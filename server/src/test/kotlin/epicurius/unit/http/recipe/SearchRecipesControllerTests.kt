@@ -60,7 +60,7 @@ class SearchRecipesControllerTests : RecipeHttpTest() {
         whenever(authenticationRefreshHandlerMock.refreshToken(testAuthenticatedUser.token)).thenReturn(mockCookie)
 
         // when searching for recipes by name
-        val response = searchRecipes(testAuthenticatedUser, searchRecipesInputInfoWithName.name, response =  mockResponse)
+        val response = searchRecipes(testAuthenticatedUser, searchRecipesInputInfoWithName.name, response = mockResponse)
         val body = response.body as SearchRecipesOutputModel
 
         // then a list containing the recipe should is returned successfully

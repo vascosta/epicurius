@@ -1,10 +1,10 @@
 package epicurius.http.controllers.rateRecipe
 
 import epicurius.domain.user.AuthenticatedUser
-import epicurius.http.pipeline.authentication.AuthenticationRefreshHandler
-import epicurius.http.pipeline.authentication.addCookie
 import epicurius.http.controllers.rateRecipe.models.input.RateRecipeInputModel
 import epicurius.http.controllers.rateRecipe.models.output.GetRecipeRateOutputModel
+import epicurius.http.pipeline.authentication.AuthenticationRefreshHandler
+import epicurius.http.pipeline.authentication.addCookie
 import epicurius.http.utils.Uris
 import epicurius.services.rateRecipe.RateRecipeService
 import jakarta.servlet.http.HttpServletResponse

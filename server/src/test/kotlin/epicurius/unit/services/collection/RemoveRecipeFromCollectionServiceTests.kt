@@ -10,7 +10,7 @@ import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 import kotlin.test.assertTrue
 
-class RemoveRecipeFromCollectionServiceTests: CollectionServiceTest() {
+class RemoveRecipeFromCollectionServiceTests : CollectionServiceTest() {
 
     @Test
     fun `Should remove a recipe from a collection successfully`() {

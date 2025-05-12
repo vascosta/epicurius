@@ -4,7 +4,6 @@ import epicurius.domain.exceptions.FollowRequestNotFound
 import epicurius.domain.exceptions.InvalidSelfCancelFollowRequest
 import epicurius.domain.exceptions.UserNotFound
 import epicurius.domain.user.FollowRequestType
-import epicurius.unit.http.recipe.RecipeHttpTest.Companion.testAuthenticatedUser
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.springframework.http.HttpStatus

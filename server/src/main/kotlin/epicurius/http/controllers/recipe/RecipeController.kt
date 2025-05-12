@@ -7,8 +7,6 @@ import epicurius.domain.PagingParams
 import epicurius.domain.recipe.Cuisine
 import epicurius.domain.recipe.MealType
 import epicurius.domain.user.AuthenticatedUser
-import epicurius.http.pipeline.authentication.AuthenticationRefreshHandler
-import epicurius.http.pipeline.authentication.addCookie
 import epicurius.http.controllers.recipe.models.input.CreateRecipeInputModel
 import epicurius.http.controllers.recipe.models.input.SearchRecipesInputModel
 import epicurius.http.controllers.recipe.models.input.UpdateRecipeInputModel
@@ -17,6 +15,8 @@ import epicurius.http.controllers.recipe.models.output.GetRecipeOutputModel
 import epicurius.http.controllers.recipe.models.output.SearchRecipesOutputModel
 import epicurius.http.controllers.recipe.models.output.UpdateRecipeOutputModel
 import epicurius.http.controllers.recipe.models.output.UpdateRecipePicturesOutputModel
+import epicurius.http.pipeline.authentication.AuthenticationRefreshHandler
+import epicurius.http.pipeline.authentication.addCookie
 import epicurius.http.utils.Uris
 import epicurius.http.utils.Uris.Recipe.recipe
 import epicurius.services.recipe.RecipeService

@@ -8,15 +8,17 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 
-class GetCollectionControllerTests: CollectionHttpTest() {
+class GetCollectionControllerTests : CollectionHttpTest() {
 
     @Test
     fun `Should retrieve a collection successfully`() {
         // given a collection id (FAVOURITE_COLLECTION_ID)
 
         // mock
-        whenever(collectionServiceMock.getCollection(
-            testPublicAuthenticatedUser.user.id, testPublicAuthenticatedUser.user.name, FAVOURITE_COLLECTION_ID)
+        whenever(
+            collectionServiceMock.getCollection(
+                testPublicAuthenticatedUser.user.id, testPublicAuthenticatedUser.user.name, FAVOURITE_COLLECTION_ID
+            )
         ).thenReturn(testFavouriteCollection)
         whenever(authenticationRefreshHandlerMock.refreshToken(testPublicAuthenticatedUser.token)).thenReturn(mockCookie)
 
@@ -35,8 +37,10 @@ class GetCollectionControllerTests: CollectionHttpTest() {
         val nonExistingCollectionId = 9999
 
         // mock
-        whenever(collectionServiceMock.getCollection(
-            testPublicAuthenticatedUser.user.id, testPublicAuthenticatedUser.user.name, nonExistingCollectionId)
+        whenever(
+            collectionServiceMock.getCollection(
+                testPublicAuthenticatedUser.user.id, testPublicAuthenticatedUser.user.name, nonExistingCollectionId
+            )
         ).thenThrow(CollectionNotFound())
 
         // when retrieving the collection
@@ -49,8 +53,10 @@ class GetCollectionControllerTests: CollectionHttpTest() {
         // given a collection id (FAVOURITE_COLLECTION_ID)
 
         // mock
-        whenever(collectionServiceMock.getCollection(
-            testPrivateAuthenticatedUser.user.id, testPrivateAuthenticatedUser.user.name, FAVOURITE_COLLECTION_ID)
+        whenever(
+            collectionServiceMock.getCollection(
+                testPrivateAuthenticatedUser.user.id, testPrivateAuthenticatedUser.user.name, FAVOURITE_COLLECTION_ID
+            )
         ).thenThrow(CollectionNotFound())
 
         // when retrieving the collection
@@ -65,8 +71,10 @@ class GetCollectionControllerTests: CollectionHttpTest() {
         // given a collection id (KITCHEN_BOOK_COLLECTION_ID)
 
         // mock
-        whenever(collectionServiceMock.getCollection(
-            testPrivateAuthenticatedUser.user.id, testPrivateAuthenticatedUser.user.name, KITCHEN_BOOK_COLLECTION_ID)
+        whenever(
+            collectionServiceMock.getCollection(
+                testPrivateAuthenticatedUser.user.id, testPrivateAuthenticatedUser.user.name, KITCHEN_BOOK_COLLECTION_ID
+            )
         ).thenThrow(CollectionNotFound())
 
         // when retrieving the collection

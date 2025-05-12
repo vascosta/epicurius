@@ -1,15 +1,9 @@
 package epicurius.unit.http.feed
 
-import epicurius.domain.Diet
-import epicurius.domain.Intolerance
 import epicurius.domain.recipe.Cuisine
 import epicurius.domain.recipe.MealType
 import epicurius.domain.recipe.RecipeInfo
-import epicurius.domain.user.AuthenticatedUser
-import epicurius.domain.user.User
 import epicurius.unit.http.HttpTest
-import epicurius.utils.generateEmail
-import epicurius.utils.generateRandomUsername
 import java.util.UUID.randomUUID
 
 open class FeedHttpTest : HttpTest() {

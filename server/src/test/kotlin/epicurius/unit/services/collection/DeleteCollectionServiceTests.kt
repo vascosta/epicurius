@@ -7,7 +7,7 @@ import org.mockito.kotlin.whenever
 import kotlin.test.Test
 import kotlin.test.assertFailsWith
 
-class DeleteCollectionServiceTests: CollectionServiceTest() {
+class DeleteCollectionServiceTests : CollectionServiceTest() {
 
     @Test
     fun `Should delete a collection successfully`() {

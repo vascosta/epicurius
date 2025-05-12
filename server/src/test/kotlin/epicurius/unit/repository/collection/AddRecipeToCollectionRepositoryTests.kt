@@ -7,7 +7,7 @@ import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 import kotlin.test.assertTrue
 
-class AddRecipeToCollectionRepositoryTests: CollectionRepositoryTest() {
+class AddRecipeToCollectionRepositoryTests : CollectionRepositoryTest() {
 
     private val testRecipe = createTestRecipe(tm, fs, testOwner)
     private val testRecipeInfo = JdbiRecipeInfo(

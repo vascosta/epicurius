@@ -10,7 +10,7 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 
-class CreateCollectionControllerTests: CollectionHttpTest() {
+class CreateCollectionControllerTests : CollectionHttpTest() {
 
     private val createCollectionInputInfo = CreateCollectionInputModel("Test Collection", CollectionType.FAVOURITE)
 

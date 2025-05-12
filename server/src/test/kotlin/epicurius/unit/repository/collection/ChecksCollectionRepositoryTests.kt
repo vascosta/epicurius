@@ -4,7 +4,7 @@ import kotlin.test.Test
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 
-class ChecksCollectionRepositoryTests: CollectionRepositoryTest() {
+class ChecksCollectionRepositoryTests : CollectionRepositoryTest() {
 
     @Test
     fun `Should check if a user is the owner of a collection successfully`() {

@@ -15,7 +15,7 @@ import epicurius.utils.generateRandomRecipeName
 import epicurius.utils.generateRandomUsername
 import java.time.LocalDate
 
-open class CollectionServiceTest: ServiceTest() {
+open class CollectionServiceTest : ServiceTest() {
 
     companion object {
         const val FAVOURITE_COLLECTION_ID = 1

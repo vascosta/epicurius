@@ -3,7 +3,7 @@ package epicurius.unit.repository.collection
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
-class UpdateCollectionRepositoryTests: CollectionRepositoryTest() {
+class UpdateCollectionRepositoryTests : CollectionRepositoryTest() {
 
     @Test
     fun `Should update a collection and then retrieve it successfully`() {

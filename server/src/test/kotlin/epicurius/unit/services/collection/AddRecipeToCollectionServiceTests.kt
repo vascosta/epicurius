@@ -12,7 +12,7 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 
-class AddRecipeToCollectionServiceTests: CollectionServiceTest() {
+class AddRecipeToCollectionServiceTests : CollectionServiceTest() {
 
     @Test
     fun `Should add a recipe to a collection successfully`() {
@@ -167,6 +167,4 @@ class AddRecipeToCollectionServiceTests: CollectionServiceTest() {
             )
         }
     }
-
-
 }

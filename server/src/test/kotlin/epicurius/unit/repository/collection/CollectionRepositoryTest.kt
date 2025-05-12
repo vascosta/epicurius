@@ -1,13 +1,6 @@
 package epicurius.unit.repository.collection
 
-import epicurius.domain.Diet
-import epicurius.domain.Intolerance
 import epicurius.domain.collection.CollectionType
-import epicurius.domain.recipe.Cuisine
-import epicurius.domain.recipe.Ingredient
-import epicurius.domain.recipe.IngredientUnit
-import epicurius.domain.recipe.MealType
-import epicurius.repository.jdbi.recipe.models.JdbiCreateRecipeModel
 import epicurius.unit.repository.RepositoryTest
 import epicurius.utils.createTestCollection
 import epicurius.utils.createTestRecipe

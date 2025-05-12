@@ -5,8 +5,8 @@ import epicurius.domain.collection.CollectionType
 import epicurius.domain.exceptions.CollectionAlreadyExists
 import epicurius.domain.exceptions.CollectionNotAccessible
 import epicurius.domain.exceptions.CollectionNotFound
-import epicurius.domain.exceptions.NotTheRecipeAuthor
 import epicurius.domain.exceptions.NotTheCollectionOwner
+import epicurius.domain.exceptions.NotTheRecipeAuthor
 import epicurius.domain.exceptions.RecipeAlreadyInCollection
 import epicurius.domain.exceptions.RecipeNotAccessible
 import epicurius.domain.exceptions.RecipeNotFound
@@ -75,8 +75,7 @@ class CollectionService(private val tm: TransactionManager, private val cs: Clou
         val jdbiRecipeModel = getJdbiRecipeModel(recipeId)
         if (jdbiCollectionModel.type == CollectionType.FAVOURITE) {
             checkRecipeAccessibility(jdbiRecipeModel.authorUsername, username)
-        }
-        else if (jdbiRecipeModel.authorId != userId) throw NotTheRecipeAuthor()
+        } else if (jdbiRecipeModel.authorId != userId) throw NotTheRecipeAuthor()
 
         if (checkIfRecipeInCollection(collectionId, recipeId)) throw RecipeAlreadyInCollection()
 

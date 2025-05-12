@@ -10,7 +10,7 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 
-class UpdateCollectionControllerTests: CollectionHttpTest() {
+class UpdateCollectionControllerTests : CollectionHttpTest() {
 
     private val updateCollectionInputInfo = UpdateCollectionInputModel("New Name")
 
@@ -19,8 +19,9 @@ class UpdateCollectionControllerTests: CollectionHttpTest() {
         // given a collection id (FAVOURITE_COLLECTION_ID) and new information for updating it (updateCollectionInputInfo)
 
         // mock
-        whenever(collectionServiceMock
-            .updateCollection(testPublicAuthenticatedUser.user.id, FAVOURITE_COLLECTION_ID, updateCollectionInputInfo)
+        whenever(
+            collectionServiceMock
+                .updateCollection(testPublicAuthenticatedUser.user.id, FAVOURITE_COLLECTION_ID, updateCollectionInputInfo)
         ).thenReturn(testFavouriteCollection.copy(name = updateCollectionInputInfo.name!!))
         whenever(authenticationRefreshHandlerMock.refreshToken(testPublicAuthenticatedUser.token)).thenReturn(mockCookie)
 
@@ -41,8 +42,9 @@ class UpdateCollectionControllerTests: CollectionHttpTest() {
         val nonExistingCollectionId = 1904
 
         // mock
-        whenever(collectionServiceMock
-            .updateCollection(testPublicAuthenticatedUser.user.id, nonExistingCollectionId, updateCollectionInputInfo)
+        whenever(
+            collectionServiceMock
+                .updateCollection(testPublicAuthenticatedUser.user.id, nonExistingCollectionId, updateCollectionInputInfo)
         ).thenThrow(CollectionNotFound())
 
         // when updating the collection
@@ -59,8 +61,9 @@ class UpdateCollectionControllerTests: CollectionHttpTest() {
         // given a collection id (FAVOURITE_COLLECTION_ID) and new information for updating it (updateCollectionInputInfo)
 
         // mock
-        whenever(collectionServiceMock
-            .updateCollection(testPrivateAuthenticatedUser.user.id, FAVOURITE_COLLECTION_ID, updateCollectionInputInfo)
+        whenever(
+            collectionServiceMock
+                .updateCollection(testPrivateAuthenticatedUser.user.id, FAVOURITE_COLLECTION_ID, updateCollectionInputInfo)
         ).thenThrow(NotTheCollectionOwner())
 
         // when updating the collection

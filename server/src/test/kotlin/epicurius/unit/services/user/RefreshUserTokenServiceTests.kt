@@ -8,7 +8,7 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 
-class RefreshUserTokenServiceTests: UserServiceTest() {
+class RefreshUserTokenServiceTests : UserServiceTest() {
 
     @Test
     fun `Should refresh the user's token successfully`() {
@@ -34,7 +34,6 @@ class RefreshUserTokenServiceTests: UserServiceTest() {
         verify(jdbiTokenRepositoryMock).deleteToken(publicTestUser.id)
         verify(jdbiTokenRepositoryMock).createToken(mockNewTokenHash, mockLastUsed, publicTestUser.id)
         assertEquals(mockNewToken, newTokenForUser)
-
     }
 
     @Test
@@ -52,5 +51,4 @@ class RefreshUserTokenServiceTests: UserServiceTest() {
             refreshUserToken(invalidToken)
         }
     }
-
 }

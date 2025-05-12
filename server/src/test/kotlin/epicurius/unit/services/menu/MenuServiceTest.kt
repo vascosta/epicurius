@@ -5,12 +5,8 @@ import epicurius.domain.Intolerance
 import epicurius.domain.recipe.Cuisine
 import epicurius.domain.recipe.MealType
 import epicurius.repository.jdbi.recipe.models.JdbiRecipeInfo
-import epicurius.repository.jdbi.recipe.models.JdbiRecipeModel
 import epicurius.unit.services.ServiceTest
-import epicurius.utils.generateRandomRecipeIngredients
 import epicurius.utils.generateRandomRecipeName
-import epicurius.utils.generateRandomUsername
-import java.time.LocalDate
 
 open class MenuServiceTest : ServiceTest() {
 

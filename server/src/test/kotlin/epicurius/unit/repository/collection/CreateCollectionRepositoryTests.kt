@@ -8,7 +8,7 @@ import kotlin.test.assertNotNull
 import kotlin.test.assertNull
 import kotlin.test.assertTrue
 
-class CreateCollectionRepositoryTests: CollectionRepositoryTest() {
+class CreateCollectionRepositoryTests : CollectionRepositoryTest() {
 
     @Test
     fun `Should create a collection and then retrieve it successfully`() {

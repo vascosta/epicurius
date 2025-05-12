@@ -8,7 +8,7 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 
-class CreateCollectionServiceTests: CollectionServiceTest() {
+class CreateCollectionServiceTests : CollectionServiceTest() {
 
     private val createCollectionInputInfo = CreateCollectionInputModel("Test Collection", CollectionType.FAVOURITE)
 

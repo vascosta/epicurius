@@ -4,7 +4,6 @@ import epicurius.domain.exceptions.FollowRequestAlreadyBeenSent
 import epicurius.domain.exceptions.InvalidSelfFollow
 import epicurius.domain.exceptions.UserAlreadyBeingFollowed
 import epicurius.domain.exceptions.UserNotFound
-import epicurius.unit.http.recipe.RecipeHttpTest.Companion.testAuthenticatedUser
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.springframework.http.HttpStatus
@@ -22,7 +21,7 @@ class FollowControllerTests : UserHttpTest() {
         whenever(authenticationRefreshHandlerMock.refreshToken(privateTestUser.token)).thenReturn(mockCookie)
 
         // when following a public user
-        val response = follow(privateTestUser, publicTestUsername,  mockResponse)
+        val response = follow(privateTestUser, publicTestUsername, mockResponse)
 
         // then the user is followed successfully
         verify(userServiceMock).follow(privateTestUser.user.id, privateTestUsername, publicTestUsername)

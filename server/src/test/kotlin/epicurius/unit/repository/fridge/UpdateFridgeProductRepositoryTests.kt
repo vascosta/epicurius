@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import java.time.LocalDate
 import kotlin.test.Test
 
-class UpdateFridgeProductRepositoryTests: FridgeRepositoryTest() {
+class UpdateFridgeProductRepositoryTests : FridgeRepositoryTest() {
 
     @Test
     fun `Update product in user fridge successfully`() {
