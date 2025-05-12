@@ -30,7 +30,7 @@ class IngredientsController(
     suspend fun getIngredients(
         authenticatedUser: AuthenticatedUser,
         @RequestParam partial: String,
-        response : HttpServletResponse
+        response: HttpServletResponse
     ): ResponseEntity<*> {
         val ingredients = ingredientsService.getIngredients(partial)
         return ResponseEntity

@@ -1,7 +1,7 @@
 package epicurius.services.mealPlanner
 
-import epicurius.domain.exceptions.MealPlannerAlreadyExists
 import epicurius.domain.exceptions.DailyMealPlannerNotFound
+import epicurius.domain.exceptions.MealPlannerAlreadyExists
 import epicurius.domain.exceptions.MealTimeAlreadyExistsInPlanner
 import epicurius.domain.exceptions.MealTimeDoesNotExist
 import epicurius.domain.exceptions.RecipeIsInvalidForMealTime
@@ -10,11 +10,11 @@ import epicurius.domain.exceptions.RecipeNotFound
 import epicurius.domain.mealPlanner.DailyMealPlanner
 import epicurius.domain.mealPlanner.MealPlanner
 import epicurius.domain.mealPlanner.MealTime
-import epicurius.domain.picture.PictureDomain.Companion.RECIPES_FOLDER
 import epicurius.http.controllers.mealPlanner.models.input.AddMealPlannerInputModel
 import epicurius.http.controllers.mealPlanner.models.input.UpdateMealPlannerInputModel
 import epicurius.repository.cloudStorage.manager.CloudStorageManager
 import epicurius.repository.jdbi.mealPlanner.models.JdbiDailyMealPlanner
+import epicurius.repository.jdbi.mealPlanner.models.JdbiDailyMealPlanner.Companion.toDailyMealPlannerList
 import epicurius.repository.jdbi.recipe.models.JdbiRecipeModel
 import epicurius.repository.transaction.TransactionManager
 import org.springframework.stereotype.Component
@@ -33,26 +33,17 @@ class MealPlannerService(
 
     fun getWeeklyMealPlanner(userId: Int): MealPlanner {
         val jdbiPlanner = tm.run { it.mealPlannerRepository.getWeeklyMealPlanner(userId) }
-        val planner = getRecipeInfoPicture(jdbiPlanner.planner)
+        if (jdbiPlanner.planner.isEmpty()) return MealPlanner(emptyList())
+        val planner = jdbiPlanner.planner.toDailyMealPlannerList(cs)
         return MealPlanner(planner)
     }
 
     fun getDailyMealPlanner(userId: Int, date: LocalDate): DailyMealPlanner {
         val jdbiDailyPlanner = checkIfDailyMealPlannerExists(userId, date) ?: throw DailyMealPlannerNotFound()
-
-        val dailyMeals = jdbiDailyPlanner.meals.mapValues { (_, recipe) ->
-            val picture = cs.pictureRepository.getPicture(recipe.picturesNames.first(), RECIPES_FOLDER)
-            recipe.toRecipeInfo(picture)
-        }
-
-        return DailyMealPlanner(
-            date = jdbiDailyPlanner.date,
-            maxCalories = jdbiDailyPlanner.maxCalories,
-            meals = dailyMeals
-        )
+        return jdbiDailyPlanner.toDailyMealPlanner(cs)
     }
 
-    fun addDailyMealPlanner(userId: Int, username: String, date: LocalDate, info: AddMealPlannerInputModel): DailyMealPlanner {
+    fun addRecipeDailyMealPlanner(userId: Int, username: String, date: LocalDate, info: AddMealPlannerInputModel): DailyMealPlanner {
         if (checkIfDailyMealPlannerExists(userId, date) == null) throw DailyMealPlannerNotFound()
         if (checkIfMealTimeAlreadyExistsInPlanner(userId, date, info.mealTime))
             throw MealTimeAlreadyExistsInPlanner(info.mealTime)
@@ -61,10 +52,9 @@ class MealPlannerService(
         if (!info.mealTime.isMealTypeAllowedForMealTime(recipe.mealType)) throw RecipeIsInvalidForMealTime()
 
         val jdbiPlanner = tm.run {
-            it.mealPlannerRepository.addDailyMealPlanner(userId, date, info.recipeId, info.mealTime)
+            it.mealPlannerRepository.addRecipeDailyMealPlanner(userId, date, info.recipeId, info.mealTime)
         }
-        val planner = getRecipeInfoPicture(listOf(jdbiPlanner))
-        return DailyMealPlanner(date, jdbiPlanner.maxCalories, planner.first().meals)
+        return jdbiPlanner.toDailyMealPlanner(cs)
     }
 
     fun updateDailyMealPlanner(
@@ -83,11 +73,7 @@ class MealPlannerService(
         val jdbiDailyPlanner = tm.run {
             it.mealPlannerRepository.updateDailyMealPlanner(userId, date, info.recipeId, info.mealTime)
         }
-        val meals = jdbiDailyPlanner.meals.mapValues { (_, recipe) ->
-            val picture = cs.pictureRepository.getPicture(recipe.picturesNames.first(), RECIPES_FOLDER)
-            recipe.toRecipeInfo(picture)
-        }
-        return DailyMealPlanner(date, jdbiDailyPlanner.maxCalories, meals)
+        return jdbiDailyPlanner.toDailyMealPlanner(cs)
     }
 
     fun updateDailyCalories(userId: Int, date: LocalDate, maxCalories: Int?): DailyMealPlanner {
@@ -97,16 +83,7 @@ class MealPlannerService(
             it.mealPlannerRepository.updateDailyCalories(userId, date, maxCalories)
         }
 
-        val dailyMeals = jdbiDailyPlanner.meals.mapValues { (_, recipe) ->
-            val picture = cs.pictureRepository.getPicture(recipe.picturesNames.first(), RECIPES_FOLDER)
-            recipe.toRecipeInfo(picture)
-        }
-
-        return DailyMealPlanner(
-            date = jdbiDailyPlanner.date,
-            maxCalories = jdbiDailyPlanner.maxCalories,
-            meals = dailyMeals
-        )
+        return jdbiDailyPlanner.toDailyMealPlanner(cs)
     }
 
     fun removeMealTimeDailyMealPlanner(userId: Int, date: LocalDate, mealTime: MealTime): DailyMealPlanner {
@@ -118,11 +95,7 @@ class MealPlannerService(
             it.mealPlannerRepository.removeMealTimeDailyMealPlanner(userId, date, mealTime)
         }
 
-        val dailyMeals = jdbiDailyPlanner.meals.mapValues { (_, recipe) ->
-            val picture = cs.pictureRepository.getPicture(recipe.picturesNames.first(), RECIPES_FOLDER)
-            recipe.toRecipeInfo(picture)
-        }
-        return DailyMealPlanner(date, jdbiDailyPlanner.maxCalories, dailyMeals)
+        return jdbiDailyPlanner.toDailyMealPlanner(cs)
     }
 
     fun deleteDailyMealPlanner(userId: Int, date: LocalDate): MealPlanner {
@@ -131,18 +104,9 @@ class MealPlannerService(
         val jdbiPlanner = tm.run {
             it.mealPlannerRepository.deleteDailyMealPlanner(userId, date)
         }
-        val planner = getRecipeInfoPicture(jdbiPlanner.planner)
+        val planner = jdbiPlanner.planner.toDailyMealPlannerList(cs)
         return MealPlanner(planner)
     }
-
-    private fun getRecipeInfoPicture(planner: List<JdbiDailyMealPlanner>): List<DailyMealPlanner> =
-        planner.map { daily ->
-            val dailyMeals = daily.meals.mapValues { (_, recipe) ->
-                val picture = cs.pictureRepository.getPicture(recipe.picturesNames.first(), RECIPES_FOLDER)
-                recipe.toRecipeInfo(picture)
-            }
-            DailyMealPlanner(date = daily.date, maxCalories = daily.maxCalories, meals = dailyMeals)
-        }
 
     private fun checkIfDailyMealPlannerExists(userId: Int, date: LocalDate): JdbiDailyMealPlanner? =
         tm.run { it.mealPlannerRepository.checkIfDailyMealPlannerExists(userId, date) }

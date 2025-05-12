@@ -11,7 +11,7 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 
-class RemoveRecipeFromCollectionControllerTests: CollectionHttpTest() {
+class RemoveRecipeFromCollectionControllerTests : CollectionHttpTest() {
 
     @Test
     fun `Should remove a recipe from a collection successfully`() {
@@ -90,7 +90,6 @@ class RemoveRecipeFromCollectionControllerTests: CollectionHttpTest() {
             removeRecipeFromCollection(testPublicAuthenticatedUser, FAVOURITE_COLLECTION_ID, nonExistingRecipeId, mockResponse)
         }
     }
-
 
     @Test
     fun `Should throw RecipeNotInCollection exception when removing a recipe that is not in the collection`() {

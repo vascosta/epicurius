@@ -51,7 +51,7 @@ open class MealPlannerRepositoryTest : RepositoryTest() {
             tm.run { it.mealPlannerRepository.createDailyMealPlanner(userId, date, maxCalories) }
 
         fun addRecipeToMealPlanner(userId: Int, date: LocalDate, recipeId: Int, mealTime: MealTime) =
-            tm.run { it.mealPlannerRepository.addDailyMealPlanner(userId, date, recipeId, mealTime) }
+            tm.run { it.mealPlannerRepository.addRecipeDailyMealPlanner(userId, date, recipeId, mealTime) }
 
         fun updateDailyMealPlanner(userId: Int, date: LocalDate, recipeId: Int, mealTime: MealTime) =
             tm.run { it.mealPlannerRepository.updateDailyMealPlanner(userId, date, recipeId, mealTime) }

@@ -7,7 +7,7 @@ import kotlin.test.assertNotNull
 class CreateDailyMealPlannerRepositoryTests : MealPlannerRepositoryTest() {
 
     @Test
-    fun `Should create a new daily meal planner successfully without calories`(){
+    fun `Should create a new daily meal planner successfully without calories`() {
         // given a test user and a date
 
         // when creating a new daily meal planner
@@ -22,7 +22,7 @@ class CreateDailyMealPlannerRepositoryTests : MealPlannerRepositoryTest() {
     }
 
     @Test
-    fun `Should create a new daily meal planner successfully with calories`(){
+    fun `Should create a new daily meal planner successfully with calories`() {
         // given a test user, a date and a maximum calorie limit
         val maxCalories = 2000
 

@@ -2,6 +2,7 @@ package epicurius.unit
 
 import epicurius.EpicuriusTest
 import epicurius.domain.fridge.FridgeDomain
+import epicurius.domain.mealPlanner.MealTime
 import epicurius.domain.picture.PictureDomain
 import epicurius.domain.user.CountriesDomain
 import epicurius.domain.user.UserDomain
@@ -10,10 +11,10 @@ import epicurius.http.controllers.feed.FeedController
 import epicurius.http.controllers.fridge.FridgeController
 import epicurius.http.controllers.ingredients.IngredientsController
 import epicurius.http.controllers.menu.MenuController
-import epicurius.http.pipeline.authentication.AuthenticationRefreshHandler
 import epicurius.http.controllers.rateRecipe.RateRecipeController
 import epicurius.http.controllers.recipe.RecipeController
 import epicurius.http.controllers.user.UserController
+import epicurius.http.pipeline.authentication.AuthenticationRefreshHandler
 import epicurius.repository.cloudFunction.CloudFunctionRepository
 import epicurius.repository.cloudFunction.manager.CloudFunctionManager
 import epicurius.repository.cloudStorage.manager.CloudStorageManager
@@ -36,6 +37,7 @@ import epicurius.services.collection.CollectionService
 import epicurius.services.feed.FeedService
 import epicurius.services.fridge.FridgeService
 import epicurius.services.ingredients.IngredientsService
+import epicurius.services.mealPlanner.MealPlannerService
 import epicurius.services.menu.MenuService
 import epicurius.services.rateRecipe.RateRecipeService
 import epicurius.services.recipe.RecipeService
@@ -75,6 +77,7 @@ open class EpicuriusUnitTest : EpicuriusTest() {
             pictureDomainMock,
             countriesDomainMock,
             fridgeDomainMock,
+            mealTimeMock
         )
     }
 
@@ -130,6 +133,7 @@ open class EpicuriusUnitTest : EpicuriusTest() {
         val pictureDomainMock: PictureDomain = mock()
         val countriesDomainMock: CountriesDomain = mock()
         val fridgeDomainMock: FridgeDomain = mock()
+        val mealTimeMock: MealTime = mock()
 
         val userService = UserService(transactionManagerMock, cloudStorageManagerMock, userDomainMock, pictureDomainMock, countriesDomainMock)
         val feedService = FeedService(transactionManagerMock, cloudStorageManagerMock)
@@ -146,6 +150,7 @@ open class EpicuriusUnitTest : EpicuriusTest() {
         )
         val menuService = MenuService(transactionManagerMock, cloudStorageManagerMock)
         val collectionService = CollectionService(transactionManagerMock, cloudStorageManagerMock)
+        val mealPlannerService = MealPlannerService(transactionManagerMock, cloudStorageManagerMock)
 
         val userServiceMock: UserService = mock()
         val fridgeServiceMock: FridgeService = mock()

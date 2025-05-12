@@ -3,17 +3,21 @@ package epicurius.unit.services
 import epicurius.domain.Diet
 import epicurius.domain.Intolerance
 import epicurius.domain.PagingParams
+import epicurius.domain.mealPlanner.MealTime
 import epicurius.domain.user.FollowRequestType
 import epicurius.http.controllers.collection.models.input.CreateCollectionInputModel
 import epicurius.http.controllers.collection.models.input.UpdateCollectionInputModel
 import epicurius.http.controllers.fridge.models.input.ProductInputModel
 import epicurius.http.controllers.fridge.models.input.UpdateProductInputModel
+import epicurius.http.controllers.mealPlanner.models.input.AddMealPlannerInputModel
+import epicurius.http.controllers.mealPlanner.models.input.UpdateMealPlannerInputModel
 import epicurius.http.controllers.recipe.models.input.CreateRecipeInputModel
 import epicurius.http.controllers.recipe.models.input.SearchRecipesInputModel
 import epicurius.http.controllers.recipe.models.input.UpdateRecipeInputModel
 import epicurius.http.controllers.user.models.input.UpdateUserInputModel
 import epicurius.unit.EpicuriusUnitTest
 import org.springframework.web.multipart.MultipartFile
+import java.time.LocalDate
 
 open class ServiceTest : EpicuriusUnitTest() {
 
@@ -134,5 +138,30 @@ open class ServiceTest : EpicuriusUnitTest() {
             collectionService.removeRecipeFromCollection(userId, collectionId, recipeId)
 
         fun deleteCollection(userId: Int, collectionId: Int) = collectionService.deleteCollection(userId, collectionId)
+
+        // MEAL PLANNER
+        fun createDailyMealPlanner(userId: Int, date: LocalDate, maxCalories: Int) =
+            mealPlannerService.createDailyMealPlanner(userId, date, maxCalories)
+
+        fun getDailyMealPlanner(userId: Int, date: LocalDate) =
+            mealPlannerService.getDailyMealPlanner(userId, date)
+
+        fun addRecipeDailyMealPlanner(userId: Int, username: String, date: LocalDate, info: AddMealPlannerInputModel) =
+            mealPlannerService.addRecipeDailyMealPlanner(userId, username, date, info)
+
+        fun updateDailyMealPlanner(userId: Int, username: String, date: LocalDate, info: UpdateMealPlannerInputModel) =
+            mealPlannerService.updateDailyMealPlanner(userId, username, date, info)
+
+        fun removeMealTimeDailyMealPlanner(userId: Int, date: LocalDate, mealTime: MealTime) =
+            mealPlannerService.removeMealTimeDailyMealPlanner(userId, date, mealTime)
+
+        fun deleteDailyMealPlanner(userId: Int, date: LocalDate) =
+            mealPlannerService.deleteDailyMealPlanner(userId, date)
+
+        fun getWeeklyMealPlanner(userId: Int) =
+            mealPlannerService.getWeeklyMealPlanner(userId)
+
+        fun updateDailyCalories(userId: Int, date: LocalDate, maxCalories: Int) =
+            mealPlannerService.updateDailyCalories(userId, date, maxCalories)
     }
 }
