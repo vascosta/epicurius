@@ -31,7 +31,7 @@ class AddRecipeDailyMealPlannerServiceTests : MealPlannerServiceTest() {
         whenever(jdbiUserRepositoryMock.checkUserVisibility(AUTHOR_USERNAME, USERNAME)).thenReturn(true)
         whenever(mealTimeMock.isMealTypeAllowedForMealTime(jdbiRecipeModel.mealType)).thenReturn(true)
         whenever(
-            jdbiMealPlannerRepositoryMock.addRecipeDailyMealPlanner(USER_ID, today, RECIPE_ID, mealTime)
+            jdbiMealPlannerRepositoryMock.addRecipeToDailyMealPlanner(USER_ID, today, RECIPE_ID, mealTime)
         ).thenReturn(jdbiDailyMealPlannerToday)
         whenever(pictureRepositoryMock.getPicture(testPicture.name, RECIPES_FOLDER)).thenReturn(testPicture.bytes)
 

@@ -1,3 +1,8 @@
 package epicurius.http.controllers.mealPlanner.models.input
 
-data class UpdateDailyCaloriesInputModel (val maxCalories: Int? = null)
+import jakarta.validation.constraints.Positive
+
+data class UpdateDailyCaloriesInputModel(
+    @Positive
+    val maxCalories: Int? = null
+)

@@ -5,7 +5,13 @@ import epicurius.domain.Diet
 import epicurius.domain.Intolerance
 import epicurius.domain.collection.CollectionDomain.Companion.MAX_COLLECTION_NAME_LENGTH
 import epicurius.domain.collection.CollectionType
-import epicurius.domain.recipe.*
+import epicurius.domain.recipe.Cuisine
+import epicurius.domain.recipe.Ingredient
+import epicurius.domain.recipe.IngredientUnit
+import epicurius.domain.recipe.Instructions
+import epicurius.domain.recipe.MealType
+import epicurius.domain.recipe.Recipe
+import epicurius.domain.recipe.RecipeDomain
 import epicurius.domain.user.User
 import epicurius.domain.user.UserDomain.Companion.MAX_PASSWORD_LENGTH
 import epicurius.domain.user.UserDomain.Companion.MAX_USERNAME_LENGTH

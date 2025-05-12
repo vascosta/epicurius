@@ -147,13 +147,13 @@ open class ServiceTest : EpicuriusUnitTest() {
             mealPlannerService.getDailyMealPlanner(userId, date)
 
         fun addRecipeDailyMealPlanner(userId: Int, username: String, date: LocalDate, info: AddMealPlannerInputModel) =
-            mealPlannerService.addRecipeDailyMealPlanner(userId, username, date, info)
+            mealPlannerService.addRecipeToDailyMealPlanner(userId, username, date, info)
 
         fun updateDailyMealPlanner(userId: Int, username: String, date: LocalDate, info: UpdateMealPlannerInputModel) =
             mealPlannerService.updateDailyMealPlanner(userId, username, date, info)
 
         fun removeMealTimeDailyMealPlanner(userId: Int, date: LocalDate, mealTime: MealTime) =
-            mealPlannerService.removeMealTimeDailyMealPlanner(userId, date, mealTime)
+            mealPlannerService.removeMealTimeFromDailyMealPlanner(userId, date, mealTime)
 
         fun deleteDailyMealPlanner(userId: Int, date: LocalDate) =
             mealPlannerService.deleteDailyMealPlanner(userId, date)

@@ -56,7 +56,7 @@ class JdbiMealPlannerRepository(private val handle: Handle) : MealPlannerReposit
         return dailyRow.toJdbiDailyMealPlanner().first()
     }
 
-    override fun addRecipeDailyMealPlanner(userId: Int, date: LocalDate, recipeId: Int, mealTime: MealTime): JdbiDailyMealPlanner {
+    override fun addRecipeToDailyMealPlanner(userId: Int, date: LocalDate, recipeId: Int, mealTime: MealTime): JdbiDailyMealPlanner {
         handle.createUpdate(
             """
                 INSERT INTO dbo.meal_planner_recipe (user_id, date, recipe_id, meal_time)
@@ -91,7 +91,7 @@ class JdbiMealPlannerRepository(private val handle: Handle) : MealPlannerReposit
         return getDailyMealPlanner(userId, date)
     }
 
-    override fun removeMealTimeDailyMealPlanner(userId: Int, date: LocalDate, mealTime: MealTime): JdbiDailyMealPlanner {
+    override fun removeMealTimeFromDailyMealPlanner(userId: Int, date: LocalDate, mealTime: MealTime): JdbiDailyMealPlanner {
         handle.createUpdate(
             """
                 DELETE FROM dbo.meal_planner_recipe

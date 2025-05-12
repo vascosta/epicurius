@@ -10,6 +10,7 @@ import epicurius.http.controllers.collection.CollectionController
 import epicurius.http.controllers.feed.FeedController
 import epicurius.http.controllers.fridge.FridgeController
 import epicurius.http.controllers.ingredients.IngredientsController
+import epicurius.http.controllers.mealPlanner.MealPlannerController
 import epicurius.http.controllers.menu.MenuController
 import epicurius.http.controllers.rateRecipe.RateRecipeController
 import epicurius.http.controllers.recipe.RecipeController
@@ -62,6 +63,7 @@ open class EpicuriusUnitTest : EpicuriusTest() {
             menuServiceMock,
             ingredientsServiceMock,
             collectionServiceMock,
+            mealPlannerServiceMock,
             jdbiUserRepositoryMock,
             jdbiTokenRepositoryMock,
             jdbiFridgeRepositoryMock,
@@ -160,6 +162,7 @@ open class EpicuriusUnitTest : EpicuriusTest() {
         val menuServiceMock: MenuService = mock()
         val ingredientsServiceMock: IngredientsService = mock()
         val collectionServiceMock: CollectionService = mock()
+        val mealPlannerServiceMock: MealPlannerService = mock()
 
         val authenticationRefreshHandlerMock: AuthenticationRefreshHandler = mock()
 
@@ -171,5 +174,6 @@ open class EpicuriusUnitTest : EpicuriusTest() {
         val menuController = MenuController(authenticationRefreshHandlerMock, menuServiceMock)
         val ingredientsController = IngredientsController(authenticationRefreshHandlerMock, ingredientsServiceMock)
         val collectionController = CollectionController(authenticationRefreshHandlerMock, collectionServiceMock)
+        val mealPlannerController = MealPlannerController(authenticationRefreshHandlerMock, mealPlannerServiceMock)
     }
 }

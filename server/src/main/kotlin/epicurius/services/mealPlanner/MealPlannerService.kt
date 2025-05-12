@@ -26,9 +26,14 @@ class MealPlannerService(
     private val cs: CloudStorageManager
 ) {
 
-    fun createDailyMealPlanner(userId: Int, date: LocalDate, maxCalories: Int?) {
+    fun createDailyMealPlanner(userId: Int, date: LocalDate, maxCalories: Int?): DailyMealPlanner {
         if (checkIfDailyMealPlannerExists(userId, date) != null) throw MealPlannerAlreadyExists(date)
         tm.run { it.mealPlannerRepository.createDailyMealPlanner(userId, date, maxCalories) }
+        return DailyMealPlanner(
+            date = date,
+            maxCalories = maxCalories,
+            meals = emptyMap()
+        )
     }
 
     fun getWeeklyMealPlanner(userId: Int): MealPlanner {
@@ -43,7 +48,7 @@ class MealPlannerService(
         return jdbiDailyPlanner.toDailyMealPlanner(cs)
     }
 
-    fun addRecipeDailyMealPlanner(userId: Int, username: String, date: LocalDate, info: AddMealPlannerInputModel): DailyMealPlanner {
+    fun addRecipeToDailyMealPlanner(userId: Int, username: String, date: LocalDate, info: AddMealPlannerInputModel): DailyMealPlanner {
         if (checkIfDailyMealPlannerExists(userId, date) == null) throw DailyMealPlannerNotFound()
         if (checkIfMealTimeAlreadyExistsInPlanner(userId, date, info.mealTime))
             throw MealTimeAlreadyExistsInPlanner(info.mealTime)
@@ -52,7 +57,7 @@ class MealPlannerService(
         if (!info.mealTime.isMealTypeAllowedForMealTime(recipe.mealType)) throw RecipeIsInvalidForMealTime()
 
         val jdbiPlanner = tm.run {
-            it.mealPlannerRepository.addRecipeDailyMealPlanner(userId, date, info.recipeId, info.mealTime)
+            it.mealPlannerRepository.addRecipeToDailyMealPlanner(userId, date, info.recipeId, info.mealTime)
         }
         return jdbiPlanner.toDailyMealPlanner(cs)
     }
@@ -86,13 +91,13 @@ class MealPlannerService(
         return jdbiDailyPlanner.toDailyMealPlanner(cs)
     }
 
-    fun removeMealTimeDailyMealPlanner(userId: Int, date: LocalDate, mealTime: MealTime): DailyMealPlanner {
+    fun removeMealTimeFromDailyMealPlanner(userId: Int, date: LocalDate, mealTime: MealTime): DailyMealPlanner {
         if (checkIfDailyMealPlannerExists(userId, date) == null) throw DailyMealPlannerNotFound()
         if (!checkIfMealTimeAlreadyExistsInPlanner(userId, date, mealTime))
             throw MealTimeDoesNotExist()
 
         val jdbiDailyPlanner = tm.run {
-            it.mealPlannerRepository.removeMealTimeDailyMealPlanner(userId, date, mealTime)
+            it.mealPlannerRepository.removeMealTimeFromDailyMealPlanner(userId, date, mealTime)
         }
 
         return jdbiDailyPlanner.toDailyMealPlanner(cs)

@@ -4,7 +4,7 @@ import epicurius.domain.mealPlanner.MealTime
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 
-class UpdateDailyMealPlannerRepositoryTests : MealPlannerRepositoryTest() {
+class UpdateDailyMealPlannerControllerTestsRepositoryTests : MealPlannerRepositoryTest() {
 
     @Test
     fun `Should update user's daily meal planner recipe successfully`() {

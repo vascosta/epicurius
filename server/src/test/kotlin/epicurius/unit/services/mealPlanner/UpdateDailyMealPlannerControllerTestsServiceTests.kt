@@ -13,7 +13,7 @@ import org.junit.jupiter.api.assertThrows
 import org.mockito.kotlin.whenever
 import kotlin.test.assertEquals
 
-class UpdateDailyMealPlannerServiceTests : MealPlannerServiceTest() {
+class UpdateDailyMealPlannerControllerTestsServiceTests : MealPlannerServiceTest() {
 
     @Test
     fun `Should update the daily meal planner successfully`() {

@@ -3,6 +3,7 @@ package epicurius.unit.http
 import epicurius.domain.Diet
 import epicurius.domain.Intolerance
 import epicurius.domain.PagingParams
+import epicurius.domain.mealPlanner.MealTime
 import epicurius.domain.recipe.Cuisine
 import epicurius.domain.recipe.MealType
 import epicurius.domain.user.AuthenticatedUser
@@ -12,6 +13,10 @@ import epicurius.http.controllers.collection.models.input.CreateCollectionInputM
 import epicurius.http.controllers.collection.models.input.UpdateCollectionInputModel
 import epicurius.http.controllers.fridge.models.input.ProductInputModel
 import epicurius.http.controllers.fridge.models.input.UpdateProductInputModel
+import epicurius.http.controllers.mealPlanner.models.input.AddMealPlannerInputModel
+import epicurius.http.controllers.mealPlanner.models.input.CreateMealPlannerInputModel
+import epicurius.http.controllers.mealPlanner.models.input.UpdateDailyCaloriesInputModel
+import epicurius.http.controllers.mealPlanner.models.input.UpdateMealPlannerInputModel
 import epicurius.http.controllers.rateRecipe.models.input.RateRecipeInputModel
 import epicurius.http.controllers.recipe.models.input.UpdateRecipeInputModel
 import epicurius.http.controllers.user.models.input.LoginInputModel
@@ -25,6 +30,7 @@ import org.junit.jupiter.api.BeforeEach
 import org.mockito.Mockito.mock
 import org.mockito.kotlin.reset
 import org.springframework.web.multipart.MultipartFile
+import java.time.LocalDate
 
 open class HttpTest : EpicuriusUnitTest() {
 
@@ -351,5 +357,57 @@ open class HttpTest : EpicuriusUnitTest() {
             response: HttpServletResponse
         ) =
             collectionController.deleteCollection(authenticatedUser, id, response)
+
+        // MEAL PLANNER
+        fun getWeeklyMealPlanner(
+            authenticatedUser: AuthenticatedUser,
+            response: HttpServletResponse
+        ) = mealPlannerController.getWeeklyMealPlanner(authenticatedUser, response)
+
+        fun getDailyMealPlanner(
+            authenticatedUser: AuthenticatedUser,
+            date: LocalDate,
+            response: HttpServletResponse
+        ) = mealPlannerController.getDailyMealPlanner(authenticatedUser, date, response)
+
+        fun createDailyMealPlanner(
+            authenticatedUser: AuthenticatedUser,
+            body: CreateMealPlannerInputModel,
+            response: HttpServletResponse
+        ) = mealPlannerController.createDailyMealPlanner(authenticatedUser, body, response)
+
+        fun addRecipeToDailyMealPlanner(
+            authenticatedUser: AuthenticatedUser,
+            date: LocalDate,
+            body: AddMealPlannerInputModel,
+            response: HttpServletResponse
+        ) = mealPlannerController.addRecipeToDailyMealPlanner(authenticatedUser, date, body, response)
+
+        fun updateDailyMealPlanner(
+            authenticatedUser: AuthenticatedUser,
+            date: LocalDate,
+            body: UpdateMealPlannerInputModel,
+            response: HttpServletResponse
+        ) = mealPlannerController.updateDailyMealPlanner(authenticatedUser, date, body, response)
+
+        fun updateDailyCalories(
+            authenticatedUser: AuthenticatedUser,
+            date: LocalDate,
+            body: UpdateDailyCaloriesInputModel,
+            response: HttpServletResponse
+        ) = mealPlannerController.updateDailyCalories(authenticatedUser, date, body, response)
+
+        fun removeMealTimeFromDailyMealPlanner(
+            authenticatedUser: AuthenticatedUser,
+            date: LocalDate,
+            mealTime: MealTime,
+            response: HttpServletResponse
+        ) = mealPlannerController.removeMealTimeFromDailyMealPlanner(authenticatedUser, date, mealTime, response)
+
+        fun deleteDailyMealPlanner(
+            authenticatedUser: AuthenticatedUser,
+            date: LocalDate,
+            response: HttpServletResponse
+        ) = mealPlannerController.deleteDailyMealPlanner(authenticatedUser, date, response)
     }
 }

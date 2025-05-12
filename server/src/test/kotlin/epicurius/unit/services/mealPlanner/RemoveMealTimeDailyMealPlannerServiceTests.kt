@@ -22,7 +22,7 @@ class RemoveMealTimeDailyMealPlannerServiceTests : MealPlannerServiceTest() {
             jdbiMealPlannerRepositoryMock.checkIfMealTimeAlreadyExistsInPlanner(USER_ID, today, mealTime)
         ).thenReturn(true)
         whenever(
-            jdbiMealPlannerRepositoryMock.removeMealTimeDailyMealPlanner(USER_ID, today, mealTime)
+            jdbiMealPlannerRepositoryMock.removeMealTimeFromDailyMealPlanner(USER_ID, today, mealTime)
         ).thenReturn(jdbiDailyMealPlannerToday.copy(meals = emptyMap()))
 
         // when the user removes a meal time from the daily meal planner
