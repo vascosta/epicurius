@@ -44,10 +44,10 @@ create table dbo.recipe(
     name varchar(50) not null,
     author_id int not null,
     date date not null,
-    servings int not null,
-    preparation_time int not null, -- in minutes, e.g if value is 30, it means 30 minutes
-    meal_type int not null,
-    cuisine int not null,
+    servings int not null check ( servings > 0),
+    preparation_time int not null check ( preparation_time > 0 ), -- in minutes, e.g. if value is 30, it means 30 minutes
+    meal_type int not null check ( meal_type between 0 and 12), -- breakfast, lunch, dinner, snack
+    cuisine int not null check ( cuisine between 0 and 25), -- italian, mexican, chinese, etc.
     intolerances int[] not null,
     diets int[] not null,
     calories int check ( calories >= 0),
@@ -81,7 +81,7 @@ create table dbo.collection(
     id serial primary key,
     owner_id int not null,
     name varchar(30) not null,
-    type int not null, -- favourite or kitchen book
+    type int not null check ( type between 0 and 1), -- favourite or kitchen book
     foreign key (owner_id) references dbo.user(id) on delete cascade
 );
 
@@ -105,7 +105,7 @@ create table dbo.meal_planner_recipe(
     user_id int not null,
     date date not null,
     recipe_id int not null,
-    meal_time int not null,
+    meal_time int not null check ( meal_time between 0 and 3), -- breakfast, lunch, dinner, snack
     primary key (user_id, date, recipe_id, meal_time),
     foreign key (user_id, date) references dbo.meal_planner(user_id, date) on delete cascade,
     foreign key (recipe_id) references dbo.recipe(id) on delete cascade
@@ -125,6 +125,6 @@ $$ language plpgsql;
 
 create trigger trg_delete_product_with_no_quantity
     after insert or update
-                        on dbo.fridge
-                        for each row
-                        execute function delete_product_with_no_quantity();
+    on dbo.fridge
+    for each row
+execute function delete_product_with_no_quantity();

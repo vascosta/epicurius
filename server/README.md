@@ -4,17 +4,20 @@ This document contains the backend internal software organization and the data m
 ## Introduction
 The backend server exposes a HTTP API that provides a system for the Epicurius Mobile App.
 
-The __domain__ of the system contains the ``User``, ``Fridge``, ``Product``, ``Recipe``, ``Collections`` and ``Meal Planner`` entities which are described as follows:
+The __domain__ of the system contains the ``User``, ``Token``, ``Fridge``, ``Recipe``, ``Collection`` and ``Meal Planner`` entities which are described as follows:
 
-* A _user_ is characterized by an unique number, an unique username, an unique email, an unique token, a password, a country, privacy, intolerance list, diet list and a profile picture;
+* A __User__ is characterized by an unique number, an unique username, an unique email, an unique token, a password, a country, privacy, intolerance list, diet list and a profile picture;
 
-* A _fridge_ is characterized by a list of _product_ characterized by product name, an unique entry number, quantity, open date and expiration date;
+* A __Token__ is characterized by a unique token hashed, the date of the last time it was used and a unique number, that represents the user to who it belongs;
 
-* A _recipe_ is characterized by a unique number, the recipe's name, the id of the author, a description, servings, preparation time, type of cuisine, type of meal, a list of intolerances, a list of diets, the ingredients list, number of calories, proteins, fat, carbohydrates, a map with the instructions and a list of images;
+* A __Fridge__ consists of a list of __Product__ characterized by product name, an unique entry number, quantity, open date and expiration date;
 
-* _collection_
+* A __Recipe__ is characterized by a unique number, the recipe's name, the id of the author, a description, servings, preparation time, type of cuisine, type of meal, a list of intolerances, a list of diets, the ingredients list, number of calories, proteins, fat, carbohydrates, a map with the instructions and a list of images;
 
-* _meal planner_
+* A __Collection__ is characterized by a unique number, the collection's name and type (``Kitchen Book`` or ``Favourites``) and a list of recipes associated to the collection;
+
+* A __Meal Planner__ consists of a list of __Daily Meal Planner__. Each __Daily Meal Planner__ is characterized by a date, the maximum number of calories for the day, and a map where the keys are the meal times, and the values are the recipes associated with those times.
+
 
 The __backend__ was developed using __Kotlin__ technology. In order to  __handle/receive HTTP requests__, the [__Spring MVC__](https://docs.spring.io/spring-framework/reference/web/webmvc.html) library was used. The specific __data__ of the application is __stored__ in a __Postgresql database__, __Firestore database__ and __Cloud Storage__. The __backend__ also interacts with external APIs such as the [__Spoonacular API__](https://spoonacular.com/food-api/docs) and the [__Vision API__](https://cloud.google.com/vision/docs).
 
@@ -25,18 +28,50 @@ The __backend__ was developed using __Kotlin__ technology. In order to  __handle
 
 The conceptual data model of the backend server is represented in the following diagram, that holds the entity-relationship diagram of the database:
 
-![Entity-Relationship Model](./imgs/ModeloEA.png)
+![Entity-Relationship Model](../docs/imgs/ModeloEA.png)
 
 #### Design Restrictions
+
+* __Followers Table__ 
+    * The _follower id_ attribute of __Followers Table__ cannot be the same as the _user id_;
+
+* __Recipe Table__
+    * Attributes _servings_ and _preparation time_ have to be bigger than 0;
+    * _meal type_ attribute has a range between 0 and 12, whereas the _cuisine_ attributes is ranged between 0 and 25;
+    * Attributes associated with nutricional informations like _calories_, 
+    _protein_, _fat_ and _carbs_ have to be bigger or equal 0 if associated with actual value;
+    * The attribute _pictures names_ is an array which size must be comprehend between 1 and 3;
+
+* __Recipe Rating Table__
+    * _user id_ attribute has to be different from recipe's author id, the author cannot rate their own recipe;
+    * Attribute _rating_ value is only accepted if between 1 and 5;
+
+* __Collection Table__
+    * The _type_ attribute can only assume value 0 or 1;
+
+* __Meal Planner Table__
+    * Attribute _max calories_ has to be bigger than 0;
+
+* __Meal Planner Recipe Table__
+    * _meal time_ attribute is ranged between 0 and 3;
 
 ### Physical Model
 
 The physical data model contains the implementation of the conceptual data model in the PostgreSQL database, that can be found in the [__createTables.sql__](./src/sql/createTables.sql) file.
 
-![Physical Model](./imgs/ER.png)
+![Physical Model](../docs/imgs/ER.png)
 
 #### Design Aspects
 
+The tables __User__, __Recipe__ and __Meal Planner Recipe__ use arrays of integer to represent outside data, this design applies to the three models.
+
+__User__ and __Recipe__ tables both use an integer array to represent the __Intolerances__ and __Diets__. __Intolerances__ and __Diets__ are enum classes that include the __accepted terms__ in the application. The integers in the array correspond to the index of the intolerance or diet in the enum class (e.g. ``intolerances { 3 } = GRAIN``; ``diets { 2,6 } = VEGETARIAN, PESCETARIAN``).
+
+It is important to notice that in the __Recipe__ table there are two more attributes with the same logic, but in this case it is only one integer instead of an array. The __Meal Type__ and __Cuisine__ attribute represent the index in the corresponding enum class (e.g. ``meal_type 1 = MAIN_COURSE``; ``cuisine 10 = GERMAN``).
+
+Once again the same logic as the previous one is repeated in the __Meal Planner Recipe__ table, but for the __Meal Time__ attribute (e.g. ``meal_time 0 = BREAKFAST``)
+
+In __Recipe__ table is used an array of varchar, __Pictures Names__ attribute, in order to store the name of the pictures related to the recipe. 
 
 ## Application Architecture
 
