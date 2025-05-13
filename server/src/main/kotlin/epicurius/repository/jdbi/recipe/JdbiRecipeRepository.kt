@@ -198,7 +198,6 @@ class JdbiRecipeRepository(private val handle: Handle) : RecipeRepository {
     }
 
     override fun deleteRecipe(recipeId: Int) {
-        removeIngredients(recipeId)
         handle.createUpdate(
             """
                 DELETE FROM dbo.Recipe

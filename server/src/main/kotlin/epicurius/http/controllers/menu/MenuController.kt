@@ -3,7 +3,7 @@ package epicurius.http.controllers.menu
 import epicurius.domain.user.AuthenticatedUser
 import epicurius.http.controllers.menu.models.out.GetDailyMenuOutputModel
 import epicurius.http.pipeline.authentication.AuthenticationRefreshHandler
-import epicurius.http.pipeline.authentication.addCookie
+import epicurius.http.pipeline.authentication.cookie.addCookie
 import epicurius.http.utils.Uris
 import epicurius.services.menu.MenuService
 import jakarta.servlet.http.HttpServletResponse

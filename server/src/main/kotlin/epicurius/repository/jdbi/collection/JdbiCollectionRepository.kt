@@ -101,9 +101,6 @@ class JdbiCollectionRepository(private val handle: Handle) : CollectionRepositor
     override fun deleteCollection(collectionId: Int) {
         handle.createUpdate(
             """
-                DELETE FROM dbo.collection_recipe
-                WHERE collection_id = :collectionId;
-                
                 DELETE FROM dbo.collection
                 WHERE id = :collectionId;
             """

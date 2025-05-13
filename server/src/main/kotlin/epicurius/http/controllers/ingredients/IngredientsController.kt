@@ -5,7 +5,7 @@ import epicurius.http.controllers.ingredients.models.output.GetIngredientsFromPi
 import epicurius.http.controllers.ingredients.models.output.GetIngredientsOutputModel
 import epicurius.http.controllers.ingredients.models.output.GetSubstituteIngredientsOutputModel
 import epicurius.http.pipeline.authentication.AuthenticationRefreshHandler
-import epicurius.http.pipeline.authentication.addCookie
+import epicurius.http.pipeline.authentication.cookie.addCookie
 import epicurius.http.utils.Uris
 import epicurius.services.ingredients.IngredientsService
 import jakarta.servlet.http.HttpServletResponse

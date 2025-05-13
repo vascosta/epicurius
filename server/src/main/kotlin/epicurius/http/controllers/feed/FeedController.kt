@@ -4,7 +4,7 @@ import epicurius.domain.PagingParams
 import epicurius.domain.user.AuthenticatedUser
 import epicurius.http.controllers.feed.models.output.FeedOutputModel
 import epicurius.http.pipeline.authentication.AuthenticationRefreshHandler
-import epicurius.http.pipeline.authentication.addCookie
+import epicurius.http.pipeline.authentication.cookie.addCookie
 import epicurius.http.utils.Uris
 import epicurius.services.feed.FeedService
 import jakarta.servlet.http.HttpServletResponse

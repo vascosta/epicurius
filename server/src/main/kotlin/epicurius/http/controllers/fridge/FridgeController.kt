@@ -5,7 +5,7 @@ import epicurius.http.controllers.fridge.models.input.ProductInputModel
 import epicurius.http.controllers.fridge.models.input.UpdateProductInputModel
 import epicurius.http.controllers.fridge.models.output.FridgeOutputModel
 import epicurius.http.pipeline.authentication.AuthenticationRefreshHandler
-import epicurius.http.pipeline.authentication.addCookie
+import epicurius.http.pipeline.authentication.cookie.addCookie
 import epicurius.http.utils.Uris
 import epicurius.http.utils.Uris.Fridge.product
 import epicurius.services.fridge.FridgeService

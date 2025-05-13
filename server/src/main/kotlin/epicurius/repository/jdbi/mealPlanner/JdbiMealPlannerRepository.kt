@@ -108,10 +108,7 @@ class JdbiMealPlannerRepository(private val handle: Handle) : MealPlannerReposit
 
     override fun deleteDailyMealPlanner(userId: Int, date: LocalDate): JdbiMealPlanner {
         handle.createUpdate(
-            """
-                DELETE FROM dbo.meal_planner_recipe 
-                WHERE user_id = :userId AND date = :date;
-                
+            """ 
                 DELETE FROM dbo.meal_planner
                 WHERE user_id = :userId AND date = :date;
             """

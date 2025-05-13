@@ -215,6 +215,17 @@ class JdbiUserRepository(private val handle: Handle) : UserRepository {
             .execute()
     }
 
+    override fun deleteUser(userId: Int) {
+        handle.createUpdate(
+            """
+                DELETE FROM dbo.User
+                WHERE id = :userId
+            """
+        )
+            .bind("userId", userId)
+            .execute()
+    }
+
     override fun checkIfUserIsLoggedIn(userId: Int) =
         handle.createQuery(
             """
