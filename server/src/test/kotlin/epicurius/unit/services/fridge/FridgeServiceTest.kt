@@ -64,7 +64,7 @@ open class FridgeServiceTest : ServiceTest() {
         )
 
         val openedProduct = Product(
-            productName = PRODUCT_NAME,
+            name = PRODUCT_NAME,
             entryNumber = NEW_ENTRY_NUMBER,
             quantity = PRODUCT_QUANTITY,
             openDate = open,

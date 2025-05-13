@@ -20,6 +20,12 @@ class RecipeDomain {
         const val MIN_INGREDIENT_QUANTITY = 0.1
         const val INGREDIENT_QUANTITY_MSG = "Ingredient quantity must be greater than $MIN_INGREDIENT_QUANTITY"
 
+        const val INVALID_CALORIES_VALUES = "The maximum amount of calories must be greater then the minimum amount"
+        const val INVALID_CARBS_VALUES = "The maximum amount of carbs must be greater then the minimum amount"
+        const val INVALID_FAT_VALUES = "The maximum amount of fat must be greater then the minimum amount"
+        const val INVALID_PROTEIN_VALUES = "The maximum amount of protein must be greater then the minimum amount"
+        const val INVALID_PREPARATION_TIME_VALUES = "The maximum amount of preparation time must be greater then the minimum amount"
+
         const val MIN_INSTRUCTIONS_STEP_LENGTH = 1
         const val MAX_INSTRUCTIONS_STEP_LENGTH = 200
         const val MAX_NUMBER_OF_INSTRUCTIONS_STEPS = 20

@@ -40,7 +40,7 @@ class ChecksFridgeRepositoryTests : FridgeRepositoryTest() {
 
         // then the existing product should be found
         assertNotNull(existingProduct)
-        assertEquals(product.productName, existingProduct!!.productName)
+        assertEquals(product.productName, existingProduct!!.name)
         assertEquals(product.quantity, existingProduct.quantity)
         assertEquals(product.openDate, existingProduct.openDate)
         assertEquals(product.expirationDate, existingProduct.expirationDate)
@@ -71,7 +71,7 @@ class ChecksFridgeRepositoryTests : FridgeRepositoryTest() {
 
         // then the existing product should be found
         assertNotNull(existingProduct)
-        assertEquals(product.productName, existingProduct!!.productName)
+        assertEquals(product.productName, existingProduct!!.name)
         assertEquals(product.quantity, existingProduct.quantity)
         assertEquals(product.openDate, existingProduct.openDate)
         assertEquals(product.expirationDate, existingProduct.expirationDate)

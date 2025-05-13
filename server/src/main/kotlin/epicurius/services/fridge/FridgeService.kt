@@ -64,7 +64,7 @@ class FridgeService(
         tm.run { it.fridgeRepository.updateProduct(userId, decreaseQuantity) }
 
         val newProduct = ProductInfo(
-            productName = observedProduct.productName,
+            productName = observedProduct.name,
             quantity = 1,
             openDate = openDate,
             expirationDate =

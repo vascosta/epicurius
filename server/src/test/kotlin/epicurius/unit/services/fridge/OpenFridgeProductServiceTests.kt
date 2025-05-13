@@ -37,7 +37,7 @@ class OpenFridgeProductServiceTests : FridgeServiceTest() {
         val updatedFridge = updateProductInfo(USER_ID, ENTRY_NUMBER, openProductInputModel)
 
         // then the product is opened
-        assertEquals(product.productName, updatedFridge.products[0].productName)
+        assertEquals(product.name, updatedFridge.products[0].name)
         assertEquals(NEW_ENTRY_NUMBER, updatedFridge.products[0].entryNumber)
         assertEquals(product.quantity, updatedFridge.products[0].quantity)
         assertEquals(openProductInputModel.openDate, updatedFridge.products[0].openDate)
@@ -74,7 +74,7 @@ class OpenFridgeProductServiceTests : FridgeServiceTest() {
         val newFridge = updateProductInfo(USER_ID, ENTRY_NUMBER, openProductInputModel)
 
         // then the product is opened
-        assertEquals(product.productName, newFridge.products[1].productName)
+        assertEquals(product.name, newFridge.products[1].name)
         assertEquals(NEW_ENTRY_NUMBER, newFridge.products[1].entryNumber)
         assertEquals(increaseQuantity.quantity, newFridge.products[1].quantity)
         assertEquals(openProductInputModel.openDate, newFridge.products[1].openDate)

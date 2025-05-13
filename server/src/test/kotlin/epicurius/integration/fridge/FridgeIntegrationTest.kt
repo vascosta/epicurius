@@ -57,7 +57,7 @@ class FridgeIntegrationTest : EpicuriusIntegrationTest() {
         // then the fridge should contain the product
         assertNotNull(newFridgeBody)
         assertTrue(newFridgeBody.products.isNotEmpty())
-        assertTrue(newFridgeBody.products.first().productName == "apple")
+        assertTrue(newFridgeBody.products.first().name == "apple")
         assertTrue(newFridgeBody.products.first().quantity == 1)
         assertTrue(newFridgeBody.products.first().openDate == null)
     }
@@ -77,7 +77,7 @@ class FridgeIntegrationTest : EpicuriusIntegrationTest() {
         // then the fridge should contain the product with the updated quantity
         assertNotNull(newFridgeBody)
         assertTrue(newFridgeBody.products.isNotEmpty())
-        assertTrue(newFridgeBody.products.first().productName == "peach")
+        assertTrue(newFridgeBody.products.first().name == "peach")
         assertTrue(newFridgeBody.products.first().quantity == 2)
         assertTrue(newFridgeBody.products.first().openDate == null)
     }
@@ -121,7 +121,7 @@ class FridgeIntegrationTest : EpicuriusIntegrationTest() {
         // then the fridge should contain the updated product
         assertNotNull(updatedFridgeBody)
         assertTrue(updatedFridgeBody.products.isNotEmpty())
-        assertTrue(updatedFridgeBody.products.first().productName == "milk")
+        assertTrue(updatedFridgeBody.products.first().name == "milk")
         assertTrue(updatedFridgeBody.products.first().quantity == 2)
         assertTrue(updatedFridgeBody.products.first().openDate == null)
     }
@@ -192,7 +192,7 @@ class FridgeIntegrationTest : EpicuriusIntegrationTest() {
         // then the fridge should contain the updated product
         assertNotNull(openProductBody)
         assertTrue(openProductBody.products.isNotEmpty())
-        assertTrue(openProductBody.products.first().productName == "peach")
+        assertTrue(openProductBody.products.first().name == "peach")
         assertTrue(openProductBody.products.first().quantity == 1)
     }
 
@@ -216,7 +216,7 @@ class FridgeIntegrationTest : EpicuriusIntegrationTest() {
         // then the fridge should contain the updated product
         assertNotNull(openProductBody)
         assertTrue(openProductBody.products.isNotEmpty())
-        assertTrue(openProductBody.products.first().productName == "orange")
+        assertTrue(openProductBody.products.first().name == "orange")
         assertTrue(openProductBody.products.first().quantity == 2)
         assertNotNull(openProductBody.products.first().openDate)
     }

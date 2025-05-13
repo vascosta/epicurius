@@ -36,7 +36,7 @@ class UpdateFridgeProduct : FridgeServiceTest() {
             }
 
         // then the product info is updated
-        assertEquals(product.productName, updatedFridge.products[0].productName)
+        assertEquals(product.name, updatedFridge.products[0].name)
         assertEquals(product.entryNumber, updatedFridge.products[0].entryNumber)
         assertEquals(updateProductInfo.quantity, updatedFridge.products[0].quantity)
         assertEquals(updateProductInfo.expirationDate, updatedFridge.products[0].expirationDate)

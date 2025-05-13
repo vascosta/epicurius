@@ -56,7 +56,7 @@ open class FridgeHttpTest : HttpTest() {
         const val NEW_ENTRY_NUMBER = 2
 
         val product = Product(
-            productName = "apple",
+            name = "apple",
             entryNumber = ENTRY_NUMBER,
             quantity = 1,
             openDate = null,

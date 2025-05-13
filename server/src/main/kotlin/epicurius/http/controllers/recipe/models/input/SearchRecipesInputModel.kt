@@ -5,10 +5,21 @@ import epicurius.domain.Intolerance
 import epicurius.domain.recipe.Cuisine
 import epicurius.domain.recipe.MealType
 import epicurius.domain.recipe.RecipeDomain
+import epicurius.domain.recipe.RecipeDomain.Companion.INVALID_CALORIES_VALUES
+import epicurius.domain.recipe.RecipeDomain.Companion.INVALID_CARBS_VALUES
+import epicurius.domain.recipe.RecipeDomain.Companion.INVALID_FAT_VALUES
+import epicurius.domain.recipe.RecipeDomain.Companion.INVALID_PREPARATION_TIME_VALUES
+import epicurius.domain.recipe.RecipeDomain.Companion.INVALID_PROTEIN_VALUES
+import epicurius.domain.recipe.RecipeDomain.Companion.MAX_NUMBER_OF_INGREDIENTS
 import epicurius.domain.recipe.RecipeDomain.Companion.MAX_RECIPE_NAME_LENGTH
 import epicurius.domain.recipe.RecipeDomain.Companion.RECIPE_NAME_LENGTH_MSG
 import epicurius.domain.recipe.SearchRecipesModel
 import epicurius.domain.user.UserDomain
+import epicurius.domain.user.UserDomain.Companion.MAX_DIET_SIZE
+import epicurius.domain.user.UserDomain.Companion.MAX_DIET_SIZE_MSG
+import epicurius.domain.user.UserDomain.Companion.MAX_INTOLERANCE_SIZE
+import epicurius.domain.user.UserDomain.Companion.MAX_INTOLERANCE_SIZE_MSG
+import epicurius.domain.user.UserDomain.Companion.POSITIVE_NUMBER_MSG
 import jakarta.validation.constraints.Positive
 
 data class SearchRecipesInputModel(
@@ -19,47 +30,67 @@ data class SearchRecipesInputModel(
     val intolerances: List<Intolerance>? = null,
     val diets: List<Diet>? = null,
 
-    @field:Positive(message = UserDomain.POSITIVE_NUMBER_MSG)
+    @field:Positive(message = POSITIVE_NUMBER_MSG)
     val minCalories: Int? = null,
 
-    @field:Positive(message = UserDomain.POSITIVE_NUMBER_MSG)
+    @field:Positive(message = POSITIVE_NUMBER_MSG)
     val maxCalories: Int? = null,
 
-    @field:Positive(message = UserDomain.POSITIVE_NUMBER_MSG)
+    @field:Positive(message = POSITIVE_NUMBER_MSG)
     val minCarbs: Int? = null,
 
-    @field:Positive(message = UserDomain.POSITIVE_NUMBER_MSG)
+    @field:Positive(message = POSITIVE_NUMBER_MSG)
     val maxCarbs: Int? = null,
 
-    @field:Positive(message = UserDomain.POSITIVE_NUMBER_MSG)
+    @field:Positive(message = POSITIVE_NUMBER_MSG)
     val minFat: Int? = null,
 
-    @field:Positive(message = UserDomain.POSITIVE_NUMBER_MSG)
+    @field:Positive(message = POSITIVE_NUMBER_MSG)
     val maxFat: Int? = null,
 
-    @field:Positive(message = UserDomain.POSITIVE_NUMBER_MSG)
+    @field:Positive(message = POSITIVE_NUMBER_MSG)
     val minProtein: Int? = null,
 
-    @field:Positive(message = UserDomain.POSITIVE_NUMBER_MSG)
+    @field:Positive(message = POSITIVE_NUMBER_MSG)
     val maxProtein: Int? = null,
 
-    @field:Positive(message = UserDomain.POSITIVE_NUMBER_MSG)
+    @field:Positive(message = POSITIVE_NUMBER_MSG)
     val minTime: Int? = null,
 
-    @field:Positive(message = UserDomain.POSITIVE_NUMBER_MSG)
+    @field:Positive(message = POSITIVE_NUMBER_MSG)
     val maxTime: Int? = null,
 ) {
     init {
-        if (ingredients != null && ingredients.size > RecipeDomain.MAX_NUMBER_OF_INGREDIENTS) {
+        if (ingredients != null && ingredients.size > MAX_NUMBER_OF_INGREDIENTS) {
             throw IllegalArgumentException(RecipeDomain.INGREDIENTS_SIZE_MSG)
         }
 
-        if (intolerances != null && intolerances.size > UserDomain.MAX_INTOLERANCE_SIZE) {
-            throw IllegalArgumentException(UserDomain.MAX_INTOLERANCE_SIZE_MSG)
+        if (intolerances != null && intolerances.size > MAX_INTOLERANCE_SIZE) {
+            throw IllegalArgumentException(MAX_INTOLERANCE_SIZE_MSG)
         }
 
-        if (diets != null && diets.size > UserDomain.MAX_DIET_SIZE) {
-            throw IllegalArgumentException(UserDomain.MAX_DIET_SIZE_MSG)
+        if (diets != null && diets.size > MAX_DIET_SIZE) {
+            throw IllegalArgumentException(MAX_DIET_SIZE_MSG)
+        }
+
+        if (minCalories != null && maxCalories != null) {
+            if (minCalories >= maxCalories) throw IllegalArgumentException(INVALID_CALORIES_VALUES)
+        }
+
+        if (minCarbs != null && maxCarbs != null) {
+            if (minCarbs >= maxCarbs) throw IllegalArgumentException(INVALID_CARBS_VALUES)
+        }
+
+        if (minFat != null && maxFat != null) {
+            if (minFat >= maxFat) throw IllegalArgumentException(INVALID_FAT_VALUES)
+        }
+
+        if (minProtein != null && maxProtein != null) {
+            if (minProtein >= maxProtein) throw IllegalArgumentException(INVALID_PROTEIN_VALUES)
+        }
+
+        if (minTime != null && maxTime != null) {
+            if (minTime >= maxTime) throw IllegalArgumentException(INVALID_PREPARATION_TIME_VALUES)
         }
     }
 

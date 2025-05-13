@@ -24,7 +24,7 @@ class AddFridgeProductRepositoryTests : FridgeRepositoryTest() {
 
         // then the fridge should contain the added product
         assertEquals(1, fridge.products.size)
-        assertEquals(product.productName, fridge.products.first().productName)
+        assertEquals(product.productName, fridge.products.first().name)
         assertEquals(product.quantity, fridge.products.first().quantity)
         assertEquals(product.openDate, fridge.products.first().openDate)
         assertEquals(product.expirationDate, fridge.products.first().expirationDate)

@@ -15,7 +15,7 @@ class AddFridgeProductServiceTests : FridgeServiceTest() {
     fun `Should add a new product to user's fridge successfully`() {
         // given a new fridge and a valid
         val newFridge = Fridge(listOf(product))
-        val validProductName = newFridge.products[0].productName
+        val validProductName = newFridge.products[0].name
 
         // mock
         whenever(runBlocking { spoonacularRepositoryMock.getIngredients(validProductName) }).thenReturn(productsList)
@@ -26,7 +26,7 @@ class AddFridgeProductServiceTests : FridgeServiceTest() {
 
         // then the product is added to the fridge
         assertEquals(newFridge.products.size, retrievedFridge.products.size)
-        assertEquals(newFridge.products[0].productName, retrievedFridge.products[0].productName)
+        assertEquals(newFridge.products[0].name, retrievedFridge.products[0].name)
         assertEquals(newFridge.products[0].quantity, retrievedFridge.products[0].quantity)
         assertEquals(newFridge.products[0].openDate, retrievedFridge.products[0].openDate)
         assertEquals(newFridge.products[0].expirationDate, retrievedFridge.products[0].expirationDate)
@@ -39,7 +39,7 @@ class AddFridgeProductServiceTests : FridgeServiceTest() {
         val newProduct = productInfo.copy(quantity = 2)
         val oldFridge = Fridge(listOf(product))
         val newFridge = Fridge(listOf(product.copy(quantity = 3)))
-        val validProductName = newFridge.products[0].productName
+        val validProductName = newFridge.products[0].name
         val updateProductInfo = UpdateProductInfo(
             entryNumber = ENTRY_NUMBER,
             quantity = existingProduct.quantity + newProduct.quantity
@@ -69,7 +69,7 @@ class AddFridgeProductServiceTests : FridgeServiceTest() {
 
         // then the existing product in the fridge is updated
         assertEquals(retrievedFridge.products.size, retrievedExistingProduct.products.size)
-        assertEquals(retrievedFridge.products[0].productName, retrievedExistingProduct.products[0].productName)
+        assertEquals(retrievedFridge.products[0].name, retrievedExistingProduct.products[0].name)
         assertEquals(existingProduct.quantity + newProduct.quantity, retrievedExistingProduct.products[0].quantity)
         assertEquals(retrievedFridge.products[0].openDate, retrievedExistingProduct.products[0].openDate)
         assertEquals(retrievedFridge.products[0].expirationDate, retrievedExistingProduct.products[0].expirationDate)
