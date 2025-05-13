@@ -2,6 +2,7 @@ package epicurius.unit.repository.mealPlanner
 
 import epicurius.domain.mealPlanner.MealTime
 import epicurius.repository.jdbi.recipe.models.JdbiRecipeInfo
+import epicurius.utils.createTestUser
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotNull
 import kotlin.test.Test
@@ -11,7 +12,7 @@ class GetDailyMealPlannerRepositoryTests : MealPlannerRepositoryTest() {
     @Test
     fun `Should get user's daily meal planner successfully`() {
         // given a test user and a date
-        val userId = testUser1.id
+        val userId = createTestUser(tm).id
 
         // when creating a new daily meal planner
         createDailyMealPlanner(userId, today)

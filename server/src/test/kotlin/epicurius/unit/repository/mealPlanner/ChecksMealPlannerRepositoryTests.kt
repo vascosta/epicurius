@@ -1,6 +1,7 @@
 package epicurius.unit.repository.mealPlanner
 
 import epicurius.domain.mealPlanner.MealTime
+import epicurius.utils.createTestUser
 import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
@@ -11,7 +12,7 @@ class ChecksMealPlannerRepositoryTests : MealPlannerRepositoryTest() {
     @Test
     fun `Should check if meal time already exists in planner`() {
         // given a test user and a date
-        val userId = testUser9.id
+        val userId = createTestUser(tm).id
         val date = tomorrow
 
         // when creating a new daily meal planner
@@ -30,7 +31,7 @@ class ChecksMealPlannerRepositoryTests : MealPlannerRepositoryTest() {
     @Test
     fun `Should check if meal time does not exist in planner`() {
         // given a test user and a date
-        val userId = testUser10.id
+        val userId = createTestUser(tm).id
         val date = tomorrow
 
         // when creating a new daily meal planner
@@ -46,7 +47,7 @@ class ChecksMealPlannerRepositoryTests : MealPlannerRepositoryTest() {
     @Test
     fun `Should check if daily meal planner exists`() {
         // given a test user and a date
-        val userId = testUser11.id
+        val userId = createTestUser(tm).id
         val date = tomorrow
 
         // when creating a new daily meal planner
@@ -62,7 +63,7 @@ class ChecksMealPlannerRepositoryTests : MealPlannerRepositoryTest() {
     @Test
     fun `Should check if daily meal planner does not exist`() {
         // given a test user and a date
-        val userId = testUser12.id
+        val userId = createTestUser(tm).id
         val date = tomorrow
 
         // when checking if the daily meal planner does not exist

@@ -23,12 +23,12 @@ class UpdateDailyMealPlannerControllerTests : MealPlannerControllerTest() {
 
         // mock
         whenever(
-             mealPlannerServiceMock.updateDailyMealPlanner(
-                 testAuthenticatedUser.user.id,
-                 testAuthenticatedUser.user.name,
-                 today,
-                 updateDailyMealPlannerInputModel
-             )
+            mealPlannerServiceMock.updateDailyMealPlanner(
+                testAuthenticatedUser.user.id,
+                testAuthenticatedUser.user.name,
+                today,
+                updateDailyMealPlannerInputModel
+            )
         ).thenReturn(expectedMealPlanner)
         whenever(authenticationRefreshHandlerMock.refreshToken(testAuthenticatedUser.token)).thenReturn(mockCookie)
 

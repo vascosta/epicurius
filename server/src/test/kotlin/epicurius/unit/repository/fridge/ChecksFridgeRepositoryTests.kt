@@ -1,6 +1,7 @@
 package epicurius.unit.repository.fridge
 
 import epicurius.domain.fridge.ProductInfo
+import epicurius.utils.createTestUser
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Assertions.assertNull
@@ -13,7 +14,7 @@ class ChecksFridgeRepositoryTests : FridgeRepositoryTest() {
     @Test
     fun `Check if product exists in user fridge successfully without entry number`() {
         // given a user
-        val user = testUser5
+        val user = createTestUser(tm)
 
         // and a product in the user's fridge
         val product = ProductInfo(
@@ -51,7 +52,7 @@ class ChecksFridgeRepositoryTests : FridgeRepositoryTest() {
     @Test
     fun `Check if product exists in user fridge successfully with entry number`() {
         // given a user
-        val user = testUser6
+        val user = createTestUser(tm)
 
         // and a product in the user's fridge
         val product = ProductInfo(
@@ -82,7 +83,7 @@ class ChecksFridgeRepositoryTests : FridgeRepositoryTest() {
     @Test
     fun `Check if product is open successfully`() {
         // given a user
-        val user = testUser7
+        val user = createTestUser(tm)
 
         // and a product in the user's fridge
         val product = ProductInfo(

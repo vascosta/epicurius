@@ -1,5 +1,6 @@
 package epicurius.unit.repository.mealPlanner
 
+import epicurius.utils.createTestUser
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import kotlin.test.assertNotNull
@@ -9,7 +10,7 @@ class UpdateDailyCaloriesMealPlannerRepositoryTests : MealPlannerRepositoryTest(
     @Test
     fun `Should update user's daily meal planner max calories successfully`() {
         // given a test user and a date
-        val userId = testUser9.id
+        val userId = createTestUser(tm).id
         val date = today
 
         // when creating a new daily meal planner

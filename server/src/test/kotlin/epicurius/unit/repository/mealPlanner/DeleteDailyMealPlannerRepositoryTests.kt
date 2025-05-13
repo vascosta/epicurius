@@ -1,6 +1,7 @@
 package epicurius.unit.repository.mealPlanner
 
 import epicurius.domain.mealPlanner.MealTime
+import epicurius.utils.createTestUser
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import kotlin.test.assertNotNull
@@ -10,7 +11,7 @@ class DeleteDailyMealPlannerRepositoryTests : MealPlannerRepositoryTest() {
     @Test
     fun `Should delete user's daily meal planner successfully`() {
         // given a test user and a date
-        val userId = testUser7.id
+        val userId = createTestUser(tm).id
         val date = today
 
         // when creating a new daily meal planner
@@ -27,7 +28,7 @@ class DeleteDailyMealPlannerRepositoryTests : MealPlannerRepositoryTest() {
     @Test
     fun `Should delete meal time from user's daily meal planner successfully`() {
         // given a test user and a date
-        val userId = testUser8.id
+        val userId = createTestUser(tm).id
         val date = tomorrow
 
         // when creating a new daily meal planner

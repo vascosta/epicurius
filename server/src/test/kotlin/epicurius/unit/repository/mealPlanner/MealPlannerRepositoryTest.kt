@@ -12,18 +12,6 @@ open class MealPlannerRepositoryTest : RepositoryTest() {
     companion object {
 
         private val testAuthor = createTestUser(tm)
-        val testUser1 = createTestUser(tm)
-        val testUser2 = createTestUser(tm, true)
-        val testUser3 = createTestUser(tm, true)
-        val testUser4 = createTestUser(tm, true)
-        val testUser5 = createTestUser(tm)
-        val testUser6 = createTestUser(tm, true)
-        val testUser7 = createTestUser(tm)
-        val testUser8 = createTestUser(tm)
-        val testUser9 = createTestUser(tm)
-        val testUser10 = createTestUser(tm)
-        val testUser11 = createTestUser(tm)
-        val testUser12 = createTestUser(tm)
 
         val testRecipe = createTestRecipe(tm, fs, testAuthor)
         val testRecipe2 = createTestRecipe(tm, fs, testAuthor)

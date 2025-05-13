@@ -2,6 +2,7 @@ package epicurius.unit.repository.fridge
 
 import epicurius.domain.fridge.ProductInfo
 import epicurius.domain.fridge.UpdateProductInfo
+import epicurius.utils.createTestUser
 import org.junit.jupiter.api.Assertions.assertEquals
 import java.time.LocalDate
 import kotlin.test.Test
@@ -11,7 +12,7 @@ class UpdateFridgeProductRepositoryTests : FridgeRepositoryTest() {
     @Test
     fun `Update product in user fridge successfully`() {
         // given a user
-        val user = testUser3
+        val user = createTestUser(tm)
 
         // and a product in the user's fridge
         val product = ProductInfo(

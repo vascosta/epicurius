@@ -1,6 +1,7 @@
 package epicurius.unit.repository.mealPlanner
 
 import epicurius.domain.mealPlanner.MealTime
+import epicurius.utils.createTestUser
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 
@@ -9,7 +10,7 @@ class UpdateDailyMealPlannerControllerTestsRepositoryTests : MealPlannerReposito
     @Test
     fun `Should update user's daily meal planner recipe successfully`() {
         // given a test user and a date
-        val userId = testUser5.id
+        val userId = createTestUser(tm).id
         val date = today
 
         // when creating a new daily meal planner
@@ -35,7 +36,7 @@ class UpdateDailyMealPlannerControllerTestsRepositoryTests : MealPlannerReposito
     @Test
     fun `Should update user's daily meal planner meal time successfully`() {
         // given a test user and a date
-        val userId = testUser6.id
+        val userId = createTestUser(tm).id
         val date = tomorrow
 
         // when creating a new daily meal planner

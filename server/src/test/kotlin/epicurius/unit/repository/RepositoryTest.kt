@@ -26,7 +26,7 @@ open class RepositoryTest : EpicuriusUnitTest() {
         private const val GOOGLE_CLOUD_STORAGE_TEST_BUCKET = "epicurius-test-bucket"
         private const val GOOGLE_CLOUD_CREDENTIALS_LOCATION = "src/main/resources/epicurius-credentials.json"
 
-        private val jdbi = Jdbi.create(
+        val jdbi = Jdbi.create(
             PGSimpleDataSource().apply {
                 setURL(POSTGRES_TEST_DATABASE_URL)
             }

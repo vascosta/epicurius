@@ -3,20 +3,10 @@ package epicurius.unit.repository.fridge
 import epicurius.domain.fridge.ProductInfo
 import epicurius.domain.fridge.UpdateProductInfo
 import epicurius.unit.repository.RepositoryTest
-import epicurius.utils.createTestUser
 
 open class FridgeRepositoryTest : RepositoryTest() {
 
     companion object {
-
-        val testUser1 = createTestUser(tm)
-        val testUser2 = createTestUser(tm, true)
-        val testUser3 = createTestUser(tm)
-        val testUser4 = createTestUser(tm, true)
-        val testUser5 = createTestUser(tm)
-        val testUser6 = createTestUser(tm, true)
-        val testUser7 = createTestUser(tm)
-
         fun getFridge(userId: Int) = tm.run { it.fridgeRepository.getFridge(userId) }
 
         fun addProduct(userId: Int, product: ProductInfo) = tm.run { it.fridgeRepository.addProduct(userId, product) }
