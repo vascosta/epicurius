@@ -19,7 +19,8 @@ import epicurius.http.controllers.user.models.output.SearchUsersOutputModel
 import epicurius.http.controllers.user.models.output.UpdateUserOutputModel
 import epicurius.http.controllers.user.models.output.UpdateUserProfilePictureOutputModel
 import epicurius.http.pipeline.authentication.AuthenticationRefreshHandler
-import epicurius.http.pipeline.authentication.addCookie
+import epicurius.http.pipeline.authentication.cookie.addCookie
+import epicurius.http.pipeline.authentication.cookie.removeCookie
 import epicurius.http.utils.Uris
 import epicurius.services.user.UserService
 import jakarta.servlet.http.Cookie
@@ -191,10 +192,10 @@ class UserController(val authenticationRefreshHandler: AuthenticationRefreshHand
         response: HttpServletResponse
     ): ResponseEntity<*> {
         userService.logout(authenticatedUser.user.id)
-        response.addCookie(Cookie("token", ""))
         return ResponseEntity
             .noContent()
             .build<Unit>()
+            .removeCookie(response)
     }
 
     @PatchMapping(Uris.User.USER)
@@ -282,5 +283,17 @@ class UserController(val authenticationRefreshHandler: AuthenticationRefreshHand
             .ok()
             .build<Unit>()
             .addCookie(response, authenticationRefreshHandler.refreshToken(authenticatedUser.token))
+    }
+
+    @DeleteMapping(Uris.User.USER)
+    fun deleteUser(
+        authenticatedUser: AuthenticatedUser,
+        response: HttpServletResponse
+    ): ResponseEntity<*> {
+        userService.deleteUser(authenticatedUser.user.id)
+        return ResponseEntity
+            .ok()
+            .build<Unit>()
+            .removeCookie(response)
     }
 }

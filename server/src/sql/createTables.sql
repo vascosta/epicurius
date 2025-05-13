@@ -17,15 +17,15 @@ create table dbo.token(
     last_used date,
     user_id int not null,
     primary key (user_id),
-    foreign key (user_id) references dbo.user(id)
+    foreign key (user_id) references dbo.user(id) on delete cascade
 );
 
 create table dbo.followers(
     user_id int not null,
     follower_id int not null check ( user_id <> follower_id ),
     status int not null,
-    foreign key (user_id) references dbo.user(id),
-    foreign key (follower_id) references dbo.user(id)
+    foreign key (user_id) references dbo.user(id) on delete cascade,
+    foreign key (follower_id) references dbo.user(id) on delete cascade
 );
 
 create table dbo.fridge(
@@ -36,7 +36,7 @@ create table dbo.fridge(
     open_date date,
     expiration_date date not null,
     primary key (owner_id, entry_number),
-    foreign key (owner_id) references dbo.user(id)
+    foreign key (owner_id) references dbo.user(id) on delete cascade
 );
 
 create table dbo.recipe(
@@ -55,7 +55,7 @@ create table dbo.recipe(
     fat int check ( fat >= 0),
     carbs int check ( carbs >= 0),
     pictures_names varchar(80)[] check (cardinality(pictures_names) between 1 and 3),
-    foreign key (author_id) references dbo.user(id)
+    foreign key (author_id) references dbo.user(id) on delete cascade
 );
 
 create table dbo.recipe_rating(
@@ -64,8 +64,8 @@ create table dbo.recipe_rating(
     rating int not null check (rating between 1 and 5),
     created_at date not null,
     primary key (recipe_id, user_id),
-    foreign key (recipe_id) references dbo.recipe(id),
-    foreign key (user_id) references dbo.user(id)
+    foreign key (recipe_id) references dbo.recipe(id) on delete cascade,
+    foreign key (user_id) references dbo.user(id) on delete cascade
 );
 
 create table dbo.ingredient(
@@ -74,7 +74,7 @@ create table dbo.ingredient(
     quantity double precision not null,
     unit int not null,
     primary key (recipe_id, name),
-    foreign key (recipe_id) references dbo.recipe(id)
+    foreign key (recipe_id) references dbo.recipe(id) on delete cascade
 );
 
 create table dbo.collection(
@@ -82,15 +82,15 @@ create table dbo.collection(
     owner_id int not null,
     name varchar(30) not null,
     type int not null, -- favourite or kitchen book
-    foreign key (owner_id) references dbo.user(id)
+    foreign key (owner_id) references dbo.user(id) on delete cascade
 );
 
 create table dbo.collection_recipe(
-   collection_id int not null,
-   recipe_id int not null,
-   primary key (collection_id, recipe_id),
-   foreign key (collection_id) references dbo.collection(id),
-   foreign key (recipe_id) references dbo.recipe(id)
+    collection_id int not null,
+    recipe_id int not null,
+    primary key (collection_id, recipe_id),
+    foreign key (collection_id) references dbo.collection(id) on delete cascade,
+    foreign key (recipe_id) references dbo.recipe(id) on delete cascade
 );
 
 create table dbo.meal_planner(
@@ -98,7 +98,7 @@ create table dbo.meal_planner(
     date date not null,
     max_calories int check ( max_calories >= 0 ),
     primary key (user_id, date),
-    foreign key (user_id) references dbo.user(id)
+    foreign key (user_id) references dbo.user(id) on delete cascade
 );
 
 create table dbo.meal_planner_recipe(
@@ -107,8 +107,8 @@ create table dbo.meal_planner_recipe(
     recipe_id int not null,
     meal_time int not null,
     primary key (user_id, date, recipe_id, meal_time),
-    foreign key (user_id, date) references dbo.meal_planner(user_id, date),
-    foreign key (recipe_id) references dbo.recipe(id)
+    foreign key (user_id, date) references dbo.meal_planner(user_id, date) on delete cascade,
+    foreign key (recipe_id) references dbo.recipe(id) on delete cascade
 );
 
 create or replace function delete_product_with_no_quantity()
@@ -116,15 +116,15 @@ create or replace function delete_product_with_no_quantity()
 $$
 begin
     if new.quantity = 0 then
-        delete from dbo.fridge
-        where owner_id = new.owner_id and entry_number = new.entry_number;
-    end if;
-    return null;
+delete from dbo.fridge
+where owner_id = new.owner_id and entry_number = new.entry_number;
+end if;
+return null;
 end;
 $$ language plpgsql;
 
 create trigger trg_delete_product_with_no_quantity
     after insert or update
-    on dbo.fridge
-    for each row
-execute function delete_product_with_no_quantity();
+                        on dbo.fridge
+                        for each row
+                        execute function delete_product_with_no_quantity();

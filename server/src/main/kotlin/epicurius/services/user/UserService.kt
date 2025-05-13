@@ -202,6 +202,10 @@ class UserService(
         }
     }
 
+    fun deleteUser(userId: Int) {
+        tm.run { it.userRepository.deleteUser(userId) }
+    }
+
     private fun removeProfilePicture(userId: Int, profilePictureName: String) {
         cs.pictureRepository.deletePicture(profilePictureName, PictureDomain.USERS_FOLDER)
         tm.run { it.userRepository.updateUser(userId, JdbiUpdateUserModel(profilePictureName = null)) }

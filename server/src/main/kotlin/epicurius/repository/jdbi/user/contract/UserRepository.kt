@@ -22,6 +22,8 @@ interface UserRepository {
     fun unfollow(userId: Int, userIdToUnfollow: Int)
     fun cancelFollowRequest(userId: Int, followerId: Int)
 
+    fun deleteUser(userId: Int)
+
     fun checkIfUserIsLoggedIn(userId: Int): Boolean
     fun checkIfUserIsBeingFollowedBy(userId: Int, followerId: Int): Boolean
     fun checkIfUserAlreadySentFollowRequest(userId: Int, followerId: Int): Boolean
