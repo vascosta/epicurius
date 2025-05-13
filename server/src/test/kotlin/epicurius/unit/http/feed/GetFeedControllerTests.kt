@@ -41,10 +41,9 @@ class GetFeedControllerTests : FeedHttpTest() {
         whenever(
             feedServiceMock.getFeed(testAuthenticatedUser.user.id, emptyList(), emptyList(), pagingParams)
         ).thenReturn(emptyList())
-        whenever(authenticationRefreshHandlerMock.refreshToken(testAuthenticatedUser.token)).thenReturn(mockCookie)
 
         // when retrieving the feed
-        val response = getFeed(testAuthenticatedUser, pagingParams.skip, pagingParams.limit, mockResponse)
+        val response = getFeed(testAuthenticatedUser, pagingParams.skip, pagingParams.limit)
 
         // then feed should be empty
         assertEquals(HttpStatus.OK, response.statusCode)
@@ -59,10 +58,9 @@ class GetFeedControllerTests : FeedHttpTest() {
         whenever(
             feedServiceMock.getFeed(testAuthenticatedUser.user.id, emptyList(), emptyList(), pagingParams)
         ).thenReturn(listOf(recipeInfo))
-        whenever(authenticationRefreshHandlerMock.refreshToken(testAuthenticatedUser.token)).thenReturn(mockCookie)
 
         // when retrieving the feed
-        val response = getFeed(testAuthenticatedUser, pagingParams.skip, pagingParams.limit, mockResponse)
+        val response = getFeed(testAuthenticatedUser, pagingParams.skip, pagingParams.limit)
 
         // then feed should contain recipes
         assertEquals(HttpStatus.OK, response.statusCode)
@@ -77,10 +75,9 @@ class GetFeedControllerTests : FeedHttpTest() {
         whenever(
             feedServiceMock.getFeed(testAuthenticatedUser.user.id, emptyList(), emptyList(), pagingParams)
         ).thenReturn(listOf(recipeInfo2, recipeInfo))
-        whenever(authenticationRefreshHandlerMock.refreshToken(testAuthenticatedUser.token)).thenReturn(mockCookie)
 
         // when retrieving the feed
-        val response = getFeed(testAuthenticatedUser, pagingParams.skip, pagingParams.limit, mockResponse)
+        val response = getFeed(testAuthenticatedUser, pagingParams.skip, pagingParams.limit)
 
         // then feed should contain recipes
         assertEquals(HttpStatus.OK, response.statusCode)
@@ -103,10 +100,9 @@ class GetFeedControllerTests : FeedHttpTest() {
                 pagingParams
             )
         ).thenReturn(listOf(recipeInfo2))
-        whenever(authenticationRefreshHandlerMock.refreshToken(testAuthenticatedUserWithIntolerances.token)).thenReturn(mockCookie)
 
         // when retrieving the feed with intolerance and no diets
-        val response = getFeed(testAuthenticatedUserWithIntolerances, pagingParams.skip, pagingParams.limit, mockResponse)
+        val response = getFeed(testAuthenticatedUserWithIntolerances, pagingParams.skip, pagingParams.limit)
 
         // then feed should contain recipes
         assertEquals(HttpStatus.OK, response.statusCode)
@@ -129,10 +125,8 @@ class GetFeedControllerTests : FeedHttpTest() {
                 pagingParams
             )
         ).thenReturn(listOf(recipeInfo))
-        whenever(authenticationRefreshHandlerMock.refreshToken(testAuthenticatedUserWithDiets.token)).thenReturn(mockCookie)
-
         // when retrieving the feed with diets and no intolerances
-        val response = getFeed(testAuthenticatedUserWithDiets, pagingParams.skip, pagingParams.limit, mockResponse)
+        val response = getFeed(testAuthenticatedUserWithDiets, pagingParams.skip, pagingParams.limit)
 
         // then feed should contain recipes
         assertEquals(HttpStatus.OK, response.statusCode)
@@ -158,10 +152,9 @@ class GetFeedControllerTests : FeedHttpTest() {
                 pagingParams
             )
         ).thenReturn(listOf(recipeInfo2, recipeInfo))
-        whenever(authenticationRefreshHandlerMock.refreshToken(testAuthenticatedUserWithIntolerancesAndDiets.token)).thenReturn(mockCookie)
 
         // when retrieving the feed with intolerance and no diets
-        val response = getFeed(testAuthenticatedUserWithIntolerancesAndDiets, pagingParams.skip, pagingParams.limit, mockResponse)
+        val response = getFeed(testAuthenticatedUserWithIntolerancesAndDiets, pagingParams.skip, pagingParams.limit)
 
         // then feed should contain recipes
         assertEquals(HttpStatus.OK, response.statusCode)

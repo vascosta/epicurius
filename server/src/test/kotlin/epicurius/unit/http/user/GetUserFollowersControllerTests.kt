@@ -18,10 +18,9 @@ class GetUserFollowersControllerTests : UserHttpTest() {
         val mockFollower = FollowUser(privateTestUsername, null)
         val mockFollowers = listOf(mockFollower)
         whenever(userServiceMock.getFollowers(publicTestUser.user.id)).thenReturn(mockFollowers)
-        whenever(authenticationRefreshHandlerMock.refreshToken(publicTestUser.token)).thenReturn(mockCookie)
 
         // when retrieving the followers of the user
-        val response = getUserFollowers(publicTestUser, mockResponse)
+        val response = getUserFollowers(publicTestUser)
         val body = response.body as GetUserFollowersOutputModel
 
         // then the followers are retrieved successfully

@@ -220,12 +220,6 @@ class UserService(
         }
     }
 
-    fun refreshUserToken(oldToken: String): String {
-        val authenticatedUser = getAuthenticatedUser(oldToken) ?: throw UserNotFound(null)
-        deleteToken(authenticatedUser.user.id)
-        return createToken(authenticatedUser.user.id)
-    }
-
     private fun createToken(userId: Int): String {
         checkIfUserIsLoggedIn(userId)
         val token = userDomain.generateTokenValue()

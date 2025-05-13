@@ -8,7 +8,6 @@ import epicurius.http.controllers.mealPlanner.models.input.UpdateDailyCaloriesIn
 import epicurius.http.controllers.mealPlanner.models.input.UpdateMealPlannerInputModel
 import epicurius.http.controllers.mealPlanner.models.output.DailyMealPlannerOutputModel
 import epicurius.http.controllers.mealPlanner.models.output.MealPlannerOutputModel
-import epicurius.http.pipeline.authentication.AuthenticationRefreshHandler
 import epicurius.http.pipeline.authentication.cookie.addCookie
 import epicurius.http.utils.Uris
 import epicurius.http.utils.Uris.MealPlanner.mealPlanner
@@ -28,47 +27,38 @@ import java.time.LocalDate
 
 @RestController
 @RequestMapping(Uris.PREFIX)
-class MealPlannerController(
-    private val authenticationRefreshHandler: AuthenticationRefreshHandler,
-    private val mealPlannerService: MealPlannerService
-) {
+class MealPlannerController(private val mealPlannerService: MealPlannerService) {
 
     @GetMapping(Uris.MealPlanner.PLANNER)
     fun getWeeklyMealPlanner(
         authenticatedUser: AuthenticatedUser,
-        response: HttpServletResponse
     ): ResponseEntity<*> {
         val mealPlanner = mealPlannerService.getWeeklyMealPlanner(authenticatedUser.user.id)
         return ResponseEntity
             .ok()
             .body(MealPlannerOutputModel(mealPlanner.planner))
-            .addCookie(response, authenticationRefreshHandler.refreshToken(authenticatedUser.token))
     }
 
     @GetMapping(Uris.MealPlanner.MEAL_PLANNER)
     fun getDailyMealPlanner(
         authenticatedUser: AuthenticatedUser,
         @PathVariable date: LocalDate,
-        response: HttpServletResponse
     ): ResponseEntity<*> {
         val dailyMealPlanner = mealPlannerService.getDailyMealPlanner(authenticatedUser.user.id, date)
         return ResponseEntity
             .ok()
             .body(DailyMealPlannerOutputModel(dailyMealPlanner))
-            .addCookie(response, authenticationRefreshHandler.refreshToken(authenticatedUser.token))
     }
 
     @PostMapping(Uris.MealPlanner.PLANNER)
     fun createDailyMealPlanner(
         authenticatedUser: AuthenticatedUser,
         @Valid @RequestBody body: CreateMealPlannerInputModel,
-        response: HttpServletResponse
     ): ResponseEntity<*> {
         val dailyMealPlanner = mealPlannerService.createDailyMealPlanner(authenticatedUser.user.id, body.date, body.maxCalories)
         return ResponseEntity
             .created(mealPlanner(body.date))
             .body(DailyMealPlannerOutputModel(dailyMealPlanner))
-            .addCookie(response, authenticationRefreshHandler.refreshToken(authenticatedUser.token))
     }
 
     @PostMapping(Uris.MealPlanner.MEAL_PLANNER)
@@ -76,7 +66,6 @@ class MealPlannerController(
         authenticatedUser: AuthenticatedUser,
         @PathVariable date: LocalDate,
         @Valid @RequestBody body: AddMealPlannerInputModel,
-        response: HttpServletResponse
     ): ResponseEntity<*> {
         val planner = mealPlannerService.addRecipeToDailyMealPlanner(
             authenticatedUser.user.id,
@@ -87,7 +76,6 @@ class MealPlannerController(
         return ResponseEntity
             .created(mealPlanner(date))
             .body(DailyMealPlannerOutputModel(planner))
-            .addCookie(response, authenticationRefreshHandler.refreshToken(authenticatedUser.token))
     }
 
     @PatchMapping(Uris.MealPlanner.MEAL_PLANNER)
@@ -95,7 +83,6 @@ class MealPlannerController(
         authenticatedUser: AuthenticatedUser,
         @PathVariable date: LocalDate,
         @Valid @RequestBody body: UpdateMealPlannerInputModel,
-        response: HttpServletResponse
     ): ResponseEntity<*> {
         val mealPlanner = mealPlannerService.updateDailyMealPlanner(
             authenticatedUser.user.id,
@@ -106,7 +93,6 @@ class MealPlannerController(
         return ResponseEntity
             .ok()
             .body(DailyMealPlannerOutputModel(mealPlanner))
-            .addCookie(response, authenticationRefreshHandler.refreshToken(authenticatedUser.token))
     }
 
     @PatchMapping(Uris.MealPlanner.CALORIES)
@@ -114,13 +100,11 @@ class MealPlannerController(
         authenticatedUser: AuthenticatedUser,
         @PathVariable date: LocalDate,
         @Valid @RequestBody body: UpdateDailyCaloriesInputModel,
-        response: HttpServletResponse
     ): ResponseEntity<*> {
         val dailyMealPlanner = mealPlannerService.updateDailyCalories(authenticatedUser.user.id, date, body.maxCalories)
         return ResponseEntity
             .ok()
             .body(DailyMealPlannerOutputModel(dailyMealPlanner))
-            .addCookie(response, authenticationRefreshHandler.refreshToken(authenticatedUser.token))
     }
 
     @DeleteMapping(Uris.MealPlanner.CLEAN_MEAL_TIME)
@@ -128,25 +112,21 @@ class MealPlannerController(
         authenticatedUser: AuthenticatedUser,
         @PathVariable date: LocalDate,
         @PathVariable mealTime: MealTime,
-        response: HttpServletResponse
     ): ResponseEntity<*> {
         val mealPlanner = mealPlannerService.removeMealTimeFromDailyMealPlanner(authenticatedUser.user.id, date, mealTime)
         return ResponseEntity
             .ok()
             .body(DailyMealPlannerOutputModel(mealPlanner))
-            .addCookie(response, authenticationRefreshHandler.refreshToken(authenticatedUser.token))
     }
 
     @DeleteMapping(Uris.MealPlanner.MEAL_PLANNER)
     fun deleteDailyMealPlanner(
         authenticatedUser: AuthenticatedUser,
         @PathVariable date: LocalDate,
-        response: HttpServletResponse
     ): ResponseEntity<*> {
         val mealPlanner = mealPlannerService.deleteDailyMealPlanner(authenticatedUser.user.id, date)
         return ResponseEntity
             .ok()
             .body(MealPlannerOutputModel(mealPlanner.planner))
-            .addCookie(response, authenticationRefreshHandler.refreshToken(authenticatedUser.token))
     }
 }

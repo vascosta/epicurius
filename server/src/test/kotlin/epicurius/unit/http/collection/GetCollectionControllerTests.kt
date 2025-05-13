@@ -20,10 +20,9 @@ class GetCollectionControllerTests : CollectionHttpTest() {
                 testPublicAuthenticatedUser.user.id, testPublicAuthenticatedUser.user.name, FAVOURITE_COLLECTION_ID
             )
         ).thenReturn(testFavouriteCollection)
-        whenever(authenticationRefreshHandlerMock.refreshToken(testPublicAuthenticatedUser.token)).thenReturn(mockCookie)
 
         // when retrieving the collection
-        val response = getCollection(testPublicAuthenticatedUser, FAVOURITE_COLLECTION_ID, mockResponse)
+        val response = getCollection(testPublicAuthenticatedUser, FAVOURITE_COLLECTION_ID)
         val body = response.body as GetCollectionOutputModel
 
         // then the collection is retrieved successfully
@@ -45,7 +44,7 @@ class GetCollectionControllerTests : CollectionHttpTest() {
 
         // when retrieving the collection
         // then the collection is not found and throws CollectionNotFound exception
-        assertFailsWith<CollectionNotFound> { getCollection(testPublicAuthenticatedUser, nonExistingCollectionId, mockResponse) }
+        assertFailsWith<CollectionNotFound> { getCollection(testPublicAuthenticatedUser, nonExistingCollectionId) }
     }
 
     @Test
@@ -62,7 +61,7 @@ class GetCollectionControllerTests : CollectionHttpTest() {
         // when retrieving the collection
         // then the collection is not accessible and throws CollectionNotAccessible exception
         assertFailsWith<CollectionNotFound> {
-            getCollection(testPrivateAuthenticatedUser, FAVOURITE_COLLECTION_ID, mockResponse)
+            getCollection(testPrivateAuthenticatedUser, FAVOURITE_COLLECTION_ID)
         }
     }
 
@@ -79,6 +78,6 @@ class GetCollectionControllerTests : CollectionHttpTest() {
 
         // when retrieving the collection
         // then the collection is not accessible and throws CollectionNotAccessible exception
-        assertFailsWith<CollectionNotFound> { getCollection(testPrivateAuthenticatedUser, KITCHEN_BOOK_COLLECTION_ID, mockResponse) }
+        assertFailsWith<CollectionNotFound> { getCollection(testPrivateAuthenticatedUser, KITCHEN_BOOK_COLLECTION_ID) }
     }
 }

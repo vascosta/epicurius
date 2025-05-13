@@ -87,11 +87,10 @@ class CreateRecipeControllerTests : RecipeHttpTest() {
             }
 
         ).thenReturn(recipeMock)
-        whenever(authenticationRefreshHandlerMock.refreshToken(testAuthenticatedUser.token)).thenReturn(mockCookie)
 
         // when creating the recipe
         val response = runBlocking {
-            createRecipe(testAuthenticatedUser, objectMapper.writeValueAsString(createRecipeInfo), recipePictures, mockResponse)
+            createRecipe(testAuthenticatedUser, objectMapper.writeValueAsString(createRecipeInfo), recipePictures)
         }
 
         // then the recipe is created successfully
@@ -122,7 +121,7 @@ class CreateRecipeControllerTests : RecipeHttpTest() {
         assertFailsWith<InvalidNumberOfRecipePictures> {
             runBlocking {
                 createRecipe(
-                    testAuthenticatedUser, objectMapper.writeValueAsString(createRecipeInfo), invalidNumberOfRecipePicturesSet, mockResponse
+                    testAuthenticatedUser, objectMapper.writeValueAsString(createRecipeInfo), invalidNumberOfRecipePicturesSet
                 )
             }
         }
@@ -150,7 +149,7 @@ class CreateRecipeControllerTests : RecipeHttpTest() {
         // then the recipe is not created and throws InvalidIngredient exception
         assertFailsWith<InvalidIngredient> {
             runBlocking {
-                createRecipe(testAuthenticatedUser, objectMapper.writeValueAsString(createRecipeInfo), recipePictures, mockResponse)
+                createRecipe(testAuthenticatedUser, objectMapper.writeValueAsString(createRecipeInfo), recipePictures)
             }
         }
     }

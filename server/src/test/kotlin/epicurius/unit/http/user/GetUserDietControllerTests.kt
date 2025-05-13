@@ -12,11 +12,8 @@ class GetUserDietControllerTests : UserHttpTest() {
     fun `Should retrieve the diets of an user successfully`() {
         // given a user (publicTestUser)
 
-        // mock
-        whenever(authenticationRefreshHandlerMock.refreshToken(publicTestUser.token)).thenReturn(mockCookie)
-
         // when retrieving the user's diets
-        val response = getUserDiet(publicTestUser, mockResponse)
+        val response = getUserDiet(publicTestUser)
         val body = response.body as GetUserDietsOutputModel
 
         // then the user's diets are retrieved successfully

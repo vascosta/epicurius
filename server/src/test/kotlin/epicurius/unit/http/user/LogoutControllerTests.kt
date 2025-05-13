@@ -14,9 +14,6 @@ class LogoutControllerTests : UserHttpTest() {
     fun `Should logout a user successfully`() {
         // given a logged-in user (publicTestUser)
 
-        // mock
-        whenever(authenticationRefreshHandlerMock.refreshToken(testAuthenticatedUser.token)).thenReturn(mockCookie)
-
         // when logging out
         val response = logout(publicTestUser, mockResponse)
 

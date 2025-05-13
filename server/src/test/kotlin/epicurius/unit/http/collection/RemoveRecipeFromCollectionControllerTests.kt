@@ -22,14 +22,12 @@ class RemoveRecipeFromCollectionControllerTests : CollectionHttpTest() {
             collectionServiceMock
                 .removeRecipeFromCollection(testPublicAuthenticatedUser.user.id, FAVOURITE_COLLECTION_ID, RECIPE_ID)
         ).thenReturn(testFavouriteCollection)
-        whenever(authenticationRefreshHandlerMock.refreshToken(testPublicAuthenticatedUser.token)).thenReturn(mockCookie)
 
         // when removing the recipe from the collection
         val response = removeRecipeFromCollection(
             testPublicAuthenticatedUser,
             FAVOURITE_COLLECTION_ID,
-            RECIPE_ID,
-            mockResponse
+            RECIPE_ID
         )
         val body = response.body as RemoveRecipeFromCollectionOutputModel
 
@@ -52,7 +50,7 @@ class RemoveRecipeFromCollectionControllerTests : CollectionHttpTest() {
         // when removing the recipe from the collection
         // then the recipe is not removed and throws CollectionNotFound exception
         assertFailsWith<CollectionNotFound> {
-            removeRecipeFromCollection(testPublicAuthenticatedUser, nonExistingCollectionId, RECIPE_ID, mockResponse)
+            removeRecipeFromCollection(testPublicAuthenticatedUser, nonExistingCollectionId, RECIPE_ID)
         }
     }
 
@@ -69,7 +67,7 @@ class RemoveRecipeFromCollectionControllerTests : CollectionHttpTest() {
         // when removing the recipe from the collection
         // then the recipe is not removed and throws NotTheCollectionOwner exception
         assertFailsWith<NotTheCollectionOwner> {
-            removeRecipeFromCollection(testPrivateAuthenticatedUser, FAVOURITE_COLLECTION_ID, RECIPE_ID, mockResponse)
+            removeRecipeFromCollection(testPrivateAuthenticatedUser, FAVOURITE_COLLECTION_ID, RECIPE_ID,)
         }
     }
 
@@ -87,7 +85,7 @@ class RemoveRecipeFromCollectionControllerTests : CollectionHttpTest() {
         // when removing the recipe from the collection
         // then the recipe is not removed and throws RecipeNotFound exception
         assertFailsWith<RecipeNotFound> {
-            removeRecipeFromCollection(testPublicAuthenticatedUser, FAVOURITE_COLLECTION_ID, nonExistingRecipeId, mockResponse)
+            removeRecipeFromCollection(testPublicAuthenticatedUser, FAVOURITE_COLLECTION_ID, nonExistingRecipeId)
         }
     }
 
@@ -104,7 +102,7 @@ class RemoveRecipeFromCollectionControllerTests : CollectionHttpTest() {
         // when removing the recipe from the collection
         // then the recipe is not removed and throws RecipeNotInCollection exception
         assertFailsWith<RecipeNotInCollection> {
-            removeRecipeFromCollection(testPublicAuthenticatedUser, FAVOURITE_COLLECTION_ID, RECIPE_ID, mockResponse)
+            removeRecipeFromCollection(testPublicAuthenticatedUser, FAVOURITE_COLLECTION_ID, RECIPE_ID)
         }
     }
 }

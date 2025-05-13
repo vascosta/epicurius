@@ -24,10 +24,9 @@ class UpdateFridgeProductControllerTests : FridgeHttpTest() {
         whenever(
             fridgeServiceMock.updateProductInfo(testAuthenticatedUser.user.id, ENTRY_NUMBER, updateInput)
         ).thenReturn(Fridge(listOf(updatedProduct)))
-        whenever(authenticationRefreshHandlerMock.refreshToken(testAuthenticatedUser.token)).thenReturn(mockCookie)
 
         // when updating the product in the fridge
-        val response = updateProduct(testAuthenticatedUser, ENTRY_NUMBER, updateInput, mockResponse)
+        val response = updateProduct(testAuthenticatedUser, ENTRY_NUMBER, updateInput)
 
         // then the product is updated successfully
         assertEquals(HttpStatus.OK, response.statusCode)
@@ -47,10 +46,9 @@ class UpdateFridgeProductControllerTests : FridgeHttpTest() {
         whenever(
             fridgeServiceMock.updateProductInfo(testAuthenticatedUser.user.id, ENTRY_NUMBER, updateInput)
         ).thenReturn(Fridge(listOf(updatedProduct)))
-        whenever(authenticationRefreshHandlerMock.refreshToken(testAuthenticatedUser.token)).thenReturn(mockCookie)
 
         // when updating the product in the fridge
-        val response = updateProduct(testAuthenticatedUser, ENTRY_NUMBER, updateInput, mockResponse)
+        val response = updateProduct(testAuthenticatedUser, ENTRY_NUMBER, updateInput)
 
         // then the product is updated successfully
         assertEquals(HttpStatus.OK, response.statusCode)
@@ -70,10 +68,9 @@ class UpdateFridgeProductControllerTests : FridgeHttpTest() {
         whenever(
             fridgeServiceMock.updateProductInfo(testAuthenticatedUser.user.id, ENTRY_NUMBER, updateProductInputModel)
         ).thenReturn(Fridge(listOf(updatedProduct)))
-        whenever(authenticationRefreshHandlerMock.refreshToken(testAuthenticatedUser.token)).thenReturn(mockCookie)
 
         // when updating the product in the fridge
-        val response = updateProduct(testAuthenticatedUser, ENTRY_NUMBER, updateProductInputModel, mockResponse)
+        val response = updateProduct(testAuthenticatedUser, ENTRY_NUMBER, updateProductInputModel)
 
         // then the product is updated successfully
         assertEquals(HttpStatus.OK, response.statusCode)
@@ -92,7 +89,7 @@ class UpdateFridgeProductControllerTests : FridgeHttpTest() {
 
         // when trying to update the product in the fridge
         val exception = assertFailsWith<ProductNotFound> {
-            updateProduct(testAuthenticatedUser, nonExistingEntryNumber, updateProductInputModel, mockResponse)
+            updateProduct(testAuthenticatedUser, nonExistingEntryNumber, updateProductInputModel)
         }
 
         // then the exception is thrown
@@ -109,7 +106,7 @@ class UpdateFridgeProductControllerTests : FridgeHttpTest() {
 
         // when trying to update the product in the fridge
         val exception = assertFailsWith<ProductIsAlreadyOpen> {
-            updateProduct(testAuthenticatedUser, NEW_ENTRY_NUMBER, updateProductInputModel, mockResponse)
+            updateProduct(testAuthenticatedUser, NEW_ENTRY_NUMBER, updateProductInputModel)
         }
 
         // then the exception is thrown

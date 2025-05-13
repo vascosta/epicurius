@@ -18,11 +18,8 @@ class RateRecipeControllerTests : RateRecipeHttpTest() {
     fun `Should rate recipe successfully`() {
         // given an authenticated user and a recipe
 
-        // mock
-        whenever(authenticationRefreshHandlerMock.refreshToken(testAuthenticatedUser.token)).thenReturn(mockCookie)
-
         // when the user rates the recipe with a rating of 5
-        val response = rateRecipe(testAuthenticatedUser, RECIPE_ID, RATING_5, mockResponse)
+        val response = rateRecipe(testAuthenticatedUser, RECIPE_ID, RATING_5)
 
         // then the recipe should be rated successfully
         verify(
@@ -42,7 +39,7 @@ class RateRecipeControllerTests : RateRecipeHttpTest() {
         ).thenReturn(RATING_5.toDouble())
 
         // when getting the recipe rate
-        val rating = getRecipeRate(testAuthenticatedUser, RECIPE_ID, mockResponse)
+        val rating = getRecipeRate(testAuthenticatedUser, RECIPE_ID)
         assertEquals(HttpStatus.OK, rating.statusCode)
         assertEquals(GetRecipeRateOutputModel(RATING_5.toDouble()), rating.body)
     }
@@ -64,7 +61,7 @@ class RateRecipeControllerTests : RateRecipeHttpTest() {
 
         // when rating a non-existing recipe
         // then RecipeNotFound exception should be thrown
-        assertThrows<RecipeNotFound> { rateRecipe(testAuthenticatedUser, nonExistingRecipeId, RATING_5, mockResponse) }
+        assertThrows<RecipeNotFound> { rateRecipe(testAuthenticatedUser, nonExistingRecipeId, RATING_5) }
     }
 
     @Test
@@ -83,7 +80,7 @@ class RateRecipeControllerTests : RateRecipeHttpTest() {
 
         // when rating the recipe
         // then AuthorCannotRateOwnRecipe exception should be thrown
-        assertThrows<AuthorCannotRateOwnRecipe> { rateRecipe(testAuthorAuthenticatedUser, RECIPE_ID, RATING_5, mockResponse) }
+        assertThrows<AuthorCannotRateOwnRecipe> { rateRecipe(testAuthorAuthenticatedUser, RECIPE_ID, RATING_5) }
     }
 
     @Test
@@ -102,7 +99,7 @@ class RateRecipeControllerTests : RateRecipeHttpTest() {
 
         // when rating the recipe
         // then RecipeNotAccessible exception should be thrown
-        assertThrows<RecipeNotAccessible> { rateRecipe(testAuthenticatedUser, RECIPE_ID, RATING_5, mockResponse) }
+        assertThrows<RecipeNotAccessible> { rateRecipe(testAuthenticatedUser, RECIPE_ID, RATING_5) }
     }
 
     @Test
@@ -121,6 +118,6 @@ class RateRecipeControllerTests : RateRecipeHttpTest() {
 
         // when rating the recipe
         // then UserAlreadyRated exception should be thrown
-        assertThrows<UserAlreadyRated> { rateRecipe(testAuthenticatedUser, RECIPE_ID, RATING_5, mockResponse) }
+        assertThrows<UserAlreadyRated> { rateRecipe(testAuthenticatedUser, RECIPE_ID, RATING_5) }
     }
 }

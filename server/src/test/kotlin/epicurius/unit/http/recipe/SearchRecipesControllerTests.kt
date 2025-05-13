@@ -57,7 +57,6 @@ class SearchRecipesControllerTests : RecipeHttpTest() {
             recipeServiceMock
                 .searchRecipes(testAuthenticatedUser.user.id, searchRecipesInputInfoWithName, pagingParams)
         ).thenReturn(listOf(recipeInfo))
-        whenever(authenticationRefreshHandlerMock.refreshToken(testAuthenticatedUser.token)).thenReturn(mockCookie)
 
         // when searching for recipes by name
         val response = searchRecipes(testAuthenticatedUser, searchRecipesInputInfoWithName.name, response = mockResponse)
@@ -80,7 +79,6 @@ class SearchRecipesControllerTests : RecipeHttpTest() {
             recipeServiceMock
                 .searchRecipes(testAuthenticatedUser.user.id, sameIntolerances, pagingParams)
         ).thenReturn(emptyList())
-        whenever(authenticationRefreshHandlerMock.refreshToken(testAuthenticatedUser.token)).thenReturn(mockCookie)
 
         // when searching for recipes with intolerances
         val response = searchRecipes(
@@ -130,7 +128,6 @@ class SearchRecipesControllerTests : RecipeHttpTest() {
             recipeServiceMock
                 .searchRecipes(testAuthenticatedUser.user.id, searchRecipesInputInfoWithoutIngredients, pagingParams)
         ).thenReturn(listOf(recipeInfo))
-        whenever(authenticationRefreshHandlerMock.refreshToken(testAuthenticatedUser.token)).thenReturn(mockCookie)
 
         // when searching for recipes without ingredients
         val response = searchRecipes(
@@ -209,7 +206,6 @@ class SearchRecipesControllerTests : RecipeHttpTest() {
             recipeServiceMock
                 .searchRecipes(testAuthenticatedUser.user.id, searchRecipesInputInfo, pagingParams)
         ).thenReturn(listOf(recipeInfo))
-        whenever(authenticationRefreshHandlerMock.refreshToken(testAuthenticatedUser.token)).thenReturn(mockCookie)
 
         // when searching for public recipes
         val response = searchRecipes(
@@ -250,7 +246,6 @@ class SearchRecipesControllerTests : RecipeHttpTest() {
             recipeServiceMock
                 .searchRecipes(testAuthenticatedUser.user.id, searchRecipesInputInfo, pagingParams)
         ).thenReturn(emptyList())
-        whenever(authenticationRefreshHandlerMock.refreshToken(testAuthenticatedUser.token)).thenReturn(mockCookie)
 
         // when searching for recipes from private users
         val response = searchRecipes(
@@ -291,7 +286,6 @@ class SearchRecipesControllerTests : RecipeHttpTest() {
             recipeServiceMock
                 .searchRecipes(testAuthenticatedUser.user.id, searchRecipesInputInfo, pagingParams)
         ).thenReturn(listOf(recipeInfo))
-        whenever(authenticationRefreshHandlerMock.refreshToken(testAuthenticatedUser.token)).thenReturn(mockCookie)
 
         // when searching for recipes from private users
         val response = searchRecipes(

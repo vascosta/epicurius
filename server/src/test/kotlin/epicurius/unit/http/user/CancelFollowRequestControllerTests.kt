@@ -17,11 +17,8 @@ class CancelFollowRequestControllerTests : UserHttpTest() {
     fun `Should cancel a follow request successfully`() {
         // given two users (publicTestUser and privateTestUser)
 
-        // mock
-        whenever(authenticationRefreshHandlerMock.refreshToken(publicTestUser.token)).thenReturn(mockCookie)
-
         // when canceling the follow request
-        val response = cancelFollowRequest(publicTestUser, privateTestUsername, mockResponse)
+        val response = cancelFollowRequest(publicTestUser, privateTestUsername)
 
         // then the follow request is canceled successfully
         verify(userServiceMock).followRequest(publicTestUser.user.id, publicTestUsername, privateTestUsername, FollowRequestType.CANCEL)
@@ -39,7 +36,7 @@ class CancelFollowRequestControllerTests : UserHttpTest() {
         // when canceling the follow request
         // then the follow request is not canceled and throws InvalidSelfCancelFollowRequest exception
         assertFailsWith<InvalidSelfCancelFollowRequest> {
-            cancelFollowRequest(publicTestUser, publicTestUsername, mockResponse)
+            cancelFollowRequest(publicTestUser, publicTestUsername)
         }
     }
 
@@ -55,7 +52,7 @@ class CancelFollowRequestControllerTests : UserHttpTest() {
         // when canceling the follow request
         // then the follow request is not canceled and throws UserNotFound exception
         assertFailsWith<UserNotFound> {
-            cancelFollowRequest(publicTestUser, nonExistingUser, mockResponse)
+            cancelFollowRequest(publicTestUser, nonExistingUser)
         }
     }
 
@@ -70,7 +67,7 @@ class CancelFollowRequestControllerTests : UserHttpTest() {
         // when canceling the follow request
         // then the follow request is not canceled and throws FollowRequestNotFound exception
         assertFailsWith<FollowRequestNotFound> {
-            cancelFollowRequest(publicTestUser, privateTestUsername, mockResponse)
+            cancelFollowRequest(publicTestUser, privateTestUsername)
         }
     }
 }

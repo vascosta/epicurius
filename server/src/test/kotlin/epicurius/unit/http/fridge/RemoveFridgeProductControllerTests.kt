@@ -22,10 +22,9 @@ class RemoveFridgeProductControllerTests : FridgeHttpTest() {
                 ENTRY_NUMBER
             )
         ).thenReturn(Fridge(emptyList()))
-        whenever(authenticationRefreshHandlerMock.refreshToken(testAuthenticatedUser.token)).thenReturn(mockCookie)
 
         // when removing the product from the fridge
-        val response = runBlocking { removeFridgeProduct(testAuthenticatedUser, ENTRY_NUMBER, mockResponse) }
+        val response = runBlocking { removeFridgeProduct(testAuthenticatedUser, ENTRY_NUMBER) }
 
         // then the product is removed successfully
         assertEquals(HttpStatus.OK, response.statusCode)
@@ -47,7 +46,7 @@ class RemoveFridgeProductControllerTests : FridgeHttpTest() {
 
         // when removing the non-existing product from the fridge
         val exception = assertFailsWith<ProductNotFound> {
-            removeFridgeProduct(testAuthenticatedUser, nonExistingEntryNumber, mockResponse)
+            removeFridgeProduct(testAuthenticatedUser, nonExistingEntryNumber)
         }
 
         // then the exception is thrown

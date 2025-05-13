@@ -19,13 +19,11 @@ class CreateMealPlannerControllerTests : MealPlannerHttpTest() {
         whenever(
             mealPlannerServiceMock.createDailyMealPlanner(testAuthenticatedUser.user.id, today, CALORIES)
         ).thenReturn(dailyMealPlannerToday.copy(meals = emptyMap()))
-        whenever(authenticationRefreshHandlerMock.refreshToken(testAuthenticatedUser.token)).thenReturn(mockCookie)
 
         // when creating the meal planner
         val response = createDailyMealPlanner(
             testAuthenticatedUser,
-            CreateMealPlannerInputModel(today, CALORIES),
-            mockResponse
+            CreateMealPlannerInputModel(today, CALORIES)
         )
 
         // then the meal planner should be created successfully
@@ -47,8 +45,7 @@ class CreateMealPlannerControllerTests : MealPlannerHttpTest() {
         assertThrows<MealPlannerAlreadyExists> {
             createDailyMealPlanner(
                 testAuthenticatedUser,
-                CreateMealPlannerInputModel(today, CALORIES),
-                mockResponse
+                CreateMealPlannerInputModel(today, CALORIES)
             )
         }
     }

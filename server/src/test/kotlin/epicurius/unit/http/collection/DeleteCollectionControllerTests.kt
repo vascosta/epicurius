@@ -15,11 +15,8 @@ class DeleteCollectionControllerTests : CollectionHttpTest() {
     fun `Should delete a collection successfully`() {
         // given a collection id (FAVOURITE_COLLECTION_ID)
 
-        // mock
-        whenever(authenticationRefreshHandlerMock.refreshToken(testPublicAuthenticatedUser.token)).thenReturn(mockCookie)
-
         // when deleting the collection
-        val response = deleteCollection(testPublicAuthenticatedUser, FAVOURITE_COLLECTION_ID, mockResponse)
+        val response = deleteCollection(testPublicAuthenticatedUser, FAVOURITE_COLLECTION_ID)
 
         // then the collection is deleted successfully
         verify(collectionServiceMock).deleteCollection(testPublicAuthenticatedUser.user.id, FAVOURITE_COLLECTION_ID)
@@ -38,7 +35,7 @@ class DeleteCollectionControllerTests : CollectionHttpTest() {
         // when deleting the collection
         // then the collection is not deleted and throws CollectionNotFound exception
         assertFailsWith<CollectionNotFound> {
-            deleteCollection(testPublicAuthenticatedUser, nonExistingCollectionId, mockResponse)
+            deleteCollection(testPublicAuthenticatedUser, nonExistingCollectionId)
         }
     }
 
@@ -53,7 +50,7 @@ class DeleteCollectionControllerTests : CollectionHttpTest() {
         // when deleting the collection
         // then the collection is not deleted and throws NotTheCollectionOwner exception
         assertFailsWith<NotTheCollectionOwner> {
-            deleteCollection(testPrivateAuthenticatedUser, FAVOURITE_COLLECTION_ID, mockResponse)
+            deleteCollection(testPrivateAuthenticatedUser, FAVOURITE_COLLECTION_ID)
         }
     }
 }

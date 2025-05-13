@@ -15,10 +15,9 @@ class GetWeeklyMealPlannerControllerTests : MealPlannerHttpTest() {
 
         // mock
         whenever(mealPlannerServiceMock.getWeeklyMealPlanner(testAuthenticatedUser.user.id)).thenReturn(mealPlanner)
-        whenever(authenticationRefreshHandlerMock.refreshToken(testAuthenticatedUser.token)).thenReturn(mockCookie)
 
         // when getting the weekly meal planner
-        val response = getWeeklyMealPlanner(testAuthenticatedUser, mockResponse)
+        val response = getWeeklyMealPlanner(testAuthenticatedUser)
 
         // then the weekly meal planner should be returned successfully
         assertEquals(HttpStatus.OK, response.statusCode)
@@ -31,10 +30,9 @@ class GetWeeklyMealPlannerControllerTests : MealPlannerHttpTest() {
 
         // mock
         whenever(mealPlannerServiceMock.getWeeklyMealPlanner(testAuthenticatedUser.user.id)).thenReturn(MealPlanner(emptyList()))
-        whenever(authenticationRefreshHandlerMock.refreshToken(testAuthenticatedUser.token)).thenReturn(mockCookie)
 
         // when getting the weekly meal planner
-        val response = getWeeklyMealPlanner(testAuthenticatedUser, mockResponse)
+        val response = getWeeklyMealPlanner(testAuthenticatedUser)
 
         // then an empty meal planner should be returned successfully
         assertEquals(HttpStatus.OK, response.statusCode)

@@ -17,11 +17,8 @@ class DeleteRecipeControllerTests : RecipeHttpTest() {
     fun `Should delete a recipe successfully`() {
         // given a user and a recipe id (testAuthenticatedUser, RECIPE_ID)
 
-        // mock
-        whenever(authenticationRefreshHandlerMock.refreshToken(testAuthenticatedUser.token)).thenReturn(mockCookie)
-
         // when deleting the recipe
-        val response = deleteRecipe(testAuthenticatedUser, RECIPE_ID, mockResponse)
+        val response = deleteRecipe(testAuthenticatedUser, RECIPE_ID)
 
         // then the recipe is deleted successfully
         verify(recipeServiceMock).deleteRecipe(testAuthenticatedUser.user.id, RECIPE_ID)
@@ -38,7 +35,7 @@ class DeleteRecipeControllerTests : RecipeHttpTest() {
 
         // when deleting the recipe
         // then the recipe is not deleted and throws RecipeNotFound exception
-        assertFailsWith<RecipeNotFound> { deleteRecipe(testAuthenticatedUser, nonExistingRecipeId, mockResponse) }
+        assertFailsWith<RecipeNotFound> { deleteRecipe(testAuthenticatedUser, nonExistingRecipeId) }
     }
 
     @Test
@@ -54,6 +51,6 @@ class DeleteRecipeControllerTests : RecipeHttpTest() {
 
         // when deleting the recipe
         // then the recipe is not deleted and throws NotTheAuthor exception
-        assertFailsWith<NotTheRecipeAuthor> { deleteRecipe(notTheAuthorUser, RECIPE_ID, mockResponse) }
+        assertFailsWith<NotTheRecipeAuthor> { deleteRecipe(notTheAuthorUser, RECIPE_ID) }
     }
 }

@@ -22,14 +22,12 @@ class UpdateDailyCaloriesControllerTests : MealPlannerHttpTest() {
                 updateDailyCaloriesInputModel.maxCalories
             )
         ).thenReturn(dailyMealPlannerToday.copy(maxCalories = updateDailyCaloriesInputModel.maxCalories))
-        whenever(authenticationRefreshHandlerMock.refreshToken(testAuthenticatedUser.token)).thenReturn(mockCookie)
 
         // when updating the daily meal planner calories
         val response = updateDailyCalories(
             testAuthenticatedUser,
             today,
-            updateDailyCaloriesInputModel,
-            mockResponse
+            updateDailyCaloriesInputModel
         )
 
         // then the daily meal planner should be updated successfully
@@ -61,8 +59,7 @@ class UpdateDailyCaloriesControllerTests : MealPlannerHttpTest() {
             updateDailyCalories(
                 testAuthenticatedUser,
                 today,
-                updateDailyCaloriesInputModel,
-                mockResponse
+                updateDailyCaloriesInputModel
             )
         }
     }

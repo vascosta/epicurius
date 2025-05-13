@@ -30,14 +30,12 @@ class UpdateDailyMealPlannerControllerTests : MealPlannerHttpTest() {
                 updateDailyMealPlannerInputModel
             )
         ).thenReturn(expectedMealPlanner)
-        whenever(authenticationRefreshHandlerMock.refreshToken(testAuthenticatedUser.token)).thenReturn(mockCookie)
 
         // when updating the daily meal planner
         val response = updateDailyMealPlanner(
             testAuthenticatedUser,
             today,
-            updateDailyMealPlannerInputModel,
-            mockResponse
+            updateDailyMealPlannerInputModel
         )
 
         // then the daily meal planner should be updated successfully
@@ -65,8 +63,7 @@ class UpdateDailyMealPlannerControllerTests : MealPlannerHttpTest() {
             updateDailyMealPlanner(
                 testAuthenticatedUser,
                 today,
-                updateDailyMealPlannerInputModel,
-                mockResponse
+                updateDailyMealPlannerInputModel
             )
         }
     }
@@ -91,8 +88,7 @@ class UpdateDailyMealPlannerControllerTests : MealPlannerHttpTest() {
             updateDailyMealPlanner(
                 testAuthenticatedUser,
                 today,
-                updateDailyMealPlannerInputModel,
-                mockResponse
+                updateDailyMealPlannerInputModel
             )
         }
     }
@@ -117,8 +113,7 @@ class UpdateDailyMealPlannerControllerTests : MealPlannerHttpTest() {
             updateDailyMealPlanner(
                 testAuthenticatedUser,
                 today,
-                updateDailyMealPlannerInputModel,
-                mockResponse
+                updateDailyMealPlannerInputModel
             )
         }
     }
@@ -143,8 +138,7 @@ class UpdateDailyMealPlannerControllerTests : MealPlannerHttpTest() {
             updateDailyMealPlanner(
                 testAuthenticatedUser,
                 today,
-                updateDailyMealPlannerInputModel,
-                mockResponse
+                updateDailyMealPlannerInputModel
             )
         }
     }
@@ -169,8 +163,7 @@ class UpdateDailyMealPlannerControllerTests : MealPlannerHttpTest() {
             updateDailyMealPlanner(
                 testAuthenticatedUser,
                 today,
-                updateDailyMealPlannerInputModel,
-                mockResponse
+                updateDailyMealPlannerInputModel
             )
         }
     }

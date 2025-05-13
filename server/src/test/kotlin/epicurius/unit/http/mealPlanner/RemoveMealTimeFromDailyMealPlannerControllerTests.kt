@@ -20,14 +20,12 @@ class RemoveMealTimeFromDailyMealPlannerControllerTests : MealPlannerHttpTest() 
         whenever(
             mealPlannerServiceMock.removeMealTimeFromDailyMealPlanner(testAuthenticatedUser.user.id, today, mealTime)
         ).thenReturn(DailyMealPlanner(today, CALORIES, emptyMap()))
-        whenever(authenticationRefreshHandlerMock.refreshToken(testAuthenticatedUser.token)).thenReturn(mockCookie)
 
         // when removing the meal time
         val response = removeMealTimeFromDailyMealPlanner(
             testAuthenticatedUser,
             today,
-            mealTime,
-            mockResponse
+            mealTime
         )
 
         // then the meal time should be removed successfully
@@ -50,8 +48,7 @@ class RemoveMealTimeFromDailyMealPlannerControllerTests : MealPlannerHttpTest() 
             removeMealTimeFromDailyMealPlanner(
                 testAuthenticatedUser,
                 today,
-                mealTime,
-                mockResponse
+                mealTime
             )
         }
     }
@@ -71,8 +68,7 @@ class RemoveMealTimeFromDailyMealPlannerControllerTests : MealPlannerHttpTest() 
             removeMealTimeFromDailyMealPlanner(
                 testAuthenticatedUser,
                 today,
-                mealTime,
-                mockResponse
+                mealTime
             )
         }
     }

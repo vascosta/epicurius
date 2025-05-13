@@ -19,10 +19,9 @@ class DeleteDailyMealPlannerControllerTests : MealPlannerHttpTest() {
         whenever(
             mealPlannerServiceMock.deleteDailyMealPlanner(testAuthenticatedUser.user.id, today)
         ).thenReturn(MealPlanner(listOf(dailyMealPlannerTomorrow)))
-        whenever(authenticationRefreshHandlerMock.refreshToken(testAuthenticatedUser.token)).thenReturn(mockCookie)
 
         // when deleting the daily meal planner
-        val response = deleteDailyMealPlanner(testAuthenticatedUser, today, mockResponse)
+        val response = deleteDailyMealPlanner(testAuthenticatedUser, today)
 
         // then the daily meal planner should be deleted successfully
         assertEquals(HttpStatus.OK, response.statusCode)
@@ -41,7 +40,7 @@ class DeleteDailyMealPlannerControllerTests : MealPlannerHttpTest() {
         // when deleting the daily meal planner
         // then DailyMealPlannerNotFound exception is thrown
         assertThrows<DailyMealPlannerNotFound> {
-            deleteDailyMealPlanner(testAuthenticatedUser, today, mockResponse)
+            deleteDailyMealPlanner(testAuthenticatedUser, today)
         }
     }
 }

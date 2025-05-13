@@ -22,10 +22,9 @@ class GetUserProfileControllerTests : UserHttpTest() {
         whenever(userServiceMock.getProfilePicture(publicTestUser.user.profilePictureName)).thenReturn(testPicture.bytes)
         whenever(userServiceMock.getFollowers(publicTestUser.user.id)).thenReturn(emptyList())
         whenever(userServiceMock.getFollowing(publicTestUser.user.id)).thenReturn(emptyList())
-        whenever(authenticationRefreshHandlerMock.refreshToken(publicTestUser.token)).thenReturn(mockCookie)
 
         // when retrieving the user profile
-        val response = getUserProfile(publicTestUser, publicTestUsername, mockResponse)
+        val response = getUserProfile(publicTestUser, publicTestUsername)
         val body = response.body as GetUserProfileOutputModel
 
         // then the user profile is retrieved successfully
@@ -52,10 +51,9 @@ class GetUserProfileControllerTests : UserHttpTest() {
             emptyList()
         )
         whenever(userServiceMock.getUserProfile(privateTestUsername)).thenReturn(mockUserProfile)
-        whenever(authenticationRefreshHandlerMock.refreshToken(publicTestUser.token)).thenReturn(mockCookie)
 
         // when retrieving the other user profile
-        val response = getUserProfile(publicTestUser, privateTestUsername, mockResponse)
+        val response = getUserProfile(publicTestUser, privateTestUsername)
         val body = response.body as GetUserProfileOutputModel
 
         // then the user profile is retrieved successfully
@@ -78,6 +76,6 @@ class GetUserProfileControllerTests : UserHttpTest() {
 
         // when getting the user profile
         // then the user profile cannot be retrieved and throws UserNotFound exception
-        assertFailsWith<UserNotFound> { getUserProfile(publicTestUser, nonExistingUsername, mockResponse) }
+        assertFailsWith<UserNotFound> { getUserProfile(publicTestUser, nonExistingUsername) }
     }
 }

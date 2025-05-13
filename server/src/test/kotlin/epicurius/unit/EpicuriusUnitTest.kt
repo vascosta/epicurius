@@ -15,7 +15,6 @@ import epicurius.http.controllers.menu.MenuController
 import epicurius.http.controllers.rateRecipe.RateRecipeController
 import epicurius.http.controllers.recipe.RecipeController
 import epicurius.http.controllers.user.UserController
-import epicurius.http.pipeline.authentication.AuthenticationRefreshHandler
 import epicurius.repository.cloudFunction.CloudFunctionRepository
 import epicurius.repository.cloudFunction.manager.CloudFunctionManager
 import epicurius.repository.cloudStorage.manager.CloudStorageManager
@@ -164,16 +163,15 @@ open class EpicuriusUnitTest : EpicuriusTest() {
         val collectionServiceMock: CollectionService = mock()
         val mealPlannerServiceMock: MealPlannerService = mock()
 
-        val authenticationRefreshHandlerMock: AuthenticationRefreshHandler = mock()
 
-        val userController = UserController(authenticationRefreshHandlerMock, userServiceMock)
-        val fridgeController = FridgeController(authenticationRefreshHandlerMock, fridgeServiceMock)
-        val recipeController = RecipeController(authenticationRefreshHandlerMock, recipeServiceMock)
-        val rateRecipeController = RateRecipeController(authenticationRefreshHandlerMock, rateRecipeServiceMock)
-        val feedController = FeedController(authenticationRefreshHandlerMock, feedServiceMock)
-        val menuController = MenuController(authenticationRefreshHandlerMock, menuServiceMock)
-        val ingredientsController = IngredientsController(authenticationRefreshHandlerMock, ingredientsServiceMock)
-        val collectionController = CollectionController(authenticationRefreshHandlerMock, collectionServiceMock)
-        val mealPlannerController = MealPlannerController(authenticationRefreshHandlerMock, mealPlannerServiceMock)
+        val userController = UserController(userServiceMock)
+        val fridgeController = FridgeController(fridgeServiceMock)
+        val recipeController = RecipeController(recipeServiceMock)
+        val rateRecipeController = RateRecipeController(rateRecipeServiceMock)
+        val feedController = FeedController(feedServiceMock)
+        val menuController = MenuController(menuServiceMock)
+        val ingredientsController = IngredientsController(ingredientsServiceMock)
+        val collectionController = CollectionController(collectionServiceMock)
+        val mealPlannerController = MealPlannerController(mealPlannerServiceMock)
     }
 }

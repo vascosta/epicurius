@@ -15,11 +15,8 @@ class GetRecipeRateControllerTests : RateRecipeHttpTest() {
     fun `Should get recipe rate successfully`() {
         // given an authenticated user and a recipe
 
-        // mock
-        whenever(authenticationRefreshHandlerMock.refreshToken(testAuthenticatedUser.token)).thenReturn(mockCookie)
-
         // when the user gets the recipe rate
-        val response = getRecipeRate(testAuthenticatedUser, RECIPE_ID, mockResponse)
+        val response = getRecipeRate(testAuthenticatedUser, RECIPE_ID)
 
         // then the recipe rate should be returned successfully
         verify(rateRecipeServiceMock).getRecipeRate(testAuthenticatedUser.user.name, RECIPE_ID)
@@ -38,7 +35,7 @@ class GetRecipeRateControllerTests : RateRecipeHttpTest() {
 
         // when getting the recipe rate
         // then RecipeNotFound exception is thrown
-        assertThrows<RecipeNotFound> { getRecipeRate(testAuthenticatedUser, nonExistingRecipeId, mockResponse) }
+        assertThrows<RecipeNotFound> { getRecipeRate(testAuthenticatedUser, nonExistingRecipeId) }
     }
 
     @Test
@@ -52,6 +49,6 @@ class GetRecipeRateControllerTests : RateRecipeHttpTest() {
 
         // when getting the recipe rate
         // then RecipeNotFound exception is thrown
-        assertThrows<RecipeNotAccessible> { getRecipeRate(testAuthenticatedUser, RECIPE_ID, mockResponse) }
+        assertThrows<RecipeNotAccessible> { getRecipeRate(testAuthenticatedUser, RECIPE_ID) }
     }
 }

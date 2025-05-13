@@ -27,14 +27,12 @@ class AddRecipeToDailyMealPlannerControllerTests : MealPlannerHttpTest() {
                 addRecipeToDailyMealPlannerInputModel
             )
         ).thenReturn(dailyMealPlannerToday)
-        whenever(authenticationRefreshHandlerMock.refreshToken(testAuthenticatedUser.token)).thenReturn(mockCookie)
 
         // when adding the recipe to the daily meal planner
         val response = addRecipeToDailyMealPlanner(
             testAuthenticatedUser,
             today,
-            addRecipeToDailyMealPlannerInputModel,
-            mockResponse
+            addRecipeToDailyMealPlannerInputModel
         )
 
         // then the recipe should be added successfully
@@ -62,8 +60,7 @@ class AddRecipeToDailyMealPlannerControllerTests : MealPlannerHttpTest() {
             addRecipeToDailyMealPlanner(
                 testAuthenticatedUser,
                 today,
-                addRecipeToDailyMealPlannerInputModel,
-                mockResponse
+                addRecipeToDailyMealPlannerInputModel
             )
         }
     }
@@ -88,8 +85,7 @@ class AddRecipeToDailyMealPlannerControllerTests : MealPlannerHttpTest() {
             addRecipeToDailyMealPlanner(
                 testAuthenticatedUser,
                 today,
-                addRecipeToDailyMealPlannerInputModel,
-                mockResponse
+                addRecipeToDailyMealPlannerInputModel
             )
         }
     }
@@ -114,8 +110,7 @@ class AddRecipeToDailyMealPlannerControllerTests : MealPlannerHttpTest() {
             addRecipeToDailyMealPlanner(
                 testAuthenticatedUser,
                 today,
-                addRecipeToDailyMealPlannerInputModel,
-                mockResponse
+                addRecipeToDailyMealPlannerInputModel
             )
         }
     }
@@ -140,8 +135,7 @@ class AddRecipeToDailyMealPlannerControllerTests : MealPlannerHttpTest() {
             addRecipeToDailyMealPlanner(
                 testAuthenticatedUser,
                 today,
-                addRecipeToDailyMealPlannerInputModel,
-                mockResponse
+                addRecipeToDailyMealPlannerInputModel
             )
         }
     }
@@ -166,8 +160,7 @@ class AddRecipeToDailyMealPlannerControllerTests : MealPlannerHttpTest() {
             addRecipeToDailyMealPlanner(
                 testAuthenticatedUser,
                 today,
-                addRecipeToDailyMealPlannerInputModel,
-                mockResponse
+                addRecipeToDailyMealPlannerInputModel
             )
         }
     }

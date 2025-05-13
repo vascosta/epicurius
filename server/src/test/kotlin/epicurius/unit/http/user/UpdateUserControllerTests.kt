@@ -48,10 +48,9 @@ class UpdateUserControllerTests : UserHttpTest() {
         )
         whenever(userServiceMock.updateUser(publicTestUser.user.id, updateUserInputInfo))
             .thenReturn(mockUserInfo)
-        whenever(authenticationRefreshHandlerMock.refreshToken(publicTestUser.token)).thenReturn(mockCookie)
 
         // when updating the user
-        val response = updateUser(publicTestUser, updateUserInputInfo, mockResponse)
+        val response = updateUser(publicTestUser, updateUserInputInfo)
         val body = response.body as UpdateUserOutputModel
 
         // then the user is updated successfully
@@ -83,13 +82,13 @@ class UpdateUserControllerTests : UserHttpTest() {
         // when updating the user with an existing username
         // then the user cannot be updated and throws UserAlreadyExists exception
         assertFailsWith<UserAlreadyExists> {
-            updateUser(publicTestUser, updateUserInputInfo.copy(name = privateTestUsername), mockResponse)
+            updateUser(publicTestUser, updateUserInputInfo.copy(name = privateTestUsername))
         }
 
         // when updating the user with an existing email
         // then the user cannot be updated and throws UserAlreadyExists exception
         assertFailsWith<UserAlreadyExists> {
-            updateUser(publicTestUser, updateUserInputInfo.copy(email = privateTestUser.user.email), mockResponse)
+            updateUser(publicTestUser, updateUserInputInfo.copy(email = privateTestUser.user.email))
         }
 
         // when updating the user with an existing username and email
@@ -98,7 +97,6 @@ class UpdateUserControllerTests : UserHttpTest() {
             updateUser(
                 publicTestUser,
                 updateUserInputInfo.copy(name = privateTestUsername, email = privateTestUser.user.email),
-                mockResponse
             )
         }
     }
@@ -114,7 +112,7 @@ class UpdateUserControllerTests : UserHttpTest() {
 
         // when updating the user with an invalid country
         // then the user cannot be updated and throws InvalidCountry exception
-        assertFailsWith<InvalidCountry> { updateUser(publicTestUser, updateUserInputInfo.copy(country = invalidCountry), mockResponse) }
+        assertFailsWith<InvalidCountry> { updateUser(publicTestUser, updateUserInputInfo.copy(country = invalidCountry)) }
     }
 
     @Test
@@ -136,11 +134,11 @@ class UpdateUserControllerTests : UserHttpTest() {
         // when updating the user with different passwords
         // then the user cannot be updated and throws PasswordsDoNotMatch exception
         assertFailsWith<PasswordsDoNotMatch> {
-            updateUser(publicTestUser, updateUserInputInfo.copy(password = password1, confirmPassword = password2), mockResponse)
+            updateUser(publicTestUser, updateUserInputInfo.copy(password = password1, confirmPassword = password2))
         }
 
         assertFailsWith<PasswordsDoNotMatch> {
-            updateUser(publicTestUser, updateUserInputInfo.copy(password = password1, confirmPassword = null), mockResponse)
+            updateUser(publicTestUser, updateUserInputInfo.copy(password = password1, confirmPassword = null))
         }
     }
 }

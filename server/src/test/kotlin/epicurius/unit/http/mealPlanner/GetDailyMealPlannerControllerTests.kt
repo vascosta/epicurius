@@ -18,10 +18,9 @@ class GetDailyMealPlannerControllerTests : MealPlannerHttpTest() {
         whenever(
             mealPlannerServiceMock.getDailyMealPlanner(testAuthenticatedUser.user.id, today)
         ).thenReturn(dailyMealPlannerToday)
-        whenever(authenticationRefreshHandlerMock.refreshToken(testAuthenticatedUser.token)).thenReturn(mockCookie)
 
         // when getting the daily meal planner
-        val response = getDailyMealPlanner(testAuthenticatedUser, today, mockResponse)
+        val response = getDailyMealPlanner(testAuthenticatedUser, today)
 
         // then the daily meal planner should be returned successfully
         assertEquals(HttpStatus.OK, response.statusCode)
@@ -39,6 +38,6 @@ class GetDailyMealPlannerControllerTests : MealPlannerHttpTest() {
 
         // when getting the daily meal planner
         // then MealPlannerNotFound exception is thrown
-        assertThrows<DailyMealPlannerNotFound> { getDailyMealPlanner(testAuthenticatedUser, today, mockResponse) }
+        assertThrows<DailyMealPlannerNotFound> { getDailyMealPlanner(testAuthenticatedUser, today) }
     }
 }

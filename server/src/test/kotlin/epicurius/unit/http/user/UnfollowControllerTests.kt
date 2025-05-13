@@ -16,11 +16,8 @@ class UnfollowControllerTests : UserHttpTest() {
     fun `Should unfollow a user successfully`() {
         // given two users (publicTestUser and privateTestUser)
 
-        // mock
-        whenever(authenticationRefreshHandlerMock.refreshToken(publicTestUser.token)).thenReturn(mockCookie)
-
         // when unfollowing a user
-        val response = unfollow(publicTestUser, privateTestUsername, mockResponse)
+        val response = unfollow(publicTestUser, privateTestUsername)
 
         // then the user is unfollowed successfully
         verify(userServiceMock).unfollow(publicTestUser.user.id, publicTestUsername, privateTestUsername)
@@ -38,7 +35,7 @@ class UnfollowControllerTests : UserHttpTest() {
         // when unfollowing himself
         // then the user cannot be unfollowed and throws InvalidSelfUnfollow exception
         assertFailsWith<InvalidSelfUnfollow> {
-            unfollow(publicTestUser, publicTestUsername, mockResponse)
+            unfollow(publicTestUser, publicTestUsername)
         }
     }
 
@@ -52,7 +49,7 @@ class UnfollowControllerTests : UserHttpTest() {
 
         // when following a non-existing user
         // then the user cannot be unfollowed and throws UserNotFound exception
-        assertFailsWith<UserNotFound> { unfollow(publicTestUser, nonExistingUser, mockResponse) }
+        assertFailsWith<UserNotFound> { unfollow(publicTestUser, nonExistingUser) }
     }
 
     @Test
@@ -64,6 +61,6 @@ class UnfollowControllerTests : UserHttpTest() {
 
         // when trying to unfollow a user that is not being followed
         // then the user cannot be unfollowed and throws UserNotFollowed exception
-        assertFailsWith<UserNotFollowed> { unfollow(publicTestUser, privateTestUsername, mockResponse) }
+        assertFailsWith<UserNotFollowed> { unfollow(publicTestUser, privateTestUsername) }
     }
 }

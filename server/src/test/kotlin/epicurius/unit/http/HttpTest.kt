@@ -47,48 +47,40 @@ open class HttpTest : EpicuriusUnitTest() {
         // USER
         fun getUserInfo(
             authenticatedUser: AuthenticatedUser,
-            response: HttpServletResponse
-        ) = userController.getUserInfo(authenticatedUser, response)
+        ) = userController.getUserInfo(authenticatedUser)
 
         fun getUserProfile(
             authenticatedUser: AuthenticatedUser,
             name: String,
-            response: HttpServletResponse
         ) =
-            userController.getUserProfile(authenticatedUser, name, response)
+            userController.getUserProfile(authenticatedUser, name)
 
         fun searchUsers(
             authenticatedUser: AuthenticatedUser,
             partialUsername: String,
             pagingParams: PagingParams,
-            response: HttpServletResponse
-        ) = userController.searchUsers(authenticatedUser, partialUsername, pagingParams.skip, pagingParams.limit, response)
+        ) = userController.searchUsers(authenticatedUser, partialUsername, pagingParams.skip, pagingParams.limit)
 
         fun getUserIntolerances(
             authenticatedUser: AuthenticatedUser,
-            response: HttpServletResponse
-        ) = userController.getUserIntolerances(authenticatedUser, response)
+        ) = userController.getUserIntolerances(authenticatedUser)
 
         fun getUserDiet(
             authenticatedUser: AuthenticatedUser,
-            response: HttpServletResponse
         ) =
-            userController.getUserDiet(authenticatedUser, response)
+            userController.getUserDiet(authenticatedUser)
 
         fun getUserFollowers(
             authenticatedUser: AuthenticatedUser,
-            response: HttpServletResponse
-        ) = userController.getUserFollowers(authenticatedUser, response)
+        ) = userController.getUserFollowers(authenticatedUser,)
 
         fun getUserFollowing(
             authenticatedUser: AuthenticatedUser,
-            response: HttpServletResponse
-        ) = userController.getUserFollowing(authenticatedUser, response)
+        ) = userController.getUserFollowing(authenticatedUser)
 
         fun getUserFollowRequests(
             authenticatedUser: AuthenticatedUser,
-            response: HttpServletResponse
-        ) = userController.getUserFollowRequests(authenticatedUser, response)
+        ) = userController.getUserFollowRequests(authenticatedUser)
 
         fun signUp(
             body: SignUpInputModel,
@@ -108,37 +100,32 @@ open class HttpTest : EpicuriusUnitTest() {
         fun updateUser(
             authenticatedUser: AuthenticatedUser,
             body: UpdateUserInputModel,
-            response: HttpServletResponse
         ) =
-            userController.updateUser(authenticatedUser, body, response)
+            userController.updateUser(authenticatedUser, body)
 
         fun updateUserProfilePicture(
             authenticatedUser: AuthenticatedUser,
             profilePicture: MultipartFile?,
-            response: HttpServletResponse
         ) =
-            userController.updateUserProfilePicture(authenticatedUser, profilePicture, response)
+            userController.updateUserProfilePicture(authenticatedUser, profilePicture)
 
         fun resetUserPassword(body: ResetPasswordInputModel) = userController.resetUserPassword(body)
 
         fun follow(
             authenticatedUser: AuthenticatedUser,
             username: String,
-            response: HttpServletResponse
-        ) = userController.follow(authenticatedUser, username, response)
+        ) = userController.follow(authenticatedUser, username)
 
         fun cancelFollowRequest(
             authenticatedUser: AuthenticatedUser,
             username: String,
-            response: HttpServletResponse
         ) =
-            userController.followRequest(authenticatedUser, username, FollowRequestType.CANCEL, response)
+            userController.followRequest(authenticatedUser, username, FollowRequestType.CANCEL)
 
         fun unfollow(
             authenticatedUser: AuthenticatedUser,
             username: String,
-            response: HttpServletResponse
-        ) = userController.unfollow(authenticatedUser, username, response)
+        ) = userController.unfollow(authenticatedUser, username)
 
         fun deleteUser(
             authenticatedUser: AuthenticatedUser,
@@ -150,44 +137,38 @@ open class HttpTest : EpicuriusUnitTest() {
             authenticatedUser: AuthenticatedUser,
             skip: Int,
             limit: Int,
-            response: HttpServletResponse
         ) =
-            feedController.getFeed(authenticatedUser, skip, limit, response)
+            feedController.getFeed(authenticatedUser, skip, limit)
 
         // FRIDGE
         fun getFridge(
             authenticatedUser: AuthenticatedUser,
-            response: HttpServletResponse
-        ) = fridgeController.getFridge(authenticatedUser, response)
+        ) = fridgeController.getFridge(authenticatedUser)
 
         suspend fun addProducts(
             authenticatedUser: AuthenticatedUser,
             product: ProductInputModel,
-            response: HttpServletResponse
         ) =
-            fridgeController.addProducts(authenticatedUser, product, response)
+            fridgeController.addProducts(authenticatedUser, product)
 
         fun updateProduct(
             authenticatedUser: AuthenticatedUser,
             entryNumber: Int,
             updateProductInputModel: UpdateProductInputModel,
-            response: HttpServletResponse
-        ) = fridgeController.updateFridgeProduct(authenticatedUser, entryNumber, updateProductInputModel, response)
+        ) = fridgeController.updateFridgeProduct(authenticatedUser, entryNumber, updateProductInputModel)
 
         fun removeFridgeProduct(
             authenticatedUser: AuthenticatedUser,
             entryNumber: Int,
-            response: HttpServletResponse
         ) =
-            fridgeController.removeFridgeProduct(authenticatedUser, entryNumber, response)
+            fridgeController.removeFridgeProduct(authenticatedUser, entryNumber)
 
         // RECIPE
         suspend fun getRecipe(
             authenticatedUser: AuthenticatedUser,
             id: Int,
-            response: HttpServletResponse
         ) =
-            recipeController.getRecipe(authenticatedUser, id, response)
+            recipeController.getRecipe(authenticatedUser, id)
 
         fun searchRecipes(
             authenticatedUser: AuthenticatedUser,
@@ -227,193 +208,166 @@ open class HttpTest : EpicuriusUnitTest() {
             minTime,
             maxTime,
             skip = 0,
-            limit = 5,
-            response
+            limit = 5
         )
 
         suspend fun createRecipe(
             authenticatedUser: AuthenticatedUser,
             createRecipeInputModel: String,
-            pictures: List<MultipartFile>,
-            response: HttpServletResponse
-        ) = recipeController.createRecipe(authenticatedUser, createRecipeInputModel, pictures, response)
+            pictures: List<MultipartFile>
+        ) = recipeController.createRecipe(authenticatedUser, createRecipeInputModel, pictures)
 
         suspend fun updateRecipe(
             authenticatedUser: AuthenticatedUser,
             id: Int,
-            updateRecipeInputModel: UpdateRecipeInputModel,
-            response: HttpServletResponse
+            updateRecipeInputModel: UpdateRecipeInputModel
         ) =
-            recipeController.updateRecipe(authenticatedUser, id, updateRecipeInputModel, response)
+            recipeController.updateRecipe(authenticatedUser, id, updateRecipeInputModel)
 
         suspend fun updateRecipePictures(
             authenticatedUser: AuthenticatedUser,
             id: Int,
-            pictures: List<MultipartFile>,
-            response: HttpServletResponse
+            pictures: List<MultipartFile>
         ) =
-            recipeController.updateRecipePictures(authenticatedUser, id, pictures, response)
+            recipeController.updateRecipePictures(authenticatedUser, id, pictures)
 
         fun deleteRecipe(
             authenticatedUser: AuthenticatedUser,
-            id: Int,
-            response: HttpServletResponse
+            id: Int
         ) =
-            recipeController.deleteRecipe(authenticatedUser, id, response)
+            recipeController.deleteRecipe(authenticatedUser, id)
 
         // RATE RECIPE
         fun getRecipeRate(
             authenticatedUser: AuthenticatedUser,
-            id: Int,
-            response: HttpServletResponse
+            id: Int
         ) =
-            rateRecipeController.getRecipeRate(authenticatedUser, id, response)
+            rateRecipeController.getRecipeRate(authenticatedUser, id)
 
         fun rateRecipe(
             authenticatedUser: AuthenticatedUser,
             id: Int,
-            rating: Int,
-            response: HttpServletResponse
+            rating: Int
         ) =
-            rateRecipeController.rateRecipe(authenticatedUser, id, RateRecipeInputModel(rating), response)
+            rateRecipeController.rateRecipe(authenticatedUser, id, RateRecipeInputModel(rating))
 
         fun updateRecipeRate(
             authenticatedUser: AuthenticatedUser,
             id: Int,
-            rating: Int,
-            response: HttpServletResponse
+            rating: Int
         ) =
-            rateRecipeController.updateRecipeRate(authenticatedUser, id, RateRecipeInputModel(rating), response)
+            rateRecipeController.updateRecipeRate(authenticatedUser, id, RateRecipeInputModel(rating))
 
         fun deleteRecipeRate(
             authenticatedUser: AuthenticatedUser,
-            id: Int,
-            response: HttpServletResponse
+            id: Int
         ) =
-            rateRecipeController.deleteRecipeRate(authenticatedUser, id, response)
+            rateRecipeController.deleteRecipeRate(authenticatedUser, id)
 
         // INGREDIENTS
         suspend fun getIngredients(
             authenticatedUser: AuthenticatedUser,
-            partial: String,
-            response: HttpServletResponse
+            partial: String
         ) =
-            ingredientsController.getIngredients(authenticatedUser, partial, response)
+            ingredientsController.getIngredients(authenticatedUser, partial)
 
         suspend fun getSubstituteIngredients(
             authenticatedUser: AuthenticatedUser,
-            name: String,
-            response: HttpServletResponse
+            name: String
         ) =
-            ingredientsController.getSubstituteIngredients(authenticatedUser, name, response)
+            ingredientsController.getSubstituteIngredients(authenticatedUser, name)
 
         suspend fun getIngredientsFromPicture(
             authenticatedUser: AuthenticatedUser,
-            picture: MultipartFile,
-            response: HttpServletResponse
+            picture: MultipartFile
         ) =
-            ingredientsController.getIngredientsFromPicture(authenticatedUser, picture, response)
+            ingredientsController.getIngredientsFromPicture(authenticatedUser, picture)
 
         // MENU
         fun getDailyMenu(
-            authenticatedUser: AuthenticatedUser,
-            response: HttpServletResponse
+            authenticatedUser: AuthenticatedUser
         ) =
-            menuController.getDailyMenu(authenticatedUser, response)
+            menuController.getDailyMenu(authenticatedUser)
 
         // COLLECTION
         fun getCollection(
             authenticatedUser: AuthenticatedUser,
-            id: Int,
-            response: HttpServletResponse
+            id: Int
         ) =
-            collectionController.getCollection(authenticatedUser, id, response)
+            collectionController.getCollection(authenticatedUser, id)
 
         fun createCollection(
             authenticatedUser: AuthenticatedUser,
-            body: CreateCollectionInputModel,
-            response: HttpServletResponse
+            body: CreateCollectionInputModel
         ) =
-            collectionController.createCollection(authenticatedUser, body, response)
+            collectionController.createCollection(authenticatedUser, body)
 
         fun addRecipeToCollection(
             authenticatedUser: AuthenticatedUser,
             id: Int,
-            body: AddRecipeToCollectionInputModel,
-            response: HttpServletResponse
-        ) = collectionController.addRecipeToCollection(authenticatedUser, id, body, response)
+            body: AddRecipeToCollectionInputModel
+        ) = collectionController.addRecipeToCollection(authenticatedUser, id, body)
 
         fun updateCollection(
             authenticatedUser: AuthenticatedUser,
             id: Int,
             body: UpdateCollectionInputModel,
-            response: HttpServletResponse
-        ) = collectionController.updateCollection(authenticatedUser, id, body, response)
+        ) = collectionController.updateCollection(authenticatedUser, id, body)
 
         fun removeRecipeFromCollection(
             authenticatedUser: AuthenticatedUser,
             id: Int,
             recipeId: Int,
-            response: HttpServletResponse
-        ) = collectionController.removeRecipeFromCollection(authenticatedUser, id, recipeId, response)
+        ) = collectionController.removeRecipeFromCollection(authenticatedUser, id, recipeId)
 
         fun deleteCollection(
             authenticatedUser: AuthenticatedUser,
-            id: Int,
-            response: HttpServletResponse
+            id: Int
         ) =
-            collectionController.deleteCollection(authenticatedUser, id, response)
+            collectionController.deleteCollection(authenticatedUser, id)
 
         // MEAL PLANNER
         fun getWeeklyMealPlanner(
-            authenticatedUser: AuthenticatedUser,
-            response: HttpServletResponse
-        ) = mealPlannerController.getWeeklyMealPlanner(authenticatedUser, response)
+            authenticatedUser: AuthenticatedUser
+        ) = mealPlannerController.getWeeklyMealPlanner(authenticatedUser)
 
         fun getDailyMealPlanner(
             authenticatedUser: AuthenticatedUser,
             date: LocalDate,
-            response: HttpServletResponse
-        ) = mealPlannerController.getDailyMealPlanner(authenticatedUser, date, response)
+        ) = mealPlannerController.getDailyMealPlanner(authenticatedUser, date)
 
         fun createDailyMealPlanner(
             authenticatedUser: AuthenticatedUser,
-            body: CreateMealPlannerInputModel,
-            response: HttpServletResponse
-        ) = mealPlannerController.createDailyMealPlanner(authenticatedUser, body, response)
+            body: CreateMealPlannerInputModel
+        ) = mealPlannerController.createDailyMealPlanner(authenticatedUser, body)
 
         fun addRecipeToDailyMealPlanner(
             authenticatedUser: AuthenticatedUser,
             date: LocalDate,
             body: AddMealPlannerInputModel,
-            response: HttpServletResponse
-        ) = mealPlannerController.addRecipeToDailyMealPlanner(authenticatedUser, date, body, response)
+        ) = mealPlannerController.addRecipeToDailyMealPlanner(authenticatedUser, date, body)
 
         fun updateDailyMealPlanner(
             authenticatedUser: AuthenticatedUser,
             date: LocalDate,
             body: UpdateMealPlannerInputModel,
-            response: HttpServletResponse
-        ) = mealPlannerController.updateDailyMealPlanner(authenticatedUser, date, body, response)
+        ) = mealPlannerController.updateDailyMealPlanner(authenticatedUser, date, body)
 
         fun updateDailyCalories(
             authenticatedUser: AuthenticatedUser,
             date: LocalDate,
             body: UpdateDailyCaloriesInputModel,
-            response: HttpServletResponse
-        ) = mealPlannerController.updateDailyCalories(authenticatedUser, date, body, response)
+        ) = mealPlannerController.updateDailyCalories(authenticatedUser, date, body)
 
         fun removeMealTimeFromDailyMealPlanner(
             authenticatedUser: AuthenticatedUser,
             date: LocalDate,
-            mealTime: MealTime,
-            response: HttpServletResponse
-        ) = mealPlannerController.removeMealTimeFromDailyMealPlanner(authenticatedUser, date, mealTime, response)
+            mealTime: MealTime
+        ) = mealPlannerController.removeMealTimeFromDailyMealPlanner(authenticatedUser, date, mealTime)
 
         fun deleteDailyMealPlanner(
             authenticatedUser: AuthenticatedUser,
-            date: LocalDate,
-            response: HttpServletResponse
-        ) = mealPlannerController.deleteDailyMealPlanner(authenticatedUser, date, response)
+            date: LocalDate
+        ) = mealPlannerController.deleteDailyMealPlanner(authenticatedUser, date)
     }
 }

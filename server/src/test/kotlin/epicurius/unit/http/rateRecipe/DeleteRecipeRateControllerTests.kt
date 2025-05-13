@@ -18,11 +18,8 @@ class DeleteRecipeRateControllerTests : RecipeHttpTest() {
     fun `Should delete recipe rate successfully`() {
         // given an authenticated user and a recipe
 
-        // mock
-        whenever(authenticationRefreshHandlerMock.refreshToken(testAuthenticatedUser.token)).thenReturn(mockCookie)
-
         // when the user deletes the recipe
-        val response = deleteRecipeRate(testAuthenticatedUser, RECIPE_ID, mockResponse)
+        val response = deleteRecipeRate(testAuthenticatedUser, RECIPE_ID)
 
         // then the recipe should be deleted successfully
         verify(
@@ -52,7 +49,7 @@ class DeleteRecipeRateControllerTests : RecipeHttpTest() {
 
         // when deleting the recipe rate
         // then RecipeNotFound exception is thrown
-        assertThrows<RecipeNotFound> { deleteRecipeRate(testAuthenticatedUser, nonExistingRecipeId, mockResponse) }
+        assertThrows<RecipeNotFound> { deleteRecipeRate(testAuthenticatedUser, nonExistingRecipeId) }
     }
 
     @Test
@@ -70,7 +67,7 @@ class DeleteRecipeRateControllerTests : RecipeHttpTest() {
 
         // when deleting the recipe rate
         // then AuthorCannotDeleteRating exception is thrown
-        assertThrows<AuthorCannotDeleteRating> { deleteRecipeRate(testAuthenticatedUser, RECIPE_ID, mockResponse) }
+        assertThrows<AuthorCannotDeleteRating> { deleteRecipeRate(testAuthenticatedUser, RECIPE_ID) }
     }
 
     @Test
@@ -88,7 +85,7 @@ class DeleteRecipeRateControllerTests : RecipeHttpTest() {
 
         // when deleting the recipe rate
         // then UserHasNotRated exception is thrown
-        assertThrows<UserHasNotRated> { deleteRecipeRate(testAuthenticatedUser, RECIPE_ID, mockResponse) }
+        assertThrows<UserHasNotRated> { deleteRecipeRate(testAuthenticatedUser, RECIPE_ID) }
     }
 
     @Test
@@ -106,6 +103,6 @@ class DeleteRecipeRateControllerTests : RecipeHttpTest() {
 
         // when deleting the recipe rate
         // then RecipeNotAccessible exception is thrown
-        assertThrows<RecipeNotAccessible> { deleteRecipeRate(testAuthenticatedUser, RECIPE_ID, mockResponse) }
+        assertThrows<RecipeNotAccessible> { deleteRecipeRate(testAuthenticatedUser, RECIPE_ID) }
     }
 }
