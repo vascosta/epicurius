@@ -8,13 +8,10 @@ import epicurius.domain.recipe.RecipeDomain.Companion.MIN_INSTRUCTIONS_STEP_LENG
 data class Instructions(val steps: Map<String, String>) {
 
     init {
-        steps.values.forEach { value ->
+        steps.forEach { (key, value) ->
             if (value.length !in MIN_INSTRUCTIONS_STEP_LENGTH..MAX_INSTRUCTIONS_STEP_LENGTH) {
                 throw IllegalArgumentException(INSTRUCTIONS_STEP_LENGTH_MSG)
             }
-        }
-
-        steps.keys.forEach { key ->
             if (key.toIntOrNull() == null) {
                 throw IllegalArgumentException(INSTRUCTIONS_STEP_NUMBER_MSG)
             }
