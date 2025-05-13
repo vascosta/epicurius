@@ -21,7 +21,7 @@ class FeedController(
     private val feedService: FeedService
 ) {
 
-    @GetMapping(Uris.Feed.FEED)
+    @GetMapping(Uris.User.USER_FEED)
     fun getFeed(
         authenticatedUser: AuthenticatedUser,
         @RequestParam skip: Int,

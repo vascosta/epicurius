@@ -137,7 +137,7 @@ class MealPlannerController(
             .addCookie(response, authenticationRefreshHandler.refreshToken(authenticatedUser.token))
     }
 
-    @DeleteMapping(Uris.MealPlanner.CLEAN_MEAL_PLANNER)
+    @DeleteMapping(Uris.MealPlanner.MEAL_PLANNER)
     fun deleteDailyMealPlanner(
         authenticatedUser: AuthenticatedUser,
         @PathVariable date: LocalDate,

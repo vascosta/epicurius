@@ -1,6 +1,6 @@
 package epicurius.http.utils
 
-import epicurius.http.utils.Uris.Recipe.RECIPE
+import epicurius.http.utils.Uris.User.USER
 import org.springframework.web.util.UriTemplate
 import java.time.LocalDate
 
@@ -18,6 +18,7 @@ object Uris {
         const val USER_INTOLERANCES = "$USER/intolerances"
         const val USER_DIETS = "$USER/diets"
         const val USER_RESET_PASSWORD = "$USER/password" // PATCH
+        const val USER_FEED = "$USER/feed"
 
         const val USERS = "/users" // GET
         const val USER_PROFILE = "/users/{name}" // GET
@@ -42,19 +43,11 @@ object Uris {
     object Recipe {
         const val RECIPES = "/recipes"
         const val RECIPE = "$RECIPES/{id}"
+        const val RECIPE_RATE = "$RECIPE/rate"
         const val RECIPE_PICTURES = "$RECIPES/{id}/pictures"
 
         fun recipe(id: Int) = UriTemplate(RECIPE).expand(id)
-    }
-
-    object RateRecipe {
-        const val RATE = "$RECIPE/rate"
-
-        fun rateRecipe(id: Int) = UriTemplate(RATE).expand(id)
-    }
-
-    object Feed {
-        const val FEED = "/feed"
+        fun rateRecipe(id: Int) = UriTemplate(RECIPE_RATE).expand(id)
     }
 
     object Menu {
@@ -70,8 +63,7 @@ object Uris {
         const val PLANNER = "/planner"
         const val MEAL_PLANNER = "$PLANNER/{date}"
         const val CALORIES = "$MEAL_PLANNER/calories"
-        const val CLEAN_MEAL_PLANNER = "$MEAL_PLANNER/remove"
-        const val CLEAN_MEAL_TIME = "$CLEAN_MEAL_PLANNER/{mealTime}"
+        const val CLEAN_MEAL_TIME = "$MEAL_PLANNER/{mealTime}"
 
         fun mealPlanner(date: LocalDate) = UriTemplate(MEAL_PLANNER).expand(date)
     }

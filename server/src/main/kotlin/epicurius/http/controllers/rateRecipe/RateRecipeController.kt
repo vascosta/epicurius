@@ -26,7 +26,7 @@ class RateRecipeController(
     private val rateRecipeService: RateRecipeService
 ) {
 
-    @GetMapping(Uris.RateRecipe.RATE)
+    @GetMapping(Uris.Recipe.RECIPE_RATE)
     fun getRecipeRate(
         authenticatedUser: AuthenticatedUser,
         @PathVariable id: Int,
@@ -39,7 +39,7 @@ class RateRecipeController(
             .addCookie(response, authenticationRefreshHandler.refreshToken(authenticatedUser.token))
     }
 
-    @PostMapping(Uris.RateRecipe.RATE)
+    @PostMapping(Uris.Recipe.RECIPE_RATE)
     fun rateRecipe(
         authenticatedUser: AuthenticatedUser,
         @PathVariable id: Int,
@@ -53,7 +53,7 @@ class RateRecipeController(
             .addCookie(response, authenticationRefreshHandler.refreshToken(authenticatedUser.token))
     }
 
-    @PatchMapping(Uris.RateRecipe.RATE)
+    @PatchMapping(Uris.Recipe.RECIPE_RATE)
     fun updateRecipeRate(
         authenticatedUser: AuthenticatedUser,
         @PathVariable id: Int,
@@ -67,7 +67,7 @@ class RateRecipeController(
             .addCookie(response, authenticationRefreshHandler.refreshToken(authenticatedUser.token))
     }
 
-    @DeleteMapping(Uris.RateRecipe.RATE)
+    @DeleteMapping(Uris.Recipe.RECIPE_RATE)
     fun deleteRecipeRate(
         authenticatedUser: AuthenticatedUser,
         @PathVariable id: Int,
