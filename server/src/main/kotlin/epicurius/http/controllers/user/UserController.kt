@@ -292,7 +292,7 @@ class UserController(val authenticationRefreshHandler: AuthenticationRefreshHand
     ): ResponseEntity<*> {
         userService.deleteUser(authenticatedUser.user.id)
         return ResponseEntity
-            .ok()
+            .noContent()
             .build<Unit>()
             .removeCookie(response)
     }

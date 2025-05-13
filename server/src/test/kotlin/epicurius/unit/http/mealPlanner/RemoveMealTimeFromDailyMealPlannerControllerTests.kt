@@ -10,7 +10,7 @@ import org.junit.jupiter.api.assertThrows
 import org.mockito.kotlin.whenever
 import org.springframework.http.HttpStatus
 
-class RemoveMealTimeFromDailyMealPlannerControllerTests : MealPlannerControllerTest() {
+class RemoveMealTimeFromDailyMealPlannerControllerTests : MealPlannerHttpTest() {
 
     @Test
     fun `Should remove meal time from daily meal planner successfully`() {

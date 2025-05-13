@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test
 import org.mockito.kotlin.whenever
 import org.springframework.http.HttpStatus
 
-class GetWeeklyMealPlannerControllerTests : MealPlannerControllerTest() {
+class GetWeeklyMealPlannerControllerTests : MealPlannerHttpTest() {
 
     @Test
     fun `Should get user's weekly meal planner successfully`() {

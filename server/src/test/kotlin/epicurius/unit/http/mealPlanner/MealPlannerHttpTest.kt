@@ -20,7 +20,7 @@ import epicurius.utils.generateRandomUsername
 import java.time.LocalDate
 import java.util.UUID.randomUUID
 
-open class MealPlannerControllerTest : HttpTest() {
+open class MealPlannerHttpTest : HttpTest() {
 
     companion object {
         private val authenticatedUsername = generateRandomUsername()

@@ -51,6 +51,8 @@ open class UserRepositoryTest : RepositoryTest() {
         fun unfollow(userId: Int, userIdToUnfollow: Int) =
             tm.run { it.userRepository.unfollow(userId, userIdToUnfollow) }
 
+        fun deleteUser(userId: Int) = tm.run { it.userRepository.deleteUser(userId) }
+
         fun cancelFollowRequest(userId: Int, userIdToCancelFollowRequest: Int) =
             tm.run { it.userRepository.cancelFollowRequest(userId, userIdToCancelFollowRequest) }
 

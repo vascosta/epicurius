@@ -59,6 +59,8 @@ open class ServiceTest : EpicuriusUnitTest() {
 
         fun unfollow(userId: Int, username: String, usernameToUnfollow: String) = userService.unfollow(userId, username, usernameToUnfollow)
 
+        fun deleteUser(userId: Int) = userService.deleteUser(userId)
+
         fun cancelFollowRequest(userId: Int, username: String, usernameToRequest: String) =
             userService.followRequest(userId, username, usernameToRequest, FollowRequestType.CANCEL)
 
