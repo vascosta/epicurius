@@ -191,11 +191,13 @@ The __routes__ for the __API__ are organized as follow:
 | GET     | ``/api/user/follow-requests``            | Get a user's follow requests              | Yes           |
 | GET     | ``/api/user/followers``                  | Get a user's followers                    | Yes           |
 | GET     | ``/api/user/following``                  | Get a user's following users              | Yes           |
+| GET     | ``/api/user/feeed``                      | Get a user's feed                         | Yes           |
 | PATCH   | ``/api/user``                            | Update a user                             | Yes           |
 | PATCH   | ``/api/user/picture``                    | Update a user's profile picture           | Yes           |
 | PATCH   | ``/api/user/follow/{username}``          | Follow a user                             | Yes           |
 | PATCH   | ``/api/user/follow-requests/{username}`` | Accept, Reject or Cancel a follow request | Yes           |
 | PATCH   | ``/api/user/password``                   | Reset a user's password                   | No            |
+| DELETE  | ``/api/user``                            | Deletes the user                          | Yes           |
 | DELETE  | ``/api/user/follow/{username}``          | Unfollow a user                           | Yes           |
 
 
@@ -209,22 +211,63 @@ The __routes__ for the __API__ are organized as follow:
 | DELETE  | ``/api/fridge/product/{entryNumber}`` | Delete a product from the fridge | Yes           |
 
 
-### Recipe
+#### Recipe
+
+| Method  | Route                          | Description                     | Authenticated | 
+|---------|--------------------------------|---------------------------------|:-------------:|
+| GET     | ``/api/recipes``               | Get a recipe                    | Yes           |
+| GET     | ``/api/recipes/{id}``          | Search for recipes              | Yes           |
+| GET     | ``/api/recipes/{id}/rate``     | Get a recipe's rate             | Yes           |
+| POST    | ``/api/recipes/{id}/rate``     | Rate a recipe                   | Yes           |
+| POST    | ``/api/recipes``               | Create a recipe                 | Yes           |
+| PATCH   | ``/api/recipe``                | Update a recipe                 | Yes           |
+| PATCH   | ``/api/recipes/{id}/rate``     | Update a rate given to a recipe | Yes           |
+| PATCH   | ``/api/recipes/{id}/pictures`` | Update a rate given to a recipe | Yes           |
+| DELETE  | ``/api/recipes/{id}``          | Delete a recipe                 | Yes           |
+| DELETE  | ``/api/recipes/{id}/rate``     | Delete a rate given to a recipe | Yes           |
 
 
-### Collection
+#### Ingredients
+
+| Method  | Route                            | Description                                    | Authenticated | 
+|---------|----------------------------------|------------------------------------------------|:-------------:|
+| GET     | ``/api/ingredients``             | Get a list of ingredients from Spoonacular API | Yes           |
+| GET     | ``/api/ingredients/substitutes`` | Get a list of substitute ingredients           | Yes           |
+| POST    | ``/api/ingredients``             | Get a list of ingredients present in a picture | Yes           |
 
 
-### MealPlanner
+#### Collection
+
+| Method  | Route                                  | Description                       | Authenticated | 
+|---------|----------------------------------------|-----------------------------------|:-------------:|
+| GET     | ``/api/collections/{id}``              | Get a collection                  | Yes           |
+| POST    | ``/api/collections/{id}``              | Create a collection               | Yes           |
+| POST    | ``/api/collections/{id}/recipes``      | Add a recipe to a collection      | Yes           |
+| PATCH   | ``/api/collections/{id}``              | Update a collection               | Yes           |
+| DELETE  | ``/api/collections/{id}/recipes/{id}`` | Remove a recipe from a collection | Yes           |
+| DELETE  | ``/api/collections/{id}``              | Delete a collection               | Yes           |
 
 
-### Ingredients
+#### MealPlanner
+
+| Method  | Route                                  | Description                                 | Authenticated | 
+|---------|----------------------------------------|---------------------------------------------|:-------------:|
+| GET     | ``/api/planner``                   | Get a weekly meal planner                       | Yes           |
+| GET     | ``/api/planner/{date}``            | Get a daily meal planner                        | Yes           |
+| POST    | ``/api/planner``                   | Create a daily meal planner                     | Yes           |
+| POST    | ``/api/planner/{date}``            | Add a recipe to a daily meal planner            | Yes           |
+| PATCH   | ``/api/planner/{date}``            | Update a daily meal planner                     | Yes           |
+| PATCH   | ``/api/planner/{date}/calories``   | Update the max calories of a daily meal planner | Yes           |
+| DELETE  | ``/api/planner/{date}/{mealTime}`` | Remove a recipe from a daily meal planner       | Yes           |
+| DELETE  | ``/api/planner/{date}``            | Delete a daily meal planner                     | Yes           |
 
 
-### Feed
+#### Menu
 
+| Method  | Route         | Description      | Authenticated | 
+|---------|---------------|------------------|:-------------:|
+| GET     | ``/api/menu`` | Get a daily menu | Yes           |
 
-### Menu
 
 ### Authentication
 
