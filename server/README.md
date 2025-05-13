@@ -174,7 +174,7 @@ The __routes__ for the __API__ are organized as follow:
 
 | Method | Route                  | Description                     | Authenticated |
 |--------|------------------------|---------------------------------|:-------------:|
-| GET    | ``/api/signup``        | Signup a new user to the system | No            |
+| POST   | ``/api/signup``        | Signup a new user to the system | No            |
 | POST   | ``/api/login``         | Login a user user               | No            |
 | POST   | ``/api/logout``        | Logout a user user              | Yes           |
 
@@ -233,7 +233,7 @@ The __routes__ for the __API__ are organized as follow:
 |---------|----------------------------------|------------------------------------------------|:-------------:|
 | GET     | ``/api/ingredients``             | Get a list of ingredients from Spoonacular API | Yes           |
 | GET     | ``/api/ingredients/substitutes`` | Get a list of substitute ingredients           | Yes           |
-| POST    | ``/api/ingredients``             | Get a list of ingredients present in a picture | Yes           |
+| POST    | ``/api/ingredients``             | Identify ingredients present in a picture      | Yes           |
 
 
 #### Collection
