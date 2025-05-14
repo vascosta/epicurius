@@ -25,9 +25,11 @@ import epicurius.integration.utils.post
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.web.server.LocalServerPort
 import org.springframework.http.HttpStatus
+import org.springframework.http.client.reactive.ReactorClientHttpConnector
 import org.springframework.test.web.reactive.server.WebTestClient
 import org.springframework.web.multipart.MultipartFile
 import org.springframework.web.reactive.function.BodyInserters
+import reactor.netty.http.client.HttpClient
 import java.time.LocalDate
 import java.time.Period
 
@@ -36,7 +38,8 @@ class EpicuriusIntegrationTest : EpicuriusTest() {
 
     @LocalServerPort
     var port: Int = 0
-    val client = WebTestClient.bindToServer().baseUrl(api("/")).build()
+    val httpClinet = HttpClient.create().followRedirect(false)
+    val client = WebTestClient.bindToServer(ReactorClientHttpConnector(httpClinet)).baseUrl(api("/")).build()
     final fun api(path: String): String = "http://localhost:$port/api$path"
 
     // USER
@@ -206,7 +209,7 @@ class EpicuriusIntegrationTest : EpicuriusTest() {
                 "openDate" to openDate,
                 "expirationDate" to expirationDate
             ),
-            HttpStatus.OK,
+            HttpStatus.CREATED,
             token = token
         )
 
