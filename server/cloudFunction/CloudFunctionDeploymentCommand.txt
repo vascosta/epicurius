@@ -1,7 +1,0 @@
-gcloud functions deploy get-ingredients-from-picture `
-  --entry-point epicurius.GetIngredientsFromPicture `
-  --runtime java21 `
-  --trigger-http `
-  --allow-unauthenticated `
-  --region=europe-west1 `
-  --gen2

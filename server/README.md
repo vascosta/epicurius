@@ -75,7 +75,7 @@ In __Recipe__ table is used an array of varchar, __Pictures Names__ attribute, i
 
 ## Application Architecture
 
-## Software organization
+### Software organization
 
 The backend server is organized in the following packages:
 * [/config](./src/main/kotlin/epicurius/config), which contains the classes that configure the databases and pipeline used by the application - [see more](#config);
