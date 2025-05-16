@@ -57,7 +57,7 @@ class CollectionController(private val collectionService: CollectionService) {
         @RequestBody body: AddRecipeToCollectionInputModel,
     ): ResponseEntity<*> {
         val updatedCollection = collectionService.addRecipeToCollection(
-            authenticatedUser.user.id, authenticatedUser.user.name, id, body.recipeId
+            authenticatedUser.user.id, id, body.recipeId
         )
         return ResponseEntity
             .ok()

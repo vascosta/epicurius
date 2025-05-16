@@ -26,7 +26,7 @@ class AddRecipeToCollectionControllerTests : CollectionHttpTest() {
         )
         whenever(
             collectionServiceMock.addRecipeToCollection(
-                testPublicAuthenticatedUser.user.id, testPublicAuthenticatedUser.user.name, FAVOURITE_COLLECTION_ID, RECIPE_ID
+                testPublicAuthenticatedUser.user.id, FAVOURITE_COLLECTION_ID, RECIPE_ID
             )
         ).thenReturn(mockUpdatedCollection)
 
@@ -51,7 +51,7 @@ class AddRecipeToCollectionControllerTests : CollectionHttpTest() {
         // mock
         whenever(
             collectionServiceMock.addRecipeToCollection(
-                testPublicAuthenticatedUser.user.id, testPublicAuthenticatedUser.user.name, nonExistingCollectionId, RECIPE_ID
+                testPublicAuthenticatedUser.user.id, nonExistingCollectionId, RECIPE_ID
             )
         ).thenThrow(CollectionNotFound())
 
@@ -71,7 +71,7 @@ class AddRecipeToCollectionControllerTests : CollectionHttpTest() {
         // mock
         whenever(
             collectionServiceMock.addRecipeToCollection(
-                testPrivateAuthenticatedUser.user.id, testPrivateAuthenticatedUser.user.name, FAVOURITE_COLLECTION_ID, RECIPE_ID
+                testPrivateAuthenticatedUser.user.id, FAVOURITE_COLLECTION_ID, RECIPE_ID
             )
         ).thenThrow(CollectionNotFound())
 
@@ -92,7 +92,7 @@ class AddRecipeToCollectionControllerTests : CollectionHttpTest() {
         // mock
         whenever(
             collectionServiceMock.addRecipeToCollection(
-                testPublicAuthenticatedUser.user.id, testPublicAuthenticatedUser.user.name, FAVOURITE_COLLECTION_ID, nonExistingRecipeId
+                testPublicAuthenticatedUser.user.id, FAVOURITE_COLLECTION_ID, nonExistingRecipeId
             )
         ).thenThrow(RecipeNotFound())
 
@@ -112,7 +112,7 @@ class AddRecipeToCollectionControllerTests : CollectionHttpTest() {
         // mock
         whenever(
             collectionServiceMock.addRecipeToCollection(
-                testPrivateAuthenticatedUser.user.id, testPrivateAuthenticatedUser.user.name, FAVOURITE_COLLECTION_ID, RECIPE_ID
+                testPrivateAuthenticatedUser.user.id, FAVOURITE_COLLECTION_ID, RECIPE_ID
             )
         ).thenThrow(RecipeNotAccessible())
 
@@ -132,7 +132,7 @@ class AddRecipeToCollectionControllerTests : CollectionHttpTest() {
         // mock
         whenever(
             collectionServiceMock.addRecipeToCollection(
-                testPublicAuthenticatedUser.user.id, testPublicAuthenticatedUser.user.name, KITCHEN_BOOK_COLLECTION_ID, RECIPE_ID
+                testPublicAuthenticatedUser.user.id, KITCHEN_BOOK_COLLECTION_ID, RECIPE_ID
             )
         ).thenThrow(RecipeNotFound())
 
@@ -152,7 +152,7 @@ class AddRecipeToCollectionControllerTests : CollectionHttpTest() {
         // mock
         whenever(
             collectionServiceMock.addRecipeToCollection(
-                testPublicAuthenticatedUser.user.id, testPublicAuthenticatedUser.user.name, FAVOURITE_COLLECTION_ID, RECIPE_ID
+                testPublicAuthenticatedUser.user.id, FAVOURITE_COLLECTION_ID, RECIPE_ID
             )
         ).thenThrow(RecipeAlreadyInCollection())
 
