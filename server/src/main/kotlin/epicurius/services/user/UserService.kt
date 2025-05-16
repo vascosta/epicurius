@@ -62,8 +62,8 @@ class UserService(
 
     fun getUserProfile(name: String): UserProfile {
         val user = checkIfUserExists(name = name) ?: throw UserNotFound(name)
-        val followers = getFollowers(user.id)
-        val following = getFollowing(user.id)
+        val followers = getFollowersCount(user.id)
+        val following = getFollowingCount(user.id)
         return if (user.profilePictureName == null) {
             UserProfile(user.name, user.country, user.privacy, null, followers, following)
         } else {
@@ -82,13 +82,19 @@ class UserService(
             .map { user -> SearchUser(user.name, getProfilePicture(user.profilePictureName)) }
     }
 
-    fun getFollowers(userId: Int) =
-        tm.run { it.userRepository.getFollowers(userId) }
+    fun getFollowers(userId: Int, pagingParams: PagingParams) =
+        tm.run { it.userRepository.getFollowers(userId, pagingParams) }
             .map { user -> FollowUser(user.name, getProfilePicture(user.profilePictureName)) }
 
-    fun getFollowing(userId: Int) =
-        tm.run { it.userRepository.getFollowing(userId) }
+    fun getFollowersCount(userId: Int) =
+        tm.run { it.userRepository.getFollowersCount(userId) }
+
+    fun getFollowing(userId: Int, pagingParams: PagingParams) =
+        tm.run { it.userRepository.getFollowing(userId, pagingParams) }
             .map { user -> FollowingUser(user.name, getProfilePicture(user.profilePictureName)) }
+
+    fun getFollowingCount(userId: Int) =
+        tm.run { it.userRepository.getFollowingCount(userId) }
 
     fun getFollowRequests(userId: Int) =
         tm.run { it.userRepository.getFollowRequests(userId) }

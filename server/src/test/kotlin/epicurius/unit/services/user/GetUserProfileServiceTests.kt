@@ -1,5 +1,6 @@
 package epicurius.unit.services.user
 
+import epicurius.domain.PagingParams
 import epicurius.domain.exceptions.UserNotFound
 import epicurius.domain.picture.PictureDomain
 import org.mockito.kotlin.whenever
@@ -8,18 +9,18 @@ import kotlin.test.Test
 import kotlin.test.assertContentEquals
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
-import kotlin.test.assertTrue
 
 class GetUserProfileServiceTests : UserServiceTest() {
 
     @Test
     fun `Should retrieve the user profile successfully`() {
         // given a user (publicTestUser)
+        val pagingParams = PagingParams()
 
         // mock
         whenever(jdbiUserRepositoryMock.getUser(publicTestUsername)).thenReturn(publicTestUser)
-        whenever(jdbiUserRepositoryMock.getFollowers(publicTestUser.id)).thenReturn(emptyList())
-        whenever(jdbiUserRepositoryMock.getFollowing(publicTestUser.id)).thenReturn(emptyList())
+        whenever(jdbiUserRepositoryMock.getFollowers(publicTestUser.id, pagingParams)).thenReturn(emptyList())
+        whenever(jdbiUserRepositoryMock.getFollowing(publicTestUser.id, pagingParams)).thenReturn(emptyList())
         whenever(pictureRepositoryMock.getPicture(publicTestUser.profilePictureName!!, PictureDomain.USERS_FOLDER))
             .thenReturn(testPicture.bytes)
 
@@ -31,8 +32,8 @@ class GetUserProfileServiceTests : UserServiceTest() {
         assertEquals(publicTestUser.country, userProfile.country)
         assertEquals(publicTestUser.privacy, userProfile.privacy)
         assertContentEquals(testPicture.bytes, userProfile.profilePicture)
-        assertTrue(userProfile.followers.isEmpty())
-        assertTrue(userProfile.following.isEmpty())
+        assertEquals(0, userProfile.followersCount)
+        assertEquals(0, userProfile.followingCount)
     }
 
     @Test

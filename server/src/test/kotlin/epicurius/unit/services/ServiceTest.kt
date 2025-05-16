@@ -35,9 +35,9 @@ open class ServiceTest : EpicuriusUnitTest() {
         fun searchUsers(userId: Int, partialUsername: String, pagingParams: PagingParams) =
             userService.searchUsers(userId, partialUsername, pagingParams)
 
-        fun getFollowers(userId: Int) = userService.getFollowers(userId)
+        fun getFollowers(userId: Int, pagingParams: PagingParams) = userService.getFollowers(userId, pagingParams)
 
-        fun getFollowing(userId: Int) = userService.getFollowing(userId)
+        fun getFollowing(userId: Int, pagingParams: PagingParams) = userService.getFollowing(userId, pagingParams)
 
         fun getFollowRequests(userId: Int) = userService.getFollowRequests(userId)
 
@@ -87,7 +87,7 @@ open class ServiceTest : EpicuriusUnitTest() {
         suspend fun createRecipe(authorId: Int, authorName: String, recipeInfo: CreateRecipeInputModel, pictures: Set<MultipartFile>) =
             recipeService.createRecipe(authorId, authorName, recipeInfo, pictures)
 
-        suspend fun getRecipe(recipeId: Int, username: String) = recipeService.getRecipe(recipeId, username)
+        suspend fun getRecipe(recipeId: Int, userId: Int) = recipeService.getRecipe(recipeId, userId)
 
         fun searchRecipes(userId: Int, form: SearchRecipesInputModel, skip: Int, limit: Int) =
             recipeService.searchRecipes(userId, form, PagingParams(skip, limit))
@@ -102,16 +102,16 @@ open class ServiceTest : EpicuriusUnitTest() {
             recipeService.deleteRecipe(userId, recipeId)
 
         // RATE RECIPE
-        fun getRecipeRate(username: String, recipeId: Int) = rateRecipeService.getRecipeRate(username, recipeId)
+        fun getRecipeRate(userId: Int, recipeId: Int) = rateRecipeService.getRecipeRate(userId, recipeId)
 
-        fun rateRecipe(userId: Int, username: String, recipeId: Int, rating: Int) =
-            rateRecipeService.rateRecipe(userId, username, recipeId, rating)
+        fun rateRecipe(userId: Int, recipeId: Int, rating: Int) =
+            rateRecipeService.rateRecipe(userId, recipeId, rating)
 
-        fun updateRecipeRate(userId: Int, username: String, recipeId: Int, rating: Int) =
-            rateRecipeService.updateRecipeRate(userId, username, recipeId, rating)
+        fun updateRecipeRate(userId: Int, recipeId: Int, rating: Int) =
+            rateRecipeService.updateRecipeRate(userId, recipeId, rating)
 
-        fun deleteRecipeRate(userId: Int, username: String, recipeId: Int) =
-            rateRecipeService.deleteRecipeRate(userId, username, recipeId)
+        fun deleteRecipeRate(userId: Int, recipeId: Int) =
+            rateRecipeService.deleteRecipeRate(userId, recipeId)
 
         // INGREDIENTS
         suspend fun getIngredients(partial: String) = ingredientsService.getIngredients(partial)
@@ -131,8 +131,8 @@ open class ServiceTest : EpicuriusUnitTest() {
         fun updateCollection(userId: Int, collectionId: Int, updateCollectionInfo: UpdateCollectionInputModel) =
             collectionService.updateCollection(userId, collectionId, updateCollectionInfo)
 
-        fun addRecipeToCollection(userId: Int, username: String, collectionId: Int, recipeId: Int) =
-            collectionService.addRecipeToCollection(userId, username, collectionId, recipeId)
+        fun addRecipeToCollection(userId: Int, collectionId: Int, recipeId: Int) =
+            collectionService.addRecipeToCollection(userId, collectionId, recipeId)
 
         fun removeRecipeFromCollection(userId: Int, collectionId: Int, recipeId: Int) =
             collectionService.removeRecipeFromCollection(userId, collectionId, recipeId)
@@ -146,11 +146,11 @@ open class ServiceTest : EpicuriusUnitTest() {
         fun getDailyMealPlanner(userId: Int, date: LocalDate) =
             mealPlannerService.getDailyMealPlanner(userId, date)
 
-        fun addRecipeDailyMealPlanner(userId: Int, username: String, date: LocalDate, info: AddMealPlannerInputModel) =
-            mealPlannerService.addRecipeToDailyMealPlanner(userId, username, date, info)
+        fun addRecipeDailyMealPlanner(userId: Int, date: LocalDate, info: AddMealPlannerInputModel) =
+            mealPlannerService.addRecipeToDailyMealPlanner(userId, date, info)
 
-        fun updateDailyMealPlanner(userId: Int, username: String, date: LocalDate, info: UpdateMealPlannerInputModel) =
-            mealPlannerService.updateDailyMealPlanner(userId, username, date, info)
+        fun updateDailyMealPlanner(userId: Int, date: LocalDate, info: UpdateMealPlannerInputModel) =
+            mealPlannerService.updateDailyMealPlanner(userId, date, info)
 
         fun removeMealTimeDailyMealPlanner(userId: Int, date: LocalDate, mealTime: MealTime) =
             mealPlannerService.removeMealTimeFromDailyMealPlanner(userId, date, mealTime)
