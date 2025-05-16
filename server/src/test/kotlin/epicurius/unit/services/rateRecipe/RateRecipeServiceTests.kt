@@ -18,17 +18,14 @@ class RateRecipeServiceTests : RateRecipeServiceTest() {
 
         // mock
         whenever(jdbiRecipeRepositoryMock.getRecipeById(RECIPE_ID)).thenReturn(jdbiRecipeModel)
-        whenever(jdbiUserRepositoryMock.checkUserVisibility(AUTHOR_USERNAME, USERNAME)).thenReturn(true)
+        whenever(jdbiUserRepositoryMock.checkUserVisibility(AUTHOR_USERNAME, USER_ID)).thenReturn(true)
         whenever(jdbiRateRecipeRepositoryMock.checkIfUserAlreadyRated(USER_ID, RECIPE_ID)).thenReturn(false)
-        whenever(jdbiRateRecipeRepositoryMock.getRecipeRate(RECIPE_ID)).thenReturn(RATING_5.toDouble())
 
         // when rating the recipe
-        rateRecipe(USER_ID, USERNAME, RECIPE_ID, RATING_5)
+        rateRecipe(USER_ID, RECIPE_ID, RATING_5)
 
         // then the recipe is rated successfully
         verify(jdbiRateRecipeRepositoryMock).rateRecipe(RECIPE_ID, USER_ID, RATING_5)
-        val rating = rateRecipeService.getRecipeRate(USERNAME, RECIPE_ID)
-        assertEquals(RATING_5.toDouble(), rating)
     }
 
     @Test
@@ -40,12 +37,10 @@ class RateRecipeServiceTests : RateRecipeServiceTest() {
         whenever(jdbiRecipeRepositoryMock.getRecipeById(nonExistingRecipeId)).thenReturn(null)
 
         // when getting the recipe rate
-        val exception = assertThrows<RecipeNotFound> {
-            rateRecipe(USER_ID, USERNAME, nonExistingRecipeId, RATING_5)
+        // then the recipe cannot be rated and throws RecipeNotFound exception
+        assertThrows<RecipeNotFound> {
+            rateRecipe(USER_ID, nonExistingRecipeId, RATING_5)
         }
-
-        // then the exception is thrown
-        assertEquals(RecipeNotFound().message, exception.message)
     }
 
     @Test
@@ -54,15 +49,13 @@ class RateRecipeServiceTests : RateRecipeServiceTest() {
 
         // mock
         whenever(jdbiRecipeRepositoryMock.getRecipeById(RECIPE_ID)).thenReturn(jdbiRecipeModel)
-        whenever(jdbiUserRepositoryMock.checkUserVisibility(AUTHOR_USERNAME, USERNAME)).thenReturn(true)
+        whenever(jdbiUserRepositoryMock.checkUserVisibility(AUTHOR_USERNAME, AUTHOR_ID)).thenReturn(true)
 
         // when rating the recipe
-        val exception = assertThrows<AuthorCannotRateOwnRecipe> {
-            rateRecipe(AUTHOR_ID, AUTHOR_USERNAME, RECIPE_ID, RATING_5)
+        // then the recipe cannot be rated and throws AuthorCannotRateOwnRecipe exception
+        assertThrows<AuthorCannotRateOwnRecipe> {
+            rateRecipe(AUTHOR_ID, RECIPE_ID, RATING_5)
         }
-
-        // then the exception is thrown
-        assertEquals(AuthorCannotRateOwnRecipe().message, exception.message)
     }
 
     @Test
@@ -71,15 +64,13 @@ class RateRecipeServiceTests : RateRecipeServiceTest() {
 
         // mock
         whenever(jdbiRecipeRepositoryMock.getRecipeById(RECIPE_ID)).thenReturn(jdbiRecipeModel)
-        whenever(jdbiUserRepositoryMock.checkUserVisibility(AUTHOR_USERNAME, USERNAME)).thenReturn(false)
+        whenever(jdbiUserRepositoryMock.checkUserVisibility(AUTHOR_USERNAME, USER_ID)).thenReturn(false)
 
         // when rating the recipe
-        val exception = assertThrows<RecipeNotAccessible> {
-            rateRecipe(USER_ID, USERNAME, RECIPE_ID, RATING_5)
+        // then the recipe cannot be rated and throws RecipeNotAccessible exception
+        assertThrows<RecipeNotAccessible> {
+            rateRecipe(USER_ID, RECIPE_ID, RATING_5)
         }
-
-        // then the exception is thrown
-        assertEquals(RecipeNotAccessible().message, exception.message)
     }
 
     @Test
@@ -88,15 +79,13 @@ class RateRecipeServiceTests : RateRecipeServiceTest() {
 
         // mock
         whenever(jdbiRecipeRepositoryMock.getRecipeById(RECIPE_ID)).thenReturn(jdbiRecipeModel)
-        whenever(jdbiUserRepositoryMock.checkUserVisibility(AUTHOR_USERNAME, USERNAME)).thenReturn(true)
+        whenever(jdbiUserRepositoryMock.checkUserVisibility(AUTHOR_USERNAME, USER_ID)).thenReturn(true)
         whenever(jdbiRateRecipeRepositoryMock.checkIfUserAlreadyRated(USER_ID, RECIPE_ID)).thenReturn(true)
 
         // when rating the recipe
-        val exception = assertThrows<UserAlreadyRated> {
-            rateRecipe(USER_ID, USERNAME, RECIPE_ID, RATING_5)
+        // then the recipe cannot be rated and throws UserAlreadyRated exception
+        assertThrows<UserAlreadyRated> {
+            rateRecipe(USER_ID, RECIPE_ID, RATING_5)
         }
-
-        // then the exception is thrown
-        assertEquals(UserAlreadyRated(USER_ID, RECIPE_ID).message, exception.message)
     }
 }

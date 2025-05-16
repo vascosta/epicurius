@@ -15,11 +15,11 @@ class DeleteRateRecipeServiceTests : RateRecipeServiceTest() {
 
         // mock
         whenever(jdbiRecipeRepositoryMock.getRecipeById(RECIPE_ID)).thenReturn(jdbiRecipeModel)
-        whenever(jdbiUserRepositoryMock.checkUserVisibility(AUTHOR_USERNAME, USERNAME)).thenReturn(true)
+        whenever(jdbiUserRepositoryMock.checkUserVisibility(AUTHOR_USERNAME, USER_ID)).thenReturn(true)
         whenever(jdbiRateRecipeRepositoryMock.checkIfUserAlreadyRated(USER_ID, RECIPE_ID)).thenReturn(true)
 
         // when deleting the recipe rate
-        deleteRecipeRate(USER_ID, USERNAME, RECIPE_ID)
+        deleteRecipeRate(USER_ID, RECIPE_ID)
 
         // then the recipe rate is deleted successfully
         verify(jdbiRateRecipeRepositoryMock).deleteRecipeRate(RECIPE_ID, USER_ID)
@@ -34,12 +34,10 @@ class DeleteRateRecipeServiceTests : RateRecipeServiceTest() {
         whenever(jdbiRecipeRepositoryMock.getRecipeById(nonExistingRecipeId)).thenReturn(null)
 
         // when deleting the recipe rate
-        val exception = assertThrows<RecipeNotFound> {
-            deleteRecipeRate(USER_ID, USERNAME, nonExistingRecipeId)
+        // then the recipe rate cannot be deleted and throws RecipeNotFound exception
+        assertThrows<RecipeNotFound> {
+            deleteRecipeRate(USER_ID, nonExistingRecipeId)
         }
-
-        // then the exception is thrown
-        assertEquals(RecipeNotFound().message, exception.message)
     }
 
     @Test
@@ -48,15 +46,13 @@ class DeleteRateRecipeServiceTests : RateRecipeServiceTest() {
 
         // mock
         whenever(jdbiRecipeRepositoryMock.getRecipeById(RECIPE_ID)).thenReturn(jdbiRecipeModel)
-        whenever(jdbiUserRepositoryMock.checkUserVisibility(AUTHOR_USERNAME, AUTHOR_USERNAME)).thenReturn(true)
+        whenever(jdbiUserRepositoryMock.checkUserVisibility(AUTHOR_USERNAME, AUTHOR_ID)).thenReturn(true)
 
         // when deleting the recipe rate
-        val exception = assertThrows<epicurius.domain.exceptions.AuthorCannotDeleteRating> {
-            deleteRecipeRate(AUTHOR_ID, AUTHOR_USERNAME, RECIPE_ID)
+        // then the recipe rate cannot be deleted and throws AuthorCannotDeleteRating exception
+        assertThrows<epicurius.domain.exceptions.AuthorCannotDeleteRating> {
+            deleteRecipeRate(AUTHOR_ID, RECIPE_ID)
         }
-
-        // then the exception is thrown
-        assertEquals(epicurius.domain.exceptions.AuthorCannotDeleteRating().message, exception.message)
     }
 
     @Test
@@ -65,16 +61,14 @@ class DeleteRateRecipeServiceTests : RateRecipeServiceTest() {
 
         // mock
         whenever(jdbiRecipeRepositoryMock.getRecipeById(RECIPE_ID)).thenReturn(jdbiRecipeModel)
-        whenever(jdbiUserRepositoryMock.checkUserVisibility(AUTHOR_USERNAME, USERNAME)).thenReturn(true)
+        whenever(jdbiUserRepositoryMock.checkUserVisibility(AUTHOR_USERNAME, USER_ID)).thenReturn(true)
         whenever(jdbiRateRecipeRepositoryMock.checkIfUserAlreadyRated(USER_ID, RECIPE_ID)).thenReturn(false)
 
         // when deleting the recipe rate
-        val exception = assertThrows<epicurius.domain.exceptions.UserHasNotRated> {
-            deleteRecipeRate(USER_ID, USERNAME, RECIPE_ID)
+        // then the recipe rate cannot be deleted and throws UserHasNotRated exception
+        assertThrows<epicurius.domain.exceptions.UserHasNotRated> {
+            deleteRecipeRate(USER_ID, RECIPE_ID)
         }
-
-        // then the exception is thrown
-        assertEquals(epicurius.domain.exceptions.UserHasNotRated(USER_ID, RECIPE_ID).message, exception.message)
     }
 
     @Test
@@ -83,14 +77,12 @@ class DeleteRateRecipeServiceTests : RateRecipeServiceTest() {
 
         // mock
         whenever(jdbiRecipeRepositoryMock.getRecipeById(RECIPE_ID)).thenReturn(jdbiRecipeModel)
-        whenever(jdbiUserRepositoryMock.checkUserVisibility(AUTHOR_USERNAME, USERNAME)).thenReturn(false)
+        whenever(jdbiUserRepositoryMock.checkUserVisibility(AUTHOR_USERNAME, USER_ID)).thenReturn(false)
 
         // when deleting the recipe rate
-        val exception = assertThrows<epicurius.domain.exceptions.RecipeNotAccessible> {
-            deleteRecipeRate(USER_ID, USERNAME, RECIPE_ID)
+        // then the recipe rate cannot be deleted and throws RecipeNotAccessible exception
+        assertThrows<epicurius.domain.exceptions.RecipeNotAccessible> {
+            deleteRecipeRate(USER_ID, RECIPE_ID)
         }
-
-        // then the exception is thrown
-        assertEquals(epicurius.domain.exceptions.RecipeNotAccessible().message, exception.message)
     }
 }

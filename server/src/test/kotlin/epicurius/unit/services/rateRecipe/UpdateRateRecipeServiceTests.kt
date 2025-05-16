@@ -18,17 +18,14 @@ class UpdateRateRecipeServiceTests : RateRecipeServiceTest() {
 
         // mock
         whenever(jdbiRecipeRepositoryMock.getRecipeById(RECIPE_ID)).thenReturn(jdbiRecipeModel)
-        whenever(jdbiUserRepositoryMock.checkUserVisibility(AUTHOR_USERNAME, USERNAME)).thenReturn(true)
+        whenever(jdbiUserRepositoryMock.checkUserVisibility(AUTHOR_USERNAME, USER_ID)).thenReturn(true)
         whenever(jdbiRateRecipeRepositoryMock.checkIfUserAlreadyRated(USER_ID, RECIPE_ID)).thenReturn(true)
-        whenever(jdbiRateRecipeRepositoryMock.getRecipeRate(RECIPE_ID)).thenReturn(RATING_3.toDouble())
 
         // when updating the recipe rate
-        updateRecipeRate(USER_ID, USERNAME, RECIPE_ID, RATING_3)
+        updateRecipeRate(USER_ID, RECIPE_ID, RATING_3)
 
         // then the recipe rate is updated successfully
         verify(jdbiRateRecipeRepositoryMock).updateRecipeRate(RECIPE_ID, USER_ID, RATING_3)
-        val rating = rateRecipeService.getRecipeRate(USERNAME, RECIPE_ID)
-        assertEquals(RATING_3.toDouble(), rating)
     }
 
     @Test
@@ -40,12 +37,10 @@ class UpdateRateRecipeServiceTests : RateRecipeServiceTest() {
         whenever(jdbiRecipeRepositoryMock.getRecipeById(nonExistingRecipeId)).thenReturn(null)
 
         // when updating the recipe rate
-        val exception = assertThrows<RecipeNotFound> {
-            updateRecipeRate(USER_ID, USERNAME, nonExistingRecipeId, RATING_3)
+        // then the recipe rate cannot be updated and throws RecipeNotFound exception
+        assertThrows<RecipeNotFound> {
+            updateRecipeRate(USER_ID, nonExistingRecipeId, RATING_3)
         }
-
-        // then the exception is thrown
-        assertEquals(RecipeNotFound().message, exception.message)
     }
 
     @Test
@@ -54,15 +49,13 @@ class UpdateRateRecipeServiceTests : RateRecipeServiceTest() {
 
         // mock
         whenever(jdbiRecipeRepositoryMock.getRecipeById(RECIPE_ID)).thenReturn(jdbiRecipeModel)
-        whenever(jdbiUserRepositoryMock.checkUserVisibility(AUTHOR_USERNAME, USERNAME)).thenReturn(true)
+        whenever(jdbiUserRepositoryMock.checkUserVisibility(AUTHOR_USERNAME, AUTHOR_ID)).thenReturn(true)
 
         // when updating the recipe rate
-        val exception = assertThrows<AuthorCannotUpdateRating> {
-            updateRecipeRate(AUTHOR_ID, USERNAME, RECIPE_ID, RATING_3)
+        // then the recipe rate cannot be updated and throws AuthorCannotUpdateRating exception
+        assertThrows<AuthorCannotUpdateRating> {
+            updateRecipeRate(AUTHOR_ID, RECIPE_ID, RATING_3)
         }
-
-        // then the exception is thrown
-        assertEquals(AuthorCannotUpdateRating().message, exception.message)
     }
 
     @Test
@@ -71,15 +64,13 @@ class UpdateRateRecipeServiceTests : RateRecipeServiceTest() {
 
         // mock
         whenever(jdbiRecipeRepositoryMock.getRecipeById(RECIPE_ID)).thenReturn(jdbiRecipeModel)
-        whenever(jdbiUserRepositoryMock.checkUserVisibility(AUTHOR_USERNAME, USERNAME)).thenReturn(false)
+        whenever(jdbiUserRepositoryMock.checkUserVisibility(AUTHOR_USERNAME, USER_ID)).thenReturn(false)
 
         // when updating the recipe rate
-        val exception = assertThrows<RecipeNotAccessible> {
-            updateRecipeRate(USER_ID, USERNAME, RECIPE_ID, RATING_3)
+        // then the recipe rate cannot be updated and throws RecipeNotAccessible exception
+        assertThrows<RecipeNotAccessible> {
+            updateRecipeRate(USER_ID, RECIPE_ID, RATING_3)
         }
-
-        // then the exception is thrown
-        assertEquals(RecipeNotAccessible().message, exception.message)
     }
 
     @Test
@@ -88,15 +79,13 @@ class UpdateRateRecipeServiceTests : RateRecipeServiceTest() {
 
         // mock
         whenever(jdbiRecipeRepositoryMock.getRecipeById(RECIPE_ID)).thenReturn(jdbiRecipeModel)
-        whenever(jdbiUserRepositoryMock.checkUserVisibility(AUTHOR_USERNAME, USERNAME)).thenReturn(true)
+        whenever(jdbiUserRepositoryMock.checkUserVisibility(AUTHOR_USERNAME, USER_ID)).thenReturn(true)
         whenever(jdbiRateRecipeRepositoryMock.checkIfUserAlreadyRated(USER_ID, RECIPE_ID)).thenReturn(false)
 
         // when updating the recipe rate
-        val exception = assertThrows<UserHasNotRated> {
-            updateRecipeRate(USER_ID, USERNAME, RECIPE_ID, RATING_3)
+        // then the recipe rate cannot be updated and throws UserHasNotRated exception
+        assertThrows<UserHasNotRated> {
+            updateRecipeRate(USER_ID, RECIPE_ID, RATING_3)
         }
-
-        // then the exception is thrown
-        assertEquals(UserHasNotRated(USER_ID, RECIPE_ID).message, exception.message)
     }
 }

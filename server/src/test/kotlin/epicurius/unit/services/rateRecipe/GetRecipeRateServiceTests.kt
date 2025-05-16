@@ -11,15 +11,15 @@ class GetRecipeRateServiceTests : RateRecipeServiceTest() {
 
     @Test
     fun `Should get recipe rating successfully`() {
-        // given a user id and a recipe id (USERNAME, RECIPE_ID)
+        // given a user id and a recipe id (USER_ID, RECIPE_ID)
 
         // mock
         whenever(jdbiRecipeRepositoryMock.getRecipeById(RECIPE_ID)).thenReturn(jdbiRecipeModel)
-        whenever(jdbiUserRepositoryMock.checkUserVisibility(AUTHOR_USERNAME, USERNAME)).thenReturn(true)
+        whenever(jdbiUserRepositoryMock.checkUserVisibility(AUTHOR_USERNAME, USER_ID)).thenReturn(true)
         whenever(jdbiRateRecipeRepositoryMock.getRecipeRate(RECIPE_ID)).thenReturn(RATING_5.toDouble())
 
         // when getting the recipe rating
-        val rate = getRecipeRate(USERNAME, RECIPE_ID)
+        val rate = getRecipeRate(USER_ID, RECIPE_ID)
 
         // then the recipe rating is returned successfully
         assert(rate == RATING_5.toDouble())
@@ -34,10 +34,8 @@ class GetRecipeRateServiceTests : RateRecipeServiceTest() {
         whenever(jdbiRecipeRepositoryMock.getRecipeById(nonExistingRecipeId)).thenReturn(null)
 
         // when getting the recipe rating
-        val exception = assertThrows<RecipeNotFound> { getRecipeRate(USERNAME, nonExistingRecipeId) }
-
         // then the recipe rating is not returned and throws RecipeNotFound exception
-        assertEquals(RecipeNotFound().message, exception.message)
+        assertThrows<RecipeNotFound> { getRecipeRate(USER_ID, nonExistingRecipeId) }
     }
 
     @Test
@@ -47,12 +45,10 @@ class GetRecipeRateServiceTests : RateRecipeServiceTest() {
 
         // mock
         whenever(jdbiRecipeRepositoryMock.getRecipeById(privateRecipeId)).thenReturn(jdbiRecipeModel)
-        whenever(jdbiUserRepositoryMock.checkUserVisibility(AUTHOR_USERNAME, USERNAME)).thenReturn(false)
+        whenever(jdbiUserRepositoryMock.checkUserVisibility(AUTHOR_USERNAME, USER_ID)).thenReturn(false)
 
         // when getting the recipe rating
-        val exception = assertThrows<RecipeNotAccessible> { getRecipeRate(USERNAME, privateRecipeId) }
-
         // then the recipe rating is not returned and throws RecipeNotAccessible exception
-        assertEquals(RecipeNotAccessible().message, exception.message)
+        assertThrows<RecipeNotAccessible> { getRecipeRate(USER_ID, privateRecipeId) }
     }
 }

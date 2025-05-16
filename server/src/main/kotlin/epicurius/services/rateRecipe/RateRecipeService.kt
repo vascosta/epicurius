@@ -14,34 +14,34 @@ import org.springframework.stereotype.Component
 @Component
 class RateRecipeService(private val tm: TransactionManager) {
 
-    fun getRecipeRate(username: String, recipeId: Int): Double {
+    fun getRecipeRate(userId: Int, recipeId: Int): Double {
         val recipe = checkIfRecipeExists(recipeId) ?: throw RecipeNotFound()
-        checkRecipeAccessibility(recipe.authorUsername, username)
+        checkRecipeAccessibility(recipe.authorUsername, userId)
         return tm.run { it.rateRecipeRepository.getRecipeRate(recipeId) }
     }
 
-    fun rateRecipe(userId: Int, username: String, recipeId: Int, rating: Int) {
+    fun rateRecipe(userId: Int, recipeId: Int, rating: Int) {
         val recipe = checkIfRecipeExists(recipeId) ?: throw RecipeNotFound()
         if (userId == recipe.authorId) throw AuthorCannotRateOwnRecipe()
-        checkRecipeAccessibility(recipe.authorUsername, username)
+        checkRecipeAccessibility(recipe.authorUsername, userId)
         if (checkIfUserAlreadyRated(userId, recipeId)) throw UserAlreadyRated(userId, recipeId)
 
         tm.run { it.rateRecipeRepository.rateRecipe(recipeId, userId, rating) }
     }
 
-    fun updateRecipeRate(userId: Int, username: String, recipeId: Int, rating: Int) {
+    fun updateRecipeRate(userId: Int, recipeId: Int, rating: Int) {
         val recipe = checkIfRecipeExists(recipeId) ?: throw RecipeNotFound()
         if (userId == recipe.authorId) throw AuthorCannotUpdateRating()
-        checkRecipeAccessibility(recipe.authorUsername, username)
+        checkRecipeAccessibility(recipe.authorUsername, userId)
         if (!checkIfUserAlreadyRated(userId, recipeId)) throw UserHasNotRated(userId, recipeId)
 
         tm.run { it.rateRecipeRepository.updateRecipeRate(recipeId, userId, rating) }
     }
 
-    fun deleteRecipeRate(userId: Int, username: String, recipeId: Int) {
+    fun deleteRecipeRate(userId: Int, recipeId: Int) {
         val recipe = checkIfRecipeExists(recipeId) ?: throw RecipeNotFound()
         if (userId == recipe.authorId) throw AuthorCannotDeleteRating()
-        checkRecipeAccessibility(recipe.authorUsername, username)
+        checkRecipeAccessibility(recipe.authorUsername, userId)
         if (!checkIfUserAlreadyRated(userId, recipeId)) throw UserHasNotRated(userId, recipeId)
 
         tm.run { it.rateRecipeRepository.deleteRecipeRate(recipeId, userId) }
@@ -50,8 +50,8 @@ class RateRecipeService(private val tm: TransactionManager) {
     private fun checkIfRecipeExists(recipeId: Int): JdbiRecipeModel? =
         tm.run { it.recipeRepository.getRecipeById(recipeId) }
 
-    private fun checkRecipeAccessibility(authorUsername: String, username: String) {
-        if (!tm.run { it.userRepository.checkUserVisibility(authorUsername, username) })
+    private fun checkRecipeAccessibility(authorUsername: String, userId: Int) {
+        if (!tm.run { it.userRepository.checkUserVisibility(authorUsername, userId) })
             throw RecipeNotAccessible()
     }
 
