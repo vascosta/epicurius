@@ -41,7 +41,7 @@ class CreateMealPlannerControllerTests : MealPlannerHttpTest() {
         ).thenThrow(MealPlannerAlreadyExists(today))
 
         // when creating the meal planner
-        // then MealPlannerAlreadyExists exception is thrown
+        // then the daily meal planner cannot be created and throws MealPlannerAlreadyExists exception
         assertThrows<MealPlannerAlreadyExists> {
             createDailyMealPlanner(
                 testAuthenticatedUser,

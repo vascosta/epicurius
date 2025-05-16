@@ -56,7 +56,7 @@ class UpdateDailyMealPlannerControllerTests : MealPlannerHttpTest() {
         ).thenThrow(DailyMealPlannerNotFound())
 
         // when updating the daily meal planner
-        // then DailyMealPlannerNotFound exception is thrown
+        // then the daily meal planner cannot be updated and throws DailyMealPlannerNotFound exception
         assertThrows<DailyMealPlannerNotFound> {
             updateDailyMealPlanner(
                 testAuthenticatedUser,
@@ -80,7 +80,7 @@ class UpdateDailyMealPlannerControllerTests : MealPlannerHttpTest() {
         ).thenThrow(MealTimeDoesNotExist())
 
         // when updating the daily meal planner
-        // then MealTimeDoesNotExist exception is thrown
+        // then the daily meal planner cannot be updated and throws MealTimeDoesNotExist exception
         assertThrows<MealTimeDoesNotExist> {
             updateDailyMealPlanner(
                 testAuthenticatedUser,
@@ -104,7 +104,7 @@ class UpdateDailyMealPlannerControllerTests : MealPlannerHttpTest() {
         ).thenThrow(RecipeNotFound())
 
         // when updating the daily meal planner
-        // then RecipeNotFound exception is thrown
+        // then the daily meal planner cannot be updated and throws RecipeNotFound exception
         assertThrows<RecipeNotFound> {
             updateDailyMealPlanner(
                 testAuthenticatedUser,
@@ -128,7 +128,7 @@ class UpdateDailyMealPlannerControllerTests : MealPlannerHttpTest() {
         ).thenThrow(RecipeNotAccessible())
 
         // when updating the daily meal planner
-        // then RecipeNotAccessible exception is thrown
+        // then the daily meal planner cannot be updated and throws RecipeNotAccessible exception
         assertThrows<RecipeNotAccessible> {
             updateDailyMealPlanner(
                 testAuthenticatedUser,
@@ -152,7 +152,7 @@ class UpdateDailyMealPlannerControllerTests : MealPlannerHttpTest() {
         ).thenThrow(RecipeIsInvalidForMealTime())
 
         // when updating the daily meal planner
-        // then RecipeIsInvalidForMealTime exception is thrown
+        // then the daily meal planner cannot be updated and throws RecipeIsInvalidForMealTime exception
         assertThrows<RecipeIsInvalidForMealTime> {
             updateDailyMealPlanner(
                 testAuthenticatedUser,

@@ -38,7 +38,7 @@ class DeleteDailyMealPlannerControllerTests : MealPlannerHttpTest() {
         ).thenThrow(DailyMealPlannerNotFound())
 
         // when deleting the daily meal planner
-        // then DailyMealPlannerNotFound exception is thrown
+        // then the daily meal planner cannot be deleted and throws DailyMealPlannerNotFound exception
         assertThrows<DailyMealPlannerNotFound> {
             deleteDailyMealPlanner(testAuthenticatedUser, today)
         }

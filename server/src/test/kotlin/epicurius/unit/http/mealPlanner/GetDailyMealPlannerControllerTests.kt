@@ -37,7 +37,7 @@ class GetDailyMealPlannerControllerTests : MealPlannerHttpTest() {
         ).thenThrow(DailyMealPlannerNotFound())
 
         // when getting the daily meal planner
-        // then MealPlannerNotFound exception is thrown
+        // then the daily meal planner cannot be retrieved and throws DailyMealPlannerNotFound exception
         assertThrows<DailyMealPlannerNotFound> { getDailyMealPlanner(testAuthenticatedUser, today) }
     }
 }

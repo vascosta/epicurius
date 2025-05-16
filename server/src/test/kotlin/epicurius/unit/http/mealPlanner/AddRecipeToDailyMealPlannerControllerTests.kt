@@ -53,7 +53,7 @@ class AddRecipeToDailyMealPlannerControllerTests : MealPlannerHttpTest() {
         ).thenThrow(DailyMealPlannerNotFound())
 
         // when adding the recipe to the daily meal planner
-        // then DailyMealPlannerNotFound exception is thrown
+        // then the recipe cannot be added and throws DailyMealPlannerNotFound exception
         assertThrows<DailyMealPlannerNotFound> {
             addRecipeToDailyMealPlanner(
                 testAuthenticatedUser,
@@ -77,7 +77,7 @@ class AddRecipeToDailyMealPlannerControllerTests : MealPlannerHttpTest() {
         ).thenThrow(MealTimeAlreadyExistsInPlanner(addRecipeToDailyMealPlannerInputModel.mealTime))
 
         // when adding the recipe to the daily meal planner
-        // then MealTimeAlreadyExistsInPlanner exception is thrown
+        // then the recipe cannot be added and throws MealTimeAlreadyExistsInPlanner exception
         assertThrows<MealTimeAlreadyExistsInPlanner> {
             addRecipeToDailyMealPlanner(
                 testAuthenticatedUser,
@@ -101,7 +101,7 @@ class AddRecipeToDailyMealPlannerControllerTests : MealPlannerHttpTest() {
         ).thenThrow(RecipeNotFound())
 
         // when adding the recipe to the daily meal planner
-        // then DailyMealPlannerNotFound exception is thrown
+        // then the recipe cannot be added and throws RecipeNotFound exception
         assertThrows<RecipeNotFound> {
             addRecipeToDailyMealPlanner(
                 testAuthenticatedUser,
@@ -125,7 +125,7 @@ class AddRecipeToDailyMealPlannerControllerTests : MealPlannerHttpTest() {
         ).thenThrow(RecipeNotAccessible())
 
         // when adding the recipe to the daily meal planner
-        // then DailyMealPlannerNotFound exception is thrown
+        // then the recipe cannot be added and throws RecipeNotAccessible exception
         assertThrows<RecipeNotAccessible> {
             addRecipeToDailyMealPlanner(
                 testAuthenticatedUser,
@@ -149,7 +149,7 @@ class AddRecipeToDailyMealPlannerControllerTests : MealPlannerHttpTest() {
         ).thenThrow(RecipeIsInvalidForMealTime())
 
         // when adding the recipe to the daily meal planner
-        // then DailyMealPlannerNotFound exception is thrown
+        // then the recipe cannot be added and throws RecipeIsInvalidForMealTime exception
         assertThrows<RecipeIsInvalidForMealTime> {
             addRecipeToDailyMealPlanner(
                 testAuthenticatedUser,

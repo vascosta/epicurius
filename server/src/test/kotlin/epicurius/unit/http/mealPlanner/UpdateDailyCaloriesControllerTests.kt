@@ -54,7 +54,7 @@ class UpdateDailyCaloriesControllerTests : MealPlannerHttpTest() {
         ).thenThrow(DailyMealPlannerNotFound())
 
         // when updating the daily meal planner calories
-        // then DailyMealPlannerNotFound exception is thrown
+        // then the calories cannot be updated and throws DailyMealPlannerNotFound exception
         assertThrows<DailyMealPlannerNotFound> {
             updateDailyCalories(
                 testAuthenticatedUser,

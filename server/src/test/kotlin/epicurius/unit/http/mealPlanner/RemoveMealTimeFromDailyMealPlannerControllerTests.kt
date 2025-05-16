@@ -43,7 +43,7 @@ class RemoveMealTimeFromDailyMealPlannerControllerTests : MealPlannerHttpTest() 
         ).thenThrow(DailyMealPlannerNotFound())
 
         // when removing the meal time
-        // then DailyMealPlannerNotFound exception is thrown
+        // then the recipe cannot be removed and throws DailyMealPlannerNotFound exception
         assertThrows<DailyMealPlannerNotFound> {
             removeMealTimeFromDailyMealPlanner(
                 testAuthenticatedUser,
@@ -63,7 +63,7 @@ class RemoveMealTimeFromDailyMealPlannerControllerTests : MealPlannerHttpTest() 
         ).thenThrow(MealTimeDoesNotExist())
 
         // when removing the meal time
-        // then MealTimeDoesNotExist exception is thrown
+        // then the recipe cannot be removed and throws MealTimeDoesNotExist exception
         assertThrows<MealTimeDoesNotExist> {
             removeMealTimeFromDailyMealPlanner(
                 testAuthenticatedUser,
