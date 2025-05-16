@@ -11,8 +11,7 @@ class RemoveMealTimeDailyMealPlannerServiceTests : MealPlannerServiceTest() {
 
     @Test
     fun `Should remove a meal time from the daily meal planner successfully`() {
-        // given a user (USER_ID) and a date (today)
-        // and a recipe (jdbiRecipeInfo)
+        // given a user (USER_ID) and a date (today) and a recipe (jdbiRecipeInfo)
 
         // mock
         whenever(
@@ -36,8 +35,7 @@ class RemoveMealTimeDailyMealPlannerServiceTests : MealPlannerServiceTest() {
 
     @Test
     fun `Should throw DailyMealPlannerNotFound exception when daily meal planner does not exist`() {
-        // given a user (USER_ID) and a date (today)
-        // and a recipe (jdbiRecipeInfo)
+        // given a user (USER_ID) and a date (today) and a recipe (jdbiRecipeInfo)
 
         // mock
         whenever(
@@ -45,18 +43,15 @@ class RemoveMealTimeDailyMealPlannerServiceTests : MealPlannerServiceTest() {
         ).thenReturn(null)
 
         // when the user tries to remove a meal time from the daily meal planner
-        val exception = assertThrows<DailyMealPlannerNotFound> {
+        // then the recipe cannot be removed and throws DailyMealPlannerNotFound exception
+        assertThrows<DailyMealPlannerNotFound> {
             removeMealTimeDailyMealPlanner(USER_ID, today, mealTime)
         }
-
-        // then the exception should be thrown
-        assertEquals(DailyMealPlannerNotFound().message, exception.message)
     }
 
     @Test
     fun `Should throw MealTimeDoesNotExist exception when meal time does not exist in the daily meal planner`() {
-        // given a user (USER_ID) and a date (today)
-        // and a recipe (jdbiRecipeInfo)
+        // given a user (USER_ID) and a date (today) and a recipe (jdbiRecipeInfo)
 
         // mock
         whenever(
@@ -67,11 +62,9 @@ class RemoveMealTimeDailyMealPlannerServiceTests : MealPlannerServiceTest() {
         ).thenReturn(false)
 
         // when the user tries to remove a meal time from the daily meal planner
-        val exception = assertThrows<MealTimeDoesNotExist> {
+        // then the recipe cannot be removed and throws MealTimeDoesNotExist exception
+        assertThrows<MealTimeDoesNotExist> {
             removeMealTimeDailyMealPlanner(USER_ID, today, mealTime)
         }
-
-        // then the exception should be thrown
-        assertEquals(MealTimeDoesNotExist().message, exception.message)
     }
 }

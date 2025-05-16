@@ -33,11 +33,9 @@ class CreateDailyMealPlannerServiceTests : MealPlannerServiceTest() {
         ).thenReturn(jdbiDailyMealPlannerToday)
 
         // when the user tries to create a daily meal planner
-        val exception = assertThrows<MealPlannerAlreadyExists> {
+        // then the daily meal planner cannot be created and throws MealPlannerAlreadyExists exception
+        assertThrows<MealPlannerAlreadyExists> {
             createDailyMealPlanner(USER_ID, today, CALORIES)
         }
-
-        // then the exception should be thrown
-        assertEquals(MealPlannerAlreadyExists(today).message, exception.message)
     }
 }

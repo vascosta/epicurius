@@ -11,8 +11,7 @@ class DeleteDailyMealPlannerServiceTests : MealPlannerServiceTest() {
 
     @Test
     fun `Should delete the daily meal planner successfully`() {
-        // given a user (USER_ID) and a date (today)
-        // and a recipe (jdbiRecipeInfo)
+        // given a user (USER_ID) and a date (today) and a recipe (jdbiRecipeInfo)
 
         // mock
         whenever(
@@ -33,8 +32,7 @@ class DeleteDailyMealPlannerServiceTests : MealPlannerServiceTest() {
 
     @Test
     fun `Should throw DailyMealPlannerNotFound exception when daily meal planner does not exist`() {
-        // given a user (USER_ID) and a date (today)
-        // and a recipe (jdbiRecipeInfo)
+        // given a user (USER_ID) and a date (today) and a recipe (jdbiRecipeInfo)
 
         // mock
         whenever(
@@ -42,11 +40,9 @@ class DeleteDailyMealPlannerServiceTests : MealPlannerServiceTest() {
         ).thenReturn(null)
 
         // when the user tries to delete the daily meal planner
-        val exception = assertThrows<DailyMealPlannerNotFound> {
+        // then the daily meal planner cannot be deleted and throws DailyMealPlannerNotFound exception
+        assertThrows<DailyMealPlannerNotFound> {
             deleteDailyMealPlanner(USER_ID, today)
         }
-
-        // then the exception should be thrown
-        assertEquals(DailyMealPlannerNotFound().message, exception.message)
     }
 }

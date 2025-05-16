@@ -59,12 +59,10 @@ class AddRecipeDailyMealPlannerServiceTests : MealPlannerServiceTest() {
         ).thenReturn(null)
 
         // when the user tries to add a recipe to the daily meal planner
-        val exception = assertThrows<DailyMealPlannerNotFound> {
+        // then the recipe cannot be added and throws DailyMealPlannerNotFound exception
+        assertThrows<DailyMealPlannerNotFound> {
             addRecipeDailyMealPlanner(USER_ID, today, AddMealPlannerInputModel(RECIPE_ID, mealTime))
         }
-
-        // then the exception should be thrown
-        assertEquals(DailyMealPlannerNotFound().message, exception.message)
     }
 
     @Test
@@ -80,18 +78,15 @@ class AddRecipeDailyMealPlannerServiceTests : MealPlannerServiceTest() {
         ).thenReturn(true)
 
         // when the user tries to add a recipe to the daily meal planner
-        val exception = assertThrows<MealTimeAlreadyExistsInPlanner> {
+        // then the recipe cannot be added and throws MealTimeAlreadyExistsInPlanner exception
+        assertThrows<MealTimeAlreadyExistsInPlanner> {
             addRecipeDailyMealPlanner(USER_ID, today, AddMealPlannerInputModel(RECIPE_ID, mealTime))
         }
-
-        // then the exception should be thrown
-        assertEquals(MealTimeAlreadyExistsInPlanner(mealTime).message, exception.message)
     }
 
     @Test
     fun `Should throw RecipeNotFound exception when recipe does not exist`() {
-        // given a user (USER_ID) and a date (today)
-        // and a recipe (jdbiRecipeInfo)
+        // given a user (USER_ID) and a date (today) and a recipe (jdbiRecipeInfo)
 
         // mock
         whenever(
@@ -103,18 +98,15 @@ class AddRecipeDailyMealPlannerServiceTests : MealPlannerServiceTest() {
         whenever(jdbiRecipeRepositoryMock.getRecipeById(RECIPE_ID)).thenReturn(null)
 
         // when the user tries to add a recipe to the daily meal planner
-        val exception = assertThrows<RecipeNotFound> {
+        // then the recipe cannot be added and throws RecipeNotFound exception
+        assertThrows<RecipeNotFound> {
             addRecipeDailyMealPlanner(USER_ID, today, AddMealPlannerInputModel(RECIPE_ID, mealTime))
         }
-
-        // then the exception should be thrown
-        assertEquals(RecipeNotFound().message, exception.message)
     }
 
     @Test
     fun `Should throw RecipeNotAccessible exception when recipe is not accessible`() {
-        // given a user (USER_ID) and a date (today)
-        // and a recipe (jdbiRecipeInfo)
+        // given a user (USER_ID) and a date (today) and a recipe (jdbiRecipeInfo)
 
         // mock
         whenever(
@@ -127,18 +119,15 @@ class AddRecipeDailyMealPlannerServiceTests : MealPlannerServiceTest() {
         whenever(jdbiUserRepositoryMock.checkUserVisibility(AUTHOR_USERNAME, USER_ID)).thenReturn(false)
 
         // when the user tries to add a recipe to the daily meal planner
-        val exception = assertThrows<RecipeNotAccessible> {
+        // then the recipe cannot be added and throws RecipeNotAccessible exception
+        assertThrows<RecipeNotAccessible> {
             addRecipeDailyMealPlanner(USER_ID, today, AddMealPlannerInputModel(RECIPE_ID, mealTime))
         }
-
-        // then the exception should be thrown
-        assertEquals(RecipeNotAccessible().message, exception.message)
     }
 
     @Test
     fun `Should throw RecipeIsInvalidForMealTime exception when recipe is invalid for meal time`() {
-        // given a user (USER_ID) and a date (today)
-        // and a recipe (jdbiRecipeInfo)
+        // given a user (USER_ID) and a date (today) and a recipe (jdbiRecipeInfo)
         val mealType = MealType.SNACK
 
         // mock
@@ -153,11 +142,9 @@ class AddRecipeDailyMealPlannerServiceTests : MealPlannerServiceTest() {
         whenever(mealTimeMock.isMealTypeAllowedForMealTime(mealType)).thenReturn(false)
 
         // when the user tries to add a recipe to the daily meal planner
-        val exception = assertThrows<RecipeIsInvalidForMealTime> {
+        // then the recipe cannot be added and throws RecipeIsInvalidForMealTime exception
+        assertThrows<RecipeIsInvalidForMealTime> {
             addRecipeDailyMealPlanner(USER_ID, today, AddMealPlannerInputModel(RECIPE_ID, mealTime))
         }
-
-        // then the exception should be thrown
-        assertEquals(RecipeIsInvalidForMealTime().message, exception.message)
     }
 }

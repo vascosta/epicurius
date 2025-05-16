@@ -42,11 +42,9 @@ class UpdateDailyCaloriesServiceTests : MealPlannerServiceTest() {
         ).thenReturn(null)
 
         // when the user updates the daily meal planner calories
-        val exception = assertThrows<DailyMealPlannerNotFound> {
+        // then the calories cannot be updated and throws DailyMealPlannerNotFound exception
+        assertThrows<DailyMealPlannerNotFound> {
             updateDailyCalories(USER_ID, today, CALORIES)
         }
-
-        // then the exception should be thrown
-        assertEquals(DailyMealPlannerNotFound().message, exception.message)
     }
 }

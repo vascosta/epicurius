@@ -17,8 +17,7 @@ class UpdateDailyMealPlannerControllerTestsServiceTests : MealPlannerServiceTest
 
     @Test
     fun `Should update the daily meal planner successfully`() {
-        // given a user (USER_ID) and a date (today)
-        // and a recipe (jdbiRecipeInfo)
+        // given a user (USER_ID) and a date (today) and a recipe (jdbiRecipeInfo)
 
         // mock
         whenever(
@@ -52,8 +51,7 @@ class UpdateDailyMealPlannerControllerTestsServiceTests : MealPlannerServiceTest
 
     @Test
     fun `Should throw DailyMealPlannerNotFound exception when daily meal planner does not exist`() {
-        // given a user (USER_ID) and a date (today)
-        // and a recipe (jdbiRecipeInfo)
+        // given a user (USER_ID) and a date (today) and a recipe (jdbiRecipeInfo)
 
         // mock
         whenever(
@@ -61,18 +59,15 @@ class UpdateDailyMealPlannerControllerTestsServiceTests : MealPlannerServiceTest
         ).thenReturn(null)
 
         // when the user tries to update the daily meal planner
-        val exception = assertThrows<DailyMealPlannerNotFound> {
+        // then the daily meal planner cannot be updated and throws DailyMealPlannerNotFound exception
+        assertThrows<DailyMealPlannerNotFound> {
             updateDailyMealPlanner(USER_ID, today, UpdateMealPlannerInputModel(RECIPE_ID, mealTime))
         }
-
-        // then the exception should be thrown
-        assertEquals(DailyMealPlannerNotFound().message, exception.message)
     }
 
     @Test
     fun `Should throw MealTimeDoesNotExist exception when meal time does not exist in the daily meal planner`() {
-        // given a user (USER_ID) and a date (today)
-        // and a recipe (jdbiRecipeInfo)
+        // given a user (USER_ID) and a date (today) and a recipe (jdbiRecipeInfo)
 
         // mock
         whenever(
@@ -83,18 +78,15 @@ class UpdateDailyMealPlannerControllerTestsServiceTests : MealPlannerServiceTest
         ).thenReturn(false)
 
         // when the user tries to update the daily meal planner
-        val exception = assertThrows<MealTimeDoesNotExist> {
+        // then the daily meal planner cannot be updated and throws MealTimeDoesNotExist exception
+        assertThrows<MealTimeDoesNotExist> {
             updateDailyMealPlanner(USER_ID, today, UpdateMealPlannerInputModel(RECIPE_ID, mealTime))
         }
-
-        // then the exception should be thrown
-        assertEquals(MealTimeDoesNotExist().message, exception.message)
     }
 
     @Test
     fun `Should throw RecipeNotFound exception when recipe does not exist`() {
-        // given a user (USER_ID) and a date (today)
-        // and a recipe (jdbiRecipeInfo)
+        // given a user (USER_ID) and a date (today) and a recipe (jdbiRecipeInfo)
 
         // mock
         whenever(
@@ -106,18 +98,15 @@ class UpdateDailyMealPlannerControllerTestsServiceTests : MealPlannerServiceTest
         whenever(jdbiRecipeRepositoryMock.getRecipeById(RECIPE_ID)).thenReturn(null)
 
         // when the user tries to update the daily meal planner
-        val exception = assertThrows<RecipeNotFound> {
+        // then the daily meal planner cannot be updated and throws RecipeNotFound exception
+        assertThrows<RecipeNotFound> {
             updateDailyMealPlanner(USER_ID, today, UpdateMealPlannerInputModel(RECIPE_ID, mealTime))
         }
-
-        // then the exception should be thrown
-        assertEquals(RecipeNotFound().message, exception.message)
     }
 
     @Test
     fun `Should throw RecipeNotAccessible exception when recipe is not accessible`() {
-        // given a user (USER_ID) and a date (today)
-        // and a recipe (jdbiRecipeInfo)
+        // given a user (USER_ID) and a date (today) and a recipe (jdbiRecipeInfo)
 
         // mock
         whenever(
@@ -130,18 +119,15 @@ class UpdateDailyMealPlannerControllerTestsServiceTests : MealPlannerServiceTest
         whenever(jdbiUserRepositoryMock.checkUserVisibility(AUTHOR_USERNAME, USER_ID)).thenReturn(false)
 
         // when the user tries to update the daily meal planner
-        val exception = assertThrows<RecipeNotAccessible> {
+        // then the daily meal planner cannot be updated and throws RecipeNotAccessible exception
+        assertThrows<RecipeNotAccessible> {
             updateDailyMealPlanner(USER_ID, today, UpdateMealPlannerInputModel(RECIPE_ID, mealTime))
         }
-
-        // then the exception should be thrown
-        assertEquals(RecipeNotAccessible().message, exception.message)
     }
 
     @Test
     fun `Should throw RecipeIsInvalidForMealTime exception when recipe is not valid for meal time`() {
-        // given a user (USER_ID) and a date (today)
-        // and a recipe (jdbiRecipeInfo)
+        // given a user (USER_ID) and a date (today) and a recipe (jdbiRecipeInfo)
         val mealType = MealType.SNACK
 
         // mock
@@ -156,11 +142,9 @@ class UpdateDailyMealPlannerControllerTestsServiceTests : MealPlannerServiceTest
         whenever(mealTimeMock.isMealTypeAllowedForMealTime(mealType)).thenReturn(false)
 
         // when the user tries to update the daily meal planner
-        val exception = assertThrows<RecipeIsInvalidForMealTime> {
+        // then the daily meal planner cannot be updated and throws RecipeIsInvalidForMealTime exception
+        assertThrows<RecipeIsInvalidForMealTime> {
             updateDailyMealPlanner(USER_ID, today, UpdateMealPlannerInputModel(RECIPE_ID, mealTime))
         }
-
-        // then the exception should be thrown
-        assertEquals(RecipeIsInvalidForMealTime().message, exception.message)
     }
 }

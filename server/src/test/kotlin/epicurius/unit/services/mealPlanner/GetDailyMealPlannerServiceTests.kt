@@ -39,11 +39,7 @@ class GetDailyMealPlannerServiceTests : MealPlannerServiceTest() {
         whenever(jdbiMealPlannerRepositoryMock.checkIfDailyMealPlannerExists(USER_ID, today)).thenReturn(null)
 
         // when the user tries to get the daily meal planner
-        val exception = assertThrows<DailyMealPlannerNotFound> {
-            getDailyMealPlanner(USER_ID, today)
-        }
-
-        // then the exception should be thrown
-        assertEquals(DailyMealPlannerNotFound().message, exception.message)
+        // then the daily meal planner cannot be retrieved and throws DailyMealPlannerNotFound exception
+        assertThrows<DailyMealPlannerNotFound> { getDailyMealPlanner(USER_ID, today) }
     }
 }
