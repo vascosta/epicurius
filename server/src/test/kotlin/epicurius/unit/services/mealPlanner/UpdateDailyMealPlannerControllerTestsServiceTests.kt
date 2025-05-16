@@ -28,7 +28,7 @@ class UpdateDailyMealPlannerControllerTestsServiceTests : MealPlannerServiceTest
             jdbiMealPlannerRepositoryMock.checkIfMealTimeAlreadyExistsInPlanner(USER_ID, today, mealTime)
         ).thenReturn(true)
         whenever(jdbiRecipeRepositoryMock.getRecipeById(RECIPE_ID)).thenReturn(jdbiRecipeModel)
-        whenever(jdbiUserRepositoryMock.checkUserVisibility(AUTHOR_USERNAME, USERNAME)).thenReturn(true)
+        whenever(jdbiUserRepositoryMock.checkUserVisibility(AUTHOR_USERNAME, USER_ID)).thenReturn(true)
         whenever(mealTimeMock.isMealTypeAllowedForMealTime(jdbiRecipeModel.mealType)).thenReturn(true)
         whenever(
             jdbiMealPlannerRepositoryMock.updateDailyMealPlanner(USER_ID, today, RECIPE_ID, mealTime)
@@ -36,7 +36,7 @@ class UpdateDailyMealPlannerControllerTestsServiceTests : MealPlannerServiceTest
         whenever(pictureRepositoryMock.getPicture(testPicture.name, RECIPES_FOLDER)).thenReturn(testPicture.bytes)
 
         // when the user updates the daily meal planner
-        val mealPlanner = updateDailyMealPlanner(USER_ID, USERNAME, today, UpdateMealPlannerInputModel(RECIPE_ID, mealTime))
+        val mealPlanner = updateDailyMealPlanner(USER_ID, today, UpdateMealPlannerInputModel(RECIPE_ID, mealTime))
 
         // then the daily meal planner should be updated
         assertEquals(today, mealPlanner.date)
@@ -62,7 +62,7 @@ class UpdateDailyMealPlannerControllerTestsServiceTests : MealPlannerServiceTest
 
         // when the user tries to update the daily meal planner
         val exception = assertThrows<DailyMealPlannerNotFound> {
-            updateDailyMealPlanner(USER_ID, USERNAME, today, UpdateMealPlannerInputModel(RECIPE_ID, mealTime))
+            updateDailyMealPlanner(USER_ID, today, UpdateMealPlannerInputModel(RECIPE_ID, mealTime))
         }
 
         // then the exception should be thrown
@@ -84,7 +84,7 @@ class UpdateDailyMealPlannerControllerTestsServiceTests : MealPlannerServiceTest
 
         // when the user tries to update the daily meal planner
         val exception = assertThrows<MealTimeDoesNotExist> {
-            updateDailyMealPlanner(USER_ID, USERNAME, today, UpdateMealPlannerInputModel(RECIPE_ID, mealTime))
+            updateDailyMealPlanner(USER_ID, today, UpdateMealPlannerInputModel(RECIPE_ID, mealTime))
         }
 
         // then the exception should be thrown
@@ -107,7 +107,7 @@ class UpdateDailyMealPlannerControllerTestsServiceTests : MealPlannerServiceTest
 
         // when the user tries to update the daily meal planner
         val exception = assertThrows<RecipeNotFound> {
-            updateDailyMealPlanner(USER_ID, USERNAME, today, UpdateMealPlannerInputModel(RECIPE_ID, mealTime))
+            updateDailyMealPlanner(USER_ID, today, UpdateMealPlannerInputModel(RECIPE_ID, mealTime))
         }
 
         // then the exception should be thrown
@@ -127,11 +127,11 @@ class UpdateDailyMealPlannerControllerTestsServiceTests : MealPlannerServiceTest
             jdbiMealPlannerRepositoryMock.checkIfMealTimeAlreadyExistsInPlanner(USER_ID, today, mealTime)
         ).thenReturn(true)
         whenever(jdbiRecipeRepositoryMock.getRecipeById(RECIPE_ID)).thenReturn(jdbiRecipeModel)
-        whenever(jdbiUserRepositoryMock.checkUserVisibility(AUTHOR_USERNAME, USERNAME)).thenReturn(false)
+        whenever(jdbiUserRepositoryMock.checkUserVisibility(AUTHOR_USERNAME, USER_ID)).thenReturn(false)
 
         // when the user tries to update the daily meal planner
         val exception = assertThrows<RecipeNotAccessible> {
-            updateDailyMealPlanner(USER_ID, USERNAME, today, UpdateMealPlannerInputModel(RECIPE_ID, mealTime))
+            updateDailyMealPlanner(USER_ID, today, UpdateMealPlannerInputModel(RECIPE_ID, mealTime))
         }
 
         // then the exception should be thrown
@@ -152,12 +152,12 @@ class UpdateDailyMealPlannerControllerTestsServiceTests : MealPlannerServiceTest
             jdbiMealPlannerRepositoryMock.checkIfMealTimeAlreadyExistsInPlanner(USER_ID, today, mealTime)
         ).thenReturn(true)
         whenever(jdbiRecipeRepositoryMock.getRecipeById(RECIPE_ID)).thenReturn(jdbiRecipeModel.copy(mealType = mealType))
-        whenever(jdbiUserRepositoryMock.checkUserVisibility(AUTHOR_USERNAME, USERNAME)).thenReturn(true)
+        whenever(jdbiUserRepositoryMock.checkUserVisibility(AUTHOR_USERNAME, USER_ID)).thenReturn(true)
         whenever(mealTimeMock.isMealTypeAllowedForMealTime(mealType)).thenReturn(false)
 
         // when the user tries to update the daily meal planner
         val exception = assertThrows<RecipeIsInvalidForMealTime> {
-            updateDailyMealPlanner(USER_ID, USERNAME, today, UpdateMealPlannerInputModel(RECIPE_ID, mealTime))
+            updateDailyMealPlanner(USER_ID, today, UpdateMealPlannerInputModel(RECIPE_ID, mealTime))
         }
 
         // then the exception should be thrown

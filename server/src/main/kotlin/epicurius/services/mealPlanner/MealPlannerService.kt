@@ -48,12 +48,12 @@ class MealPlannerService(
         return jdbiDailyPlanner.toDailyMealPlanner(cs)
     }
 
-    fun addRecipeToDailyMealPlanner(userId: Int, username: String, date: LocalDate, info: AddMealPlannerInputModel): DailyMealPlanner {
+    fun addRecipeToDailyMealPlanner(userId: Int, date: LocalDate, info: AddMealPlannerInputModel): DailyMealPlanner {
         if (checkIfDailyMealPlannerExists(userId, date) == null) throw DailyMealPlannerNotFound()
         if (checkIfMealTimeAlreadyExistsInPlanner(userId, date, info.mealTime))
             throw MealTimeAlreadyExistsInPlanner(info.mealTime)
         val recipe = checkIfRecipeExists(info.recipeId)
-        checkRecipeAccessibility(recipe.authorUsername, username)
+        checkRecipeAccessibility(recipe.authorUsername, userId)
         if (!info.mealTime.isMealTypeAllowedForMealTime(recipe.mealType)) throw RecipeIsInvalidForMealTime()
 
         val jdbiPlanner = tm.run {
@@ -62,17 +62,12 @@ class MealPlannerService(
         return jdbiPlanner.toDailyMealPlanner(cs)
     }
 
-    fun updateDailyMealPlanner(
-        userId: Int,
-        username: String,
-        date: LocalDate,
-        info: UpdateMealPlannerInputModel
-    ): DailyMealPlanner {
+    fun updateDailyMealPlanner(userId: Int, date: LocalDate, info: UpdateMealPlannerInputModel): DailyMealPlanner {
         if (checkIfDailyMealPlannerExists(userId, date) == null) throw DailyMealPlannerNotFound()
         if (!checkIfMealTimeAlreadyExistsInPlanner(userId, date, info.mealTime))
             throw MealTimeDoesNotExist()
         val recipe = checkIfRecipeExists(info.recipeId)
-        checkRecipeAccessibility(recipe.authorUsername, username)
+        checkRecipeAccessibility(recipe.authorUsername, userId)
         if (!info.mealTime.isMealTypeAllowedForMealTime(recipe.mealType)) throw RecipeIsInvalidForMealTime()
 
         val jdbiDailyPlanner = tm.run {
@@ -119,8 +114,8 @@ class MealPlannerService(
     private fun checkIfRecipeExists(recipeId: Int): JdbiRecipeModel =
         tm.run { it.recipeRepository.getRecipeById(recipeId) } ?: throw RecipeNotFound()
 
-    private fun checkRecipeAccessibility(authorUsername: String, username: String) {
-        if (!tm.run { it.userRepository.checkUserVisibility(authorUsername, username) })
+    private fun checkRecipeAccessibility(authorUsername: String, userId: Int) {
+        if (!tm.run { it.userRepository.checkUserVisibility(authorUsername, userId) })
             throw RecipeNotAccessible()
     }
 

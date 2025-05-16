@@ -17,8 +17,7 @@ class AddRecipeDailyMealPlannerServiceTests : MealPlannerServiceTest() {
 
     @Test
     fun `Should add a recipe to the daily meal planner successfully`() {
-        // given a user (USER_ID) and a date (today)
-        // and a recipe (jdbiRecipeInfo)
+        // given a user (USER_ID) and a date (today) and a recipe (jdbiRecipeInfo)
 
         // mock
         whenever(
@@ -28,7 +27,7 @@ class AddRecipeDailyMealPlannerServiceTests : MealPlannerServiceTest() {
             jdbiMealPlannerRepositoryMock.checkIfMealTimeAlreadyExistsInPlanner(USER_ID, today, mealTime)
         ).thenReturn(false)
         whenever(jdbiRecipeRepositoryMock.getRecipeById(RECIPE_ID)).thenReturn(jdbiRecipeModel)
-        whenever(jdbiUserRepositoryMock.checkUserVisibility(AUTHOR_USERNAME, USERNAME)).thenReturn(true)
+        whenever(jdbiUserRepositoryMock.checkUserVisibility(AUTHOR_USERNAME, USER_ID)).thenReturn(true)
         whenever(mealTimeMock.isMealTypeAllowedForMealTime(jdbiRecipeModel.mealType)).thenReturn(true)
         whenever(
             jdbiMealPlannerRepositoryMock.addRecipeToDailyMealPlanner(USER_ID, today, RECIPE_ID, mealTime)
@@ -36,7 +35,7 @@ class AddRecipeDailyMealPlannerServiceTests : MealPlannerServiceTest() {
         whenever(pictureRepositoryMock.getPicture(testPicture.name, RECIPES_FOLDER)).thenReturn(testPicture.bytes)
 
         // when the user adds a recipe to the daily meal planner
-        val mealPlanner = addRecipeDailyMealPlanner(USER_ID, USERNAME, today, AddMealPlannerInputModel(RECIPE_ID, mealTime))
+        val mealPlanner = addRecipeDailyMealPlanner(USER_ID, today, AddMealPlannerInputModel(RECIPE_ID, mealTime))
 
         // then the recipe should be added to the daily meal planner
         assertEquals(today, mealPlanner.date)
@@ -52,8 +51,7 @@ class AddRecipeDailyMealPlannerServiceTests : MealPlannerServiceTest() {
 
     @Test
     fun `Should throw DailyMealPlannerNotFound exception when daily meal planner does not exist`() {
-        // given a user (USER_ID) and a date (today)
-        // and a recipe (jdbiRecipeInfo)
+        // given a user (USER_ID) and a date (today) and a recipe (jdbiRecipeInfo)
 
         // mock
         whenever(
@@ -62,7 +60,7 @@ class AddRecipeDailyMealPlannerServiceTests : MealPlannerServiceTest() {
 
         // when the user tries to add a recipe to the daily meal planner
         val exception = assertThrows<DailyMealPlannerNotFound> {
-            addRecipeDailyMealPlanner(USER_ID, USERNAME, today, AddMealPlannerInputModel(RECIPE_ID, mealTime))
+            addRecipeDailyMealPlanner(USER_ID, today, AddMealPlannerInputModel(RECIPE_ID, mealTime))
         }
 
         // then the exception should be thrown
@@ -71,8 +69,7 @@ class AddRecipeDailyMealPlannerServiceTests : MealPlannerServiceTest() {
 
     @Test
     fun `Should throw MealTimeAlreadyExistsInPlanner exception when meal time already exists in the daily meal planner`() {
-        // given a user (USER_ID) and a date (today)
-        // and a recipe (jdbiRecipeInfo)
+        // given a user (USER_ID) and a date (today) and a recipe (jdbiRecipeInfo)
 
         // mock
         whenever(
@@ -84,7 +81,7 @@ class AddRecipeDailyMealPlannerServiceTests : MealPlannerServiceTest() {
 
         // when the user tries to add a recipe to the daily meal planner
         val exception = assertThrows<MealTimeAlreadyExistsInPlanner> {
-            addRecipeDailyMealPlanner(USER_ID, USERNAME, today, AddMealPlannerInputModel(RECIPE_ID, mealTime))
+            addRecipeDailyMealPlanner(USER_ID, today, AddMealPlannerInputModel(RECIPE_ID, mealTime))
         }
 
         // then the exception should be thrown
@@ -107,7 +104,7 @@ class AddRecipeDailyMealPlannerServiceTests : MealPlannerServiceTest() {
 
         // when the user tries to add a recipe to the daily meal planner
         val exception = assertThrows<RecipeNotFound> {
-            addRecipeDailyMealPlanner(USER_ID, USERNAME, today, AddMealPlannerInputModel(RECIPE_ID, mealTime))
+            addRecipeDailyMealPlanner(USER_ID, today, AddMealPlannerInputModel(RECIPE_ID, mealTime))
         }
 
         // then the exception should be thrown
@@ -127,11 +124,11 @@ class AddRecipeDailyMealPlannerServiceTests : MealPlannerServiceTest() {
             jdbiMealPlannerRepositoryMock.checkIfMealTimeAlreadyExistsInPlanner(USER_ID, today, mealTime)
         ).thenReturn(false)
         whenever(jdbiRecipeRepositoryMock.getRecipeById(RECIPE_ID)).thenReturn(jdbiRecipeModel)
-        whenever(jdbiUserRepositoryMock.checkUserVisibility(AUTHOR_USERNAME, USERNAME)).thenReturn(false)
+        whenever(jdbiUserRepositoryMock.checkUserVisibility(AUTHOR_USERNAME, USER_ID)).thenReturn(false)
 
         // when the user tries to add a recipe to the daily meal planner
         val exception = assertThrows<RecipeNotAccessible> {
-            addRecipeDailyMealPlanner(USER_ID, USERNAME, today, AddMealPlannerInputModel(RECIPE_ID, mealTime))
+            addRecipeDailyMealPlanner(USER_ID, today, AddMealPlannerInputModel(RECIPE_ID, mealTime))
         }
 
         // then the exception should be thrown
@@ -152,12 +149,12 @@ class AddRecipeDailyMealPlannerServiceTests : MealPlannerServiceTest() {
             jdbiMealPlannerRepositoryMock.checkIfMealTimeAlreadyExistsInPlanner(USER_ID, today, mealTime)
         ).thenReturn(false)
         whenever(jdbiRecipeRepositoryMock.getRecipeById(RECIPE_ID)).thenReturn(jdbiRecipeModel.copy(mealType = mealType))
-        whenever(jdbiUserRepositoryMock.checkUserVisibility(AUTHOR_USERNAME, USERNAME)).thenReturn(true)
+        whenever(jdbiUserRepositoryMock.checkUserVisibility(AUTHOR_USERNAME, USER_ID)).thenReturn(true)
         whenever(mealTimeMock.isMealTypeAllowedForMealTime(mealType)).thenReturn(false)
 
         // when the user tries to add a recipe to the daily meal planner
         val exception = assertThrows<RecipeIsInvalidForMealTime> {
-            addRecipeDailyMealPlanner(USER_ID, USERNAME, today, AddMealPlannerInputModel(RECIPE_ID, mealTime))
+            addRecipeDailyMealPlanner(USER_ID, today, AddMealPlannerInputModel(RECIPE_ID, mealTime))
         }
 
         // then the exception should be thrown
