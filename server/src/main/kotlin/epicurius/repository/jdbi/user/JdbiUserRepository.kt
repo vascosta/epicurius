@@ -69,8 +69,8 @@ class JdbiUserRepository(private val handle: Handle) : UserRepository {
             .mapTo<User>()
             .firstOrNull()
 
-    override fun searchUsers(userId: Int, partialUsername: String, pagingParams: PagingParams): List<SearchUserModel> {
-        return handle.createQuery(
+    override fun searchUsers(userId: Int, partialUsername: String, pagingParams: PagingParams): List<SearchUserModel> =
+        handle.createQuery(
             """
                 SELECT name, profile_picture_name
                 FROM dbo.user
@@ -84,12 +84,28 @@ class JdbiUserRepository(private val handle: Handle) : UserRepository {
             .bind("skip", pagingParams.skip)
             .mapTo<SearchUserModel>()
             .list()
-    }
 
-    override fun getFollowers(userId: Int): List<SearchUserModel> {
-        return handle.createQuery(
+    override fun getFollowers(userId: Int, pagingParams: PagingParams): List<SearchUserModel> =
+        handle.createQuery(
             """
                 SELECT u.name, u.profile_picture_name
+                FROM dbo.user u
+                JOIN dbo.followers f ON u.id = f.follower_id
+                WHERE f.user_id = :user_id AND f.status = :status
+                LIMIT :limit OFFSET :skip
+            """
+        )
+            .bind("user_id", userId)
+            .bind("status", FollowingStatus.ACCEPTED.ordinal)
+            .bind("limit", pagingParams.limit)
+            .bind("skip", pagingParams.skip)
+            .mapTo<SearchUserModel>()
+            .list()
+
+    override fun getFollowersCount(userId: Int): Int =
+        handle.createQuery(
+            """
+                SELECT COUNT(*)
                 FROM dbo.user u
                 JOIN dbo.followers f ON u.id = f.follower_id
                 WHERE f.user_id = :user_id AND f.status = :status
@@ -97,14 +113,31 @@ class JdbiUserRepository(private val handle: Handle) : UserRepository {
         )
             .bind("user_id", userId)
             .bind("status", FollowingStatus.ACCEPTED.ordinal)
-            .mapTo<SearchUserModel>()
-            .list()
-    }
+            .mapTo<Int>()
+            .one()
 
-    override fun getFollowing(userId: Int): List<SearchUserModel> {
-        return handle.createQuery(
+
+    override fun getFollowing(userId: Int, pagingParams: PagingParams): List<SearchUserModel> =
+        handle.createQuery(
             """
                 SELECT u.name, u.profile_picture_name
+                FROM dbo.user u
+                JOIN dbo.followers f ON u.id = f.user_id
+                WHERE f.follower_id = :user_id AND f.status = :status
+                LIMIT :limit OFFSET :skip
+            """
+        )
+            .bind("user_id", userId)
+            .bind("status", FollowingStatus.ACCEPTED.ordinal)
+            .bind("limit", pagingParams.limit)
+            .bind("skip", pagingParams.skip)
+            .mapTo<SearchUserModel>()
+            .list()
+
+    override fun getFollowingCount(userId: Int): Int =
+        handle.createQuery(
+            """
+                SELECT COUNT(*)
                 FROM dbo.user u
                 JOIN dbo.followers f ON u.id = f.user_id
                 WHERE f.follower_id = :user_id AND f.status = :status
@@ -112,12 +145,11 @@ class JdbiUserRepository(private val handle: Handle) : UserRepository {
         )
             .bind("user_id", userId)
             .bind("status", FollowingStatus.ACCEPTED.ordinal)
-            .mapTo<SearchUserModel>()
-            .list()
-    }
+            .mapTo<Int>()
+            .one()
 
-    override fun getFollowRequests(userId: Int): List<SearchUserModel> {
-        return handle.createQuery(
+    override fun getFollowRequests(userId: Int): List<SearchUserModel> =
+        handle.createQuery(
             """
                 SELECT u.name, u.profile_picture_name
                 FROM dbo.user u
@@ -129,10 +161,9 @@ class JdbiUserRepository(private val handle: Handle) : UserRepository {
             .bind("status", FollowingStatus.PENDING.ordinal)
             .mapTo<SearchUserModel>()
             .list()
-    }
 
-    override fun updateUser(userId: Int, userUpdateInfo: JdbiUpdateUserModel): User {
-        return handle.createQuery(
+    override fun updateUser(userId: Int, userUpdateInfo: JdbiUpdateUserModel): User =
+        handle.createQuery(
             """
                 WITH updated_user AS (
                     UPDATE dbo.user
@@ -163,7 +194,6 @@ class JdbiUserRepository(private val handle: Handle) : UserRepository {
             .bind("userId", userId)
             .mapTo<User>()
             .first()
-    }
 
     override fun resetPassword(userId: Int, passwordHash: String) {
         handle.createUpdate(
@@ -265,11 +295,10 @@ class JdbiUserRepository(private val handle: Handle) : UserRepository {
             .mapTo<Int>()
             .one() == 1
 
-    override fun checkUserVisibility(username: String, followerName: String): Boolean {
-        if (username == followerName) return true
+    override fun checkUserVisibility(username: String, followerId: Int): Boolean {
         val user = getUser(username) ?: throw UserNotFound(username)
-        val userFollowers = getFollowers(user.id)
+        if (user.id == followerId) return true
 
-        return !user.privacy || userFollowers.any { it.name == followerName }
+        return !user.privacy || checkIfUserIsBeingFollowedBy(user.id, followerId)
     }
 }

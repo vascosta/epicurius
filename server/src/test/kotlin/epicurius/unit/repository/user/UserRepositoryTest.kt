@@ -22,8 +22,16 @@ open class UserRepositoryTest : RepositoryTest() {
         fun searchUsers(userId: Int, partialUsername: String, pagingParams: PagingParams) =
             tm.run { it.userRepository.searchUsers(userId, partialUsername, pagingParams) }
 
-        fun getFollowers(userId: Int) = tm.run { it.userRepository.getFollowers(userId) }
-        fun getFollowing(userId: Int) = tm.run { it.userRepository.getFollowing(userId) }
+        fun getFollowers(userId: Int, pagingParams: PagingParams) =
+            tm.run { it.userRepository.getFollowers(userId, pagingParams) }
+
+        fun getFollowersCount(userId: Int) = tm.run { it.userRepository.getFollowersCount(userId) }
+
+        fun getFollowing(userId: Int, pagingParams: PagingParams) =
+            tm.run { it.userRepository.getFollowing(userId, pagingParams) }
+
+        fun getFollowingCount(userId: Int) = tm.run { it.userRepository.getFollowingCount(userId) }
+
         fun getFollowRequests(userId: Int) = tm.run { it.userRepository.getFollowRequests(userId) }
 
         fun updateUser(userId: Int, userUpdate: JdbiUpdateUserModel) =
@@ -65,7 +73,7 @@ open class UserRepositoryTest : RepositoryTest() {
         fun checkIfUserAlreadySentFollowRequest(userId: Int, followerId: Int) =
             tm.run { it.userRepository.checkIfUserAlreadySentFollowRequest(userId, followerId) }
 
-        fun checkUserVisibility(authorUsername: String, username: String) =
-            tm.run { it.userRepository.checkUserVisibility(authorUsername, username) }
+        fun checkUserVisibility(authorUsername: String, userId: Int) =
+            tm.run { it.userRepository.checkUserVisibility(authorUsername, userId) }
     }
 }

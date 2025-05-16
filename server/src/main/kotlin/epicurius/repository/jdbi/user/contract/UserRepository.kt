@@ -12,8 +12,10 @@ interface UserRepository {
     fun getUser(name: String? = null, email: String? = null, tokenHash: String? = null): User?
     fun getUserById(userId: Int): User?
     fun searchUsers(userId: Int, partialUsername: String, pagingParams: PagingParams): List<SearchUserModel>
-    fun getFollowers(userId: Int): List<SearchUserModel>
-    fun getFollowing(userId: Int): List<SearchUserModel>
+    fun getFollowers(userId: Int, pagingParams: PagingParams): List<SearchUserModel>
+    fun getFollowersCount(userId: Int): Int
+    fun getFollowing(userId: Int, pagingParams: PagingParams): List<SearchUserModel>
+    fun getFollowingCount(userId: Int): Int
     fun getFollowRequests(userId: Int): List<SearchUserModel>
 
     fun updateUser(userId: Int, userUpdateInfo: JdbiUpdateUserModel): User
@@ -27,5 +29,5 @@ interface UserRepository {
     fun checkIfUserIsLoggedIn(userId: Int): Boolean
     fun checkIfUserIsBeingFollowedBy(userId: Int, followerId: Int): Boolean
     fun checkIfUserAlreadySentFollowRequest(userId: Int, followerId: Int): Boolean
-    fun checkUserVisibility(username: String, followerName: String): Boolean
+    fun checkUserVisibility(username: String, followerId: Int): Boolean
 }
