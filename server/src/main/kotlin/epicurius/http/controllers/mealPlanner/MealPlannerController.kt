@@ -69,7 +69,6 @@ class MealPlannerController(private val mealPlannerService: MealPlannerService) 
     ): ResponseEntity<*> {
         val planner = mealPlannerService.addRecipeToDailyMealPlanner(
             authenticatedUser.user.id,
-            authenticatedUser.user.name,
             date,
             body
         )
@@ -86,7 +85,6 @@ class MealPlannerController(private val mealPlannerService: MealPlannerService) 
     ): ResponseEntity<*> {
         val mealPlanner = mealPlannerService.updateDailyMealPlanner(
             authenticatedUser.user.id,
-            authenticatedUser.user.name,
             date,
             body
         )

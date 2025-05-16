@@ -25,7 +25,6 @@ class UpdateDailyMealPlannerControllerTests : MealPlannerHttpTest() {
         whenever(
             mealPlannerServiceMock.updateDailyMealPlanner(
                 testAuthenticatedUser.user.id,
-                testAuthenticatedUser.user.name,
                 today,
                 updateDailyMealPlannerInputModel
             )
@@ -51,7 +50,6 @@ class UpdateDailyMealPlannerControllerTests : MealPlannerHttpTest() {
         whenever(
             mealPlannerServiceMock.updateDailyMealPlanner(
                 testAuthenticatedUser.user.id,
-                testAuthenticatedUser.user.name,
                 today,
                 updateDailyMealPlannerInputModel
             )
@@ -76,7 +74,6 @@ class UpdateDailyMealPlannerControllerTests : MealPlannerHttpTest() {
         whenever(
             mealPlannerServiceMock.updateDailyMealPlanner(
                 testAuthenticatedUser.user.id,
-                testAuthenticatedUser.user.name,
                 today,
                 updateDailyMealPlannerInputModel
             )
@@ -101,7 +98,6 @@ class UpdateDailyMealPlannerControllerTests : MealPlannerHttpTest() {
         whenever(
             mealPlannerServiceMock.updateDailyMealPlanner(
                 testAuthenticatedUser.user.id,
-                testAuthenticatedUser.user.name,
                 today,
                 updateDailyMealPlannerInputModel
             )
@@ -126,7 +122,6 @@ class UpdateDailyMealPlannerControllerTests : MealPlannerHttpTest() {
         whenever(
             mealPlannerServiceMock.updateDailyMealPlanner(
                 testAuthenticatedUser.user.id,
-                testAuthenticatedUser.user.name,
                 today,
                 updateDailyMealPlannerInputModel
             )
@@ -151,7 +146,6 @@ class UpdateDailyMealPlannerControllerTests : MealPlannerHttpTest() {
         whenever(
             mealPlannerServiceMock.updateDailyMealPlanner(
                 testAuthenticatedUser.user.id,
-                testAuthenticatedUser.user.name,
                 today,
                 updateDailyMealPlannerInputModel
             )

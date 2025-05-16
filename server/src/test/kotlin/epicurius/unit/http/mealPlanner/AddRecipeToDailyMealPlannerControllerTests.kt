@@ -22,7 +22,6 @@ class AddRecipeToDailyMealPlannerControllerTests : MealPlannerHttpTest() {
         whenever(
             mealPlannerServiceMock.addRecipeToDailyMealPlanner(
                 testAuthenticatedUser.user.id,
-                testAuthenticatedUser.user.name,
                 today,
                 addRecipeToDailyMealPlannerInputModel
             )
@@ -48,7 +47,6 @@ class AddRecipeToDailyMealPlannerControllerTests : MealPlannerHttpTest() {
         whenever(
             mealPlannerServiceMock.addRecipeToDailyMealPlanner(
                 testAuthenticatedUser.user.id,
-                testAuthenticatedUser.user.name,
                 today,
                 addRecipeToDailyMealPlannerInputModel
             )
@@ -73,7 +71,6 @@ class AddRecipeToDailyMealPlannerControllerTests : MealPlannerHttpTest() {
         whenever(
             mealPlannerServiceMock.addRecipeToDailyMealPlanner(
                 testAuthenticatedUser.user.id,
-                testAuthenticatedUser.user.name,
                 today,
                 addRecipeToDailyMealPlannerInputModel
             )
@@ -98,7 +95,6 @@ class AddRecipeToDailyMealPlannerControllerTests : MealPlannerHttpTest() {
         whenever(
             mealPlannerServiceMock.addRecipeToDailyMealPlanner(
                 testAuthenticatedUser.user.id,
-                testAuthenticatedUser.user.name,
                 today,
                 addRecipeToDailyMealPlannerInputModel
             )
@@ -123,7 +119,6 @@ class AddRecipeToDailyMealPlannerControllerTests : MealPlannerHttpTest() {
         whenever(
             mealPlannerServiceMock.addRecipeToDailyMealPlanner(
                 testAuthenticatedUser.user.id,
-                testAuthenticatedUser.user.name,
                 today,
                 addRecipeToDailyMealPlannerInputModel
             )
@@ -148,7 +143,6 @@ class AddRecipeToDailyMealPlannerControllerTests : MealPlannerHttpTest() {
         whenever(
             mealPlannerServiceMock.addRecipeToDailyMealPlanner(
                 testAuthenticatedUser.user.id,
-                testAuthenticatedUser.user.name,
                 today,
                 addRecipeToDailyMealPlannerInputModel
             )
