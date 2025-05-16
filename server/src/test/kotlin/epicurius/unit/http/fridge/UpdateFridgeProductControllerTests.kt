@@ -88,12 +88,10 @@ class UpdateFridgeProductControllerTests : FridgeHttpTest() {
         ).thenThrow(ProductNotFound(nonExistingEntryNumber))
 
         // when trying to update the product in the fridge
-        val exception = assertFailsWith<ProductNotFound> {
+        // then the product cannot be updated and throws ProductNotFound exception
+        assertFailsWith<ProductNotFound> {
             updateProduct(testAuthenticatedUser, nonExistingEntryNumber, updateProductInputModel)
         }
-
-        // then the exception is thrown
-        assertEquals(ProductNotFound(nonExistingEntryNumber).message, exception.message)
     }
 
     @Test
@@ -105,11 +103,9 @@ class UpdateFridgeProductControllerTests : FridgeHttpTest() {
         ).thenThrow(ProductIsAlreadyOpen())
 
         // when trying to update the product in the fridge
-        val exception = assertFailsWith<ProductIsAlreadyOpen> {
+        // then the product cannot be removed and throws ProductIsAlreadyOpen exception
+        assertFailsWith<ProductIsAlreadyOpen> {
             updateProduct(testAuthenticatedUser, NEW_ENTRY_NUMBER, updateProductInputModel)
         }
-
-        // then the exception is thrown
-        assertEquals(ProductIsAlreadyOpen().message, exception.message)
     }
 }

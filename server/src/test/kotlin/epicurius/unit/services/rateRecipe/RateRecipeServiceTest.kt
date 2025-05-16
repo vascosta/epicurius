@@ -13,7 +13,6 @@ open class RateRecipeServiceTest : ServiceTest() {
 
     companion object {
         const val USER_ID = 1
-        const val USERNAME = "testUser"
 
         const val AUTHOR_ID = 2
         const val AUTHOR_USERNAME = "authorUser"
@@ -43,6 +42,5 @@ open class RateRecipeServiceTest : ServiceTest() {
 
         const val RATING_5 = 5
         const val RATING_3 = 3
-        const val RATING_1 = 1
     }
 }

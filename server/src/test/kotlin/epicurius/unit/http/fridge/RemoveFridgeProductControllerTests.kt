@@ -45,11 +45,9 @@ class RemoveFridgeProductControllerTests : FridgeHttpTest() {
         ).thenThrow(ProductNotFound(nonExistingEntryNumber))
 
         // when removing the non-existing product from the fridge
-        val exception = assertFailsWith<ProductNotFound> {
+        // then the product cannot be removed and throws ProductNotFound exception
+        assertFailsWith<ProductNotFound> {
             removeFridgeProduct(testAuthenticatedUser, nonExistingEntryNumber)
         }
-
-        // then the exception is thrown
-        assertEquals(ProductNotFound(nonExistingEntryNumber).message, exception.message)
     }
 }

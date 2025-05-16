@@ -83,11 +83,9 @@ class AddProductFridgeControllerTests : FridgeHttpTest() {
         ).thenThrow(InvalidProduct())
 
         // when adding the invalid product to the fridge
-        val response = assertFailsWith<InvalidProduct> {
+        // then the product cannot be added and throws InvalidProduct exception
+        assertFailsWith<InvalidProduct> {
             runBlocking { addProducts(testAuthenticatedUser, invalidProductInputModel) }
         }
-
-        // then an exception is thrown
-        assertEquals(InvalidProduct().message, response.message)
     }
 }
