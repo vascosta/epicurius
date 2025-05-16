@@ -5,6 +5,6 @@ data class UserProfile(
     val country: String,
     val privacy: Boolean,
     val profilePicture: ByteArray?,
-    val followers: List<SearchUser>,
-    val following: List<SearchUser>,
+    val followersCount: Int,
+    val followingCount: Int,
 )

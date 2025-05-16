@@ -1,5 +1,6 @@
 package epicurius.unit.http.user
 
+import epicurius.domain.PagingParams
 import epicurius.domain.exceptions.UserNotFound
 import epicurius.domain.user.UserProfile
 import epicurius.http.controllers.user.models.output.GetUserProfileOutputModel
@@ -17,11 +18,12 @@ class GetUserProfileControllerTests : UserHttpTest() {
     @Test
     fun `Should retrieve the user profile successfully`() {
         // given a user (publicTestUser)
+        val pagingParams = PagingParams()
 
         // mock
         whenever(userServiceMock.getProfilePicture(publicTestUser.user.profilePictureName)).thenReturn(testPicture.bytes)
-        whenever(userServiceMock.getFollowers(publicTestUser.user.id)).thenReturn(emptyList())
-        whenever(userServiceMock.getFollowing(publicTestUser.user.id)).thenReturn(emptyList())
+        whenever(userServiceMock.getFollowers(publicTestUser.user.id, pagingParams)).thenReturn(emptyList())
+        whenever(userServiceMock.getFollowing(publicTestUser.user.id, pagingParams)).thenReturn(emptyList())
 
         // when retrieving the user profile
         val response = getUserProfile(publicTestUser, publicTestUsername)
@@ -33,8 +35,8 @@ class GetUserProfileControllerTests : UserHttpTest() {
         assertEquals(publicTestUser.user.country, body.userProfile.country)
         assertEquals(publicTestUser.user.privacy, body.userProfile.privacy)
         assertContentEquals(testPicture.bytes, body.userProfile.profilePicture)
-        assertTrue(body.userProfile.followers.isEmpty())
-        assertTrue(body.userProfile.following.isEmpty())
+        assertEquals(0, body.userProfile.followersCount)
+        assertEquals(0, body.userProfile.followingCount)
     }
 
     @Test
@@ -47,8 +49,8 @@ class GetUserProfileControllerTests : UserHttpTest() {
             privateTestUser.user.country,
             privateTestUser.user.privacy,
             testPicture.bytes,
-            emptyList(),
-            emptyList()
+            0,
+            0
         )
         whenever(userServiceMock.getUserProfile(privateTestUsername)).thenReturn(mockUserProfile)
 
@@ -62,8 +64,8 @@ class GetUserProfileControllerTests : UserHttpTest() {
         assertEquals(mockUserProfile.country, body.userProfile.country)
         assertEquals(mockUserProfile.privacy, body.userProfile.privacy)
         assertContentEquals(mockUserProfile.profilePicture, body.userProfile.profilePicture)
-        assertContentEquals(mockUserProfile.followers, body.userProfile.followers)
-        assertContentEquals(mockUserProfile.following, body.userProfile.following)
+        assertEquals(mockUserProfile.followersCount, body.userProfile.followersCount)
+        assertEquals(mockUserProfile.followingCount, body.userProfile.followingCount)
     }
 
     @Test

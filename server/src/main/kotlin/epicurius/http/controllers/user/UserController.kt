@@ -59,8 +59,8 @@ class UserController(val userService: UserService) {
     ): ResponseEntity<*> {
         return if (name == authenticatedUser.user.name) {
             val userProfilePicture = userService.getProfilePicture(authenticatedUser.user.profilePictureName)
-            val followers = userService.getFollowers(authenticatedUser.user.id)
-            val following = userService.getFollowing(authenticatedUser.user.id)
+            val followers = userService.getFollowersCount(authenticatedUser.user.id)
+            val following = userService.getFollowingCount(authenticatedUser.user.id)
             val userProfile = UserProfile(
                 authenticatedUser.user.name,
                 authenticatedUser.user.country,
@@ -117,8 +117,11 @@ class UserController(val userService: UserService) {
     @GetMapping(Uris.User.USER_FOLLOWERS)
     fun getUserFollowers(
         authenticatedUser: AuthenticatedUser,
+        @RequestParam skip: Int,
+        @RequestParam limit: Int
     ): ResponseEntity<*> {
-        val followers = userService.getFollowers(authenticatedUser.user.id)
+        val pagingParams = PagingParams(skip, limit)
+        val followers = userService.getFollowers(authenticatedUser.user.id, pagingParams)
         return ResponseEntity
             .ok()
             .body(GetUserFollowersOutputModel(followers))
@@ -127,8 +130,11 @@ class UserController(val userService: UserService) {
     @GetMapping(Uris.User.USER_FOLLOWING)
     fun getUserFollowing(
         authenticatedUser: AuthenticatedUser,
+        @RequestParam skip: Int,
+        @RequestParam limit: Int
     ): ResponseEntity<*> {
-        val following = userService.getFollowing(authenticatedUser.user.id)
+        val pagingParams = PagingParams(skip, limit)
+        val following = userService.getFollowing(authenticatedUser.user.id, pagingParams)
         return ResponseEntity
             .ok()
             .body(GetUserFollowingOutputModel(following))

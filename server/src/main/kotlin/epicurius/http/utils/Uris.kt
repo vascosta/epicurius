@@ -21,7 +21,7 @@ object Uris {
         const val USER_FEED = "$USER/feed"
 
         const val USERS = "/users"
-        const val USER_PROFILE = "/users/{name}"
+        const val USER_PROFILE = "$USERS/{name}"
 
         const val USER_FOLLOW = "$USER/follow/{name}"
         const val USER_FOLLOW_REQUEST = "$USER/follow-requests/{name}"

@@ -1,5 +1,6 @@
 package epicurius.unit.http.user
 
+import epicurius.domain.PagingParams
 import epicurius.domain.user.FollowUser
 import epicurius.domain.user.SearchUser
 import epicurius.http.controllers.user.models.output.GetUserFollowingOutputModel
@@ -13,14 +14,15 @@ class GetUserFollowingControllerTests : UserHttpTest() {
     @Test
     fun `Should retrieve the following of an user successfully`() {
         // given a user (publicTestUser)
+        val pagingParams = PagingParams()
 
         // mock
         val mockFollowing = FollowUser(privateTestUsername, null)
         val mockFollowings = listOf(mockFollowing)
-        whenever(userServiceMock.getFollowing(publicTestUser.user.id)).thenReturn(mockFollowings)
+        whenever(userServiceMock.getFollowing(publicTestUser.user.id, pagingParams)).thenReturn(mockFollowings)
 
         // when retrieving the following of the user
-        val response = getUserFollowing(publicTestUser)
+        val response = getUserFollowing(publicTestUser, pagingParams.skip, pagingParams.limit)
         val body = response.body as GetUserFollowingOutputModel
 
         // then the following are retrieved successfully
