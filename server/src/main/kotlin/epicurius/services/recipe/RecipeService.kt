@@ -81,10 +81,10 @@ class RecipeService(
         }
     }
 
-    suspend fun getRecipe(recipeId: Int, username: String): Recipe {
+    suspend fun getRecipe(recipeId: Int, userId: Int): Recipe {
         val jdbiRecipe = tm.run { it.recipeRepository.getRecipeById(recipeId) } ?: throw RecipeNotFound()
 
-        checkRecipeAccessibility(jdbiRecipe.authorUsername, username)
+        checkRecipeAccessibility(jdbiRecipe.authorUsername, userId)
 
         val firestoreRecipe = fs.recipeRepository.getRecipeById(recipeId) ?: throw RecipeNotFound()
         val recipePictures = jdbiRecipe.picturesNames.map {
@@ -199,8 +199,8 @@ class RecipeService(
     private fun checkIfRecipeExists(recipeId: Int): JdbiRecipeModel? =
         tm.run { it.recipeRepository.getRecipeById(recipeId) }
 
-    private fun checkRecipeAccessibility(authorUsername: String, username: String) {
-        if (!tm.run { it.userRepository.checkUserVisibility(authorUsername, username) })
+    private fun checkRecipeAccessibility(authorUsername: String, userId: Int) {
+        if (!tm.run { it.userRepository.checkUserVisibility(authorUsername, userId) })
             throw RecipeNotAccessible()
     }
 

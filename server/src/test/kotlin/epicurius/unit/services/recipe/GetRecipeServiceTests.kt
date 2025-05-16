@@ -19,12 +19,12 @@ class GetRecipeServiceTests : RecipeServiceTest() {
 
         // mock
         whenever(jdbiRecipeRepositoryMock.getRecipeById(RECIPE_ID)).thenReturn(jdbiRecipeModel)
-        whenever(jdbiUserRepositoryMock.checkUserVisibility(authorUsername, authorUsername)).thenReturn(true)
+        whenever(jdbiUserRepositoryMock.checkUserVisibility(authorUsername, AUTHOR_ID)).thenReturn(true)
         whenever(runBlocking { firestoreRecipeRepositoryMock.getRecipeById(RECIPE_ID) }).thenReturn(firestoreRecipeInfo)
         whenever(pictureRepositoryMock.getPicture(testPicture.name, RECIPES_FOLDER)).thenReturn(testPicture.bytes)
 
         // when retrieving the recipe
-        val recipe = runBlocking { getRecipe(RECIPE_ID, authorUsername) }
+        val recipe = runBlocking { getRecipe(RECIPE_ID, AUTHOR_ID) }
 
         // then the recipe is retrieved successfully
         assertEquals(RECIPE_ID, recipe.id)
@@ -49,16 +49,16 @@ class GetRecipeServiceTests : RecipeServiceTest() {
     @Test
     fun `Should a follower of the author retrieve the recipe successfully`() {
         // given a recipe id (RECIPE_ID) and a user following the author
-        val user = generateRandomUsername()
+        val userId = 1904
 
         // mock
         whenever(jdbiRecipeRepositoryMock.getRecipeById(RECIPE_ID)).thenReturn(jdbiRecipeModel)
-        whenever(jdbiUserRepositoryMock.checkUserVisibility(authorUsername, user)).thenReturn(true)
+        whenever(jdbiUserRepositoryMock.checkUserVisibility(authorUsername, userId)).thenReturn(true)
         whenever(runBlocking { firestoreRecipeRepositoryMock.getRecipeById(RECIPE_ID) }).thenReturn(firestoreRecipeInfo)
         whenever(pictureRepositoryMock.getPicture(testPicture.name, RECIPES_FOLDER)).thenReturn(testPicture.bytes)
 
         // when retrieving the recipe
-        val recipe = runBlocking { getRecipe(RECIPE_ID, user) }
+        val recipe = runBlocking { getRecipe(RECIPE_ID, userId) }
 
         // then the recipe is retrieved successfully
         assertEquals(RECIPE_ID, recipe.id)
@@ -87,25 +87,25 @@ class GetRecipeServiceTests : RecipeServiceTest() {
 
         // mock
         whenever(jdbiRecipeRepositoryMock.getRecipeById(nonExistingRecipeId)).thenReturn(null, jdbiRecipeModel)
-        whenever(jdbiUserRepositoryMock.checkUserVisibility(authorUsername, authorUsername)).thenReturn(true)
+        whenever(jdbiUserRepositoryMock.checkUserVisibility(authorUsername, AUTHOR_ID)).thenReturn(true)
 
         // when retrieving the recipe
         // then the recipe is not retrieved and throws RecipeNotFound exception
-        assertFailsWith<RecipeNotFound> { runBlocking { getRecipe(nonExistingRecipeId, authorUsername) } } // jdbi
-        assertFailsWith<RecipeNotFound> { runBlocking { getRecipe(nonExistingRecipeId, authorUsername) } } // firestore
+        assertFailsWith<RecipeNotFound> { runBlocking { getRecipe(nonExistingRecipeId, AUTHOR_ID) } } // jdbi
+        assertFailsWith<RecipeNotFound> { runBlocking { getRecipe(nonExistingRecipeId, AUTHOR_ID) } } // firestore
     }
 
     @Test
     fun `Should throw RecipeNotAccessible exception when retrieving a recipe from a private user not followed`() {
         // given a user not following the author and a recipe id (RECIPE_ID)
-        val user = "user"
+        val userId = 123
 
         // mock
         whenever(jdbiRecipeRepositoryMock.getRecipeById(RECIPE_ID)).thenReturn(jdbiRecipeModel)
-        whenever(jdbiUserRepositoryMock.checkUserVisibility(authorUsername, user)).thenReturn(false)
+        whenever(jdbiUserRepositoryMock.checkUserVisibility(authorUsername, userId)).thenReturn(false)
 
         // when retrieving the recipe
         // then the recipe is not retrieved and throws RecipeNotAccessible exception
-        assertFailsWith<RecipeNotAccessible> { runBlocking { getRecipe(RECIPE_ID, user) } }
+        assertFailsWith<RecipeNotAccessible> { runBlocking { getRecipe(RECIPE_ID, userId) } }
     }
 }
