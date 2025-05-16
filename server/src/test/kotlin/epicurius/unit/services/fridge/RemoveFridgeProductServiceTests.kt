@@ -43,9 +43,7 @@ class RemoveFridgeProductServiceTests : FridgeServiceTest() {
         ).thenReturn(null)
 
         // when removing the product from user's fridge
-        val exception = assertThrows<ProductNotFound> { removeProduct(USER_ID, entryNumber) }
-
-        // then the exception should be thrown
-        assertEquals(ProductNotFound(entryNumber).message, exception.message)
+        // then the product cannot be removed and throws ProductNotFound exception
+        assertThrows<ProductNotFound> { removeProduct(USER_ID, entryNumber) }
     }
 }

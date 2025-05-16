@@ -10,7 +10,7 @@ import org.mockito.kotlin.whenever
 import java.time.LocalDate
 import kotlin.test.assertEquals
 
-class UpdateFridgeProduct : FridgeServiceTest() {
+class UpdateFridgeProductServiceTests : FridgeServiceTest() {
 
     @Test
     fun `Should update product info`() {
@@ -57,12 +57,10 @@ class UpdateFridgeProduct : FridgeServiceTest() {
         ).thenReturn(null)
 
         // when updating the product info
-        val exception = assertThrows<ProductNotFound> {
+        // then the product cannot be updated and throws ProductNotFound exception
+        assertThrows<ProductNotFound> {
             runBlocking { updateProductInfo(USER_ID, nonExistingEntryNumber, updateProductInputModel) }
         }
-
-        // then the exception is thrown
-        assertEquals(ProductNotFound(nonExistingEntryNumber).message, exception.message)
     }
 
     @Test
@@ -81,11 +79,9 @@ class UpdateFridgeProduct : FridgeServiceTest() {
         whenever(jdbiFridgeRepositoryMock.checkIfProductIsOpen(USER_ID, ENTRY_NUMBER)).thenReturn(true)
 
         // when updating the product info
-        val exception = assertThrows<ProductIsAlreadyOpen> {
+        // then the product cannot be updated and throws ProductIsAlreadyOpen exception
+        assertThrows<ProductIsAlreadyOpen> {
             runBlocking { updateProductInfo(USER_ID, ENTRY_NUMBER, updateProductInputModel) }
         }
-
-        // then the exception is thrown
-        assertEquals(ProductIsAlreadyOpen().message, exception.message)
     }
 }

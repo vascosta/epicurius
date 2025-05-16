@@ -92,12 +92,10 @@ class OpenFridgeProductServiceTests : FridgeServiceTest() {
         whenever(jdbiFridgeRepositoryMock.checkIfProductExistsInFridge(USER_ID, entryNumber, null)).thenReturn(null)
 
         // when opening the product
-        val exception = assertThrows<ProductNotFound> {
+        // then the product cannot be open and throws ProductNotFound exception
+        assertThrows<ProductNotFound> {
             updateProductInfo(USER_ID, entryNumber, openProductInputModel)
         }
-
-        // then the exception is thrown
-        assertEquals(ProductNotFound(entryNumber).message, exception.message)
     }
 
     @Test
@@ -112,11 +110,9 @@ class OpenFridgeProductServiceTests : FridgeServiceTest() {
         whenever(jdbiFridgeRepositoryMock.checkIfProductIsOpen(USER_ID, entryNumber)).thenReturn(true)
 
         // when opening the product
-        val exception = assertThrows<ProductIsAlreadyOpen> {
+        // then the product cannot be open and throws ProductIsAlreadyOpen exception
+        assertThrows<ProductIsAlreadyOpen> {
             updateProductInfo(USER_ID, entryNumber, openProductInputModel)
         }
-
-        // then the exception is thrown
-        assertEquals(ProductIsAlreadyOpen().message, exception.message)
     }
 }

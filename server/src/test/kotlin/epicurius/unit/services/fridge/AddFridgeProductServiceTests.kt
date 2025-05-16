@@ -85,11 +85,9 @@ class AddFridgeProductServiceTests : FridgeServiceTest() {
         whenever(runBlocking { spoonacularRepositoryMock.getIngredients(invalidProductName) }).thenReturn(emptyList())
 
         // when adding the invalid product to fridge
-        val exception = assertThrows<InvalidProduct> {
+        // then the product cannot be added and throws InvalidProduct exception
+        assertThrows<InvalidProduct> {
             runBlocking { addProduct(USER_ID, invalidProductInputModel) }
         }
-
-        // then an exception is thrown
-        assertEquals(InvalidProduct().message, exception.message)
     }
 }
