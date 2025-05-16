@@ -18,10 +18,22 @@ fun Request.Builder.authorizationHeader(token: String?) =
 
 //fun Request.Builder.userAgentHeader() = header(USER_AGENT_HEADER, "Android")
 
+fun String.addPathParams(vararg params: Map<String, Any?>): String = params
+    .flatMap { it.entries }
+    .fold(this) { acc, (key, value) ->
+        if (value != null) acc.replace("{$key}", value.toString()) else acc
+    }
+
 fun String.addQueryParams(vararg params: Map<String, Any?>): String = params
     .flatMap { it.entries }
     .filter { it.value != null }
     .joinToString("&") { "${it.key}=${it.value}" }
     .let { if (it.isEmpty()) this else "$this?$it" }
 
-fun String.params(params: Map<String, Any?>?): String = params?.let { addQueryParams(it) } ?: this
+fun String.params(
+    pathParams: Map<String, Any?>?,
+    queryParams: Map<String, Any?>?
+): String =
+    this
+        .let { if (pathParams != null) it.addPathParams(pathParams) else it }
+        .let { if (queryParams != null) it.addQueryParams(queryParams) else it }

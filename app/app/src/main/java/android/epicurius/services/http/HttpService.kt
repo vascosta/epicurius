@@ -3,6 +3,8 @@ package android.epicurius.services.http
 import android.epicurius.domain.exceptions.InvalidResponseException
 import android.epicurius.services.http.utils.APIResult
 import android.epicurius.services.http.utils.Problem
+import android.epicurius.services.http.utils.addPathParams
+import android.epicurius.services.http.utils.addQueryParams
 import android.epicurius.services.http.utils.authorizationHeader
 import android.epicurius.services.http.utils.getBodyOrThrow
 import android.epicurius.services.http.utils.isApplicationJson
@@ -29,11 +31,12 @@ class HttpService(
 ) {
     suspend inline fun <reified T> get(
         endpoint: String,
-        params: Map<String, Any?>? = null,
+        pathParams: Map<String, Any?>? = null,
+        queryParams: Map<String, Any?>? = null,
         token: String? = null
     ): APIResult<T> =
         Request.Builder()
-            .url(baseUrl + endpoint.params(params))
+            .url(baseUrl + endpoint.params(pathParams, queryParams))
             .authorizationHeader(token)
             //.userAgentHeader()
             .build()
@@ -42,11 +45,12 @@ class HttpService(
     suspend inline fun <reified T> post(
         endpoint: String,
         body: Any? = null,
-        params: Map<String, Any?>? = null,
+        pathParams: Map<String, Any?>? = null,
+        queryParams: Map<String, Any?>? = null,
         token: String? = null
     ): APIResult<T> =
         Request.Builder()
-            .url(baseUrl + endpoint.params(params))
+            .url(baseUrl + endpoint.params(pathParams, queryParams))
             .authorizationHeader(token)
             //.userAgentHeader()
             .post(gson.toJsonBody(body))
@@ -56,11 +60,12 @@ class HttpService(
     suspend inline fun <reified T> patch(
         endpoint: String,
         body: Any? = null,
-        params: Map<String, Any?>? = null,
+        pathParams: Map<String, Any?>? = null,
+        queryParams: Map<String, Any?>? = null,
         token: String? = null
     ): APIResult<T> =
         Request.Builder()
-            .url(baseUrl + endpoint.params(params))
+            .url(baseUrl + endpoint.params(pathParams, queryParams))
             .authorizationHeader(token)
             //.userAgentHeader()
             .patch(gson.toJsonBody(body))
@@ -70,11 +75,12 @@ class HttpService(
     suspend inline fun <reified T> put(
         endpoint: String,
         body: Any? = null,
-        params: Map<String, Any?>? = null,
+        pathParams: Map<String, Any?>? = null,
+        queryParams: Map<String, Any?>? = null,
         token: String? = null
     ): APIResult<T> =
         Request.Builder()
-            .url(baseUrl + endpoint.params(params))
+            .url(baseUrl + endpoint.params(pathParams, queryParams))
             .authorizationHeader(token)
             //.userAgentHeader()
             .put(gson.toJsonBody(body))
@@ -83,11 +89,12 @@ class HttpService(
 
     suspend inline fun <reified T> delete(
         endpoint: String,
-        params: Map<String, Any?>? = null,
+        pathParams: Map<String, Any?>? = null,
+        queryParams: Map<String, Any?>? = null,
         token: String? = null
     ): APIResult<T> =
         Request.Builder()
-            .url(baseUrl + endpoint.params(params))
+            .url(baseUrl + endpoint.params(pathParams, queryParams))
             .authorizationHeader(token)
             //.userAgentHeader()
             .delete()

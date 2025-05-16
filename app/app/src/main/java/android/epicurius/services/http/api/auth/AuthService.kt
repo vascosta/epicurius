@@ -11,15 +11,24 @@ class AuthService(private val httpService: HttpService) {
     suspend fun signUp(
         signUpInfo: SignUpInputModel
     ): APIResult<Unit> =
-        httpService.post<Unit>(Uris.User.SIGNUP, signUpInfo)
+        httpService.post<Unit>(
+            Uris.User.SIGNUP,
+            signUpInfo
+        )
 
     suspend fun login(
         loginInfo: LoginInputModel
     ): APIResult<Unit> =
-        httpService.post<Unit>(Uris.User.LOGIN, loginInfo)
+        httpService.post<Unit>(
+            Uris.User.LOGIN,
+            loginInfo
+        )
 
     suspend fun logout(
         token: String
     ): APIResult<Unit> =
-        httpService.post<Unit>(Uris.User.LOGOUT, token = token)
+        httpService.post<Unit>(
+            Uris.User.LOGOUT,
+            token = token
+        )
 }
