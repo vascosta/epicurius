@@ -17,18 +17,18 @@ object Uris {
         const val USER_PICTURE = "$USER/picture"
         const val USER_INTOLERANCES = "$USER/intolerances"
         const val USER_DIETS = "$USER/diets"
-        const val USER_RESET_PASSWORD = "$USER/password" // PATCH
+        const val USER_RESET_PASSWORD = "$USER/password"
         const val USER_FEED = "$USER/feed"
 
-        const val USERS = "/users" // GET
-        const val USER_PROFILE = "/users/{name}" // GET
+        const val USERS = "/users"
+        const val USER_PROFILE = "/users/{name}"
 
-        const val USER_FOLLOW = "$USER/follow/{name}" // PATCH and DELETE for unfollow
-        const val USER_FOLLOW_REQUEST = "$USER/follow-requests/{name}" // PATCH
+        const val USER_FOLLOW = "$USER/follow/{name}"
+        const val USER_FOLLOW_REQUEST = "$USER/follow-requests/{name}"
 
-        const val USER_FOLLOW_REQUESTS = "$USER/follow-requests" // GET
-        const val USER_FOLLOWERS = "$USER/followers" // GET
-        const val USER_FOLLOWING = "$USER/following" // GET
+        const val USER_FOLLOW_REQUESTS = "$USER/follow-requests"
+        const val USER_FOLLOWERS = "$USER/followers"
+        const val USER_FOLLOWING = "$USER/following"
 
         fun userProfile(name: String) = UriTemplate(USER_PROFILE).expand(name)
     }
