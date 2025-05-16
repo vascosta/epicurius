@@ -19,7 +19,7 @@ class GetRecipeControllerTests : RecipeHttpTest() {
         // given a recipe id (RECIPE_ID)
 
         // mock
-        whenever(runBlocking { recipeServiceMock.getRecipe(RECIPE_ID, testAuthorAuthenticatedUser.user.name) }).thenReturn(testRecipe)
+        whenever(runBlocking { recipeServiceMock.getRecipe(RECIPE_ID, testAuthorAuthenticatedUser.user.id) }).thenReturn(testRecipe)
 
         // when retrieving the recipe
         val response = runBlocking { getRecipe(testAuthorAuthenticatedUser, RECIPE_ID) }
@@ -35,7 +35,7 @@ class GetRecipeControllerTests : RecipeHttpTest() {
         // given a recipe id and a user following the author (RECIPE_ID, testAuthenticatedUser)
 
         // mock
-        whenever(runBlocking { recipeServiceMock.getRecipe(RECIPE_ID, testAuthenticatedUser.user.name) }).thenReturn(testRecipe)
+        whenever(runBlocking { recipeServiceMock.getRecipe(RECIPE_ID, testAuthenticatedUser.user.id) }).thenReturn(testRecipe)
 
         // when retrieving the recipe
         val response = runBlocking { getRecipe(testAuthenticatedUser, RECIPE_ID) }
@@ -52,7 +52,7 @@ class GetRecipeControllerTests : RecipeHttpTest() {
         val nonExistingRecipeId = 9999
 
         // mock
-        whenever(runBlocking { recipeServiceMock.getRecipe(nonExistingRecipeId, testAuthenticatedUser.user.name) }).thenThrow(RecipeNotFound())
+        whenever(runBlocking { recipeServiceMock.getRecipe(nonExistingRecipeId, testAuthenticatedUser.user.id) }).thenThrow(RecipeNotFound())
 
         // when retrieving the recipe
         // then the recipe is not retrieved and throws RecipeNotFound exception
@@ -65,7 +65,7 @@ class GetRecipeControllerTests : RecipeHttpTest() {
         val user = AuthenticatedUser(User(9999, "user", "", "", "", "", false, emptyList(), emptyList(), ""), "")
 
         // mock
-        whenever(runBlocking { recipeServiceMock.getRecipe(RECIPE_ID, user.user.name) }).thenThrow(RecipeNotAccessible())
+        whenever(runBlocking { recipeServiceMock.getRecipe(RECIPE_ID, user.user.id) }).thenThrow(RecipeNotAccessible())
 
         // when retrieving the recipe
         // then the recipe is not retrieved and throws RecipeNotAccessible exception

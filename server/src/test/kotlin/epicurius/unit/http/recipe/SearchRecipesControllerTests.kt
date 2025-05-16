@@ -59,7 +59,7 @@ class SearchRecipesControllerTests : RecipeHttpTest() {
         ).thenReturn(listOf(recipeInfo))
 
         // when searching for recipes by name
-        val response = searchRecipes(testAuthenticatedUser, searchRecipesInputInfoWithName.name, response = mockResponse)
+        val response = searchRecipes(testAuthenticatedUser, searchRecipesInputInfoWithName.name)
         val body = response.body as SearchRecipesOutputModel
 
         // then a list containing the recipe should is returned successfully
@@ -83,8 +83,7 @@ class SearchRecipesControllerTests : RecipeHttpTest() {
         // when searching for recipes with intolerances
         val response = searchRecipes(
             authenticatedUser = testAuthenticatedUser,
-            intolerances = sameIntolerances.intolerances,
-            response = mockResponse
+            intolerances = sameIntolerances.intolerances
         )
         val body = response.body as SearchRecipesOutputModel
 
@@ -104,8 +103,7 @@ class SearchRecipesControllerTests : RecipeHttpTest() {
         // when searching for recipes with intolerances
         val response2 = searchRecipes(
             authenticatedUser = testAuthenticatedUser,
-            intolerances = differentIntolerances.intolerances,
-            response = mockResponse
+            intolerances = differentIntolerances.intolerances
         )
         val body2 = response2.body as SearchRecipesOutputModel
 
@@ -147,8 +145,7 @@ class SearchRecipesControllerTests : RecipeHttpTest() {
             searchRecipesInputInfoWithoutIngredients.minProtein,
             searchRecipesInputInfoWithoutIngredients.maxProtein,
             searchRecipesInputInfoWithoutIngredients.minTime,
-            searchRecipesInputInfoWithoutIngredients.maxTime,
-            mockResponse
+            searchRecipesInputInfoWithoutIngredients.maxTime
         )
         val body = response.body as SearchRecipesOutputModel
 
@@ -186,8 +183,7 @@ class SearchRecipesControllerTests : RecipeHttpTest() {
             searchRecipesInputInfo.minProtein,
             searchRecipesInputInfo.maxProtein,
             searchRecipesInputInfo.minTime,
-            searchRecipesInputInfo.maxTime,
-            mockResponse
+            searchRecipesInputInfo.maxTime
         )
         val body = response.body as SearchRecipesOutputModel
 
@@ -225,8 +221,7 @@ class SearchRecipesControllerTests : RecipeHttpTest() {
             searchRecipesInputInfo.minProtein,
             searchRecipesInputInfo.maxProtein,
             searchRecipesInputInfo.minTime,
-            searchRecipesInputInfo.maxTime,
-            mockResponse
+            searchRecipesInputInfo.maxTime
         )
         val body = response.body as SearchRecipesOutputModel
 
@@ -265,8 +260,7 @@ class SearchRecipesControllerTests : RecipeHttpTest() {
             searchRecipesInputInfo.minProtein,
             searchRecipesInputInfo.maxProtein,
             searchRecipesInputInfo.minTime,
-            searchRecipesInputInfo.maxTime,
-            mockResponse
+            searchRecipesInputInfo.maxTime
         )
         val body = response.body as SearchRecipesOutputModel
 
@@ -305,8 +299,7 @@ class SearchRecipesControllerTests : RecipeHttpTest() {
             searchRecipesInputInfo.minProtein,
             searchRecipesInputInfo.maxProtein,
             searchRecipesInputInfo.minTime,
-            searchRecipesInputInfo.maxTime,
-            mockResponse
+            searchRecipesInputInfo.maxTime
         )
         val body = response.body as SearchRecipesOutputModel
 

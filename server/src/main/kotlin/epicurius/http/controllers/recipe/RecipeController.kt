@@ -44,7 +44,7 @@ class RecipeController(private val recipeService: RecipeService) {
         authenticatedUser: AuthenticatedUser,
         @PathVariable id: Int,
     ): ResponseEntity<*> {
-        val recipe = recipeService.getRecipe(id, authenticatedUser.user.name)
+        val recipe = recipeService.getRecipe(id, authenticatedUser.user.id)
         return ResponseEntity
             .ok()
             .body(GetRecipeOutputModel(recipe))
