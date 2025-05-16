@@ -188,7 +188,6 @@ open class HttpTest : EpicuriusUnitTest() {
             maxProtein: Int? = null,
             minTime: Int? = null,
             maxTime: Int? = null,
-            response: HttpServletResponse
         ) = recipeController.searchRecipes(
             authenticatedUser,
             name,

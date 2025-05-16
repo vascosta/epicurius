@@ -43,7 +43,6 @@ class GetRecipeRateServiceTests : RateRecipeServiceTest() {
     @Test
     fun `Should throw RecipeNotAccessible exception when recipe is from a private user that the user does not follow`() {
         // given a recipe from a private user that the user does not follow
-        val privateUserId = 2
         val privateRecipeId = 3
 
         // mock

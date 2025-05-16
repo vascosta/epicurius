@@ -1,5 +1,8 @@
 package epicurius.integration
 
+import com.google.auth.oauth2.GoogleCredentials
+import com.google.cloud.firestore.Firestore
+import com.google.cloud.firestore.FirestoreOptions
 import epicurius.EpicuriusTest
 import epicurius.domain.Diet
 import epicurius.domain.Intolerance
@@ -22,14 +25,18 @@ import epicurius.integration.utils.getBody
 import epicurius.integration.utils.patch
 import epicurius.integration.utils.patchMultiPart
 import epicurius.integration.utils.post
+import epicurius.repository.firestore.manager.FirestoreManager
+import epicurius.repository.jdbi.config.configureWithAppRequirements
+import epicurius.repository.transaction.jdbi.JdbiTransactionManager
+import org.jdbi.v3.core.Jdbi
+import org.postgresql.ds.PGSimpleDataSource
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.web.server.LocalServerPort
 import org.springframework.http.HttpStatus
-import org.springframework.http.client.reactive.ReactorClientHttpConnector
 import org.springframework.test.web.reactive.server.WebTestClient
 import org.springframework.web.multipart.MultipartFile
 import org.springframework.web.reactive.function.BodyInserters
-import reactor.netty.http.client.HttpClient
+import java.io.FileInputStream
 import java.time.LocalDate
 import java.time.Period
 
@@ -38,8 +45,7 @@ class EpicuriusIntegrationTest : EpicuriusTest() {
 
     @LocalServerPort
     var port: Int = 0
-    val httpClinet = HttpClient.create().followRedirect(false)
-    val client = WebTestClient.bindToServer(ReactorClientHttpConnector(httpClinet)).baseUrl(api("/")).build()
+    val client = WebTestClient.bindToServer().baseUrl(api("/")).build()
     final fun api(path: String): String = "http://localhost:$port/api$path"
 
     // USER
