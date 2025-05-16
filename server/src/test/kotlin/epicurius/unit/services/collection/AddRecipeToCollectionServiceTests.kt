@@ -27,7 +27,7 @@ class AddRecipeToCollectionServiceTests : CollectionServiceTest() {
         whenever(jdbiCollectionRepositoryMock.checkIfUserIsCollectionOwner(FAVOURITE_COLLECTION_ID, PUBLIC_USER_ID))
             .thenReturn(true)
         whenever(jdbiRecipeRepositoryMock.getRecipeById(RECIPE_ID)).thenReturn(testJdbiRecipeModel)
-        whenever(jdbiUserRepositoryMock.checkUserVisibility(testPublicUsername, testPublicUsername)).thenReturn(true)
+        whenever(jdbiUserRepositoryMock.checkUserVisibility(testPublicUsername, testPublicUser.id)).thenReturn(true)
         whenever(jdbiCollectionRepositoryMock.checkIfRecipeInCollection(FAVOURITE_COLLECTION_ID, RECIPE_ID))
             .thenReturn(false)
         whenever(jdbiCollectionRepositoryMock.addRecipeToCollection(FAVOURITE_COLLECTION_ID, RECIPE_ID))
@@ -37,7 +37,7 @@ class AddRecipeToCollectionServiceTests : CollectionServiceTest() {
 
         // when adding the recipe to the collection
         val updatedCollection = addRecipeToCollection(
-            testPublicUser.id, testPublicUsername, FAVOURITE_COLLECTION_ID, RECIPE_ID
+            testPublicUser.id, FAVOURITE_COLLECTION_ID, RECIPE_ID
         )
 
         // then the recipe is added successfully
@@ -57,7 +57,7 @@ class AddRecipeToCollectionServiceTests : CollectionServiceTest() {
         // then the recipe is not added and throws CollectionNotFound exception
         assertFailsWith<CollectionNotFound> {
             addRecipeToCollection(
-                testPublicUser.id, testPublicUsername, nonExistingCollectionId, RECIPE_ID
+                testPublicUser.id, nonExistingCollectionId, RECIPE_ID
             )
         }
     }
@@ -76,7 +76,7 @@ class AddRecipeToCollectionServiceTests : CollectionServiceTest() {
         // then the recipe is not added and throws NotTheCollectionOwner exception
         assertFailsWith<NotTheCollectionOwner> {
             addRecipeToCollection(
-                testPrivateUser.id, testPrivateUsername, FAVOURITE_COLLECTION_ID, RECIPE_ID
+                testPrivateUser.id, FAVOURITE_COLLECTION_ID, RECIPE_ID
             )
         }
     }
@@ -97,7 +97,7 @@ class AddRecipeToCollectionServiceTests : CollectionServiceTest() {
         // then the recipe is not added and throws RecipeNotFound exception
         assertFailsWith<RecipeNotFound> {
             addRecipeToCollection(
-                testPublicUser.id, testPublicUsername, FAVOURITE_COLLECTION_ID, nonExistingRecipeId
+                testPublicUser.id, FAVOURITE_COLLECTION_ID, nonExistingRecipeId
             )
         }
     }
@@ -114,13 +114,13 @@ class AddRecipeToCollectionServiceTests : CollectionServiceTest() {
         whenever(jdbiRecipeRepositoryMock.getRecipeById(RECIPE_ID)).thenReturn(testJdbiRecipeModel)
         whenever(jdbiCollectionRepositoryMock.checkIfRecipeInCollection(FAVOURITE_COLLECTION_ID, RECIPE_ID))
             .thenReturn(false)
-        whenever(jdbiUserRepositoryMock.checkUserVisibility(testPrivateUsername, testPublicUsername)).thenReturn(false)
+        whenever(jdbiUserRepositoryMock.checkUserVisibility(testPrivateUsername, testPublicUser.id)).thenReturn(false)
 
         // when adding the recipe to the collection
         // then the recipe is not added and throws RecipeNotAccessible exception
         assertFailsWith<RecipeNotAccessible> {
             addRecipeToCollection(
-                testPublicUser.id, testPublicUsername, FAVOURITE_COLLECTION_ID, RECIPE_ID
+                testPublicUser.id, FAVOURITE_COLLECTION_ID, RECIPE_ID
             )
         }
     }
@@ -140,7 +140,7 @@ class AddRecipeToCollectionServiceTests : CollectionServiceTest() {
         // then the recipe is not added and throws NotTheRecipeAuthor exception
         assertFailsWith<NotTheRecipeAuthor> {
             addRecipeToCollection(
-                testPrivateUser.id, testPrivateUsername, KITCHEN_BOOK_COLLECTION_ID, RECIPE_ID
+                testPrivateUser.id, KITCHEN_BOOK_COLLECTION_ID, RECIPE_ID
             )
         }
     }
@@ -155,7 +155,7 @@ class AddRecipeToCollectionServiceTests : CollectionServiceTest() {
         whenever(jdbiCollectionRepositoryMock.checkIfUserIsCollectionOwner(FAVOURITE_COLLECTION_ID, PUBLIC_USER_ID))
             .thenReturn(true)
         whenever(jdbiRecipeRepositoryMock.getRecipeById(RECIPE_ID)).thenReturn(testJdbiRecipeModel)
-        whenever(jdbiUserRepositoryMock.checkUserVisibility(testPublicUsername, testPublicUsername)).thenReturn(true)
+        whenever(jdbiUserRepositoryMock.checkUserVisibility(testPublicUsername, testPublicUser.id)).thenReturn(true)
         whenever(jdbiCollectionRepositoryMock.checkIfRecipeInCollection(FAVOURITE_COLLECTION_ID, RECIPE_ID))
             .thenReturn(true)
 
@@ -163,7 +163,7 @@ class AddRecipeToCollectionServiceTests : CollectionServiceTest() {
         // then the recipe is not added and throws RecipeAlreadyInCollection exception
         assertFailsWith<RecipeAlreadyInCollection> {
             addRecipeToCollection(
-                testPublicUser.id, testPublicUsername, FAVOURITE_COLLECTION_ID, RECIPE_ID
+                testPublicUser.id, FAVOURITE_COLLECTION_ID, RECIPE_ID
             )
         }
     }

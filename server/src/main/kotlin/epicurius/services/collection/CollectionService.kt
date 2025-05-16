@@ -45,7 +45,7 @@ class CollectionService(private val tm: TransactionManager, private val cs: Clou
     fun getCollection(userId: Int, username: String, collectionId: Int): Collection {
         val jdbiCollectionModel = checkIfCollectionExists(collectionId)
 
-        if (!checkCollectionVisibility(userId, username, jdbiCollectionModel)) throw CollectionNotAccessible()
+        if (!checkCollectionVisibility(userId, jdbiCollectionModel)) throw CollectionNotAccessible()
         return Collection(
             jdbiCollectionModel.id,
             jdbiCollectionModel.name,
@@ -68,13 +68,13 @@ class CollectionService(private val tm: TransactionManager, private val cs: Clou
         )
     }
 
-    fun addRecipeToCollection(userId: Int, username: String, collectionId: Int, recipeId: Int): Collection {
+    fun addRecipeToCollection(userId: Int, collectionId: Int, recipeId: Int): Collection {
         val jdbiCollectionModel = checkIfCollectionExists(collectionId)
         if (!checkIfUserIsCollectionOwner(collectionId, userId)) throw NotTheCollectionOwner()
 
         val jdbiRecipeModel = getJdbiRecipeModel(recipeId)
         if (jdbiCollectionModel.type == CollectionType.FAVOURITE) {
-            checkRecipeAccessibility(jdbiRecipeModel.authorUsername, username)
+            checkRecipeAccessibility(jdbiRecipeModel.authorUsername, userId)
         } else if (jdbiRecipeModel.authorId != userId) throw NotTheRecipeAuthor()
 
         if (checkIfRecipeInCollection(collectionId, recipeId)) throw RecipeAlreadyInCollection()
@@ -120,11 +120,11 @@ class CollectionService(private val tm: TransactionManager, private val cs: Clou
     private fun checkIfOwnedCollectionExists(ownerId: Int, collectionName: String, collectionType: CollectionType) =
         tm.run { it.collectionRepository.getCollection(ownerId, collectionName, collectionType) } != null
 
-    private fun checkCollectionVisibility(userId: Int, username: String, jdbiCollectionModel: JdbiCollectionModel): Boolean {
+    private fun checkCollectionVisibility(userId: Int, jdbiCollectionModel: JdbiCollectionModel): Boolean {
         if (checkIfUserIsCollectionOwner(jdbiCollectionModel.id, userId)) return true
         if (jdbiCollectionModel.type == CollectionType.FAVOURITE) return false
         val owner = tm.run { it.userRepository.getUserById(jdbiCollectionModel.ownerId) } ?: throw UserNotFound(null)
-        return tm.run { it.userRepository.checkUserVisibility(owner.name, username) }
+        return tm.run { it.userRepository.checkUserVisibility(owner.name, userId) }
     }
 
     private fun getJdbiRecipeModel(recipeId: Int): JdbiRecipeModel =
@@ -140,8 +140,8 @@ class CollectionService(private val tm: TransactionManager, private val cs: Clou
     private fun checkIfRecipeInCollection(collectionId: Int, recipeId: Int) =
         tm.run { it.collectionRepository.checkIfRecipeInCollection(collectionId, recipeId) }
 
-    private fun checkRecipeAccessibility(authorUsername: String, username: String) {
-        if (!tm.run { it.userRepository.checkUserVisibility(authorUsername, username) })
+    private fun checkRecipeAccessibility(authorUsername: String, userId: Int) {
+        if (!tm.run { it.userRepository.checkUserVisibility(authorUsername, userId) })
             throw RecipeNotAccessible()
     }
 }

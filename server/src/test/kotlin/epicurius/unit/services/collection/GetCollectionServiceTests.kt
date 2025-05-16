@@ -64,7 +64,7 @@ class GetCollectionServiceTests : CollectionServiceTest() {
         whenever(jdbiCollectionRepositoryMock.getCollectionById(testKitchenBookCollection.id))
             .thenReturn(testKitchenBookJdbiCollectionModel)
         whenever(jdbiUserRepositoryMock.getUserById(PRIVATE_USER_ID)).thenReturn(testPublicUser)
-        whenever(jdbiUserRepositoryMock.checkUserVisibility(testPublicUsername, testPrivateUsername))
+        whenever(jdbiUserRepositoryMock.checkUserVisibility(testPublicUsername, PRIVATE_USER_ID))
             .thenReturn(false)
 
         // when retrieving the collection
