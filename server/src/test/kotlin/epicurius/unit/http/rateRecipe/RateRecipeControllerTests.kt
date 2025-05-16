@@ -26,7 +26,6 @@ class RateRecipeControllerTests : RateRecipeHttpTest() {
             rateRecipeServiceMock
         ).rateRecipe(
             testAuthenticatedUser.user.id,
-            testAuthenticatedUser.user.name,
             RECIPE_ID,
             RATING_5
         )
@@ -35,7 +34,7 @@ class RateRecipeControllerTests : RateRecipeHttpTest() {
 
         // mock
         whenever(
-            rateRecipeServiceMock.getRecipeRate(testAuthenticatedUser.user.name, RECIPE_ID)
+            rateRecipeServiceMock.getRecipeRate(testAuthenticatedUser.user.id, RECIPE_ID)
         ).thenReturn(RATING_5.toDouble())
 
         // when getting the recipe rate
@@ -53,7 +52,6 @@ class RateRecipeControllerTests : RateRecipeHttpTest() {
         whenever(
             rateRecipeServiceMock.rateRecipe(
                 testAuthenticatedUser.user.id,
-                testAuthenticatedUser.user.name,
                 nonExistingRecipeId,
                 RATING_5
             )
@@ -72,7 +70,6 @@ class RateRecipeControllerTests : RateRecipeHttpTest() {
         whenever(
             rateRecipeServiceMock.rateRecipe(
                 testAuthorAuthenticatedUser.user.id,
-                testAuthorAuthenticatedUser.user.name,
                 RECIPE_ID,
                 RATING_5
             )
@@ -91,7 +88,6 @@ class RateRecipeControllerTests : RateRecipeHttpTest() {
         whenever(
             rateRecipeServiceMock.rateRecipe(
                 testAuthenticatedUser.user.id,
-                testAuthenticatedUser.user.name,
                 RECIPE_ID,
                 RATING_5
             )
@@ -110,7 +106,6 @@ class RateRecipeControllerTests : RateRecipeHttpTest() {
         whenever(
             rateRecipeServiceMock.rateRecipe(
                 testAuthenticatedUser.user.id,
-                testAuthenticatedUser.user.name,
                 RECIPE_ID,
                 RATING_5
             )

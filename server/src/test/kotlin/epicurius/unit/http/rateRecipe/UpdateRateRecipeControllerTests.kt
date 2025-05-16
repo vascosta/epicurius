@@ -25,7 +25,6 @@ class UpdateRateRecipeControllerTests : RateRecipeHttpTest() {
             rateRecipeServiceMock
         ).updateRecipeRate(
             testAuthenticatedUser.user.id,
-            testAuthenticatedUser.user.name,
             RECIPE_ID,
             RATING_3
         )
@@ -42,7 +41,6 @@ class UpdateRateRecipeControllerTests : RateRecipeHttpTest() {
         whenever(
             rateRecipeServiceMock.updateRecipeRate(
                 testAuthenticatedUser.user.id,
-                testAuthenticatedUser.user.name,
                 nonExistingRecipeId,
                 RATING_3
             )
@@ -61,7 +59,6 @@ class UpdateRateRecipeControllerTests : RateRecipeHttpTest() {
         whenever(
             rateRecipeServiceMock.updateRecipeRate(
                 testAuthorAuthenticatedUser.user.id,
-                testAuthorAuthenticatedUser.user.name,
                 RECIPE_ID,
                 RATING_3
             )
@@ -80,7 +77,6 @@ class UpdateRateRecipeControllerTests : RateRecipeHttpTest() {
         whenever(
             rateRecipeServiceMock.updateRecipeRate(
                 testAuthenticatedUser.user.id,
-                testAuthenticatedUser.user.name,
                 RECIPE_ID,
                 RATING_3
             )
@@ -99,7 +95,6 @@ class UpdateRateRecipeControllerTests : RateRecipeHttpTest() {
         whenever(
             rateRecipeServiceMock.updateRecipeRate(
                 testAuthenticatedUser.user.id,
-                testAuthenticatedUser.user.name,
                 RECIPE_ID,
                 RATING_3
             )

@@ -27,7 +27,7 @@ class RateRecipeController(private val rateRecipeService: RateRecipeService) {
         authenticatedUser: AuthenticatedUser,
         @PathVariable id: Int,
     ): ResponseEntity<*> {
-        val rate = rateRecipeService.getRecipeRate(authenticatedUser.user.name, id)
+        val rate = rateRecipeService.getRecipeRate(authenticatedUser.user.id, id)
         return ResponseEntity
             .ok()
             .body(GetRecipeRateOutputModel(rate))
@@ -39,7 +39,7 @@ class RateRecipeController(private val rateRecipeService: RateRecipeService) {
         @PathVariable id: Int,
         @Valid @RequestBody body: RateRecipeInputModel,
     ): ResponseEntity<*> {
-        rateRecipeService.rateRecipe(authenticatedUser.user.id, authenticatedUser.user.name, id, body.rating)
+        rateRecipeService.rateRecipe(authenticatedUser.user.id, id, body.rating)
         return ResponseEntity
             .noContent()
             .build<Unit>()
@@ -51,7 +51,7 @@ class RateRecipeController(private val rateRecipeService: RateRecipeService) {
         @PathVariable id: Int,
         @Valid @RequestBody body: RateRecipeInputModel,
     ): ResponseEntity<*> {
-        rateRecipeService.updateRecipeRate(authenticatedUser.user.id, authenticatedUser.user.name, id, body.rating)
+        rateRecipeService.updateRecipeRate(authenticatedUser.user.id, id, body.rating)
         return ResponseEntity
             .noContent()
             .build<Unit>()
@@ -62,7 +62,7 @@ class RateRecipeController(private val rateRecipeService: RateRecipeService) {
         authenticatedUser: AuthenticatedUser,
         @PathVariable id: Int,
     ): ResponseEntity<*> {
-        rateRecipeService.deleteRecipeRate(authenticatedUser.user.id, authenticatedUser.user.name, id)
+        rateRecipeService.deleteRecipeRate(authenticatedUser.user.id, id)
         return ResponseEntity
             .noContent()
             .build<Unit>()

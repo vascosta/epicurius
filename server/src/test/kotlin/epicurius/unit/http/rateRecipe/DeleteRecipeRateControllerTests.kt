@@ -26,7 +26,6 @@ class DeleteRecipeRateControllerTests : RecipeHttpTest() {
             rateRecipeServiceMock
         ).deleteRecipeRate(
             testAuthenticatedUser.user.id,
-            testAuthenticatedUser.user.name,
             RECIPE_ID
         )
 
@@ -42,7 +41,6 @@ class DeleteRecipeRateControllerTests : RecipeHttpTest() {
         whenever(
             rateRecipeServiceMock.deleteRecipeRate(
                 testAuthenticatedUser.user.id,
-                testAuthenticatedUser.user.name,
                 nonExistingRecipeId
             )
         ).thenThrow(RecipeNotFound())
@@ -60,7 +58,6 @@ class DeleteRecipeRateControllerTests : RecipeHttpTest() {
         whenever(
             rateRecipeServiceMock.deleteRecipeRate(
                 testAuthenticatedUser.user.id,
-                testAuthenticatedUser.user.name,
                 RECIPE_ID
             )
         ).thenThrow(AuthorCannotDeleteRating())
@@ -78,7 +75,6 @@ class DeleteRecipeRateControllerTests : RecipeHttpTest() {
         whenever(
             rateRecipeServiceMock.deleteRecipeRate(
                 testAuthenticatedUser.user.id,
-                testAuthenticatedUser.user.name,
                 RECIPE_ID
             )
         ).thenThrow(UserHasNotRated(testAuthenticatedUser.user.id, RECIPE_ID))
@@ -96,7 +92,6 @@ class DeleteRecipeRateControllerTests : RecipeHttpTest() {
         whenever(
             rateRecipeServiceMock.deleteRecipeRate(
                 testAuthenticatedUser.user.id,
-                testAuthenticatedUser.user.name,
                 RECIPE_ID
             )
         ).thenThrow(RecipeNotAccessible())
