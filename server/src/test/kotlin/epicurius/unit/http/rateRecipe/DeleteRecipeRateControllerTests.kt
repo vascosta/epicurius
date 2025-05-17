@@ -46,7 +46,7 @@ class DeleteRecipeRateControllerTests : RecipeHttpTest() {
         ).thenThrow(RecipeNotFound())
 
         // when deleting the recipe rate
-        // then RecipeNotFound exception is thrown
+        // then the recipe rate cannot be deleted and throws RecipeNotFound exception
         assertThrows<RecipeNotFound> { deleteRecipeRate(testAuthenticatedUser, nonExistingRecipeId) }
     }
 
@@ -63,7 +63,7 @@ class DeleteRecipeRateControllerTests : RecipeHttpTest() {
         ).thenThrow(AuthorCannotDeleteRating())
 
         // when deleting the recipe rate
-        // then AuthorCannotDeleteRating exception is thrown
+        // then the recipe rate cannot be deleted and throws AuthorCannotDeleteRating exception
         assertThrows<AuthorCannotDeleteRating> { deleteRecipeRate(testAuthenticatedUser, RECIPE_ID) }
     }
 
@@ -80,7 +80,7 @@ class DeleteRecipeRateControllerTests : RecipeHttpTest() {
         ).thenThrow(UserHasNotRated(testAuthenticatedUser.user.id, RECIPE_ID))
 
         // when deleting the recipe rate
-        // then UserHasNotRated exception is thrown
+        // then the recipe rate cannot be deleted and throws UserHasNotRated exception
         assertThrows<UserHasNotRated> { deleteRecipeRate(testAuthenticatedUser, RECIPE_ID) }
     }
 
@@ -97,7 +97,7 @@ class DeleteRecipeRateControllerTests : RecipeHttpTest() {
         ).thenThrow(RecipeNotAccessible())
 
         // when deleting the recipe rate
-        // then RecipeNotAccessible exception is thrown
+        // then the recipe rate cannot be deleted and throws RecipeNotAccessible exception
         assertThrows<RecipeNotAccessible> { deleteRecipeRate(testAuthenticatedUser, RECIPE_ID) }
     }
 }

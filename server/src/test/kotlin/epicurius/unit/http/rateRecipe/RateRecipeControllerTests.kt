@@ -58,7 +58,7 @@ class RateRecipeControllerTests : RateRecipeHttpTest() {
         ).thenThrow(RecipeNotFound())
 
         // when rating a non-existing recipe
-        // then RecipeNotFound exception should be thrown
+        // then the recipe cannot be rated and throws RecipeNotFound exception
         assertThrows<RecipeNotFound> { rateRecipe(testAuthenticatedUser, nonExistingRecipeId, RATING_5) }
     }
 
@@ -76,7 +76,7 @@ class RateRecipeControllerTests : RateRecipeHttpTest() {
         ).thenThrow(AuthorCannotRateOwnRecipe())
 
         // when rating the recipe
-        // then AuthorCannotRateOwnRecipe exception should be thrown
+        // then the recipe cannot be rated and throws AuthorCannotRateOwnRecipe exception
         assertThrows<AuthorCannotRateOwnRecipe> { rateRecipe(testAuthorAuthenticatedUser, RECIPE_ID, RATING_5) }
     }
 
@@ -94,7 +94,7 @@ class RateRecipeControllerTests : RateRecipeHttpTest() {
         ).thenThrow(RecipeNotAccessible())
 
         // when rating the recipe
-        // then RecipeNotAccessible exception should be thrown
+        // then the recipe cannot be rated and throws RecipeNotAccessible exception
         assertThrows<RecipeNotAccessible> { rateRecipe(testAuthenticatedUser, RECIPE_ID, RATING_5) }
     }
 
@@ -112,7 +112,7 @@ class RateRecipeControllerTests : RateRecipeHttpTest() {
         ).thenThrow(UserAlreadyRated(testAuthenticatedUser.user.id, RECIPE_ID))
 
         // when rating the recipe
-        // then UserAlreadyRated exception should be thrown
+        // then the recipe cannot be rated and throws UserAlreadyRated exception
         assertThrows<UserAlreadyRated> { rateRecipe(testAuthenticatedUser, RECIPE_ID, RATING_5) }
     }
 }

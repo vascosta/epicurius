@@ -47,7 +47,7 @@ class UpdateRateRecipeControllerTests : RateRecipeHttpTest() {
         ).thenThrow(RecipeNotFound())
 
         // when updating the recipe rate
-        // then RecipeNotFound exception is thrown
+        // then the recipe rate cannot be updated and throws RecipeNotFound exception
         assertThrows<RecipeNotFound> { updateRecipeRate(testAuthenticatedUser, nonExistingRecipeId, RATING_3) }
     }
 
@@ -65,7 +65,7 @@ class UpdateRateRecipeControllerTests : RateRecipeHttpTest() {
         ).thenThrow(AuthorCannotUpdateRating())
 
         // when updating the recipe rate
-        // then AuthorCannotUpdateRating exception is thrown
+        // then the recipe rate cannot be updated and throws AuthorCannotUpdateRating exception
         assertThrows<AuthorCannotUpdateRating> { updateRecipeRate(testAuthorAuthenticatedUser, RECIPE_ID, RATING_3) }
     }
 
@@ -83,7 +83,7 @@ class UpdateRateRecipeControllerTests : RateRecipeHttpTest() {
         ).thenThrow(RecipeNotAccessible())
 
         // when updating the recipe rate
-        // then RecipeNotAccessible exception is thrown
+        // then the recipe rate cannot be updated and throws RecipeNotAccessible exception
         assertThrows<RecipeNotAccessible> { updateRecipeRate(testAuthenticatedUser, RECIPE_ID, RATING_3) }
     }
 
@@ -101,7 +101,7 @@ class UpdateRateRecipeControllerTests : RateRecipeHttpTest() {
         ).thenThrow(UserHasNotRated(testAuthenticatedUser.user.id, RECIPE_ID))
 
         // when updating the recipe rate
-        // then UserHasNotRated exception is thrown
+        // then the recipe rate cannot be updated and throws UserHasNotRated exception
         assertThrows<UserHasNotRated> { updateRecipeRate(testAuthenticatedUser, RECIPE_ID, RATING_3) }
     }
 }

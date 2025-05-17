@@ -34,7 +34,7 @@ class GetRecipeRateControllerTests : RateRecipeHttpTest() {
         ).thenThrow(RecipeNotFound())
 
         // when getting the recipe rate
-        // then RecipeNotFound exception is thrown
+        // then the recipe rating is not returned and throws RecipeNotFound exception
         assertThrows<RecipeNotFound> { getRecipeRate(testAuthenticatedUser, nonExistingRecipeId) }
     }
 
@@ -48,7 +48,7 @@ class GetRecipeRateControllerTests : RateRecipeHttpTest() {
         ).thenThrow(RecipeNotAccessible())
 
         // when getting the recipe rate
-        // then RecipeNotFound exception is thrown
+        // then the recipe rating is not returned and throws RecipeNotAccessible exception
         assertThrows<RecipeNotAccessible> { getRecipeRate(testAuthenticatedUser, RECIPE_ID) }
     }
 }
