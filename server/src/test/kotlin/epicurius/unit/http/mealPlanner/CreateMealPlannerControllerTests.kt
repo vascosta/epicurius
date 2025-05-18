@@ -8,12 +8,14 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.mockito.kotlin.whenever
 import org.springframework.http.HttpStatus
+import java.time.LocalDate
 
 class CreateMealPlannerControllerTests : MealPlannerControllerTest() {
 
     @Test
     fun `Should create meal planner successfully`() {
         // given an authenticated user and a meal planner
+        val today = LocalDate.now()
 
         // mock
         whenever(
@@ -34,6 +36,7 @@ class CreateMealPlannerControllerTests : MealPlannerControllerTest() {
     @Test
     fun `Should throw MealPlannerAlreadyExists exception when user already has a meal planner`() {
         // given an authenticated user with a meal planner
+        val today = LocalDate.now()
 
         // mock
         whenever(
