@@ -246,6 +246,12 @@ open class HttpTest : EpicuriusUnitTest() {
         ) =
             rateRecipeController.getRecipeRate(authenticatedUser, id)
 
+        fun getUserRecipeRate(
+            authenticatedUser: AuthenticatedUser,
+            id: Int
+        ) =
+            rateRecipeController.getUserRecipeRate(authenticatedUser, id)
+
         fun rateRecipe(
             authenticatedUser: AuthenticatedUser,
             id: Int,

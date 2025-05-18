@@ -22,7 +22,7 @@ class GetRecipeRateServiceTests : RateRecipeServiceTest() {
         val rate = getRecipeRate(USER_ID, RECIPE_ID)
 
         // then the recipe rating is returned successfully
-        assert(rate == RATING_5.toDouble())
+        assertEquals(RATING_5.toDouble(), rate)
     }
 
     @Test

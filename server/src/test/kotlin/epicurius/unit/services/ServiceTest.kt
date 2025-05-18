@@ -104,6 +104,8 @@ open class ServiceTest : EpicuriusUnitTest() {
         // RATE RECIPE
         fun getRecipeRate(userId: Int, recipeId: Int) = rateRecipeService.getRecipeRate(userId, recipeId)
 
+        fun getUserRecipeRate(userId: Int, recipeId: Int) = rateRecipeService.getUserRecipeRate(userId, recipeId)
+
         fun rateRecipe(userId: Int, recipeId: Int, rating: Int) =
             rateRecipeService.rateRecipe(userId, recipeId, rating)
 

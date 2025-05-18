@@ -10,7 +10,7 @@ class GetRateRecipeRepositoryTests : RateRecipeRepositoryTest() {
         // given a recipe (testRecipe)
 
         // when getting the recipe rate
-        val rate = getRecipeRate(testRecipe3.id)
+        val rate = getRecipeRate(testRecipe.id)
 
         // then the rate should be 0.0
         assertEquals(0.0, rate)
