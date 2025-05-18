@@ -73,7 +73,7 @@ class LoginControllerTests : UserControllerTest() {
         whenever(userServiceMock.login(loginInputInfo.name, null, loginInputInfo.password)).thenThrow(UserAlreadyLoggedIn())
         whenever(userServiceMock.login(null, loginInputInfo.email, loginInputInfo.password)).thenThrow(UserAlreadyLoggedIn())
 
-        // when logging in
+        // when logging in again
         // then the user cannot be logged in and throws UserAlreadyLoggedIn exception
         assertFailsWith<UserAlreadyLoggedIn> { login(loginInputInfo.copy(name = publicTestUsername, email = null), mockResponse) }
         assertFailsWith<UserAlreadyLoggedIn> { login(loginInputInfo.copy(name = null, email = publicTestUser.user.email), mockResponse) }

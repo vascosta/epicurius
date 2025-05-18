@@ -88,7 +88,7 @@ class LoginServiceTests : UserServiceTest() {
         whenever(jdbiUserRepositoryMock.getUser(email = publicTestUser.email)).thenReturn(publicTestUser)
         whenever(jdbiUserRepositoryMock.checkIfUserIsLoggedIn(publicTestUser.id)).thenReturn(true)
 
-        // when logging in
+        // when logging in again
         // then the user cannot be logged in and throws UserAlreadyLoggedIn exception
         assertFailsWith<UserAlreadyLoggedIn> { login(publicTestUsername, password = password) }
         assertFailsWith<UserAlreadyLoggedIn> { login(email = publicTestUser.email, password = password) }

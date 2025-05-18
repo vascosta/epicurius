@@ -31,7 +31,7 @@ class RemoveFridgeProductIntegrationTests : FridgeIntegrationTest() {
     }
 
     @Test
-    fun `Try to remove product with invalid entry number and fails with code 404`() {
+    fun `Should fail with code 404 when removing product with invalid entry number`() {
         // given a user (testUser)
 
         // when removing a product with an invalid entry number

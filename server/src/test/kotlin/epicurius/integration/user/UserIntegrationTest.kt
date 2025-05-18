@@ -34,7 +34,7 @@ class UserIntegrationTest: EpicuriusIntegrationTest() {
     fun getUserProfile(token: String, username: String) =
         get<GetUserProfileOutputModel>(
             client,
-            api(Uris.User.USER_PROFILE.replace("{username}", username)),
+            api(Uris.User.USER_PROFILE.replace("{name}", username)),
             token = token
         )
 
@@ -84,7 +84,7 @@ class UserIntegrationTest: EpicuriusIntegrationTest() {
         val result = post<Unit>(
             client,
             api(Uris.User.LOGIN),
-            mapOf("username" to username, "email" to email, "password" to password),
+            mapOf("name" to username, "email" to email, "password" to password),
         )
 
         return getCookieHeader(result)
@@ -110,7 +110,7 @@ class UserIntegrationTest: EpicuriusIntegrationTest() {
             client,
             api(Uris.User.USER),
             body = mapOf(
-                "username" to username,
+                "name" to username,
                 "email" to email,
                 "country" to country,
                 "password" to password,
@@ -174,7 +174,7 @@ class UserIntegrationTest: EpicuriusIntegrationTest() {
     fun follow(token: String, username: String) {
         patch<Unit>(
             client,
-            api(Uris.User.USER_FOLLOW.replace("{username}", username)),
+            api(Uris.User.USER_FOLLOW.replace("{name}", username)),
             body = "",
             token = token
         )
@@ -183,7 +183,7 @@ class UserIntegrationTest: EpicuriusIntegrationTest() {
     fun unfollow(token: String, username: String) {
         delete<Unit>(
             client,
-            api(Uris.User.USER_FOLLOW.replace("{username}", username)),
+            api(Uris.User.USER_FOLLOW.replace("{name}", username)),
             token = token
         )
     }
@@ -191,7 +191,7 @@ class UserIntegrationTest: EpicuriusIntegrationTest() {
     fun cancelFollowRequest(token: String, username: String) {
         patch<Unit>(
             client,
-            api(Uris.User.USER_FOLLOW_REQUEST.replace("{username}", username) + "?type=${FollowRequestType.CANCEL}"),
+            api(Uris.User.USER_FOLLOW_REQUEST.replace("{name}", username) + "?type=${FollowRequestType.CANCEL}"),
             body = "",
             token = token
         )
