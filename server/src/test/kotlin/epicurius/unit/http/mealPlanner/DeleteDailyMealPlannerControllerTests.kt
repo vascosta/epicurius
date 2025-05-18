@@ -9,7 +9,7 @@ import org.junit.jupiter.api.assertThrows
 import org.mockito.kotlin.whenever
 import org.springframework.http.HttpStatus
 
-class DeleteDailyMealPlannerControllerTests : MealPlannerHttpTest() {
+class DeleteDailyMealPlannerControllerTests : MealPlannerControllerTest() {
 
     @Test
     fun `Should delete user's daily meal planner successfully`() {

@@ -17,7 +17,7 @@ import epicurius.utils.generateRandomUsername
 import java.time.LocalDate
 import java.util.UUID.randomUUID
 
-open class RecipeHttpTest : HttpTest() {
+open class RecipeControllerTest : HttpTest() {
 
     companion object {
         const val RECIPE_ID = 1

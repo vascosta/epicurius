@@ -16,7 +16,7 @@ import epicurius.utils.generateRandomRecipeName
 import epicurius.utils.generateRandomUsername
 import java.util.UUID.randomUUID
 
-open class CollectionHttpTest : HttpTest() {
+open class CollectionControllerTest : HttpTest() {
 
     companion object {
         const val FAVOURITE_COLLECTION_ID = 1

@@ -11,7 +11,7 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 
-class DeleteRecipeControllerTests : RecipeHttpTest() {
+class DeleteRecipeControllerTests : RecipeControllerTest() {
 
     @Test
     fun `Should delete a recipe successfully`() {

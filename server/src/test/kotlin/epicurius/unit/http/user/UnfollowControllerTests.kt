@@ -10,7 +10,7 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 
-class UnfollowControllerTests : UserHttpTest() {
+class UnfollowControllerTests : UserControllerTest() {
 
     @Test
     fun `Should unfollow a user successfully`() {

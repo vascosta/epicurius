@@ -85,6 +85,6 @@ inline fun <reified T> delete(
 inline fun <reified T> getBody(result: EntityExchangeResult<T>): T = result.responseBody
     ?: throw IllegalStateException("Response body is null")
 
-inline fun <reified T> getAuthorizationHeader(result: EntityExchangeResult<T>): String =
+inline fun <reified T> getCookieHeader(result: EntityExchangeResult<T>): String =
     result.responseHeaders["Set-Cookie"]?.first()?.substringAfter("token=")
         ?: throw IllegalStateException("Set cookie is null")

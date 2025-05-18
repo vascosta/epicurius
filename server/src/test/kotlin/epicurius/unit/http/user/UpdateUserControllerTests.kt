@@ -17,7 +17,7 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 
-class UpdateUserControllerTests : UserHttpTest() {
+class UpdateUserControllerTests : UserControllerTest() {
 
     private val newUsername = generateRandomUsername()
     val newPassword = generateSecurePassword()

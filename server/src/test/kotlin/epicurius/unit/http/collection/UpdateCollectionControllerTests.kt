@@ -10,7 +10,7 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 
-class UpdateCollectionControllerTests : CollectionHttpTest() {
+class UpdateCollectionControllerTests : CollectionControllerTest() {
 
     private val updateCollectionInputInfo = UpdateCollectionInputModel("New Name")
 

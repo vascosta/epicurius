@@ -14,7 +14,7 @@ import org.springframework.http.HttpStatus
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
-class SearchRecipesControllerTests : RecipeHttpTest() {
+class SearchRecipesControllerTests : RecipeControllerTest() {
 
     private val searchRecipesInputInfo = SearchRecipesInputModel(
         name = "Pastel de nata",

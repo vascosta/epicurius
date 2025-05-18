@@ -1,12 +1,11 @@
 package epicurius.unit.http.user
 
 import epicurius.http.controllers.user.models.output.GetUserIntolerancesOutputModel
-import org.mockito.kotlin.whenever
 import org.springframework.http.HttpStatus
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
-class GetUserIntolerancesControllerTests : UserHttpTest() {
+class GetUserIntolerancesControllerTests : UserControllerTest() {
 
     @Test
     fun `Should retrieve the intolerances of an user successfully`() {

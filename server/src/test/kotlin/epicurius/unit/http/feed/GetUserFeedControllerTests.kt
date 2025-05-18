@@ -14,7 +14,7 @@ import org.springframework.http.HttpStatus
 import java.util.UUID.randomUUID
 import kotlin.test.Test
 
-class GetUserFeedControllerTests : FeedHttpTest() {
+class GetUserFeedControllerTests : FeedControllerTest() {
 
     private val pagingParams = PagingParams(0, 10)
     private val testAuthenticatedUser = AuthenticatedUser(

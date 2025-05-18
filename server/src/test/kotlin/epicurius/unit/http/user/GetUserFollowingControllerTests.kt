@@ -9,7 +9,7 @@ import org.springframework.http.HttpStatus
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
-class GetUserFollowingControllerTests : UserHttpTest() {
+class GetUserFollowingControllerTests : UserControllerTest() {
 
     @Test
     fun `Should retrieve the following of an user successfully`() {

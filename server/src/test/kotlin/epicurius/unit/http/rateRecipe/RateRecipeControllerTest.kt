@@ -7,7 +7,7 @@ import epicurius.utils.generateEmail
 import epicurius.utils.generateRandomUsername
 import java.util.UUID.randomUUID
 
-open class RateRecipeHttpTest : HttpTest() {
+open class RateRecipeControllerTest : HttpTest() {
 
     companion object {
 

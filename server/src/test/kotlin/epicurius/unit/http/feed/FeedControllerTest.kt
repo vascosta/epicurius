@@ -6,7 +6,7 @@ import epicurius.domain.recipe.RecipeInfo
 import epicurius.unit.http.HttpTest
 import java.util.UUID.randomUUID
 
-open class FeedHttpTest : HttpTest() {
+open class FeedControllerTest : HttpTest() {
 
     companion object {
         val token = randomUUID().toString()

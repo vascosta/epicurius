@@ -9,7 +9,7 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 
-class DeleteCollectionControllerTests : CollectionHttpTest() {
+class DeleteCollectionControllerTests : CollectionControllerTest() {
 
     @Test
     fun `Should delete a collection successfully`() {

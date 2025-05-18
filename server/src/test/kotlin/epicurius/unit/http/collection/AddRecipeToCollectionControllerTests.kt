@@ -12,7 +12,7 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 
-class AddRecipeToCollectionControllerTests : CollectionHttpTest() {
+class AddRecipeToCollectionControllerTests : CollectionControllerTest() {
 
     private val addRecipeToCollectionInputInfo = AddRecipeToCollectionInputModel(RECIPE_ID)
 

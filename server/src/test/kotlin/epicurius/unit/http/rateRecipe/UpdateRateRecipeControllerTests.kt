@@ -11,7 +11,7 @@ import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.springframework.http.HttpStatus
 
-class UpdateRateRecipeControllerTests : RateRecipeHttpTest() {
+class UpdateRateRecipeControllerTests : RateRecipeControllerTest() {
 
     @Test
     fun `Should update rate recipe successfully`() {

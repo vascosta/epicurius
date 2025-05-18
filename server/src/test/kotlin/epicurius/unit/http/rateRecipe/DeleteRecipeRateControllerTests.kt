@@ -4,7 +4,7 @@ import epicurius.domain.exceptions.AuthorCannotDeleteRating
 import epicurius.domain.exceptions.RecipeNotAccessible
 import epicurius.domain.exceptions.RecipeNotFound
 import epicurius.domain.exceptions.UserHasNotRated
-import epicurius.unit.http.recipe.RecipeHttpTest
+import epicurius.unit.http.recipe.RecipeControllerTest
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.mockito.kotlin.verify
@@ -12,7 +12,7 @@ import org.mockito.kotlin.whenever
 import org.springframework.http.HttpStatus
 import kotlin.test.assertEquals
 
-class DeleteRecipeRateControllerTests : RecipeHttpTest() {
+class DeleteRecipeRateControllerTests : RecipeControllerTest() {
 
     @Test
     fun `Should delete recipe rate successfully`() {

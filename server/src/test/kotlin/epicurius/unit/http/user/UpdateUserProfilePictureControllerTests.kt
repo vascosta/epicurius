@@ -8,7 +8,7 @@ import java.util.UUID.randomUUID
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
-class UpdateUserProfilePictureControllerTests : UserHttpTest() {
+class UpdateUserProfilePictureControllerTests : UserControllerTest() {
 
     @Test
     fun `Should add a profile picture to an user successfully`() {

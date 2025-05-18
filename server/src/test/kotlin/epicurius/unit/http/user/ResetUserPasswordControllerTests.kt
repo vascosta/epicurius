@@ -10,7 +10,7 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 
-class ResetUserPasswordControllerTests : UserHttpTest() {
+class ResetUserPasswordControllerTests : UserControllerTest() {
 
     private val password = generateSecurePassword()
     private val resetPasswordInputInfo = ResetPasswordInputModel(publicTestUser.user.email, password, password)

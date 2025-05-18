@@ -11,9 +11,8 @@ import kotlin.test.Test
 import kotlin.test.assertContentEquals
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
-import kotlin.test.assertTrue
 
-class GetUserProfileControllerTests : UserHttpTest() {
+class GetUserProfileControllerTests : UserControllerTest() {
 
     @Test
     fun `Should retrieve the user profile successfully`() {

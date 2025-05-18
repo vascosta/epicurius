@@ -13,7 +13,7 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 
-class LoginControllerTests : UserHttpTest() {
+class LoginControllerTests : UserControllerTest() {
 
     private val loginInputInfo = LoginInputModel(publicTestUsername, publicTestUser.user.email, generateSecurePassword())
 

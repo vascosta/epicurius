@@ -8,7 +8,7 @@ import org.mockito.kotlin.whenever
 import org.springframework.http.HttpStatus
 import kotlin.test.assertEquals
 
-class UpdateDailyCaloriesControllerTests : MealPlannerHttpTest() {
+class UpdateDailyCaloriesControllerTests : MealPlannerControllerTest() {
 
     @Test
     fun `Should update user's daily meal planner calories successfully`() {

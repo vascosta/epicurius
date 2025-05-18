@@ -9,7 +9,7 @@ import epicurius.utils.generateEmail
 import epicurius.utils.generateRandomUsername
 import java.util.UUID.randomUUID
 
-open class UserHttpTest : HttpTest() {
+open class UserControllerTest : HttpTest() {
 
     companion object {
         val publicTestUsername = generateRandomUsername()
