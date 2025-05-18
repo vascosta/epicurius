@@ -64,10 +64,10 @@ open class HttpTest : EpicuriusUnitTest() {
             authenticatedUser: AuthenticatedUser,
         ) = userController.getUserIntolerances(authenticatedUser)
 
-        fun getUserDiet(
+        fun getUserDiets(
             authenticatedUser: AuthenticatedUser,
         ) =
-            userController.getUserDiet(authenticatedUser)
+            userController.getUserDiets(authenticatedUser)
 
         fun getUserFollowers(
             authenticatedUser: AuthenticatedUser,

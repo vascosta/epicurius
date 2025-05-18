@@ -17,6 +17,6 @@ class GetUserIntolerancesControllerTests : UserControllerTest() {
 
         // then the user's intolerances are retrieved successfully
         assertEquals(HttpStatus.OK, response.statusCode)
-        assertEquals(publicTestUser.user.toUserInfo().intolerances, body.intolerances)
+        assertEquals(publicTestUser.user.intolerances, body.intolerances)
     }
 }

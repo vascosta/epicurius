@@ -22,7 +22,6 @@ import epicurius.http.pipeline.authentication.cookie.addCookie
 import epicurius.http.pipeline.authentication.cookie.removeCookie
 import epicurius.http.utils.Uris
 import epicurius.services.user.UserService
-import jakarta.servlet.http.Cookie
 import jakarta.servlet.http.HttpServletResponse
 import jakarta.validation.Valid
 import org.springframework.http.MediaType
@@ -105,7 +104,7 @@ class UserController(val userService: UserService) {
     }
 
     @GetMapping(Uris.User.USER_DIETS)
-    fun getUserDiet(
+    fun getUserDiets(
         authenticatedUser: AuthenticatedUser,
     ): ResponseEntity<*> {
         val diets = authenticatedUser.user.diets
