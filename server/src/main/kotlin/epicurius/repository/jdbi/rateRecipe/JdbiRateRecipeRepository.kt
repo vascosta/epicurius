@@ -19,6 +19,19 @@ class JdbiRateRecipeRepository(private val handle: Handle) : RateRecipeRepositor
             .mapTo<Double>()
             .one()
 
+    override fun getUserRecipeRate(recipeId: Int, userId: Int): Int =
+        handle.createQuery(
+            """
+                SELECT rating
+                FROM dbo.recipe_rating
+                WHERE recipe_id = :recipeId AND user_id = :userId
+            """
+        )
+            .bind("recipeId", recipeId)
+            .bind("userId", userId)
+            .mapTo<Int>()
+            .one()
+
     override fun rateRecipe(recipeId: Int, userId: Int, rating: Int) {
         handle.createUpdate(
             """

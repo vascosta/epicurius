@@ -20,6 +20,13 @@ class RateRecipeService(private val tm: TransactionManager) {
         return tm.run { it.rateRecipeRepository.getRecipeRate(recipeId) }
     }
 
+    fun getUserRecipeRate(userId: Int, recipeId: Int): Int {
+        val recipe = checkIfRecipeExists(recipeId) ?: throw RecipeNotFound()
+        checkRecipeAccessibility(recipe.authorUsername, userId)
+        if (!checkIfUserAlreadyRated(userId, recipeId)) throw UserHasNotRated(userId, recipeId)
+        return tm.run { it.rateRecipeRepository.getUserRecipeRate(recipeId, userId) }
+    }
+
     fun rateRecipe(userId: Int, recipeId: Int, rating: Int) {
         val recipe = checkIfRecipeExists(recipeId) ?: throw RecipeNotFound()
         if (userId == recipe.authorId) throw AuthorCannotRateOwnRecipe()

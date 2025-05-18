@@ -43,6 +43,7 @@ object Uris {
         const val RECIPES = "/recipes"
         const val RECIPE = "$RECIPES/{id}"
         const val RECIPE_RATE = "$RECIPE/rate"
+        const val RECIPE_USER_RATE = "$RECIPE_RATE/self"
         const val RECIPE_PICTURES = "$RECIPES/{id}/pictures"
 
         fun recipe(id: Int) = UriTemplate(RECIPE).expand(id)

@@ -3,10 +3,9 @@ package epicurius.http.controllers.rateRecipe
 import epicurius.domain.user.AuthenticatedUser
 import epicurius.http.controllers.rateRecipe.models.input.RateRecipeInputModel
 import epicurius.http.controllers.rateRecipe.models.output.GetRecipeRateOutputModel
-import epicurius.http.pipeline.authentication.cookie.addCookie
+import epicurius.http.controllers.rateRecipe.models.output.GetUserRecipeRateOutputModel
 import epicurius.http.utils.Uris
 import epicurius.services.rateRecipe.RateRecipeService
-import jakarta.servlet.http.HttpServletResponse
 import jakarta.validation.Valid
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.DeleteMapping
@@ -31,6 +30,17 @@ class RateRecipeController(private val rateRecipeService: RateRecipeService) {
         return ResponseEntity
             .ok()
             .body(GetRecipeRateOutputModel(rate))
+    }
+
+    @GetMapping(Uris.Recipe.RECIPE_USER_RATE)
+    fun getUserRecipeRate(
+        authenticatedUser: AuthenticatedUser,
+        @PathVariable id: Int
+    ): ResponseEntity<*> {
+        val rate = rateRecipeService.getUserRecipeRate(authenticatedUser.user.id, id)
+        return ResponseEntity
+            .ok()
+            .body(GetUserRecipeRateOutputModel(rate))
     }
 
     @PostMapping(Uris.Recipe.RECIPE_RATE)
