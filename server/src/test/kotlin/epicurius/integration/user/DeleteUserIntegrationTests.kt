@@ -7,7 +7,7 @@ import kotlin.test.assertTrue
 class DeleteUserIntegrationTests: UserIntegrationTest() {
 
     @Test
-    fun `Should delete a user successfully`() {
+    fun `Should delete a user successfully with code 204`() {
         // given an existing user
         val user = createTestUser(tm)
 

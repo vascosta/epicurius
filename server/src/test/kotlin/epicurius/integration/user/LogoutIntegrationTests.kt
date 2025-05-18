@@ -7,7 +7,7 @@ import kotlin.test.assertTrue
 class LogoutIntegrationTests: UserIntegrationTest() {
 
     @Test
-    fun `Should logout a user successfully`() {
+    fun `Should logout a user successfully with code 204`() {
         // given a logged-in user
         val user = createTestUser(tm)
 

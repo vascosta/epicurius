@@ -22,7 +22,7 @@ class LoginIntegrationTests: UserIntegrationTest() {
     private val passwordHash = userDomain.encodePassword(password)
 
     @Test
-    fun `Should login a user by name successfully`() {
+    fun `Should login a user by name successfully with code 204`() {
         // given a user
         val username = generateRandomUsername()
         val email = generateEmail(username)
@@ -36,7 +36,7 @@ class LoginIntegrationTests: UserIntegrationTest() {
     }
 
     @Test
-    fun `Should login a user by email successfully`() {
+    fun `Should login a user by email successfully with code 204`() {
         // given a user
         val username = generateRandomUsername()
         val email = generateEmail(username)
@@ -50,7 +50,7 @@ class LoginIntegrationTests: UserIntegrationTest() {
     }
 
     @Test
-    fun `Should fail with code 404 when login with an non existing user `() {
+    fun `Should fail with code 404 when login with an non existing user`() {
         // given a non-existing username and email
         val nonExistingUsername = "123abc"
         val nonExistingEmail = "123@gmail.com"
@@ -108,7 +108,7 @@ class LoginIntegrationTests: UserIntegrationTest() {
     }
 
     @Test
-    fun `Should fail with code 401 IncorrectPassword exception when login with an incorrect password`() {
+    fun `Should fail with code 400 IncorrectPassword exception when login with an incorrect password`() {
         // given a user and an incorrect password
         val username = generateRandomUsername()
         val email = generateEmail(username)
