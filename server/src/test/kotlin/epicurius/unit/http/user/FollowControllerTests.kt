@@ -11,7 +11,7 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 
-class FollowControllerTests : UserHttpTest() {
+class FollowControllerTests : UserControllerTest() {
 
     @Test
     fun `Should follow a public user successfully`() {

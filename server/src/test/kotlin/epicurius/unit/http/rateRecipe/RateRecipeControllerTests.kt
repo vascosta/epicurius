@@ -12,7 +12,7 @@ import org.mockito.kotlin.whenever
 import org.springframework.http.HttpStatus
 import kotlin.test.assertEquals
 
-class RateRecipeControllerTests : RateRecipeHttpTest() {
+class RateRecipeControllerTests : RateRecipeControllerTest() {
 
     @Test
     fun `Should rate recipe successfully`() {

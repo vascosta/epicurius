@@ -12,7 +12,7 @@ import kotlin.test.Test
 import kotlin.test.assertContentEquals
 import kotlin.test.assertEquals
 
-class SearchUsersControllerTests : UserHttpTest() {
+class SearchUsersControllerTests : UserControllerTest() {
 
     @Test
     fun `Should search for users and retrieve them successfully`() {

@@ -21,7 +21,7 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 
-class CreateRecipeControllerTests : RecipeHttpTest() {
+class CreateRecipeControllerTests : RecipeControllerTest() {
 
     private val createRecipeInfo = CreateRecipeInputModel(
         "Pastel de nata",

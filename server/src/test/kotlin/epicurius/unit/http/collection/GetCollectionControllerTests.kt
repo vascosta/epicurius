@@ -8,7 +8,7 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 
-class GetCollectionControllerTests : CollectionHttpTest() {
+class GetCollectionControllerTests : CollectionControllerTest() {
 
     @Test
     fun `Should retrieve a collection successfully`() {

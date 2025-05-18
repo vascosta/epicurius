@@ -9,7 +9,7 @@ import org.springframework.http.HttpStatus
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
-class GetUserFollowersControllerTests : UserHttpTest() {
+class GetUserFollowersControllerTests : UserControllerTest() {
 
     @Test
     fun `Should retrieve the followers of an user successfully`() {

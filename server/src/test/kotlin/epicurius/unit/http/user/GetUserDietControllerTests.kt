@@ -1,12 +1,11 @@
 package epicurius.unit.http.user
 
 import epicurius.http.controllers.user.models.output.GetUserDietsOutputModel
-import org.mockito.kotlin.whenever
 import org.springframework.http.HttpStatus
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
-class GetUserDietControllerTests : UserHttpTest() {
+class GetUserDietControllerTests : UserControllerTest() {
 
     @Test
     fun `Should retrieve the diets of an user successfully`() {
