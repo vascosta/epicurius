@@ -3,8 +3,6 @@ package android.epicurius.services.http
 import android.epicurius.domain.exceptions.InvalidResponseException
 import android.epicurius.services.http.utils.APIResult
 import android.epicurius.services.http.utils.Problem
-import android.epicurius.services.http.utils.addPathParams
-import android.epicurius.services.http.utils.addQueryParams
 import android.epicurius.services.http.utils.authorizationHeader
 import android.epicurius.services.http.utils.getBodyOrThrow
 import android.epicurius.services.http.utils.isApplicationJson
@@ -17,8 +15,11 @@ import com.google.gson.stream.JsonReader
 import kotlinx.coroutines.suspendCancellableCoroutine
 import okhttp3.Call
 import okhttp3.Callback
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.MultipartBody
 import okhttp3.OkHttpClient
 import okhttp3.Request
+import okhttp3.RequestBody.Companion.toRequestBody
 import okhttp3.Response
 import java.io.IOException
 import kotlin.coroutines.resume
@@ -71,6 +72,32 @@ class HttpService(
             .patch(gson.toJsonBody(body))
             .build()
             .getResponseResult()
+
+    suspend inline fun <reified T> patchMultipart(
+        endpoint: String,
+        fileParamName: String,
+        fileName: String,
+        fileBytes: ByteArray?,
+        pathParams: Map<String, Any?>? = null,
+        token: String? = null
+    ): APIResult<T> {
+        val imageBodyBuilder = MultipartBody.Builder().setType(MultipartBody.FORM)
+
+        fileBytes?.let {
+            val fileBody = it.toRequestBody("image/*".toMediaTypeOrNull())
+            imageBodyBuilder.addFormDataPart(fileParamName, fileName, fileBody)
+        }
+
+        val requestBody = imageBodyBuilder.build()
+
+        val request = Request.Builder()
+            .url(baseUrl + endpoint.params(pathParams, emptyMap()))
+            .authorizationHeader(token)
+            .patch(requestBody)
+            .build()
+
+        return request.getResponseResult()
+    }
 
     suspend inline fun <reified T> put(
         endpoint: String,
