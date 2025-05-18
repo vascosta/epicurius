@@ -50,11 +50,19 @@ class UserIntegrationTest: EpicuriusIntegrationTest() {
 
     fun getUserDiets(token: String) = get<GetUserDietsOutputModel>(client, api(Uris.User.USER_DIETS), token = token)
 
-    fun getUserFollowers(token: String) =
-        get<GetUserFollowersOutputModel>(client, api(Uris.User.USER_FOLLOWERS), token = token)
+    fun getUserFollowers(token: String, skip: Int = 0, limit: Int = 10) =
+        get<GetUserFollowersOutputModel>(
+            client,
+            api(Uris.User.USER_FOLLOWERS) + "?skip=$skip&limit=$limit",
+            token = token
+        )
 
-    fun getUserFollowing(token: String) =
-        get<GetUserFollowingOutputModel>(client, api(Uris.User.USER_FOLLOWING), token = token)
+    fun getUserFollowing(token: String, skip: Int = 0, limit: Int = 10) =
+        get<GetUserFollowingOutputModel>(
+            client,
+            api(Uris.User.USER_FOLLOWING) + "?skip=$skip&limit=$limit",
+            token = token
+        )
 
     fun getUserFollowRequests(token: String) =
         get<GetUserFollowRequestsOutputModel>(
