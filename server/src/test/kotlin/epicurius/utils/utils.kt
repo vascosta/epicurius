@@ -36,7 +36,7 @@ fun createTestUser(tm: TransactionManager, privacy: Boolean = false): Authentica
         tm.run { it.userRepository.updateUser(userId, JdbiUpdateUserModel(privacy = true)) }
     }
 
-    val token = randomUUID().toString()
+    val token = userDomain.generateTokenValue()
     val tokenHash = userDomain.hashToken(token)
     val lastUsed = LocalDate.now()
     tm.run { it.tokenRepository.createToken(tokenHash, lastUsed, userId) }

@@ -72,7 +72,7 @@ inline fun <reified T> patchMultiPart(
 inline fun <reified T> delete(
     client: WebTestClient,
     uri: String,
-    responseStatus: HttpStatus = HttpStatus.OK,
+    responseStatus: HttpStatus = HttpStatus.NO_CONTENT,
     token: String? = null
 ) =
     client.delete().uri(uri)
