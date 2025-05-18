@@ -27,8 +27,8 @@ open class MealPlannerServiceTest : ServiceTest() {
         const val CALORIES = 2000
 
         val mealTime = MealTime.LUNCH
-        val today: LocalDate = LocalDate.now()
-        val tomorrow: LocalDate = LocalDate.now().plusDays(1)
+        val today: LocalDate = LocalDate.of(2025, 5, 12)
+        val tomorrow: LocalDate = today.plusDays(1)
 
         const val RECIPE_ID = 1
 

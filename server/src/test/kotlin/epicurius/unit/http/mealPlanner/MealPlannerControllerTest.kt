@@ -20,7 +20,7 @@ import epicurius.utils.generateRandomUsername
 import java.time.LocalDate
 import java.util.UUID.randomUUID
 
-open class MealPlannerHttpTest : HttpTest() {
+open class MealPlannerControllerTest : HttpTest() {
 
     companion object {
         private val authenticatedUsername = generateRandomUsername()
@@ -59,7 +59,7 @@ open class MealPlannerHttpTest : HttpTest() {
         )
 
         const val CALORIES = 2000
-        val today: LocalDate = LocalDate.now()
+        val today: LocalDate = LocalDate.of(2025, 5, 12)
         val tomorrow: LocalDate = today.plusDays(1)
         val mealTime = MealTime.LUNCH
 

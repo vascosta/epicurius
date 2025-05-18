@@ -16,7 +16,7 @@ open class MealPlannerRepositoryTest : RepositoryTest() {
         val testRecipe = createTestRecipe(tm, fs, testAuthor.user)
         val testRecipe2 = createTestRecipe(tm, fs, testAuthor.user)
 
-        val today: LocalDate = LocalDate.now()
+        val today: LocalDate = LocalDate.of(2025, 5, 12)
         val tomorrow: LocalDate = today.plusDays(1)
 
         val jdbiRecipeInfo = JdbiRecipeInfo(
