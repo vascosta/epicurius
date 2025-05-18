@@ -17,15 +17,15 @@ class CreateCollectionRepositoryTests : CollectionRepositoryTest() {
         val collectionType = CollectionType.FAVOURITE
 
         // when creating the collection
-        val collectionId = createCollection(testOwner.id, collectionName, collectionType)
+        val collectionId = createCollection(testOwner.user.id, collectionName, collectionType)
 
         // then the collection is created successfully
-        val jdbiCollection = getCollection(testOwner.id, collectionName, collectionType)
+        val jdbiCollection = getCollection(testOwner.user.id, collectionName, collectionType)
         val jdbiCollectionById = getCollectionById(collectionId)
         assertNotNull(jdbiCollection)
         assertNotNull(jdbiCollectionById)
-        assertEquals(testOwner.id, jdbiCollection.ownerId)
-        assertEquals(testOwner.id, jdbiCollectionById.ownerId)
+        assertEquals(testOwner.user.id, jdbiCollection.ownerId)
+        assertEquals(testOwner.user.id, jdbiCollectionById.ownerId)
         assertEquals(collectionName, jdbiCollection.name)
         assertEquals(collectionName, jdbiCollectionById.name)
         assertEquals(collectionType, jdbiCollection.type)
@@ -37,7 +37,7 @@ class CreateCollectionRepositoryTests : CollectionRepositoryTest() {
     @Test
     fun `Should create a collection and then delete it successfully`() {
         // given a collection
-        val collectionId = createTestCollection(tm, testOwner.id, CollectionType.FAVOURITE)
+        val collectionId = createTestCollection(tm, testOwner.user.id, CollectionType.FAVOURITE)
 
         // when deleting the collection
         deleteCollection(collectionId)

@@ -16,7 +16,7 @@ class ChecksUserRepositoryTests : UserRepositoryTest() {
         // given an existing user logged in (publicTestUser)
 
         // when checking if the user is logged in
-        val isLoggedIn = checkIfUserIsLoggedIn(publicTestUser.id)
+        val isLoggedIn = checkIfUserIsLoggedIn(publicTestUser.user.id)
 
         // then the user is logged in
         assertTrue(isLoggedIn)
@@ -27,7 +27,7 @@ class ChecksUserRepositoryTests : UserRepositoryTest() {
         // given 2 users (publicTestUser and privateTestUser)
 
         // when checking if the user is being followed by the other user
-        val userBeingFollowedBy = checkIfUserIsBeingFollowedBy(privateTestUser.id, publicTestUser.id)
+        val userBeingFollowedBy = checkIfUserIsBeingFollowedBy(privateTestUser.user.id, publicTestUser.user.id)
 
         // then the user is not being followed by the other user
         assertFalse(userBeingFollowedBy)
@@ -38,8 +38,8 @@ class ChecksUserRepositoryTests : UserRepositoryTest() {
         // given 2 users (publicTestUser and privateTestUser)
 
         // when checking if the user already sent a follow request to the other user
-        follow(publicTestUser.id, privateTestUser.id, FollowingStatus.PENDING.ordinal)
-        val userAlreadySentFollowRequest = checkIfUserAlreadySentFollowRequest(privateTestUser.id, publicTestUser.id)
+        follow(publicTestUser.user.id, privateTestUser.user.id, FollowingStatus.PENDING.ordinal)
+        val userAlreadySentFollowRequest = checkIfUserAlreadySentFollowRequest(privateTestUser.user.id, publicTestUser.user.id)
 
         // then a follow request was already sent
         assertTrue(userAlreadySentFollowRequest)
@@ -50,7 +50,7 @@ class ChecksUserRepositoryTests : UserRepositoryTest() {
         // given 2 users (publicTestUser and privateTestUser)
 
         // when checking if the user has access to the other user's profile
-        val userVisibility = checkUserVisibility(publicTestUser.name, privateTestUser.id)
+        val userVisibility = checkUserVisibility(publicTestUser.user.name, privateTestUser.user.id)
 
         // then the user does not have access to the other user's profile
         assertTrue(userVisibility)
@@ -61,7 +61,7 @@ class ChecksUserRepositoryTests : UserRepositoryTest() {
         // given 2 users (publicTestUser and privateTestUser)
 
         // when checking if the user has access to the other user's profile
-        val userVisibility = checkUserVisibility(privateTestUser.name, publicTestUser.id)
+        val userVisibility = checkUserVisibility(privateTestUser.user.name, publicTestUser.user.id)
 
         // then the user does not have access to the other user's profile
         assertFalse(userVisibility)

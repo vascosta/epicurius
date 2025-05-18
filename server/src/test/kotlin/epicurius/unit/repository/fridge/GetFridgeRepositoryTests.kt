@@ -12,7 +12,7 @@ class GetFridgeRepositoryTests : FridgeRepositoryTest() {
         val user = createTestUser(tm)
 
         // when retrieving the user's fridge
-        val fridge = getFridge(user.id)
+        val fridge = getFridge(user.user.id)
 
         // then the fridge should be empty
         assertTrue(fridge.products.isEmpty())

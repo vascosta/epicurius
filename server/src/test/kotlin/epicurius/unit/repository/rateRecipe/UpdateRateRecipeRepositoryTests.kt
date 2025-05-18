@@ -11,10 +11,10 @@ class UpdateRateRecipeRepositoryTests : RateRecipeRepositoryTest() {
         val newRating = 5
 
         // when the user rates the recipe
-        rateRecipe(testRecipe4.id, testUserPrivate.id, 3)
+        rateRecipe(testRecipe4.id, testUserPrivate.user.id, 3)
 
         // when updating the recipe rate
-        updateRecipeRate(testRecipe4.id, testUserPrivate.id, newRating)
+        updateRecipeRate(testRecipe4.id, testUserPrivate.user.id, newRating)
 
         // when getting the recipe rate
         val rate = getRecipeRate(testRecipe4.id)

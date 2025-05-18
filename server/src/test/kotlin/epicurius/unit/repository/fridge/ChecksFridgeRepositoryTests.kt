@@ -23,12 +23,12 @@ class ChecksFridgeRepositoryTests : FridgeRepositoryTest() {
             openDate = null,
             expirationDate = LocalDate.now().plusDays(7)
         )
-        addProduct(user.id, product)
+        addProduct(user.user.id, product)
 
         // when checking if the product exists in the user's fridge
-        val existingProduct = checkIfProductExistsInFridge(user.id, null, product)
+        val existingProduct = checkIfProductExistsInFridge(user.user.id, null, product)
         val nonExistingProduct = checkIfProductExistsInFridge(
-            user.id,
+            user.user.id,
             null,
             ProductInfo(
                 productName = "Eggs",
@@ -61,13 +61,13 @@ class ChecksFridgeRepositoryTests : FridgeRepositoryTest() {
             openDate = null,
             expirationDate = LocalDate.now().plusDays(7)
         )
-        val fridge = addProduct(user.id, product)
+        val fridge = addProduct(user.user.id, product)
 
         val entryNumber = fridge.products.first().entryNumber
 
         // when checking if the product exists in the user's fridge
-        val existingProduct = checkIfProductExistsInFridge(user.id, entryNumber, null)
-        val nonExistingProduct = checkIfProductExistsInFridge(user.id, 9999999, null)
+        val existingProduct = checkIfProductExistsInFridge(user.user.id, entryNumber, null)
+        val nonExistingProduct = checkIfProductExistsInFridge(user.user.id, 9999999, null)
 
         // then the existing product should be found
         assertNotNull(existingProduct)
@@ -92,13 +92,13 @@ class ChecksFridgeRepositoryTests : FridgeRepositoryTest() {
             openDate = LocalDate.now().minusDays(1),
             expirationDate = LocalDate.now().plusDays(7)
         )
-        addProduct(user.id, product)
+        addProduct(user.user.id, product)
 
         // when retrieving the product and checking if the product is open
-        val check = checkIfProductExistsInFridge(user.id, null, product)
+        val check = checkIfProductExistsInFridge(user.user.id, null, product)
         assertNotNull(check)
 
-        val isOpen = checkIfProductIsOpen(user.id, check!!.entryNumber)
+        val isOpen = checkIfProductIsOpen(user.user.id, check!!.entryNumber)
 
         // then the product should be open
         assertTrue(isOpen)

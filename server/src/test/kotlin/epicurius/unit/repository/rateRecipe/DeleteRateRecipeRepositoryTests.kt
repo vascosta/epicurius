@@ -11,10 +11,10 @@ class DeleteRateRecipeRepositoryTests : RateRecipeRepositoryTest() {
         val newRating = 5
 
         // when the user rates the recipe
-        rateRecipe(testRecipe5.id, testUserPublic.id, newRating)
+        rateRecipe(testRecipe5.id, testUserPublic.user.id, newRating)
 
         // when deleting the recipe rate
-        deleteRecipeRate(testRecipe5.id, testUserPublic.id)
+        deleteRecipeRate(testRecipe5.id, testUserPublic.user.id)
 
         // when getting the recipe rate
         val rate = getRecipeRate(testRecipe5.id)

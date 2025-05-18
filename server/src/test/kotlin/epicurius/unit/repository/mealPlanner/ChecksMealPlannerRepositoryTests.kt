@@ -12,7 +12,7 @@ class ChecksMealPlannerRepositoryTests : MealPlannerRepositoryTest() {
     @Test
     fun `Should check if meal time already exists in planner`() {
         // given a test user and a date
-        val userId = createTestUser(tm).id
+        val userId = createTestUser(tm).user.id
         val date = tomorrow
 
         // when creating a new daily meal planner
@@ -31,7 +31,7 @@ class ChecksMealPlannerRepositoryTests : MealPlannerRepositoryTest() {
     @Test
     fun `Should check if meal time does not exist in planner`() {
         // given a test user and a date
-        val userId = createTestUser(tm).id
+        val userId = createTestUser(tm).user.id
         val date = tomorrow
 
         // when creating a new daily meal planner
@@ -47,7 +47,7 @@ class ChecksMealPlannerRepositoryTests : MealPlannerRepositoryTest() {
     @Test
     fun `Should check if daily meal planner exists`() {
         // given a test user and a date
-        val userId = createTestUser(tm).id
+        val userId = createTestUser(tm).user.id
         val date = tomorrow
 
         // when creating a new daily meal planner
@@ -63,7 +63,7 @@ class ChecksMealPlannerRepositoryTests : MealPlannerRepositoryTest() {
     @Test
     fun `Should check if daily meal planner does not exist`() {
         // given a test user and a date
-        val userId = createTestUser(tm).id
+        val userId = createTestUser(tm).user.id
         val date = tomorrow
 
         // when checking if the daily meal planner does not exist

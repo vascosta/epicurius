@@ -10,7 +10,7 @@ class UpdateDailyCaloriesMealPlannerRepositoryTests : MealPlannerRepositoryTest(
     @Test
     fun `Should update user's daily meal planner max calories successfully`() {
         // given a test user and a date
-        val userId = createTestUser(tm).id
+        val userId = createTestUser(tm).user.id
         val date = today
 
         // when creating a new daily meal planner

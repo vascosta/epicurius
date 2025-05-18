@@ -16,10 +16,10 @@ class CreateDailyMealPlannerRepositoryTests : MealPlannerRepositoryTest() {
         // given a test user and a date
 
         // when creating a new daily meal planner
-        createDailyMealPlanner(user.id, today)
+        createDailyMealPlanner(user.user.id, today)
 
         // then the daily meal planner should be created successfully
-        val dailyMealPlanner = getDailyMealPlanner(user.id, today)
+        val dailyMealPlanner = getDailyMealPlanner(user.user.id, today)
         assertNotNull(dailyMealPlanner)
         assertEquals(today, dailyMealPlanner.date)
         assertEquals(0, dailyMealPlanner.maxCalories)
@@ -32,10 +32,10 @@ class CreateDailyMealPlannerRepositoryTests : MealPlannerRepositoryTest() {
         val maxCalories = 2000
 
         // when creating a new daily meal planner
-        createDailyMealPlanner(user.id, tomorrow, maxCalories)
+        createDailyMealPlanner(user.user.id, tomorrow, maxCalories)
 
         // then the daily meal planner should be created successfully
-        val dailyMealPlanner = getDailyMealPlanner(user.id, tomorrow)
+        val dailyMealPlanner = getDailyMealPlanner(user.user.id, tomorrow)
         assertNotNull(dailyMealPlanner)
         assertEquals(tomorrow, dailyMealPlanner.date)
         assertEquals(maxCalories, dailyMealPlanner.maxCalories)

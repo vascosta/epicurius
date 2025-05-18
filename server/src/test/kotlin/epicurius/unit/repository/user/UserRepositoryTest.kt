@@ -3,13 +3,10 @@ package epicurius.unit.repository.user
 import epicurius.domain.PagingParams
 import epicurius.repository.jdbi.user.models.JdbiUpdateUserModel
 import epicurius.unit.repository.RepositoryTest
-import epicurius.utils.createTestUser
 
 open class UserRepositoryTest : RepositoryTest() {
 
     companion object {
-        val publicTestUser = createTestUser(tm)
-        val privateTestUser = createTestUser(tm, false)
 
         fun createUser(username: String, email: String, country: String, passwordHash: String) =
             tm.run { it.userRepository.createUser(username, email, country, passwordHash) }

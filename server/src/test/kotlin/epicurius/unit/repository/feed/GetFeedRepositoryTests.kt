@@ -15,7 +15,7 @@ class GetFeedRepositoryTests : FeedRepositoryTest() {
         val pagingParams = PagingParams(0, 10)
 
         // when retrieving the feed
-        val feed = getFeed(anotherTestUser.id, emptyList(), emptyList(), pagingParams)
+        val feed = getFeed(anotherTestUser.user.id, emptyList(), emptyList(), pagingParams)
 
         // then feed should be empty
         assert(feed.isEmpty())
@@ -27,10 +27,10 @@ class GetFeedRepositoryTests : FeedRepositoryTest() {
         val pagingParams = PagingParams(0, 10)
 
         // when user follows another user
-        followUser(userFollows.id, userFollowed.id)
+        followUser(userFollows.user.id, userFollowed.user.id)
 
         // when retrieving the feed
-        val feed = getFeed(userFollows.id, emptyList(), emptyList(), pagingParams)
+        val feed = getFeed(userFollows.user.id, emptyList(), emptyList(), pagingParams)
 
         // then feed should contain recipes ordered by most recent
         assertTrue(feed.isNotEmpty())
@@ -44,16 +44,16 @@ class GetFeedRepositoryTests : FeedRepositoryTest() {
         val pagingParams = PagingParams(0, 10)
 
         // when user follows another user
-        followUser(userFollows.id, userFollowed.id)
+        followUser(userFollows.user.id, userFollowed.user.id)
 
         // when retrieving the feed with intolerance and no diets
-        val feedWithIntolerances = getFeed(userFollows.id, listOf(Intolerance.GLUTEN), emptyList(), pagingParams)
+        val feedWithIntolerances = getFeed(userFollows.user.id, listOf(Intolerance.GLUTEN), emptyList(), pagingParams)
 
         // then feed should be empty
         assertTrue(feedWithIntolerances.isEmpty())
 
         // when retrieving the feed with diets and no intolerances
-        val feedWithDiets = getFeed(userFollows.id, emptyList(), listOf(Diet.LACTO_VEGETARIAN), pagingParams)
+        val feedWithDiets = getFeed(userFollows.user.id, emptyList(), listOf(Diet.LACTO_VEGETARIAN), pagingParams)
 
         // then feed should be empty
         assertTrue(feedWithDiets.isNotEmpty())
@@ -62,7 +62,7 @@ class GetFeedRepositoryTests : FeedRepositoryTest() {
 
         // when retrieving the feed with both intolerances and diets
         val feedWithIntolerancesAndDiets = getFeed(
-            userFollows.id,
+            userFollows.user.id,
             listOf(Intolerance.GLUTEN),
             listOf(Diet.LACTO_VEGETARIAN),
             pagingParams

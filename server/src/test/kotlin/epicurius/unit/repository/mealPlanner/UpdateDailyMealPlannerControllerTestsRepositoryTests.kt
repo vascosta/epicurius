@@ -10,7 +10,7 @@ class UpdateDailyMealPlannerControllerTestsRepositoryTests : MealPlannerReposito
     @Test
     fun `Should update user's daily meal planner recipe successfully`() {
         // given a test user and a date
-        val userId = createTestUser(tm).id
+        val userId = createTestUser(tm).user.id
         val date = today
 
         // when creating a new daily meal planner
@@ -36,7 +36,7 @@ class UpdateDailyMealPlannerControllerTestsRepositoryTests : MealPlannerReposito
     @Test
     fun `Should update user's daily meal planner meal time successfully`() {
         // given a test user and a date
-        val userId = createTestUser(tm).id
+        val userId = createTestUser(tm).user.id
         val date = tomorrow
 
         // when creating a new daily meal planner

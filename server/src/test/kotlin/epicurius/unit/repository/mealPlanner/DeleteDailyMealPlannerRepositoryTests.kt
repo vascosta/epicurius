@@ -11,7 +11,7 @@ class DeleteDailyMealPlannerRepositoryTests : MealPlannerRepositoryTest() {
     @Test
     fun `Should delete user's daily meal planner successfully`() {
         // given a test user and a date
-        val userId = createTestUser(tm).id
+        val userId = createTestUser(tm).user.id
         val date = today
 
         // when creating a new daily meal planner
@@ -28,7 +28,7 @@ class DeleteDailyMealPlannerRepositoryTests : MealPlannerRepositoryTest() {
     @Test
     fun `Should delete meal time from user's daily meal planner successfully`() {
         // given a test user and a date
-        val userId = createTestUser(tm).id
+        val userId = createTestUser(tm).user.id
         val date = tomorrow
 
         // when creating a new daily meal planner

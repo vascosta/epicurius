@@ -3,12 +3,8 @@ package epicurius.integration.fridge
 import epicurius.domain.exceptions.InvalidProduct
 import epicurius.http.utils.Problem
 import epicurius.http.utils.Uris.Fridge.FRIDGE
-import epicurius.integration.utils.getAuthorizationHeader
 import epicurius.integration.utils.getBody
 import epicurius.integration.utils.post
-import epicurius.utils.generateEmail
-import epicurius.utils.generateRandomUsername
-import epicurius.utils.generateSecurePassword
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Assertions.assertTrue
@@ -20,13 +16,12 @@ class AddProductToFridgeIntegrationTests : FridgeIntegrationTest() {
 
     @Test
     fun `Add products successfully with code 200`() {
-        // given a user token
-        val token = testUserToken
+        // given a user (testUser)
 
         // when adding a product
         val expirationDate = LocalDate.now().plusDays(7)
         val newFridgeBody = getBody(
-            addProducts(token, "apple", 1, null, expirationDate)
+            addProducts(testUser.token, "apple", 1, null, expirationDate)
         )
 
         // then the fridge should contain the product
@@ -39,15 +34,14 @@ class AddProductToFridgeIntegrationTests : FridgeIntegrationTest() {
 
     @Test
     fun `Add product that already exists successfully with code 200`() {
-        // given a user token
-        val token = testUserToken
+        // given a user (testUser)
 
         // when adding a product
         val expirationDate = LocalDate.now().plusDays(7)
-        addProducts(token, "peach", 1, null, expirationDate)
+        addProducts(testUser.token, "peach", 1, null, expirationDate)
 
         // and adding the same product again
-        val newFridgeBody = getBody(addProducts(token, "peach", 1, null, expirationDate))
+        val newFridgeBody = getBody(addProducts(testUser.token, "peach", 1, null, expirationDate))
 
         // then the fridge should contain the product with the updated quantity
         assertNotNull(newFridgeBody)
@@ -59,7 +53,7 @@ class AddProductToFridgeIntegrationTests : FridgeIntegrationTest() {
 
     @Test
     fun `Try to add product with invalid name and fails with code 400`() {
-        // given a user
+        // given a user (testUser)
 
         // when trying to add a product with an invalid name
         val expirationDate = LocalDate.now().plusDays(7)
@@ -68,7 +62,7 @@ class AddProductToFridgeIntegrationTests : FridgeIntegrationTest() {
             api(FRIDGE),
             mapOf("productName" to "invalid", "quantity" to 1, "expirationDate" to expirationDate),
             HttpStatus.BAD_REQUEST,
-            testUserToken
+            testUser.token
         )
         assertNotNull(error)
 

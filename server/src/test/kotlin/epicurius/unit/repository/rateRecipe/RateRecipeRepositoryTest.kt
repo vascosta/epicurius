@@ -11,11 +11,11 @@ open class RateRecipeRepositoryTest : RepositoryTest() {
         val testUserPublic = createTestUser(tm)
         val testUserPrivate = createTestUser(tm, true)
         private val testAuthor = createTestUser(tm)
-        val testRecipe = createTestRecipe(tm, fs, testAuthor)
-        val testRecipe2 = createTestRecipe(tm, fs, testAuthor)
-        val testRecipe3 = createTestRecipe(tm, fs, testAuthor)
-        val testRecipe4 = createTestRecipe(tm, fs, testAuthor)
-        val testRecipe5 = createTestRecipe(tm, fs, testAuthor)
+        val testRecipe = createTestRecipe(tm, fs, testAuthor.user)
+        val testRecipe2 = createTestRecipe(tm, fs, testAuthor.user)
+        val testRecipe3 = createTestRecipe(tm, fs, testAuthor.user)
+        val testRecipe4 = createTestRecipe(tm, fs, testAuthor.user)
+        val testRecipe5 = createTestRecipe(tm, fs, testAuthor.user)
 
         fun getRecipeRate(recipeId: Int) =
             tm.run { it.rateRecipeRepository.getRecipeRate(recipeId) }

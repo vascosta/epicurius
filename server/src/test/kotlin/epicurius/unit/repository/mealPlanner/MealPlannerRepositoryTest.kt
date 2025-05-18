@@ -13,8 +13,8 @@ open class MealPlannerRepositoryTest : RepositoryTest() {
 
         private val testAuthor = createTestUser(tm)
 
-        val testRecipe = createTestRecipe(tm, fs, testAuthor)
-        val testRecipe2 = createTestRecipe(tm, fs, testAuthor)
+        val testRecipe = createTestRecipe(tm, fs, testAuthor.user)
+        val testRecipe2 = createTestRecipe(tm, fs, testAuthor.user)
 
         val today: LocalDate = LocalDate.now()
         val tomorrow: LocalDate = today.plusDays(1)

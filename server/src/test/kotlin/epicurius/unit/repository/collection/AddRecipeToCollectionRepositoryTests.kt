@@ -9,7 +9,7 @@ import kotlin.test.assertTrue
 
 class AddRecipeToCollectionRepositoryTests : CollectionRepositoryTest() {
 
-    private val testRecipe = createTestRecipe(tm, fs, testOwner)
+    private val testRecipe = createTestRecipe(tm, fs, testOwner.user)
     private val testRecipeInfo = JdbiRecipeInfo(
         testRecipe.id,
         testRecipe.name,

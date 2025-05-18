@@ -11,7 +11,7 @@ class ChecksCollectionRepositoryTests : CollectionRepositoryTest() {
         // given a collection id (testCollectionId) and a user id (testOwner.id)
 
         // when checking if the user is the owner of the collection
-        val isOwner = checkIfUserIsCollectionOwner(testCollectionId, testOwner.id)
+        val isOwner = checkIfUserIsCollectionOwner(testCollectionId, testOwner.user.id)
 
         // then the user is the owner of the collection
         assertTrue(isOwner)

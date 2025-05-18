@@ -23,7 +23,7 @@ class CreateRecipeRepositoryTests : RecipeRepositoryTest() {
         // given information for a new recipe
         val jdbiCreateRecipeInfo = JdbiCreateRecipeModel(
             name = "Pastel de nata",
-            authorId = testAuthor.id,
+            authorId = testAuthor.user.id,
             servings = 4,
             preparationTime = 30,
             cuisine = Cuisine.MEDITERRANEAN.ordinal,
@@ -48,7 +48,7 @@ class CreateRecipeRepositoryTests : RecipeRepositoryTest() {
         assertNotNull(jdbiRecipe)
         assertEquals(jdbiCreateRecipeInfo.name, jdbiRecipe.name)
         assertEquals(jdbiCreateRecipeInfo.authorId, jdbiRecipe.authorId)
-        assertEquals(testAuthor.name, jdbiRecipe.authorUsername)
+        assertEquals(testAuthor.user.name, jdbiRecipe.authorUsername)
         assertEquals(jdbiCreateRecipeInfo.servings, jdbiRecipe.servings)
         assertEquals(jdbiCreateRecipeInfo.preparationTime, jdbiRecipe.preparationTime)
         assertEquals(jdbiCreateRecipeInfo.cuisine, jdbiRecipe.cuisine.ordinal)
@@ -89,7 +89,7 @@ class CreateRecipeRepositoryTests : RecipeRepositoryTest() {
     @Test
     fun `Should create a recipe and then delete it successfully`() {
         // given a recipe
-        val recipe = createTestRecipe(tm, fs, testAuthor)
+        val recipe = createTestRecipe(tm, fs, testAuthor.user)
 
         // when deleting the recipe
         deleteJdbiRecipe(recipe.id)

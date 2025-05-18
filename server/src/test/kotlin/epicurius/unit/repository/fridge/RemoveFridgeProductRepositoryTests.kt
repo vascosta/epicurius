@@ -20,12 +20,12 @@ class RemoveFridgeProductRepositoryTests : FridgeRepositoryTest() {
             openDate = null,
             expirationDate = LocalDate.now().plusDays(7)
         )
-        val fridge = addProduct(user.id, product)
+        val fridge = addProduct(user.user.id, product)
 
         val entryNumber = fridge.products.first().entryNumber
 
         // when removing the product from the user's fridge
-        val removedFridge = removeProduct(user.id, entryNumber)
+        val removedFridge = removeProduct(user.user.id, entryNumber)
 
         // then the fridge should be empty
         assertTrue(removedFridge.products.isEmpty())

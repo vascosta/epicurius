@@ -42,7 +42,7 @@ class UpdateRecipeRepositoryTests : RecipeRepositoryTest() {
 
         // then the recipe is updated successfully
         assertEquals(jdbiUpdateRecipeInfo.name, updatedJdbiRecipe.name)
-        assertEquals(testAuthor.name, updatedJdbiRecipe.authorUsername)
+        assertEquals(testAuthor.user.name, updatedJdbiRecipe.authorUsername)
         assertEquals(jdbiUpdateRecipeInfo.servings, updatedJdbiRecipe.servings)
         assertEquals(jdbiUpdateRecipeInfo.preparationTime, updatedJdbiRecipe.preparationTime)
         assertEquals(jdbiUpdateRecipeInfo.cuisine, updatedJdbiRecipe.cuisine.ordinal)

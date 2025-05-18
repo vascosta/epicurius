@@ -1,5 +1,6 @@
 package epicurius.unit.repository.user
 
+import epicurius.utils.createTestUser
 import org.junit.jupiter.api.Assertions.assertNull
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -7,35 +8,37 @@ import kotlin.test.assertNotNull
 
 class GetUserRepositoryTests : UserRepositoryTest() {
 
+    val publicTestUser = createTestUser(tm)
+
     @Test
     fun `Should retrieve an user by id, name, email and token hash successfully`() {
         // given an existing user (publicTestUser)
 
         // when retrieving the user by id
-        val userById = getUserById(publicTestUser.id)
+        val userById = getUserById(publicTestUser.user.id)
 
         // when retrieving the user by name
-        val userByName = getUserByName(publicTestUser.name)
+        val userByName = getUserByName(publicTestUser.user.name)
 
         // when retrieving the user by email
-        val userByEmail = getUserByEmail(publicTestUser.email)
+        val userByEmail = getUserByEmail(publicTestUser.user.email)
 
         // when retrieving the user by token hash
-        val userExistsByTokenHash = getUserByTokenHash(publicTestUser.tokenHash!!)
+        val userExistsByTokenHash = getUserByTokenHash(publicTestUser.user.tokenHash!!)
 
         // then the user is retrieved successfully
         assertNotNull(userById)
         assertNotNull(userByName)
         assertNotNull(userByEmail)
         assertNotNull(userExistsByTokenHash)
-        assertEquals(publicTestUser.name, userById.name)
-        assertEquals(publicTestUser.name, userByName.name)
-        assertEquals(publicTestUser.name, userByEmail.name)
-        assertEquals(publicTestUser.name, userExistsByTokenHash.name)
-        assertEquals(publicTestUser.email, userById.email)
-        assertEquals(publicTestUser.email, userByName.email)
-        assertEquals(publicTestUser.email, userByEmail.email)
-        assertEquals(publicTestUser.email, userExistsByTokenHash.email)
+        assertEquals(publicTestUser.user.name, userById.name)
+        assertEquals(publicTestUser.user.name, userByName.name)
+        assertEquals(publicTestUser.user.name, userByEmail.name)
+        assertEquals(publicTestUser.user.name, userExistsByTokenHash.name)
+        assertEquals(publicTestUser.user.email, userById.email)
+        assertEquals(publicTestUser.user.email, userByName.email)
+        assertEquals(publicTestUser.user.email, userByEmail.email)
+        assertEquals(publicTestUser.user.email, userExistsByTokenHash.email)
     }
 
     @Test

@@ -21,7 +21,7 @@ class UpdateFridgeProductRepositoryTests : FridgeRepositoryTest() {
             openDate = null,
             expirationDate = LocalDate.now().plusDays(7)
         )
-        val fridge = addProduct(user.id, product)
+        val fridge = addProduct(user.user.id, product)
 
         val entryNumber = fridge.products.first().entryNumber
 
@@ -33,7 +33,7 @@ class UpdateFridgeProductRepositoryTests : FridgeRepositoryTest() {
             quantity = newQuantity,
             expirationDate = newExpirationDate
         )
-        val updatedFridge = updateProduct(user.id, updatedProduct)
+        val updatedFridge = updateProduct(user.user.id, updatedProduct)
 
         // then the fridge should contain the updated product
         assertEquals(1, updatedFridge.products.size)

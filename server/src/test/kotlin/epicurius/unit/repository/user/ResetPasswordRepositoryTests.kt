@@ -18,16 +18,16 @@ class ResetPasswordRepositoryTests : UserRepositoryTest() {
         // when resetting the password
         val newPassword = UUID.randomUUID().toString()
         val newPasswordHash = userDomain.encodePassword(newPassword)
-        resetPassword(testUser.id, newPasswordHash)
+        resetPassword(testUser.user.id, newPasswordHash)
 
         // when getting the user by name
-        val userAfterResetPassword = getUserByName(testUser.name)
+        val userAfterResetPassword = getUserByName(testUser.user.name)
 
         // then the password is reset successfully
         assertNotNull(userAfterResetPassword)
-        assertEquals(testUser.name, userAfterResetPassword.name)
-        assertEquals(testUser.email, userAfterResetPassword.email)
+        assertEquals(testUser.user.name, userAfterResetPassword.name)
+        assertEquals(testUser.user.email, userAfterResetPassword.email)
         assertEquals(newPasswordHash, userAfterResetPassword.passwordHash)
-        assertNotEquals(testUser.passwordHash, userAfterResetPassword.passwordHash)
+        assertNotEquals(testUser.user.passwordHash, userAfterResetPassword.passwordHash)
     }
 }

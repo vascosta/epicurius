@@ -10,7 +10,7 @@ class AddRecipeToMealPlannerRepositoryTests : MealPlannerRepositoryTest() {
     @Test
     fun `Should add a recipe to user's daily meal planner successfully`() {
         // given a test user, a date, and a recipe
-        val userId = createTestUser(tm).id
+        val userId = createTestUser(tm).user.id
         val date = today
 
         // when creating a new daily meal planner

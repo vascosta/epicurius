@@ -18,18 +18,17 @@ class OpenFridgeProductIntegrationTests : FridgeIntegrationTest() {
 
     @Test
     fun `Open fridge product successfully with code 200`() {
-        // given a user token
-        val token = testUserToken
+        // given a user (testUser)
 
         // when adding a product
         val expirationDate = LocalDate.now().plusDays(7)
-        val newFridgeBody = getBody(addProducts(token, "peach", 1, null, expirationDate))
+        val newFridgeBody = getBody(addProducts(testUser.token, "peach", 1, null, expirationDate))
 
         // and opening the product
         val openDate = LocalDate.now()
         val duration = Period.ofDays(3)
         val openProductBody = getBody(
-            openFridgeProduct(token, newFridgeBody.products.first().entryNumber, openDate, duration)
+            openFridgeProduct(testUser.token, newFridgeBody.products.first().entryNumber, openDate, duration)
         )
 
         // then the fridge should contain the updated product
@@ -41,19 +40,18 @@ class OpenFridgeProductIntegrationTests : FridgeIntegrationTest() {
 
     @Test
     fun `Open product that already exists in the fridge with the same expiration date successfully with code 200`() {
-        // given a user token
-        val token = testUserToken
+        // given a user (testUser)
 
         // when adding a product
         val expirationDate = LocalDate.now().plusDays(7)
-        val newFridgeBody = getBody(addProducts(token, "orange", 2, null, expirationDate))
+        val newFridgeBody = getBody(addProducts(testUser.token, "orange", 2, null, expirationDate))
 
         // and opening the product
         val openDate = LocalDate.now()
         val duration = Period.ofDays(3)
-        openFridgeProduct(token, newFridgeBody.products.first().entryNumber, openDate, duration)
+        openFridgeProduct(testUser.token, newFridgeBody.products.first().entryNumber, openDate, duration)
         val openProductBody = getBody(
-            openFridgeProduct(token, newFridgeBody.products.first().entryNumber, openDate, duration)
+            openFridgeProduct(testUser.token, newFridgeBody.products.first().entryNumber, openDate, duration)
         )
 
         // then the fridge should contain the updated product
@@ -66,8 +64,7 @@ class OpenFridgeProductIntegrationTests : FridgeIntegrationTest() {
 
     @Test
     fun `Try to open product but entry number is invalid, fails with 404`() {
-        // given a user token
-        val token = testUserToken
+        // given a user (testUser)
 
         // when opening a product with an invalid entry number
         val openDate = LocalDate.now()
@@ -77,7 +74,7 @@ class OpenFridgeProductIntegrationTests : FridgeIntegrationTest() {
             api(PRODUCT.take(16) + 999999),
             body = mapOf("openDate" to openDate, "duration" to duration),
             responseStatus = HttpStatus.NOT_FOUND,
-            token = token
+            token = testUser.token
         )
         assertNotNull(error)
 
@@ -88,13 +85,12 @@ class OpenFridgeProductIntegrationTests : FridgeIntegrationTest() {
 
     @Test
     fun `Try to open product but product is already open, fails with 400`() {
-        // given a user token
-        val token = testUserToken
+        // given a user (testUser)
 
         // when adding a product
         val openDate = LocalDate.now()
         val expirationDate = LocalDate.now().plusDays(7)
-        val newFridgeBody = getBody(addProducts(token, "tomato", 1, openDate, expirationDate))
+        val newFridgeBody = getBody(addProducts(testUser.token, "tomato", 1, openDate, expirationDate))
 
         // and trying to open the product
         val duration = Period.ofDays(3)
@@ -103,7 +99,7 @@ class OpenFridgeProductIntegrationTests : FridgeIntegrationTest() {
             api(PRODUCT.take(16) + newFridgeBody.products.first().entryNumber),
             body = mapOf("openDate" to openDate, "duration" to duration),
             responseStatus = HttpStatus.CONFLICT,
-            token = token
+            token = testUser.token
         )
         assertNotNull(error)
 

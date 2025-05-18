@@ -11,7 +11,7 @@ class GetWeeklyMealPlannerRepositoryTests : MealPlannerRepositoryTest() {
     @Test
     fun `Should get user's weekly meal planner successfully`() {
         // given a test user
-        val userId = createTestUser(tm).id
+        val userId = createTestUser(tm).user.id
 
         // when creating a new weekly meal planner
         createDailyMealPlanner(userId, today)

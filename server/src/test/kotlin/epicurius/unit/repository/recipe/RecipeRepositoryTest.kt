@@ -23,11 +23,11 @@ open class RecipeRepositoryTest : RepositoryTest() {
         val testUserPublic = createTestUser(tm)
         val testUserPrivate = createTestUser(tm, true)
         val testAuthor = createTestUser(tm)
-        val testRecipe = createTestRecipe(tm, fs, testAuthor)
+        val testRecipe = createTestRecipe(tm, fs, testAuthor.user)
 
         val jdbiRecipeInfo1 = JdbiCreateRecipeModel(
             name = "Spaghetti Bolognese",
-            authorId = testAuthor.id,
+            authorId = testAuthor.user.id,
             servings = 4,
             preparationTime = 30,
             cuisine = Cuisine.ITALIAN.ordinal,
@@ -49,7 +49,7 @@ open class RecipeRepositoryTest : RepositoryTest() {
 
         val jdbiRecipeInfo2 = JdbiCreateRecipeModel(
             name = "Buffalo Cauliflower Wings",
-            authorId = testAuthor.id,
+            authorId = testAuthor.user.id,
             servings = 4,
             preparationTime = 30,
             cuisine = Cuisine.ASIAN.ordinal,
@@ -71,7 +71,7 @@ open class RecipeRepositoryTest : RepositoryTest() {
 
         val jdbiRecipeInfo3 = JdbiCreateRecipeModel(
             name = "Burrito",
-            authorId = testAuthor.id,
+            authorId = testAuthor.user.id,
             servings = 2,
             preparationTime = 20,
             cuisine = Cuisine.MEXICAN.ordinal,
@@ -93,7 +93,7 @@ open class RecipeRepositoryTest : RepositoryTest() {
 
         val jdbiRecipeInfo4 = JdbiCreateRecipeModel(
             name = "Chicken Curry",
-            authorId = testUserPrivate.id,
+            authorId = testUserPrivate.user.id,
             servings = 4,
             preparationTime = 45,
             cuisine = Cuisine.INDIAN.ordinal,
@@ -115,7 +115,7 @@ open class RecipeRepositoryTest : RepositoryTest() {
 
         val jdbiRecipeInfo5 = JdbiCreateRecipeModel(
             name = "Vegetable Stir Fry",
-            authorId = testUserPublic.id,
+            authorId = testUserPublic.user.id,
             servings = 4,
             preparationTime = 20,
             cuisine = Cuisine.CHINESE.ordinal,

@@ -20,7 +20,7 @@ class AddFridgeProductRepositoryTests : FridgeRepositoryTest() {
             openDate = null,
             expirationDate = LocalDate.now().plusDays(7)
         )
-        val fridge = addProduct(user.id, product)
+        val fridge = addProduct(user.user.id, product)
 
         // then the fridge should contain the added product
         assertEquals(1, fridge.products.size)

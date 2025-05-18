@@ -1,202 +1,27 @@
 package epicurius.integration
 
-import com.google.auth.oauth2.GoogleCredentials
-import com.google.cloud.firestore.Firestore
-import com.google.cloud.firestore.FirestoreOptions
 import epicurius.EpicuriusTest
-import epicurius.domain.Diet
-import epicurius.domain.Intolerance
 import epicurius.http.controllers.fridge.models.output.FridgeOutputModel
-import epicurius.http.controllers.user.models.output.GetUserDietsOutputModel
-import epicurius.http.controllers.user.models.output.GetUserFollowRequestsOutputModel
-import epicurius.http.controllers.user.models.output.GetUserFollowersOutputModel
-import epicurius.http.controllers.user.models.output.GetUserFollowingOutputModel
-import epicurius.http.controllers.user.models.output.GetUserIntolerancesOutputModel
-import epicurius.http.controllers.user.models.output.GetUserOutputModel
-import epicurius.http.controllers.user.models.output.GetUserProfileOutputModel
-import epicurius.http.controllers.user.models.output.SearchUsersOutputModel
-import epicurius.http.controllers.user.models.output.UpdateUserOutputModel
-import epicurius.http.controllers.user.models.output.UpdateUserProfilePictureOutputModel
 import epicurius.http.utils.Uris
 import epicurius.integration.utils.delete
 import epicurius.integration.utils.get
-import epicurius.integration.utils.getAuthorizationHeader
-import epicurius.integration.utils.getBody
 import epicurius.integration.utils.patch
-import epicurius.integration.utils.patchMultiPart
 import epicurius.integration.utils.post
-import epicurius.repository.firestore.manager.FirestoreManager
-import epicurius.repository.jdbi.config.configureWithAppRequirements
-import epicurius.repository.transaction.jdbi.JdbiTransactionManager
-import org.jdbi.v3.core.Jdbi
-import org.postgresql.ds.PGSimpleDataSource
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.web.server.LocalServerPort
 import org.springframework.http.HttpStatus
 import org.springframework.test.web.reactive.server.WebTestClient
-import org.springframework.web.multipart.MultipartFile
-import org.springframework.web.reactive.function.BodyInserters
-import java.io.FileInputStream
 import java.time.LocalDate
 import java.time.Period
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class EpicuriusIntegrationTest : EpicuriusTest() {
 
-    @LocalServerPort
-    var port: Int = 0
-    val client = WebTestClient.bindToServer().baseUrl(api("/")).build()
-    final fun api(path: String): String = "http://localhost:$port/api$path"
-
-    // USER
-    fun getUser(token: String) = get<GetUserOutputModel>(client, api(Uris.User.USER), token = token)
-
-    fun getUserProfile(token: String, username: String) =
-        get<GetUserProfileOutputModel>(
-            client,
-            api(Uris.User.USER_PROFILE.replace("{username}", username)),
-            token = token
-        )
-
-    fun getUsers(token: String, partialUsername: String, skip: Int = 0, limit: Int = 10) =
-        get<SearchUsersOutputModel>(
-            client,
-            api(Uris.User.USERS) + "?partialUsername=$partialUsername&skip=$skip&limit=$limit",
-            token = token
-        )
-
-    fun getIntolerances(token: String) =
-        get<GetUserIntolerancesOutputModel>(client, api(Uris.User.USER_INTOLERANCES), token = token)
-
-    fun getDiets(token: String) = get<GetUserDietsOutputModel>(client, api(Uris.User.USER_DIETS), token = token)
-
-    fun getFollowers(token: String) =
-        get<GetUserFollowersOutputModel>(client, api(Uris.User.USER_FOLLOWERS), token = token)
-
-    fun getFollowing(token: String) =
-        get<GetUserFollowingOutputModel>(client, api(Uris.User.USER_FOLLOWING), token = token)
-
-    fun getFollowRequests(token: String) =
-        get<GetUserFollowRequestsOutputModel>(
-            client,
-            api(Uris.User.USER_FOLLOW_REQUESTS),
-            token = token
-        )
-
-    fun signUp(username: String, email: String, country: String, password: String): String {
-        val result = post<Unit>(
-            client,
-            api(Uris.User.SIGNUP),
-            mapOf(
-                "name" to username,
-                "email" to email,
-                "password" to password,
-                "confirmPassword" to password,
-                "country" to country
-            ),
-            responseStatus = HttpStatus.CREATED
-        )
-
-        return getAuthorizationHeader(result)
-    }
-
-    fun login(username: String? = null, email: String? = null, password: String): String {
-        val result = post<Unit>(
-            client,
-            api(Uris.User.LOGIN),
-            mapOf("username" to username, "email" to email, "password" to password),
-        )
-
-        return getAuthorizationHeader(result)
-    }
-
-    fun logout(token: String): String {
-        val result = post<Unit>(client, api(Uris.User.LOGOUT), "", token = token)
-        return getAuthorizationHeader(result)
-    }
-
-    fun updateUser(
-        token: String,
-        username: String? = null,
-        email: String? = null,
-        country: String? = null,
-        password: String? = null,
-        confirmPassword: String? = null,
-        privacy: Boolean? = null,
-        intolerances: List<Intolerance>? = null,
-        diets: List<Diet>? = null
-    ): UpdateUserOutputModel? {
-        val result = patch<UpdateUserOutputModel>(
-            client,
-            api(Uris.User.USER),
-            body = mapOf(
-                "username" to username,
-                "email" to email,
-                "country" to country,
-                "password" to password,
-                "confirmPassword" to confirmPassword,
-                "privacy" to privacy,
-                "intolerances" to intolerances,
-                "diets" to diets
-            ),
-            responseStatus = HttpStatus.OK,
-            token = token
-        )
-
-        return getBody(result)
-    }
-
-    fun updateProfilePicture(
-        token: String,
-        profilePicture: MultipartFile
-    ): UpdateUserProfilePictureOutputModel? {
-        val result = patchMultiPart<UpdateUserProfilePictureOutputModel>(
-            client,
-            api(Uris.User.USER_PICTURE),
-            BodyInserters.fromMultipartData("profilePicture", profilePicture.resource),
-            responseStatus = HttpStatus.OK,
-            token = token
-        )
-
-        return getBody(result)
-    }
-
-    fun resetPassword(email: String, newPassword: String, confirmPassword: String) {
-        patch<Unit>(
-            client,
-            api(Uris.User.USER_RESET_PASSWORD),
-            body = mapOf(
-                "email" to email,
-                "newPassword" to newPassword,
-                "confirmPassword" to confirmPassword
-            )
-        )
-    }
-
-    fun follow(token: String, username: String) {
-        patch<Unit>(
-            client,
-            api(Uris.User.USER_FOLLOW.replace("{username}", username)),
-            body = "",
-            token = token
-        )
-    }
-
-    fun unfollow(token: String, username: String) {
-        delete<Unit>(
-            client,
-            api(Uris.User.USER_FOLLOW.replace("{username}", username)),
-            token = token
-        )
-    }
-
-    fun cancelFollowRequest(token: String, username: String) {
-        patch<Unit>(
-            client,
-            api(Uris.User.USER_FOLLOW_REQUEST.replace("{username}", username) + "?type=CANCEL"),
-            body = "",
-            token = token
-        )
+    companion object {
+        @LocalServerPort
+        var port: Int = 0
+        val client = WebTestClient.bindToServer().baseUrl(api("/")).build()
+        fun api(path: String): String = "http://localhost:$port/api$path"
     }
 
     // FRIDGE

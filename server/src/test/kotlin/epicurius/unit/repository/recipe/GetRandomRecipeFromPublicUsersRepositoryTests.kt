@@ -12,7 +12,12 @@ class GetRandomRecipeFromPublicUsersRepositoryTests : RecipeRepositoryTest() {
         // given a user public user (testUser)
 
         // when retrieving a random recipe from public users
-        val retrievedRecipe = getRandomRecipesFromPublicUsers(MealType.DESSERT, testUserPublic.intolerances, testUserPublic.diets, 1)
+        val retrievedRecipe = getRandomRecipesFromPublicUsers(
+            MealType.DESSERT,
+            testUserPublic.user.intolerances,
+            testUserPublic.user.diets,
+            1
+        )
 
         // then the recipe is retrieved successfully
         assertNotNull(retrievedRecipe)

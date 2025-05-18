@@ -16,15 +16,14 @@ class RemoveFridgeProductIntegrationTests : FridgeIntegrationTest() {
 
     @Test
     fun `Remove product successfully with code 200`() {
-        // given a user token
-        val token = testUserToken
+        // given a user (testUser)
 
         // when adding a product
         val expirationDate = LocalDate.now().plusDays(7)
-        val newFridgeBody = getBody(addProducts(token, "banana", 1, null, expirationDate))
+        val newFridgeBody = getBody(addProducts(testUser.token, "banana", 1, null, expirationDate))
 
         // and removing the product
-        val removedFridgeBody = getBody(removeProduct(token, newFridgeBody.products.first().entryNumber))
+        val removedFridgeBody = getBody(removeProduct(testUser.token, newFridgeBody.products.first().entryNumber))
 
         // then the fridge should be empty
         assertNotNull(removedFridgeBody)
@@ -33,15 +32,14 @@ class RemoveFridgeProductIntegrationTests : FridgeIntegrationTest() {
 
     @Test
     fun `Try to remove product with invalid entry number and fails with code 404`() {
-        // given a user token
-        val token = testUserToken
+        // given a user (testUser)
 
         // when removing a product with an invalid entry number
         val error = delete<Problem>(
             client,
             api(PRODUCT.take(16) + 999999),
             HttpStatus.NOT_FOUND,
-            token
+            testUser.token
         )
         assertNotNull(error)
 

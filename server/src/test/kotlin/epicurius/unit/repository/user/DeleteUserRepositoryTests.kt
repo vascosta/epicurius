@@ -12,10 +12,10 @@ class DeleteUserRepositoryTests: UserRepositoryTest() {
         val user = createTestUser(tm)
 
         // when deleting the user
-        deleteUser(user.id)
+        deleteUser(user.user.id)
 
         // then the user is deleted successfully
-        val deletedUser = getUserById(user.id)
+        val deletedUser = getUserById(user.user.id)
         assertNull(deletedUser)
     }
 }

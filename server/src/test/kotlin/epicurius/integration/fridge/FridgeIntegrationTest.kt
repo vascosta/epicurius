@@ -1,18 +1,16 @@
 package epicurius.integration.fridge
 
+import epicurius.domain.user.AuthenticatedUser
 import epicurius.integration.EpicuriusIntegrationTest
-import epicurius.utils.generateEmail
-import epicurius.utils.generateRandomUsername
-import epicurius.utils.generateSecurePassword
+import epicurius.utils.createTestUser
 import org.junit.jupiter.api.BeforeEach
 
 class FridgeIntegrationTest : EpicuriusIntegrationTest() {
 
-    lateinit var testUserToken: String
+    lateinit var testUser: AuthenticatedUser
 
     @BeforeEach
     fun setup() {
-        val username = generateRandomUsername()
-        testUserToken = signUp(username, generateEmail(username), "PT", generateSecurePassword())
+        testUser = createTestUser(tm)
     }
 }

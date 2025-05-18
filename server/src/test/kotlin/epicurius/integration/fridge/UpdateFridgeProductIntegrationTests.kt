@@ -17,17 +17,16 @@ class UpdateFridgeProductIntegrationTests : FridgeIntegrationTest() {
 
     @Test
     fun `Update product successfully with code 200`() {
-        // given a user token
-        val token = testUserToken
+        // given a user (testUser)
 
         // when adding a product
         val expirationDate = LocalDate.now().plusDays(7)
-        val newFridgeBody = getBody(addProducts(token, "milk", 1, null, expirationDate))
+        val newFridgeBody = getBody(addProducts(testUser.token, "milk", 1, null, expirationDate))
 
         // and updating the product
         val newExpirationDate = LocalDate.now().plusDays(14)
         val updatedFridgeBody = getBody(
-            updateFridgeProduct(token, newFridgeBody.products.first().entryNumber, 2, newExpirationDate)
+            updateFridgeProduct(testUser.token, newFridgeBody.products.first().entryNumber, 2, newExpirationDate)
         )
 
         // then the fridge should contain the updated product
@@ -40,8 +39,7 @@ class UpdateFridgeProductIntegrationTests : FridgeIntegrationTest() {
 
     @Test
     fun `Try to update product with invalid entry number and fails with code 404`() {
-        // given a user token
-        val token = testUserToken
+        // given a user (testUser)
 
         // when updating a product with an invalid entry number
         val newExpirationDate = LocalDate.now().plusDays(14)
@@ -50,7 +48,7 @@ class UpdateFridgeProductIntegrationTests : FridgeIntegrationTest() {
             api(PRODUCT.take(16) + 999999),
             body = mapOf("quantity" to 2, "expirationDate" to newExpirationDate),
             responseStatus = HttpStatus.NOT_FOUND,
-            token = token
+            token = testUser.token
         )
         assertNotNull(error)
 
@@ -61,13 +59,12 @@ class UpdateFridgeProductIntegrationTests : FridgeIntegrationTest() {
 
     @Test
     fun `Try to update a product expiration date but it is already open, fails with 400`() {
-        // given a user token
-        val token = testUserToken
+        // given a user (testUser)
 
         // when adding a product
         val openDate = LocalDate.now()
         val expirationDate = LocalDate.now().plusDays(7)
-        val newFridgeBody = getBody(addProducts(token, "cream", 1, openDate, expirationDate))
+        val newFridgeBody = getBody(addProducts(testUser.token, "cream", 1, openDate, expirationDate))
 
         // and trying to update the product
         val newExpirationDate = LocalDate.now().plusDays(14)
@@ -76,7 +73,7 @@ class UpdateFridgeProductIntegrationTests : FridgeIntegrationTest() {
             api(PRODUCT.take(16) + newFridgeBody.products.first().entryNumber),
             body = mapOf("quantity" to 2, "expirationDate" to newExpirationDate),
             responseStatus = HttpStatus.CONFLICT,
-            token = token
+            token = testUser.token
         )
         assertNotNull(error)
 

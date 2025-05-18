@@ -12,6 +12,7 @@ import epicurius.domain.recipe.Instructions
 import epicurius.domain.recipe.MealType
 import epicurius.domain.recipe.Recipe
 import epicurius.domain.recipe.RecipeDomain
+import epicurius.domain.user.AuthenticatedUser
 import epicurius.domain.user.User
 import epicurius.domain.user.UserDomain.Companion.MAX_PASSWORD_LENGTH
 import epicurius.domain.user.UserDomain.Companion.MAX_USERNAME_LENGTH
@@ -23,7 +24,7 @@ import epicurius.repository.transaction.TransactionManager
 import java.time.LocalDate
 import java.util.UUID.randomUUID
 
-fun createTestUser(tm: TransactionManager, privacy: Boolean = false): User {
+fun createTestUser(tm: TransactionManager, privacy: Boolean = false): AuthenticatedUser {
     val username = generateRandomUsername()
     val email = generateEmail(username)
     val country = "PT"
@@ -35,11 +36,13 @@ fun createTestUser(tm: TransactionManager, privacy: Boolean = false): User {
         tm.run { it.userRepository.updateUser(userId, JdbiUpdateUserModel(privacy = true)) }
     }
 
-    val tokenHash = userDomain.hashToken(randomUUID().toString())
+    val token = randomUUID().toString()
+    val tokenHash = userDomain.hashToken(token)
     val lastUsed = LocalDate.now()
     tm.run { it.tokenRepository.createToken(tokenHash, lastUsed, userId) }
 
-    return tm.run { it.userRepository.getUser(username) } ?: throw Exception("User not created")
+    val user = tm.run { it.userRepository.getUser(username) } ?: throw Exception("User not created")
+    return AuthenticatedUser(user, token)
 }
 
 fun createTestRecipe(tm: TransactionManager, fs: FirestoreManager, user: User): Recipe {

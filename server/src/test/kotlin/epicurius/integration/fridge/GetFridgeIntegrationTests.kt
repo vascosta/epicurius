@@ -1,5 +1,6 @@
 package epicurius.integration.fridge
 
+import epicurius.utils.createTestUser
 import epicurius.utils.generateEmail
 import epicurius.utils.generateRandomUsername
 import epicurius.utils.generateSecurePassword
@@ -11,12 +12,11 @@ class GetFridgeIntegrationTests: FridgeIntegrationTest() {
 
     @Test
     fun `Get fridge successfully with code 200`() {
-        // given a user token
-        val username = generateRandomUsername()
-        val testUserToken = signUp(username, generateEmail(username), "PT", generateSecurePassword())
+        // given a user
+        val testUser = createTestUser(tm)
 
         // when getting the user's fridge
-        val fridgeBody = getFridge(testUserToken)
+        val fridgeBody = getFridge(testUser.token)
 
         // then the fridge should be empty
         assertNotNull(fridgeBody)
