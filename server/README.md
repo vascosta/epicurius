@@ -213,18 +213,19 @@ The __routes__ for the __API__ are organized as follow:
 
 #### Recipe
 
-| Method  | Route                          | Description                     | Authenticated | 
-|---------|--------------------------------|---------------------------------|:-------------:|
-| GET     | ``/api/recipes``               | Get a recipe                    | Yes           |
-| GET     | ``/api/recipes/{id}``          | Search for recipes              | Yes           |
-| GET     | ``/api/recipes/{id}/rate``     | Get a recipe's rate             | Yes           |
-| POST    | ``/api/recipes/{id}/rate``     | Rate a recipe                   | Yes           |
-| POST    | ``/api/recipes``               | Create a recipe                 | Yes           |
-| PATCH   | ``/api/recipe``                | Update a recipe                 | Yes           |
-| PATCH   | ``/api/recipes/{id}/rate``     | Update a rate given to a recipe | Yes           |
-| PATCH   | ``/api/recipes/{id}/pictures`` | Update a rate given to a recipe | Yes           |
-| DELETE  | ``/api/recipes/{id}``          | Delete a recipe                 | Yes           |
-| DELETE  | ``/api/recipes/{id}/rate``     | Delete a rate given to a recipe | Yes           |
+| Method  | Route                           | Description                     | Authenticated | 
+|---------|---------------------------------|---------------------------------|:-------------:|
+| GET     | ``/api/recipes``                | Get a recipe                    | Yes           |
+| GET     | ``/api/recipes/{id}``           | Search for recipes              | Yes           |
+| GET     | ``/api/recipes/{id}/rate``      | Get a recipe's rate             | Yes           |
+| GET     | ``/api/recipes/{id}/rate/self`` | Get the user's recipe's rate    | Yes           |
+| POST    | ``/api/recipes/{id}/rate``      | Rate a recipe                   | Yes           |
+| POST    | ``/api/recipes``                | Create a recipe                 | Yes           |
+| PATCH   | ``/api/recipe``                 | Update a recipe                 | Yes           |
+| PATCH   | ``/api/recipes/{id}/rate``      | Update a rate given to a recipe | Yes           |
+| PATCH   | ``/api/recipes/{id}/pictures``  | Update a rate given to a recipe | Yes           |
+| DELETE  | ``/api/recipes/{id}``           | Delete a recipe                 | Yes           |
+| DELETE  | ``/api/recipes/{id}/rate``      | Delete a rate given to a recipe | Yes           |
 
 
 #### Ingredients
