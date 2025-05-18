@@ -4,6 +4,7 @@ import android.epicurius.domain.user.FollowRequestType
 import android.epicurius.services.http.HttpService
 import android.epicurius.services.http.api.user.models.input.ResetPasswordInputModel
 import android.epicurius.services.http.api.user.models.input.UpdateUserInputModel
+import android.epicurius.services.http.api.user.models.output.GetUserFeedOutputModel
 import android.epicurius.services.http.api.user.models.output.GetUserFollowRequestsOutputModel
 import android.epicurius.services.http.api.user.models.output.GetUserFollowersOutputModel
 import android.epicurius.services.http.api.user.models.output.GetUserFollowingOutputModel
@@ -83,6 +84,20 @@ class UserService(private val httpService: HttpService) {
     ): APIResult<GetUserFollowRequestsOutputModel> =
         httpService.get<GetUserFollowRequestsOutputModel>(
             Uris.User.USER_FOLLOW_REQUESTS,
+            token = token
+        )
+
+    suspend fun getUserFeed(
+        token: String,
+        skip: Int,
+        limit: Int
+    ): APIResult<GetUserFeedOutputModel> =
+        httpService.get<GetUserFeedOutputModel>(
+            Uris.User.USER_FEED,
+            queryParams = mapOf(
+                "skip" to skip,
+                "limit" to limit,
+            ),
             token = token
         )
 
