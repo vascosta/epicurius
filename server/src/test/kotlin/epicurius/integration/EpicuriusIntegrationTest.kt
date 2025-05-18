@@ -8,10 +8,13 @@ import org.springframework.test.web.reactive.server.WebTestClient
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class EpicuriusIntegrationTest : EpicuriusTest() {
 
-    companion object {
-        @LocalServerPort
-        var port: Int = 0
-        val client = WebTestClient.bindToServer().baseUrl(api("/")).build()
-        fun api(path: String): String = "http://localhost:$port/api$path"
-    }
+
+    @LocalServerPort
+    var port: Int = 0
+
+    var client: WebTestClient = WebTestClient.bindToServer()
+        .baseUrl("http://localhost:$port/api")
+        .build()
+
+    fun api(path: String): String = "http://localhost:$port/api$path"
 }

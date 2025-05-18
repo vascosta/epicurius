@@ -55,10 +55,6 @@ open class CollectionControllerTest : HttpTest() {
             FAVOURITE_COLLECTION_ID, "Test Collection", CollectionType.FAVOURITE, emptyList()
         )
 
-        val testKitchenBookCollection = CollectionServiceTest.Companion.testFavouriteCollection.copy(
-            id = KITCHEN_BOOK_COLLECTION_ID, type = CollectionType.KITCHEN_BOOK
-        )
-
         val testRecipeInfo = RecipeInfo(
             RECIPE_ID,
             generateRandomRecipeName(),
