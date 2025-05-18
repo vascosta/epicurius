@@ -26,7 +26,6 @@ import epicurius.http.controllers.user.models.input.UpdateUserInputModel
 import epicurius.unit.EpicuriusUnitTest
 import jakarta.servlet.http.Cookie
 import jakarta.servlet.http.HttpServletResponse
-import org.apache.coyote.Response
 import org.junit.jupiter.api.BeforeEach
 import org.mockito.Mockito.mock
 import org.mockito.kotlin.reset
@@ -137,12 +136,12 @@ open class HttpTest : EpicuriusUnitTest() {
         ) = userController.deleteUser(authenticatedUser, response)
 
         // FEED
-        fun getFeed(
+        fun getUserFeed(
             authenticatedUser: AuthenticatedUser,
             skip: Int,
             limit: Int,
         ) =
-            feedController.getFeed(authenticatedUser, skip, limit)
+            feedController.getUserFeed(authenticatedUser, skip, limit)
 
         // FRIDGE
         fun getFridge(

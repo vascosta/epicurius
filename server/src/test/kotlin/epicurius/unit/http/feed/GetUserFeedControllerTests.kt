@@ -5,7 +5,7 @@ import epicurius.domain.Intolerance
 import epicurius.domain.PagingParams
 import epicurius.domain.user.AuthenticatedUser
 import epicurius.domain.user.User
-import epicurius.http.controllers.feed.models.output.FeedOutputModel
+import epicurius.http.controllers.feed.models.output.GetUserFeedOutputModel
 import epicurius.utils.generateEmail
 import epicurius.utils.generateRandomUsername
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -14,7 +14,7 @@ import org.springframework.http.HttpStatus
 import java.util.UUID.randomUUID
 import kotlin.test.Test
 
-class GetFeedControllerTests : FeedHttpTest() {
+class GetUserFeedControllerTests : FeedHttpTest() {
 
     private val pagingParams = PagingParams(0, 10)
     private val testAuthenticatedUser = AuthenticatedUser(
@@ -43,11 +43,11 @@ class GetFeedControllerTests : FeedHttpTest() {
         ).thenReturn(emptyList())
 
         // when retrieving the feed
-        val response = getFeed(testAuthenticatedUser, pagingParams.skip, pagingParams.limit)
+        val response = getUserFeed(testAuthenticatedUser, pagingParams.skip, pagingParams.limit)
 
         // then feed should be empty
         assertEquals(HttpStatus.OK, response.statusCode)
-        assertEquals(FeedOutputModel(emptyList()), response.body)
+        assertEquals(GetUserFeedOutputModel(emptyList()), response.body)
     }
 
     @Test
@@ -60,11 +60,11 @@ class GetFeedControllerTests : FeedHttpTest() {
         ).thenReturn(listOf(recipeInfo))
 
         // when retrieving the feed
-        val response = getFeed(testAuthenticatedUser, pagingParams.skip, pagingParams.limit)
+        val response = getUserFeed(testAuthenticatedUser, pagingParams.skip, pagingParams.limit)
 
         // then feed should contain recipes
         assertEquals(HttpStatus.OK, response.statusCode)
-        assertEquals(FeedOutputModel(listOf(recipeInfo)), response.body)
+        assertEquals(GetUserFeedOutputModel(listOf(recipeInfo)), response.body)
     }
 
     @Test
@@ -77,11 +77,11 @@ class GetFeedControllerTests : FeedHttpTest() {
         ).thenReturn(listOf(recipeInfo2, recipeInfo))
 
         // when retrieving the feed
-        val response = getFeed(testAuthenticatedUser, pagingParams.skip, pagingParams.limit)
+        val response = getUserFeed(testAuthenticatedUser, pagingParams.skip, pagingParams.limit)
 
         // then feed should contain recipes
         assertEquals(HttpStatus.OK, response.statusCode)
-        assertEquals(FeedOutputModel(listOf(recipeInfo2, recipeInfo)), response.body)
+        assertEquals(GetUserFeedOutputModel(listOf(recipeInfo2, recipeInfo)), response.body)
     }
 
     @Test
@@ -102,11 +102,11 @@ class GetFeedControllerTests : FeedHttpTest() {
         ).thenReturn(listOf(recipeInfo2))
 
         // when retrieving the feed with intolerance and no diets
-        val response = getFeed(testAuthenticatedUserWithIntolerances, pagingParams.skip, pagingParams.limit)
+        val response = getUserFeed(testAuthenticatedUserWithIntolerances, pagingParams.skip, pagingParams.limit)
 
         // then feed should contain recipes
         assertEquals(HttpStatus.OK, response.statusCode)
-        assertEquals(FeedOutputModel(listOf(recipeInfo2)), response.body)
+        assertEquals(GetUserFeedOutputModel(listOf(recipeInfo2)), response.body)
     }
 
     @Test
@@ -126,11 +126,11 @@ class GetFeedControllerTests : FeedHttpTest() {
             )
         ).thenReturn(listOf(recipeInfo))
         // when retrieving the feed with diets and no intolerances
-        val response = getFeed(testAuthenticatedUserWithDiets, pagingParams.skip, pagingParams.limit)
+        val response = getUserFeed(testAuthenticatedUserWithDiets, pagingParams.skip, pagingParams.limit)
 
         // then feed should contain recipes
         assertEquals(HttpStatus.OK, response.statusCode)
-        assertEquals(FeedOutputModel(listOf(recipeInfo)), response.body)
+        assertEquals(GetUserFeedOutputModel(listOf(recipeInfo)), response.body)
     }
 
     @Test
@@ -154,10 +154,10 @@ class GetFeedControllerTests : FeedHttpTest() {
         ).thenReturn(listOf(recipeInfo2, recipeInfo))
 
         // when retrieving the feed with intolerance and no diets
-        val response = getFeed(testAuthenticatedUserWithIntolerancesAndDiets, pagingParams.skip, pagingParams.limit)
+        val response = getUserFeed(testAuthenticatedUserWithIntolerancesAndDiets, pagingParams.skip, pagingParams.limit)
 
         // then feed should contain recipes
         assertEquals(HttpStatus.OK, response.statusCode)
-        assertEquals(FeedOutputModel(listOf(recipeInfo2, recipeInfo)), response.body)
+        assertEquals(GetUserFeedOutputModel(listOf(recipeInfo2, recipeInfo)), response.body)
     }
 }

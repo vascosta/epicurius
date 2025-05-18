@@ -2,11 +2,9 @@ package epicurius.http.controllers.feed
 
 import epicurius.domain.PagingParams
 import epicurius.domain.user.AuthenticatedUser
-import epicurius.http.controllers.feed.models.output.FeedOutputModel
-import epicurius.http.pipeline.authentication.cookie.addCookie
+import epicurius.http.controllers.feed.models.output.GetUserFeedOutputModel
 import epicurius.http.utils.Uris
 import epicurius.services.feed.FeedService
-import jakarta.servlet.http.HttpServletResponse
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
@@ -18,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController
 class FeedController(private val feedService: FeedService) {
 
     @GetMapping(Uris.User.USER_FEED)
-    fun getFeed(
+    fun getUserFeed(
         authenticatedUser: AuthenticatedUser,
         @RequestParam skip: Int,
         @RequestParam limit: Int,
@@ -32,6 +30,6 @@ class FeedController(private val feedService: FeedService) {
         )
         return ResponseEntity
             .ok()
-            .body(FeedOutputModel(feed))
+            .body(GetUserFeedOutputModel(feed))
     }
 }

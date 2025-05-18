@@ -1,6 +1,5 @@
 package epicurius.http.utils
 
-import epicurius.http.utils.Uris.User.USER
 import org.springframework.web.util.UriTemplate
 import java.time.LocalDate
 
