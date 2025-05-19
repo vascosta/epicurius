@@ -10,6 +10,7 @@ import android.epicurius.domain.recipe.IngredientUnit
 import android.epicurius.domain.recipe.Instructions
 import android.epicurius.domain.recipe.MealType
 import android.epicurius.domain.recipe.Recipe
+import android.epicurius.ui.screens.BottomBar
 import android.epicurius.ui.screens.TopBar
 import android.epicurius.ui.utils.MixedText
 import android.os.Build
@@ -59,7 +60,8 @@ import java.time.LocalDate
 @Composable
 fun RecipeProfileScreen(recipe: Recipe, rating: Double, images: List<Int>, isAuthor: Boolean) {
     Scaffold(
-        topBar = { TopBar(recipe.name, true) }
+        topBar = { TopBar(recipe.name, true) },
+        bottomBar = { BottomBar() }
     ) { paddingValues ->
         Column(
             modifier = Modifier
