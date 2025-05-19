@@ -1,16 +1,16 @@
 package android.epicurius.domain
 
-enum class Intolerance {
-    DAIRY,
-    EGG,
-    GLUTEN,
-    GRAIN,
-    PEANUT,
-    SEAFOOD,
-    SESAME,
-    SHELLFISH,
-    SOY,
-    SULFITE,
-    TREE_NUT,
-    WHEAT;
+enum class Intolerance(val displayName: String) {
+    DAIRY("Dairy"),
+    EGG("Egg"),
+    GLUTEN("Gluten"),
+    GRAIN("Grain"),
+    PEANUT("Peanut"),
+    SEAFOOD("Seafood"),
+    SESAME("Sesame"),
+    SHELLFISH("Shellfish"),
+    SOY("Soy"),
+    SULFITE("Sulfite"),
+    TREE_NUT("Tree Nut"),
+    WHEAT("Wheat");
 }
