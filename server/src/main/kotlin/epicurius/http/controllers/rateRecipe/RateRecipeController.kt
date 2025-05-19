@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RestController
 @RequestMapping(Uris.PREFIX)
 class RateRecipeController(private val rateRecipeService: RateRecipeService) {
 
-    @GetMapping(Uris.Recipe.RECIPE_RATE)
+    @GetMapping(Uris.Recipe.RATE_RECIPE)
     fun getRecipeRate(
         authenticatedUser: AuthenticatedUser,
         @PathVariable id: Int,
@@ -32,7 +32,7 @@ class RateRecipeController(private val rateRecipeService: RateRecipeService) {
             .body(GetRecipeRateOutputModel(rate))
     }
 
-    @GetMapping(Uris.Recipe.RECIPE_USER_RATE)
+    @GetMapping(Uris.Recipe.USER_RECIPE_RATE)
     fun getUserRecipeRate(
         authenticatedUser: AuthenticatedUser,
         @PathVariable id: Int
@@ -43,7 +43,7 @@ class RateRecipeController(private val rateRecipeService: RateRecipeService) {
             .body(GetUserRecipeRateOutputModel(rate))
     }
 
-    @PostMapping(Uris.Recipe.RECIPE_RATE)
+    @PostMapping(Uris.Recipe.RATE_RECIPE)
     fun rateRecipe(
         authenticatedUser: AuthenticatedUser,
         @PathVariable id: Int,
@@ -55,7 +55,7 @@ class RateRecipeController(private val rateRecipeService: RateRecipeService) {
             .build<Unit>()
     }
 
-    @PatchMapping(Uris.Recipe.RECIPE_RATE)
+    @PatchMapping(Uris.Recipe.RATE_RECIPE)
     fun updateRecipeRate(
         authenticatedUser: AuthenticatedUser,
         @PathVariable id: Int,
@@ -67,7 +67,7 @@ class RateRecipeController(private val rateRecipeService: RateRecipeService) {
             .build<Unit>()
     }
 
-    @DeleteMapping(Uris.Recipe.RECIPE_RATE)
+    @DeleteMapping(Uris.Recipe.RATE_RECIPE)
     fun deleteRecipeRate(
         authenticatedUser: AuthenticatedUser,
         @PathVariable id: Int,

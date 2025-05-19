@@ -42,12 +42,12 @@ object Uris {
     object Recipe {
         const val RECIPES = "/recipes"
         const val RECIPE = "$RECIPES/{id}"
-        const val RECIPE_RATE = "$RECIPE/rate"
-        const val RECIPE_USER_RATE = "$RECIPE_RATE/self"
+        const val RATE_RECIPE = "$RECIPE/rate"
+        const val USER_RECIPE_RATE = "$RATE_RECIPE/self"
         const val RECIPE_PICTURES = "$RECIPES/{id}/pictures"
 
         fun recipe(id: Int) = UriTemplate(RECIPE).expand(id)
-        fun rateRecipe(id: Int) = UriTemplate(RECIPE_RATE).expand(id)
+        fun rateRecipe(id: Int) = UriTemplate(RATE_RECIPE).expand(id)
     }
 
     object Menu {
