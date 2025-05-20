@@ -78,7 +78,7 @@ class OpenFridgeProductIntegrationTests : FridgeIntegrationTest() {
         )
         assertNotNull(error)
 
-        // then the request should fail with code 404
+        // then the product cannot be open and fails with code 404
         val errorBody = getBody(error)
         assertEquals(ProductNotFound(999999).message, errorBody.detail)
     }
@@ -103,7 +103,7 @@ class OpenFridgeProductIntegrationTests : FridgeIntegrationTest() {
         )
         assertNotNull(error)
 
-        // then the request should fail with code 400
+        // then the product cannot be open and fails with code 400
         val errorBody = getBody(error)
         assertEquals(ProductIsAlreadyOpen().message, errorBody.detail)
     }

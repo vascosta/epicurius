@@ -52,7 +52,7 @@ class UpdateFridgeProductIntegrationTests : FridgeIntegrationTest() {
         )
         assertNotNull(error)
 
-        // then the request should fail with code 400
+        // then the fridge cannot be updated and fails with code 400
         val errorBody = getBody(error)
         assertEquals(ProductNotFound(999999).message, errorBody.detail)
     }
@@ -77,7 +77,7 @@ class UpdateFridgeProductIntegrationTests : FridgeIntegrationTest() {
         )
         assertNotNull(error)
 
-        // then the request should fail with code 400
+        // then the fridge cannot be updated and fails with code 400
         val errorBody = getBody(error)
         assertEquals(ProductIsAlreadyOpen().message, errorBody.detail)
     }

@@ -66,7 +66,7 @@ class AddProductToFridgeIntegrationTests : FridgeIntegrationTest() {
         )
         assertNotNull(error)
 
-        // then the request should fail with code 400
+        // then the product cannot be added and fails with code 400
         val errorBody = getBody(error)
         assertEquals(InvalidProduct().message, errorBody.detail)
     }
