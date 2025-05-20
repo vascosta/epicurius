@@ -9,7 +9,7 @@ import kotlin.test.assertEquals
 class GetFollowRequestsServiceTests : UserServiceTest() {
 
     @Test
-    fun `Should retrieve the follow request of an user successfully`() {
+    fun `Should retrieve the follow requests of an user successfully`() {
         // given a user (publicTestUser)
 
         // mock
