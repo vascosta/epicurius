@@ -71,7 +71,7 @@ class UserIntegrationTest: EpicuriusIntegrationTest() {
             token = token
         )
 
-    fun signUp(username: String, email: String, country: String, password: String): String {
+    fun signUp(username: String, email: String, country: String, password: String, confirmPassword: String): String {
         val result = post<Unit>(
             client,
             api(Uris.User.SIGNUP),
@@ -79,7 +79,7 @@ class UserIntegrationTest: EpicuriusIntegrationTest() {
                 "name" to username,
                 "email" to email,
                 "password" to password,
-                "confirmPassword" to password,
+                "confirmPassword" to confirmPassword,
                 "country" to country
             ),
             responseStatus = HttpStatus.CREATED
@@ -167,7 +167,7 @@ class UserIntegrationTest: EpicuriusIntegrationTest() {
         )
     }
 
-    fun resetPassword(email: String, newPassword: String, confirmPassword: String) {
+    fun resetUserPassword(email: String, newPassword: String, confirmPassword: String) {
         patch<Unit>(
             client,
             api(Uris.User.USER_RESET_PASSWORD),
