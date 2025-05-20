@@ -43,7 +43,7 @@ class GetUserRecipeRate : RateRecipeIntegrationTest() {
             token = token
         )
 
-        // then the recipe is not found
+        // then the user recipe rate cannot be retrieved and fails with code 404
         assertNotNull(error)
         assertEquals(RecipeNotFound().message, error.detail)
     }
@@ -61,7 +61,7 @@ class GetUserRecipeRate : RateRecipeIntegrationTest() {
             token = token
         )
 
-        // then the recipe is not accessible
+        // then the user recipe rate cannot be retrieved and fails with code 403
         assertNotNull(error)
         assertEquals(RecipeNotAccessible().message, error.detail)
     }
@@ -79,7 +79,7 @@ class GetUserRecipeRate : RateRecipeIntegrationTest() {
             token = token
         )
 
-        // then the recipe has not been rated
+        // then the user recipe rate cannot be retrieved and fails with code 400
         assertNotNull(error)
         assertEquals(UserHasNotRated(testUser.user.id, testRecipe.id).message, error.detail)
     }

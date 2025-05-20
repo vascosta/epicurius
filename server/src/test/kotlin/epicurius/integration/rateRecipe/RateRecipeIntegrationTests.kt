@@ -40,7 +40,7 @@ class RateRecipeIntegrationTests : RateRecipeIntegrationTest() {
             token = token
         )
 
-        // then the recipe is not found
+        // then the recipe cannot be rated and fails with code 404
         val bodyError = getBody(error)
         assertEquals(RecipeNotFound().message, bodyError.detail)
     }
@@ -61,7 +61,7 @@ class RateRecipeIntegrationTests : RateRecipeIntegrationTest() {
             token = token
         )
 
-        // then the user cannot rate their own recipe
+        // then the recipe cannot be rated and fails with code 403
         val bodyError = getBody(error)
         assertEquals(AuthorCannotRateOwnRecipe().message, bodyError.detail)
     }
@@ -82,7 +82,7 @@ class RateRecipeIntegrationTests : RateRecipeIntegrationTest() {
             token = token
         )
 
-        // then the recipe is not accessible
+        // then the recipe cannot be rated and fails with code 403
         val bodyError = getBody(error)
         assertEquals(RecipeNotAccessible().message, bodyError.detail)
     }
@@ -105,7 +105,7 @@ class RateRecipeIntegrationTests : RateRecipeIntegrationTest() {
             token = token
         )
 
-        // then the user has already rated the recipe
+        // then the recipe cannot be rated and fails with code 409
         val bodyError = getBody(error)
         assertEquals(UserAlreadyRated(testUser.user.id, testRecipe.id).message, bodyError.detail)
     }

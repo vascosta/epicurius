@@ -50,7 +50,7 @@ class GetRecipeRateIntegrationTests : RateRecipeIntegrationTest() {
             token = token
         )
 
-        // then the recipe is not found
+        // then the recipe rate cannot be retrieved and fails with code 404
         assertNotNull(error)
         assertEquals(RecipeNotFound().message, error.detail)
     }
@@ -68,7 +68,7 @@ class GetRecipeRateIntegrationTests : RateRecipeIntegrationTest() {
             token = token
         )
 
-        // then the recipe is not accessible
+        // then the recipe rate cannot be retrieved and fails with code 403
         assertNotNull(error)
         assertEquals(RecipeNotAccessible().message, error.detail)
     }

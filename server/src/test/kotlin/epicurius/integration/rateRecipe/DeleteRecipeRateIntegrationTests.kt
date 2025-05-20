@@ -51,7 +51,7 @@ class DeleteRecipeRateIntegrationTests : RateRecipeIntegrationTest() {
             token = token
         )
 
-        // then the recipe is not found
+        // then the recipe rate cannot be deleted and fails with code 404
         val bodyError = getBody(error)
         assertEquals(RecipeNotFound().message, bodyError.detail)
     }
@@ -69,7 +69,7 @@ class DeleteRecipeRateIntegrationTests : RateRecipeIntegrationTest() {
             token = token
         )
 
-        // then the recipe is not accessible
+        // then the recipe rate cannot be deleted and fails with code 403
         val bodyError = getBody(error)
         assertEquals(AuthorCannotDeleteRating().message, bodyError.detail)
     }
@@ -87,7 +87,7 @@ class DeleteRecipeRateIntegrationTests : RateRecipeIntegrationTest() {
             token = token
         )
 
-        // then the recipe is not accessible
+        // then the recipe rate cannot be deleted and fails with code 403
         val bodyError = getBody(error)
         assertEquals(RecipeNotAccessible().message, bodyError.detail)
     }
@@ -105,7 +105,7 @@ class DeleteRecipeRateIntegrationTests : RateRecipeIntegrationTest() {
             token = token
         )
 
-        // then the recipe has not been rated
+        // then the recipe rate cannot be deleted and fails with code 400
         val bodyError = getBody(error)
         assertEquals(UserHasNotRated(testUser.user.id, testRecipe.id).message, bodyError.detail)
     }

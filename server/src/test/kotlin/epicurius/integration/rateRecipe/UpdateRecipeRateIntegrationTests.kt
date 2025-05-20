@@ -54,7 +54,7 @@ class UpdateRecipeRateIntegrationTests : RateRecipeIntegrationTest() {
             token = token
         )
 
-        // then the recipe is not found
+        // then the recipe rate cannot be updated and fails with code 404
         val bodyError = getBody(error)
         assertEquals(RecipeNotFound().message, bodyError.detail)
     }
@@ -75,7 +75,7 @@ class UpdateRecipeRateIntegrationTests : RateRecipeIntegrationTest() {
             token = token
         )
 
-        // then the recipe is not accessible
+        // then the recipe rate cannot be updated and fails with code 403
         val bodyError = getBody(error)
         assertEquals(AuthorCannotUpdateRating().message, bodyError.detail)
     }
@@ -96,7 +96,7 @@ class UpdateRecipeRateIntegrationTests : RateRecipeIntegrationTest() {
             token = token
         )
 
-        // then the recipe is not accessible
+        // then the recipe rate cannot be updated and fails with code 403
         val bodyError = getBody(error)
         assertEquals(RecipeNotAccessible().message, bodyError.detail)
     }
@@ -117,7 +117,7 @@ class UpdateRecipeRateIntegrationTests : RateRecipeIntegrationTest() {
             token = token
         )
 
-        // then the recipe has not been rated
+        // then the recipe rate cannot be updated and fails with code 400
         val bodyError = getBody(error)
         assertEquals(UserHasNotRated(testUser.user.id, testRecipe.id).message, bodyError.detail)
     }
