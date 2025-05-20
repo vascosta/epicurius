@@ -55,7 +55,7 @@ class LoginIntegrationTests: UserIntegrationTest() {
         val nonExistingUsername = "123abc"
         val nonExistingEmail = "123@gmail.com"
 
-        // when logging in
+        // when logging in by username
         val nonExistingUsernameError = post<Problem>(
             client,
             api(Uris.User.LOGIN),
@@ -63,6 +63,7 @@ class LoginIntegrationTests: UserIntegrationTest() {
             HttpStatus.NOT_FOUND
         )
 
+        // when logging in by email
         val nonExistingEmailResponse = post<Problem>(
             client,
             api(Uris.User.LOGIN),
