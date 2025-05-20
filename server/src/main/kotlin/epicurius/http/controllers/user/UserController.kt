@@ -257,7 +257,7 @@ class UserController(val userService: UserService) {
     ): ResponseEntity<*> {
         userService.unfollow(authenticatedUser.user.id, authenticatedUser.user.name, name)
         return ResponseEntity
-            .ok()
+            .noContent()
             .build<Unit>()
     }
 
