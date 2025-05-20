@@ -24,7 +24,7 @@ class RateRecipeIntegrationTests : RateRecipeIntegrationTest() {
     }
 
     @Test
-    fun `Fails with code 404 when trying to rate a recipe with non existing id`() {
+    fun `Should fail with code 404 when trying to rate a recipe with non existing id`() {
         // given a user token and a non-existing recipe id
         val token = testUser.token
         val nonExistingRecipeId = 9999
@@ -88,7 +88,7 @@ class RateRecipeIntegrationTests : RateRecipeIntegrationTest() {
     }
 
     @Test
-    fun `Fails with code 409 when trying to rate a recipe that the user has already rated`() {
+    fun `Should fail with code 409 when trying to rate a recipe that the user has already rated`() {
         // given a user token and a recipe id
         val token = testUser.token
 

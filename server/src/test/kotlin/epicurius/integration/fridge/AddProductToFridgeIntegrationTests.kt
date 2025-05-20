@@ -52,7 +52,7 @@ class AddProductToFridgeIntegrationTests : FridgeIntegrationTest() {
     }
 
     @Test
-    fun `Try to add product with invalid name and fails with code 400`() {
+    fun `Should fail with code 400 when adding a product with invalid name`() {
         // given a user (testUser)
 
         // when trying to add a product with an invalid name

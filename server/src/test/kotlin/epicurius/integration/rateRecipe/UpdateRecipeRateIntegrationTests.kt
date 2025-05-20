@@ -38,7 +38,7 @@ class UpdateRecipeRateIntegrationTests : RateRecipeIntegrationTest() {
     }
 
     @Test
-    fun `Fails with code 404 when trying to update a recipe's rate with non existing recipe id`() {
+    fun `Should fail with code 404 when trying to update a recipe's rate with non existing recipe id`() {
         // given a user token and a non-existing recipe id
         val token = testUser.token
         val nonExistingRecipeId = 9999
@@ -60,7 +60,7 @@ class UpdateRecipeRateIntegrationTests : RateRecipeIntegrationTest() {
     }
 
     @Test
-    fun `Fails with code 403 when recipe's author tries to update recipe rate`() {
+    fun `Should fail with code 403 when recipe's author tries to update recipe rate`() {
         // given a user token and a recipe id
         val token = authorTestUser.token
 
@@ -81,7 +81,7 @@ class UpdateRecipeRateIntegrationTests : RateRecipeIntegrationTest() {
     }
 
     @Test
-    fun `Fails with code 403 when trying to update a recipe's rate without following the recipe's private user author`() {
+    fun `Should fail with code 403 when trying to update a recipe's rate without following the recipe's private user author`() {
         // given a user token and a private recipe id
         val token = testUser.token
 
@@ -102,7 +102,7 @@ class UpdateRecipeRateIntegrationTests : RateRecipeIntegrationTest() {
     }
 
     @Test
-    fun `Fails with code 400 when trying to update user's rate that does not exist`() {
+    fun `Should fail with code 400 when trying to update user's rate that does not exist`() {
         // given a user token and a recipe id
         val token = testUser.token
 

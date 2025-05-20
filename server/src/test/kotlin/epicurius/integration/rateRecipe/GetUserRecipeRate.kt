@@ -30,7 +30,7 @@ class GetUserRecipeRate : RateRecipeIntegrationTest() {
     }
 
     @Test
-    fun `Fails with code 404 when trying to retrieve a user's recipe rate with non existing id`() {
+    fun `Should fail with code 404 when trying to retrieve a user's recipe rate with non existing id`() {
         // given a user token and a non-existing recipe id
         val token = testUser.token
         val nonExistingRecipeId = 9999
@@ -49,7 +49,7 @@ class GetUserRecipeRate : RateRecipeIntegrationTest() {
     }
 
     @Test
-    fun `Fails with code 403 when trying to retrieve a user's recipe rate without following the recipe's private user author`() {
+    fun `Should fail with code 403 when trying to retrieve a user's recipe rate without following the recipe's private user author`() {
         // given a user token and a private recipe id
         val token = testUser.token
 
@@ -67,7 +67,7 @@ class GetUserRecipeRate : RateRecipeIntegrationTest() {
     }
 
     @Test
-    fun `Fails with code 400 when trying to retrieve a user's recipe rate that has not been rated`() {
+    fun `Should fail with code 400 when trying to retrieve a user's recipe rate that has not been rated`() {
         // given a user token and a recipe id
         val token = testUser.token
 

@@ -38,7 +38,7 @@ class DeleteRecipeRateIntegrationTests : RateRecipeIntegrationTest() {
     }
 
     @Test
-    fun `Fails with code 404 when trying to delete a recipe's rate with non existing recipe id`() {
+    fun `Should fail with code 404 when trying to delete a recipe's rate with non existing recipe id`() {
         // given a user token and a non-existing recipe id
         val token = testUser.token
         val nonExistingRecipeId = 9999
@@ -57,7 +57,7 @@ class DeleteRecipeRateIntegrationTests : RateRecipeIntegrationTest() {
     }
 
     @Test
-    fun `Fails with code 403 when recipe's author tries to delete recipe rate`() {
+    fun `Should fail with code 403 when recipe's author tries to delete recipe rate`() {
         // given a user token and a recipe id
         val token = authorTestUser.token
 
@@ -75,7 +75,7 @@ class DeleteRecipeRateIntegrationTests : RateRecipeIntegrationTest() {
     }
 
     @Test
-    fun `Fails with code 403 when trying to delete a recipe's rate without following the recipe's private user author`() {
+    fun `Should fail with code 403 when trying to delete a recipe's rate without following the recipe's private user author`() {
         // given a user token and a private recipe id
         val token = testUser.token
 
@@ -93,7 +93,7 @@ class DeleteRecipeRateIntegrationTests : RateRecipeIntegrationTest() {
     }
 
     @Test
-    fun `Fails with code 400 when trying to delete a recipe's rate that has not been rated`() {
+    fun `Should fail with code 400 when trying to delete a recipe's rate that has not been rated`() {
         // given a user token and a recipe id
         val token = testUser.token
 

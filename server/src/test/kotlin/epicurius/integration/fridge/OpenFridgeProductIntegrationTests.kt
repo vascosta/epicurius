@@ -63,7 +63,7 @@ class OpenFridgeProductIntegrationTests : FridgeIntegrationTest() {
     }
 
     @Test
-    fun `Try to open product but entry number is invalid, fails with 404`() {
+    fun `Should fail with code 404 when opening a product but entry number is invalid`() {
         // given a user (testUser)
 
         // when opening a product with an invalid entry number
@@ -84,7 +84,7 @@ class OpenFridgeProductIntegrationTests : FridgeIntegrationTest() {
     }
 
     @Test
-    fun `Try to open product but product is already open, fails with 400`() {
+    fun `Should fail with code 400 when opening a product already open`() {
         // given a user (testUser)
 
         // when adding a product

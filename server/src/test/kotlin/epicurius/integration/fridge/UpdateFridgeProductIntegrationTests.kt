@@ -38,7 +38,7 @@ class UpdateFridgeProductIntegrationTests : FridgeIntegrationTest() {
     }
 
     @Test
-    fun `Try to update product with invalid entry number and fails with code 404`() {
+    fun `Should fail with code 404 when updating a product with invalid entry number`() {
         // given a user (testUser)
 
         // when updating a product with an invalid entry number
@@ -58,7 +58,7 @@ class UpdateFridgeProductIntegrationTests : FridgeIntegrationTest() {
     }
 
     @Test
-    fun `Try to update a product expiration date but it is already open, fails with 400`() {
+    fun `Should fail with code 400 when updating a product expiration date but it is already open`() {
         // given a user (testUser)
 
         // when adding a product
