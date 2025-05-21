@@ -21,6 +21,7 @@ import epicurius.domain.exceptions.InvalidMealTimeIdx
 import epicurius.domain.exceptions.InvalidMealTypeIdx
 import epicurius.domain.exceptions.InvalidNumberOfRecipePictures
 import epicurius.domain.exceptions.InvalidProduct
+import epicurius.domain.exceptions.InvalidSelfCancelFollowRequest
 import epicurius.domain.exceptions.InvalidSelfFollow
 import epicurius.domain.exceptions.InvalidSelfUnfollow
 import epicurius.domain.exceptions.InvalidToken
@@ -203,6 +204,7 @@ class ExceptionHandler {
             UserAlreadyRated::class,
             InvalidSelfFollow::class,
             InvalidSelfUnfollow::class,
+            InvalidSelfCancelFollowRequest::class,
             FollowRequestAlreadyBeenSent ::class,
             ProductIsAlreadyOpen::class,
             MealTimeAlreadyExistsInPlanner::class,
