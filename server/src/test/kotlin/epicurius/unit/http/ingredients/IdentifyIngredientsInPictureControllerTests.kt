@@ -2,7 +2,7 @@ package epicurius.unit.http.ingredients
 
 import epicurius.domain.user.AuthenticatedUser
 import epicurius.domain.user.User
-import epicurius.http.controllers.ingredients.models.output.GetIngredientsFromPictureOutputModel
+import epicurius.http.controllers.ingredients.models.output.IdentifyIngredientsInPictureOutputModel
 import epicurius.unit.http.HttpTest
 import epicurius.utils.generateEmail
 import epicurius.utils.generateRandomUsername
@@ -12,7 +12,7 @@ import org.springframework.http.HttpStatus
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
-class GetIngredientsFromPictureControllerTests : HttpTest() {
+class IdentifyIngredientsInPictureControllerTests : HttpTest() {
 
     private val testIngredients = listOf("tomato")
 
@@ -28,12 +28,12 @@ class GetIngredientsFromPictureControllerTests : HttpTest() {
 
         // mock
         whenever(
-            runBlocking { ingredientsServiceMock.getIngredientsFromPicture(testTomatoPicture) }
+            runBlocking { ingredientsServiceMock.identifyIngredientsInPicture(testTomatoPicture) }
         ).thenReturn(testIngredients)
 
         // when retrieving the ingredients from the picture
-        val response = runBlocking { getIngredientsFromPicture(testAuthenticatedUser, testTomatoPicture) }
-        val body = response.body as GetIngredientsFromPictureOutputModel
+        val response = runBlocking { identifyIngredientsInPicture(testAuthenticatedUser, testTomatoPicture) }
+        val body = response.body as IdentifyIngredientsInPictureOutputModel
 
         // then the ingredients are detected successfully
         assertEquals(HttpStatus.OK, response.statusCode)
@@ -46,12 +46,12 @@ class GetIngredientsFromPictureControllerTests : HttpTest() {
 
         // mock
         whenever(
-            runBlocking { ingredientsServiceMock.getIngredientsFromPicture(testPicture) }
+            runBlocking { ingredientsServiceMock.identifyIngredientsInPicture(testPicture) }
         ).thenReturn(emptyList())
 
         // when retrieving the ingredients from the picture
-        val response = runBlocking { getIngredientsFromPicture(testAuthenticatedUser, testPicture) }
-        val body = response.body as GetIngredientsFromPictureOutputModel
+        val response = runBlocking { identifyIngredientsInPicture(testAuthenticatedUser, testPicture) }
+        val body = response.body as IdentifyIngredientsInPictureOutputModel
 
         // then the ingredients are empty
         assertEquals(HttpStatus.OK, response.statusCode)

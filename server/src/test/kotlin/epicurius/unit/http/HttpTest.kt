@@ -285,11 +285,11 @@ open class HttpTest : EpicuriusUnitTest() {
         ) =
             ingredientsController.getSubstituteIngredients(authenticatedUser, name)
 
-        suspend fun getIngredientsFromPicture(
+        suspend fun identifyIngredientsInPicture(
             authenticatedUser: AuthenticatedUser,
             picture: MultipartFile
         ) =
-            ingredientsController.getIngredientsFromPicture(authenticatedUser, picture)
+            ingredientsController.identifyIngredientsInPicture(authenticatedUser, picture)
 
         // MENU
         fun getDailyMenu(

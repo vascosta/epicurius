@@ -9,7 +9,7 @@ import java.util.UUID.randomUUID
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
-class GetIngredientsFromPictureServiceTests : ServiceTest() {
+class IdentifyIngredientsInPictureServiceTests : ServiceTest() {
 
     private val testIngredients = listOf("tomato")
 
@@ -34,7 +34,7 @@ class GetIngredientsFromPictureServiceTests : ServiceTest() {
         }
 
         // when retrieving the ingredients from the picture
-        val ingredients = runBlocking { getIngredientsFromPicture(testTomatoPicture) }
+        val ingredients = runBlocking { identifyIngredientsInPicture(testTomatoPicture) }
 
         // then the ingredients are detected successfully
         verify(pictureDomainMock).validatePicture(testTomatoPicture)
@@ -57,7 +57,7 @@ class GetIngredientsFromPictureServiceTests : ServiceTest() {
         ).thenReturn(emptyList())
 
         // when retrieving the ingredients from the picture
-        val ingredients = runBlocking { getIngredientsFromPicture(testPicture) }
+        val ingredients = runBlocking { identifyIngredientsInPicture(testPicture) }
 
         // then the ingredients are empty
         verify(pictureDomainMock).validatePicture(testPicture)

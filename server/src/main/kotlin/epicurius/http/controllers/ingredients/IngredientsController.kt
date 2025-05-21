@@ -1,13 +1,11 @@
 package epicurius.http.controllers.ingredients
 
 import epicurius.domain.user.AuthenticatedUser
-import epicurius.http.controllers.ingredients.models.output.GetIngredientsFromPictureOutputModel
+import epicurius.http.controllers.ingredients.models.output.IdentifyIngredientsInPictureOutputModel
 import epicurius.http.controllers.ingredients.models.output.GetIngredientsOutputModel
 import epicurius.http.controllers.ingredients.models.output.GetSubstituteIngredientsOutputModel
-import epicurius.http.pipeline.authentication.cookie.addCookie
 import epicurius.http.utils.Uris
 import epicurius.services.ingredients.IngredientsService
-import jakarta.servlet.http.HttpServletResponse
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
@@ -45,13 +43,13 @@ class IngredientsController(private val ingredientsService: IngredientsService) 
     }
 
     @PostMapping(Uris.Ingredients.INGREDIENTS, consumes = [MediaType.MULTIPART_FORM_DATA_VALUE])
-    suspend fun getIngredientsFromPicture(
+    suspend fun identifyIngredientsInPicture(
         authenticatedUser: AuthenticatedUser,
         @RequestPart("picture") picture: MultipartFile,
     ): ResponseEntity<*> {
-        val ingredients = ingredientsService.getIngredientsFromPicture(picture)
+        val ingredients = ingredientsService.identifyIngredientsInPicture(picture)
         return ResponseEntity
             .ok()
-            .body(GetIngredientsFromPictureOutputModel(ingredients))
+            .body(IdentifyIngredientsInPictureOutputModel(ingredients))
     }
 }

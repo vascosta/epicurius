@@ -21,7 +21,7 @@ class IngredientsService(
     suspend fun getSubstituteIngredients(name: String): List<String> =
         sm.spoonacularRepository.getSubstituteIngredients(name)
 
-    suspend fun getIngredientsFromPicture(picture: MultipartFile): List<String> {
+    suspend fun identifyIngredientsInPicture(picture: MultipartFile): List<String> {
         pictureDomain.validatePicture(picture)
         val pictureName = pictureDomain.generatePictureName() + "." + picture.contentType?.substringAfter("/")
         cs.pictureRepository.updatePicture(pictureName, picture, INGREDIENTS_FOLDER)
