@@ -73,6 +73,32 @@ class HttpService(
             .build()
             .getResponseResult()
 
+    suspend inline fun <reified T> postMultipart(
+        endpoint: String,
+        fileParamName: String,
+        fileName: String,
+        fileBytes: ByteArray?,
+        pathParams: Map<String, Any?>? = null,
+        token: String? = null
+    ): APIResult<T> {
+        val imageBodyBuilder = MultipartBody.Builder().setType(MultipartBody.FORM)
+
+        fileBytes?.let {
+            val fileBody = it.toRequestBody("image/*".toMediaTypeOrNull())
+            imageBodyBuilder.addFormDataPart(fileParamName, fileName, fileBody)
+        }
+
+        val requestBody = imageBodyBuilder.build()
+
+        val request = Request.Builder()
+            .url(baseUrl + endpoint.params(pathParams, emptyMap()))
+            .authorizationHeader(token)
+            .post(requestBody)
+            .build()
+
+        return request.getResponseResult()
+    }
+
     suspend inline fun <reified T> patchMultipart(
         endpoint: String,
         fileParamName: String,
