@@ -2,6 +2,7 @@ package android.epicurius.ui.screens.auth.login
 
 import android.annotation.SuppressLint
 import android.epicurius.ui.screens.TopBar
+import android.epicurius.ui.screens.auth.utils.PasswordTextField
 import android.epicurius.ui.utils.TextField
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -31,7 +32,7 @@ fun LoginScreen() {
     var password by rememberSaveable { mutableStateOf("") }
 
     Scaffold(
-        topBar = { TopBar("LogIn") }
+        topBar = { TopBar(text = "LogIn", icon = null) }
     ) {
         Column(
             modifier = Modifier
@@ -42,8 +43,8 @@ fun LoginScreen() {
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             TextField(value = username, onValueChange = { username = it }, label = "Username")
-            TextField(value = email, onValueChange = {email = it}, label = "Email")
-            TextField(value = password, onValueChange = {password = it}, label = "Password")
+            TextField(value = email, onValueChange = { email = it }, label = "Email")
+            PasswordTextField(value = password, onValueChange = { password = it }, label = "Password")
 
             Row {
                 Button(

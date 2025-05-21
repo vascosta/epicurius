@@ -20,6 +20,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Tab
@@ -42,7 +43,7 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun UserProfileScreen(username: String, followers: Int, following: Int) {
     Scaffold(
-        topBar = { TopBar("Profile") },
+        topBar = { TopBar(text = "Profile", icon = Icons.Filled.Settings) },
         bottomBar = { BottomBar() },
         content = { paddingValues ->
             Column(modifier = Modifier

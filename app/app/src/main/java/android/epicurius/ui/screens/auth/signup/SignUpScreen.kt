@@ -2,17 +2,16 @@ package android.epicurius.ui.screens.auth.signup
 
 import android.annotation.SuppressLint
 import android.epicurius.ui.screens.TopBar
+import android.epicurius.ui.screens.auth.utils.PasswordTextField
 import android.epicurius.ui.utils.TextField
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
@@ -27,6 +26,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -38,8 +38,13 @@ import java.util.Locale
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun SignUpScreen() {
+    var username by rememberSaveable { mutableStateOf("") }
+    var email by rememberSaveable { mutableStateOf("") }
+    var password by rememberSaveable { mutableStateOf("") }
+    var confirmPassword by rememberSaveable { mutableStateOf("") }
+
     Scaffold(
-        topBar = { TopBar("SignUp") }
+        topBar = { TopBar(text = "SignUp", icon = null) }
     ) {
         Column(
             modifier = Modifier
@@ -48,10 +53,14 @@ fun SignUpScreen() {
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-            TextField(value = "", onValueChange = {}, label = "Username")
-            TextField(value = "", onValueChange = {}, label = "Email")
-            TextField(value = "", onValueChange = {}, label = "Password")
-            TextField(value = "", onValueChange = {}, label = "Confirm Password")
+            TextField(value = username, onValueChange = { username = it }, label = "Username")
+            TextField(value = email, onValueChange = { email = it }, label = "Email")
+            PasswordTextField(value = password, onValueChange = { password = it }, label = "Password")
+            PasswordTextField(
+                value = confirmPassword,
+                onValueChange = { confirmPassword = it },
+                label = "Confirm Password"
+            )
             SelectCountry()
 
             Row {
@@ -83,7 +92,9 @@ private fun SelectCountry() {
     ExposedDropdownMenuBox(
         expanded = expanded,
         onExpandedChange = { expanded = !expanded },
-        modifier = Modifier.padding(5.dp)
+        modifier = Modifier
+            .padding(5.dp)
+            .verticalScroll(rememberScrollState())
     ) {
         OutlinedTextField(
             value = selectedCode,

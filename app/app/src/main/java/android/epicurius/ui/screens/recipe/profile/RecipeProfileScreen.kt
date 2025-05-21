@@ -36,7 +36,6 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
-import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -44,8 +43,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.drawWithContent
-import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
@@ -60,7 +57,7 @@ import java.time.LocalDate
 @Composable
 fun RecipeProfileScreen(recipe: Recipe, rating: Double, images: List<Int>, isAuthor: Boolean) {
     Scaffold(
-        topBar = { TopBar(recipe.name, true) },
+        topBar = { TopBar(text = recipe.name, backButton = true) },
         bottomBar = { BottomBar() }
     ) { paddingValues ->
         Column(
@@ -114,7 +111,7 @@ fun RecipeProfileScreen(recipe: Recipe, rating: Double, images: List<Int>, isAut
             ) { page ->
                 Image(
                     painter = painterResource(id = images[page]),
-                    contentDescription = "Imagem da receita",
+                    contentDescription = "Recipe Image",
                     contentScale = ContentScale.Crop,
                     modifier = Modifier
                         .fillMaxSize()
@@ -148,7 +145,7 @@ fun RecipeProfileScreen(recipe: Recipe, rating: Double, images: List<Int>, isAut
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(16.dp)
+                    .padding(top = 16.dp, start = 10.dp, end = 10.dp)
                     .border(1.dp, Color.Black, RoundedCornerShape(16.dp)),
                 contentAlignment = Alignment.CenterStart
             ) {
@@ -180,7 +177,30 @@ fun RecipeProfileScreen(recipe: Recipe, rating: Double, images: List<Int>, isAut
                     MixedText("Fat: ", recipe.fat?.toString() ?: "N/A")
                     MixedText("Carbs: ", recipe.carbs?.toString() ?: "N/A")
 
-                    val ingredients = recipe.ingredients.joinToString("\n") { "${it.quantity} ${it.unit} ${it.name}" }
+                    val ingredients = recipe.ingredients.joinToString("\n") {
+                        val formattedQuantity = if (it.quantity % 1.0 == 0.0) {
+                            it.quantity.toInt()
+                        } else {
+                            it.quantity
+                        }
+
+                        val formattedUnit =
+                            when(it.unit) {
+                                IngredientUnit.G -> "g"
+                                IngredientUnit.ML -> "ml"
+                                IngredientUnit.X -> ""
+                                IngredientUnit.TSP -> "tsp"
+                                IngredientUnit.L -> "l"
+                                IngredientUnit.Kg -> "Kg"
+                                IngredientUnit.CUPS -> "cups"
+                                IngredientUnit.TBSP -> "tbsp"
+                                IngredientUnit.DSP -> "dsp"
+                                IngredientUnit.TEA_CUP -> "Tea cup"
+                                IngredientUnit.COFFEE_CUP -> "Coffee cup"
+                            }
+
+                        "$formattedQuantity$formattedUnit ${it.name}"
+                    }
                     Text("Ingredients:", fontWeight = FontWeight.Bold)
                     Text(text = ingredients, modifier = Modifier.padding(start = 10.dp))
 
@@ -194,9 +214,9 @@ fun RecipeProfileScreen(recipe: Recipe, rating: Double, images: List<Int>, isAut
                 Button(
                     onClick = { },
                     modifier = Modifier
-                        .padding(top = 5.dp, end = 10.dp)
+                        .padding(top = 5.dp, end = 10.dp),
                 ) {
-                    Text("Edit")
+                    Text("Make it!")
                 }
             }
         }

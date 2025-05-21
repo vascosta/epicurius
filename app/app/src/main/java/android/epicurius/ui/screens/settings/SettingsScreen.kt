@@ -3,10 +3,13 @@ package android.epicurius.ui.screens.settings
 import android.epicurius.ui.screens.BottomBar
 import android.epicurius.ui.screens.TopBar
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
@@ -23,7 +26,7 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun SettingsScreens() {
     Scaffold(
-        topBar = { TopBar("Settings", true) },
+        topBar = { TopBar(text = "Settings", backButton = true, icon = null) },
         bottomBar = { BottomBar() },
         content = { paddingValues ->
             Column(
@@ -34,13 +37,20 @@ fun SettingsScreens() {
             ) {
                 Spacer(modifier = Modifier.fillMaxHeight(0.02f))
 
+                SettingsButton("Change username")
                 SettingsButton("Change email")
                 SettingsButton("Change password")
                 SettingsButton("Change privacy")
 
                 Spacer(modifier = Modifier.fillMaxHeight(0.9f))
 
-                SettingsButton("Logout")
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    SettingsButton("Delete account")
+                    SettingsButton("Logout")
+                }
             }
         }
     )
@@ -50,7 +60,7 @@ fun SettingsScreens() {
 private fun SettingsButton(text: String) {
     TextButton(
         onClick = {},
-        modifier = Modifier.padding(start = 15.dp)
+        modifier = Modifier.padding(start = 15.dp, end = 15.dp)
     ) { Text(text) }
 }
 

@@ -2,33 +2,17 @@ package android.epicurius.ui.screens
 
 import android.epicurius.R
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.sharp.ArrowBack
-import androidx.compose.material.icons.filled.AccountCircle
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material.icons.sharp.ArrowBack
-import androidx.compose.material3.BottomAppBar
-import androidx.compose.material3.Divider
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FloatingActionButton
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.NavigationBar
-import androidx.compose.material3.NavigationBarItem
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
@@ -37,17 +21,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TopBar(topBarText: String, backButton: Boolean = false) {
+fun TopBar(text: String, backButton: Boolean = false, icon: ImageVector? = Icons.Filled.Person) {
     TopAppBar(
-        title = { Text(topBarText) },
+        title = { Text(text) },
         modifier = Modifier
             .drawWithContent {
                 drawContent()
@@ -65,7 +49,18 @@ fun TopBar(topBarText: String, backButton: Boolean = false) {
                 ) {
                     Icon(
                         imageVector = Icons.AutoMirrored.Sharp.ArrowBack,
-                        contentDescription = stringResource(R.string.app_name)
+                        contentDescription = "Go Back"
+                    )
+                }
+            }
+        },
+        actions = {
+            icon?.let {
+                IconButton(onClick = {  }) {
+                    Icon(
+                        imageVector = it,
+                        contentDescription = "Navigation",
+                        tint = Color.Black
                     )
                 }
             }
@@ -82,16 +77,17 @@ fun TopBar(topBarText: String, backButton: Boolean = false) {
 fun BottomBar() {
     NavigationBar(containerColor = Color.White) {
         Row(
-            modifier = Modifier.fillMaxWidth()
-                    .drawWithContent {
-                        drawContent()
-                        drawLine(
-                            color = Color.Black,
-                            start = Offset(0f, 1f),
-                            end = Offset(size.width, 1f),
-                            strokeWidth = 1.dp.toPx()
-                        )
-                    },
+            modifier = Modifier
+                .fillMaxWidth()
+                .drawWithContent {
+                    drawContent()
+                    drawLine(
+                        color = Color.Black,
+                        start = Offset(0f, 0f),
+                        end = Offset(size.width, 0f),
+                        strokeWidth = 1.dp.toPx()
+                    )
+                },
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             BottomBarButton({}, R.drawable.home, "Home")
