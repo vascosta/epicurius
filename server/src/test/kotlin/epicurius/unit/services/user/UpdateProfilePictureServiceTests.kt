@@ -89,7 +89,7 @@ class UpdateProfilePictureServiceTests : UserServiceTest() {
         whenever(jdbiUserRepositoryMock.getUserProfilePictureName(publicTestUser.id)).thenReturn(null)
 
         // when removing the profile picture of the user
-        // then the user profile picture cannot be updated and throws PictureNotFound exception
+        // then the user profile picture cannot be removed and throws PictureNotFound exception
         assertFailsWith<PictureNotFound> {
             updateProfilePicture(publicTestUser.id, publicTestUser.profilePictureName, null)
         }
