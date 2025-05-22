@@ -25,10 +25,10 @@ class UpdateUserProfilePictureIntegrationTests: UserIntegrationTest() {
         val user = createTestUser(tm)
         val userProfilePictureName = updateUserProfilePicture(user.token, testPicture).profilePictureName
 
-        // when adding a profile picture to the user
+        // when updating the profile picture of the user
         val body = updateUserProfilePicture(user.token, testPicture2)
 
-        // then the profile picture is added successfully with code 200
+        // then the profile picture is updated successfully with code 200
         assertEquals(userProfilePictureName, body.profilePictureName)
     }
 
