@@ -1,10 +1,11 @@
 package android.epicurius.ui.screens.user.profile
 
+import android.epicurius.domain.user.UserProfile
 import android.epicurius.ui.screens.BottomBar
 import android.epicurius.ui.screens.TopBar
+import android.epicurius.ui.screens.user.utils.UserProfilePicture
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -15,13 +16,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
@@ -33,7 +30,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.text.font.FontWeight
@@ -41,7 +37,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun UserProfileScreen(username: String, followers: Int, following: Int) {
+fun UserProfileScreen(userProfile: UserProfile) {
     Scaffold(
         topBar = { TopBar(text = "Profile", icon = Icons.Filled.Settings) },
         bottomBar = { BottomBar() },
@@ -54,11 +50,11 @@ fun UserProfileScreen(username: String, followers: Int, following: Int) {
             ) {
                 Spacer(modifier = Modifier.fillMaxHeight(0.02f))
 
-                ProfilePicture()
+                UserProfilePicture(userProfile.profilePicture, 120)
 
                 Spacer(modifier = Modifier.fillMaxHeight(0.02f))
 
-                Text(text = username, fontWeight = FontWeight.Bold)
+                Text(text = userProfile.name, fontWeight = FontWeight.Bold)
 
                 Spacer(modifier = Modifier.fillMaxHeight(0.05f))
 
@@ -66,8 +62,8 @@ fun UserProfileScreen(username: String, followers: Int, following: Int) {
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.Center,
                 ) {
-                    FollowBox("Followers", followers)
-                    FollowBox("Following", following)
+                    FollowBox("Followers", userProfile.followersCount)
+                    FollowBox("Following", userProfile.followingCount)
                 }
 
                 Spacer(modifier = Modifier.fillMaxHeight(0.03f))
@@ -76,25 +72,6 @@ fun UserProfileScreen(username: String, followers: Int, following: Int) {
             }
         }
     )
-}
-
-@Composable
-private fun ProfilePicture() {
-    Box(
-        modifier = Modifier
-            .size(120.dp)
-            .clip(CircleShape)
-            .background(Color.LightGray)
-            .clickable { },
-        contentAlignment = Alignment.Center
-    ) {
-        Icon(
-            imageVector = Icons.Default.Person,
-            contentDescription = "Default Profile",
-            tint = Color.White,
-            modifier = Modifier.size(64.dp)
-        )
-    }
 }
 
 @Composable
@@ -145,5 +122,14 @@ private fun ProfileTabBar() {
 @Preview
 @Composable
 fun UserProfilePreview() {
-    UserProfileScreen("Carol", 1234, 2356)
+    val userProfile = UserProfile(
+        name = "John Doe",
+        country = "USA",
+        privacy = false,
+        profilePicture = null,
+        followersCount = 100,
+        followingCount = 50
+    )
+
+    UserProfileScreen(userProfile)
 }

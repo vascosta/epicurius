@@ -11,9 +11,6 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonColors
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -41,6 +38,8 @@ fun SettingsScreens() {
                 SettingsButton("Change email")
                 SettingsButton("Change password")
                 SettingsButton("Change privacy")
+                SettingsButton("Change intolerances")
+                SettingsButton("Change diets")
 
                 Spacer(modifier = Modifier.fillMaxHeight(0.9f))
 
