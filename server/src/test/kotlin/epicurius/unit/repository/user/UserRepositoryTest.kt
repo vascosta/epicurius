@@ -15,6 +15,7 @@ open class UserRepositoryTest : RepositoryTest() {
         fun getUserByName(username: String) = tm.run { it.userRepository.getUser(username) }
         fun getUserByEmail(email: String) = tm.run { it.userRepository.getUser(email = email) }
         fun getUserByTokenHash(tokenHash: String) = tm.run { it.userRepository.getUser(tokenHash = tokenHash) }
+        fun getUserProfilePictureName(userId: Int) = tm.run { it.userRepository.getUserProfilePictureName(userId) }
 
         fun searchUsers(userId: Int, partialUsername: String, pagingParams: PagingParams) =
             tm.run { it.userRepository.searchUsers(userId, partialUsername, pagingParams) }
