@@ -14,6 +14,8 @@ class FollowRequestNotFound(name: String) : RuntimeException("Follow request to 
 class IncorrectPassword : RuntimeException("Incorrect password")
 class PasswordsDoNotMatch : RuntimeException("Passwords don't match")
 
+class PictureNotFound : RuntimeException("Picture not found")
+
 class InvalidToken : RuntimeException("Invalid token")
 class InvalidCountry : RuntimeException("Invalid country")
 class InvalidIntolerancesIdx : RuntimeException("Invalid intolerance index")

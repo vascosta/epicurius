@@ -162,6 +162,18 @@ class JdbiUserRepository(private val handle: Handle) : UserRepository {
             .mapTo<SearchUserModel>()
             .list()
 
+    override fun getUserProfilePictureName(userId: Int): String? =
+        handle.createQuery(
+            """
+                SELECT profile_picture_name
+                FROM dbo.user
+                WHERE id = :userId
+            """
+        )
+            .bind("userId", userId)
+            .mapTo<String>()
+            .firstOrNull()
+
     override fun updateUser(userId: Int, userUpdateInfo: JdbiUpdateUserModel): User =
         handle.createQuery(
             """

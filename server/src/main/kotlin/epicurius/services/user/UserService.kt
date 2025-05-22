@@ -11,6 +11,7 @@ import epicurius.domain.exceptions.InvalidSelfFollow
 import epicurius.domain.exceptions.InvalidSelfUnfollow
 import epicurius.domain.exceptions.InvalidToken
 import epicurius.domain.exceptions.PasswordsDoNotMatch
+import epicurius.domain.exceptions.PictureNotFound
 import epicurius.domain.exceptions.UserAlreadyBeingFollowed
 import epicurius.domain.exceptions.UserAlreadyExists
 import epicurius.domain.exceptions.UserAlreadyLoggedIn
@@ -150,12 +151,14 @@ class UserService(
             }
 
             profilePictureName != null && profilePicture != null -> { // update profile picture
+                checkUserProfilePicture(userId, profilePictureName)
                 pictureDomain.validatePicture(profilePicture)
                 cs.pictureRepository.updatePicture(profilePictureName, profilePicture, PictureDomain.USERS_FOLDER)
                 profilePictureName
             }
 
             profilePictureName != null && profilePicture == null -> { // remove profile picture
+                checkUserProfilePicture(userId, profilePictureName)
                 removeProfilePicture(userId, profilePictureName)
                 null
             }
@@ -262,4 +265,11 @@ class UserService(
     }
 
     private fun checkSelf(userId: String, userId2: String) = userId == userId2
+
+    private fun checkUserProfilePicture(userId: Int, profilePictureName: String?) {
+        val userProfilePictureName = tm.run { it.userRepository.getUserProfilePictureName(userId) } ?: throw PictureNotFound()
+        if (userProfilePictureName != profilePictureName) {
+            throw PictureNotFound()
+        }
+    }
 }

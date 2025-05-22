@@ -29,6 +29,7 @@ import epicurius.domain.exceptions.MealPlannerAlreadyExists
 import epicurius.domain.exceptions.MealTimeAlreadyExistsInPlanner
 import epicurius.domain.exceptions.NotTheRecipeAuthor
 import epicurius.domain.exceptions.PasswordsDoNotMatch
+import epicurius.domain.exceptions.PictureNotFound
 import epicurius.domain.exceptions.ProductIsAlreadyOpen
 import epicurius.domain.exceptions.ProductNotFound
 import epicurius.domain.exceptions.RecipeDoesNotContainCaloriesInfo
@@ -168,6 +169,7 @@ class ExceptionHandler {
     @ExceptionHandler(
         value = [
             UserNotFound::class,
+            PictureNotFound::class,
             ProductNotFound::class,
             FollowRequestNotFound::class,
             RecipeNotFound::class,
