@@ -81,14 +81,7 @@ class HttpService(
         pathParams: Map<String, Any?>? = null,
         token: String? = null
     ): APIResult<T> {
-        val imageBodyBuilder = MultipartBody.Builder().setType(MultipartBody.FORM)
-
-        fileBytes?.let {
-            val fileBody = it.toRequestBody("image/*".toMediaTypeOrNull())
-            imageBodyBuilder.addFormDataPart(fileParamName, fileName, fileBody)
-        }
-
-        val requestBody = imageBodyBuilder.build()
+        val requestBody = getMultipartBody(fileParamName, fileName, fileBytes)
 
         val request = Request.Builder()
             .url(baseUrl + endpoint.params(pathParams, emptyMap()))
@@ -107,14 +100,7 @@ class HttpService(
         pathParams: Map<String, Any?>? = null,
         token: String? = null
     ): APIResult<T> {
-        val imageBodyBuilder = MultipartBody.Builder().setType(MultipartBody.FORM)
-
-        fileBytes?.let {
-            val fileBody = it.toRequestBody("image/*".toMediaTypeOrNull())
-            imageBodyBuilder.addFormDataPart(fileParamName, fileName, fileBody)
-        }
-
-        val requestBody = imageBodyBuilder.build()
+        val requestBody = getMultipartBody(fileParamName, fileName, fileBytes)
 
         val request = Request.Builder()
             .url(baseUrl + endpoint.params(pathParams, emptyMap()))
@@ -195,10 +181,27 @@ class HttpService(
             }
         }
 
+
+
     companion object {
         const val AUTHORIZATION_HEADER = "Authorization"
         //const val USER_AGENT_HEADER = "User-Agent"
         const val TOKEN_TYPE = "Bearer"
         const val BAD_GATEWAY = 502
+
+        fun getMultipartBody(
+            fileParamName: String,
+            fileName: String,
+            fileBytes: ByteArray?
+        ): MultipartBody {
+            val imageBodyBuilder = MultipartBody.Builder().setType(MultipartBody.FORM)
+
+            fileBytes?.let {
+                val fileBody = it.toRequestBody("image/*".toMediaTypeOrNull())
+                imageBodyBuilder.addFormDataPart(fileParamName, fileName, fileBody)
+            }
+
+            return imageBodyBuilder.build()
+        }
     }
 }
