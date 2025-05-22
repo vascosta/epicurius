@@ -8,7 +8,6 @@ import epicurius.http.utils.Problem
 import epicurius.http.utils.Uris
 import epicurius.integration.utils.getBody
 import epicurius.integration.utils.patch
-import epicurius.integration.utils.post
 import epicurius.utils.createTestUser
 import org.springframework.http.HttpStatus
 import kotlin.test.Test

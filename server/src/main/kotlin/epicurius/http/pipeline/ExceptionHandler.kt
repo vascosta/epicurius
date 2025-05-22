@@ -5,6 +5,8 @@ import com.fasterxml.jackson.databind.exc.MismatchedInputException
 import epicurius.domain.exceptions.AuthorCannotDeleteRating
 import epicurius.domain.exceptions.AuthorCannotRateOwnRecipe
 import epicurius.domain.exceptions.AuthorCannotUpdateRating
+import epicurius.domain.exceptions.CollectionNotAccessible
+import epicurius.domain.exceptions.CollectionNotFound
 import epicurius.domain.exceptions.DailyMealPlannerNotFound
 import epicurius.domain.exceptions.DurationIsNull
 import epicurius.domain.exceptions.FollowRequestAlreadyBeenSent
@@ -173,7 +175,8 @@ class ExceptionHandler {
             ProductNotFound::class,
             FollowRequestNotFound::class,
             RecipeNotFound::class,
-            DailyMealPlannerNotFound::class
+            DailyMealPlannerNotFound::class,
+            CollectionNotFound::class,
         ]
     )
     fun handleNotFound(request: HttpServletRequest, ex: Exception) =
@@ -188,7 +191,8 @@ class ExceptionHandler {
             AuthorCannotRateOwnRecipe::class,
             AuthorCannotUpdateRating::class,
             AuthorCannotDeleteRating::class,
-            NotTheRecipeAuthor::class
+            NotTheRecipeAuthor::class,
+            CollectionNotAccessible::class,
         ]
     )
     fun handleForbidden(request: HttpServletRequest, ex: Exception): ResponseEntity<Problem> =
@@ -210,7 +214,7 @@ class ExceptionHandler {
             FollowRequestAlreadyBeenSent ::class,
             ProductIsAlreadyOpen::class,
             MealTimeAlreadyExistsInPlanner::class,
-            MealPlannerAlreadyExists::class,
+            MealPlannerAlreadyExists::class
         ]
     )
     fun handleConflict(request: HttpServletRequest, ex: Exception): ResponseEntity<Problem> =

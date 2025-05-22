@@ -31,7 +31,7 @@ class GetCollectionControllerTests : CollectionControllerTest() {
     }
 
     @Test
-    fun `Should throw CollectionNotFound when retrieving a collection that does not exist`() {
+    fun `Should throw CollectionNotFound exception when retrieving a collection that does not exist`() {
         // given a non-existing collection id
         val nonExistingCollectionId = 9999
 
@@ -48,7 +48,7 @@ class GetCollectionControllerTests : CollectionControllerTest() {
     }
 
     @Test
-    fun `Should throw CollectionNotAccessible when retrieving a favourite's collection of another user`() {
+    fun `Should throw CollectionNotAccessible exception when retrieving a favourite's collection of another user`() {
         // given a collection id (FAVOURITE_COLLECTION_ID)
 
         // mock
@@ -66,7 +66,7 @@ class GetCollectionControllerTests : CollectionControllerTest() {
     }
 
     @Test
-    fun `Should throw CollectionNotAccessible when retrieving a kitchen book's collection of a private user not being followed`() {
+    fun `Should throw CollectionNotAccessible exception when retrieving a kitchen book's collection of a private user not being followed`() {
         // given a collection id (KITCHEN_BOOK_COLLECTION_ID)
 
         // mock
