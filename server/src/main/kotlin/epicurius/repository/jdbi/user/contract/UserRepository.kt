@@ -17,6 +17,7 @@ interface UserRepository {
     fun getFollowing(userId: Int, pagingParams: PagingParams): List<SearchUserModel>
     fun getFollowingCount(userId: Int): Int
     fun getFollowRequests(userId: Int): List<SearchUserModel>
+    fun getUserProfilePictureName(userId: Int): String?
 
     fun updateUser(userId: Int, userUpdateInfo: JdbiUpdateUserModel): User
     fun resetPassword(userId: Int, passwordHash: String)
