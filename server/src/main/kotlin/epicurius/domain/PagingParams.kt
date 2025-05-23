@@ -16,7 +16,7 @@ data class PagingParams(
         }
 
         private object Limit {
-            const val DEFAULT = 5
+            const val DEFAULT = 1
             const val MAX_VALUE = 10
         }
     }
