@@ -5,7 +5,9 @@ import epicurius.repository.jdbi.recipe.models.JdbiRecipeInfo
 import epicurius.unit.repository.RepositoryTest
 import epicurius.utils.createTestRecipe
 import epicurius.utils.createTestUser
+import java.time.DayOfWeek
 import java.time.LocalDate
+import java.time.temporal.TemporalAdjusters
 
 open class MealPlannerRepositoryTest : RepositoryTest() {
 
@@ -16,7 +18,8 @@ open class MealPlannerRepositoryTest : RepositoryTest() {
         val testRecipe = createTestRecipe(tm, fs, testAuthor.user)
         val testRecipe2 = createTestRecipe(tm, fs, testAuthor.user)
 
-        val today: LocalDate = LocalDate.of(2025, 5, 12)
+        val now: LocalDate = LocalDate.now()
+        val today: LocalDate = now.with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY))
         val tomorrow: LocalDate = today.plusDays(1)
 
         val jdbiRecipeInfo = JdbiRecipeInfo(
