@@ -3,7 +3,7 @@ package android.epicurius.ui.screens.auth.login
 import android.annotation.SuppressLint
 import android.epicurius.ui.screens.TopBar
 import android.epicurius.ui.screens.auth.utils.PasswordTextField
-import android.epicurius.ui.utils.TextField
+import android.epicurius.ui.screens.utils.TextField
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column

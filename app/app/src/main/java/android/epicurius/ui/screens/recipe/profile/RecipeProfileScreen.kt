@@ -12,7 +12,7 @@ import android.epicurius.domain.recipe.MealType
 import android.epicurius.domain.recipe.Recipe
 import android.epicurius.ui.screens.BottomBar
 import android.epicurius.ui.screens.TopBar
-import android.epicurius.ui.utils.MixedText
+import android.epicurius.ui.screens.utils.MixedText
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image

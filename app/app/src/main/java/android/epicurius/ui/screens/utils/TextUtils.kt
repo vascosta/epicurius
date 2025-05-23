@@ -1,6 +1,9 @@
-package android.epicurius.ui.utils
+package android.epicurius.ui.screens.utils
 
 import androidx.compose.foundation.layout.Row
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -29,4 +32,20 @@ fun MixedText(boldString: String, normalString: String) {
         Text(text = boldString, fontWeight = FontWeight.Bold)
         Text(normalString)
     }
+}
+
+@Composable
+fun SearchTextField(
+    text: String,
+    onSearchQueryChange: (String) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    OutlinedTextField(
+        value = text,
+        onValueChange = onSearchQueryChange,
+        placeholder = { Text("Search") },
+        leadingIcon = { Icon(Icons.Default.Search, contentDescription = "Search icon") },
+        singleLine = true,
+        modifier = modifier
+    )
 }

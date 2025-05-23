@@ -1,6 +1,7 @@
 package android.epicurius.ui.screens
 
 import android.epicurius.R
+import android.epicurius.ui.screens.utils.TabComponent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -94,6 +95,8 @@ fun FollowTopBar(
     selectedTabIndex: Int,
     onTabSelected: (Int) -> Unit
 ) {
+    val tabs = listOf("$followers Followers", "$following Following")
+
     TopAppBar(
         title = {
             Row(
@@ -102,15 +105,11 @@ fun FollowTopBar(
                     .fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                FollowTab(
-                    number = listOf(followers, following),
-                    selectedTabIndex = selectedTabIndex,
-                    onTabSelected = onTabSelected
-                )
+                TabComponent(tabs, selectedTabIndex, onTabSelected)
             }
         },
         navigationIcon = {
-            IconButton(onClick = { /* ação de voltar */ }) {
+            IconButton(onClick = { }) {
                 Icon(
                     imageVector = Icons.AutoMirrored.Sharp.ArrowBack,
                     contentDescription = "Go Back"
@@ -194,14 +193,12 @@ private fun BottomBarButton(onClick: () -> Unit, imageId: Int, description: Stri
 fun NavBarPreview() {
     TopBar("Settings", true)
 }
-/*
+
 @Preview
 @Composable
 fun FollowTopBarPreview() {
-    FollowTopBar(100, 200)
+    FollowTopBar(100, 200, 0) {}
 }
-
- */
 
 @Preview
 @Composable
