@@ -10,8 +10,10 @@ import epicurius.http.utils.Uris
 import epicurius.integration.EpicuriusIntegrationTest
 import epicurius.integration.utils.delete
 import epicurius.integration.utils.get
+import epicurius.integration.utils.getBody
 import epicurius.integration.utils.patch
 import epicurius.integration.utils.post
+import org.springframework.http.HttpStatus
 
 class CollectionIntegrationTest: EpicuriusIntegrationTest() {
 
@@ -22,39 +24,52 @@ class CollectionIntegrationTest: EpicuriusIntegrationTest() {
             token = token
         )
 
-    fun createCollection(token: String, name: String, type: CollectionType) =
-        post<CreateCollectionOutputModel>(
+    fun createCollection(token: String, name: String, type: CollectionType): CreateCollectionOutputModel? {
+        val result = post<CreateCollectionOutputModel>(
             client,
             api(Uris.Collection.COLLECTIONS),
             token = token,
             body = mapOf("name" to name, "type" to type)
         )
+        return getBody(result)
+    }
 
-    fun addRecipeToCollection(token: String, collectionId: Int, recipeId: Int) =
-        post<AddRecipeToCollectionOutputModel>(
+    fun addRecipeToCollection(token: String, collectionId: Int, recipeId: Int): AddRecipeToCollectionOutputModel? {
+        val result = post<AddRecipeToCollectionOutputModel>(
             client,
             api(Uris.Collection.COLLECTION_RECIPES.replace("{id}", collectionId.toString())),
-            token = token,
-            body = mapOf("recipeId" to recipeId)
+            mapOf("recipeId" to recipeId),
+            HttpStatus.OK,
+            token,
         )
 
-    fun updateCollection(token: String, collectionId: Int, name: String) =
-        patch<UpdateCollectionOutputModel>(
+        return getBody(result)
+    }
+
+    fun updateCollection(token: String, collectionId: Int, name: String): UpdateCollectionOutputModel? {
+        val result = patch<UpdateCollectionOutputModel>(
             client,
             api(Uris.Collection.COLLECTION.replace("{id}", collectionId.toString())),
+            body = mapOf("name" to name),
+            responseStatus = HttpStatus.OK,
             token = token,
-            body = mapOf("name" to name)
         )
+        return getBody(result)
+    }
 
-    fun removeRecipeFromCollection(token: String, collectionId: Int, recipeId: Int) =
-        delete<RemoveRecipeFromCollectionOutputModel>(
+    fun removeRecipeFromCollection(token: String, collectionId: Int, recipeId: Int): RemoveRecipeFromCollectionOutputModel? {
+        val result = delete<RemoveRecipeFromCollectionOutputModel>(
             client,
-            api(Uris.Collection.COLLECTION_RECIPE
-                .replace("{id}", collectionId.toString())
-                .replace("{recipeId}", recipeId.toString())
+            api(
+                Uris.Collection.COLLECTION_RECIPE
+                    .replace("{id}", collectionId.toString())
+                    .replace("{recipeId}", recipeId.toString())
             ),
-            token = token
+            HttpStatus.OK,
+            token
         )
+        return getBody(result)
+    }
 
     fun deleteCollection(token: String, collectionId: Int) =
         delete<Unit>(
