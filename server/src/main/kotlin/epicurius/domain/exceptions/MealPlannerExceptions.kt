@@ -8,8 +8,6 @@ class MealTimeAlreadyExistsInPlanner(mealTime: MealTime) : RuntimeException("Mea
 class DailyMealPlannerNotFound : RuntimeException("Daily meal planner not found")
 class MealTimeDoesNotExist : RuntimeException("Meal time does not exist in daily planner")
 
-class RecipeDoesNotContainCaloriesInfo : RuntimeException("Recipe doesn't contain calories info")
-class RecipeExceedsMaximumCalories : RuntimeException("Recipe exceeds maximum calories")
 class RecipeIsInvalidForMealTime : RuntimeException("Recipe is invalid for meal time")
 
 class InvalidMealPlannerDate : RuntimeException("Date must be present or future")

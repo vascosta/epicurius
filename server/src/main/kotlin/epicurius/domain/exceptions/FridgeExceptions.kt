@@ -1,7 +1,6 @@
 package epicurius.domain.exceptions
 
 class InvalidProduct : RuntimeException("Inserted product is invalid")
-class DurationIsNull : RuntimeException("If product is open then duration can't be null")
 class OpenDateIsNull : RuntimeException("If duration is given then open date can't be null")
 class InvalidExpiration : RuntimeException("If open date is given then expiration date cannot be changed")
 class InvalidQuantity : RuntimeException("Can not update quantity when opening a product")

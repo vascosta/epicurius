@@ -8,7 +8,6 @@ import epicurius.domain.exceptions.AuthorCannotUpdateRating
 import epicurius.domain.exceptions.CollectionNotAccessible
 import epicurius.domain.exceptions.CollectionNotFound
 import epicurius.domain.exceptions.DailyMealPlannerNotFound
-import epicurius.domain.exceptions.DurationIsNull
 import epicurius.domain.exceptions.FollowRequestAlreadyBeenSent
 import epicurius.domain.exceptions.FollowRequestNotFound
 import epicurius.domain.exceptions.IncorrectPassword
@@ -29,13 +28,13 @@ import epicurius.domain.exceptions.InvalidSelfUnfollow
 import epicurius.domain.exceptions.InvalidToken
 import epicurius.domain.exceptions.MealPlannerAlreadyExists
 import epicurius.domain.exceptions.MealTimeAlreadyExistsInPlanner
+import epicurius.domain.exceptions.NotTheCollectionOwner
 import epicurius.domain.exceptions.NotTheRecipeAuthor
 import epicurius.domain.exceptions.PasswordsDoNotMatch
 import epicurius.domain.exceptions.PictureNotFound
 import epicurius.domain.exceptions.ProductIsAlreadyOpen
 import epicurius.domain.exceptions.ProductNotFound
-import epicurius.domain.exceptions.RecipeDoesNotContainCaloriesInfo
-import epicurius.domain.exceptions.RecipeExceedsMaximumCalories
+import epicurius.domain.exceptions.RecipeAlreadyInCollection
 import epicurius.domain.exceptions.RecipeIsInvalidForMealTime
 import epicurius.domain.exceptions.RecipeNotAccessible
 import epicurius.domain.exceptions.RecipeNotFound
@@ -132,15 +131,12 @@ class ExceptionHandler {
             InvalidIntolerancesIdx::class,
             InvalidDietIdx::class,
             InvalidProduct::class,
-            DurationIsNull::class,
             InvalidCuisineIdx::class,
             InvalidMealTypeIdx::class,
             InvalidIngredientUnitIdx::class,
             InvalidMealTimeIdx::class,
             InvalidMealPlannerDate::class,
             RecipeIsInvalidForMealTime::class,
-            RecipeExceedsMaximumCalories::class,
-            RecipeDoesNotContainCaloriesInfo::class,
             InvalidNumberOfRecipePictures::class,
             InvalidIngredient::class,
             UserHasNotRated::class
@@ -192,6 +188,7 @@ class ExceptionHandler {
             AuthorCannotUpdateRating::class,
             AuthorCannotDeleteRating::class,
             NotTheRecipeAuthor::class,
+            NotTheCollectionOwner::class,
             CollectionNotAccessible::class,
         ]
     )
@@ -208,6 +205,7 @@ class ExceptionHandler {
             UserAlreadyBeingFollowed::class,
             UserNotFollowed::class,
             UserAlreadyRated::class,
+            RecipeAlreadyInCollection::class,
             InvalidSelfFollow::class,
             InvalidSelfUnfollow::class,
             InvalidSelfCancelFollowRequest::class,
