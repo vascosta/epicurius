@@ -17,7 +17,7 @@ class AddRecipeToCollectionRepositoryTests : CollectionRepositoryTest() {
         testRecipe.mealType,
         testRecipe.preparationTime,
         testRecipe.servings,
-        listOf("")
+        listOf("test-picture.jpeg")
     )
 
     @Test

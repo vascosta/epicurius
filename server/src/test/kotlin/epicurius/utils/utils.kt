@@ -56,7 +56,7 @@ fun createTestRecipe(tm: TransactionManager, fs: FirestoreManager, user: User): 
         intolerances = listOf(Intolerance.EGG, Intolerance.GLUTEN, Intolerance.DAIRY).map { it.ordinal },
         diets = listOf(Diet.OVO_VEGETARIAN, Diet.LACTO_VEGETARIAN).map { it.ordinal },
         ingredients = generateRandomRecipeIngredients(),
-        picturesNames = listOf("")
+        picturesNames = listOf("test-picture.jpeg")
     )
 
     val recipeId = tm.run { it.recipeRepository.createRecipe(jdbiRecipeInfo) }

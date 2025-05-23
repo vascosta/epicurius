@@ -29,7 +29,7 @@ open class MealPlannerRepositoryTest : RepositoryTest() {
             mealType = testRecipe.mealType,
             preparationTime = testRecipe.preparationTime,
             servings = testRecipe.servings,
-            picturesNames = emptyList()
+            picturesNames = listOf("test-picture.jpeg")
         )
 
         fun getWeeklyMealPlanner(userId: Int) =
