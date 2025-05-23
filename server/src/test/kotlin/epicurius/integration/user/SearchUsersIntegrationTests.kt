@@ -14,7 +14,7 @@ class SearchUsersIntegrationTests: UserIntegrationTest() {
         repeat(2) { createTestUser(tm) }
 
         // when retrieving the users by a common string
-        val body = searchUsers(user.token, "test")
+        val body = searchUsers(user.token, "test", limit = 2)
 
         // then the users are retrieved successfully with code 200
         assertNotNull(body)
