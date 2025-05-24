@@ -55,7 +55,13 @@ class CollectionService(private val tm: TransactionManager, private val cs: Clou
     }
 
     fun updateCollection(userId: Int, collectionId: Int, updateCollectionInfo: UpdateCollectionInputModel): Collection {
-        checkIfCollectionExists(collectionId)
+        val collectionType = checkIfCollectionExists(collectionId).type
+        if (updateCollectionInfo.name != null) {
+            if (checkIfOwnedCollectionExists(userId, updateCollectionInfo.name, collectionType)) {
+                throw CollectionAlreadyExists()
+            }
+        }
+
         if (!checkIfUserIsCollectionOwner(collectionId, userId)) throw NotTheCollectionOwner()
         val updatedCollection = tm.run {
             it.collectionRepository.updateCollection(collectionId, updateCollectionInfo.name)
