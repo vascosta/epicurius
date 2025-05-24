@@ -14,7 +14,7 @@ class GetFeedIntegrationTests : FeedIntegrationTest() {
         // when getting the user's feed
         val feedBody = getFeed(testUser.token)
 
-        // then the feed should contain the test recipe
+        // then the feed should contain any recipes
         assertNotNull(feedBody)
         assertTrue(feedBody.feed.isEmpty())
     }
