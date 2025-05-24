@@ -15,7 +15,7 @@ class RemoveFridgeProductRepositoryTests : FridgeRepositoryTest() {
 
         // and a product in the user's fridge
         val product = ProductInfo(
-            productName = "Peach",
+            name = "Peach",
             quantity = 1,
             openDate = null,
             expirationDate = LocalDate.now().plusDays(7)

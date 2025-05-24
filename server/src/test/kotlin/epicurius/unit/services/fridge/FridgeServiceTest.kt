@@ -57,7 +57,7 @@ open class FridgeServiceTest : ServiceTest() {
         const val NEW_ENTRY_NUMBER = ENTRY_NUMBER + 1
 
         val openedProductInfo = ProductInfo(
-            productName = PRODUCT_NAME,
+            name = PRODUCT_NAME,
             quantity = PRODUCT_QUANTITY,
             openDate = open,
             expirationDate = newExpiration

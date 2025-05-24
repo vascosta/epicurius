@@ -18,7 +18,7 @@ class ChecksFridgeRepositoryTests : FridgeRepositoryTest() {
 
         // and a product in the user's fridge
         val product = ProductInfo(
-            productName = "Cream",
+            name = "Cream",
             quantity = 1,
             openDate = null,
             expirationDate = LocalDate.now().plusDays(7)
@@ -31,7 +31,7 @@ class ChecksFridgeRepositoryTests : FridgeRepositoryTest() {
             user.user.id,
             null,
             ProductInfo(
-                productName = "Eggs",
+                name = "Eggs",
                 quantity = 1,
                 openDate = null,
                 expirationDate = LocalDate.now().plusDays(7)
@@ -40,7 +40,7 @@ class ChecksFridgeRepositoryTests : FridgeRepositoryTest() {
 
         // then the existing product should be found
         assertNotNull(existingProduct)
-        assertEquals(product.productName, existingProduct!!.name)
+        assertEquals(product.name, existingProduct!!.name)
         assertEquals(product.quantity, existingProduct.quantity)
         assertEquals(product.openDate, existingProduct.openDate)
         assertEquals(product.expirationDate, existingProduct.expirationDate)
@@ -56,7 +56,7 @@ class ChecksFridgeRepositoryTests : FridgeRepositoryTest() {
 
         // and a product in the user's fridge
         val product = ProductInfo(
-            productName = "Milk",
+            name = "Milk",
             quantity = 1,
             openDate = null,
             expirationDate = LocalDate.now().plusDays(7)
@@ -71,7 +71,7 @@ class ChecksFridgeRepositoryTests : FridgeRepositoryTest() {
 
         // then the existing product should be found
         assertNotNull(existingProduct)
-        assertEquals(product.productName, existingProduct!!.name)
+        assertEquals(product.name, existingProduct!!.name)
         assertEquals(product.quantity, existingProduct.quantity)
         assertEquals(product.openDate, existingProduct.openDate)
         assertEquals(product.expirationDate, existingProduct.expirationDate)
@@ -87,7 +87,7 @@ class ChecksFridgeRepositoryTests : FridgeRepositoryTest() {
 
         // and a product in the user's fridge
         val product = ProductInfo(
-            productName = "Orange",
+            name = "Orange",
             quantity = 1,
             openDate = LocalDate.now().minusDays(1),
             expirationDate = LocalDate.now().plusDays(7)
