@@ -9,9 +9,9 @@ import org.junit.jupiter.api.BeforeEach
 
 open class RateRecipeRepositoryTest : RepositoryTest() {
 
-    lateinit var testUserPublic : User
-    lateinit var testUserPrivate : User
-    lateinit var testRecipe : Recipe
+    lateinit var testUserPublic: User
+    lateinit var testUserPrivate: User
+    lateinit var testRecipe: Recipe
 
     @BeforeEach
     fun setup() {

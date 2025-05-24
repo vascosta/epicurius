@@ -4,7 +4,7 @@ import epicurius.utils.createTestUser
 import kotlin.test.Test
 import kotlin.test.assertNull
 
-class DeleteUserRepositoryTests: UserRepositoryTest() {
+class DeleteUserRepositoryTests : UserRepositoryTest() {
 
     @Test
     fun `Should delete a user successfully`() {

@@ -1,6 +1,6 @@
 package epicurius.unit.repository.cloudFunction
 
-import epicurius.domain.exceptions.ErrorOnCloudFunction
+import epicurius.domain.exceptions.CloudFunctionException
 import epicurius.unit.repository.RepositoryTest
 import kotlinx.coroutines.runBlocking
 import kotlin.test.Test
@@ -39,12 +39,12 @@ class CloudFunctionRepositoryTests : RepositoryTest() {
     }
 
     @Test
-    fun `Should throw ErrorOnCloudFunction when cloud function fails`() {
+    fun `Should throw CloudFunctionException when cloud function fails`() {
         // given a picture not presented in the cloud storage
         val invalidPicture = "invalid_picture_name"
 
         // when retrieving the ingredients from the picture
         // then the ingredients cannot be detected and throws ErrorOnCloudFunction exception
-        assertFailsWith<ErrorOnCloudFunction> { runBlocking { getIngredientsFromPicture(invalidPicture) } }
+        assertFailsWith<CloudFunctionException> { runBlocking { getIngredientsFromPicture(invalidPicture) } }
     }
 }

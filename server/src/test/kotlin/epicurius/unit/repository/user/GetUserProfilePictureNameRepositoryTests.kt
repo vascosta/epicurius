@@ -4,7 +4,7 @@ import epicurius.utils.createTestUser
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
-class GetUserProfilePictureNameRepositoryTests: UserRepositoryTest() {
+class GetUserProfilePictureNameRepositoryTests : UserRepositoryTest() {
 
     @Test
     fun `Should retrieve an user profile picture name successfully`() {
