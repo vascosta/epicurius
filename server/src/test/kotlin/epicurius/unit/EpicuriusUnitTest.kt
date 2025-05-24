@@ -163,7 +163,6 @@ open class EpicuriusUnitTest : EpicuriusTest() {
         val collectionServiceMock: CollectionService = mock()
         val mealPlannerServiceMock: MealPlannerService = mock()
 
-
         val userController = UserController(userServiceMock)
         val fridgeController = FridgeController(fridgeServiceMock)
         val recipeController = RecipeController(recipeServiceMock)

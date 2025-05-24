@@ -116,7 +116,6 @@ class JdbiUserRepository(private val handle: Handle) : UserRepository {
             .mapTo<Int>()
             .one()
 
-
     override fun getFollowing(userId: Int, pagingParams: PagingParams): List<SearchUserModel> =
         handle.createQuery(
             """
