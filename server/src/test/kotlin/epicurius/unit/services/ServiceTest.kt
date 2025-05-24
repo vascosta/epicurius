@@ -8,7 +8,7 @@ import epicurius.domain.mealPlanner.MealTime
 import epicurius.domain.user.FollowRequestType
 import epicurius.http.controllers.collection.models.input.CreateCollectionInputModel
 import epicurius.http.controllers.collection.models.input.UpdateCollectionInputModel
-import epicurius.http.controllers.fridge.models.input.ProductInputModel
+import epicurius.http.controllers.fridge.models.input.AddProductInputModel
 import epicurius.http.controllers.fridge.models.input.UpdateProductInputModel
 import epicurius.http.controllers.mealPlanner.models.input.AddMealPlannerInputModel
 import epicurius.http.controllers.mealPlanner.models.input.UpdateMealPlannerInputModel
@@ -76,7 +76,7 @@ open class ServiceTest : EpicuriusUnitTest() {
         // FRIDGE
         fun getFridge(userId: Int) = fridgeService.getFridge(userId)
 
-        suspend fun addProduct(userId: Int, productName: ProductInputModel) =
+        suspend fun addProduct(userId: Int, productName: AddProductInputModel) =
             fridgeService.addProduct(userId, productName)
 
         fun updateProductInfo(userId: Int, entryNumber: Int, product: UpdateProductInputModel) =

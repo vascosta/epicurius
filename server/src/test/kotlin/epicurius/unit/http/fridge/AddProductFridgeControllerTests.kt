@@ -2,7 +2,7 @@ package epicurius.unit.http.fridge
 
 import epicurius.domain.exceptions.InvalidProduct
 import epicurius.domain.fridge.Fridge
-import epicurius.http.controllers.fridge.models.input.ProductInputModel
+import epicurius.http.controllers.fridge.models.input.AddProductInputModel
 import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Test
 import org.mockito.kotlin.whenever
@@ -21,12 +21,12 @@ class AddProductFridgeControllerTests : FridgeHttpTest() {
         // mock
         whenever(
             runBlocking {
-                fridgeServiceMock.addProduct(testAuthenticatedUser.user.id, productInputModel)
+                fridgeServiceMock.addProduct(testAuthenticatedUser.user.id, addProductInputModel)
             }
         ).thenReturn(fridge)
 
         // when adding the product to the fridge
-        val response = runBlocking { addProduct(testAuthenticatedUser, productInputModel) }
+        val response = runBlocking { addProduct(testAuthenticatedUser, addProductInputModel) }
 
         // then the product is added successfully
         assertEquals(HttpStatus.CREATED, response.statusCode)
@@ -40,12 +40,12 @@ class AddProductFridgeControllerTests : FridgeHttpTest() {
         // mock
         whenever(
             runBlocking {
-                fridgeServiceMock.addProduct(testAuthenticatedUser.user.id, productInputModel)
+                fridgeServiceMock.addProduct(testAuthenticatedUser.user.id, addProductInputModel)
             }
         ).thenReturn(Fridge(listOf(product)))
 
         // when adding the product to the fridge
-        val oldFridge = runBlocking { addProduct(testAuthenticatedUser, productInputModel) }
+        val oldFridge = runBlocking { addProduct(testAuthenticatedUser, addProductInputModel) }
 
         // then the existing product is added successfully
         assertEquals(HttpStatus.CREATED, oldFridge.statusCode)
@@ -54,12 +54,12 @@ class AddProductFridgeControllerTests : FridgeHttpTest() {
         // mock
         whenever(
             runBlocking {
-                fridgeServiceMock.addProduct(testAuthenticatedUser.user.id, productInputModel)
+                fridgeServiceMock.addProduct(testAuthenticatedUser.user.id, addProductInputModel)
             }
         ).thenReturn(Fridge(listOf(product.copy(quantity = 2))))
 
         // when adding the existing product to the fridge
-        val newFridge = runBlocking { addProduct(testAuthenticatedUser, productInputModel) }
+        val newFridge = runBlocking { addProduct(testAuthenticatedUser, addProductInputModel) }
 
         // then the product is updated successfully
         assertEquals(HttpStatus.CREATED, newFridge.statusCode)
@@ -69,7 +69,7 @@ class AddProductFridgeControllerTests : FridgeHttpTest() {
     @Test
     fun `Should throw InvalidProduct exception when adding invalid product`() {
         // given a user with a fridge and an invalid product to add
-        val invalidProductInputModel = ProductInputModel(
+        val invalidProductInputModel = AddProductInputModel(
             name = "invalid product",
             quantity = 1,
             expirationDate = LocalDate.now().plusDays(10)

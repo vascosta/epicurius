@@ -6,7 +6,7 @@ import epicurius.domain.Intolerance
 import epicurius.domain.fridge.Product
 import epicurius.domain.user.AuthenticatedUser
 import epicurius.domain.user.User
-import epicurius.http.controllers.fridge.models.input.ProductInputModel
+import epicurius.http.controllers.fridge.models.input.AddProductInputModel
 import epicurius.http.controllers.fridge.models.input.UpdateProductInputModel
 import epicurius.unit.http.HttpTest
 import epicurius.utils.generateEmail
@@ -64,7 +64,7 @@ open class FridgeHttpTest : HttpTest() {
         )
 
         // ADD PRODUCT
-        val productInputModel = ProductInputModel(
+        val addProductInputModel = AddProductInputModel(
             name = "apple",
             quantity = 1,
             expirationDate = LocalDate.now().plusDays(7)

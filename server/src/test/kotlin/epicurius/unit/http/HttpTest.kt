@@ -12,7 +12,7 @@ import epicurius.domain.user.FollowRequestType
 import epicurius.http.controllers.collection.models.input.AddRecipeToCollectionInputModel
 import epicurius.http.controllers.collection.models.input.CreateCollectionInputModel
 import epicurius.http.controllers.collection.models.input.UpdateCollectionInputModel
-import epicurius.http.controllers.fridge.models.input.ProductInputModel
+import epicurius.http.controllers.fridge.models.input.AddProductInputModel
 import epicurius.http.controllers.fridge.models.input.UpdateProductInputModel
 import epicurius.http.controllers.mealPlanner.models.input.AddMealPlannerInputModel
 import epicurius.http.controllers.mealPlanner.models.input.CreateMealPlannerInputModel
@@ -151,7 +151,7 @@ open class HttpTest : EpicuriusUnitTest() {
 
         suspend fun addProduct(
             authenticatedUser: AuthenticatedUser,
-            product: ProductInputModel,
+            product: AddProductInputModel,
         ) =
             fridgeController.addProduct(authenticatedUser, product)
 

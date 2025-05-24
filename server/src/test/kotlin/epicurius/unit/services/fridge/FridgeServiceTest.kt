@@ -3,7 +3,7 @@ package epicurius.unit.services.fridge
 import epicurius.domain.fridge.Product
 import epicurius.domain.fridge.ProductInfo
 import epicurius.domain.fridge.UpdateProductInfo
-import epicurius.http.controllers.fridge.models.input.ProductInputModel
+import epicurius.http.controllers.fridge.models.input.AddProductInputModel
 import epicurius.http.controllers.fridge.models.input.UpdateProductInputModel
 import epicurius.unit.services.ServiceTest
 import java.time.LocalDate
@@ -32,8 +32,8 @@ open class FridgeServiceTest : ServiceTest() {
         )
 
         // ADD PRODUCT
-        val productInputModel = ProductInputModel(PRODUCT_NAME, PRODUCT_QUANTITY, openDate, expirationDate)
-        val productInfo = productInputModel.toProductInfo()
+        val addProductInputModel = AddProductInputModel(PRODUCT_NAME, PRODUCT_QUANTITY, openDate, expirationDate)
+        val productInfo = addProductInputModel.toProductInfo()
         val product = productInfo.toProduct(ENTRY_NUMBER)
 
         // UPDATE PRODUCT

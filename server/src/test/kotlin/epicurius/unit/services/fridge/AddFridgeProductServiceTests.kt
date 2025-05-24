@@ -22,7 +22,7 @@ class AddFridgeProductServiceTests : FridgeServiceTest() {
         whenever(jdbiFridgeRepositoryMock.addProduct(USER_ID, productInfo)).thenReturn(newFridge)
 
         // when adding the new product to fridge
-        val retrievedFridge = runBlocking { addProduct(USER_ID, productInputModel) }
+        val retrievedFridge = runBlocking { addProduct(USER_ID, addProductInputModel) }
 
         // then the product is added to the fridge
         assertEquals(newFridge.products.size, retrievedFridge.products.size)
@@ -59,12 +59,12 @@ class AddFridgeProductServiceTests : FridgeServiceTest() {
         whenever(jdbiFridgeRepositoryMock.updateProduct(USER_ID, updateProductInfo)).thenReturn(newFridge)
 
         // when adding the new product to fridge
-        val retrievedFridge = runBlocking { addProduct(USER_ID, productInputModel) }
+        val retrievedFridge = runBlocking { addProduct(USER_ID, addProductInputModel) }
 
         // when adding the existing product to fridge
         val retrievedExistingProduct =
             runBlocking {
-                addProduct(USER_ID, productInputModel.copy(quantity = 2))
+                addProduct(USER_ID, addProductInputModel.copy(quantity = 2))
             }
 
         // then the existing product in the fridge is updated
@@ -79,7 +79,7 @@ class AddFridgeProductServiceTests : FridgeServiceTest() {
     fun `Should throw InvalidProduct exception when adding an invalid product to fridge`() {
         // given an invalid product name and the product input model
         val invalidProductName = "invalid-product-name"
-        val invalidProductInputModel = productInputModel.copy(name = invalidProductName)
+        val invalidProductInputModel = addProductInputModel.copy(name = invalidProductName)
 
         // mock
         whenever(runBlocking { spoonacularRepositoryMock.getIngredients(invalidProductName) }).thenReturn(emptyList())
