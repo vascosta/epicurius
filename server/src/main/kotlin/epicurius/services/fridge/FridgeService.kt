@@ -25,7 +25,7 @@ class FridgeService(
     fun getFridge(userId: Int): Fridge = tm.run { it.fridgeRepository.getFridge(userId) }
 
     suspend fun addProduct(userId: Int, body: ProductInputModel): Fridge {
-        checkIfProductIsValid(body.productName)
+        checkIfProductIsValid(body.name)
 
         val product = body.toProductInfo()
         checkIfProductExistsInFridge(userId, product = product)?.let { existingProduct ->

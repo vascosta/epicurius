@@ -70,7 +70,7 @@ class AddProductFridgeControllerTests : FridgeHttpTest() {
     fun `Should throw InvalidProduct exception when adding invalid product`() {
         // given a user with a fridge and an invalid product to add
         val invalidProductInputModel = ProductInputModel(
-            productName = "invalid product",
+            name = "invalid product",
             quantity = 1,
             expirationDate = LocalDate.now().plusDays(10)
         )

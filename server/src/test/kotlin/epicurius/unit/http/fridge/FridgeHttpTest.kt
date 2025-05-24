@@ -65,7 +65,7 @@ open class FridgeHttpTest : HttpTest() {
 
         // ADD PRODUCT
         val productInputModel = ProductInputModel(
-            productName = "apple",
+            name = "apple",
             quantity = 1,
             expirationDate = LocalDate.now().plusDays(7)
         )

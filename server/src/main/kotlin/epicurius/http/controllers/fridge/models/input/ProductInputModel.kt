@@ -12,7 +12,7 @@ import java.time.LocalDate
 data class ProductInputModel(
     @field:NotBlank
     // adicionar regex para garantir que nao sao enviados caracteres especiais
-    val productName: String,
+    val name: String,
 
     @field:Min(1)
     @field:Max(20)
@@ -26,7 +26,7 @@ data class ProductInputModel(
     val expirationDate: LocalDate
 ) {
     fun toProductInfo() = ProductInfo(
-        productName = productName,
+        productName = name,
         quantity = quantity,
         openDate = openDate,
         expirationDate = expirationDate

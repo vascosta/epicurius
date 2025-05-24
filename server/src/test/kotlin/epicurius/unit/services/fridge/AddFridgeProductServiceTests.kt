@@ -79,7 +79,7 @@ class AddFridgeProductServiceTests : FridgeServiceTest() {
     fun `Should throw InvalidProduct exception when adding an invalid product to fridge`() {
         // given an invalid product name and the product input model
         val invalidProductName = "invalid-product-name"
-        val invalidProductInputModel = productInputModel.copy(productName = invalidProductName)
+        val invalidProductInputModel = productInputModel.copy(name = invalidProductName)
 
         // mock
         whenever(runBlocking { spoonacularRepositoryMock.getIngredients(invalidProductName) }).thenReturn(emptyList())
