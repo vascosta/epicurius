@@ -3,6 +3,7 @@ package epicurius.unit.services
 import epicurius.domain.Diet
 import epicurius.domain.Intolerance
 import epicurius.domain.PagingParams
+import epicurius.domain.collection.CollectionType
 import epicurius.domain.mealPlanner.MealTime
 import epicurius.domain.user.FollowRequestType
 import epicurius.http.controllers.collection.models.input.CreateCollectionInputModel
@@ -129,6 +130,9 @@ open class ServiceTest : EpicuriusUnitTest() {
 
         fun getCollection(userId: Int, collectionId: Int) =
             collectionService.getCollection(userId, collectionId)
+
+        fun getCollections(userId: Int, collectionType: CollectionType, pagingParams: PagingParams) =
+            collectionService.getCollections(userId, collectionType, pagingParams)
 
         fun updateCollection(userId: Int, collectionId: Int, updateCollectionInfo: UpdateCollectionInputModel) =
             collectionService.updateCollection(userId, collectionId, updateCollectionInfo)
