@@ -16,7 +16,7 @@ class UpdateFridgeProductRepositoryTests : FridgeRepositoryTest() {
 
         // and a product in the user's fridge
         val product = ProductInfo(
-            productName = "Apple",
+            name = "Apple",
             quantity = 1,
             openDate = null,
             expirationDate = LocalDate.now().plusDays(7)
@@ -37,7 +37,7 @@ class UpdateFridgeProductRepositoryTests : FridgeRepositoryTest() {
 
         // then the fridge should contain the updated product
         assertEquals(1, updatedFridge.products.size)
-        assertEquals(product.productName, updatedFridge.products.first().name)
+        assertEquals(product.name, updatedFridge.products.first().name)
         assertEquals(newQuantity, updatedFridge.products.first().quantity)
         assertEquals(product.openDate, updatedFridge.products.first().openDate)
         assertEquals(newExpirationDate, updatedFridge.products.first().expirationDate)

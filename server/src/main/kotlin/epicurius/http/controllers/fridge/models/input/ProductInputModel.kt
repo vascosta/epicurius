@@ -1,5 +1,6 @@
 package epicurius.http.controllers.fridge.models.input
 
+import epicurius.domain.fridge.FridgeDomain
 import epicurius.domain.fridge.ProductInfo
 import jakarta.validation.constraints.Future
 import jakarta.validation.constraints.Max
@@ -7,11 +8,12 @@ import jakarta.validation.constraints.Min
 import jakarta.validation.constraints.NotBlank
 import jakarta.validation.constraints.NotNull
 import jakarta.validation.constraints.PastOrPresent
+import jakarta.validation.constraints.Pattern
 import java.time.LocalDate
 
 data class ProductInputModel(
     @field:NotBlank
-    // adicionar regex para garantir que nao sao enviados caracteres especiais
+    @field:Pattern(regexp = FridgeDomain.VALID_STRING, message = FridgeDomain.VALID_STRING_MSG)
     val name: String,
 
     @field:Min(1)
@@ -26,7 +28,7 @@ data class ProductInputModel(
     val expirationDate: LocalDate
 ) {
     fun toProductInfo() = ProductInfo(
-        productName = name,
+        name = name,
         quantity = quantity,
         openDate = openDate,
         expirationDate = expirationDate

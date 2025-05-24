@@ -8,7 +8,7 @@ import java.sql.ResultSet
 class ProductInfoMapper : RowMapper<ProductInfo> {
     override fun map(rs: ResultSet, ctx: StatementContext): ProductInfo {
         return ProductInfo(
-            productName = rs.getString("product_name"),
+            name = rs.getString("product_name"),
             quantity = rs.getInt("quantity"),
             openDate = rs.getDate("open_date").toLocalDate(),
             expirationDate = rs.getDate("expiration_date").toLocalDate()

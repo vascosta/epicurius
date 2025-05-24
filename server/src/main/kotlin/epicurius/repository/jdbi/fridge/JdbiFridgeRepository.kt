@@ -33,7 +33,7 @@ class JdbiFridgeRepository(private val handle: Handle) : FridgeRepository {
             """
         )
             .bind("id", userId)
-            .bind("name", product.productName)
+            .bind("name", product.name)
             .bind("quantity", product.quantity)
             .bind("openDate", product.openDate)
             .bind("expirationDate", product.expirationDate)
@@ -88,7 +88,7 @@ class JdbiFridgeRepository(private val handle: Handle) : FridgeRepository {
         val params = mutableMapOf<String, Any?>()
 
         params["id"] = userId
-        product?.productName?.let { query.append(" AND product_name = :name"); params["name"] = it }
+        product?.name?.let { query.append(" AND product_name = :name"); params["name"] = it }
         product?.openDate?.let { query.append(" AND open_date = :open"); params["open"] = it }
         product?.expirationDate?.let { query.append(" AND expiration_date = :date"); params["date"] = it }
         entryNumber?.let { query.append(" AND entry_number = :number"); params["number"] = it }

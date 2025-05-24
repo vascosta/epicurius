@@ -7,4 +7,9 @@ import java.time.Period
 @Component
 class FridgeDomain {
     fun calculateExpirationDate(openDate: LocalDate, duration: Period): LocalDate = openDate.plus(duration)
+
+    companion object {
+        const val VALID_STRING = "^[A-Za-zÀ-ÿ\\s]+$"
+        const val VALID_STRING_MSG = "Product can only contain letters"
+    }
 }
