@@ -1,7 +1,7 @@
 package epicurius.unit.http.fridge
 
 import epicurius.domain.fridge.Fridge
-import epicurius.http.controllers.fridge.models.output.FridgeOutputModel
+import epicurius.http.controllers.fridge.models.output.GetFridgeOutputModel
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.mockito.kotlin.whenever
@@ -22,7 +22,7 @@ class GetFridgeControllerTests : FridgeHttpTest() {
 
         // then the fridge is retrieved successfully
         assertEquals(HttpStatus.OK, response.statusCode)
-        assertEquals(FridgeOutputModel(emptyList()), response.body)
+        assertEquals(GetFridgeOutputModel(emptyList()), response.body)
     }
 
     @Test
@@ -38,6 +38,6 @@ class GetFridgeControllerTests : FridgeHttpTest() {
 
         // then the fridge is retrieved successfully
         assertEquals(HttpStatus.OK, response.statusCode)
-        assertEquals(FridgeOutputModel(listOf(product)), response.body)
+        assertEquals(GetFridgeOutputModel(listOf(product)), response.body)
     }
 }

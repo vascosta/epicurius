@@ -149,11 +149,11 @@ open class HttpTest : EpicuriusUnitTest() {
             authenticatedUser: AuthenticatedUser,
         ) = fridgeController.getFridge(authenticatedUser)
 
-        suspend fun addProducts(
+        suspend fun addProduct(
             authenticatedUser: AuthenticatedUser,
             product: ProductInputModel,
         ) =
-            fridgeController.addProducts(authenticatedUser, product)
+            fridgeController.addProduct(authenticatedUser, product)
 
         fun updateProduct(
             authenticatedUser: AuthenticatedUser,

@@ -1,7 +1,7 @@
 package epicurius.integration.fridge
 
 import epicurius.domain.user.AuthenticatedUser
-import epicurius.http.controllers.fridge.models.output.FridgeOutputModel
+import epicurius.http.controllers.fridge.models.output.GetFridgeOutputModel
 import epicurius.http.utils.Uris
 import epicurius.integration.EpicuriusIntegrationTest
 import epicurius.integration.utils.delete
@@ -23,13 +23,13 @@ class FridgeIntegrationTest : EpicuriusIntegrationTest() {
         testUser = createTestUser(tm)
     }
 
-    fun getFridge(token: String) = get<FridgeOutputModel>(client, api(Uris.Fridge.FRIDGE), token = token)
+    fun getFridge(token: String) = get<GetFridgeOutputModel>(client, api(Uris.Fridge.FRIDGE), token = token)
 
     fun getProductsList(token: String, partial: String) =
         get<List<String>>(client, api(Uris.Ingredients.INGREDIENTS) + "?partial=$partial", token = token)
 
     fun addProducts(token: String, productName: String, quantity: Int, openDate: LocalDate? = null, expirationDate: LocalDate) =
-        post<FridgeOutputModel>(
+        post<GetFridgeOutputModel>(
             client,
             api(Uris.Fridge.FRIDGE),
             mapOf(
@@ -43,7 +43,7 @@ class FridgeIntegrationTest : EpicuriusIntegrationTest() {
         )
 
     fun updateFridgeProduct(token: String, entryNumber: Int, quantity: Int? = null, expirationDate: LocalDate? = null) =
-        patch<FridgeOutputModel>(
+        patch<GetFridgeOutputModel>(
             client,
             api(Uris.Fridge.PRODUCT.take(16) + entryNumber),
             body = mapOf("quantity" to quantity, "expirationDate" to expirationDate),
@@ -56,7 +56,7 @@ class FridgeIntegrationTest : EpicuriusIntegrationTest() {
         entryNumber: Int,
         openDate: LocalDate,
         duration: Period
-    ) = patch<FridgeOutputModel>(
+    ) = patch<GetFridgeOutputModel>(
         client,
         api(Uris.Fridge.PRODUCT.take(16) + entryNumber),
         body = mapOf("openDate" to openDate, "duration" to duration),
@@ -65,7 +65,7 @@ class FridgeIntegrationTest : EpicuriusIntegrationTest() {
     )
 
     fun removeProduct(token: String, entryNumber: Int) =
-        delete<FridgeOutputModel>(
+        delete<GetFridgeOutputModel>(
             client,
             api(Uris.Fridge.PRODUCT.take(16) + entryNumber),
             HttpStatus.OK,

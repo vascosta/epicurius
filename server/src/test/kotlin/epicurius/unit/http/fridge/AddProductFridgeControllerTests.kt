@@ -26,7 +26,7 @@ class AddProductFridgeControllerTests : FridgeHttpTest() {
         ).thenReturn(fridge)
 
         // when adding the product to the fridge
-        val response = runBlocking { addProducts(testAuthenticatedUser, productInputModel) }
+        val response = runBlocking { addProduct(testAuthenticatedUser, productInputModel) }
 
         // then the product is added successfully
         assertEquals(HttpStatus.CREATED, response.statusCode)
@@ -45,7 +45,7 @@ class AddProductFridgeControllerTests : FridgeHttpTest() {
         ).thenReturn(Fridge(listOf(product)))
 
         // when adding the product to the fridge
-        val oldFridge = runBlocking { addProducts(testAuthenticatedUser, productInputModel) }
+        val oldFridge = runBlocking { addProduct(testAuthenticatedUser, productInputModel) }
 
         // then the existing product is added successfully
         assertEquals(HttpStatus.CREATED, oldFridge.statusCode)
@@ -59,7 +59,7 @@ class AddProductFridgeControllerTests : FridgeHttpTest() {
         ).thenReturn(Fridge(listOf(product.copy(quantity = 2))))
 
         // when adding the existing product to the fridge
-        val newFridge = runBlocking { addProducts(testAuthenticatedUser, productInputModel) }
+        val newFridge = runBlocking { addProduct(testAuthenticatedUser, productInputModel) }
 
         // then the product is updated successfully
         assertEquals(HttpStatus.CREATED, newFridge.statusCode)
@@ -85,7 +85,7 @@ class AddProductFridgeControllerTests : FridgeHttpTest() {
         // when adding the invalid product to the fridge
         // then the product cannot be added and throws InvalidProduct exception
         assertFailsWith<InvalidProduct> {
-            runBlocking { addProducts(testAuthenticatedUser, invalidProductInputModel) }
+            runBlocking { addProduct(testAuthenticatedUser, invalidProductInputModel) }
         }
     }
 }
