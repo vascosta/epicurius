@@ -6,7 +6,7 @@ import org.springframework.http.HttpStatus
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
-class DeleteUserControllerTests: UserControllerTest() {
+class DeleteUserControllerTests : UserControllerTest() {
 
     @Test
     fun `Should delete a user successfully`() {

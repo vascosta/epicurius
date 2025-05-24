@@ -10,7 +10,6 @@ import epicurius.domain.recipe.RecipeInfo
 import epicurius.domain.user.AuthenticatedUser
 import epicurius.domain.user.User
 import epicurius.unit.http.HttpTest
-import epicurius.unit.services.collection.CollectionServiceTest
 import epicurius.utils.generateEmail
 import epicurius.utils.generateRandomRecipeName
 import epicurius.utils.generateRandomUsername

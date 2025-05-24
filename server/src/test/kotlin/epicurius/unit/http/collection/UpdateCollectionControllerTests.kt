@@ -1,5 +1,6 @@
 package epicurius.unit.http.collection
 
+import epicurius.domain.exceptions.CollectionAlreadyExists
 import epicurius.domain.exceptions.CollectionNotFound
 import epicurius.domain.exceptions.NotTheCollectionOwner
 import epicurius.http.controllers.collection.models.input.UpdateCollectionInputModel
@@ -51,6 +52,25 @@ class UpdateCollectionControllerTests : CollectionControllerTest() {
         assertFailsWith<CollectionNotFound> {
             updateCollection(
                 testPublicAuthenticatedUser, nonExistingCollectionId, updateCollectionInputInfo
+            )
+        }
+    }
+
+    @Test
+    fun `Should throw CollectionAlreadyExists exception when updating a collection with an existing name`() {
+        // given collection id (FAVOURITE_COLLECTION_ID) and new information for updating it (updateCollectionInputInfo)
+
+        // mock
+        whenever(
+            collectionServiceMock
+                .updateCollection(testPublicAuthenticatedUser.user.id, FAVOURITE_COLLECTION_ID, updateCollectionInputInfo)
+        ).thenThrow(CollectionAlreadyExists())
+
+        // when updating the collection
+        // then the collection is not updated and throws CollectionAlreadyExists exception
+        assertFailsWith<CollectionAlreadyExists> {
+            updateCollection(
+                testPublicAuthenticatedUser, FAVOURITE_COLLECTION_ID, updateCollectionInputInfo
             )
         }
     }
