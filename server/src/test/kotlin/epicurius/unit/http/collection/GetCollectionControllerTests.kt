@@ -17,7 +17,7 @@ class GetCollectionControllerTests : CollectionControllerTest() {
         // mock
         whenever(
             collectionServiceMock.getCollection(
-                testPublicAuthenticatedUser.user.id, testPublicAuthenticatedUser.user.name, FAVOURITE_COLLECTION_ID
+                testPublicAuthenticatedUser.user.id, FAVOURITE_COLLECTION_ID
             )
         ).thenReturn(testFavouriteCollection)
 
@@ -38,7 +38,7 @@ class GetCollectionControllerTests : CollectionControllerTest() {
         // mock
         whenever(
             collectionServiceMock.getCollection(
-                testPublicAuthenticatedUser.user.id, testPublicAuthenticatedUser.user.name, nonExistingCollectionId
+                testPublicAuthenticatedUser.user.id, nonExistingCollectionId
             )
         ).thenThrow(CollectionNotFound())
 
@@ -54,7 +54,7 @@ class GetCollectionControllerTests : CollectionControllerTest() {
         // mock
         whenever(
             collectionServiceMock.getCollection(
-                testPrivateAuthenticatedUser.user.id, testPrivateAuthenticatedUser.user.name, FAVOURITE_COLLECTION_ID
+                testPrivateAuthenticatedUser.user.id, FAVOURITE_COLLECTION_ID
             )
         ).thenThrow(CollectionNotFound())
 
@@ -72,7 +72,7 @@ class GetCollectionControllerTests : CollectionControllerTest() {
         // mock
         whenever(
             collectionServiceMock.getCollection(
-                testPrivateAuthenticatedUser.user.id, testPrivateAuthenticatedUser.user.name, KITCHEN_BOOK_COLLECTION_ID
+                testPrivateAuthenticatedUser.user.id, KITCHEN_BOOK_COLLECTION_ID
             )
         ).thenThrow(CollectionNotFound())
 

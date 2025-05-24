@@ -20,7 +20,7 @@ class GetCollectionServiceTests : CollectionServiceTest() {
             .thenReturn(testFavouriteJdbiCollectionModel)
 
         // when retrieving the collection
-        val collection = getCollection(PUBLIC_USER_ID, testPublicUsername, FAVOURITE_COLLECTION_ID)
+        val collection = getCollection(PUBLIC_USER_ID, FAVOURITE_COLLECTION_ID)
 
         // then the collection is retrieved successfully
         assertEquals(testFavouriteCollection, collection)
@@ -37,7 +37,7 @@ class GetCollectionServiceTests : CollectionServiceTest() {
         // when retrieving the collection
         // then the collection is not found and throws CollectionNotFound exception
         assertFailsWith<CollectionNotFound> {
-            getCollection(PUBLIC_USER_ID, testPublicUsername, nonExistingCollectionId)
+            getCollection(PUBLIC_USER_ID, nonExistingCollectionId)
         }
     }
 
@@ -52,7 +52,7 @@ class GetCollectionServiceTests : CollectionServiceTest() {
         // when retrieving the collection
         // then the collection is not accessible and throws CollectionNotAccessible exception
         assertFailsWith<CollectionNotAccessible> {
-            getCollection(PRIVATE_USER_ID, testPrivateUsername, FAVOURITE_COLLECTION_ID)
+            getCollection(PRIVATE_USER_ID, FAVOURITE_COLLECTION_ID)
         }
     }
 
@@ -70,7 +70,7 @@ class GetCollectionServiceTests : CollectionServiceTest() {
         // when retrieving the collection
         // then the collection is not accessible and throws CollectionNotAccessible exception
         assertFailsWith<CollectionNotAccessible> {
-            getCollection(PUBLIC_USER_ID, testPublicUsername, testKitchenBookCollection.id)
+            getCollection(PUBLIC_USER_ID, testKitchenBookCollection.id)
         }
     }
 }

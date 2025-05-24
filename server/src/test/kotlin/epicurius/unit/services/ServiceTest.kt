@@ -127,8 +127,8 @@ open class ServiceTest : EpicuriusUnitTest() {
         fun createCollection(ownerId: Int, createCollectionInfo: CreateCollectionInputModel) =
             collectionService.createCollection(ownerId, createCollectionInfo)
 
-        fun getCollection(userId: Int, username: String, collectionId: Int) =
-            collectionService.getCollection(userId, username, collectionId)
+        fun getCollection(userId: Int, collectionId: Int) =
+            collectionService.getCollection(userId, collectionId)
 
         fun updateCollection(userId: Int, collectionId: Int, updateCollectionInfo: UpdateCollectionInputModel) =
             collectionService.updateCollection(userId, collectionId, updateCollectionInfo)
