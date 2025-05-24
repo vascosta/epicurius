@@ -3,6 +3,7 @@ package epicurius.unit.http
 import epicurius.domain.Diet
 import epicurius.domain.Intolerance
 import epicurius.domain.PagingParams
+import epicurius.domain.collection.CollectionType
 import epicurius.domain.mealPlanner.MealTime
 import epicurius.domain.recipe.Cuisine
 import epicurius.domain.recipe.MealType
@@ -303,6 +304,14 @@ open class HttpTest : EpicuriusUnitTest() {
             id: Int
         ) =
             collectionController.getCollection(authenticatedUser, id)
+
+        fun getCollections(
+            authenticatedUser: AuthenticatedUser,
+            collectionType: CollectionType,
+            skip: Int,
+            limit: Int
+        ) =
+            collectionController.getCollections(authenticatedUser, collectionType, skip, limit)
 
         fun createCollection(
             authenticatedUser: AuthenticatedUser,
