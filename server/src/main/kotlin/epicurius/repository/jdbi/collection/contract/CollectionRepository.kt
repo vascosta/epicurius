@@ -1,7 +1,9 @@
 package epicurius.repository.jdbi.collection.contract
 
+import epicurius.domain.PagingParams
 import epicurius.domain.collection.CollectionType
 import epicurius.repository.jdbi.collection.models.JdbiCollectionModel
+import epicurius.repository.jdbi.collection.models.JdbiCollectionProfileModel
 
 interface CollectionRepository {
 
@@ -9,6 +11,7 @@ interface CollectionRepository {
 
     fun getCollection(ownerId: Int, collectionName: String, collectionType: CollectionType): JdbiCollectionModel?
     fun getCollectionById(collectionId: Int): JdbiCollectionModel?
+    fun getCollections(collectionType: CollectionType, pagingParams: PagingParams): List<JdbiCollectionProfileModel>
 
     fun updateCollection(collectionId: Int, newName: String?): JdbiCollectionModel
 
