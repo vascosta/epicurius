@@ -1,10 +1,5 @@
 package epicurius.domain.recipe
 
-import epicurius.domain.recipe.utils.Companion.INSTRUCTIONS_STEP_LENGTH_MSG
-import epicurius.domain.recipe.utils.Companion.INSTRUCTIONS_STEP_NUMBER_MSG
-import epicurius.domain.recipe.utils.Companion.MAX_INSTRUCTIONS_STEP_LENGTH
-import epicurius.domain.recipe.utils.Companion.MIN_INSTRUCTIONS_STEP_LENGTH
-
 data class Instructions(val steps: Map<String, String>) {
 
     init {
