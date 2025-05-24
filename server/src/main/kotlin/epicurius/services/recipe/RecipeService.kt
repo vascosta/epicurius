@@ -10,8 +10,8 @@ import epicurius.domain.picture.PictureDomain
 import epicurius.domain.picture.PictureDomain.Companion.RECIPES_FOLDER
 import epicurius.domain.recipe.Ingredient
 import epicurius.domain.recipe.Recipe
-import epicurius.domain.recipe.RecipeDomain.Companion.MAX_PICTURES
-import epicurius.domain.recipe.RecipeDomain.Companion.MIN_PICTURES
+import epicurius.domain.recipe.utils.Companion.MAX_PICTURES
+import epicurius.domain.recipe.utils.Companion.MIN_PICTURES
 import epicurius.domain.recipe.RecipeInfo
 import epicurius.http.controllers.recipe.models.input.CreateRecipeInputModel
 import epicurius.http.controllers.recipe.models.input.SearchRecipesInputModel
