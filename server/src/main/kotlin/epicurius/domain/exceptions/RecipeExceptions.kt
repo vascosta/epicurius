@@ -1,7 +1,7 @@
 package epicurius.domain.exceptions
 
-import epicurius.domain.recipe.utils.Companion.MAX_PICTURES
-import epicurius.domain.recipe.utils.Companion.MIN_PICTURES
+import epicurius.domain.recipe.MAX_PICTURES
+import epicurius.domain.recipe.MIN_PICTURES
 
 class RecipeNotFound : RuntimeException("Recipe not found")
 class NotTheRecipeAuthor : RuntimeException("You are not the author of this recipe")
