@@ -1,9 +1,11 @@
 package epicurius.repository.jdbi.collection
 
+import epicurius.domain.PagingParams
 import epicurius.domain.collection.CollectionType
 import epicurius.domain.exceptions.CollectionNotFound
 import epicurius.repository.jdbi.collection.contract.CollectionRepository
 import epicurius.repository.jdbi.collection.models.JdbiCollectionModel
+import epicurius.repository.jdbi.collection.models.JdbiCollectionProfileModel
 import org.jdbi.v3.core.Handle
 import org.jdbi.v3.core.kotlin.mapTo
 
@@ -50,6 +52,23 @@ class JdbiCollectionRepository(private val handle: Handle) : CollectionRepositor
             .bind("collectionId", collectionId)
             .mapTo<JdbiCollectionModel>()
             .firstOrNull()
+    }
+
+    override fun getCollections(collectionType: CollectionType, pagingParams: PagingParams): List<JdbiCollectionProfileModel> {
+        return handle.createQuery(
+            """
+                SELECT c.id as collection_id, c.name as collection_name
+                FROM dbo.collection c
+                WHERE c.type = :collectionType
+                ORDER BY c.id DESC
+                LIMIT :limit OFFSET :skip
+            """
+        )
+            .bind("collectionType", collectionType.ordinal)
+            .bind("skip", pagingParams.skip)
+            .bind("limit", pagingParams.limit)
+            .mapTo<JdbiCollectionProfileModel>()
+            .list()
     }
 
     override fun updateCollection(collectionId: Int, newName: String?): JdbiCollectionModel {
