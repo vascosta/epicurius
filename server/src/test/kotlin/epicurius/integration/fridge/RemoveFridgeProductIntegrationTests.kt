@@ -23,11 +23,13 @@ class RemoveFridgeProductIntegrationTests : FridgeIntegrationTest() {
         val newFridgeBody = getBody(addProducts(testUser.token, "banana", 1, null, expirationDate))
 
         // and removing the product
-        val removedFridgeBody = getBody(removeProduct(testUser.token, newFridgeBody.products.first().entryNumber))
+        val removedFridgeBody = getBody(
+            removeProduct(testUser.token, newFridgeBody.fridge.products.first().entryNumber)
+        )
 
         // then the fridge should be empty
         assertNotNull(removedFridgeBody)
-        assertTrue(removedFridgeBody.products.isEmpty())
+        assertTrue(removedFridgeBody.fridge.products.isEmpty())
     }
 
     @Test

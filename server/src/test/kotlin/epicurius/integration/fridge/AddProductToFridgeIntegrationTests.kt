@@ -26,10 +26,10 @@ class AddProductToFridgeIntegrationTests : FridgeIntegrationTest() {
 
         // then the fridge should contain the product
         assertNotNull(newFridgeBody)
-        assertTrue(newFridgeBody.products.isNotEmpty())
-        assertTrue(newFridgeBody.products.first().name == "apple")
-        assertTrue(newFridgeBody.products.first().quantity == 1)
-        assertTrue(newFridgeBody.products.first().openDate == null)
+        assertTrue(newFridgeBody.fridge.products.isNotEmpty())
+        assertTrue(newFridgeBody.fridge.products.first().name == "apple")
+        assertTrue(newFridgeBody.fridge.products.first().quantity == 1)
+        assertTrue(newFridgeBody.fridge.products.first().openDate == null)
     }
 
     @Test
@@ -45,10 +45,10 @@ class AddProductToFridgeIntegrationTests : FridgeIntegrationTest() {
 
         // then the fridge should contain the product with the updated quantity
         assertNotNull(newFridgeBody)
-        assertTrue(newFridgeBody.products.isNotEmpty())
-        assertTrue(newFridgeBody.products.first().name == "peach")
-        assertTrue(newFridgeBody.products.first().quantity == 2)
-        assertTrue(newFridgeBody.products.first().openDate == null)
+        assertTrue(newFridgeBody.fridge.products.isNotEmpty())
+        assertTrue(newFridgeBody.fridge.products.first().name == "peach")
+        assertTrue(newFridgeBody.fridge.products.first().quantity == 2)
+        assertTrue(newFridgeBody.fridge.products.first().openDate == null)
     }
 
     @Test
@@ -60,7 +60,7 @@ class AddProductToFridgeIntegrationTests : FridgeIntegrationTest() {
         val error = post<Problem>(
             client,
             api(FRIDGE),
-            mapOf("productName" to "invalid", "quantity" to 1, "expirationDate" to expirationDate),
+            mapOf("name" to "invalid", "quantity" to 1, "expirationDate" to expirationDate),
             HttpStatus.BAD_REQUEST,
             testUser.token
         )

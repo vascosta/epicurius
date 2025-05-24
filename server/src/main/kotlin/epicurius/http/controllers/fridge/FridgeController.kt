@@ -32,7 +32,7 @@ class FridgeController(private val fridgeService: FridgeService) {
         val fridge = fridgeService.getFridge(authenticatedUser.user.id)
         return ResponseEntity
             .ok()
-            .body(GetFridgeOutputModel(fridge.products))
+            .body(GetFridgeOutputModel(fridge))
     }
 
     @PostMapping(Uris.Fridge.FRIDGE)

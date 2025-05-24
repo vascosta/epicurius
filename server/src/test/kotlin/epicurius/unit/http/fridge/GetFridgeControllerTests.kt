@@ -22,7 +22,7 @@ class GetFridgeControllerTests : FridgeHttpTest() {
 
         // then the fridge is retrieved successfully
         assertEquals(HttpStatus.OK, response.statusCode)
-        assertEquals(GetFridgeOutputModel(emptyList()), response.body)
+        assertEquals(GetFridgeOutputModel(Fridge(emptyList())), response.body)
     }
 
     @Test
@@ -38,6 +38,6 @@ class GetFridgeControllerTests : FridgeHttpTest() {
 
         // then the fridge is retrieved successfully
         assertEquals(HttpStatus.OK, response.statusCode)
-        assertEquals(GetFridgeOutputModel(listOf(product)), response.body)
+        assertEquals(GetFridgeOutputModel(Fridge(listOf(product))), response.body)
     }
 }

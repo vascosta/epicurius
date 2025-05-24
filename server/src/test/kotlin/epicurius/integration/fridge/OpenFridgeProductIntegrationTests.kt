@@ -22,20 +22,27 @@ class OpenFridgeProductIntegrationTests : FridgeIntegrationTest() {
 
         // when adding a product
         val expirationDate = LocalDate.now().plusDays(7)
-        val newFridgeBody = getBody(addProducts(testUser.token, "peach", 1, null, expirationDate))
+        val newFridgeBody = getBody(
+            addProducts(testUser.token, "peach", 1, null, expirationDate)
+        )
 
         // and opening the product
         val openDate = LocalDate.now()
         val duration = Period.ofDays(3)
         val openProductBody = getBody(
-            openFridgeProduct(testUser.token, newFridgeBody.products.first().entryNumber, openDate, duration)
+            openFridgeProduct(
+                token = testUser.token,
+                entryNumber = newFridgeBody.fridge.products.first().entryNumber,
+                openDate = openDate,
+                duration = duration
+            )
         )
 
         // then the fridge should contain the updated product
         assertNotNull(openProductBody)
-        assertTrue(openProductBody.products.isNotEmpty())
-        assertTrue(openProductBody.products.first().name == "peach")
-        assertTrue(openProductBody.products.first().quantity == 1)
+        assertTrue(openProductBody.fridge.products.isNotEmpty())
+        assertTrue(openProductBody.fridge.products.first().name == "peach")
+        assertTrue(openProductBody.fridge.products.first().quantity == 1)
     }
 
     @Test
@@ -44,22 +51,34 @@ class OpenFridgeProductIntegrationTests : FridgeIntegrationTest() {
 
         // when adding a product
         val expirationDate = LocalDate.now().plusDays(7)
-        val newFridgeBody = getBody(addProducts(testUser.token, "orange", 2, null, expirationDate))
+        val newFridgeBody = getBody(
+            addProducts(testUser.token, "orange", 2, null, expirationDate)
+        )
 
         // and opening the product
         val openDate = LocalDate.now()
         val duration = Period.ofDays(3)
-        openFridgeProduct(testUser.token, newFridgeBody.products.first().entryNumber, openDate, duration)
+        openFridgeProduct(
+            token = testUser.token,
+            entryNumber = newFridgeBody.fridge.products.first().entryNumber,
+            openDate = openDate,
+            duration = duration
+        )
         val openProductBody = getBody(
-            openFridgeProduct(testUser.token, newFridgeBody.products.first().entryNumber, openDate, duration)
+            openFridgeProduct(
+                token = testUser.token,
+                entryNumber = newFridgeBody.fridge.products.first().entryNumber,
+                openDate = openDate,
+                duration = duration
+            )
         )
 
         // then the fridge should contain the updated product
         assertNotNull(openProductBody)
-        assertTrue(openProductBody.products.isNotEmpty())
-        assertTrue(openProductBody.products.first().name == "orange")
-        assertTrue(openProductBody.products.first().quantity == 2)
-        assertNotNull(openProductBody.products.first().openDate)
+        assertTrue(openProductBody.fridge.products.isNotEmpty())
+        assertTrue(openProductBody.fridge.products.first().name == "orange")
+        assertTrue(openProductBody.fridge.products.first().quantity == 2)
+        assertNotNull(openProductBody.fridge.products.first().openDate)
     }
 
     @Test
@@ -90,13 +109,15 @@ class OpenFridgeProductIntegrationTests : FridgeIntegrationTest() {
         // when adding a product
         val openDate = LocalDate.now()
         val expirationDate = LocalDate.now().plusDays(7)
-        val newFridgeBody = getBody(addProducts(testUser.token, "tomato", 1, openDate, expirationDate))
+        val newFridgeBody = getBody(
+            addProducts(testUser.token, "tomato", 1, openDate, expirationDate)
+        )
 
         // and trying to open the product
         val duration = Period.ofDays(3)
         val error = patch<Problem>(
             client,
-            api(PRODUCT.take(16) + newFridgeBody.products.first().entryNumber),
+            api(PRODUCT.take(16) + newFridgeBody.fridge.products.first().entryNumber),
             body = mapOf("openDate" to openDate, "duration" to duration),
             responseStatus = HttpStatus.CONFLICT,
             token = testUser.token
