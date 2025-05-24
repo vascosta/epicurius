@@ -39,6 +39,7 @@ import epicurius.domain.exceptions.RecipeAlreadyInCollection
 import epicurius.domain.exceptions.RecipeIsInvalidForMealTime
 import epicurius.domain.exceptions.RecipeNotAccessible
 import epicurius.domain.exceptions.RecipeNotFound
+import epicurius.domain.exceptions.RecipeNotInCollection
 import epicurius.domain.exceptions.UnauthorizedException
 import epicurius.domain.exceptions.UserAlreadyBeingFollowed
 import epicurius.domain.exceptions.UserAlreadyExists
@@ -207,6 +208,7 @@ class ExceptionHandler {
             UserNotFollowed::class,
             UserAlreadyRated::class,
             RecipeAlreadyInCollection::class,
+            RecipeNotInCollection::class,
             CollectionAlreadyExists::class,
             InvalidSelfFollow::class,
             InvalidSelfUnfollow::class,
