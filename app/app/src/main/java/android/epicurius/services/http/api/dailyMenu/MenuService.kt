@@ -1,7 +1,7 @@
-package android.epicurius.services.http.api.menu
+package android.epicurius.services.http.api.dailyMenu
 
 import android.epicurius.services.http.HttpService
-import android.epicurius.services.http.api.menu.models.output.GetDailyMenuOutputModel
+import android.epicurius.services.http.api.dailyMenu.models.output.GetDailyMenuOutputModel
 import android.epicurius.services.http.utils.APIResult
 import android.epicurius.services.http.utils.Uris
 

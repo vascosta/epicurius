@@ -1,4 +1,4 @@
-package android.epicurius.services.http.api.menu.models.output
+package android.epicurius.services.http.api.dailyMenu.models.output
 
 import android.epicurius.domain.recipe.RecipeInfo
 
