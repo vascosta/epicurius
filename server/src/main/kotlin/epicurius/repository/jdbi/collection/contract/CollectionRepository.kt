@@ -11,7 +11,7 @@ interface CollectionRepository {
 
     fun getCollection(ownerId: Int, collectionName: String, collectionType: CollectionType): JdbiCollectionModel?
     fun getCollectionById(collectionId: Int): JdbiCollectionModel?
-    fun getCollections(userId: Int, collectionType: CollectionType, pagingParams: PagingParams): List<JdbiCollectionProfileModel>
+    fun getCollections(ownerId: Int, collectionType: CollectionType, pagingParams: PagingParams): List<JdbiCollectionProfileModel>
 
     fun updateCollection(collectionId: Int, newName: String?): JdbiCollectionModel
 

@@ -54,7 +54,7 @@ class JdbiCollectionRepository(private val handle: Handle) : CollectionRepositor
             .firstOrNull()
     }
 
-    override fun getCollections(userId: Int, collectionType: CollectionType, pagingParams: PagingParams): List<JdbiCollectionProfileModel> {
+    override fun getCollections(ownerId: Int, collectionType: CollectionType, pagingParams: PagingParams): List<JdbiCollectionProfileModel> {
         return handle.createQuery(
             """
                 SELECT c.id as collection_id, c.name as collection_name
@@ -64,7 +64,7 @@ class JdbiCollectionRepository(private val handle: Handle) : CollectionRepositor
                 LIMIT :limit OFFSET :skip
             """
         )
-            .bind("userId", userId)
+            .bind("userId", ownerId)
             .bind("collectionType", collectionType.ordinal)
             .bind("skip", pagingParams.skip)
             .bind("limit", pagingParams.limit)
