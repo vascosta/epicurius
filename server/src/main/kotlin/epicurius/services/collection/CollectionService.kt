@@ -1,6 +1,8 @@
 package epicurius.services.collection
 
+import epicurius.domain.PagingParams
 import epicurius.domain.collection.Collection
+import epicurius.domain.collection.CollectionProfile
 import epicurius.domain.collection.CollectionType
 import epicurius.domain.exceptions.CollectionAlreadyExists
 import epicurius.domain.exceptions.CollectionNotAccessible
@@ -42,7 +44,7 @@ class CollectionService(private val tm: TransactionManager, private val cs: Clou
         )
     }
 
-    fun getCollection(userId: Int, username: String, collectionId: Int): Collection {
+    fun getCollection(userId: Int, collectionId: Int): Collection {
         val jdbiCollectionModel = checkIfCollectionExists(collectionId)
 
         if (!checkCollectionVisibility(userId, jdbiCollectionModel)) throw CollectionNotAccessible()
@@ -52,6 +54,11 @@ class CollectionService(private val tm: TransactionManager, private val cs: Clou
             jdbiCollectionModel.type,
             getRecipesInfo(jdbiCollectionModel.recipes)
         )
+    }
+
+    fun getCollections(collectionType: CollectionType, pagingParams: PagingParams): List<CollectionProfile> {
+        val jdbiCollectionsProfileModels = tm.run { it.collectionRepository.getCollections(collectionType, pagingParams) }
+        return jdbiCollectionsProfileModels.map { it.toCollectionProfile() }
     }
 
     fun updateCollection(userId: Int, collectionId: Int, updateCollectionInfo: UpdateCollectionInputModel): Collection {
