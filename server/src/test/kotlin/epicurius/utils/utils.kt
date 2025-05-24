@@ -3,7 +3,6 @@ package epicurius.utils
 import epicurius.EpicuriusTest.Companion.userDomain
 import epicurius.domain.Diet
 import epicurius.domain.Intolerance
-import epicurius.domain.collection.CollectionDomain.Companion.MAX_COLLECTION_NAME_LENGTH
 import epicurius.domain.collection.CollectionType
 import epicurius.domain.recipe.Cuisine
 import epicurius.domain.recipe.Ingredient
@@ -11,7 +10,7 @@ import epicurius.domain.recipe.IngredientUnit
 import epicurius.domain.recipe.Instructions
 import epicurius.domain.recipe.MealType
 import epicurius.domain.recipe.Recipe
-import epicurius.domain.recipe.RecipeDomain
+import epicurius.domain.recipe.utils
 import epicurius.domain.user.AuthenticatedUser
 import epicurius.domain.user.User
 import epicurius.domain.user.UserDomain.Companion.MAX_PASSWORD_LENGTH
@@ -100,15 +99,15 @@ fun generateRandomUsername() = "test${Math.random()}".replace(".", "").take(MAX_
 fun generateEmail(username: String) = "$username@email.com"
 fun generateSecurePassword() = ("P" + randomUUID().toString()).take(MAX_PASSWORD_LENGTH)
 
-fun generateRandomRecipeName() = randomUUID().toString().take(RecipeDomain.MAX_RECIPE_NAME_LENGTH)
-fun generateRandomRecipeDescription() = randomUUID().toString().take(RecipeDomain.MAX_RECIPE_DESCRIPTION_LENGTH)
+fun generateRandomRecipeName() = randomUUID().toString().take(utils.MAX_RECIPE_NAME_LENGTH)
+fun generateRandomRecipeDescription() = randomUUID().toString().take(utils.MAX_RECIPE_DESCRIPTION_LENGTH)
 fun generateRandomRecipeIngredients() = listOf(
-    Ingredient(randomUUID().toString().take(RecipeDomain.MAX_INGREDIENT_NAME_LENGTH), 1.0, IngredientUnit.TSP),
-    Ingredient(randomUUID().toString().take(RecipeDomain.MAX_INGREDIENT_NAME_LENGTH), 1.0, IngredientUnit.TSP)
+    Ingredient(randomUUID().toString().take(utils.MAX_INGREDIENT_NAME_LENGTH), 1.0, IngredientUnit.TSP),
+    Ingredient(randomUUID().toString().take(utils.MAX_INGREDIENT_NAME_LENGTH), 1.0, IngredientUnit.TSP)
 )
 fun generateRandomRecipeInstructions() = Instructions(
     mapOf(
-        "1" to randomUUID().toString().take(RecipeDomain.MAX_INSTRUCTIONS_STEP_LENGTH),
-        "2" to randomUUID().toString().take(RecipeDomain.MAX_INSTRUCTIONS_STEP_LENGTH)
+        "1" to randomUUID().toString().take(utils.MAX_INSTRUCTIONS_STEP_LENGTH),
+        "2" to randomUUID().toString().take(utils.MAX_INSTRUCTIONS_STEP_LENGTH)
     )
 )
