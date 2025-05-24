@@ -56,8 +56,8 @@ class CollectionService(private val tm: TransactionManager, private val cs: Clou
         )
     }
 
-    fun getCollections(collectionType: CollectionType, pagingParams: PagingParams): List<CollectionProfile> {
-        val jdbiCollectionsProfileModels = tm.run { it.collectionRepository.getCollections(collectionType, pagingParams) }
+    fun getCollections(userId: Int, collectionType: CollectionType, pagingParams: PagingParams): List<CollectionProfile> {
+        val jdbiCollectionsProfileModels = tm.run { it.collectionRepository.getCollections(userId, collectionType, pagingParams) }
         return jdbiCollectionsProfileModels.map { it.toCollectionProfile() }
     }
 
