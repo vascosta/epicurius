@@ -3,7 +3,7 @@ package epicurius.unit.services.user
 import org.mockito.kotlin.verify
 import kotlin.test.Test
 
-class DeleteUserServiceTests: UserServiceTest() {
+class DeleteUserServiceTests : UserServiceTest() {
 
     @Test
     fun `Should delete a user successfully`() {

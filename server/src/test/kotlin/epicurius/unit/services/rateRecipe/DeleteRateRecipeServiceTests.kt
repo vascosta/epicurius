@@ -1,7 +1,6 @@
 package epicurius.unit.services.rateRecipe
 
 import epicurius.domain.exceptions.RecipeNotFound
-import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.assertThrows
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever

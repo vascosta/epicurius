@@ -5,7 +5,6 @@ import epicurius.domain.fridge.Fridge
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.mockito.kotlin.whenever
-import kotlin.test.assertEquals
 
 class RemoveFridgeProductServiceTests : FridgeServiceTest() {
 

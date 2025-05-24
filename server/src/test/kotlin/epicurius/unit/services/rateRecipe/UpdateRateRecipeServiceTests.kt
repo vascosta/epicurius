@@ -4,7 +4,6 @@ import epicurius.domain.exceptions.AuthorCannotUpdateRating
 import epicurius.domain.exceptions.RecipeNotAccessible
 import epicurius.domain.exceptions.RecipeNotFound
 import epicurius.domain.exceptions.UserHasNotRated
-import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.mockito.kotlin.verify

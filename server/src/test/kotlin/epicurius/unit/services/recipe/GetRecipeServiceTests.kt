@@ -3,7 +3,6 @@ package epicurius.unit.services.recipe
 import epicurius.domain.exceptions.RecipeNotAccessible
 import epicurius.domain.exceptions.RecipeNotFound
 import epicurius.domain.picture.PictureDomain.Companion.RECIPES_FOLDER
-import epicurius.utils.generateRandomUsername
 import kotlinx.coroutines.runBlocking
 import org.mockito.kotlin.whenever
 import kotlin.test.Test

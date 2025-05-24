@@ -1,5 +1,6 @@
 package epicurius.unit.services.collection
 
+import epicurius.domain.exceptions.CollectionAlreadyExists
 import epicurius.domain.exceptions.CollectionNotFound
 import epicurius.domain.exceptions.NotTheCollectionOwner
 import epicurius.http.controllers.collection.models.input.UpdateCollectionInputModel
@@ -19,6 +20,9 @@ class UpdateCollectionServiceTests : CollectionServiceTest() {
         // mock
         val mockUpdatedCollection = testFavouriteJdbiCollectionModel.copy(name = updateCollectionInputInfo.name!!)
         whenever(jdbiCollectionRepositoryMock.getCollectionById(FAVOURITE_COLLECTION_ID)).thenReturn(testFavouriteJdbiCollectionModel)
+        whenever(jdbiCollectionRepositoryMock
+            .getCollection(testPublicUser.id, updateCollectionInputInfo.name!!, testFavouriteJdbiCollectionModel.type)
+        ).thenReturn(null)
         whenever(
             jdbiCollectionRepositoryMock.checkIfUserIsCollectionOwner(FAVOURITE_COLLECTION_ID, testPublicUser.id)
         ).thenReturn(true)
@@ -49,11 +53,31 @@ class UpdateCollectionServiceTests : CollectionServiceTest() {
     }
 
     @Test
+    fun `Should throw CollectionAlreadyExists exception when updating a collection with an existing name`() {
+        // given a collection id (FAVOURITE_COLLECTION_ID) and new information for updating it (updateCollectionInputInfo)
+
+        // mock
+        whenever(jdbiCollectionRepositoryMock.getCollectionById(FAVOURITE_COLLECTION_ID)).thenReturn(testFavouriteJdbiCollectionModel)
+        whenever(jdbiCollectionRepositoryMock
+            .getCollection(testPublicUser.id, updateCollectionInputInfo.name!!, testFavouriteJdbiCollectionModel.type)
+        ).thenReturn(testFavouriteJdbiCollectionModel)
+
+        // when updating the collection
+        // then the collection is not updated and throws CollectionAlreadyExists exception
+        assertFailsWith<CollectionAlreadyExists> {
+            updateCollection(testPublicUser.id, FAVOURITE_COLLECTION_ID, updateCollectionInputInfo)
+        }
+    }
+
+    @Test
     fun `Should throw NotTheCollectionOwner exception when updating a collection that the user does not own`() {
         // given a collection id (FAVOURITE_COLLECTION_ID) and new information for updating it (updateCollectionInputInfo)
 
         // mock
         whenever(jdbiCollectionRepositoryMock.getCollectionById(FAVOURITE_COLLECTION_ID)).thenReturn(testFavouriteJdbiCollectionModel)
+        whenever(jdbiCollectionRepositoryMock
+            .getCollection(testPublicUser.id, updateCollectionInputInfo.name!!, testFavouriteJdbiCollectionModel.type)
+        ).thenReturn(null)
         whenever(
             jdbiCollectionRepositoryMock.checkIfUserIsCollectionOwner(FAVOURITE_COLLECTION_ID, testPrivateUser.id)
         ).thenReturn(false)
