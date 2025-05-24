@@ -1,4 +1,4 @@
-package epicurius.repository.jdbi.mappers
+package epicurius.repository.jdbi.mappers.recipe
 
 import epicurius.domain.recipe.Ingredient
 import epicurius.domain.recipe.IngredientUnit
@@ -9,7 +9,7 @@ import java.sql.ResultSet
 
 class IngredientMapper : RowMapper<Ingredient> {
     override fun map(rs: ResultSet, ctx: StatementContext): Ingredient {
-        val unit = IngredientUnit.fromInt(rs.getInt("unit"))
+        val unit = IngredientUnit.Companion.fromInt(rs.getInt("unit"))
 
         return Ingredient(
             name = rs.getString("ingredient_name"),

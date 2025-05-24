@@ -1,4 +1,4 @@
-package epicurius.repository.jdbi.mappers
+package epicurius.repository.jdbi.mappers.mealPlanner
 
 import epicurius.domain.mealPlanner.MealTime
 import epicurius.domain.mealPlanner.MealTime.Companion.fromInt
@@ -15,7 +15,7 @@ class JdbiDailyMealPlannerRowMapper(
         return JdbiDailyMealPlannerRow(
             date = rs.getDate("date").toLocalDate(),
             maxCalories = rs.getInt("max_calories"),
-            mealTime = MealTime.fromInt(rs.getInt("meal_time")),
+            mealTime = MealTime.Companion.fromInt(rs.getInt("meal_time")),
             jdbiRecipeInfo = jdbiRecipeInfoMapper.map(rs, ctx)
         )
     }

@@ -1,4 +1,4 @@
-package epicurius.repository.jdbi.mappers
+package epicurius.repository.jdbi.mappers.mealPlanner
 
 import epicurius.domain.fridge.Product
 import org.jdbi.v3.core.mapper.RowMapper

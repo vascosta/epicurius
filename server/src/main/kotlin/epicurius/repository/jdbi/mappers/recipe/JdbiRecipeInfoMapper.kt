@@ -1,4 +1,4 @@
-package epicurius.repository.jdbi.mappers
+package epicurius.repository.jdbi.mappers.recipe
 
 import epicurius.domain.recipe.Cuisine
 import epicurius.domain.recipe.MealType
@@ -10,8 +10,8 @@ import java.sql.ResultSet
 
 class JdbiRecipeInfoMapper : RowMapper<JdbiRecipeInfo> {
     override fun map(rs: ResultSet, ctx: StatementContext): JdbiRecipeInfo {
-        val cuisine = Cuisine.fromInt(rs.getInt("cuisine"))
-        val mealType = MealType.fromInt(rs.getInt("meal_type"))
+        val cuisine = Cuisine.Companion.fromInt(rs.getInt("cuisine"))
+        val mealType = MealType.Companion.fromInt(rs.getInt("meal_type"))
 
         val array = rs.getArray("pictures_names")
         val pictures: List<String> = if (array != null) {

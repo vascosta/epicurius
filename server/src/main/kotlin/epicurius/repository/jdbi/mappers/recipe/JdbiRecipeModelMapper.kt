@@ -1,12 +1,10 @@
-package epicurius.repository.jdbi.mappers
+package epicurius.repository.jdbi.mappers.recipe
 
 import epicurius.domain.Diet
 import epicurius.domain.Intolerance
 import epicurius.domain.recipe.Cuisine
-import epicurius.domain.recipe.Cuisine.Companion.fromInt
 import epicurius.domain.recipe.Ingredient
 import epicurius.domain.recipe.MealType
-import epicurius.domain.recipe.MealType.Companion.fromInt
 import epicurius.repository.jdbi.recipe.models.JdbiRecipeModel
 import epicurius.repository.jdbi.utils.getArray
 import org.jdbi.v3.core.mapper.ColumnMapper
@@ -21,8 +19,8 @@ class JdbiRecipeModelMapper(
 ) : RowMapper<JdbiRecipeModel> {
 
     override fun map(rs: ResultSet, ctx: StatementContext): JdbiRecipeModel {
-        val cuisine = Cuisine.fromInt(rs.getInt("cuisine"))
-        val mealType = MealType.fromInt(rs.getInt("meal_type"))
+        val cuisine = Cuisine.Companion.fromInt(rs.getInt("cuisine"))
+        val mealType = MealType.Companion.fromInt(rs.getInt("meal_type"))
         val intolerances = intoleranceSetMapper.map(rs, 9, ctx)
         val diets = dietSetMapper.map(rs, 10, ctx)
         val dbPicturesArray = rs.getArray(15)
