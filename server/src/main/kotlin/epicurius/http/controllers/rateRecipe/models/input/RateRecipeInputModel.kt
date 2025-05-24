@@ -1,8 +1,8 @@
 package epicurius.http.controllers.rateRecipe.models.input
 
-import epicurius.domain.recipe.utils.Companion.MAX_RATING
-import epicurius.domain.recipe.utils.Companion.MIN_RATING
-import epicurius.domain.recipe.utils.Companion.RATING_MSG
+import epicurius.domain.recipe.MAX_RATING
+import epicurius.domain.recipe.MIN_RATING
+import epicurius.domain.recipe.RATING_MSG
 import jakarta.validation.constraints.Max
 import jakarta.validation.constraints.Min
 

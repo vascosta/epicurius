@@ -1,9 +1,9 @@
 package epicurius.http.controllers.collection.models.input
 
-import epicurius.domain.collection.utils.Companion.COLLECTION_NAME_LENGTH_MSG
-import epicurius.domain.collection.utils.Companion.MAX_COLLECTION_NAME_LENGTH
-import epicurius.domain.collection.utils.Companion.MIN_COLLECTION_NAME_LENGTH
+import epicurius.domain.collection.COLLECTION_NAME_LENGTH_MSG
 import epicurius.domain.collection.CollectionType
+import epicurius.domain.collection.MAX_COLLECTION_NAME_LENGTH
+import epicurius.domain.collection.MIN_COLLECTION_NAME_LENGTH
 import jakarta.validation.constraints.Size
 
 data class CreateCollectionInputModel(
