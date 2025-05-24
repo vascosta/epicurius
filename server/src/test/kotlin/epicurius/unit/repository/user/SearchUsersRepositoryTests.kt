@@ -27,7 +27,7 @@ class SearchUsersRepositoryTests : UserRepositoryTest() {
         createUser(username2, email2, country, passwordHash)
 
         // when retrieving the users by a partial username
-        val users = searchUsers(publicTestUser.user.id, "partial", PagingParams())
+        val users = searchUsers(publicTestUser.user.id, "partial", PagingParams(limit = 2))
 
         // then the users are retrieved successfully
         assertTrue(users.isNotEmpty())

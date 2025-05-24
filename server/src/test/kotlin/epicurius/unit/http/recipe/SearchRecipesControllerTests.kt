@@ -45,7 +45,7 @@ class SearchRecipesControllerTests : RecipeControllerTest() {
         testRecipe.pictures.first()
     )
 
-    private val pagingParams = PagingParams()
+    private val pagingParams = PagingParams(limit = 5)
 
     @Test
     fun `Should search for recipes by name`() {
@@ -72,7 +72,6 @@ class SearchRecipesControllerTests : RecipeControllerTest() {
     fun `Should search for a recipe according to user's intolerances`() {
         // given a search form with intolerances that match the recipe and paging params (pagingParams)
         val sameIntolerances = SearchRecipesInputModel(intolerances = listOf(Intolerance.GLUTEN))
-        val pagingParams = PagingParams()
 
         // mock
         whenever(
@@ -119,7 +118,6 @@ class SearchRecipesControllerTests : RecipeControllerTest() {
         val searchRecipesInputInfoWithoutIngredients = searchRecipesInputInfo.copy(
             ingredients = null
         )
-        val pagingParams = PagingParams()
 
         // mock
         whenever(
@@ -157,7 +155,6 @@ class SearchRecipesControllerTests : RecipeControllerTest() {
     @Test
     fun `Should search for a recipe with ingredients successfully`() {
         // given a search form with ingredients (searchRecipesInputInfo) and paging params (pagingParams)
-        val pagingParams = PagingParams()
 
         // mock
         whenever(
@@ -195,7 +192,6 @@ class SearchRecipesControllerTests : RecipeControllerTest() {
     @Test
     fun `Should search for recipes of public users`() {
         // given a search form with name and paging params (pagingParams)
-        val pagingParams = PagingParams()
 
         // mock
         whenever(
@@ -234,7 +230,6 @@ class SearchRecipesControllerTests : RecipeControllerTest() {
     @Test
     fun `Should search for recipes from private users when not followed`() {
         // given a search form with name and paging params (pagingParams)
-        val pagingParams = PagingParams()
 
         // mock
         whenever(
@@ -273,7 +268,6 @@ class SearchRecipesControllerTests : RecipeControllerTest() {
     @Test
     fun `Should search for recipes from private users when followed`() {
         // given a search form with name and paging params (pagingParams)
-        val pagingParams = PagingParams()
 
         // mock
         whenever(

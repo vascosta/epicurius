@@ -21,7 +21,7 @@ class UnfollowControllerTests : UserControllerTest() {
 
         // then the user is unfollowed successfully
         verify(userServiceMock).unfollow(publicTestUser.user.id, publicTestUsername, privateTestUsername)
-        assertEquals(HttpStatus.OK, response.statusCode)
+        assertEquals(HttpStatus.NO_CONTENT, response.statusCode)
     }
 
     @Test
