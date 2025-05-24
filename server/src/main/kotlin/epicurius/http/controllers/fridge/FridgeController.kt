@@ -1,7 +1,7 @@
 package epicurius.http.controllers.fridge
 
 import epicurius.domain.user.AuthenticatedUser
-import epicurius.http.controllers.fridge.models.input.ProductInputModel
+import epicurius.http.controllers.fridge.models.input.AddProductInputModel
 import epicurius.http.controllers.fridge.models.input.UpdateProductInputModel
 import epicurius.http.controllers.fridge.models.output.AddProductOutputModel
 import epicurius.http.controllers.fridge.models.output.GetFridgeOutputModel
@@ -38,7 +38,7 @@ class FridgeController(private val fridgeService: FridgeService) {
     @PostMapping(Uris.Fridge.FRIDGE)
     suspend fun addProduct(
         authenticatedUser: AuthenticatedUser,
-        @Valid @RequestBody body: ProductInputModel,
+        @Valid @RequestBody body: AddProductInputModel,
     ): ResponseEntity<*> {
         val newFridge = fridgeService.addProduct(authenticatedUser.user.id, body)
         return ResponseEntity

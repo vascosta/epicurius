@@ -11,7 +11,7 @@ import jakarta.validation.constraints.PastOrPresent
 import jakarta.validation.constraints.Pattern
 import java.time.LocalDate
 
-data class ProductInputModel(
+data class AddProductInputModel(
     @field:NotBlank
     @field:Pattern(regexp = FridgeDomain.VALID_STRING, message = FridgeDomain.VALID_STRING_MSG)
     val name: String,

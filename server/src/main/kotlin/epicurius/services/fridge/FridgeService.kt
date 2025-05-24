@@ -8,7 +8,7 @@ import epicurius.domain.fridge.FridgeDomain
 import epicurius.domain.fridge.Product
 import epicurius.domain.fridge.ProductInfo
 import epicurius.domain.fridge.UpdateProductInfo
-import epicurius.http.controllers.fridge.models.input.ProductInputModel
+import epicurius.http.controllers.fridge.models.input.AddProductInputModel
 import epicurius.http.controllers.fridge.models.input.UpdateProductInputModel
 import epicurius.repository.spoonacular.manager.SpoonacularManager
 import epicurius.repository.transaction.TransactionManager
@@ -24,7 +24,7 @@ class FridgeService(
 ) {
     fun getFridge(userId: Int): Fridge = tm.run { it.fridgeRepository.getFridge(userId) }
 
-    suspend fun addProduct(userId: Int, body: ProductInputModel): Fridge {
+    suspend fun addProduct(userId: Int, body: AddProductInputModel): Fridge {
         checkIfProductIsValid(body.name)
 
         val product = body.toProductInfo()
