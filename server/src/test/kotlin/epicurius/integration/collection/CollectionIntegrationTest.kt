@@ -4,6 +4,7 @@ import epicurius.domain.collection.CollectionType
 import epicurius.http.controllers.collection.models.output.AddRecipeToCollectionOutputModel
 import epicurius.http.controllers.collection.models.output.CreateCollectionOutputModel
 import epicurius.http.controllers.collection.models.output.GetCollectionOutputModel
+import epicurius.http.controllers.collection.models.output.GetCollectionsOutputModel
 import epicurius.http.controllers.collection.models.output.RemoveRecipeFromCollectionOutputModel
 import epicurius.http.controllers.collection.models.output.UpdateCollectionOutputModel
 import epicurius.http.utils.Uris
@@ -21,6 +22,13 @@ class CollectionIntegrationTest : EpicuriusIntegrationTest() {
         get<GetCollectionOutputModel>(
             client,
             api(Uris.Collection.COLLECTION.replace("{id}", id.toString())),
+            token = token
+        )
+
+    fun getCollections(token: String, type: CollectionType, skip: Int, limit: Int) =
+        get<GetCollectionsOutputModel>(
+            client,
+            api(Uris.Collection.COLLECTIONS) + "?collectionType=$type&skip=$skip&limit=$limit",
             token = token
         )
 
