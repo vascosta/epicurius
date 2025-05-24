@@ -1,5 +1,7 @@
 package epicurius.http.controllers.collection
 
+import epicurius.domain.PagingParams
+import epicurius.domain.collection.CollectionType
 import epicurius.domain.user.AuthenticatedUser
 import epicurius.http.controllers.collection.models.input.AddRecipeToCollectionInputModel
 import epicurius.http.controllers.collection.models.input.CreateCollectionInputModel
@@ -7,6 +9,7 @@ import epicurius.http.controllers.collection.models.input.UpdateCollectionInputM
 import epicurius.http.controllers.collection.models.output.AddRecipeToCollectionOutputModel
 import epicurius.http.controllers.collection.models.output.CreateCollectionOutputModel
 import epicurius.http.controllers.collection.models.output.GetCollectionOutputModel
+import epicurius.http.controllers.collection.models.output.GetCollectionsOutputModel
 import epicurius.http.controllers.collection.models.output.RemoveRecipeFromCollectionOutputModel
 import epicurius.http.controllers.collection.models.output.UpdateCollectionOutputModel
 import epicurius.http.utils.Uris
@@ -20,6 +23,7 @@ import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
@@ -31,10 +35,24 @@ class CollectionController(private val collectionService: CollectionService) {
         authenticatedUser: AuthenticatedUser,
         @PathVariable id: Int,
     ): ResponseEntity<*> {
-        val collection = collectionService.getCollection(authenticatedUser.user.id, authenticatedUser.user.name, id)
+        val collection = collectionService.getCollection(authenticatedUser.user.id, id)
         return ResponseEntity
             .ok()
             .body(GetCollectionOutputModel(collection))
+    }
+
+    @GetMapping(Uris.Collection.COLLECTIONS)
+    fun getCollections(
+        authenticatedUser: AuthenticatedUser,
+        @RequestParam collectionType: CollectionType,
+        @RequestParam skip: Int,
+        @RequestParam limit: Int
+    ): ResponseEntity<*> {
+        val pagingParams = PagingParams(skip, limit)
+        val collections = collectionService.getCollections(authenticatedUser.user.id, collectionType, pagingParams)
+        return ResponseEntity
+            .ok()
+            .body(GetCollectionsOutputModel(collections))
     }
 
     @PostMapping(Uris.Collection.COLLECTIONS)
