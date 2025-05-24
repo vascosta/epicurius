@@ -3,7 +3,10 @@ package epicurius.http.controllers.fridge
 import epicurius.domain.user.AuthenticatedUser
 import epicurius.http.controllers.fridge.models.input.ProductInputModel
 import epicurius.http.controllers.fridge.models.input.UpdateProductInputModel
-import epicurius.http.controllers.fridge.models.output.FridgeOutputModel
+import epicurius.http.controllers.fridge.models.output.AddProductOutputModel
+import epicurius.http.controllers.fridge.models.output.GetFridgeOutputModel
+import epicurius.http.controllers.fridge.models.output.RemoveProductOutputModel
+import epicurius.http.controllers.fridge.models.output.UpdateProductOutputModel
 import epicurius.http.utils.Uris
 import epicurius.http.utils.Uris.Fridge.product
 import epicurius.services.fridge.FridgeService
@@ -29,18 +32,18 @@ class FridgeController(private val fridgeService: FridgeService) {
         val fridge = fridgeService.getFridge(authenticatedUser.user.id)
         return ResponseEntity
             .ok()
-            .body(FridgeOutputModel(fridge.products))
+            .body(GetFridgeOutputModel(fridge.products))
     }
 
     @PostMapping(Uris.Fridge.FRIDGE)
-    suspend fun addProducts(
+    suspend fun addProduct(
         authenticatedUser: AuthenticatedUser,
         @Valid @RequestBody body: ProductInputModel,
     ): ResponseEntity<*> {
         val newFridge = fridgeService.addProduct(authenticatedUser.user.id, body)
         return ResponseEntity
             .created(product(newFridge.products.last().entryNumber))
-            .body(newFridge)
+            .body(AddProductOutputModel(newFridge))
     }
 
     @PatchMapping(Uris.Fridge.PRODUCT)
@@ -52,7 +55,7 @@ class FridgeController(private val fridgeService: FridgeService) {
         val updatedFridge = fridgeService.updateProductInfo(authenticatedUser.user.id, entryNumber, body)
         return ResponseEntity
             .ok()
-            .body(updatedFridge)
+            .body(UpdateProductOutputModel(updatedFridge))
     }
 
     @DeleteMapping(Uris.Fridge.PRODUCT)
@@ -63,6 +66,6 @@ class FridgeController(private val fridgeService: FridgeService) {
         val updatedFridge = fridgeService.removeProduct(authenticatedUser.user.id, entryNumber)
         return ResponseEntity
             .ok()
-            .body(updatedFridge)
+            .body(RemoveProductOutputModel(updatedFridge))
     }
 }
