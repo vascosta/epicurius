@@ -16,14 +16,14 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
-class SignUpIntegrationTests: UserIntegrationTest() {
+class SignUpIntegrationTests : UserIntegrationTest() {
 
     private val username = generateRandomUsername()
     private val password = generateSecurePassword()
     private val email = generateEmail(username)
 
     @Test
-    fun `Should create new user and retrieve it successfully with code 201`() {
+    fun `Should create new user successfully with code 201`() {
         // given information to create a user
 
         // when creating a user

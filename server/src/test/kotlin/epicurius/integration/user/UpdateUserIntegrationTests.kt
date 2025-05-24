@@ -3,7 +3,6 @@ package epicurius.integration.user
 import epicurius.domain.Diet
 import epicurius.domain.Intolerance
 import epicurius.domain.exceptions.InvalidCountry
-import epicurius.domain.exceptions.InvalidSelfFollow
 import epicurius.domain.exceptions.PasswordsDoNotMatch
 import epicurius.domain.exceptions.UserAlreadyExists
 import epicurius.http.utils.Problem
@@ -19,7 +18,7 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 
-class UpdateUserIntegrationTests: UserIntegrationTest() {
+class UpdateUserIntegrationTests : UserIntegrationTest() {
 
     private val testUser = createTestUser(tm)
 

@@ -20,7 +20,7 @@ class RateRecipeIntegrationTest : EpicuriusIntegrationTest() {
     lateinit var testUser: AuthenticatedUser
     lateinit var authorTestUser: AuthenticatedUser
     lateinit var testRecipe: Recipe
-    lateinit var testPrivateRecipe : Recipe
+    lateinit var testPrivateRecipe: Recipe
 
     @BeforeEach
     fun setup() {

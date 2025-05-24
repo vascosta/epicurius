@@ -1,6 +1,5 @@
 package epicurius.integration.user
 
-import epicurius.domain.exceptions.InvalidSelfFollow
 import epicurius.domain.exceptions.InvalidSelfUnfollow
 import epicurius.domain.exceptions.UserNotFollowed
 import epicurius.domain.exceptions.UserNotFound
@@ -9,13 +8,12 @@ import epicurius.http.utils.Problem
 import epicurius.http.utils.Uris
 import epicurius.integration.utils.delete
 import epicurius.integration.utils.getBody
-import epicurius.integration.utils.post
 import epicurius.utils.createTestUser
 import org.springframework.http.HttpStatus
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
-class UnfollowIntegrationTests: UserIntegrationTest() {
+class UnfollowIntegrationTests : UserIntegrationTest() {
 
     private val testUser = createTestUser(tm)
     private val testUser2 = createTestUser(tm)

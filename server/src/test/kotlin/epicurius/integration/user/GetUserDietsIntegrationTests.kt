@@ -5,7 +5,7 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 
-class GetUserDietsIntegrationTests: UserIntegrationTest() {
+class GetUserDietsIntegrationTests : UserIntegrationTest() {
 
     @Test
     fun `Should retrieve the diets of an user successfully with code 200`() {

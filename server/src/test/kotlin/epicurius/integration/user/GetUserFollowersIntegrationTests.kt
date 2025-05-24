@@ -1,12 +1,11 @@
 package epicurius.integration.user
 
-
 import epicurius.utils.createTestUser
 import kotlin.test.Test
 import kotlin.test.assertNotNull
 import kotlin.test.assertTrue
 
-class GetUserFollowersIntegrationTests: UserIntegrationTest() {
+class GetUserFollowersIntegrationTests : UserIntegrationTest() {
 
     @Test
     fun `Should retrieve the followers of an user successfully with code 200`() {

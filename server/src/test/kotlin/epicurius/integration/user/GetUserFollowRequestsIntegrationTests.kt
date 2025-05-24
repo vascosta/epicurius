@@ -5,7 +5,7 @@ import kotlin.test.Test
 import kotlin.test.assertNotNull
 import kotlin.test.assertTrue
 
-class GetUserFollowRequestsIntegrationTests: UserIntegrationTest() {
+class GetUserFollowRequestsIntegrationTests : UserIntegrationTest() {
 
     @Test
     fun `Should retrieve the follow requests of an user successfully with code 200`() {

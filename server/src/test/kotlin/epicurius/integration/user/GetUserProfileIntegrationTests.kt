@@ -12,7 +12,7 @@ import kotlin.test.assertContentEquals
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 
-class GetUserProfileIntegrationTests: UserIntegrationTest() {
+class GetUserProfileIntegrationTests : UserIntegrationTest() {
 
     private val testUser = createTestUser(tm)
 
@@ -67,6 +67,5 @@ class GetUserProfileIntegrationTests: UserIntegrationTest() {
         // then the user profile cannot be retrieved and fails with code 404
         assertNotNull(errorBody)
         assertEquals(UserNotFound(nonExistingUsername).message, errorBody.detail)
-
     }
 }

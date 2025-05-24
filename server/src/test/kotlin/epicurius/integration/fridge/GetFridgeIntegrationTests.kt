@@ -1,14 +1,11 @@
 package epicurius.integration.fridge
 
 import epicurius.utils.createTestUser
-import epicurius.utils.generateEmail
-import epicurius.utils.generateRandomUsername
-import epicurius.utils.generateSecurePassword
 import kotlin.test.Test
 import kotlin.test.assertNotNull
 import kotlin.test.assertTrue
 
-class GetFridgeIntegrationTests: FridgeIntegrationTest() {
+class GetFridgeIntegrationTests : FridgeIntegrationTest() {
 
     @Test
     fun `Get fridge successfully with code 200`() {

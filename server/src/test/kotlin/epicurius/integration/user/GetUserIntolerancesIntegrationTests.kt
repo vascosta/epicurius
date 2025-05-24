@@ -5,7 +5,7 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 
-class GetUserIntolerancesIntegrationTests: UserIntegrationTest() {
+class GetUserIntolerancesIntegrationTests : UserIntegrationTest() {
 
     @Test
     fun `Should retrieve the intolerances of an user successfully with code 200`() {

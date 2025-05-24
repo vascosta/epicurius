@@ -15,7 +15,7 @@ import epicurius.integration.utils.patch
 import epicurius.integration.utils.post
 import org.springframework.http.HttpStatus
 
-class CollectionIntegrationTest: EpicuriusIntegrationTest() {
+class CollectionIntegrationTest : EpicuriusIntegrationTest() {
 
     fun getCollection(token: String, id: Int) =
         get<GetCollectionOutputModel>(
@@ -28,8 +28,9 @@ class CollectionIntegrationTest: EpicuriusIntegrationTest() {
         val result = post<CreateCollectionOutputModel>(
             client,
             api(Uris.Collection.COLLECTIONS),
-            token = token,
-            body = mapOf("name" to name, "type" to type)
+            body = mapOf("name" to name, "type" to type),
+            responseStatus = HttpStatus.CREATED,
+            token = token
         )
         return getBody(result)
     }

@@ -13,7 +13,7 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 
-class GetCollectionIntegrationTests: CollectionIntegrationTest() {
+class GetCollectionIntegrationTests : CollectionIntegrationTest() {
 
     val testUser = createTestUser(tm)
     val privateTestUser = createTestUser(tm, true)

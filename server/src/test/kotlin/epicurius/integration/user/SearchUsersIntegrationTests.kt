@@ -5,7 +5,7 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 
-class SearchUsersIntegrationTests: UserIntegrationTest() {
+class SearchUsersIntegrationTests : UserIntegrationTest() {
 
     @Test
     fun `Should search for users and retrieve them successfully with code 200`() {

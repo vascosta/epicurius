@@ -5,7 +5,7 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 
-class GetUserInfoIntegrationTests: UserIntegrationTest() {
+class GetUserInfoIntegrationTests : UserIntegrationTest() {
 
     @Test
     fun `Should retrieve an authenticated user info successfully with code 200`() {

@@ -4,7 +4,7 @@ import epicurius.utils.createTestUser
 import kotlin.test.Test
 import kotlin.test.assertTrue
 
-class LogoutIntegrationTests: UserIntegrationTest() {
+class LogoutIntegrationTests : UserIntegrationTest() {
 
     @Test
     fun `Should logout a user successfully with code 204`() {

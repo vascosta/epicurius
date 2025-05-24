@@ -15,7 +15,7 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
-class LoginIntegrationTests: UserIntegrationTest() {
+class LoginIntegrationTests : UserIntegrationTest() {
 
     private val country = "PT"
     private val password = generateSecurePassword()
@@ -115,7 +115,6 @@ class LoginIntegrationTests: UserIntegrationTest() {
         val email = generateEmail(username)
         tm.run { it.userRepository.createUser(username, email, country, passwordHash) }
         val incorrectPassword = generateSecurePassword()
-
 
         // when logging in with an incorrect password
         val incorrectPasswordError = post<Problem>(

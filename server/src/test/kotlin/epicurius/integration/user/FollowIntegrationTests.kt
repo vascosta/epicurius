@@ -13,7 +13,7 @@ import org.springframework.http.HttpStatus
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
-class FollowIntegrationTests: UserIntegrationTest() {
+class FollowIntegrationTests : UserIntegrationTest() {
 
     private val publicTestUser = createTestUser(tm)
     private val privateTestUser = createTestUser(tm, true)

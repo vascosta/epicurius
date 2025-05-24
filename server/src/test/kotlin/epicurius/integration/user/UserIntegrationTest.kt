@@ -27,7 +27,7 @@ import org.springframework.http.client.MultipartBodyBuilder
 import org.springframework.web.multipart.MultipartFile
 import org.springframework.web.reactive.function.BodyInserters
 
-class UserIntegrationTest: EpicuriusIntegrationTest() {
+class UserIntegrationTest : EpicuriusIntegrationTest() {
 
     fun getUserInfo(token: String) = get<GetUserOutputModel>(client, api(Uris.User.USER), token = token)
 
@@ -206,7 +206,7 @@ class UserIntegrationTest: EpicuriusIntegrationTest() {
     }
 
     fun deleteUser(token: String): String {
-        val result =  delete<Unit>(
+        val result = delete<Unit>(
             client,
             api(Uris.User.USER),
             token = token

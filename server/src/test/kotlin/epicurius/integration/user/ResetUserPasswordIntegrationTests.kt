@@ -13,7 +13,7 @@ import org.springframework.http.HttpStatus
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
-class ResetUserPasswordIntegrationTests: UserIntegrationTest() {
+class ResetUserPasswordIntegrationTests : UserIntegrationTest() {
 
     private val testUser = createTestUser(tm)
     val testPassword = generateSecurePassword()

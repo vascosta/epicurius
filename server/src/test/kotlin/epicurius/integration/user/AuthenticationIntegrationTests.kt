@@ -11,7 +11,7 @@ import org.springframework.http.HttpStatus
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
-class AuthenticationIntegrationTests: UserIntegrationTest() {
+class AuthenticationIntegrationTests : UserIntegrationTest() {
 
     @Test
     fun `Should fail with 401 code when an unauthenticated user tries to do an authenticated operation`() {

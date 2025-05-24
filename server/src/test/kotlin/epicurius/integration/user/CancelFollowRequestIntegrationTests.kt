@@ -13,11 +13,10 @@ import org.springframework.http.HttpStatus
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
-class CancelFollowRequestIntegrationTests: UserIntegrationTest() {
+class CancelFollowRequestIntegrationTests : UserIntegrationTest() {
 
     private val publicTestUser = createTestUser(tm)
     private val privateTestUser = createTestUser(tm, true)
-
 
     @Test
     fun `Should cancel a follow request successfully with code 204`() {

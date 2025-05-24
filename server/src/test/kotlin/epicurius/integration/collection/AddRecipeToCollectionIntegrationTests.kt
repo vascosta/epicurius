@@ -19,7 +19,7 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 
-class AddRecipeToCollectionIntegrationTests: CollectionIntegrationTest() {
+class AddRecipeToCollectionIntegrationTests : CollectionIntegrationTest() {
 
     private val testUser = createTestUser(tm)
     private val privateTestUser = createTestUser(tm, true)
@@ -150,6 +150,5 @@ class AddRecipeToCollectionIntegrationTests: CollectionIntegrationTest() {
         // then the recipe is not added and fails with code 409
         val errorBody = getBody(error)
         assertEquals(RecipeAlreadyInCollection().message, errorBody.detail)
-
     }
 }

@@ -5,7 +5,7 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
-class UpdateUserProfilePictureIntegrationTests: UserIntegrationTest() {
+class UpdateUserProfilePictureIntegrationTests : UserIntegrationTest() {
 
     @Test
     fun `Should add a profile picture to an user successfully with code 200`() {
