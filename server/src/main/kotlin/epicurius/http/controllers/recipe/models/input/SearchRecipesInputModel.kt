@@ -3,16 +3,16 @@ package epicurius.http.controllers.recipe.models.input
 import epicurius.domain.Diet
 import epicurius.domain.Intolerance
 import epicurius.domain.recipe.Cuisine
+import epicurius.domain.recipe.INGREDIENTS_SIZE_MSG
+import epicurius.domain.recipe.INVALID_CALORIES_VALUES
+import epicurius.domain.recipe.INVALID_CARBS_VALUES
+import epicurius.domain.recipe.INVALID_FAT_VALUES
+import epicurius.domain.recipe.INVALID_PREPARATION_TIME_VALUES
+import epicurius.domain.recipe.INVALID_PROTEIN_VALUES
+import epicurius.domain.recipe.MAX_NUMBER_OF_INGREDIENTS
+import epicurius.domain.recipe.MAX_RECIPE_NAME_LENGTH
 import epicurius.domain.recipe.MealType
-import epicurius.domain.recipe.RecipeDomain
-import epicurius.domain.recipe.RecipeDomain.Companion.INVALID_CALORIES_VALUES
-import epicurius.domain.recipe.RecipeDomain.Companion.INVALID_CARBS_VALUES
-import epicurius.domain.recipe.RecipeDomain.Companion.INVALID_FAT_VALUES
-import epicurius.domain.recipe.RecipeDomain.Companion.INVALID_PREPARATION_TIME_VALUES
-import epicurius.domain.recipe.RecipeDomain.Companion.INVALID_PROTEIN_VALUES
-import epicurius.domain.recipe.RecipeDomain.Companion.MAX_NUMBER_OF_INGREDIENTS
-import epicurius.domain.recipe.RecipeDomain.Companion.MAX_RECIPE_NAME_LENGTH
-import epicurius.domain.recipe.RecipeDomain.Companion.RECIPE_NAME_LENGTH_MSG
+import epicurius.domain.recipe.RECIPE_NAME_LENGTH_MSG
 import epicurius.domain.recipe.SearchRecipesModel
 import epicurius.domain.user.UserDomain.Companion.MAX_DIET_SIZE
 import epicurius.domain.user.UserDomain.Companion.MAX_DIET_SIZE_MSG
@@ -61,7 +61,7 @@ data class SearchRecipesInputModel(
 ) {
     init {
         if (ingredients != null && ingredients.size > MAX_NUMBER_OF_INGREDIENTS) {
-            throw IllegalArgumentException(RecipeDomain.INGREDIENTS_SIZE_MSG)
+            throw IllegalArgumentException(INGREDIENTS_SIZE_MSG)
         }
 
         if (intolerances != null && intolerances.size > MAX_INTOLERANCE_SIZE) {

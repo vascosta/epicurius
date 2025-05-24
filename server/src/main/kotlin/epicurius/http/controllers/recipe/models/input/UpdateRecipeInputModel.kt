@@ -6,7 +6,7 @@ import epicurius.domain.recipe.Cuisine
 import epicurius.domain.recipe.Ingredient
 import epicurius.domain.recipe.Instructions
 import epicurius.domain.recipe.MealType
-import epicurius.domain.recipe.RecipeDomain
+import epicurius.domain.recipe.utils
 import epicurius.domain.user.UserDomain
 import epicurius.repository.firestore.recipe.models.FirestoreUpdateRecipeModel
 import epicurius.repository.jdbi.recipe.models.JdbiUpdateRecipeModel
@@ -14,10 +14,10 @@ import jakarta.validation.constraints.Positive
 import jakarta.validation.constraints.Size
 
 data class UpdateRecipeInputModel(
-    @field:Size(max = RecipeDomain.MAX_RECIPE_DESCRIPTION_LENGTH, message = RecipeDomain.RECIPE_DESCRIPTION_LENGTH_MSG)
+    @field:Size(max = utils.MAX_RECIPE_DESCRIPTION_LENGTH, message = utils.RECIPE_DESCRIPTION_LENGTH_MSG)
     val name: String? = null,
 
-    @field:Size(min = RecipeDomain.MIN_RECIPE_NAME_LENGTH, max = RecipeDomain.MAX_RECIPE_NAME_LENGTH, message = RecipeDomain.RECIPE_NAME_LENGTH_MSG)
+    @field:Size(min = utils.MIN_RECIPE_NAME_LENGTH, max = utils.MAX_RECIPE_NAME_LENGTH, message = utils.RECIPE_NAME_LENGTH_MSG)
     val description: String? = null,
 
     @field:Positive(message = UserDomain.POSITIVE_NUMBER_MSG)
@@ -45,8 +45,8 @@ data class UpdateRecipeInputModel(
     val instructions: Instructions? = null,
 ) {
     init {
-        if (ingredients != null && ingredients.size > RecipeDomain.MAX_NUMBER_OF_INGREDIENTS) {
-            throw IllegalArgumentException(RecipeDomain.INGREDIENTS_SIZE_MSG)
+        if (ingredients != null && ingredients.size > utils.MAX_NUMBER_OF_INGREDIENTS) {
+            throw IllegalArgumentException(utils.INGREDIENTS_SIZE_MSG)
         }
 
         if (intolerances != null && intolerances.size > UserDomain.MAX_INTOLERANCE_SIZE) {
@@ -57,8 +57,8 @@ data class UpdateRecipeInputModel(
             throw IllegalArgumentException(UserDomain.MAX_DIET_SIZE_MSG)
         }
 
-        if (instructions != null && instructions.steps.size > RecipeDomain.MAX_NUMBER_OF_INSTRUCTIONS_STEPS) {
-            throw IllegalArgumentException(RecipeDomain.INSTRUCTIONS_STEPS_SIZE_MSG)
+        if (instructions != null && instructions.steps.size > utils.MAX_NUMBER_OF_INSTRUCTIONS_STEPS) {
+            throw IllegalArgumentException(utils.INSTRUCTIONS_STEPS_SIZE_MSG)
         }
     }
 
