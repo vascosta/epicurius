@@ -1,9 +1,9 @@
 package epicurius.http.controllers.ingredients
 
 import epicurius.domain.user.AuthenticatedUser
-import epicurius.http.controllers.ingredients.models.output.IdentifyIngredientsInPictureOutputModel
 import epicurius.http.controllers.ingredients.models.output.GetIngredientsOutputModel
 import epicurius.http.controllers.ingredients.models.output.GetSubstituteIngredientsOutputModel
+import epicurius.http.controllers.ingredients.models.output.IdentifyIngredientsInPictureOutputModel
 import epicurius.http.utils.Uris
 import epicurius.services.ingredients.IngredientsService
 import org.springframework.http.MediaType

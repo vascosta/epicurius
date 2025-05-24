@@ -8,11 +8,9 @@ import epicurius.http.controllers.mealPlanner.models.input.UpdateDailyCaloriesIn
 import epicurius.http.controllers.mealPlanner.models.input.UpdateMealPlannerInputModel
 import epicurius.http.controllers.mealPlanner.models.output.DailyMealPlannerOutputModel
 import epicurius.http.controllers.mealPlanner.models.output.MealPlannerOutputModel
-import epicurius.http.pipeline.authentication.cookie.addCookie
 import epicurius.http.utils.Uris
 import epicurius.http.utils.Uris.MealPlanner.mealPlanner
 import epicurius.services.mealPlanner.MealPlannerService
-import jakarta.servlet.http.HttpServletResponse
 import jakarta.validation.Valid
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.DeleteMapping

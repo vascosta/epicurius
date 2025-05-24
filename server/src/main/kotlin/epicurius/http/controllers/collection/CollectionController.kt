@@ -9,11 +9,9 @@ import epicurius.http.controllers.collection.models.output.CreateCollectionOutpu
 import epicurius.http.controllers.collection.models.output.GetCollectionOutputModel
 import epicurius.http.controllers.collection.models.output.RemoveRecipeFromCollectionOutputModel
 import epicurius.http.controllers.collection.models.output.UpdateCollectionOutputModel
-import epicurius.http.pipeline.authentication.cookie.addCookie
 import epicurius.http.utils.Uris
 import epicurius.http.utils.Uris.Collection.collection
 import epicurius.services.collection.CollectionService
-import jakarta.servlet.http.HttpServletResponse
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping

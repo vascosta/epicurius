@@ -14,7 +14,6 @@ import epicurius.domain.recipe.RecipeDomain.Companion.MAX_NUMBER_OF_INGREDIENTS
 import epicurius.domain.recipe.RecipeDomain.Companion.MAX_RECIPE_NAME_LENGTH
 import epicurius.domain.recipe.RecipeDomain.Companion.RECIPE_NAME_LENGTH_MSG
 import epicurius.domain.recipe.SearchRecipesModel
-import epicurius.domain.user.UserDomain
 import epicurius.domain.user.UserDomain.Companion.MAX_DIET_SIZE
 import epicurius.domain.user.UserDomain.Companion.MAX_DIET_SIZE_MSG
 import epicurius.domain.user.UserDomain.Companion.MAX_INTOLERANCE_SIZE

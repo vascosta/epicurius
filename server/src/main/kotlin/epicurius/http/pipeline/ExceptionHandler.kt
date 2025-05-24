@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.exc.MismatchedInputException
 import epicurius.domain.exceptions.AuthorCannotDeleteRating
 import epicurius.domain.exceptions.AuthorCannotRateOwnRecipe
 import epicurius.domain.exceptions.AuthorCannotUpdateRating
+import epicurius.domain.exceptions.CollectionAlreadyExists
 import epicurius.domain.exceptions.CollectionNotAccessible
 import epicurius.domain.exceptions.CollectionNotFound
 import epicurius.domain.exceptions.DailyMealPlannerNotFound
@@ -206,6 +207,7 @@ class ExceptionHandler {
             UserNotFollowed::class,
             UserAlreadyRated::class,
             RecipeAlreadyInCollection::class,
+            CollectionAlreadyExists::class,
             InvalidSelfFollow::class,
             InvalidSelfUnfollow::class,
             InvalidSelfCancelFollowRequest::class,

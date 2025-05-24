@@ -15,11 +15,9 @@ import epicurius.http.controllers.recipe.models.output.GetRecipeOutputModel
 import epicurius.http.controllers.recipe.models.output.SearchRecipesOutputModel
 import epicurius.http.controllers.recipe.models.output.UpdateRecipeOutputModel
 import epicurius.http.controllers.recipe.models.output.UpdateRecipePicturesOutputModel
-import epicurius.http.pipeline.authentication.cookie.addCookie
 import epicurius.http.utils.Uris
 import epicurius.http.utils.Uris.Recipe.recipe
 import epicurius.services.recipe.RecipeService
-import jakarta.servlet.http.HttpServletResponse
 import jakarta.validation.Valid
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
