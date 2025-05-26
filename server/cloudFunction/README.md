@@ -13,7 +13,7 @@ The __cloud function__ was developed using __Java__ technology. In order to  __t
 
 ## Architecture
 
-![](../docs/imgs/GCP.png)
+![](/docs/imgs/GCP.png)
 
 ### Trigger
 
