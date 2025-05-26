@@ -86,5 +86,5 @@ inline fun <reified T> getBody(result: EntityExchangeResult<T>): T = result.resp
     ?: throw IllegalStateException("Response body is null")
 
 inline fun <reified T> getCookieHeader(result: EntityExchangeResult<T>): String =
-    result.responseHeaders["Set-Cookie"]?.first()?.substringAfter("token=")
+    result.responseHeaders["Set-Cookie"]?.first()?.substringAfter("token=")?.substringBefore(";")
         ?: throw IllegalStateException("Set cookie is null")
