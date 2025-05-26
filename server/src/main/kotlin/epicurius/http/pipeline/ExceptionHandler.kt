@@ -2,6 +2,7 @@ package epicurius.http.pipeline
 
 import com.fasterxml.jackson.core.JsonParseException
 import com.fasterxml.jackson.databind.exc.MismatchedInputException
+import epicurius.domain.exceptions.AuthenticatedUserNotFound
 import epicurius.domain.exceptions.AuthorCannotDeleteRating
 import epicurius.domain.exceptions.AuthorCannotRateOwnRecipe
 import epicurius.domain.exceptions.AuthorCannotUpdateRating
@@ -29,6 +30,7 @@ import epicurius.domain.exceptions.InvalidSelfUnfollow
 import epicurius.domain.exceptions.InvalidToken
 import epicurius.domain.exceptions.MealPlannerAlreadyExists
 import epicurius.domain.exceptions.MealTimeAlreadyExistsInPlanner
+import epicurius.domain.exceptions.MissingUserToken
 import epicurius.domain.exceptions.NotTheCollectionOwner
 import epicurius.domain.exceptions.NotTheRecipeAuthor
 import epicurius.domain.exceptions.PasswordsDoNotMatch
@@ -40,7 +42,6 @@ import epicurius.domain.exceptions.RecipeIsInvalidForMealTime
 import epicurius.domain.exceptions.RecipeNotAccessible
 import epicurius.domain.exceptions.RecipeNotFound
 import epicurius.domain.exceptions.RecipeNotInCollection
-import epicurius.domain.exceptions.UnauthorizedException
 import epicurius.domain.exceptions.UserAlreadyBeingFollowed
 import epicurius.domain.exceptions.UserAlreadyExists
 import epicurius.domain.exceptions.UserAlreadyLoggedIn
@@ -127,6 +128,7 @@ class ExceptionHandler {
     @ExceptionHandler(
         value = [
             IllegalArgumentException::class,
+            IllegalStateException::class,
             InvalidCountry::class,
             IncorrectPassword::class,
             PasswordsDoNotMatch::class,
@@ -152,7 +154,8 @@ class ExceptionHandler {
 
     @ExceptionHandler(
         value = [
-            UnauthorizedException::class,
+            MissingUserToken::class,
+            AuthenticatedUserNotFound::class,
             InvalidToken::class
         ]
     )

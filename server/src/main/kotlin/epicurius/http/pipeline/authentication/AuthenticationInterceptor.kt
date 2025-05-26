@@ -1,6 +1,7 @@
 package epicurius.http.pipeline.authentication
 
-import epicurius.domain.exceptions.UnauthorizedException
+import epicurius.domain.exceptions.AuthenticatedUserNotFound
+import epicurius.domain.exceptions.MissingUserToken
 import epicurius.domain.user.AuthenticatedUser
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
@@ -13,10 +14,10 @@ class AuthenticationInterceptor(private val requestTokenProcessor: RequestTokenP
 
     override fun preHandle(request: HttpServletRequest, response: HttpServletResponse, handler: Any): Boolean {
         if (handler is HandlerMethod && handler.hasParameterType<AuthenticatedUser>()) {
-            val token = getToken(request) ?: throw UnauthorizedException("Missing user token")
+            val token = getToken(request) ?: throw MissingUserToken()
             val authenticatedUser = requestTokenProcessor.getAuthenticatedUser(token)
             return if (authenticatedUser == null) {
-                throw UnauthorizedException("Authenticated user not found")
+                throw AuthenticatedUserNotFound()
             } else {
                 AuthenticatedUserArgumentResolver.addSession(authenticatedUser, request)
                 true

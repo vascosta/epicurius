@@ -1,6 +1,7 @@
 package epicurius.integration.user
 
-import epicurius.domain.exceptions.UnauthorizedException
+import epicurius.domain.exceptions.AuthenticatedUserNotFound
+import epicurius.domain.exceptions.MissingUserToken
 import epicurius.http.utils.Problem
 import epicurius.http.utils.Uris
 import epicurius.integration.utils.getBody
@@ -27,8 +28,18 @@ class AuthenticationIntegrationTests : UserIntegrationTest() {
             ""
         )
 
+        val unauthenticatedError2 = post<Problem>(
+            client,
+            api(Uris.User.LOGOUT),
+            mapOf("name" to username, "password" to generateSecurePassword()),
+            HttpStatus.UNAUTHORIZED,
+            userDomain.generateTokenValue()
+        )
+
         // then the user couldn't do the operation and an error is returned
         val unauthenticatedErrorBody = getBody(unauthenticatedError)
-        assertEquals(UnauthorizedException("Missing user token").message, unauthenticatedErrorBody.detail)
+        val unauthenticatedErrorBody2 = getBody(unauthenticatedError2)
+        assertEquals(MissingUserToken().message, unauthenticatedErrorBody.detail)
+        assertEquals(AuthenticatedUserNotFound().message, unauthenticatedErrorBody2.detail)
     }
 }

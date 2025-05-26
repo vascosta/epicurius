@@ -1,6 +1,7 @@
 package epicurius.domain.exceptions
 
-class UnauthorizedException(msg: String) : RuntimeException(msg)
+class MissingUserToken : RuntimeException("Missing user token")
+class AuthenticatedUserNotFound : RuntimeException("Authenticated user not found")
 
 class UserAlreadyExists : RuntimeException("User already exists")
 class UserNotFound(name: String?) : RuntimeException("User $name not found")
