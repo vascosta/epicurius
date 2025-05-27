@@ -1,0 +1,29 @@
+package android.epicurius.domain.mealPlanner
+
+import android.epicurius.domain.recipe.MealType
+
+enum class MealTime {
+    BREAKFAST,
+    LUNCH,
+    DINNER,
+    SNACK;
+
+    fun isMealTypeAllowedForMealTime(mealType: MealType): Boolean {
+        return when (this) {
+            BREAKFAST -> mealType in setOf(
+                MealType.BREAKFAST, MealType.BEVERAGE, MealType.BREAD
+            )
+            LUNCH -> mealType in setOf(
+                MealType.MAIN_COURSE, MealType.SIDE_DISH, MealType.SALAD,
+                MealType.BEVERAGE, MealType.BREAD, MealType.SOUP, MealType.MARINADE
+            )
+            DINNER -> mealType in setOf(
+                MealType.MAIN_COURSE, MealType.SIDE_DISH, MealType.SALAD,
+                MealType.BEVERAGE, MealType.BREAD, MealType.SOUP, MealType.MARINADE
+            )
+            SNACK -> mealType in setOf(
+                MealType.SNACK, MealType.FINGERFOOD, MealType.BEVERAGE, MealType.DESSERT
+            )
+        }
+    }
+}
