@@ -235,11 +235,11 @@ The __routes__ for the __API__ are organized as follow:
 
 #### Ingredients
 
-| Method  | Route                            | Description                                    | Authenticated | 
-|---------|----------------------------------|------------------------------------------------|:-------------:|
-| GET     | ``/api/ingredients``             | Get a list of ingredients from Spoonacular API | Yes           |
-| GET     | ``/api/ingredients/substitutes`` | Get a list of substitute ingredients           | Yes           |
-| POST    | ``/api/ingredients``             | Identify ingredients present in a picture      | Yes           |
+| Method  | Route                            | Description                                               | Authenticated | 
+|---------|----------------------------------|-----------------------------------------------------------|:-------------:|
+| GET     | ``/api/ingredients``             | Get a list of ingredients from Spoonacular API            | Yes           |
+| GET     | ``/api/ingredients/substitutes`` | Get a list of substitute ingredients from Spoonacular API | Yes           |
+| POST    | ``/api/ingredients``             | Identify ingredients present in a picture                 | Yes           |
 
 
 #### Collection
