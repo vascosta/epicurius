@@ -2,6 +2,7 @@ package epicurius.unit.http.fridge
 
 import epicurius.domain.exceptions.ProductNotFound
 import epicurius.domain.fridge.Fridge
+import epicurius.http.controllers.fridge.models.output.GetFridgeOutputModel
 import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Test
 import org.mockito.kotlin.whenever
@@ -28,7 +29,7 @@ class RemoveFridgeProductControllerTests : FridgeHttpTest() {
 
         // then the product is removed successfully
         assertEquals(HttpStatus.OK, response.statusCode)
-        assertEquals(Fridge(emptyList()), response.body)
+        assertEquals(GetFridgeOutputModel(Fridge(emptyList())), response.body)
     }
 
     @Test

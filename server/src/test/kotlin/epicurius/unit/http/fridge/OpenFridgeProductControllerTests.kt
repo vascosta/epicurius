@@ -4,6 +4,7 @@ import epicurius.domain.exceptions.ProductIsAlreadyOpen
 import epicurius.domain.exceptions.ProductNotFound
 import epicurius.domain.fridge.Fridge
 import epicurius.http.controllers.fridge.models.input.UpdateProductInputModel
+import epicurius.http.controllers.fridge.models.output.GetFridgeOutputModel
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.mockito.kotlin.whenever
@@ -35,7 +36,7 @@ class OpenFridgeProductControllerTests : FridgeHttpTest() {
 
         // then the product is opened successfully
         assertEquals(HttpStatus.OK, response.statusCode)
-        assertEquals(Fridge(listOf(openedProduct)), response.body)
+        assertEquals(GetFridgeOutputModel(Fridge(listOf(openedProduct))), response.body)
     }
 
     @Test
@@ -59,7 +60,7 @@ class OpenFridgeProductControllerTests : FridgeHttpTest() {
 
         // then the product is opened successfully
         assertEquals(HttpStatus.OK, response.statusCode)
-        assertEquals(Fridge(listOf(openedProduct)), response.body)
+        assertEquals(GetFridgeOutputModel(Fridge(listOf(openedProduct))), response.body)
     }
 
     @Test
@@ -86,7 +87,7 @@ class OpenFridgeProductControllerTests : FridgeHttpTest() {
 
         // then the product is opened successfully and its quantity is updated
         assertEquals(HttpStatus.OK, response.statusCode)
-        assertEquals(newFridge, response.body)
+        assertEquals(GetFridgeOutputModel(newFridge), response.body)
     }
 
     @Test

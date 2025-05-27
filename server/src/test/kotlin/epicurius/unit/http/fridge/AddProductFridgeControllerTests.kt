@@ -3,6 +3,7 @@ package epicurius.unit.http.fridge
 import epicurius.domain.exceptions.InvalidProduct
 import epicurius.domain.fridge.Fridge
 import epicurius.http.controllers.fridge.models.input.AddProductInputModel
+import epicurius.http.controllers.fridge.models.output.GetFridgeOutputModel
 import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Test
 import org.mockito.kotlin.whenever
@@ -30,7 +31,7 @@ class AddProductFridgeControllerTests : FridgeHttpTest() {
 
         // then the product is added successfully
         assertEquals(HttpStatus.CREATED, response.statusCode)
-        assertEquals(fridge, response.body)
+        assertEquals(GetFridgeOutputModel(fridge), response.body)
     }
 
     @Test
@@ -49,7 +50,7 @@ class AddProductFridgeControllerTests : FridgeHttpTest() {
 
         // then the existing product is added successfully
         assertEquals(HttpStatus.CREATED, oldFridge.statusCode)
-        assertEquals(Fridge(listOf(product)), oldFridge.body)
+        assertEquals(GetFridgeOutputModel(Fridge(listOf(product))), oldFridge.body)
 
         // mock
         whenever(
@@ -63,7 +64,7 @@ class AddProductFridgeControllerTests : FridgeHttpTest() {
 
         // then the product is updated successfully
         assertEquals(HttpStatus.CREATED, newFridge.statusCode)
-        assertEquals(Fridge(listOf(product.copy(quantity = 2))), newFridge.body)
+        assertEquals(GetFridgeOutputModel(Fridge(listOf(product.copy(quantity = 2)))), newFridge.body)
     }
 
     @Test
