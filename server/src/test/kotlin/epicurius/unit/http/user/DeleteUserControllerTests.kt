@@ -1,5 +1,6 @@
 package epicurius.unit.http.user
 
+import epicurius.http.pipeline.authentication.cookie.TOKEN
 import jakarta.servlet.http.Cookie
 import org.mockito.kotlin.verify
 import org.springframework.http.HttpStatus
@@ -17,7 +18,12 @@ class DeleteUserControllerTests : UserControllerTest() {
 
         // then the user is deleted successfully
         verify(userServiceMock).deleteUser(publicTestUser.user.id)
-        verify(mockResponse).addCookie(Cookie("token", ""))
+        verify(mockResponse).addCookie(Cookie(TOKEN, "")
+            .apply {
+                isHttpOnly = true
+                secure = true
+                maxAge = 0
+            })
         assertEquals(HttpStatus.NO_CONTENT, response.statusCode)
     }
 }

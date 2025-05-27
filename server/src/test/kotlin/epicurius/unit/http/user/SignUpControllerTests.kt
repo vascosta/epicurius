@@ -4,6 +4,7 @@ import epicurius.domain.exceptions.InvalidCountry
 import epicurius.domain.exceptions.PasswordsDoNotMatch
 import epicurius.domain.exceptions.UserAlreadyExists
 import epicurius.http.controllers.user.models.input.SignUpInputModel
+import epicurius.http.pipeline.authentication.cookie.TOKEN
 import epicurius.utils.generateEmail
 import epicurius.utils.generateRandomUsername
 import epicurius.utils.generateSecurePassword
@@ -42,7 +43,10 @@ class SignUpControllerTests : UserControllerTest() {
         val response = signUp(signUpInfo, mockResponse)
 
         // then the user is created successfully
-        verify(mockResponse).addCookie(Cookie("token", mockToken))
+        verify(mockResponse).addCookie(Cookie(TOKEN, mockToken).apply {
+            isHttpOnly = true
+            secure = true
+        })
         assertEquals(HttpStatus.CREATED, response.statusCode)
     }
 

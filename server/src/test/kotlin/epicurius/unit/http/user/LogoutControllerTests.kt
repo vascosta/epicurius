@@ -1,5 +1,6 @@
 package epicurius.unit.http.user
 
+import epicurius.http.pipeline.authentication.cookie.TOKEN
 import jakarta.servlet.http.Cookie
 import org.mockito.kotlin.verify
 import org.springframework.http.HttpStatus
@@ -16,7 +17,12 @@ class LogoutControllerTests : UserControllerTest() {
         val response = logout(publicTestUser, mockResponse)
 
         // then the user is logged out successfully
-        verify(mockResponse).addCookie(Cookie("token", ""))
+        verify(mockResponse).addCookie(Cookie(TOKEN, "")
+            .apply {
+                isHttpOnly = true
+                secure = true
+                maxAge = 0
+            })
         assertEquals(HttpStatus.NO_CONTENT, response.statusCode)
     }
 }
