@@ -13,7 +13,7 @@ import epicurius.domain.user.User
 import epicurius.http.controllers.mealPlanner.models.input.AddMealPlannerInputModel
 import epicurius.http.controllers.mealPlanner.models.input.UpdateDailyCaloriesInputModel
 import epicurius.http.controllers.mealPlanner.models.input.UpdateMealPlannerInputModel
-import epicurius.http.controllers.mealPlanner.models.output.MealPlannerOutputModel
+import epicurius.http.controllers.mealPlanner.models.output.GetWeeklyMealPlannerOutputModel
 import epicurius.unit.http.HttpTest
 import epicurius.utils.generateEmail
 import epicurius.utils.generateRandomUsername
@@ -108,7 +108,7 @@ open class MealPlannerControllerTest : HttpTest() {
             )
         )
 
-        val mealPlannerOutputModel = MealPlannerOutputModel(mealPlanner.planner)
+        val getWeeklyMealPlannerOutputModel = GetWeeklyMealPlannerOutputModel(mealPlanner.planner)
 
         val addRecipeToDailyMealPlannerInputModel = AddMealPlannerInputModel(
             recipeId = 1,

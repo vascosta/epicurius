@@ -1,7 +1,7 @@
 package epicurius.unit.http.mealPlanner
 
 import epicurius.domain.mealPlanner.MealPlanner
-import epicurius.http.controllers.mealPlanner.models.output.MealPlannerOutputModel
+import epicurius.http.controllers.mealPlanner.models.output.GetWeeklyMealPlannerOutputModel
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.mockito.kotlin.whenever
@@ -21,7 +21,7 @@ class GetWeeklyMealPlannerControllerTests : MealPlannerControllerTest() {
 
         // then the weekly meal planner should be returned successfully
         assertEquals(HttpStatus.OK, response.statusCode)
-        assertEquals(mealPlannerOutputModel, response.body)
+        assertEquals(getWeeklyMealPlannerOutputModel, response.body)
     }
 
     @Test
@@ -36,6 +36,6 @@ class GetWeeklyMealPlannerControllerTests : MealPlannerControllerTest() {
 
         // then an empty meal planner should be returned successfully
         assertEquals(HttpStatus.OK, response.statusCode)
-        assertEquals(MealPlannerOutputModel(emptyList()), response.body)
+        assertEquals(GetWeeklyMealPlannerOutputModel(emptyList()), response.body)
     }
 }

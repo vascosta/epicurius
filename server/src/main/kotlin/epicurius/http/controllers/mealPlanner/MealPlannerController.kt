@@ -7,7 +7,7 @@ import epicurius.http.controllers.mealPlanner.models.input.CreateMealPlannerInpu
 import epicurius.http.controllers.mealPlanner.models.input.UpdateDailyCaloriesInputModel
 import epicurius.http.controllers.mealPlanner.models.input.UpdateMealPlannerInputModel
 import epicurius.http.controllers.mealPlanner.models.output.DailyMealPlannerOutputModel
-import epicurius.http.controllers.mealPlanner.models.output.MealPlannerOutputModel
+import epicurius.http.controllers.mealPlanner.models.output.GetWeeklyMealPlannerOutputModel
 import epicurius.http.utils.Uris
 import epicurius.http.utils.Uris.MealPlanner.mealPlanner
 import epicurius.services.mealPlanner.MealPlannerService
@@ -34,7 +34,7 @@ class MealPlannerController(private val mealPlannerService: MealPlannerService) 
         val mealPlanner = mealPlannerService.getWeeklyMealPlanner(authenticatedUser.user.id)
         return ResponseEntity
             .ok()
-            .body(MealPlannerOutputModel(mealPlanner.planner))
+            .body(GetWeeklyMealPlannerOutputModel(mealPlanner.planner))
     }
 
     @GetMapping(Uris.MealPlanner.MEAL_PLANNER)
@@ -123,6 +123,6 @@ class MealPlannerController(private val mealPlannerService: MealPlannerService) 
         val mealPlanner = mealPlannerService.deleteDailyMealPlanner(authenticatedUser.user.id, date)
         return ResponseEntity
             .ok()
-            .body(MealPlannerOutputModel(mealPlanner.planner))
+            .body(GetWeeklyMealPlannerOutputModel(mealPlanner.planner))
     }
 }

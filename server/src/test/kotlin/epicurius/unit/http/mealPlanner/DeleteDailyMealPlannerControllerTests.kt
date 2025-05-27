@@ -2,7 +2,7 @@ package epicurius.unit.http.mealPlanner
 
 import epicurius.domain.exceptions.DailyMealPlannerNotFound
 import epicurius.domain.mealPlanner.MealPlanner
-import epicurius.http.controllers.mealPlanner.models.output.MealPlannerOutputModel
+import epicurius.http.controllers.mealPlanner.models.output.GetWeeklyMealPlannerOutputModel
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -25,7 +25,7 @@ class DeleteDailyMealPlannerControllerTests : MealPlannerControllerTest() {
 
         // then the daily meal planner should be deleted successfully
         assertEquals(HttpStatus.OK, response.statusCode)
-        assertEquals(MealPlannerOutputModel(listOf(dailyMealPlannerTomorrow)), response.body)
+        assertEquals(GetWeeklyMealPlannerOutputModel(listOf(dailyMealPlannerTomorrow)), response.body)
     }
 
     @Test
