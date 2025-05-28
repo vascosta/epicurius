@@ -3,8 +3,9 @@ package epicurius.repository.cloudFunction.manager
 import epicurius.config.HttpClientConfigurer
 import epicurius.repository.cloudFunction.CloudFunctionRepository
 import org.springframework.stereotype.Component
+import org.springframework.stereotype.Repository
 
-@Component
+@Repository
 class CloudFunctionManager(httpClient: HttpClientConfigurer) {
     val cloudFunctionRepository = CloudFunctionRepository(httpClient)
 }

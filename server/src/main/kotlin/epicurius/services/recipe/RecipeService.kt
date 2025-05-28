@@ -25,9 +25,10 @@ import epicurius.repository.transaction.TransactionManager
 import epicurius.services.recipe.models.UpdateRecipeModel
 import epicurius.services.recipe.models.UpdateRecipePicturesModel
 import org.springframework.stereotype.Component
+import org.springframework.stereotype.Service
 import org.springframework.web.multipart.MultipartFile
 
-@Component
+@Service
 class RecipeService(
     private val tm: TransactionManager,
     private val fs: FirestoreManager,

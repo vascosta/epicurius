@@ -3,8 +3,9 @@ package epicurius.repository.spoonacular.manager
 import epicurius.config.HttpClientConfigurer
 import epicurius.repository.spoonacular.SpoonacularRepository
 import org.springframework.stereotype.Component
+import org.springframework.stereotype.Repository
 
-@Component
+@Repository
 class SpoonacularManager(httpClient: HttpClientConfigurer) {
     val spoonacularRepository = SpoonacularRepository(httpClient)
 }

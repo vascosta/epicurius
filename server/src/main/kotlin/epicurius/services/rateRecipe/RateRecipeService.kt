@@ -10,8 +10,9 @@ import epicurius.domain.exceptions.UserHasNotRated
 import epicurius.repository.jdbi.recipe.models.JdbiRecipeModel
 import epicurius.repository.transaction.TransactionManager
 import org.springframework.stereotype.Component
+import org.springframework.stereotype.Service
 
-@Component
+@Service
 class RateRecipeService(private val tm: TransactionManager) {
 
     fun getRecipeRate(userId: Int, recipeId: Int): Double {

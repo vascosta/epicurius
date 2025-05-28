@@ -3,9 +3,9 @@ package epicurius.repository.transaction.jdbi
 import epicurius.repository.transaction.Transaction
 import epicurius.repository.transaction.TransactionManager
 import org.jdbi.v3.core.Jdbi
-import org.springframework.stereotype.Component
+import org.springframework.stereotype.Repository
 
-@Component
+@Repository
 class JdbiTransactionManager(private val jdbi: Jdbi) : TransactionManager {
     override fun <R> run(block: (Transaction) -> R): R =
         jdbi.inTransaction<R, Exception> { handle ->

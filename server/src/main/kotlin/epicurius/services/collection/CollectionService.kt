@@ -24,8 +24,9 @@ import epicurius.repository.jdbi.recipe.models.JdbiRecipeInfo
 import epicurius.repository.jdbi.recipe.models.JdbiRecipeModel
 import epicurius.repository.transaction.TransactionManager
 import org.springframework.stereotype.Component
+import org.springframework.stereotype.Service
 
-@Component
+@Service
 class CollectionService(private val tm: TransactionManager, private val cs: CloudStorageManager) {
 
     fun createCollection(ownerId: Int, createCollectionInfo: CreateCollectionInputModel): Collection {
