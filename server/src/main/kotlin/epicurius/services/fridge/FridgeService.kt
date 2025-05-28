@@ -13,10 +13,11 @@ import epicurius.http.controllers.fridge.models.input.UpdateProductInputModel
 import epicurius.repository.spoonacular.manager.SpoonacularManager
 import epicurius.repository.transaction.TransactionManager
 import org.springframework.stereotype.Component
+import org.springframework.stereotype.Service
 import java.time.LocalDate
 import java.time.Period
 
-@Component
+@Service
 class FridgeService(
     private val tm: TransactionManager,
     private val sm: SpoonacularManager,

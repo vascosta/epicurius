@@ -8,8 +8,9 @@ import epicurius.domain.recipe.RecipeInfo
 import epicurius.repository.cloudStorage.manager.CloudStorageManager
 import epicurius.repository.transaction.TransactionManager
 import org.springframework.stereotype.Component
+import org.springframework.stereotype.Service
 
-@Component
+@Service
 class MenuService(private val tm: TransactionManager, private val cs: CloudStorageManager) {
 
     fun getDailyMenu(intolerances: List<Intolerance>, diets: List<Diet>): Map<String, RecipeInfo?> {
