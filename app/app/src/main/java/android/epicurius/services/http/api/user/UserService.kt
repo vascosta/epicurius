@@ -1,6 +1,7 @@
 package android.epicurius.services.http.api.user
 
 import android.epicurius.domain.user.FollowRequestType
+import android.epicurius.domain.user.UpdateUserProfilePictureModel
 import android.epicurius.services.http.HttpService
 import android.epicurius.services.http.api.user.models.input.ResetPasswordInputModel
 import android.epicurius.services.http.api.user.models.input.UpdateUserInputModel
@@ -113,14 +114,12 @@ class UserService(private val httpService: HttpService) {
 
     suspend fun updateUserProfilePicture(
         token: String,
-        pictureName: String,
-        picture: ByteArray
+        picture: UpdateUserProfilePictureModel
     ): APIResult<UpdateUserProfilePictureOutputModel> =
         httpService.patchMultipart<UpdateUserProfilePictureOutputModel>(
             Uris.User.USER_PICTURE,
             "picture",
-            pictureName,
-            picture,
+            listOf(picture),
             token = token
         )
 

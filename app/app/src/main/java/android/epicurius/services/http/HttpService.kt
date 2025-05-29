@@ -75,37 +75,63 @@ class HttpService(
 
     suspend inline fun <reified T> postMultipart(
         endpoint: String,
-        fileParamName: String,
-        fileName: String,
-        fileBytes: ByteArray?,
+        filePartName: String,
+        files: List<Pair<String, ByteArray>>,
         pathParams: Map<String, Any?>? = null,
         token: String? = null
     ): APIResult<T> {
-        val requestBody = getMultipartBody(fileParamName, fileName, fileBytes)
+        val multipartBody = getMultipartBody(filePartName, files)
 
         val request = Request.Builder()
             .url(baseUrl + endpoint.params(pathParams, emptyMap()))
             .authorizationHeader(token)
-            .post(requestBody)
+            .post(multipartBody)
             .build()
 
         return request.getResponseResult()
     }
 
+    suspend inline fun <reified T> postMultipartWithJsonAndFiles(
+        endpoint: String,
+        jsonPartName: String,
+        jsonBody: Any,
+        filePartName: String,
+        files: List<Pair<String, ByteArray>>,
+        token: String? = null
+    ): APIResult<T> {
+        val multipartBuilder = MultipartBody.Builder().setType(MultipartBody.FORM)
+
+        val json = gson.toJson(jsonBody)
+        multipartBuilder.addFormDataPart(jsonPartName, null, json.toRequestBody("application/json".toMediaTypeOrNull()))
+
+        files.forEach { (filename, bytes) ->
+            val fileBody = bytes.toRequestBody("image/*".toMediaTypeOrNull())
+            multipartBuilder.addFormDataPart(filePartName, filename, fileBody)
+        }
+
+        val request = Request.Builder()
+            .url(baseUrl + endpoint)
+            .authorizationHeader(token)
+            .post(multipartBuilder.build())
+            .build()
+
+        return request.getResponseResult()
+    }
+
+
     suspend inline fun <reified T> patchMultipart(
         endpoint: String,
-        fileParamName: String,
-        fileName: String,
-        fileBytes: ByteArray?,
+        filePartName: String,
+        files: List<Pair<String, ByteArray>>,
         pathParams: Map<String, Any?>? = null,
         token: String? = null
     ): APIResult<T> {
-        val requestBody = getMultipartBody(fileParamName, fileName, fileBytes)
+        val multipartBody = getMultipartBody(filePartName, files)
 
         val request = Request.Builder()
             .url(baseUrl + endpoint.params(pathParams, emptyMap()))
             .authorizationHeader(token)
-            .patch(requestBody)
+            .patch(multipartBody)
             .build()
 
         return request.getResponseResult()
@@ -190,18 +216,17 @@ class HttpService(
         const val BAD_GATEWAY = 502
 
         fun getMultipartBody(
-            fileParamName: String,
-            fileName: String,
-            fileBytes: ByteArray?
+            filePartName: String,
+            files: List<Pair<String, ByteArray>>,
         ): MultipartBody {
-            val imageBodyBuilder = MultipartBody.Builder().setType(MultipartBody.FORM)
+            val multipartBuilder = MultipartBody.Builder().setType(MultipartBody.FORM)
 
-            fileBytes?.let {
-                val fileBody = it.toRequestBody("image/*".toMediaTypeOrNull())
-                imageBodyBuilder.addFormDataPart(fileParamName, fileName, fileBody)
+            files.forEach { (filename, bytes) ->
+                val fileBody = bytes.toRequestBody("image/*".toMediaTypeOrNull())
+                multipartBuilder.addFormDataPart(filePartName, filename, fileBody)
             }
 
-            return imageBodyBuilder.build()
+            return multipartBuilder.build()
         }
     }
 }
