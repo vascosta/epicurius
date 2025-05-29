@@ -1,4 +1,4 @@
-package android.epicurius.ui.screens.favourites
+package android.epicurius.ui.screens.favourites.folder
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
