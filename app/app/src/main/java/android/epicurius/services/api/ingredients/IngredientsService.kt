@@ -1,5 +1,6 @@
 package android.epicurius.services.api.ingredients
 
+import android.epicurius.domain.Picture
 import android.epicurius.services.api.ingredients.models.output.GetIngredientsOutputModel
 import android.epicurius.services.api.ingredients.models.output.GetSubstituteIngredientsOutputModel
 import android.epicurius.services.api.ingredients.models.output.IdentifyIngredientsInPictureOutputModel
@@ -31,14 +32,12 @@ class IngredientsService(private val httpService: HttpService) {
 
     suspend fun identifyIngredientsInPicture(
         token: String,
-        pictureName : String,
-        picture: ByteArray
+        picture: Picture
     ): APIResult<IdentifyIngredientsInPictureOutputModel> =
         httpService.postMultipart<IdentifyIngredientsInPictureOutputModel>(
             Uris.Ingredients.INGREDIENTS,
             "picture",
-            pictureName,
-            picture,
+            listOf(picture),
             token = token
         )
 }
