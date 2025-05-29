@@ -5,7 +5,7 @@ import android.epicurius.services.http.api.dailyMenu.models.output.GetDailyMenuO
 import android.epicurius.services.http.utils.APIResult
 import android.epicurius.services.http.utils.Uris
 
-class MenuService(private val httpService: HttpService) {
+class DailyMenuService(private val httpService: HttpService) {
 
     suspend fun getDailyMenu(
         token: String
