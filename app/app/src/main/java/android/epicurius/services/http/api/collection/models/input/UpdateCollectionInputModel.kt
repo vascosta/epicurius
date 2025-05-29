@@ -1,11 +1,20 @@
 package epicurius.http.controllers.collection.models.input
 
-import android.epicurius.domain.collection.CollectionDomain.Companion.COLLECTION_NAME_LENGTH_MSG
-import android.epicurius.domain.collection.CollectionDomain.Companion.MAX_COLLECTION_NAME_LENGTH
-import android.epicurius.domain.collection.CollectionDomain.Companion.MIN_COLLECTION_NAME_LENGTH
-import jakarta.validation.constraints.Size
+import android.epicurius.domain.collection.COLLECTION_NAME_LENGTH_MSG
+import android.epicurius.domain.collection.MAX_COLLECTION_NAME_LENGTH
+import android.epicurius.domain.collection.MIN_COLLECTION_NAME_LENGTH
+import androidx.annotation.Size
 
 data class UpdateCollectionInputModel(
-    @field:Size(min = MIN_COLLECTION_NAME_LENGTH, max = MAX_COLLECTION_NAME_LENGTH, message = COLLECTION_NAME_LENGTH_MSG)
+    @field:Size(
+        min = MIN_COLLECTION_NAME_LENGTH.toLong(),
+        max = MAX_COLLECTION_NAME_LENGTH.toLong()
+    )
     val name: String?,
-)
+) {
+    init {
+        require(name == null || (name.length in MIN_COLLECTION_NAME_LENGTH..MAX_COLLECTION_NAME_LENGTH)) {
+            COLLECTION_NAME_LENGTH_MSG
+        }
+    }
+}
