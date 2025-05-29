@@ -72,7 +72,7 @@ fun FormTextField(parameterName: String, value: String, modifier: Modifier = Mod
 }
 
 @Composable
-fun NumberTextField(parameterName: String, value: String, modifier: Modifier = Modifier, onValueChange: (String) -> Unit) {
+fun NumberField(parameterName: String, value: String, modifier: Modifier = Modifier, onValueChange: (String) -> Unit) {
     TextField(
         value = value,
         onValueChange = onValueChange,
@@ -86,6 +86,25 @@ fun NumberTextField(parameterName: String, value: String, modifier: Modifier = M
             focusedContainerColor = Color.White,
             unfocusedContainerColor = Color.White,
             disabledContainerColor = Color.Black
+        )
+    )
+}
+
+@Composable
+fun NumberTextField(
+    value: String,
+    label: String,
+    modifier: Modifier = Modifier,
+    onValueChange: (String) -> Unit
+) {
+    OutlinedTextField(
+        value = value,
+        onValueChange = onValueChange,
+        singleLine = true,
+        label = { Text(label) },
+        modifier = modifier,
+        keyboardOptions = KeyboardOptions.Default.copy(
+            keyboardType = KeyboardType.Number
         )
     )
 }

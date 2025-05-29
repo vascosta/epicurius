@@ -3,7 +3,7 @@ package android.epicurius.ui.screens.recipe.addRecipe.utils
 import android.epicurius.domain.recipe.IngredientUnit
 import android.epicurius.ui.screens.recipe.addRecipe.IngredientComponent
 import android.epicurius.ui.screens.utils.DropdownMenuComponent
-import android.epicurius.ui.screens.utils.NumberTextField
+import android.epicurius.ui.screens.utils.NumberField
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -43,7 +43,7 @@ fun IngredientsComponent(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                    NumberTextField(
+                    NumberField(
                         parameterName = "Quantity",
                         value = ingredient.quantity,
                         modifier = Modifier.weight(1f)

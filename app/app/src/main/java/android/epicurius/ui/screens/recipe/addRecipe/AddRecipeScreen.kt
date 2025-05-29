@@ -3,7 +3,6 @@ package android.epicurius.ui.screens.recipe.addRecipe
 import android.epicurius.domain.Diet
 import android.epicurius.domain.Intolerance
 import android.epicurius.domain.recipe.Cuisine
-import android.epicurius.domain.recipe.IngredientUnit
 import android.epicurius.domain.recipe.MealType
 import android.epicurius.ui.screens.BottomBar
 import android.epicurius.ui.screens.TopBar
@@ -12,14 +11,11 @@ import android.epicurius.ui.screens.recipe.addRecipe.utils.InstructionsComponent
 import android.epicurius.ui.screens.utils.DropdownMenuComponent
 import android.epicurius.ui.screens.utils.FormTextField
 import android.epicurius.ui.screens.utils.MultiSelectDropdownMenuComponent
-import android.epicurius.ui.screens.utils.NumberTextField
+import android.epicurius.ui.screens.utils.NumberField
 import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
@@ -27,16 +23,12 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Image
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -95,8 +87,8 @@ fun AddRecipeScreen() {
                 FormTextField("Name", name, Modifier.height(56.dp)) { name = it }
                 FormTextField("Description", description, Modifier.height(56.dp)) { description = it }
 
-                NumberTextField("Duration (min)", duration) { duration = it }
-                NumberTextField("Serving (px)", serving) { serving = it }
+                NumberField("Duration (min)", duration) { duration = it }
+                NumberField("Serving (px)", serving) { serving = it }
 
                 DropdownMenuComponent(
                     options = MealType.entries.map { it.displayName },
