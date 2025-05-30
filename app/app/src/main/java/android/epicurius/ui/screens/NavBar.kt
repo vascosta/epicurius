@@ -44,7 +44,13 @@ import androidx.compose.ui.unit.sp
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TopBar(text: String, backButton: Boolean = false, icon: ImageVector? = Icons.Filled.Person) {
+fun TopBar(
+    text: String,
+    backButton: Boolean = false,
+    onBackButtonClick: () -> Unit = {},
+    icon: ImageVector? = Icons.Filled.Person,
+    onIconClick: () -> Unit = {}
+) {
     TopAppBar(
         title = { Text(text) },
         modifier = Modifier
@@ -60,7 +66,7 @@ fun TopBar(text: String, backButton: Boolean = false, icon: ImageVector? = Icons
         navigationIcon = {
             if (backButton) {
                 IconButton(
-                    onClick = {  },
+                    onClick = onBackButtonClick,
                 ) {
                     Icon(
                         imageVector = Icons.AutoMirrored.Sharp.ArrowBack,
@@ -71,7 +77,7 @@ fun TopBar(text: String, backButton: Boolean = false, icon: ImageVector? = Icons
         },
         actions = {
             icon?.let {
-                IconButton(onClick = {  }) {
+                IconButton(onClick = onIconClick) {
                     Icon(
                         imageVector = it,
                         contentDescription = "Navigation",

@@ -58,13 +58,15 @@ import java.time.LocalDate
 fun RecipeProfileScreen(recipe: Recipe, rating: Double, images: List<Int>, isAuthor: Boolean) {
     Scaffold(
         topBar = { TopBar(text = recipe.name, backButton = true) },
-        bottomBar = { BottomBar() }
+        bottomBar = { BottomBar() },
+        containerColor = Color.White
     ) { paddingValues ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .verticalScroll(rememberScrollState())
                 .padding(paddingValues)
+                .padding(16.dp)
                 .background(Color.White),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
