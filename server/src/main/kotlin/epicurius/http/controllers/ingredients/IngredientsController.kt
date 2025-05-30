@@ -4,7 +4,8 @@ import epicurius.domain.user.AuthenticatedUser
 import epicurius.http.controllers.ingredients.models.output.GetIngredientsOutputModel
 import epicurius.http.controllers.ingredients.models.output.GetSubstituteIngredientsOutputModel
 import epicurius.http.controllers.ingredients.models.output.IdentifyIngredientsInPictureOutputModel
-import epicurius.http.utils.Uris
+import epicurius.http.media.Uris
+import epicurius.http.media.okHttpResponse
 import epicurius.services.ingredients.IngredientsService
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
@@ -26,9 +27,7 @@ class IngredientsController(private val ingredientsService: IngredientsService) 
         @RequestParam partial: String,
     ): ResponseEntity<*> {
         val ingredients = ingredientsService.getIngredients(partial)
-        return ResponseEntity
-            .ok()
-            .body(GetIngredientsOutputModel(ingredients))
+        return okHttpResponse(GetIngredientsOutputModel(ingredients))
     }
 
     @GetMapping(Uris.Ingredients.INGREDIENTS_SUBSTITUTES)
@@ -37,9 +36,7 @@ class IngredientsController(private val ingredientsService: IngredientsService) 
         @RequestParam name: String,
     ): ResponseEntity<*> {
         val substituteIngredients = ingredientsService.getSubstituteIngredients(name)
-        return ResponseEntity
-            .ok()
-            .body(GetSubstituteIngredientsOutputModel(substituteIngredients))
+        return okHttpResponse(GetSubstituteIngredientsOutputModel(substituteIngredients))
     }
 
     @PostMapping(Uris.Ingredients.INGREDIENTS, consumes = [MediaType.MULTIPART_FORM_DATA_VALUE])
@@ -48,8 +45,6 @@ class IngredientsController(private val ingredientsService: IngredientsService) 
         @RequestPart("picture") picture: MultipartFile,
     ): ResponseEntity<*> {
         val ingredients = ingredientsService.identifyIngredientsInPicture(picture)
-        return ResponseEntity
-            .ok()
-            .body(IdentifyIngredientsInPictureOutputModel(ingredients))
+        return okHttpResponse(IdentifyIngredientsInPictureOutputModel(ingredients))
     }
 }
