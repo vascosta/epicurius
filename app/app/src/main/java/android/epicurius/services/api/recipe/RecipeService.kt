@@ -6,12 +6,17 @@ import android.epicurius.domain.Picture
 import android.epicurius.domain.recipe.Cuisine
 import android.epicurius.domain.recipe.MealType
 import android.epicurius.services.api.recipe.models.input.CreateRecipeInputModel
+import android.epicurius.services.api.recipe.models.input.RateRecipeInputModel
 import android.epicurius.services.api.recipe.models.input.UpdateRecipeInputModel
 import android.epicurius.services.api.recipe.models.output.CreateRecipeOutputModel
 import android.epicurius.services.api.recipe.models.output.GetRecipeOutputModel
+import android.epicurius.services.api.recipe.models.output.GetRecipeRateOutputModel
+import android.epicurius.services.api.recipe.models.output.GetUserRecipeRateOutputModel
+import android.epicurius.services.api.recipe.models.output.RateRecipeOutputModel
 import android.epicurius.services.api.recipe.models.output.SearchRecipesOutputModel
 import android.epicurius.services.api.recipe.models.output.UpdateRecipeOutputModel
 import android.epicurius.services.api.recipe.models.output.UpdateRecipePicturesOutputModel
+import android.epicurius.services.api.recipe.models.output.UpdateRecipeRateOutputModel
 import android.epicurius.services.http.HttpService
 import android.epicurius.services.http.utils.APIResult
 import android.epicurius.services.http.utils.Uris
@@ -24,6 +29,26 @@ class RecipeService(private val httpService: HttpService) {
     ): APIResult<GetRecipeOutputModel> =
         httpService.get<GetRecipeOutputModel>(
             Uris.Recipe.RECIPE,
+            pathParams = mapOf("id" to id),
+            token = token
+        )
+
+    suspend fun getRecipeRate(
+        token: String,
+        id: Int
+    ): APIResult<GetRecipeRateOutputModel> =
+        httpService.get<GetRecipeRateOutputModel>(
+            Uris.Recipe.RATE_RECIPE,
+            pathParams = mapOf("id" to id),
+            token = token
+        )
+
+    suspend fun getUserRecipeRate(
+        token: String,
+        id: Int
+    ): APIResult<GetUserRecipeRateOutputModel> =
+        httpService.get<GetUserRecipeRateOutputModel>(
+            Uris.Recipe.USER_RECIPE_RATE,
             pathParams = mapOf("id" to id),
             token = token
         )
@@ -88,6 +113,18 @@ class RecipeService(private val httpService: HttpService) {
             token
         )
 
+    suspend fun rateRecipe(
+        token: String,
+        id: Int,
+        rateRecipeInfo: RateRecipeInputModel
+    ): APIResult<RateRecipeOutputModel> =
+        httpService.post<RateRecipeOutputModel>(
+            Uris.Recipe.RATE_RECIPE,
+            rateRecipeInfo,
+            pathParams = mapOf("id" to id),
+            token = token
+        )
+
     suspend fun updateRecipe(
         token: String,
         id: Int,
@@ -113,12 +150,34 @@ class RecipeService(private val httpService: HttpService) {
             token = token
         )
 
+    suspend fun updateRecipeRate(
+        token: String,
+        id: Int,
+        rateRecipeInfo: RateRecipeInputModel
+    ): APIResult<UpdateRecipeRateOutputModel> =
+        httpService.patch<UpdateRecipeRateOutputModel>(
+            Uris.Recipe.RATE_RECIPE,
+            rateRecipeInfo,
+            pathParams = mapOf("id" to id),
+            token = token
+        )
+
     suspend fun deleteRecipe(
         token: String,
         id: Int,
     ): APIResult<Unit> =
         httpService.delete<Unit>(
             Uris.Recipe.RECIPE,
+            pathParams = mapOf("id" to id),
+            token = token
+        )
+
+    suspend fun deleteRecipeRate(
+        token: String,
+        id: Int,
+    ): APIResult<Unit> =
+        httpService.delete<Unit>(
+            Uris.Recipe.RATE_RECIPE,
             pathParams = mapOf("id" to id),
             token = token
         )
