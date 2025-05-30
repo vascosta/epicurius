@@ -15,8 +15,11 @@ import epicurius.http.controllers.recipe.models.output.GetRecipeOutputModel
 import epicurius.http.controllers.recipe.models.output.SearchRecipesOutputModel
 import epicurius.http.controllers.recipe.models.output.UpdateRecipeOutputModel
 import epicurius.http.controllers.recipe.models.output.UpdateRecipePicturesOutputModel
-import epicurius.http.utils.Uris
-import epicurius.http.utils.Uris.Recipe.recipe
+import epicurius.http.media.Uris
+import epicurius.http.media.Uris.Recipe.recipe
+import epicurius.http.media.createdHttpResponse
+import epicurius.http.media.noContentHttpResponse
+import epicurius.http.media.okHttpResponse
 import epicurius.services.recipe.RecipeService
 import jakarta.validation.Valid
 import org.springframework.http.MediaType
@@ -43,9 +46,7 @@ class RecipeController(private val recipeService: RecipeService) {
         @PathVariable id: Int,
     ): ResponseEntity<*> {
         val recipe = recipeService.getRecipe(id, authenticatedUser.user.id)
-        return ResponseEntity
-            .ok()
-            .body(GetRecipeOutputModel(recipe))
+        return okHttpResponse(GetRecipeOutputModel(recipe))
     }
 
     @GetMapping(Uris.Recipe.RECIPES)
@@ -90,9 +91,7 @@ class RecipeController(private val recipeService: RecipeService) {
             maxTime = maxTime
         )
         val results = recipeService.searchRecipes(authenticatedUser.user.id, searchForm, pagingParams)
-        return ResponseEntity
-            .ok()
-            .body(SearchRecipesOutputModel(results))
+        return okHttpResponse(SearchRecipesOutputModel(results))
     }
 
     @PostMapping(Uris.Recipe.RECIPES, consumes = [MediaType.MULTIPART_FORM_DATA_VALUE])
@@ -104,9 +103,7 @@ class RecipeController(private val recipeService: RecipeService) {
         val objectMapper = jacksonObjectMapper()
         val recipeInfo = objectMapper.readValue(body, CreateRecipeInputModel::class.java)
         val recipe = recipeService.createRecipe(authenticatedUser.user.id, authenticatedUser.user.name, recipeInfo, pictures.toSet())
-        return ResponseEntity
-            .created(recipe(recipe.id))
-            .body(CreateRecipeOutputModel(recipe))
+        return createdHttpResponse(recipe(recipe.id), CreateRecipeOutputModel(recipe))
     }
 
     @PatchMapping(Uris.Recipe.RECIPE)
@@ -116,9 +113,7 @@ class RecipeController(private val recipeService: RecipeService) {
         @Valid @RequestBody body: UpdateRecipeInputModel,
     ): ResponseEntity<*> {
         val updatedRecipe = recipeService.updateRecipe(authenticatedUser.user.id, id, body)
-        return ResponseEntity
-            .ok()
-            .body(UpdateRecipeOutputModel(updatedRecipe))
+        return okHttpResponse(UpdateRecipeOutputModel(updatedRecipe))
     }
 
     @PatchMapping(Uris.Recipe.RECIPE_PICTURES, consumes = [MediaType.MULTIPART_FORM_DATA_VALUE])
@@ -128,9 +123,7 @@ class RecipeController(private val recipeService: RecipeService) {
         @RequestPart("pictures") pictures: List<MultipartFile>,
     ): ResponseEntity<*> {
         val updatedPictures = recipeService.updateRecipePictures(authenticatedUser.user.id, id, pictures.toSet())
-        return ResponseEntity
-            .ok()
-            .body(UpdateRecipePicturesOutputModel(updatedPictures.pictures))
+        return okHttpResponse(UpdateRecipePicturesOutputModel(updatedPictures.pictures))
     }
 
     @DeleteMapping(Uris.Recipe.RECIPE)
@@ -139,8 +132,6 @@ class RecipeController(private val recipeService: RecipeService) {
         @PathVariable id: Int,
     ): ResponseEntity<*> {
         recipeService.deleteRecipe(authenticatedUser.user.id, id)
-        return ResponseEntity
-            .noContent()
-            .build<Unit>()
+        return noContentHttpResponse()
     }
 }
