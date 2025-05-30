@@ -62,6 +62,10 @@ tasks.withType<Test> {
     useJUnitPlatform()
 }
 
+tasks.named<Jar>("bootJar") {
+    archiveFileName.set("epicurius-server.jar")
+}
+
 tasks.register<Copy>("extractUberJar") {
     dependsOn("assemble")
 
