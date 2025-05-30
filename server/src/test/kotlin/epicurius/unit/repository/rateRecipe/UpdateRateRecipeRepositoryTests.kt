@@ -14,10 +14,7 @@ class UpdateRateRecipeRepositoryTests : RateRecipeRepositoryTest() {
         rateRecipe(testRecipe.id, testUserPrivate.id, 3)
 
         // when updating the recipe rate
-        updateRecipeRate(testRecipe.id, testUserPrivate.id, newRating)
-
-        // when getting the recipe rate
-        val rate = getRecipeRate(testRecipe.id)
+        val rate = updateRecipeRate(testRecipe.id, testUserPrivate.id, newRating)
 
         // then the rate should be 5.0
         assertEquals(newRating.toDouble(), rate)

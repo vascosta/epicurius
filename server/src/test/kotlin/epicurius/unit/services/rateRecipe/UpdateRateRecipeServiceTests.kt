@@ -4,6 +4,7 @@ import epicurius.domain.exceptions.AuthorCannotUpdateRating
 import epicurius.domain.exceptions.RecipeNotAccessible
 import epicurius.domain.exceptions.RecipeNotFound
 import epicurius.domain.exceptions.UserHasNotRated
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.mockito.kotlin.verify
@@ -19,12 +20,13 @@ class UpdateRateRecipeServiceTests : RateRecipeServiceTest() {
         whenever(jdbiRecipeRepositoryMock.getRecipeById(RECIPE_ID)).thenReturn(jdbiRecipeModel)
         whenever(jdbiUserRepositoryMock.checkUserVisibility(AUTHOR_USERNAME, USER_ID)).thenReturn(true)
         whenever(jdbiRateRecipeRepositoryMock.checkIfUserAlreadyRated(USER_ID, RECIPE_ID)).thenReturn(true)
+        whenever(jdbiRateRecipeRepositoryMock.updateRecipeRate(RECIPE_ID, USER_ID, RATING_3)).thenReturn(RATING_3.toDouble())
 
         // when updating the recipe rate
-        updateRecipeRate(USER_ID, RECIPE_ID, RATING_3)
+        val rate = updateRecipeRate(USER_ID, RECIPE_ID, RATING_3)
 
         // then the recipe rate is updated successfully
-        verify(jdbiRateRecipeRepositoryMock).updateRecipeRate(RECIPE_ID, USER_ID, RATING_3)
+        assertEquals(RATING_3.toDouble(), rate)
     }
 
     @Test
