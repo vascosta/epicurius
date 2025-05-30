@@ -35,9 +35,9 @@ object Uris {
     object Recipe {
         const val RECIPES = "/recipes"
         const val RECIPE = "$RECIPES/{id}"
-        const val RATE_RECIPE = "$RECIPE/rate"
-        const val USER_RECIPE_RATE = "$RATE_RECIPE/self"
+        const val RECIPE_RATE = "$RECIPE/rate"
         const val RECIPE_PICTURES = "$RECIPES/{id}/pictures"
+
     }
 
     object Menu {
