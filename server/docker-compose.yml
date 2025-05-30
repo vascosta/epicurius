@@ -1,0 +1,22 @@
+version: "3.8"
+services:
+  db-compose:
+    container_name: db-compose
+    build:
+      context: .
+      dockerfile: ./dockerfiles/Dockerfile-db
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=dbo
+    ports:
+      - 5432:5432
+
+  epicurius-service:
+    build:
+      context: .
+      dockerfile: ./dockerfiles/Dockerfile-spring
+    environment:
+      DATABASE_URL: "jdbc:postgresql://db-compose:5432/dbo?user=postgres&password=postgres"
+    ports:
+      - 8080:8080
