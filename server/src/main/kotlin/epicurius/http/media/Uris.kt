@@ -1,4 +1,4 @@
-package epicurius.http.utils
+package epicurius.http.media
 
 import org.springframework.web.util.UriTemplate
 import java.time.LocalDate

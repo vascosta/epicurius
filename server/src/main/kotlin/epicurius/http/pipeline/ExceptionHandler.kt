@@ -51,7 +51,7 @@ import epicurius.domain.exceptions.UserNotFollowed
 import epicurius.domain.exceptions.UserNotFound
 import epicurius.http.pipeline.authentication.AuthenticationInterceptor.Companion.WWW_AUTHENTICATE_HEADER
 import epicurius.http.pipeline.authentication.RequestTokenProcessor.Companion.SCHEME
-import epicurius.http.utils.Problem
+import epicurius.http.media.Problem
 import jakarta.servlet.http.HttpServletRequest
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
