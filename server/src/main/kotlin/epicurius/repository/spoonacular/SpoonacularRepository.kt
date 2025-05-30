@@ -17,7 +17,6 @@ class SpoonacularRepository(private val httpClient: HttpClientConfigurer) : Spoo
 
     override suspend fun getIngredients(partialName: String): List<String> {
         val validName = partialName.replace(" ", "-").lowercase()
-        println("Spoonacular API Key: $spoonacularApiKey")
         val uriCompleted = "$AUTOCOMPLETE_INGREDIENTS_URL?apiKey=$spoonacularApiKey&query=$validName"
 
         return withContext(Dispatchers.IO) {

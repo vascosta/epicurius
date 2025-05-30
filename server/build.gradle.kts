@@ -77,4 +77,10 @@ tasks.register<Exec>("dockerComposeUp") {
     commandLine("docker", "compose", "up", "--build", "-d")
 }
 
+tasks.register<Exec>("dockerComposeStart") {
+    commandLine("docker-compose", "Start")
+}
 
+tasks.register<Exec>("dockerComposeStop") {
+    commandLine("docker-compose", "stop")
+}

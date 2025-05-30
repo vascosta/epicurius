@@ -16,7 +16,7 @@ class EpicuriusApplication: Application(), Dependencies {
     private val httpService = HttpService(BASE_URL, OkHttpClient(), gson)
 
     override val service = EpicuriusService(httpService)
-    override val session: SessionDataStore = SessionDataStore(sessionDataStore, gson)
+    override val session = SessionDataStore(sessionDataStore, gson)
 
     companion object {
         private const val BASE_URL = "localhost:8080/api"
