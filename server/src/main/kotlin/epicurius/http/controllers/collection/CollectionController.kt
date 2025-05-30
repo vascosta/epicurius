@@ -12,8 +12,11 @@ import epicurius.http.controllers.collection.models.output.GetCollectionOutputMo
 import epicurius.http.controllers.collection.models.output.GetCollectionsOutputModel
 import epicurius.http.controllers.collection.models.output.RemoveRecipeFromCollectionOutputModel
 import epicurius.http.controllers.collection.models.output.UpdateCollectionOutputModel
-import epicurius.http.utils.Uris
-import epicurius.http.utils.Uris.Collection.collection
+import epicurius.http.media.Uris
+import epicurius.http.media.Uris.Collection.collection
+import epicurius.http.media.createdHttpResponse
+import epicurius.http.media.noContentHttpResponse
+import epicurius.http.media.okHttpResponse
 import epicurius.services.collection.CollectionService
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.DeleteMapping
@@ -36,9 +39,7 @@ class CollectionController(private val collectionService: CollectionService) {
         @PathVariable id: Int,
     ): ResponseEntity<*> {
         val collection = collectionService.getCollection(authenticatedUser.user.id, id)
-        return ResponseEntity
-            .ok()
-            .body(GetCollectionOutputModel(collection))
+        return okHttpResponse(GetCollectionOutputModel(collection))
     }
 
     @GetMapping(Uris.Collection.COLLECTIONS)
@@ -50,9 +51,7 @@ class CollectionController(private val collectionService: CollectionService) {
     ): ResponseEntity<*> {
         val pagingParams = PagingParams(skip, limit)
         val collections = collectionService.getCollections(authenticatedUser.user.id, collectionType, pagingParams)
-        return ResponseEntity
-            .ok()
-            .body(GetCollectionsOutputModel(collections))
+        return okHttpResponse(GetCollectionsOutputModel(collections))
     }
 
     @PostMapping(Uris.Collection.COLLECTIONS)
@@ -61,9 +60,7 @@ class CollectionController(private val collectionService: CollectionService) {
         @RequestBody body: CreateCollectionInputModel,
     ): ResponseEntity<*> {
         val collection = collectionService.createCollection(authenticatedUser.user.id, body)
-        return ResponseEntity
-            .created(collection(collection.id))
-            .body(CreateCollectionOutputModel(collection))
+        return createdHttpResponse(collection(collection.id), CreateCollectionOutputModel(collection))
     }
 
     @PostMapping(Uris.Collection.COLLECTION_RECIPES)
@@ -75,9 +72,7 @@ class CollectionController(private val collectionService: CollectionService) {
         val updatedCollection = collectionService.addRecipeToCollection(
             authenticatedUser.user.id, id, body.recipeId
         )
-        return ResponseEntity
-            .ok()
-            .body(AddRecipeToCollectionOutputModel(updatedCollection))
+        return okHttpResponse(AddRecipeToCollectionOutputModel(updatedCollection))
     }
 
     @PatchMapping(Uris.Collection.COLLECTION)
@@ -87,9 +82,7 @@ class CollectionController(private val collectionService: CollectionService) {
         @RequestBody body: UpdateCollectionInputModel,
     ): ResponseEntity<*> {
         val updatedCollection = collectionService.updateCollection(authenticatedUser.user.id, id, body)
-        return ResponseEntity
-            .ok()
-            .body(UpdateCollectionOutputModel(updatedCollection))
+        return okHttpResponse(UpdateCollectionOutputModel(updatedCollection))
     }
 
     @DeleteMapping(Uris.Collection.COLLECTION_RECIPE)
@@ -99,9 +92,7 @@ class CollectionController(private val collectionService: CollectionService) {
         @PathVariable recipeId: Int,
     ): ResponseEntity<*> {
         val updatedCollection = collectionService.removeRecipeFromCollection(authenticatedUser.user.id, id, recipeId)
-        return ResponseEntity
-            .ok()
-            .body(RemoveRecipeFromCollectionOutputModel(updatedCollection))
+        return okHttpResponse(RemoveRecipeFromCollectionOutputModel(updatedCollection))
     }
 
     @DeleteMapping(Uris.Collection.COLLECTION)
@@ -110,8 +101,6 @@ class CollectionController(private val collectionService: CollectionService) {
         @PathVariable id: Int,
     ): ResponseEntity<*> {
         collectionService.deleteCollection(authenticatedUser.user.id, id)
-        return ResponseEntity
-            .noContent()
-            .build<Unit>()
+        return noContentHttpResponse()
     }
 }
