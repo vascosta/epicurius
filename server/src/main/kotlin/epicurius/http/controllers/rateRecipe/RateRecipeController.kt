@@ -4,7 +4,9 @@ import epicurius.domain.user.AuthenticatedUser
 import epicurius.http.controllers.rateRecipe.models.input.RateRecipeInputModel
 import epicurius.http.controllers.rateRecipe.models.output.GetRecipeRateOutputModel
 import epicurius.http.controllers.rateRecipe.models.output.GetUserRecipeRateOutputModel
-import epicurius.http.utils.Uris
+import epicurius.http.media.Uris
+import epicurius.http.media.noContentHttpResponse
+import epicurius.http.media.okHttpResponse
 import epicurius.services.rateRecipe.RateRecipeService
 import jakarta.validation.Valid
 import org.springframework.http.ResponseEntity
@@ -27,9 +29,7 @@ class RateRecipeController(private val rateRecipeService: RateRecipeService) {
         @PathVariable id: Int,
     ): ResponseEntity<*> {
         val rate = rateRecipeService.getRecipeRate(authenticatedUser.user.id, id)
-        return ResponseEntity
-            .ok()
-            .body(GetRecipeRateOutputModel(rate))
+        return okHttpResponse(GetRecipeRateOutputModel(rate))
     }
 
     @GetMapping(Uris.Recipe.USER_RECIPE_RATE)
@@ -38,9 +38,7 @@ class RateRecipeController(private val rateRecipeService: RateRecipeService) {
         @PathVariable id: Int
     ): ResponseEntity<*> {
         val rate = rateRecipeService.getUserRecipeRate(authenticatedUser.user.id, id)
-        return ResponseEntity
-            .ok()
-            .body(GetUserRecipeRateOutputModel(rate))
+        return okHttpResponse(GetUserRecipeRateOutputModel(rate))
     }
 
     @PostMapping(Uris.Recipe.RATE_RECIPE)
@@ -50,9 +48,7 @@ class RateRecipeController(private val rateRecipeService: RateRecipeService) {
         @Valid @RequestBody body: RateRecipeInputModel,
     ): ResponseEntity<*> {
         rateRecipeService.rateRecipe(authenticatedUser.user.id, id, body.rating)
-        return ResponseEntity
-            .noContent()
-            .build<Unit>()
+        return noContentHttpResponse()
     }
 
     @PatchMapping(Uris.Recipe.RATE_RECIPE)
@@ -62,9 +58,7 @@ class RateRecipeController(private val rateRecipeService: RateRecipeService) {
         @Valid @RequestBody body: RateRecipeInputModel,
     ): ResponseEntity<*> {
         rateRecipeService.updateRecipeRate(authenticatedUser.user.id, id, body.rating)
-        return ResponseEntity
-            .noContent()
-            .build<Unit>()
+        return noContentHttpResponse()
     }
 
     @DeleteMapping(Uris.Recipe.RATE_RECIPE)
@@ -73,8 +67,6 @@ class RateRecipeController(private val rateRecipeService: RateRecipeService) {
         @PathVariable id: Int,
     ): ResponseEntity<*> {
         rateRecipeService.deleteRecipeRate(authenticatedUser.user.id, id)
-        return ResponseEntity
-            .noContent()
-            .build<Unit>()
+        return noContentHttpResponse()
     }
 }
