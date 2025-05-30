@@ -8,8 +8,10 @@ import epicurius.http.controllers.mealPlanner.models.input.UpdateDailyCaloriesIn
 import epicurius.http.controllers.mealPlanner.models.input.UpdateMealPlannerInputModel
 import epicurius.http.controllers.mealPlanner.models.output.DailyMealPlannerOutputModel
 import epicurius.http.controllers.mealPlanner.models.output.GetWeeklyMealPlannerOutputModel
-import epicurius.http.utils.Uris
-import epicurius.http.utils.Uris.MealPlanner.mealPlanner
+import epicurius.http.media.Uris
+import epicurius.http.media.Uris.MealPlanner.mealPlanner
+import epicurius.http.media.createdHttpResponse
+import epicurius.http.media.okHttpResponse
 import epicurius.services.mealPlanner.MealPlannerService
 import jakarta.validation.Valid
 import org.springframework.http.ResponseEntity
@@ -32,9 +34,7 @@ class MealPlannerController(private val mealPlannerService: MealPlannerService) 
         authenticatedUser: AuthenticatedUser,
     ): ResponseEntity<*> {
         val mealPlanner = mealPlannerService.getWeeklyMealPlanner(authenticatedUser.user.id)
-        return ResponseEntity
-            .ok()
-            .body(GetWeeklyMealPlannerOutputModel(mealPlanner.planner))
+        return okHttpResponse(GetWeeklyMealPlannerOutputModel(mealPlanner.planner))
     }
 
     @GetMapping(Uris.MealPlanner.MEAL_PLANNER)
@@ -43,9 +43,7 @@ class MealPlannerController(private val mealPlannerService: MealPlannerService) 
         @PathVariable date: LocalDate,
     ): ResponseEntity<*> {
         val dailyMealPlanner = mealPlannerService.getDailyMealPlanner(authenticatedUser.user.id, date)
-        return ResponseEntity
-            .ok()
-            .body(DailyMealPlannerOutputModel(dailyMealPlanner))
+        return okHttpResponse(DailyMealPlannerOutputModel(dailyMealPlanner))
     }
 
     @PostMapping(Uris.MealPlanner.PLANNER)
@@ -54,9 +52,7 @@ class MealPlannerController(private val mealPlannerService: MealPlannerService) 
         @Valid @RequestBody body: CreateMealPlannerInputModel,
     ): ResponseEntity<*> {
         val dailyMealPlanner = mealPlannerService.createDailyMealPlanner(authenticatedUser.user.id, body.date, body.maxCalories)
-        return ResponseEntity
-            .created(mealPlanner(body.date))
-            .body(DailyMealPlannerOutputModel(dailyMealPlanner))
+        return createdHttpResponse(mealPlanner(body.date), DailyMealPlannerOutputModel(dailyMealPlanner))
     }
 
     @PostMapping(Uris.MealPlanner.MEAL_PLANNER)
@@ -70,9 +66,7 @@ class MealPlannerController(private val mealPlannerService: MealPlannerService) 
             date,
             body
         )
-        return ResponseEntity
-            .created(mealPlanner(date))
-            .body(DailyMealPlannerOutputModel(planner))
+        return createdHttpResponse(mealPlanner(date), DailyMealPlannerOutputModel(planner))
     }
 
     @PatchMapping(Uris.MealPlanner.MEAL_PLANNER)
@@ -86,9 +80,7 @@ class MealPlannerController(private val mealPlannerService: MealPlannerService) 
             date,
             body
         )
-        return ResponseEntity
-            .ok()
-            .body(DailyMealPlannerOutputModel(mealPlanner))
+        return okHttpResponse(DailyMealPlannerOutputModel(mealPlanner))
     }
 
     @PatchMapping(Uris.MealPlanner.CALORIES)
@@ -98,9 +90,7 @@ class MealPlannerController(private val mealPlannerService: MealPlannerService) 
         @Valid @RequestBody body: UpdateDailyCaloriesInputModel,
     ): ResponseEntity<*> {
         val dailyMealPlanner = mealPlannerService.updateDailyCalories(authenticatedUser.user.id, date, body.maxCalories)
-        return ResponseEntity
-            .ok()
-            .body(DailyMealPlannerOutputModel(dailyMealPlanner))
+        return okHttpResponse(DailyMealPlannerOutputModel(dailyMealPlanner))
     }
 
     @DeleteMapping(Uris.MealPlanner.CLEAN_MEAL_TIME)
@@ -110,9 +100,7 @@ class MealPlannerController(private val mealPlannerService: MealPlannerService) 
         @PathVariable mealTime: MealTime,
     ): ResponseEntity<*> {
         val mealPlanner = mealPlannerService.removeMealTimeFromDailyMealPlanner(authenticatedUser.user.id, date, mealTime)
-        return ResponseEntity
-            .ok()
-            .body(DailyMealPlannerOutputModel(mealPlanner))
+        return okHttpResponse(DailyMealPlannerOutputModel(mealPlanner))
     }
 
     @DeleteMapping(Uris.MealPlanner.MEAL_PLANNER)
@@ -121,8 +109,6 @@ class MealPlannerController(private val mealPlannerService: MealPlannerService) 
         @PathVariable date: LocalDate,
     ): ResponseEntity<*> {
         val mealPlanner = mealPlannerService.deleteDailyMealPlanner(authenticatedUser.user.id, date)
-        return ResponseEntity
-            .ok()
-            .body(GetWeeklyMealPlannerOutputModel(mealPlanner.planner))
+        return okHttpResponse(GetWeeklyMealPlannerOutputModel(mealPlanner.planner))
     }
 }
