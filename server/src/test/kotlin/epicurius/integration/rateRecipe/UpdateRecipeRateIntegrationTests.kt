@@ -4,8 +4,8 @@ import epicurius.domain.exceptions.AuthorCannotUpdateRating
 import epicurius.domain.exceptions.RecipeNotAccessible
 import epicurius.domain.exceptions.RecipeNotFound
 import epicurius.domain.exceptions.UserHasNotRated
-import epicurius.http.utils.Problem
-import epicurius.http.utils.Uris
+import epicurius.http.media.Problem
+import epicurius.http.media.Uris
 import epicurius.integration.utils.getBody
 import epicurius.integration.utils.patch
 import org.junit.jupiter.api.Assertions.assertEquals

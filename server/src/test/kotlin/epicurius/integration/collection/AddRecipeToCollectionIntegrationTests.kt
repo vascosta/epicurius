@@ -7,8 +7,8 @@ import epicurius.domain.exceptions.NotTheRecipeAuthor
 import epicurius.domain.exceptions.RecipeAlreadyInCollection
 import epicurius.domain.exceptions.RecipeNotAccessible
 import epicurius.domain.exceptions.RecipeNotFound
-import epicurius.http.utils.Problem
-import epicurius.http.utils.Uris
+import epicurius.http.media.Problem
+import epicurius.http.media.Uris
 import epicurius.integration.utils.getBody
 import epicurius.integration.utils.post
 import epicurius.utils.createTestCollection

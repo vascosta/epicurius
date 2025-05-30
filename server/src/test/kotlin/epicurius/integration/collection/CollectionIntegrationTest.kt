@@ -7,7 +7,7 @@ import epicurius.http.controllers.collection.models.output.GetCollectionOutputMo
 import epicurius.http.controllers.collection.models.output.GetCollectionsOutputModel
 import epicurius.http.controllers.collection.models.output.RemoveRecipeFromCollectionOutputModel
 import epicurius.http.controllers.collection.models.output.UpdateCollectionOutputModel
-import epicurius.http.utils.Uris
+import epicurius.http.media.Uris
 import epicurius.integration.EpicuriusIntegrationTest
 import epicurius.integration.utils.delete
 import epicurius.integration.utils.get

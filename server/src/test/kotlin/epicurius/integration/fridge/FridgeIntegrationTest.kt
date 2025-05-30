@@ -5,7 +5,7 @@ import epicurius.http.controllers.fridge.models.output.AddProductOutputModel
 import epicurius.http.controllers.fridge.models.output.GetFridgeOutputModel
 import epicurius.http.controllers.fridge.models.output.RemoveProductOutputModel
 import epicurius.http.controllers.fridge.models.output.UpdateProductOutputModel
-import epicurius.http.utils.Uris
+import epicurius.http.media.Uris
 import epicurius.integration.EpicuriusIntegrationTest
 import epicurius.integration.utils.delete
 import epicurius.integration.utils.get

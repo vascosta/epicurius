@@ -5,8 +5,8 @@ import epicurius.domain.Intolerance
 import epicurius.domain.exceptions.InvalidCountry
 import epicurius.domain.exceptions.PasswordsDoNotMatch
 import epicurius.domain.exceptions.UserAlreadyExists
-import epicurius.http.utils.Problem
-import epicurius.http.utils.Uris
+import epicurius.http.media.Problem
+import epicurius.http.media.Uris
 import epicurius.integration.utils.getBody
 import epicurius.integration.utils.patch
 import epicurius.utils.createTestUser

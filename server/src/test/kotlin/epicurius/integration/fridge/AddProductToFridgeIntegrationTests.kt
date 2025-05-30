@@ -1,8 +1,8 @@
 package epicurius.integration.fridge
 
 import epicurius.domain.exceptions.InvalidProduct
-import epicurius.http.utils.Problem
-import epicurius.http.utils.Uris.Fridge.FRIDGE
+import epicurius.http.media.Problem
+import epicurius.http.media.Uris.Fridge.FRIDGE
 import epicurius.integration.utils.getBody
 import epicurius.integration.utils.post
 import org.junit.jupiter.api.Assertions.assertEquals

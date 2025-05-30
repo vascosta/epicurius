@@ -4,7 +4,7 @@ import epicurius.domain.recipe.Recipe
 import epicurius.domain.user.AuthenticatedUser
 import epicurius.http.controllers.rateRecipe.models.output.GetRecipeRateOutputModel
 import epicurius.http.controllers.rateRecipe.models.output.GetUserRecipeRateOutputModel
-import epicurius.http.utils.Uris
+import epicurius.http.media.Uris
 import epicurius.integration.EpicuriusIntegrationTest
 import epicurius.integration.utils.delete
 import epicurius.integration.utils.get

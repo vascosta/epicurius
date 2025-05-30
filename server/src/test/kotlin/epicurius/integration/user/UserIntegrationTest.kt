@@ -13,7 +13,7 @@ import epicurius.http.controllers.user.models.output.GetUserProfileOutputModel
 import epicurius.http.controllers.user.models.output.SearchUsersOutputModel
 import epicurius.http.controllers.user.models.output.UpdateUserOutputModel
 import epicurius.http.controllers.user.models.output.UpdateUserProfilePictureOutputModel
-import epicurius.http.utils.Uris
+import epicurius.http.media.Uris
 import epicurius.integration.EpicuriusIntegrationTest
 import epicurius.integration.utils.delete
 import epicurius.integration.utils.get

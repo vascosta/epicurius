@@ -1,8 +1,8 @@
 package epicurius.integration.user
 
 import epicurius.domain.exceptions.UserNotFound
-import epicurius.http.utils.Problem
-import epicurius.http.utils.Uris
+import epicurius.http.media.Problem
+import epicurius.http.media.Uris
 import epicurius.integration.utils.get
 import epicurius.utils.createTestUser
 import org.springframework.http.HttpStatus

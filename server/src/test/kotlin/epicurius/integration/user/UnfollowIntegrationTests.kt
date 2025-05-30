@@ -4,8 +4,8 @@ import epicurius.domain.exceptions.InvalidSelfUnfollow
 import epicurius.domain.exceptions.UserNotFollowed
 import epicurius.domain.exceptions.UserNotFound
 import epicurius.domain.user.FollowingStatus
-import epicurius.http.utils.Problem
-import epicurius.http.utils.Uris
+import epicurius.http.media.Problem
+import epicurius.http.media.Uris
 import epicurius.integration.utils.delete
 import epicurius.integration.utils.getBody
 import epicurius.utils.createTestUser

@@ -4,8 +4,8 @@ import epicurius.domain.exceptions.AuthorCannotDeleteRating
 import epicurius.domain.exceptions.RecipeNotAccessible
 import epicurius.domain.exceptions.RecipeNotFound
 import epicurius.domain.exceptions.UserHasNotRated
-import epicurius.http.utils.Problem
-import epicurius.http.utils.Uris
+import epicurius.http.media.Problem
+import epicurius.http.media.Uris
 import epicurius.integration.utils.delete
 import epicurius.integration.utils.getBody
 import org.junit.jupiter.api.Assertions.assertEquals

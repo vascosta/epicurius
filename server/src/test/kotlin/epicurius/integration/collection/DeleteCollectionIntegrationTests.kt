@@ -3,8 +3,8 @@ package epicurius.integration.collection
 import epicurius.domain.collection.CollectionType
 import epicurius.domain.exceptions.CollectionNotFound
 import epicurius.domain.exceptions.NotTheCollectionOwner
-import epicurius.http.utils.Problem
-import epicurius.http.utils.Uris
+import epicurius.http.media.Problem
+import epicurius.http.media.Uris
 import epicurius.integration.utils.delete
 import epicurius.integration.utils.getBody
 import epicurius.utils.createTestCollection

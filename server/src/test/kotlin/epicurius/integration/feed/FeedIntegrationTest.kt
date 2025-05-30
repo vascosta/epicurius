@@ -3,7 +3,7 @@ package epicurius.integration.feed
 import epicurius.domain.recipe.Recipe
 import epicurius.domain.user.AuthenticatedUser
 import epicurius.http.controllers.feed.models.output.GetUserFeedOutputModel
-import epicurius.http.utils.Uris
+import epicurius.http.media.Uris
 import epicurius.integration.EpicuriusIntegrationTest
 import epicurius.integration.utils.get
 import epicurius.integration.utils.patch

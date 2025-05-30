@@ -4,8 +4,8 @@ import epicurius.domain.exceptions.FollowRequestNotFound
 import epicurius.domain.exceptions.InvalidSelfCancelFollowRequest
 import epicurius.domain.user.FollowRequestType
 import epicurius.domain.user.FollowingStatus
-import epicurius.http.utils.Problem
-import epicurius.http.utils.Uris
+import epicurius.http.media.Problem
+import epicurius.http.media.Uris
 import epicurius.integration.utils.getBody
 import epicurius.integration.utils.patch
 import epicurius.utils.createTestUser
