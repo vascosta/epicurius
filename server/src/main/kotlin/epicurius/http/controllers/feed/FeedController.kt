@@ -3,7 +3,8 @@ package epicurius.http.controllers.feed
 import epicurius.domain.PagingParams
 import epicurius.domain.user.AuthenticatedUser
 import epicurius.http.controllers.feed.models.output.GetUserFeedOutputModel
-import epicurius.http.utils.Uris
+import epicurius.http.media.Uris
+import epicurius.http.media.okHttpResponse
 import epicurius.services.feed.FeedService
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
@@ -28,8 +29,6 @@ class FeedController(private val feedService: FeedService) {
             authenticatedUser.user.diets,
             pagingParams
         )
-        return ResponseEntity
-            .ok()
-            .body(GetUserFeedOutputModel(feed))
+        return okHttpResponse(GetUserFeedOutputModel(feed))
     }
 }
