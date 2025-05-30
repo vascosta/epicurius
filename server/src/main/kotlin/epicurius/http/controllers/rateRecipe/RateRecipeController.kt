@@ -52,10 +52,7 @@ class RateRecipeController(private val rateRecipeService: RateRecipeService) {
         @Valid @RequestBody body: RateRecipeInputModel,
     ): ResponseEntity<*> {
         val rate = rateRecipeService.rateRecipe(authenticatedUser.user.id, id, body.rating)
-        return createdHttpResponse(
-            location = rateRecipe(id),
-            body = RateRecipeOutputModel(rate)
-        )
+        return createdHttpResponse(rateRecipe(id), RateRecipeOutputModel(rate))
     }
 
     @PatchMapping(Uris.Recipe.RATE_RECIPE)
