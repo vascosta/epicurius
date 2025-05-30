@@ -1,6 +1,5 @@
 package epicurius.repository.spoonacular
 
-import epicurius.Environment
 import epicurius.config.HttpClientConfigurer
 import epicurius.domain.exceptions.InvalidIngredient
 import epicurius.repository.spoonacular.contract.SpoonacularRepository
@@ -11,12 +10,14 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.Json
 import org.springframework.stereotype.Component
+import java.io.FileInputStream
 
 @Component
 class SpoonacularRepository(private val httpClient: HttpClientConfigurer) : SpoonacularRepository {
 
     override suspend fun getIngredients(partialName: String): List<String> {
         val validName = partialName.replace(" ", "-").lowercase()
+        println("Spoonacular API Key: $spoonacularApiKey")
         val uriCompleted = "$AUTOCOMPLETE_INGREDIENTS_URL?apiKey=$spoonacularApiKey&query=$validName"
 
         return withContext(Dispatchers.IO) {
@@ -44,7 +45,10 @@ class SpoonacularRepository(private val httpClient: HttpClientConfigurer) : Spoo
     }
 
     companion object {
-        val spoonacularApiKey = Environment.getSpoonacularAPIKey().readAllBytes().decodeToString().trim()
+        val spoonacularAPIKeyFile = this::class.java.classLoader.getResourceAsStream("SpoonacularAPIKey.txt")
+            ?: throw IllegalArgumentException("Spoonacular API key file not found")
+        val spoonacularApiKey = spoonacularAPIKeyFile.bufferedReader().use { it.readText() }.trim()
+
 
         const val AUTOCOMPLETE_INGREDIENTS_URL = "https://api.spoonacular.com/food/ingredients/autocomplete"
         const val GET_INGREDIENT_SUBSTITUTES_URL = "https://api.spoonacular.com/food/ingredients/substitutes"

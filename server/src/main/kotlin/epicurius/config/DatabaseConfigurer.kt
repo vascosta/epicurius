@@ -4,11 +4,9 @@ import com.google.auth.oauth2.GoogleCredentials
 import com.google.cloud.firestore.Firestore
 import com.google.cloud.firestore.FirestoreOptions
 import com.google.cloud.storage.StorageOptions
-import epicurius.Environment
 import epicurius.repository.jdbi.config.configureWithAppRequirements
 import org.jdbi.v3.core.Jdbi
 import org.postgresql.ds.PGSimpleDataSource
-import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import java.io.FileInputStream
@@ -16,11 +14,11 @@ import java.io.FileInputStream
 @Configuration
 class DatabaseConfigurer {
 
-    @Value("\${postgres.database.url}")
-    val postgresDbUrl: String = ""
+    private val cloudStorageBucketName = "epicurius-bucket"
+    private val firestoreDatabaseId = "epicurius-database"
+    private val googleCredentialsFileName = "epicurius-credentials.json"
 
-    @Value("\${google.cloud.credentials.location}")
-    val googleCredentialsFile = ""
+    private val postgresDbUrl: String = System.getenv("DATABASE_URL")
 
     @Bean
     fun jdbi(): Jdbi {
@@ -33,23 +31,25 @@ class DatabaseConfigurer {
 
     @Bean
     fun googleCloudStorage(): CloudStorage {
-        val credentials = FileInputStream(googleCredentialsFile)
+        val googleCredentials = this::class.java.classLoader.getResourceAsStream(googleCredentialsFileName)
 
         val options = StorageOptions.newBuilder()
-            .setCredentials(GoogleCredentials.fromStream(credentials))
+            .setCredentials(GoogleCredentials.fromStream(googleCredentials))
             .build()
 
-        return CloudStorage(options.service, Environment.getCloudStorageBucketName())
+        return CloudStorage(options.service, cloudStorageBucketName)
     }
 
     @Bean
     fun firestore(): Firestore {
-        val credentials = FileInputStream(googleCredentialsFile)
+        val googleCredentials = this::class.java.classLoader.getResourceAsStream(googleCredentialsFileName)
 
         return FirestoreOptions.newBuilder()
-            .setCredentials(GoogleCredentials.fromStream(credentials))
-            .setDatabaseId(Environment.getFirestoreDatabaseId())
+            .setCredentials(GoogleCredentials.fromStream(googleCredentials))
+            .setDatabaseId(firestoreDatabaseId)
             .build()
             .service
     }
+
+
 }
