@@ -4,7 +4,11 @@ import epicurius.domain.user.AuthenticatedUser
 import epicurius.http.controllers.rateRecipe.models.input.RateRecipeInputModel
 import epicurius.http.controllers.rateRecipe.models.output.GetRecipeRateOutputModel
 import epicurius.http.controllers.rateRecipe.models.output.GetUserRecipeRateOutputModel
+import epicurius.http.controllers.rateRecipe.models.output.RateRecipeOutputModel
+import epicurius.http.controllers.rateRecipe.models.output.UpdateRecipeRateOutputModel
 import epicurius.http.media.Uris
+import epicurius.http.media.Uris.Recipe.rateRecipe
+import epicurius.http.media.createdHttpResponse
 import epicurius.http.media.noContentHttpResponse
 import epicurius.http.media.okHttpResponse
 import epicurius.services.rateRecipe.RateRecipeService
@@ -47,8 +51,11 @@ class RateRecipeController(private val rateRecipeService: RateRecipeService) {
         @PathVariable id: Int,
         @Valid @RequestBody body: RateRecipeInputModel,
     ): ResponseEntity<*> {
-        rateRecipeService.rateRecipe(authenticatedUser.user.id, id, body.rating)
-        return noContentHttpResponse()
+        val rate = rateRecipeService.rateRecipe(authenticatedUser.user.id, id, body.rating)
+        return createdHttpResponse(
+            location = rateRecipe(id),
+            body = RateRecipeOutputModel(rate)
+        )
     }
 
     @PatchMapping(Uris.Recipe.RATE_RECIPE)
@@ -57,8 +64,8 @@ class RateRecipeController(private val rateRecipeService: RateRecipeService) {
         @PathVariable id: Int,
         @Valid @RequestBody body: RateRecipeInputModel,
     ): ResponseEntity<*> {
-        rateRecipeService.updateRecipeRate(authenticatedUser.user.id, id, body.rating)
-        return noContentHttpResponse()
+        val rate = rateRecipeService.updateRecipeRate(authenticatedUser.user.id, id, body.rating)
+        return okHttpResponse(UpdateRecipeRateOutputModel(rate))
     }
 
     @DeleteMapping(Uris.Recipe.RATE_RECIPE)

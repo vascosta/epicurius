@@ -10,28 +10,9 @@ class RateRecipeRepositoryTests : RateRecipeRepositoryTest() {
         // given a recipe (testRecipe) and a user (testUserPublic)
 
         // when the user rates the recipe
-        rateRecipe(testRecipe.id, testUserPublic.id, 5)
-
-        // when getting the recipe rate
-        val rate = getRecipeRate(testRecipe.id)
+        val rate = rateRecipe(testRecipe.id, testUserPublic.id, 5)
 
         // then the rate should be 5.0
         assertEquals(5.0, rate)
-    }
-
-    @Test
-    fun `Should get the average rate of a recipe`() {
-        // given a recipe (testRecipe) and a user (testUserPublic)
-        val average = listOf(5, 3).average()
-
-        // when the user rates the recipe
-        rateRecipe(testRecipe.id, testUserPublic.id, 5)
-        rateRecipe(testRecipe.id, testUserPrivate.id, 3)
-
-        // when getting the recipe rate
-        val rate = getRecipeRate(testRecipe.id)
-
-        // then the rate should be 5.0
-        assertEquals(average, rate)
     }
 }

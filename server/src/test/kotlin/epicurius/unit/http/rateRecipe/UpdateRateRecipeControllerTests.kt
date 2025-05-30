@@ -4,6 +4,7 @@ import epicurius.domain.exceptions.AuthorCannotUpdateRating
 import epicurius.domain.exceptions.RecipeNotAccessible
 import epicurius.domain.exceptions.RecipeNotFound
 import epicurius.domain.exceptions.UserHasNotRated
+import epicurius.http.controllers.rateRecipe.models.output.UpdateRecipeRateOutputModel
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -17,19 +18,24 @@ class UpdateRateRecipeControllerTests : RateRecipeControllerTest() {
     fun `Should update rate recipe successfully`() {
         // given an authenticated user and a recipe
 
+        // mock
+        whenever(
+            rateRecipeServiceMock.updateRecipeRate(
+                testAuthenticatedUser.user.id,
+                RECIPE_ID,
+                RATING_3
+            )
+        ).thenReturn(RATING_3.toDouble())
+
         // when the user updates the recipe with a rating of 3
         val response = updateRecipeRate(testAuthenticatedUser, RECIPE_ID, RATING_3)
 
         // then the recipe should be updated successfully
-        verify(
-            rateRecipeServiceMock
-        ).updateRecipeRate(
-            testAuthenticatedUser.user.id,
-            RECIPE_ID,
-            RATING_3
+        assertEquals(HttpStatus.OK, response.statusCode)
+        assertEquals(
+            UpdateRecipeRateOutputModel(RATING_3.toDouble()),
+            response.body
         )
-
-        assertEquals(HttpStatus.NO_CONTENT, response.statusCode)
     }
 
     @Test

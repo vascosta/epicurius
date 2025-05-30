@@ -32,7 +32,7 @@ class JdbiRateRecipeRepository(private val handle: Handle) : RateRecipeRepositor
             .mapTo<Int>()
             .one()
 
-    override fun rateRecipe(recipeId: Int, userId: Int, rating: Int) {
+    override fun rateRecipe(recipeId: Int, userId: Int, rating: Int): Double {
         handle.createUpdate(
             """
                 INSERT INTO dbo.recipe_rating (recipe_id, user_id, rating, created_at)
@@ -44,9 +44,11 @@ class JdbiRateRecipeRepository(private val handle: Handle) : RateRecipeRepositor
             .bind("rating", rating)
             .bind("createdAt", LocalDate.now())
             .execute()
+
+        return getRecipeRate(recipeId)
     }
 
-    override fun updateRecipeRate(recipeId: Int, userId: Int, rating: Int) {
+    override fun updateRecipeRate(recipeId: Int, userId: Int, rating: Int): Double {
         handle.createUpdate(
             """
                 UPDATE dbo.recipe_rating
@@ -58,6 +60,8 @@ class JdbiRateRecipeRepository(private val handle: Handle) : RateRecipeRepositor
             .bind("recipeId", recipeId)
             .bind("userId", userId)
             .execute()
+
+        return getRecipeRate(recipeId)
     }
 
     override fun deleteRecipeRate(recipeId: Int, userId: Int) {

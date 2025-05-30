@@ -4,10 +4,9 @@ import epicurius.domain.exceptions.AuthorCannotRateOwnRecipe
 import epicurius.domain.exceptions.RecipeNotAccessible
 import epicurius.domain.exceptions.RecipeNotFound
 import epicurius.domain.exceptions.UserAlreadyRated
-import epicurius.http.controllers.rateRecipe.models.output.GetRecipeRateOutputModel
+import epicurius.http.controllers.rateRecipe.models.output.RateRecipeOutputModel
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
-import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.springframework.http.HttpStatus
 import kotlin.test.assertEquals
@@ -18,29 +17,24 @@ class RateRecipeControllerTests : RateRecipeControllerTest() {
     fun `Should rate recipe successfully`() {
         // given an authenticated user and a recipe
 
+        // mock
+        whenever(
+            rateRecipeServiceMock.rateRecipe(
+                testAuthenticatedUser.user.id,
+                RECIPE_ID,
+                RATING_5
+            )
+        ).thenReturn(RATING_5.toDouble())
+
         // when the user rates the recipe with a rating of 5
         val response = rateRecipe(testAuthenticatedUser, RECIPE_ID, RATING_5)
 
         // then the recipe should be rated successfully
-        verify(
-            rateRecipeServiceMock
-        ).rateRecipe(
-            testAuthenticatedUser.user.id,
-            RECIPE_ID,
-            RATING_5
+        assertEquals(HttpStatus.CREATED, response.statusCode)
+        assertEquals(
+            RateRecipeOutputModel(RATING_5.toDouble()),
+            response.body
         )
-
-        assertEquals(HttpStatus.NO_CONTENT, response.statusCode)
-
-        // mock
-        whenever(
-            rateRecipeServiceMock.getRecipeRate(testAuthenticatedUser.user.id, RECIPE_ID)
-        ).thenReturn(RATING_5.toDouble())
-
-        // when getting the recipe rate
-        val rating = getRecipeRate(testAuthenticatedUser, RECIPE_ID)
-        assertEquals(HttpStatus.OK, rating.statusCode)
-        assertEquals(GetRecipeRateOutputModel(RATING_5.toDouble()), rating.body)
     }
 
     @Test

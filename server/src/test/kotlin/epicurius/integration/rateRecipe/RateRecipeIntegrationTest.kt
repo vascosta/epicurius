@@ -4,6 +4,8 @@ import epicurius.domain.recipe.Recipe
 import epicurius.domain.user.AuthenticatedUser
 import epicurius.http.controllers.rateRecipe.models.output.GetRecipeRateOutputModel
 import epicurius.http.controllers.rateRecipe.models.output.GetUserRecipeRateOutputModel
+import epicurius.http.controllers.rateRecipe.models.output.RateRecipeOutputModel
+import epicurius.http.controllers.rateRecipe.models.output.UpdateRecipeRateOutputModel
 import epicurius.http.media.Uris
 import epicurius.integration.EpicuriusIntegrationTest
 import epicurius.integration.utils.delete
@@ -49,20 +51,20 @@ class RateRecipeIntegrationTest : EpicuriusIntegrationTest() {
         )
 
     fun rateRecipe(token: String, recipeId: Int, rating: Int) =
-        post<Unit>(
+        post<RateRecipeOutputModel>(
             client,
             api(Uris.Recipe.RATE_RECIPE.replace("{id}", recipeId.toString())),
             body = mapOf("rating" to rating),
-            responseStatus = HttpStatus.NO_CONTENT,
+            responseStatus = HttpStatus.CREATED,
             token = token
         )
 
     fun updateRecipeRate(token: String, recipeId: Int, rating: Int) =
-        patch<Unit>(
+        patch<UpdateRecipeRateOutputModel>(
             client,
             api(Uris.Recipe.RATE_RECIPE.replace("{id}", recipeId.toString())),
             body = mapOf("rating" to rating),
-            responseStatus = HttpStatus.NO_CONTENT,
+            responseStatus = HttpStatus.OK,
             token = token
         )
 

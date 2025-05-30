@@ -15,12 +15,17 @@ import kotlin.test.assertEquals
 class RateRecipeIntegrationTests : RateRecipeIntegrationTest() {
 
     @Test
-    fun `Should rate recipe successfully with code 204`() {
+    fun `Should rate recipe successfully with code 201`() {
         // given a user token and a recipe id
         val token = testUser.token
 
         // when the user rates a recipe
-        rateRecipe(token, testRecipe.id, RATING_5)
+        val response = rateRecipe(token, testRecipe.id, RATING_5)
+        val body = getBody(response)
+
+        // then the recipe is rated successfully
+        assertEquals(HttpStatus.CREATED, response.status)
+        assertEquals(RATING_5.toDouble(), body.rating)
     }
 
     @Test

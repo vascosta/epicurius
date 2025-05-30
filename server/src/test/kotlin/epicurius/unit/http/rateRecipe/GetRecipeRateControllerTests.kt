@@ -2,6 +2,7 @@ package epicurius.unit.http.rateRecipe
 
 import epicurius.domain.exceptions.RecipeNotAccessible
 import epicurius.domain.exceptions.RecipeNotFound
+import epicurius.http.controllers.rateRecipe.models.output.GetRecipeRateOutputModel
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -15,12 +16,20 @@ class GetRecipeRateControllerTests : RateRecipeControllerTest() {
     fun `Should get recipe rate successfully`() {
         // given an authenticated user and a recipe
 
+        // mock
+        whenever(
+            rateRecipeServiceMock.getRecipeRate(testAuthenticatedUser.user.id, RECIPE_ID)
+        ).thenReturn(RATING_5.toDouble())
+
         // when the user gets the recipe rate
         val response = getRecipeRate(testAuthenticatedUser, RECIPE_ID)
 
         // then the recipe rate should be returned successfully
-        verify(rateRecipeServiceMock).getRecipeRate(testAuthenticatedUser.user.id, RECIPE_ID)
         assertEquals(HttpStatus.OK, response.statusCode)
+        assertEquals(
+            GetRecipeRateOutputModel(RATING_5.toDouble()),
+            response.body
+        )
     }
 
     @Test

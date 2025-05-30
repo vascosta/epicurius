@@ -28,22 +28,22 @@ class RateRecipeService(private val tm: TransactionManager) {
         return tm.run { it.rateRecipeRepository.getUserRecipeRate(recipeId, userId) }
     }
 
-    fun rateRecipe(userId: Int, recipeId: Int, rating: Int) {
+    fun rateRecipe(userId: Int, recipeId: Int, rating: Int): Double {
         val recipe = checkIfRecipeExists(recipeId) ?: throw RecipeNotFound()
         if (userId == recipe.authorId) throw AuthorCannotRateOwnRecipe()
         checkRecipeAccessibility(recipe.authorUsername, userId)
         if (checkIfUserAlreadyRated(userId, recipeId)) throw UserAlreadyRated(userId, recipeId)
 
-        tm.run { it.rateRecipeRepository.rateRecipe(recipeId, userId, rating) }
+        return tm.run { it.rateRecipeRepository.rateRecipe(recipeId, userId, rating) }
     }
 
-    fun updateRecipeRate(userId: Int, recipeId: Int, rating: Int) {
+    fun updateRecipeRate(userId: Int, recipeId: Int, rating: Int): Double {
         val recipe = checkIfRecipeExists(recipeId) ?: throw RecipeNotFound()
         if (userId == recipe.authorId) throw AuthorCannotUpdateRating()
         checkRecipeAccessibility(recipe.authorUsername, userId)
         if (!checkIfUserAlreadyRated(userId, recipeId)) throw UserHasNotRated(userId, recipeId)
 
-        tm.run { it.rateRecipeRepository.updateRecipeRate(recipeId, userId, rating) }
+        return tm.run { it.rateRecipeRepository.updateRecipeRate(recipeId, userId, rating) }
     }
 
     fun deleteRecipeRate(userId: Int, recipeId: Int) {

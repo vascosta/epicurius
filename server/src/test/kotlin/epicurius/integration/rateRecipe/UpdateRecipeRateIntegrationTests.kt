@@ -29,12 +29,12 @@ class UpdateRecipeRateIntegrationTests : RateRecipeIntegrationTest() {
         assertEquals(RATING_4.toDouble(), response?.rating)
 
         // and updates the recipe rate
-        updateRecipeRate(token, testRecipe.id, RATING_5)
+        val rsp = updateRecipeRate(token, testRecipe.id, RATING_5)
+        val body = getBody(rsp)
 
         // then the recipe rate is updated successfully
-        val rsp = getRecipeRate(token, testRecipe.id)
-        assertNotNull(rsp)
-        assertEquals(RATING_5.toDouble(), rsp?.rating)
+        assertEquals(HttpStatus.OK, rsp.status)
+        assertEquals(RATING_5.toDouble(), body.rating)
     }
 
     @Test
