@@ -51,7 +51,7 @@ data class IngredientComponent(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CreateRecipeScreen() {
+fun CreateRecipeScreen(onBackButton: () -> Unit = {}) {
     var name by remember { mutableStateOf("") }
     var description by remember { mutableStateOf("") }
     var duration by remember { mutableStateOf("") }
@@ -64,7 +64,7 @@ fun CreateRecipeScreen() {
     var instructions by remember { mutableStateOf(listOf<String>()) }
 
     Scaffold(
-        topBar = { TopBar("Create recipe") },
+        topBar = { TopBar("Create recipe", backButton = true, onBackButton) },
         bottomBar = { BottomBar() },
         containerColor = Color.White,
         content = { paddingValues ->

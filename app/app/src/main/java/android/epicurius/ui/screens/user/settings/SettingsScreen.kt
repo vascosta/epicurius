@@ -1,4 +1,4 @@
-package android.epicurius.ui.screens.settings
+package android.epicurius.ui.screens.user.settings
 
 import android.epicurius.ui.screens.BottomBar
 import android.epicurius.ui.screens.TopBar
@@ -21,9 +21,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun SettingsScreens() {
+fun SettingsScreen(onBackButton: () -> Unit = {}) {
     Scaffold(
-        topBar = { TopBar(text = "Settings", backButton = true, icon = null) },
+        topBar = { TopBar(text = "Settings", backButton = true, onBackButton = onBackButton, icon = null) },
         bottomBar = { BottomBar() },
         content = { paddingValues ->
             Column(
@@ -66,5 +66,5 @@ private fun SettingsButton(text: String) {
 @Preview
 @Composable
 fun SettingsPreview() {
-    SettingsScreens()
+    SettingsScreen()
 }

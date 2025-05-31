@@ -25,7 +25,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun FollowScreen(userProfile: UserProfile, followers: List<FollowUser>, following: List<FollowingUser>) {
+fun FollowScreen(
+    onBackButton: () -> Unit = {},
+    userProfile: UserProfile,
+    followers: List<FollowUser>,
+    following: List<FollowingUser>
+) {
     var selectedTabIndex by remember { mutableIntStateOf(0) }
 
     Scaffold(
@@ -34,7 +39,8 @@ fun FollowScreen(userProfile: UserProfile, followers: List<FollowUser>, followin
                 following = userProfile.followingCount,
                 followers = userProfile.followersCount,
                 selectedTabIndex = selectedTabIndex,
-                onTabSelected = { selectedTabIndex = it }
+                onTabSelected = { selectedTabIndex = it },
+                onBackButton = onBackButton,
             )
         },
         bottomBar = { BottomBar() },
@@ -83,5 +89,5 @@ fun FollowPreview() {
         )
     )
 
-    FollowScreen(userProfile, followers, following)
+    FollowScreen({}, userProfile, followers, following)
 }

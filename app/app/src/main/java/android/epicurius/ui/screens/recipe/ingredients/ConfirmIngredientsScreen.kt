@@ -35,7 +35,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 @Composable
-fun ConfirmIngredientsActivity(recipeName: String, ingredientsList: List<Ingredient>) {
+fun ConfirmIngredientsScreen(
+    onBackButton: () -> Unit,
+    recipeName: String,
+    ingredientsList: List<Ingredient>
+) {
     val checkboxStates = remember { mutableStateListOf<Boolean>().apply {
         repeat(ingredientsList.size) { add(false) }
     }}
@@ -43,7 +47,7 @@ fun ConfirmIngredientsActivity(recipeName: String, ingredientsList: List<Ingredi
     val selectedIngredient = remember { mutableStateOf<Ingredient?>(null) }
 
     Scaffold(
-        topBar = { TopBar(recipeName, backButton = true) },
+        topBar = { TopBar(recipeName, backButton = true, onBackButton = onBackButton) },
         bottomBar = { BottomBar() },
         content = { paddingValues ->
             Column(
@@ -203,5 +207,5 @@ fun ConfirmIngredientsActivityPreview() {
         Ingredient("Sugar", 1.5, IngredientUnit.COFFEE_CUP),
         Ingredient("Eggs", 3.0, IngredientUnit.X)
     )
-    ConfirmIngredientsActivity(recipeName, ingredientsList = ingredients)
+    ConfirmIngredientsScreen({}, recipeName, ingredientsList = ingredients)
 }

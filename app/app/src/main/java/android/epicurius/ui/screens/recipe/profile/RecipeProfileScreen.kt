@@ -55,9 +55,15 @@ import java.time.LocalDate
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun RecipeProfileScreen(recipe: Recipe, rating: Double, images: List<Int>, isAuthor: Boolean) {
+fun RecipeProfileScreen(
+    onBackButton: () -> Unit = {},
+    recipe: Recipe,
+    rating: Double,
+    images: List<Int>,
+    isAuthor: Boolean
+) {
     Scaffold(
-        topBar = { TopBar(text = recipe.name, backButton = true) },
+        topBar = { TopBar(text = recipe.name, backButton = true, onBackButton) },
         bottomBar = { BottomBar() },
         containerColor = Color.White
     ) { paddingValues ->
@@ -285,5 +291,5 @@ fun RecipeProfilePreview(){
         pictures = listOf()
     )
     val rating = 4.0
-    RecipeProfileScreen(recipe, rating, listOf(R.drawable.home, R.drawable.star, R.drawable.pencil), true)
+    RecipeProfileScreen({}, recipe, rating, listOf(R.drawable.home, R.drawable.star, R.drawable.pencil), true)
 }

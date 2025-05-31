@@ -28,9 +28,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun FavouritesScreen(collections: List<CollectionProfile>) {
+fun FavouritesScreen(
+    onBackButton: () -> Unit,
+    collections: List<CollectionProfile>
+) {
     Scaffold(
-        topBar = { TopBar("Favourites") },
+        topBar = { TopBar("Favourites", backButton = true, onBackButton) },
         bottomBar = { BottomBar() },
         content = { paddingValues ->
             Column(
@@ -78,5 +81,5 @@ fun FavouritesScreenPreview() {
         CollectionProfile(3, "Healthy Meals")
     )
 
-    FavouritesScreen(collections)
+    FavouritesScreen({}, collections)
 }

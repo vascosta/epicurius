@@ -37,9 +37,14 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun UserProfileScreen(userProfile: UserProfile) {
+fun UserProfileScreen(
+    onBackButton: () -> Unit = {},
+    userProfile: UserProfile
+) {
     Scaffold(
-        topBar = { TopBar(text = "Profile", icon = Icons.Filled.Settings) },
+        topBar = {
+            TopBar(text = "Profile", backButton = true, onBackButton = onBackButton, icon = Icons.Filled.Settings)
+        },
         bottomBar = { BottomBar() },
         content = { paddingValues ->
             Column(modifier = Modifier
@@ -131,5 +136,5 @@ fun UserProfilePreview() {
         followingCount = 50
     )
 
-    UserProfileScreen(userProfile)
+    UserProfileScreen(userProfile = userProfile)
 }

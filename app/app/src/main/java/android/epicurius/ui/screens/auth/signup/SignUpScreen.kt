@@ -29,7 +29,11 @@ import java.util.Locale
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun SignUpScreen() {
+fun SignUpScreen(
+    onBackButton: () -> Unit = {},
+    onSignUp: () -> Unit = {},
+    onLogin: () -> Unit = {}
+) {
     var username by remember { mutableStateOf("") }
     var email by remember{ mutableStateOf("") }
     var password by remember { mutableStateOf("") }
@@ -37,7 +41,9 @@ fun SignUpScreen() {
     var country by remember { mutableStateOf("") }
 
     Scaffold(
-        topBar = { TopBar(text = "SignUp", icon = null) }
+        topBar = {
+            TopBar(text = "SignUp", backButton = true, onBackButton = { onBackButton() },  icon = null)
+        }
     ) {
         Column(
             modifier = Modifier
@@ -65,17 +71,17 @@ fun SignUpScreen() {
             )
 
             Row {
-                SignUpButton("LogIn")
-                SignUpButton("SignUp")
+                SignUpButton("LogIn", onClick = { onLogin() })
+                SignUpButton("SignUp", onClick = { onSignUp() })
             }
         }
     }
 }
 
 @Composable
-private fun SignUpButton(label: String) {
+private fun SignUpButton(label: String, onClick: () -> Unit) {
     Button(
-        onClick = {},
+        onClick = { onClick() },
         modifier = Modifier.padding(10.dp)
     ) { Text(label) }
 }

@@ -57,6 +57,7 @@ dependencies {
     implementation(platform(libs.okhttp.bom))
     implementation(libs.okhttp)
     implementation(libs.gson)
+    implementation(libs.androidx.datastore.core.android)
 
     testImplementation(kotlin("test"))
     androidTestImplementation(libs.androidx.junit)

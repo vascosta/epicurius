@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.epicurius.ui.screens.TopBar
 import android.epicurius.ui.screens.auth.utils.PasswordTextField
 import android.epicurius.ui.screens.utils.TextField
+import android.widget.Button
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -26,13 +27,17 @@ import androidx.compose.ui.unit.dp
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun LoginScreen() {
+fun LoginScreen(
+    onBackButton: () -> Unit = {},
+    onSignUp: () -> Unit = {},
+    onLogin: () -> Unit = {}
+) {
     var username by rememberSaveable { mutableStateOf("") }
     var email by rememberSaveable { mutableStateOf("") }
     var password by rememberSaveable { mutableStateOf("") }
 
     Scaffold(
-        topBar = { TopBar(text = "LogIn", icon = null) }
+        topBar = { TopBar(text = "LogIn", backButton = true, onBackButton = { onBackButton() }, icon = null) }
     ) {
         Column(
             modifier = Modifier
@@ -48,12 +53,12 @@ fun LoginScreen() {
 
             Row {
                 Button(
-                    onClick = {},
+                    onClick = { onSignUp() },
                     modifier = Modifier.padding(10.dp)
                 ) { Text("SignUp") }
 
                 Button(
-                    onClick = {},
+                    onClick = { onLogin() },
                     modifier = Modifier.padding(10.dp)
                 ) { Text("Login") }
             }
