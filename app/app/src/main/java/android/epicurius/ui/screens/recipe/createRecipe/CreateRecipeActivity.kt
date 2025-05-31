@@ -1,9 +1,9 @@
-package android.epicurius.ui.screens.recipe.addRecipe
+package android.epicurius.ui.screens.recipe.createRecipe
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 
-class AddRecipeActivity : ComponentActivity() {
+class CreateRecipeActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }

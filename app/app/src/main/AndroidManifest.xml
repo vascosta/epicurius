@@ -23,6 +23,51 @@
             android:label="Sign Up"
             android:theme="@style/Theme.App" />
         <activity
+            android:name=".ui.screens.dailyMenu.DailyMenuActivity"
+            android:exported="false"
+            android:label="Daily Menu"
+            android:theme="@style/Theme.App" />
+        <activity
+            android:name=".ui.screens.favourites.folder.FavouritesActivity"
+            android:exported="false"
+            android:label="Favourites Folder"
+            android:theme="@style/Theme.App" />
+        <activity
+            android:name=".ui.screens.favourites.list.FavouritesListActivity"
+            android:exported="false"
+            android:label="Favourites List"
+            android:theme="@style/Theme.App" />
+        <activity
+            android:name=".ui.screens.feed.FeedActivity"
+            android:exported="false"
+            android:label="Feed"
+            android:theme="@style/Theme.App" />
+        <activity
+            android:name=".ui.screens.recipe.createRecipe.CreateRecipeActivity"
+            android:exported="false"
+            android:label="Create Recipe"
+            android:theme="@style/Theme.App" />
+        <activity
+            android:name=".ui.screens.recipe.ingredients.ConfirmIngredientsActivity"
+            android:exported="false"
+            android:label="Confirm Ingredients"
+            android:theme="@style/Theme.App" />
+        <activity
+            android:name=".ui.screens.recipe.preparation.PreparationActivity"
+            android:exported="false"
+            android:label="Preparation"
+            android:theme="@style/Theme.App" />
+        <activity
+            android:name=".ui.screens.recipe.profile.RecipeProfileActivity"
+            android:exported="false"
+            android:label="Recipe Profile"
+            android:theme="@style/Theme.App" />
+        <activity
+            android:name=".ui.screens.search.SearchActivity"
+            android:exported="false"
+            android:label="Search"
+            android:theme="@style/Theme.App" />
+        <activity
             android:name=".ui.screens.user.profile.UserProfileActivity"
             android:exported="false"
             android:label="User Profile"
