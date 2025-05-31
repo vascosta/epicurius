@@ -18,6 +18,26 @@
             android:label="@string/title_activity_login_screen"
             android:theme="@style/Theme.App" />
         <activity
+            android:name=".ui.screens.auth.signup.SignUpActivity"
+            android:exported="false"
+            android:label="Sign Up"
+            android:theme="@style/Theme.App" />
+        <activity
+            android:name=".ui.screens.user.profile.UserProfileActivity"
+            android:exported="false"
+            android:label="User Profile"
+            android:theme="@style/Theme.App" />
+        <activity
+            android:name=".ui.screens.user.follow.FollowActivity"
+            android:exported="false"
+            android:label="Follow"
+            android:theme="@style/Theme.App" />
+        <activity
+            android:name=".ui.screens.user.settings.SettingsActivity"
+            android:exported="false"
+            android:label="Settings"
+            android:theme="@style/Theme.App" />
+        <activity
             android:name=".MainActivity"
             android:exported="true"
             android:label="@string/app_name"
