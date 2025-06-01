@@ -68,3 +68,22 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 }
+
+afterEvaluate {
+    tasks.named("assembleDebug").configure {
+        doLast {
+            val apkSrc = layout.buildDirectory.file("outputs/apk/debug/app-debug.apk").get().asFile
+            val apkDestDir = rootProject.layout.projectDirectory.asFile.parentFile.resolve("demo")
+
+            apkDestDir.resolve("epicurius-app.apk")
+
+            copy {
+                from(apkSrc)
+                into(apkDestDir)
+                rename { "epicurius-app.apk" }
+            }
+        }
+    }
+}
+
+
