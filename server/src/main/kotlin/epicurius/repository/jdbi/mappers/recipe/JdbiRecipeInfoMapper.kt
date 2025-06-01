@@ -23,6 +23,7 @@ class JdbiRecipeInfoMapper : RowMapper<JdbiRecipeInfo> {
         return JdbiRecipeInfo(
             id = rs.getInt("recipe_id"),
             name = rs.getString("recipe_name") ?: "",
+            authorUsername = rs.getString("author_username") ?: "",
             cuisine = cuisine,
             mealType = mealType,
             preparationTime = rs.getInt("preparation_time"),
