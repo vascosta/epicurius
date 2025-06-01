@@ -25,6 +25,7 @@ open class MealPlannerRepositoryTest : RepositoryTest() {
         val jdbiRecipeInfo = JdbiRecipeInfo(
             id = testRecipe.id,
             name = testRecipe.name,
+            authorUsername = testRecipe.authorUsername,
             cuisine = testRecipe.cuisine,
             mealType = testRecipe.mealType,
             preparationTime = testRecipe.preparationTime,

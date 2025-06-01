@@ -42,22 +42,6 @@ open class MealPlannerControllerTest : HttpTest() {
             token,
         )
 
-        val testAuthorUser = AuthenticatedUser(
-            User(
-                2,
-                "author",
-                generateEmail("author"),
-                userDomain.encodePassword(randomUUID().toString()),
-                userDomain.hashToken(token),
-                "PT",
-                false,
-                listOf(Intolerance.GLUTEN),
-                listOf(Diet.GLUTEN_FREE),
-                randomUUID().toString()
-            ),
-            token,
-        )
-
         const val CALORIES = 2000
         val today: LocalDate = LocalDate.of(2025, 5, 12)
         val tomorrow: LocalDate = today.plusDays(1)
@@ -68,6 +52,7 @@ open class MealPlannerControllerTest : HttpTest() {
         val recipeInfo1 = RecipeInfo(
             id = 1,
             name = "Recipe 1",
+            authenticatedUsername,
             cuisine = Cuisine.ITALIAN,
             mealType = MealType.MAIN_COURSE,
             preparationTime = 40,
@@ -78,6 +63,7 @@ open class MealPlannerControllerTest : HttpTest() {
         val recipeInfo2 = RecipeInfo(
             id = 2,
             name = "Recipe 2",
+            authenticatedUsername,
             cuisine = Cuisine.THAI,
             mealType = MealType.SIDE_DISH,
             preparationTime = 40,

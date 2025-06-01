@@ -84,6 +84,7 @@ open class MealPlannerServiceTest : ServiceTest() {
         val jdbiRecipeInfo = JdbiRecipeInfo(
             id = RECIPE_ID,
             name = "Test Recipe",
+            USERNAME,
             servings = 4,
             preparationTime = 30,
             cuisine = Cuisine.FRENCH,
