@@ -4,6 +4,7 @@ import epicurius.domain.recipe.Cuisine
 import epicurius.domain.recipe.MealType
 import epicurius.domain.recipe.RecipeInfo
 import epicurius.unit.http.HttpTest
+import epicurius.utils.generateRandomUsername
 import java.util.UUID.randomUUID
 
 open class FeedControllerTest : HttpTest() {
@@ -14,6 +15,7 @@ open class FeedControllerTest : HttpTest() {
         val recipeInfo = RecipeInfo(
             id = 1,
             name = "Carbonara",
+            generateRandomUsername(),
             cuisine = Cuisine.ITALIAN,
             mealType = MealType.MAIN_COURSE,
             preparationTime = 30,
@@ -24,6 +26,7 @@ open class FeedControllerTest : HttpTest() {
         val recipeInfo2 = RecipeInfo(
             id = 2,
             name = "Spring Rolls",
+            generateRandomUsername(),
             cuisine = Cuisine.CHINESE,
             mealType = MealType.APPETIZER,
             preparationTime = 20,

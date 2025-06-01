@@ -5,6 +5,7 @@ import epicurius.domain.recipe.MealType
 import epicurius.domain.recipe.RecipeInfo
 import epicurius.repository.jdbi.recipe.models.JdbiRecipeInfo
 import epicurius.unit.services.ServiceTest
+import epicurius.utils.generateRandomUsername
 
 open class FeedServiceTest : ServiceTest() {
 
@@ -14,6 +15,7 @@ open class FeedServiceTest : ServiceTest() {
         val jdbiRecipeInfo = JdbiRecipeInfo(
             id = 1,
             name = "Carbonara",
+            generateRandomUsername(),
             cuisine = Cuisine.ITALIAN,
             mealType = MealType.MAIN_COURSE,
             preparationTime = 30,
@@ -24,6 +26,7 @@ open class FeedServiceTest : ServiceTest() {
         val recipeInfo = RecipeInfo(
             id = 1,
             name = "Carbonara",
+            generateRandomUsername(),
             cuisine = Cuisine.ITALIAN,
             mealType = MealType.MAIN_COURSE,
             preparationTime = 30,
@@ -34,6 +37,7 @@ open class FeedServiceTest : ServiceTest() {
         val jdbiRecipeInfo2 = JdbiRecipeInfo(
             id = 2,
             name = "Spring Rolls",
+            generateRandomUsername(),
             cuisine = Cuisine.CHINESE,
             mealType = MealType.APPETIZER,
             preparationTime = 20,
@@ -44,6 +48,7 @@ open class FeedServiceTest : ServiceTest() {
         val recipeInfo2 = RecipeInfo(
             id = 2,
             name = "Spring Rolls",
+            generateRandomUsername(),
             cuisine = Cuisine.CHINESE,
             mealType = MealType.APPETIZER,
             preparationTime = 20,
