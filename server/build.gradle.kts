@@ -64,6 +64,7 @@ tasks.withType<Test> {
 
 tasks.named<Jar>("bootJar") {
     archiveFileName.set("epicurius-server.jar")
+    destinationDirectory.set(layout.projectDirectory.dir("../demo"))
 }
 
 tasks.register<Copy>("extractUberJar") {

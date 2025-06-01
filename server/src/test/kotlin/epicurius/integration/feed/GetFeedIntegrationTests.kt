@@ -9,7 +9,7 @@ class GetFeedIntegrationTests : FeedIntegrationTest() {
 
     @Test
     fun `Should retrieve user's empty feed successfully with code 200`() {
-        // given a user (testUser))
+        // given a user (testUser)
 
         // when getting the user's feed
         val feedBody = getFeed(testUser.token)
