@@ -1,7 +1,7 @@
 [versions]
 accompanistPager = "0.30.1"
 accompanistPagerIndicators = "0.30.1"
-agp = "8.10.0"
+agp = "8.10.1"
 datastorePreferences = "1.0.0"
 gson = "2.10.1"
 kotlin = "2.0.21"
