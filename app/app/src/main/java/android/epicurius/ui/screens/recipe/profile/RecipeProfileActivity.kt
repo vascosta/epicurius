@@ -1,10 +1,69 @@
 package android.epicurius.ui.screens.recipe.profile
 
+import android.epicurius.MainActivity
+import android.epicurius.R
+import android.epicurius.domain.Diet
+import android.epicurius.domain.Intolerance
+import android.epicurius.domain.recipe.Cuisine
+import android.epicurius.domain.recipe.Ingredient
+import android.epicurius.domain.recipe.IngredientUnit
+import android.epicurius.domain.recipe.Instructions
+import android.epicurius.domain.recipe.MealType
+import android.epicurius.domain.recipe.Recipe
+import android.epicurius.ui.screens.utils.navigateTo
+import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
+import androidx.activity.compose.setContent
+import androidx.annotation.RequiresApi
+import java.time.LocalDate
 
 class RecipeProfileActivity : ComponentActivity() {
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setContent {
+            RecipeProfileScreen(
+                onBackButton = { navigateTo<MainActivity>() },
+                recipe = Recipe(
+                    id = 1,
+                    name = "Panquecas Americanas",
+                    authorUsername = "MestreAndre",
+                    date = LocalDate.of(2025, 5, 19),
+                    description = "Deliciosas panquecas fofinhas perfeitas para o pequeno-almoço.",
+                    servings = 4,
+                    preparationTime = 20,
+                    cuisine = Cuisine.AMERICAN,
+                    mealType = MealType.BREAKFAST,
+                    intolerances = listOf(Intolerance.GLUTEN),
+                    diets = listOf(Diet.VEGETARIAN),
+                    ingredients = listOf(
+                        Ingredient("Farinha de trigo", 200.0, IngredientUnit.G),
+                        Ingredient("Leite", 300.0, IngredientUnit.ML),
+                        Ingredient("Ovo", 2.0, IngredientUnit.X),
+                        Ingredient("Açúcar", 50.0, IngredientUnit.G),
+                        Ingredient("Fermento em pó", 10.0, IngredientUnit.G),
+                        Ingredient("Sal", 1.0, IngredientUnit.TSP),
+                        Ingredient("Manteiga", 30.0, IngredientUnit.G)
+                    ),
+                    calories = 350,
+                    protein = 8,
+                    fat = 10,
+                    carbs = 55,
+                    instructions = Instructions(
+                        steps = mapOf(
+                            "1" to "Numa taça, mistura a farinha, o açúcar, o fermento e o sal.",
+                            "2" to "Adiciona o leite, os ovos e a manteiga derretida. Mistura até ficar homogéneo.",
+                            "3" to "Aquece uma frigideira antiaderente e coloca uma concha da massa.",
+                            "4" to "Cozinha até formar bolhas na superfície e vira a panqueca. Cozinha o outro lado.",
+                            "5" to "Serve quente com xarope de ácer ou frutas."
+                        )
+                    ),
+                    pictures = listOf()
+                ),
+                rating = 4.0,
+                listOf(R.drawable.home, R.drawable.star, R.drawable.pencil), true
+            )
+        }
     }
 }

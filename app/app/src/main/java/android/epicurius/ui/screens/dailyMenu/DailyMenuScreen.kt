@@ -27,9 +27,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 @Composable
-fun DailyMenuScreen(menu: Map<String, RecipeInfo?>) {
+fun DailyMenuScreen(
+    onBackButton: () -> Unit = {},
+    menu: Map<String, RecipeInfo?>,
+) {
     Scaffold(
-        topBar = { TopBar("Today's Menu") },
+        topBar = { TopBar("Today's Menu", backButton = true, onBackButton) },
         bottomBar = { BottomBar() },
         content = { paddingValues ->
             Column(
@@ -100,5 +103,5 @@ fun DailyMenuPreview() {
             picture = "".toByteArray()
         )
     )
-    DailyMenuScreen(menu)
+    DailyMenuScreen({}, menu)
 }

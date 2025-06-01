@@ -1,21 +1,23 @@
 package android.epicurius
 
-import android.epicurius.ui.screens.auth.login.LoginScreen
-import android.epicurius.ui.screens.auth.signup.SignUpScreen
-import android.epicurius.ui.screens.recipe.profile.RecipeProfileScreen
-import android.epicurius.ui.screens.settings.SettingsScreens
+import android.epicurius.ui.MainScreen
+import android.epicurius.ui.screens.auth.login.LoginActivity
+import android.epicurius.ui.screens.auth.signup.SignUpActivity
+import android.epicurius.ui.screens.dailyMenu.DailyMenuActivity
+import android.epicurius.ui.screens.favourites.folder.FavouritesActivity
+import android.epicurius.ui.screens.favourites.list.FavouritesListActivity
+import android.epicurius.ui.screens.feed.FeedActivity
+import android.epicurius.ui.screens.recipe.createRecipe.CreateRecipeActivity
+import android.epicurius.ui.screens.recipe.ingredients.ConfirmIngredientsActivity
+import android.epicurius.ui.screens.recipe.profile.RecipeProfileActivity
+import android.epicurius.ui.screens.search.SearchActivity
+import android.epicurius.ui.screens.user.follow.FollowActivity
+import android.epicurius.ui.screens.user.profile.UserProfileActivity
+import android.epicurius.ui.screens.user.settings.SettingsActivity
+import android.epicurius.ui.screens.utils.navigateTo
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import android.epicurius.ui.theme.AppTheme
 import androidx.compose.material3.MaterialTheme
 
 class MainActivity : ComponentActivity() {
@@ -23,7 +25,21 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent{
             MaterialTheme {
-                LoginScreen()
+                MainScreen(
+                    onSignUp = { navigateTo<SignUpActivity>() },
+                    onLogin = { navigateTo<LoginActivity>() },
+                    onUserProfile = { navigateTo<UserProfileActivity>() },
+                    onUserSettings = { navigateTo<SettingsActivity>() },
+                    onUserFollows = { navigateTo<FollowActivity>() },
+                    onCreateRecipe = { navigateTo<CreateRecipeActivity>() },
+                    onConfirmIngredients = { navigateTo<ConfirmIngredientsActivity>() },
+                    onRecipeProfile = { navigateTo<RecipeProfileActivity>() },
+                    onSearch = { navigateTo<SearchActivity>() },
+                    onFeed = { navigateTo<FeedActivity>() },
+                    onDailyMenu = { navigateTo<DailyMenuActivity>() },
+                    onFavouritesFolders = { navigateTo<FavouritesActivity>() },
+                    onFavouritesRecipes = { navigateTo<FavouritesListActivity>() }
+                )
             }
         }
     }

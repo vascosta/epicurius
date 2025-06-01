@@ -48,7 +48,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 @Composable
-fun SearchScreen() {
+fun SearchScreen(onBackButton: () -> Unit = {}) {
     val tabs = listOf("Recipe", "Users")
     var selectedTabIndex by remember { mutableIntStateOf(0) }
     var searchQuery by remember { mutableStateOf("") }
@@ -89,7 +89,7 @@ fun SearchScreen() {
     }
 
     Scaffold(
-        topBar = { TopBar("Search", backButton = true) },
+        topBar = { TopBar("Search", backButton = true, onBackButton) },
         bottomBar = { BottomBar() },
         content = { paddingValues ->
             Box(

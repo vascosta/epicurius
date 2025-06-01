@@ -6,6 +6,7 @@ import android.epicurius.domain.recipe.RecipeInfo
 import android.epicurius.ui.screens.BottomBar
 import android.epicurius.ui.screens.TopBar
 import android.epicurius.ui.screens.recipe.RecipeInfoBox
+import android.widget.Button
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -23,9 +24,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun FavouritesListScreen(folderName: String, recipeList: List<RecipeInfo>) {
+fun FavouritesListScreen(
+    onBackButton: () -> Unit = {},
+    folderName: String,
+    recipeList: List<RecipeInfo>
+) {
     Scaffold(
-        topBar = { TopBar(text = folderName, backButton = true) },
+        topBar = { TopBar(text = folderName, backButton = true, onBackButton) },
         bottomBar = { BottomBar() },
         content = { paddingValues ->
             Column(

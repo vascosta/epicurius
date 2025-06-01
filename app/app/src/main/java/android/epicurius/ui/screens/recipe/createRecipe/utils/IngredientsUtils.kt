@@ -1,7 +1,7 @@
-package android.epicurius.ui.screens.recipe.addRecipe.utils
+package android.epicurius.ui.screens.recipe.createRecipe.utils
 
 import android.epicurius.domain.recipe.IngredientUnit
-import android.epicurius.ui.screens.recipe.addRecipe.IngredientComponent
+import android.epicurius.ui.screens.recipe.createRecipe.IngredientComponent
 import android.epicurius.ui.screens.utils.DropdownMenuComponent
 import android.epicurius.ui.screens.utils.NumberField
 import androidx.compose.foundation.layout.Arrangement

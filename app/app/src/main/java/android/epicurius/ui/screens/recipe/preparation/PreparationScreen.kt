@@ -31,11 +31,15 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 @Composable
-fun PreparationScreen(recipeName: String, instructions: Instructions) {
+fun PreparationScreen(
+    onBackButton: () -> Unit,
+    recipeName: String,
+    instructions: Instructions
+) {
     var currentStep by remember { mutableIntStateOf(1) }
 
     Scaffold(
-        topBar = { TopBar(recipeName, backButton = true) },
+        topBar = { TopBar(recipeName, backButton = true, onBackButton) },
         bottomBar = { BottomBar() },
         content = { paddingValues ->
             Column(
@@ -100,6 +104,7 @@ fun PreparationScreenPreview() {
     )
 
     PreparationScreen(
+        {},
         recipeName = "Sample Recipe",
         instructions = sampleInstructions
     )

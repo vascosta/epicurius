@@ -1,4 +1,4 @@
-package android.epicurius.ui.screens.recipe.addRecipe
+package android.epicurius.ui.screens.recipe.createRecipe
 
 import android.epicurius.domain.Diet
 import android.epicurius.domain.Intolerance
@@ -6,8 +6,8 @@ import android.epicurius.domain.recipe.Cuisine
 import android.epicurius.domain.recipe.MealType
 import android.epicurius.ui.screens.BottomBar
 import android.epicurius.ui.screens.TopBar
-import android.epicurius.ui.screens.recipe.addRecipe.utils.IngredientsComponent
-import android.epicurius.ui.screens.recipe.addRecipe.utils.InstructionsComponent
+import android.epicurius.ui.screens.recipe.createRecipe.utils.IngredientsComponent
+import android.epicurius.ui.screens.recipe.createRecipe.utils.InstructionsComponent
 import android.epicurius.ui.screens.utils.DropdownMenuComponent
 import android.epicurius.ui.screens.utils.FormTextField
 import android.epicurius.ui.screens.utils.MultiSelectDropdownMenuComponent
@@ -51,7 +51,7 @@ data class IngredientComponent(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AddRecipeScreen() {
+fun CreateRecipeScreen(onBackButton: () -> Unit = {}) {
     var name by remember { mutableStateOf("") }
     var description by remember { mutableStateOf("") }
     var duration by remember { mutableStateOf("") }
@@ -64,7 +64,7 @@ fun AddRecipeScreen() {
     var instructions by remember { mutableStateOf(listOf<String>()) }
 
     Scaffold(
-        topBar = { TopBar("Create recipe") },
+        topBar = { TopBar("Create recipe", backButton = true, onBackButton) },
         bottomBar = { BottomBar() },
         containerColor = Color.White,
         content = { paddingValues ->
@@ -177,5 +177,5 @@ fun DividerComponent() {
 @Preview
 @Composable
 fun AddRecipeScreenPreview() {
-    AddRecipeScreen()
+    CreateRecipeScreen()
 }
