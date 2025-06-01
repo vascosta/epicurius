@@ -51,5 +51,5 @@ data class JdbiRecipeModel(
     )
 
     fun toRecipeInfo(picture: ByteArray): RecipeInfo =
-        RecipeInfo(id, name, cuisine, mealType, preparationTime, servings, picture)
+        RecipeInfo(id, name, authorUsername, cuisine, mealType, preparationTime, servings, picture)
 }

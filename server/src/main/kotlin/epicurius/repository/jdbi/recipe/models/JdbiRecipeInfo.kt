@@ -7,6 +7,7 @@ import epicurius.domain.recipe.RecipeInfo
 data class JdbiRecipeInfo(
     val id: Int,
     val name: String,
+    val authorUsername: String,
     val cuisine: Cuisine,
     val mealType: MealType,
     val preparationTime: Int,
@@ -15,12 +16,6 @@ data class JdbiRecipeInfo(
 ) {
     fun toRecipeInfo(picture: ByteArray) =
         RecipeInfo(
-            id = id,
-            name = name,
-            cuisine = cuisine,
-            mealType = mealType,
-            preparationTime = preparationTime,
-            servings = servings,
-            picture = picture
+            id, name, authorUsername, cuisine, mealType, preparationTime, servings, picture
         )
 }
