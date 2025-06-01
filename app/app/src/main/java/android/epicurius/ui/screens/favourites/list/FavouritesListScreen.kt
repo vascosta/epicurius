@@ -61,6 +61,7 @@ fun FavouritesListScreenPreview() {
             RecipeInfo(
                 id = 1,
                 name = "Spaghetti Carbonara",
+                authorUsername = "ChefBear",
                 cuisine = Cuisine.ITALIAN,
                 mealType = MealType.MAIN_COURSE,
                 preparationTime = 35,

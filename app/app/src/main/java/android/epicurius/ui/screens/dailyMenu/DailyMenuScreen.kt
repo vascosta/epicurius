@@ -87,6 +87,7 @@ fun DailyMenuPreview() {
         "Breakfast" to RecipeInfo(
             id = 1,
             name = "Pancakes",
+            authorUsername = "ChefBear",
             cuisine = Cuisine.AMERICAN,
             mealType = MealType.BREAKFAST,
             preparationTime = 20,
@@ -96,6 +97,7 @@ fun DailyMenuPreview() {
         "Lunch" to RecipeInfo(
             id = 2,
             name = "Caesar Salad",
+            authorUsername = "ChefBear",
             cuisine = Cuisine.ITALIAN,
             mealType = MealType.MAIN_COURSE,
             preparationTime = 15,

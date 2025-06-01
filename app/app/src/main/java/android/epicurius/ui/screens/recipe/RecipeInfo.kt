@@ -4,6 +4,7 @@ import android.epicurius.R
 import android.epicurius.domain.recipe.Cuisine
 import android.epicurius.domain.recipe.MealType
 import android.epicurius.domain.recipe.RecipeInfo
+import android.epicurius.ui.screens.utils.MixedText
 import android.graphics.BitmapFactory
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -38,8 +39,10 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.max
 import androidx.compose.ui.unit.sp
 
 @Composable
@@ -54,7 +57,7 @@ fun RecipeInfoBox(recipeInfo: RecipeInfo) {
             .clickable(onClick = {  })
     ) {
         Column {
-            RecipeHeader(name = recipeInfo.name)
+            RecipeHeader(name = recipeInfo.name, author = recipeInfo.authorUsername)
 
             RecipeImage(recipeInfo.picture)
 
@@ -79,7 +82,7 @@ fun RecipeInfoSimpleBox(recipeInfo: RecipeInfo) {
             .clickable(onClick = {  })
     ) {
         Column {
-            RecipeHeader(name = recipeInfo.name)
+            RecipeHeader(name = recipeInfo.name, author = recipeInfo.authorUsername)
 
             RecipeImage(recipeInfo.picture)
         }
@@ -87,23 +90,42 @@ fun RecipeInfoSimpleBox(recipeInfo: RecipeInfo) {
 }
 
 @Composable
-fun RecipeHeader(name: String) {
-    Row(
+fun RecipeHeader(name: String, author: String) {
+    Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(start = 16.dp),
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically,
+            .padding(start = 16.dp, end = 16.dp, top = 10.dp),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.Start
     ) {
-        Text(name, fontWeight = FontWeight.Bold)
+        Text(
+            text = name,
+            fontWeight = FontWeight.Bold,
+            maxLines = 3,
+            overflow = TextOverflow.Ellipsis,
+            fontSize = 18.sp
+        )
 
-        IconButton(onClick = {  }) {
-            Image(
-                painter = painterResource(R.drawable.white_star),
-                contentDescription = "Favorites",
-                modifier = Modifier.size(20.dp),
-                contentScale = ContentScale.Fit
-            )
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 3.dp, bottom = 10.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            MixedText(boldString = "by ", normalString = author)
+
+            IconButton(
+                onClick = { },
+                modifier = Modifier.size(24.dp),
+            ) {
+                Image(
+                    painter = painterResource(R.drawable.white_star),
+                    contentDescription = "Favorites",
+                    modifier = Modifier.size(20.dp),
+                    contentScale = ContentScale.Fit
+                )
+            }
         }
     }
 }
@@ -160,6 +182,7 @@ fun RecipeInfoPreview() {
         recipeInfo = RecipeInfo(
             id = 1,
             name = "Recipe Name",
+            authorUsername = "ChefBear",
             cuisine = Cuisine.MEDITERRANEAN,
             mealType = MealType.SIDE_DISH,
             preparationTime = 30,
@@ -186,6 +209,7 @@ fun RecipeInfoSimpleBoxPreview() {
         recipeInfo = RecipeInfo(
             id = 1,
             name = "Simple Recipe Name",
+            authorUsername = "ChefBear",
             cuisine = Cuisine.ASIAN,
             mealType = MealType.MAIN_COURSE,
             preparationTime = 20,

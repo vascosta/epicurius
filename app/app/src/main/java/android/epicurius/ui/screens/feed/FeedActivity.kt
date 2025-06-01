@@ -17,6 +17,7 @@ class FeedActivity : ComponentActivity() {
                     RecipeInfo(
                         id = 1,
                         name = "Spaghetti Bolognese",
+                        authorUsername = "ChefBear",
                         cuisine = Cuisine.ITALIAN,
                         mealType = MealType.MAIN_COURSE,
                         preparationTime = 30,
@@ -26,6 +27,7 @@ class FeedActivity : ComponentActivity() {
                     RecipeInfo(
                         id = 2,
                         name = "Chicken Curry",
+                        authorUsername = "ChefBear",
                         cuisine = Cuisine.INDIAN,
                         mealType = MealType.MAIN_COURSE,
                         preparationTime = 45,
