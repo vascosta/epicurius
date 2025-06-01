@@ -57,6 +57,7 @@ open class CollectionControllerTest : HttpTest() {
         val testRecipeInfo = RecipeInfo(
             RECIPE_ID,
             generateRandomRecipeName(),
+            publicAuthenticatedUsername,
             Cuisine.MEDITERRANEAN,
             MealType.SOUP,
             1,

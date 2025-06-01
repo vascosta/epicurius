@@ -80,6 +80,7 @@ open class CollectionServiceTest : ServiceTest() {
         val testJdbiRecipeInfo = JdbiRecipeInfo(
             RECIPE_ID,
             testJdbiRecipeModel.name,
+            testJdbiRecipeModel.authorUsername,
             testJdbiRecipeModel.cuisine,
             testJdbiRecipeModel.mealType,
             testJdbiRecipeModel.preparationTime,
