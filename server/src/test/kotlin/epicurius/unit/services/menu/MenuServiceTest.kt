@@ -7,6 +7,7 @@ import epicurius.domain.recipe.MealType
 import epicurius.repository.jdbi.recipe.models.JdbiRecipeInfo
 import epicurius.unit.services.ServiceTest
 import epicurius.utils.generateRandomRecipeName
+import epicurius.utils.generateRandomUsername
 
 open class MenuServiceTest : ServiceTest() {
 
@@ -17,6 +18,7 @@ open class MenuServiceTest : ServiceTest() {
         val publicBreakfastJdbiRecipeModel = JdbiRecipeInfo(
             1,
             generateRandomRecipeName(),
+            generateRandomUsername(),
             Cuisine.MEDITERRANEAN,
             MealType.BREAKFAST,
             1,
@@ -27,6 +29,7 @@ open class MenuServiceTest : ServiceTest() {
         val publicSoupJdbiRecipeModel = JdbiRecipeInfo(
             2,
             generateRandomRecipeName(),
+            generateRandomUsername(),
             Cuisine.MEDITERRANEAN,
             MealType.SOUP,
             1,
@@ -37,6 +40,7 @@ open class MenuServiceTest : ServiceTest() {
         val publicDessertJdbiRecipeModel = JdbiRecipeInfo(
             3,
             generateRandomRecipeName(),
+            generateRandomUsername(),
             Cuisine.MEDITERRANEAN,
             MealType.DESSERT,
             1,
@@ -47,6 +51,7 @@ open class MenuServiceTest : ServiceTest() {
         val publicLunchJdbiRecipeModel = JdbiRecipeInfo(
             4,
             generateRandomRecipeName(),
+            generateRandomUsername(),
             Cuisine.MEDITERRANEAN,
             MealType.MAIN_COURSE,
             1,

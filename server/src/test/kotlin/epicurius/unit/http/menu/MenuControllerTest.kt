@@ -37,6 +37,7 @@ open class MenuControllerTest : HttpTest() {
         val publicBreakfastRecipeInfo = RecipeInfo(
             1,
             generateRandomRecipeName(),
+            authenticatedUsername,
             Cuisine.MEDITERRANEAN,
             MealType.BREAKFAST,
             1,
@@ -47,6 +48,7 @@ open class MenuControllerTest : HttpTest() {
         val publicSoupRecipeInfo = RecipeInfo(
             2,
             generateRandomRecipeName(),
+            authenticatedUsername,
             Cuisine.MEDITERRANEAN,
             MealType.SOUP,
             1,
@@ -57,6 +59,7 @@ open class MenuControllerTest : HttpTest() {
         val publicDessertRecipeInfo = RecipeInfo(
             3,
             generateRandomRecipeName(),
+            authenticatedUsername,
             Cuisine.MEDITERRANEAN,
             MealType.DESSERT,
             1,
@@ -67,6 +70,7 @@ open class MenuControllerTest : HttpTest() {
         val publicLunchJdbiRecipeModel = RecipeInfo(
             4,
             generateRandomRecipeName(),
+            authenticatedUsername,
             Cuisine.MEDITERRANEAN,
             MealType.MAIN_COURSE,
             1,
