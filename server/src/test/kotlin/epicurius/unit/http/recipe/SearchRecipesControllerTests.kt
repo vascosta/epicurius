@@ -38,6 +38,7 @@ class SearchRecipesControllerTests : RecipeControllerTest() {
     private val recipeInfo = RecipeInfo(
         RECIPE_ID,
         testRecipe.name,
+        testRecipe.authorUsername,
         testRecipe.cuisine,
         testRecipe.mealType,
         testRecipe.preparationTime,

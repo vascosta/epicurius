@@ -8,6 +8,7 @@ import epicurius.domain.recipe.Cuisine
 import epicurius.domain.recipe.MealType
 import epicurius.http.controllers.recipe.models.input.SearchRecipesInputModel
 import epicurius.repository.jdbi.recipe.models.JdbiRecipeInfo
+import epicurius.utils.generateRandomUsername
 import org.junit.jupiter.api.Test
 import org.mockito.kotlin.whenever
 import kotlin.test.assertEquals
@@ -55,6 +56,7 @@ class SearchRecipesServiceTests : RecipeServiceTest() {
     private val recipeInfo = JdbiRecipeInfo(
         id = RECIPE_ID,
         name = "Pastel de nata",
+        generateRandomUsername(),
         cuisine = Cuisine.MEDITERRANEAN,
         mealType = MealType.DESSERT,
         preparationTime = 30,
