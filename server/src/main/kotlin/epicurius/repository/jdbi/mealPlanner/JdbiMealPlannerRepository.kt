@@ -29,11 +29,12 @@ class JdbiMealPlannerRepository(private val handle: Handle) : MealPlannerReposit
         val list = handle.createQuery(
             """
                 SELECT mp.date, mp.max_calories, mpr.meal_time, 
-                       r.id AS recipe_id, r.name AS recipe_name, 
+                       r.id AS recipe_id, r.name AS recipe_name, u.name AS author_username,
                        r.cuisine, r.meal_type, r.preparation_time, r.servings, r.pictures_names
                 FROM dbo.meal_planner mp 
                 LEFT JOIN dbo.meal_planner_recipe mpr ON mp.user_id = mpr.user_id AND mp.date = mpr.date
                 LEFT JOIN dbo.recipe r ON mpr.recipe_id = r.id
+                LEFT JOIN dbo.user u ON u.id = r.author_id
                 WHERE mp.user_id = :id 
                 AND mp.date >= DATE_TRUNC('week', CURRENT_DATE)
                 AND mp.date < DATE_TRUNC('week', CURRENT_DATE) + INTERVAL '1 week'
@@ -161,11 +162,12 @@ class JdbiMealPlannerRepository(private val handle: Handle) : MealPlannerReposit
         handle.createQuery(
             """
                 SELECT mp.date, mp.max_calories, mpr.meal_time, 
-                       r.id AS recipe_id, r.name AS recipe_name, 
+                       r.id AS recipe_id, r.name AS recipe_name, u.name as author_username,
                        r.cuisine, r.meal_type, r.preparation_time, r.servings, r.pictures_names
                 FROM dbo.meal_planner mp 
                 LEFT JOIN dbo.meal_planner_recipe mpr ON mp.user_id = mpr.user_id AND mp.date = mpr.date
                 LEFT JOIN dbo.recipe r ON mpr.recipe_id = r.id
+                LEFT JOIN dbo.user u ON u.id = r.author_id
                 WHERE mp.user_id = :userId AND mp.date = :date
                 ORDER BY mpr.meal_time ASC
             """
