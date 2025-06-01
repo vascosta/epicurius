@@ -13,6 +13,7 @@ class AddRecipeToCollectionRepositoryTests : CollectionRepositoryTest() {
     private val testRecipeInfo = JdbiRecipeInfo(
         testRecipe.id,
         testRecipe.name,
+        testRecipe.authorUsername,
         testRecipe.cuisine,
         testRecipe.mealType,
         testRecipe.preparationTime,
