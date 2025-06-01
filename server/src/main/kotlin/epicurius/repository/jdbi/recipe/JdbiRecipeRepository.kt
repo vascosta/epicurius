@@ -92,8 +92,8 @@ class JdbiRecipeRepository(private val handle: Handle) : RecipeRepository {
     ): List<JdbiRecipeInfo> =
         handle.createQuery(
             """
-                SELECT r.id as recipe_id, r.name as recipe_name, r.cuisine, r.meal_type,  
-                    r.preparation_time, r.servings, r.pictures_names
+                SELECT r.id as recipe_id, r.name as recipe_name, u.name as author_username, 
+                r.cuisine, r.meal_type, r.preparation_time, r.servings, r.pictures_names
                 FROM dbo.Recipe r
                 JOIN dbo.user u ON u.id = r.author_id
                 WHERE u.privacy = false 
@@ -115,13 +115,13 @@ class JdbiRecipeRepository(private val handle: Handle) : RecipeRepository {
         val query = StringBuilder(
             """
                 WITH available_recipes AS (
-                    SELECT r.*
+                    SELECT r.*, u.name as author_username
                     FROM dbo.Recipe r
                     JOIN dbo.user u ON u.id = r.author_id
                     LEFT JOIN dbo.followers f ON f.user_id = r.author_id AND f.follower_id = :id
                     WHERE u.privacy = false OR f.follower_id IS NOT NULL
                 ) 
-                SELECT DISTINCT r.id as recipe_id, r.name as recipe_name, r.cuisine, 
+                SELECT DISTINCT r.id as recipe_id, r.name as recipe_name, r.name as author_username, r.cuisine, 
                 r.meal_type, r.preparation_time, r.servings, r.pictures_names
                 FROM available_recipes r JOIN dbo.Ingredient i ON r.id = i.recipe_id
                 WHERE r.author_id <> :id
