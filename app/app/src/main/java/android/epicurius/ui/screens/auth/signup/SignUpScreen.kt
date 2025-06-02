@@ -30,8 +30,9 @@ import java.util.Locale
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun SignUpScreen(
+    signUpEnable: Boolean = true,
     onBackButton: () -> Unit = {},
-    onSignUp: () -> Unit = {},
+    onSignUp: (String, String, String, String, String) -> Unit = {_, _, _, _, _ -> },
     onLogin: () -> Unit = {}
 ) {
     var username by remember { mutableStateOf("") }
@@ -72,7 +73,13 @@ fun SignUpScreen(
 
             Row {
                 SignUpButton("LogIn", onClick = { onLogin() })
-                SignUpButton("SignUp", onClick = { onSignUp() })
+                SignUpButton("SignUp", onClick = { onSignUp(
+                    username,
+                    email,
+                    password,
+                    confirmPassword,
+                    country
+                ) })
             }
         }
     }
