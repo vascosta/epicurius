@@ -1,21 +1,29 @@
 package android.epicurius.ui.screens.auth.login
 
 import android.epicurius.MainActivity
+import android.epicurius.ui.EpicuriusActivity
 import android.epicurius.ui.screens.auth.signup.SignUpActivity
+import android.epicurius.ui.screens.feed.FeedActivity
 import android.epicurius.ui.screens.utils.navigateTo
 import android.os.Bundle
-import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.material3.MaterialTheme
 
-class LoginActivity : ComponentActivity() {
+class LoginActivity : EpicuriusActivity() {
+    val viewModel: LoginViewModel by getViewModel<LoginViewModel>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             MaterialTheme {
                 LoginScreen(
+                    loginEnable = viewModel.loginEnable,
                     onBackButton = { navigateTo<MainActivity>() },
                     onSignUp = { navigateTo<SignUpActivity>() },
+                    onLogin = { name, email, password ->
+                        viewModel.login(name, email, password) {
+                            navigateTo<FeedActivity>()
+                        }
+                    }
                 )
             }
         }

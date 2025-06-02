@@ -31,7 +31,7 @@ fun LoginScreen(
     loginEnable: Boolean = true,
     onBackButton: () -> Unit = {},
     onSignUp: () -> Unit = {},
-    onLogin: (String, String, String) -> Unit = {_, _, _ ->}
+    onLogin: (String, String, String) -> Unit = {_, _, _ -> }
 ) {
     var username by rememberSaveable { mutableStateOf("") }
     var email by rememberSaveable { mutableStateOf("") }
