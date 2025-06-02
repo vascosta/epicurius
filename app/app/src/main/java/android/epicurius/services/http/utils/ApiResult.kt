@@ -1,7 +1,8 @@
 package android.epicurius.services.http.utils
 
-@JvmInline
-value class APIResult<out T>(val value: Any?) {
+import android.epicurius.services.http.media.Problem
+
+class APIResult<out T>(private val value: Any?, private val token: String? = null) {
 
     val isSuccess get() = value !is Failure
     val isFailure get() = value is Failure
@@ -12,26 +13,28 @@ value class APIResult<out T>(val value: Any?) {
             else -> value as T
         }
 
-    fun getOrThrow(): T =
+    fun getValueOrThrow(): T =
         when {
             isFailure -> error("Result is failure")
             else -> value as T
         }
 
-    fun problemOrNull(): Problem? =
+    fun getTokenOrThrow(): String = token ?: error("Token not in result")
+
+    fun getProblemOrNull(): Problem? =
         when (value) {
             is Failure -> value.problem
             else -> null
         }
 
-    fun problemOrThrow(): Problem =
+    fun getProblemOrThrow(): Problem =
         when (value) {
             is Failure -> value.problem
             else -> error("Result is not failure")
         }
 
     companion object {
-        fun <T> success(value: T): APIResult<T> = APIResult(value)
+        fun <T> success(value: T, token: String?): APIResult<T> = APIResult(value, token)
         fun <T> failure(problem: Problem): APIResult<T> = APIResult(Failure(problem))
     }
 

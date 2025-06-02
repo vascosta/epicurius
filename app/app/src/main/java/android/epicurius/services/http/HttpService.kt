@@ -194,7 +194,15 @@ class HttpService(
             when {
                 res.isSuccessful && body.isApplicationJson -> {
                     val jsonBody = gson.fromJson<T>(json, T::class.java)
-                    APIResult.success(jsonBody)
+
+                    val setCookieHeader = res.headers.values("Set-Cookie")
+                    val token = setCookieHeader.firstNotNullOfOrNull { cookieHeader ->
+                        val cookieParts = cookieHeader.split(";").map { it.trim() }
+                        cookieParts.find { it.startsWith("token=") }
+                            ?.substringAfter("token=")
+                    }
+
+                    APIResult.success(jsonBody, token)
                 }
                 res.isFailure && body.isProblem -> {
                     val problem = gson.fromJson<Problem>(json, Problem::class.java)
