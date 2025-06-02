@@ -2,6 +2,7 @@ package android.epicurius.services.http.utils
 
 import android.epicurius.services.http.HttpService.Companion.AUTHORIZATION_HEADER
 import android.epicurius.services.http.HttpService.Companion.TOKEN_TYPE
+import android.epicurius.services.http.media.MediaTypes
 import okhttp3.Request
 import okhttp3.Response
 import okhttp3.ResponseBody

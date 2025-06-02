@@ -1,5 +1,6 @@
 package android.epicurius.services.http.utils
 
+import android.epicurius.services.http.media.MediaTypes
 import com.google.gson.Gson
 import com.google.gson.stream.JsonReader
 import okhttp3.RequestBody

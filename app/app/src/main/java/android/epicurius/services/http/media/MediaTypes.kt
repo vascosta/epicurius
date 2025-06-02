@@ -1,4 +1,4 @@
-package android.epicurius.services.http.utils
+package android.epicurius.services.http.media
 
 import okhttp3.MediaType.Companion.toMediaType
 
