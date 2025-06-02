@@ -28,9 +28,10 @@ import androidx.compose.ui.unit.dp
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun LoginScreen(
+    loginEnable: Boolean = true,
     onBackButton: () -> Unit = {},
     onSignUp: () -> Unit = {},
-    onLogin: () -> Unit = {}
+    onLogin: (String, String, String) -> Unit = {_, _, _ ->}
 ) {
     var username by rememberSaveable { mutableStateOf("") }
     var email by rememberSaveable { mutableStateOf("") }
@@ -58,7 +59,7 @@ fun LoginScreen(
                 ) { Text("SignUp") }
 
                 Button(
-                    onClick = { onLogin() },
+                    onClick = { onLogin(username, email, password) },
                     modifier = Modifier.padding(10.dp)
                 ) { Text("Login") }
             }
