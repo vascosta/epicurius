@@ -10,6 +10,13 @@
 
 The app features an **interactive feed** where users can **share recipes** and engage with the community. With an intuitive interface, **Epicurius** offers a variety of tools, including **daily menu suggestions**, **meal planning**, and **fridge management**.
 
+### Project Organization
+
+- [**App folder**](./app) – Contains the **Android application** source code (**frontend**).
+- [**Demo folder**](./demo) – Includes both the **APK** file of the application's **beta** version and **server** file.
+- [**Docs folder**](./docs) – Contains **images** and **documentation** relevant for understanding the application.
+- [**Server folder**](./server) – Holds the **backend** code of the application (**server side**).
+
 
 ## Technologies
 ## Frontend
