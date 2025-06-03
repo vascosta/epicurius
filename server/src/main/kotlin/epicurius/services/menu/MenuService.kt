@@ -2,18 +2,18 @@ package epicurius.services.menu
 
 import epicurius.domain.Diet
 import epicurius.domain.Intolerance
+import epicurius.domain.menu.Menu
 import epicurius.domain.picture.PictureDomain.Companion.RECIPES_FOLDER
 import epicurius.domain.recipe.MealType
 import epicurius.domain.recipe.RecipeInfo
 import epicurius.repository.cloudStorage.manager.CloudStorageManager
 import epicurius.repository.transaction.TransactionManager
-import org.springframework.stereotype.Component
 import org.springframework.stereotype.Service
 
 @Service
 class MenuService(private val tm: TransactionManager, private val cs: CloudStorageManager) {
 
-    fun getDailyMenu(intolerances: List<Intolerance>, diets: List<Diet>): Map<String, RecipeInfo?> {
+    fun getDailyMenu(intolerances: List<Intolerance>, diets: List<Diet>): Menu {
         val breakfast = getRecipe(intolerances, diets, MealType.BREAKFAST)
         val soup = getRecipe(intolerances, diets, MealType.SOUP)
         val dessert = getRecipe(intolerances, diets, MealType.DESSERT)

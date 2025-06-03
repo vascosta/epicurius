@@ -1,5 +1,5 @@
 package epicurius.http.controllers.menu.models.out
 
-import epicurius.domain.recipe.RecipeInfo
+import epicurius.domain.menu.Menu
 
-data class GetDailyMenuOutputModel(val menu: Map<String, RecipeInfo?>)
+data class GetDailyMenuOutputModel(val menu: Menu)
