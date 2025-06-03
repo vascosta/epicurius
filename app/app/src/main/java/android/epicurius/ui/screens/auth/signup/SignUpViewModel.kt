@@ -54,7 +54,7 @@ class SignUpViewModel(
         confirmPassword: String,
         country: String
     ): SignUpInputModel {
-        TODO("Add verifications")
+        // Add verifications
         return SignUpInputModel(name, email, password, confirmPassword, country)
     }
 
