@@ -3,6 +3,7 @@ package android.epicurius.ui
 import android.content.Context
 import android.epicurius.R
 import android.epicurius.domain.exceptions.InvalidResponseException
+import android.epicurius.domain.exceptions.UserNotLoggedInException
 import android.epicurius.services.EpicuriusService
 import android.epicurius.services.http.utils.APIResult
 import android.epicurius.services.http.media.Problem
@@ -44,16 +45,20 @@ open class EpicuriusViewModel(
             }
             result
         } catch (e: Exception) {
-            val message = when (e) {
-                is ConnectException,
-                is SocketTimeoutException,
-                is UnknownHostException,
-                is InvalidResponseException -> context.getString(R.string.could_not_connect_to_server_msg)
-                is CancellationException -> null
-                else -> context.getString(R.string.something_went_wrong_msg)
+            if (e is UserNotLoggedInException) {
+                onSessionExpired()
             }
-            if (message != null) showToast(message)
-
+            else {
+                val message = when (e) {
+                    is ConnectException,
+                    is SocketTimeoutException,
+                    is UnknownHostException,
+                    is InvalidResponseException -> context.getString(R.string.could_not_connect_to_server_msg)
+                    is CancellationException -> null
+                    else -> context.getString(R.string.something_went_wrong_msg)
+                }
+                if (message != null) showToast(message)
+            }
             APIResult.failure(Problem(detail = e.message ?: context.getString(R.string.something_went_wrong_msg)))
         }
     }
