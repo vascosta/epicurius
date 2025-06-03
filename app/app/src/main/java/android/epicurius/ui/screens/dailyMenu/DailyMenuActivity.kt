@@ -1,42 +1,33 @@
 package android.epicurius.ui.screens.dailyMenu
 
 import android.epicurius.MainActivity
-import android.epicurius.domain.recipe.Cuisine
-import android.epicurius.domain.recipe.MealType
-import android.epicurius.domain.recipe.RecipeInfo
+import android.epicurius.ui.EpicuriusActivity
+import android.epicurius.ui.screens.utils.Idle
+import android.epicurius.ui.screens.utils.idle
 import android.epicurius.ui.screens.utils.navigateTo
 import android.os.Bundle
-import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.runtime.collectAsState
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
-class DailyMenuActivity : ComponentActivity() {
+class DailyMenuActivity : EpicuriusActivity() {
+    val viewModel: DailyMenuViewModel by getViewModel<DailyMenuViewModel>()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        lifecycleScope.launch {
+            viewModel.dailyMenu.collectLatest { state ->
+                if (state is Idle) viewModel.getDailyMenu()
+            }
+        }
         setContent {
+            val menuState = viewModel.dailyMenu.collectAsState(idle())
             DailyMenuScreen(
                 onBackButton = { navigateTo<MainActivity>() },
-                menu = mapOf(
-                    "Breakfast" to RecipeInfo(
-                        id = 1,
-                        name = "Pancakes",
-                        authorUsername = "ChefBear",
-                        cuisine = Cuisine.AMERICAN,
-                        mealType = MealType.BREAKFAST,
-                        preparationTime = 20,
-                        servings = 2,
-                        picture = "".toByteArray()
-                    ),
-                    "Lunch" to RecipeInfo(
-                        id = 2,
-                        name = "Caesar Salad",
-                        authorUsername = "ChefBear",
-                        cuisine = Cuisine.ITALIAN,
-                        mealType = MealType.MAIN_COURSE,
-                        preparationTime = 15,
-                        servings = 1,
-                        picture = "".toByteArray()
-                    )
-                )
+                onDailyMenuRefresh = { viewModel.getDailyMenu() },
+                menuState = menuState.value
             )
         }
     }
