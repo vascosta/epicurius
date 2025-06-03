@@ -81,11 +81,3 @@ tasks.register<Exec>("dockerComposeUp") {
     dependsOn("extractUberJar")
     commandLine("docker", "compose", "up", "--build", "-d")
 }
-
-tasks.register<Exec>("dockerComposeStart") {
-    commandLine("docker-compose", "Start")
-}
-
-tasks.register<Exec>("dockerComposeStop") {
-    commandLine("docker-compose", "stop")
-}
