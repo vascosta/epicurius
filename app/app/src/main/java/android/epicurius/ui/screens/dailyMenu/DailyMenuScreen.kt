@@ -29,33 +29,35 @@ fun DailyMenuScreen(
     onDailyMenuRefresh: () -> Unit = {},
     menuState: LoadState<Map<String, RecipeInfo?>>,
 ) {
-    LoadStateRenderer(
-        menuState,
-        onDailyMenuRefresh
-    ) { menu ->
-        Scaffold(
-            topBar = { TopBar("Today's Menu", backButton = true, onBackButton) },
-            bottomBar = { BottomBar() },
-            content = { paddingValues ->
-                Column(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(paddingValues)
-                        .padding(10.dp)
-                        .background(Color.White)
-                        .verticalScroll(rememberScrollState()),
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    MenuItemBox("Breakfast", menu["Breakfast"])
-                    MenuItemBox("Soup", menu["Soup"])
-                    MenuItemBox("Lunch", menu["Lunch"])
-                    MenuItemBox("Dinner", menu["Dinner"])
-                    MenuItemBox("Dessert", menu["Dessert"])
+    Scaffold(
+        topBar = { TopBar("Today's Menu", backButton = true, onBackButton) },
+        bottomBar = { BottomBar() },
+        content = { paddingValues ->
+            LoadStateRenderer(
+                loadState = menuState,
+                swipeToRefresh = onDailyMenuRefresh,
+                content = { menu ->
+                    Column(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(paddingValues)
+                            .padding(10.dp)
+                            .background(Color.White)
+                            .verticalScroll(rememberScrollState()),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        MenuItemBox("Breakfast", menu["Breakfast"])
+                        MenuItemBox("Soup", menu["Soup"])
+                        MenuItemBox("Lunch", menu["Lunch"])
+                        MenuItemBox("Dinner", menu["Dinner"])
+                        MenuItemBox("Dessert", menu["Dessert"])
+                    }
                 }
-            },
-            containerColor = Color.White
-        )
-    }
+            )
+        },
+        containerColor = Color.White
+    )
+
 }
 
 @Preview

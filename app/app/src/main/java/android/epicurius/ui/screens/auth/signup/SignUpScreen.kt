@@ -2,7 +2,7 @@ package android.epicurius.ui.screens.auth.signup
 
 import android.annotation.SuppressLint
 import android.epicurius.ui.screens.TopBar
-import android.epicurius.ui.screens.auth.utils.PasswordTextField
+import android.epicurius.ui.screens.auth.components.PasswordTextField
 import android.epicurius.ui.screens.utils.DropdownMenuComponent
 import android.epicurius.ui.screens.utils.TextField
 import androidx.compose.foundation.background
@@ -18,7 +18,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
