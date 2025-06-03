@@ -26,8 +26,9 @@ class LoginViewModel(
         password: String,
         navigateTo: () -> Unit
     ) {
-        val loginInfo = validateLoginInfo(name, email, password)
         disableLogin()
+        validateLoginInfo(name, email, password)
+        val loginInfo = LoginInputModel(name, email, password)
         viewModelScope.launch {
             val result = request {
                 service.authService.login(loginInfo)
@@ -45,10 +46,18 @@ class LoginViewModel(
         }
     }
 
-    fun validateLoginInfo(name: String?, email: String?, password: String): LoginInputModel {
-        TODO("Add verifications")
-        return LoginInputModel(name, email, password)
-    }
+    fun validateLoginInfo(
+        name: String?,
+        email: String?,
+        password: String
+    ): Boolean =
+        when {
+            name != null && !validateName(name) -> false
+            email != null && !validateEmail(email) -> false
+            !validatePassword(password) -> false
+            else -> true
+        }
+
 
     fun enableLogin() {
         loginEnable = true

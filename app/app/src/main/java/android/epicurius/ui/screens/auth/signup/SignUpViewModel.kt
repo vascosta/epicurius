@@ -28,8 +28,9 @@ class SignUpViewModel(
         country: String,
         navigateTo: () -> Unit
     ) {
-        val signUpInfo = validateSignUpInfo(name, email, password, confirmPassword, country)
         disableSignUp()
+        if (!validateSignUpInfo(name, email, password, confirmPassword)) return
+        val signUpInfo = SignUpInputModel(name, email, password, confirmPassword, country)
         viewModelScope.launch {
             val result = request {
                 service.authService.signUp(signUpInfo)
@@ -51,12 +52,16 @@ class SignUpViewModel(
         name: String,
         email: String,
         password: String,
-        confirmPassword: String,
-        country: String
-    ): SignUpInputModel {
-        // Add verifications
-        return SignUpInputModel(name, email, password, confirmPassword, country)
-    }
+        confirmPassword: String
+    ): Boolean =
+        when {
+            password != confirmPassword -> {
+                showToast("passwords must be equal")
+                false
+            }
+            !validateName(name) || !validateEmail(email) || !validatePassword(password) -> false
+            else -> true
+        }
 
     fun enableSignUp() {
         signUpEnable = true
