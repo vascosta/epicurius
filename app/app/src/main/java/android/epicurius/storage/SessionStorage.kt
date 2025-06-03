@@ -1,11 +1,10 @@
 package android.epicurius.storage
 
 import android.content.Context
-import android.epicurius.domain.Diet
-import android.epicurius.domain.Intolerance
 import android.epicurius.domain.exceptions.UserNotLoggedInException
 import android.epicurius.domain.exceptions.UserProfilePictureNotSaved
 import android.epicurius.domain.user.UserInfo
+import android.epicurius.services.api.menu.DailyMenu
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
@@ -14,6 +13,7 @@ import com.google.gson.Gson
 import kotlinx.coroutines.flow.first
 import java.io.File
 import java.io.IOException
+import java.time.LocalDate
 
 class SessionDataStore(
     private val store: DataStore<Preferences>,
@@ -25,7 +25,7 @@ class SessionDataStore(
 
     override suspend fun getUserInfo() =
         store.data.first()[USER_INFO_KEY]?.let {
-                json -> gson.fromJson(json, UserInfo::class.java)
+            json -> gson.fromJson(json, UserInfo::class.java)
         } ?: throw UserNotLoggedInException()
 
     override suspend fun getUserName() = getUserInfo().name
@@ -40,6 +40,11 @@ class SessionDataStore(
             return if (file.exists()) file.readBytes() else null
         } ?: return null
     }
+
+    override suspend fun getDailyMenu(): DailyMenu? =
+        store.data.first()[DAILY_MENU_KEY]?.let {
+            json -> gson.fromJson(json, DailyMenu::class.java)
+        }
 
     override suspend fun isLoggedIn() = store.data.first()[TOKEN_KEY] != null
 
@@ -67,17 +72,9 @@ class SessionDataStore(
         }
     }
 
-    override suspend fun updateUserIntolerances(intolerances: List<Intolerance>) {
-        val updatedUser = getUserInfo().copy(intolerances = intolerances)
+    override suspend fun updateUserInfo(userInfo: UserInfo) {
         store.edit {
-            it[USER_INFO_KEY] = gson.toJson(updatedUser)
-        }
-    }
-
-    override suspend fun updateUserDiets(diets: List<Diet>) {
-        val updatedUser = getUserInfo().copy(diets = diets)
-        store.edit {
-            it[USER_INFO_KEY] = gson.toJson(updatedUser)
+            it[USER_INFO_KEY] = gson.toJson(userInfo)
         }
     }
 
@@ -86,6 +83,11 @@ class SessionDataStore(
             deleteProfilePicture(context)
     }
 
+    override suspend fun updateDailyMenu(dailyMenu: DailyMenu) {
+        store.edit {
+            it[DAILY_MENU_KEY] = gson.toJson(dailyMenu)
+        }
+    }
 
     override suspend fun delete(context: Context) {
         deleteProfilePicture(context)
@@ -93,6 +95,7 @@ class SessionDataStore(
         store.edit {
             it.remove(TOKEN_KEY)
             it.remove(USER_INFO_KEY)
+            it.remove(DAILY_MENU_KEY)
         }
     }
 
@@ -111,5 +114,6 @@ class SessionDataStore(
         private val TOKEN_KEY = stringPreferencesKey("tokenKey")
         private val USER_INFO_KEY = stringPreferencesKey("userInfoKey")
         private val USER_PROFILE_PICTURE_NAME_KEY = stringPreferencesKey("userProfilePictureNameKey")
+        private val DAILY_MENU_KEY = stringPreferencesKey("dailyMenuKey")
     }
 }

@@ -4,6 +4,8 @@ import android.content.Context
 import android.epicurius.domain.Diet
 import android.epicurius.domain.Intolerance
 import android.epicurius.domain.user.UserInfo
+import android.epicurius.services.api.menu.DailyMenu
+import java.time.LocalDate
 
 interface Session {
     suspend fun getToken(): String
@@ -12,6 +14,7 @@ interface Session {
     suspend fun getUserIntolerances(): List<Intolerance>
     suspend fun getUserDiets(): List<Diet>
     suspend fun getUserProfilePicture(context: Context): ByteArray?
+    suspend fun getDailyMenu(): DailyMenu?
     suspend fun isLoggedIn(): Boolean
     suspend fun save(
         context: Context,
@@ -19,9 +22,9 @@ interface Session {
         userInfo: UserInfo,
         profilePicture: ByteArray?
     )
-    suspend fun updateUserIntolerances(intolerances: List<Intolerance>)
-    suspend fun updateUserDiets(diets: List<Diet>)
+    suspend fun updateUserInfo(userInfo: UserInfo)
     suspend fun updateUserProfilePicture(context: Context, profilePicture: ByteArray?)
+    suspend fun updateDailyMenu(dailyMenu: DailyMenu)
     suspend fun delete(context: Context)
     suspend fun deleteProfilePicture(context: Context)
 }
