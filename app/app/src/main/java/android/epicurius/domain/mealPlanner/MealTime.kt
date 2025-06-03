@@ -2,11 +2,11 @@ package android.epicurius.domain.mealPlanner
 
 import android.epicurius.domain.recipe.MealType
 
-enum class MealTime {
-    BREAKFAST,
-    LUNCH,
-    DINNER,
-    SNACK;
+enum class MealTime(val displayName: String) {
+    BREAKFAST("Breakfast"),
+    LUNCH("Lunch"),
+    DINNER("Dinner"),
+    SNACK("Snack");
 
     fun isMealTypeAllowedForMealTime(mealType: MealType): Boolean {
         return when (this) {
