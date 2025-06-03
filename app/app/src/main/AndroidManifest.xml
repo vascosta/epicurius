@@ -43,6 +43,21 @@
             android:label="Feed"
             android:theme="@style/Theme.App" />
         <activity
+            android:name=".ui.screens.mealPlanner.calendar.CalendarActivity"
+            android:exported="false"
+            android:label="Meal Planner Calendar"
+            android:theme="@style/Theme.App" />
+        <activity
+            android:name=".ui.screens.mealPlanner.daily.DailyActivity"
+            android:exported="false"
+            android:label="Meal Planner Daily"
+            android:theme="@style/Theme.App" />
+        <activity
+            android:name=".ui.screens.mealPlanner.weekly.WeeklyActivity"
+            android:exported="false"
+            android:label="Meal Planner Weekly"
+            android:theme="@style/Theme.App" />
+        <activity
             android:name=".ui.screens.recipe.createRecipe.CreateRecipeActivity"
             android:exported="false"
             android:label="Create Recipe"

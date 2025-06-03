@@ -13,13 +13,13 @@
         </DropdownSelection>
         <DialogSelection />
       </SelectionState>
-      <SelectionState runConfigName="SearchUserScreenPreview">
+      <SelectionState runConfigName="WeeklyScreenPreview">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="ConfirmIngredientsActivityPreview">
+      <SelectionState runConfigName="RecipeProfilePreview">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="PreparationScreenPreview">
+      <SelectionState runConfigName="DailyScreenPreview">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
       <SelectionState runConfigName="MainActivity">
