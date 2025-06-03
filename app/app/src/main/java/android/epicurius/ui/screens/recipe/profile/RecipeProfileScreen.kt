@@ -53,7 +53,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import java.time.LocalDate
 
-@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun RecipeProfileScreen(
     onBackButton: () -> Unit = {},
@@ -250,7 +249,6 @@ private fun HorizontalPagerIndicator(size: Int, pagerState: PagerState) {
     }
 }
 
-@RequiresApi(Build.VERSION_CODES.O)
 @Preview
 @Composable
 fun RecipeProfilePreview(){

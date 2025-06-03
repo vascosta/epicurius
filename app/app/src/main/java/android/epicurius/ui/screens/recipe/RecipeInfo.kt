@@ -83,7 +83,6 @@ fun RecipeInfoSimpleBox(recipeInfo: RecipeInfo) {
     ) {
         Column {
             RecipeHeader(name = recipeInfo.name, author = recipeInfo.authorUsername)
-
             RecipeImage(recipeInfo.picture)
         }
     }
@@ -153,7 +152,7 @@ fun RecipeDetails(preparationTime: Int, servings: Int, rating: Float) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(start = 16.dp, end = 16.dp),
+            .padding(horizontal = 16.dp),
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
         InfoItem(icon = Icons.Filled.PunchClock, text = "$preparationTime min")

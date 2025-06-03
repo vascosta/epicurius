@@ -15,6 +15,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
@@ -34,18 +35,21 @@ fun SettingsScreen(onBackButton: () -> Unit = {}) {
             ) {
                 Spacer(modifier = Modifier.fillMaxHeight(0.02f))
 
+                SettingsButton("Favorites")
                 SettingsButton("Change username")
                 SettingsButton("Change email")
                 SettingsButton("Change password")
+                SettingsButton("Change country")
                 SettingsButton("Change privacy")
                 SettingsButton("Change intolerances")
                 SettingsButton("Change diets")
 
-                Spacer(modifier = Modifier.fillMaxHeight(0.9f))
+                Spacer(modifier = Modifier.fillMaxHeight(0.8f))
 
                 Row(
                     modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
                     SettingsButton("Delete account")
                     SettingsButton("Logout")
