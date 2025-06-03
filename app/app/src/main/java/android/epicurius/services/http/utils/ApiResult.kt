@@ -7,11 +7,11 @@ class APIResult<out T>(private val value: Any?, private val token: String? = nul
     val isSuccess get() = value !is Failure
     val isFailure get() = value is Failure
 
-    fun getOrNull(): T? =
+    /*fun getOrNull(): T? =
         when {
             isFailure -> null
             else -> value as T
-        }
+        }*/
 
     fun getValueOrThrow(): T =
         when {
@@ -21,11 +21,11 @@ class APIResult<out T>(private val value: Any?, private val token: String? = nul
 
     fun getTokenOrThrow(): String = token ?: error("Token not in result")
 
-    fun getProblemOrNull(): Problem? =
+    /*fun getProblemOrNull(): Problem? =
         when (value) {
             is Failure -> value.problem
             else -> null
-        }
+        }*/
 
     fun getProblemOrThrow(): Problem =
         when (value) {
