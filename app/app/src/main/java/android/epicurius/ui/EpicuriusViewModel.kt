@@ -2,7 +2,10 @@ package android.epicurius.ui
 
 import android.content.Context
 import android.epicurius.R
+import android.epicurius.domain.exceptions.AuthenticatedUserNotFound
 import android.epicurius.domain.exceptions.InvalidResponseException
+import android.epicurius.domain.exceptions.InvalidToken
+import android.epicurius.domain.exceptions.MissingUserToken
 import android.epicurius.domain.exceptions.UserNotLoggedInException
 import android.epicurius.services.EpicuriusService
 import android.epicurius.services.http.utils.APIResult
@@ -37,7 +40,7 @@ open class EpicuriusViewModel(
             val result = handler()
             if (result.isFailure) {
                 val problem = result.getProblemOrThrow()
-                if (problem.title == "Unauthorized") {
+                if (unauthorizedMessages.contains(problem.detail)) {
                     onSessionExpired()
                 } else if (showError) {
                     showToast(problem.detail)
@@ -71,5 +74,13 @@ open class EpicuriusViewModel(
         showToast(context.getString(R.string.session_expired_msg))
         viewModelScope.launch { session.delete(context) }
         context.navigateTo<LoginActivity>()
+    }
+
+    companion object {
+        val unauthorizedMessages = listOf(
+            MissingUserToken().message,
+            AuthenticatedUserNotFound().message,
+            InvalidToken().message
+        )
     }
 }
