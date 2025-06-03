@@ -14,7 +14,7 @@ import java.io.FileInputStream
 open class EpicuriusTest {
 
     companion object {
-        private const val POSTGRES_TEST_DATABASE_URL = "jdbc:postgresql://localhost/postgres?user=postgres&password=postgres"
+        private val POSTGRES_TEST_DATABASE_URL = System.getenv("DATABASE_URL")
 
         const val GOOGLE_CLOUD_CREDENTIALS_LOCATION = "src/main/resources/epicurius-credentials.json"
 
