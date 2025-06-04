@@ -10,6 +10,7 @@ import android.epicurius.ui.screens.utils.LoadState
 import android.epicurius.ui.screens.utils.apiFailure
 import android.epicurius.ui.screens.utils.apiSuccess
 import android.epicurius.ui.screens.utils.idle
+import android.epicurius.ui.screens.utils.loading
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -40,6 +41,17 @@ class FavouritesListViewModel(
     var removeRecipeFromCollectionEnable by mutableStateOf(true)
         private set
 
+    fun getCollection(id: Int, navigateTo: () -> Unit) {
+        if (id == -1) {
+            showToast("Missing RECIPE_ID in intent")
+            navigateTo()
+            return
+        }
+        viewModelScope.launch {
+            fetchCollection(id)
+        }
+    }
+
     fun deleteFavouriteCollection(id: Int, navigateTo: () -> Unit) {
         disableButtons()
         viewModelScope.launch {
@@ -49,6 +61,7 @@ class FavouritesListViewModel(
 
     fun updateFavouriteCollection(id: Int, name: String) {
         disableButtons()
+        favouritesListNameFlow.value = loading()
         if (!validateCollectionName(name)) {
             enableButtons()
             return
@@ -58,10 +71,29 @@ class FavouritesListViewModel(
             handleUpdateFavouriteCollection(id, updateCollectionInfo)
         }
     }
+
     fun removeRecipeFromFavouriteCollection(id: Int, recipeId: Int) {
         disableButtons()
+        recipesFlow.value = loading()
         viewModelScope.launch {
             handleRemoveRecipeFromFavouriteCollection(id, recipeId)
+        }
+    }
+
+    private suspend fun fetchCollection(id: Int) {
+        val result = request {
+            val token = session.getToken()
+            service.collectionService.getCollection(token, id)
+        }
+        when {
+            result.isFailure -> {
+                recipesFlow.value = apiFailure(result.getProblemOrThrow())
+                favouritesListNameFlow.value = apiFailure(result.getProblemOrThrow())
+            }
+            result.isSuccess -> {
+                recipesFlow.value = apiSuccess(result.getValueOrThrow().collection.recipes)
+                favouritesListNameFlow.value = apiSuccess(result.getValueOrThrow().collection.name)
+            }
         }
     }
 
