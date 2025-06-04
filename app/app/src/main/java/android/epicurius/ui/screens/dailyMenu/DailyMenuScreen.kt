@@ -57,7 +57,6 @@ fun DailyMenuScreen(
         },
         containerColor = Color.White
     )
-
 }
 
 @Preview

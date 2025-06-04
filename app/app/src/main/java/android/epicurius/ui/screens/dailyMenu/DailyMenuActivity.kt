@@ -1,7 +1,7 @@
 package android.epicurius.ui.screens.dailyMenu
 
-import android.epicurius.MainActivity
 import android.epicurius.ui.EpicuriusActivity
+import android.epicurius.ui.screens.feed.FeedActivity
 import android.epicurius.ui.screens.utils.Idle
 import android.epicurius.ui.screens.utils.idle
 import android.epicurius.ui.screens.utils.navigateTo
@@ -25,7 +25,7 @@ class DailyMenuActivity : EpicuriusActivity() {
         setContent {
             val menuState = viewModel.dailyMenu.collectAsState(idle())
             DailyMenuScreen(
-                onBackButton = { navigateTo<MainActivity>() },
+                onBackButton = { navigateTo<FeedActivity>() },
                 onDailyMenuRefresh = { viewModel.getDailyMenu() },
                 menuState = menuState.value
             )
