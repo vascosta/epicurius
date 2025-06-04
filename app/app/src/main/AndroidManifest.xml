@@ -48,6 +48,11 @@
             android:label="Feed"
             android:theme="@style/Theme.App" />
         <activity
+            android:name=".ui.screens.fridge.FridgeActivity"
+            android:exported="false"
+            android:label="Fridge"
+            android:theme="@style/Theme.App" />
+        <activity
             android:name=".ui.screens.mealPlanner.calendar.CalendarActivity"
             android:exported="false"
             android:label="Meal Planner Calendar"

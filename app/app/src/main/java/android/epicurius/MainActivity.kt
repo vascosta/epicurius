@@ -7,6 +7,7 @@ import android.epicurius.ui.screens.dailyMenu.DailyMenuActivity
 import android.epicurius.ui.screens.favourites.folder.FavouritesActivity
 import android.epicurius.ui.screens.favourites.list.FavouritesListActivity
 import android.epicurius.ui.screens.feed.FeedActivity
+import android.epicurius.ui.screens.fridge.FridgeActivity
 import android.epicurius.ui.screens.mealPlanner.calendar.CalendarActivity
 import android.epicurius.ui.screens.recipe.createRecipe.CreateRecipeActivity
 import android.epicurius.ui.screens.recipe.ingredients.ConfirmIngredientsActivity
@@ -40,7 +41,8 @@ class MainActivity : ComponentActivity() {
                     onDailyMenu = { navigateTo<DailyMenuActivity>() },
                     onFavouritesFolders = { navigateTo<FavouritesActivity>() },
                     onFavouritesRecipes = { navigateTo<FavouritesListActivity>() },
-                    onCalendar = { navigateTo<CalendarActivity>() }
+                    onCalendar = { navigateTo<CalendarActivity>() },
+                    onFridge = { navigateTo<FridgeActivity>() }
                 )
             }
         }

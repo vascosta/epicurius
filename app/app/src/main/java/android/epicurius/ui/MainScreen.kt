@@ -32,6 +32,7 @@ fun MainScreen(
     onFavouritesFolders: () -> Unit = {},
     onFavouritesRecipes: () -> Unit = {},
     onCalendar: () -> Unit = {},
+    onFridge: () -> Unit = {}
 ) {
     Column(
         modifier = Modifier
@@ -83,6 +84,9 @@ fun MainScreen(
         }
         Button(onClick = { onCalendar() }) {
             Text("Calendar")
+        }
+        Button(onClick = { onFridge() }) {
+            Text("Fridge")
         }
     }
 }

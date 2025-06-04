@@ -12,7 +12,7 @@ import android.epicurius.ui.screens.recipe.createRecipe.components.InstructionsC
 import android.epicurius.ui.screens.utils.DropdownMenuComponent
 import android.epicurius.ui.screens.utils.FormTextField
 import android.epicurius.ui.screens.utils.MultiSelectDropdownMenuComponent
-import android.epicurius.ui.screens.utils.NumberField
+import android.epicurius.ui.screens.utils.NumberLineTextField
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -85,8 +85,8 @@ fun CreateRecipeScreen(onBackButton: () -> Unit = {}) {
                 FormTextField("Name", name, Modifier.height(56.dp)) { name = it }
                 FormTextField("Description", description, Modifier.height(56.dp)) { description = it }
 
-                NumberField("Duration (min)", duration) { duration = it }
-                NumberField("Serving (px)", serving) { serving = it }
+                NumberLineTextField("Duration (min)", duration) { duration = it }
+                NumberLineTextField("Serving (px)", serving) { serving = it }
 
                 DropdownMenuComponent(
                     options = MealType.entries.map { it.displayName },

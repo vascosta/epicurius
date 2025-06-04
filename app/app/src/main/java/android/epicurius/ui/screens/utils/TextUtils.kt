@@ -72,7 +72,7 @@ fun FormTextField(parameterName: String, value: String, modifier: Modifier = Mod
 }
 
 @Composable
-fun NumberField(parameterName: String, value: String, modifier: Modifier = Modifier, onValueChange: (String) -> Unit) {
+fun NumberLineTextField(parameterName: String, value: String, modifier: Modifier = Modifier, onValueChange: (String) -> Unit) {
     TextField(
         value = value,
         onValueChange = onValueChange,
@@ -95,11 +95,13 @@ fun NumberTextField(
     value: String,
     label: String,
     modifier: Modifier = Modifier,
+    enabled: () -> Boolean = { true },
     onValueChange: (String) -> Unit
 ) {
     OutlinedTextField(
         value = value,
         onValueChange = onValueChange,
+        enabled = enabled(),
         singleLine = true,
         label = { Text(label) },
         modifier = modifier,
