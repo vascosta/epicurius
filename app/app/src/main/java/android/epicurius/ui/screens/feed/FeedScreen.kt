@@ -6,6 +6,9 @@ import android.epicurius.domain.recipe.RecipeInfo
 import android.epicurius.ui.screens.BottomBar
 import android.epicurius.ui.screens.TopBar
 import android.epicurius.ui.screens.recipe.components.RecipeInfoBox
+import android.epicurius.ui.screens.utils.LoadState
+import android.epicurius.ui.screens.utils.LoadStateRenderer
+import android.epicurius.ui.screens.utils.apiSuccess
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -21,24 +24,34 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun FeedScreen(onBackButton: () -> Unit, recipeList: List<RecipeInfo>) {
+fun FeedScreen(
+    onBackButton: () -> Unit,
+    onUserFeedRefresh: () -> Unit = {},
+    userFeedState: LoadState<List<RecipeInfo>>
+) {
     Scaffold(
         topBar = { TopBar(text = "For you to cook", backButton = true, onBackButton) },
         bottomBar = { BottomBar() },
         content = { paddingValues ->
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(paddingValues)
-                    .padding(10.dp)
-                    .background(Color.White),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                recipeList.forEach { recipe ->
-                    RecipeInfoBox(recipe)
-                    Spacer(modifier = Modifier.size(5.dp))
+            LoadStateRenderer(
+                loadState = userFeedState,
+                swipeToRefresh = onUserFeedRefresh,
+                content = { userFeed ->
+                    Column(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(paddingValues)
+                            .padding(10.dp)
+                            .background(Color.White),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        userFeed.forEach { recipe ->
+                            RecipeInfoBox(recipe)
+                            Spacer(modifier = Modifier.size(5.dp))
+                        }
+                    }
                 }
-            }
+            )
         },
         containerColor = Color.White
     )
@@ -70,5 +83,5 @@ fun FeedPreview() {
         )
     )
 
-    FeedScreen({}, recipeList)
+    FeedScreen({}, {}, apiSuccess(recipeList))
 }
