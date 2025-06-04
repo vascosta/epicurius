@@ -5,7 +5,11 @@ import android.epicurius.domain.recipe.MealType
 import android.epicurius.domain.recipe.RecipeInfo
 import android.epicurius.ui.screens.BottomBar
 import android.epicurius.ui.screens.TopBar
+import android.epicurius.ui.screens.favourites.folder.components.getFavouritesListName
 import android.epicurius.ui.screens.recipe.components.RecipeInfoBox
+import android.epicurius.ui.screens.utils.LoadState
+import android.epicurius.ui.screens.utils.LoadStateRenderer
+import android.epicurius.ui.screens.utils.apiSuccess
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -25,27 +29,35 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun FavouritesListScreen(
     onBackButton: () -> Unit = {},
-    folderName: String,
-    recipeList: List<RecipeInfo>
+    onFavouritesRefresh: () -> Unit = {},
+    favouritesListNameState: LoadState<String>,
+    recipesState: LoadState<List<RecipeInfo>>
 ) {
+    val favouritesListName = getFavouritesListName(favouritesListNameState)
     Scaffold(
-        topBar = { TopBar(text = folderName, backButton = true, onBackButton) },
+        topBar = { TopBar(text = favouritesListName, backButton = true, onBackButton) },
         bottomBar = { BottomBar() },
         content = { paddingValues ->
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(paddingValues)
-                    .padding(10.dp)
-                    .background(Color.White)
-                    .verticalScroll(rememberScrollState()),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                recipeList.forEach {
-                    RecipeInfoBox(recipeInfo = it)
-                    Spacer(modifier = Modifier.height(10.dp))
+            LoadStateRenderer(
+                loadState = recipesState,
+                swipeToRefresh = onFavouritesRefresh,
+                content = { recipes ->
+                    Column(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(paddingValues)
+                            .padding(10.dp)
+                            .background(Color.White)
+                            .verticalScroll(rememberScrollState()),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        recipes.forEach {
+                            RecipeInfoBox(recipeInfo = it)
+                            Spacer(modifier = Modifier.height(10.dp))
+                        }
+                    }
                 }
-            }
+            )
         },
         containerColor = Color.White
     )
@@ -55,8 +67,10 @@ fun FavouritesListScreen(
 @Composable
 fun FavouritesListScreenPreview() {
     FavouritesListScreen(
-        folderName = "My Favourite Recipes",
-        recipeList = listOf(
+        onBackButton = {},
+        onFavouritesRefresh = {},
+        favouritesListNameState = apiSuccess("My Favourite Recipes"),
+        recipesState = apiSuccess(listOf(
             RecipeInfo(
                 id = 1,
                 name = "Spaghetti Carbonara",
@@ -67,6 +81,6 @@ fun FavouritesListScreenPreview() {
                 servings = 4,
                 picture = "".toByteArray()
             )
-        )
+        ))
     )
 }

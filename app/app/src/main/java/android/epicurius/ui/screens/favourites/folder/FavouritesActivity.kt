@@ -17,7 +17,6 @@ import kotlinx.coroutines.launch
 
 class FavouritesActivity : EpicuriusActivity() {
     val viewModel: FavouritesViewModel by getViewModel<FavouritesViewModel>()
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         lifecycleScope.launch {
