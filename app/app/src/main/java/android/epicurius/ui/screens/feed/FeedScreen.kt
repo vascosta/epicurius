@@ -5,8 +5,7 @@ import android.epicurius.domain.recipe.MealType
 import android.epicurius.domain.recipe.RecipeInfo
 import android.epicurius.ui.screens.BottomBar
 import android.epicurius.ui.screens.TopBar
-import android.epicurius.ui.screens.recipe.RecipeInfoBox
-import android.widget.Button
+import android.epicurius.ui.screens.recipe.components.RecipeInfoBox
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer

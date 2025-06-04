@@ -6,8 +6,9 @@ import android.epicurius.domain.recipe.Cuisine
 import android.epicurius.domain.recipe.MealType
 import android.epicurius.ui.screens.BottomBar
 import android.epicurius.ui.screens.TopBar
-import android.epicurius.ui.screens.recipe.createRecipe.utils.IngredientsComponent
-import android.epicurius.ui.screens.recipe.createRecipe.utils.InstructionsComponent
+import android.epicurius.ui.screens.recipe.createRecipe.components.DividerComponent
+import android.epicurius.ui.screens.recipe.createRecipe.components.IngredientsComponent
+import android.epicurius.ui.screens.recipe.createRecipe.components.InstructionsComponent
 import android.epicurius.ui.screens.utils.DropdownMenuComponent
 import android.epicurius.ui.screens.utils.FormTextField
 import android.epicurius.ui.screens.utils.MultiSelectDropdownMenuComponent
@@ -25,8 +26,6 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Image
 import androidx.compose.material3.Button
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -49,7 +48,6 @@ data class IngredientComponent(
     val unit: String = ""
 )
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CreateRecipeScreen(onBackButton: () -> Unit = {}) {
     var name by remember { mutableStateOf("") }
@@ -157,20 +155,6 @@ fun CreateRecipeScreen(onBackButton: () -> Unit = {}) {
                 }
             }
         }
-    )
-}
-
-@Composable
-fun DividerComponent() {
-    HorizontalDivider(
-        modifier = Modifier.padding(
-            top = 15.dp,
-            bottom = 10.dp,
-            start = 15.dp,
-            end = 15.dp
-        ),
-        color = Color.Black,
-        thickness = 1.dp
     )
 }
 

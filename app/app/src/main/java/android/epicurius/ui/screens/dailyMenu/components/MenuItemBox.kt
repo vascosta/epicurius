@@ -1,7 +1,7 @@
 package android.epicurius.ui.screens.dailyMenu.components
 
 import android.epicurius.domain.recipe.RecipeInfo
-import android.epicurius.ui.screens.recipe.RecipeInfoSimpleBox
+import android.epicurius.ui.screens.recipe.components.RecipeInfoSimpleBox
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding

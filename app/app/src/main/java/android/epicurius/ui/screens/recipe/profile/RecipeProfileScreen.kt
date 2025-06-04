@@ -12,6 +12,8 @@ import android.epicurius.domain.recipe.MealType
 import android.epicurius.domain.recipe.Recipe
 import android.epicurius.ui.screens.BottomBar
 import android.epicurius.ui.screens.TopBar
+import android.epicurius.ui.screens.recipe.profile.components.HorizontalPagerIndicator
+import android.epicurius.ui.screens.recipe.profile.components.RecipeProfileImages
 import android.epicurius.ui.screens.utils.MixedText
 import android.os.Build
 import androidx.annotation.RequiresApi
@@ -61,6 +63,8 @@ fun RecipeProfileScreen(
     images: List<Int>,
     isAuthor: Boolean
 ) {
+    val pagerState = rememberPagerState(pageCount = { images.size })
+
     Scaffold(
         topBar = { TopBar(text = recipe.name, backButton = true, onBackButton) },
         bottomBar = { BottomBar() },
@@ -107,32 +111,14 @@ fun RecipeProfileScreen(
                 }
             }
 
-            val pagerState = rememberPagerState(pageCount = { images.size })
-
-            HorizontalPager(
-                state = pagerState,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(5.dp)
-                    .height(250.dp)
-            ) { page ->
-                Image(
-                    painter = painterResource(id = images[page]),
-                    contentDescription = "Recipe Image",
-                    contentScale = ContentScale.Crop,
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .clip(RoundedCornerShape(12.dp))
-                )
-            }
-
+            RecipeProfileImages(images, pagerState)
             HorizontalPagerIndicator(images.size, pagerState)
 
-            Row(
+            Box(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(10.dp),
-                horizontalArrangement = Arrangement.End
+                contentAlignment = Alignment.CenterEnd
             ) { MixedText("by ", recipe.authorUsername) }
 
             Row(
@@ -190,22 +176,7 @@ fun RecipeProfileScreen(
                         } else {
                             it.quantity
                         }
-
-                        val formattedUnit =
-                            when(it.unit) {
-                                IngredientUnit.G -> "g"
-                                IngredientUnit.ML -> "ml"
-                                IngredientUnit.X -> ""
-                                IngredientUnit.TSP -> "tsp"
-                                IngredientUnit.L -> "l"
-                                IngredientUnit.Kg -> "Kg"
-                                IngredientUnit.CUPS -> "cups"
-                                IngredientUnit.TBSP -> "tbsp"
-                                IngredientUnit.DSP -> "dsp"
-                                IngredientUnit.TEA_CUP -> "Tea cup"
-                                IngredientUnit.COFFEE_CUP -> "Coffee cup"
-                            }
-
+                        val formattedUnit = it.unit.displayName
                         "$formattedQuantity$formattedUnit ${it.name}"
                     }
                     Text("Ingredients:", fontWeight = FontWeight.Bold)
@@ -226,25 +197,6 @@ fun RecipeProfileScreen(
                     Text("Make it!")
                 }
             }
-        }
-    }
-}
-
-@Composable
-private fun HorizontalPagerIndicator(size: Int, pagerState: PagerState) {
-    Row(
-        horizontalArrangement = Arrangement.Center,
-        modifier = Modifier.fillMaxWidth()
-    ) {
-        repeat(size) { index ->
-            val color = if (pagerState.currentPage == index) Color.Blue else Color.Gray
-            Box(
-                modifier = Modifier
-                    .padding(4.dp)
-                    .size(8.dp)
-                    .clip(CircleShape)
-                    .background(color)
-            )
         }
     }
 }
