@@ -3,9 +3,7 @@ package epicurius.integration.ingredients
 import epicurius.domain.exceptions.InvalidIngredient
 import epicurius.http.media.Problem
 import epicurius.http.media.Uris
-import epicurius.integration.utils.delete
 import epicurius.integration.utils.get
-import epicurius.integration.utils.getBody
 import epicurius.utils.createTestUser
 import org.springframework.http.HttpStatus
 import kotlin.test.Test
