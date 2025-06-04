@@ -25,7 +25,6 @@ class FavouritesActivity : EpicuriusActivity() {
                 if (state is Idle) viewModel.getFavourites()
             }
         }
-
         setContent {
             val favouritesState = viewModel.favourites.collectAsState(idle())
             FavouritesScreen(
