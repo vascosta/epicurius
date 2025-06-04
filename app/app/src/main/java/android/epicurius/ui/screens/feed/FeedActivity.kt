@@ -1,40 +1,32 @@
 package android.epicurius.ui.screens.feed
 
-import android.epicurius.domain.recipe.Cuisine
-import android.epicurius.domain.recipe.MealType
-import android.epicurius.domain.recipe.RecipeInfo
+import android.epicurius.ui.EpicuriusActivity
+import android.epicurius.ui.screens.utils.Idle
+import android.epicurius.ui.screens.utils.idle
 import android.os.Bundle
-import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.runtime.collectAsState
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
-class FeedActivity : ComponentActivity() {
+class FeedActivity : EpicuriusActivity() {
+    val viewModel: FeedViewModel by getViewModel<FeedViewModel>()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        lifecycleScope.launch {
+            viewModel.userFeed.collectLatest { state ->
+                if (state is Idle) viewModel.getUserFeed()
+            }
+        }
+
         setContent {
+            val userFeedState = viewModel.userFeed.collectAsState(idle())
             FeedScreen(
                 onBackButton = { finish() },
-                recipeList = listOf(
-                    RecipeInfo(
-                        id = 1,
-                        name = "Spaghetti Bolognese",
-                        authorUsername = "ChefBear",
-                        cuisine = Cuisine.ITALIAN,
-                        mealType = MealType.MAIN_COURSE,
-                        preparationTime = 30,
-                        servings = 4,
-                        picture = "".toByteArray()
-                    ),
-                    RecipeInfo(
-                        id = 2,
-                        name = "Chicken Curry",
-                        authorUsername = "ChefBear",
-                        cuisine = Cuisine.INDIAN,
-                        mealType = MealType.MAIN_COURSE,
-                        preparationTime = 45,
-                        servings = 4,
-                        picture = "".toByteArray()
-                    )
-                )
+                onUserFeedRefresh = { viewModel.refreshUserFeed() },
+                userFeedState = userFeedState.value
             )
         }
     }
