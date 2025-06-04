@@ -4,7 +4,7 @@ import android.content.Context
 import android.epicurius.services.EpicuriusService
 import android.epicurius.services.api.auth.models.input.LoginInputModel
 import android.epicurius.storage.Session
-import android.epicurius.ui.screens.auth.AuthViewModel
+import android.epicurius.ui.screens.user.UserViewModel
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -15,7 +15,7 @@ class LoginViewModel(
     service: EpicuriusService,
     session: Session,
     context: Context
-): AuthViewModel(service, session, context) {
+): UserViewModel(service, session, context) {
 
     var loginEnable by mutableStateOf(true)
         private set
@@ -27,14 +27,17 @@ class LoginViewModel(
         navigateTo: () -> Unit
     ) {
         disableLogin()
-        validateLoginInfo(name, email, password)
+        if (!validateLoginInfo(name, email, password)) {
+            enableLogin()
+            return
+        }
         val loginInfo = LoginInputModel(name, email, password)
         viewModelScope.launch {
-            submitLogin(loginInfo, navigateTo)
+            handleLogin(loginInfo, navigateTo)
         }
     }
 
-    private suspend fun submitLogin(loginInfo: LoginInputModel, navigateTo: () -> Unit) {
+    private suspend fun handleLogin(loginInfo: LoginInputModel, navigateTo: () -> Unit) {
         val result = request {
             service.authService.login(loginInfo)
         }
