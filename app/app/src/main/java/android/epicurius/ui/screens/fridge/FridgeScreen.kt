@@ -29,6 +29,7 @@ import java.time.Period
 @Composable
 fun FridgeScreen(
     products: List<Product>,
+    onBackButton: () -> Unit = {},
     onAddProduct: (String, Int, LocalDate?, LocalDate) -> Unit = { _, _, _, _ -> },
     onUpdateProduct: (Int?, LocalDate?, Period?, LocalDate?) -> Unit = { _, _, _, _ -> },
     onDeleteProduct: (Int) -> Unit = { _ -> }
@@ -36,7 +37,7 @@ fun FridgeScreen(
     var showDialog by remember { mutableStateOf(false) }
 
     Scaffold(
-        topBar = { TopBar("Fridge") },
+        topBar = { TopBar("Fridge", backButton = true, onBackButton) },
         bottomBar = { BottomBar() },
         floatingActionButton = {
             FloatingActionButton(onClick = { showDialog = true }) {
