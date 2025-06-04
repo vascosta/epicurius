@@ -1,4 +1,4 @@
-package android.epicurius.ui.screens.user.utils
+package android.epicurius.ui.screens.user.components
 
 import android.epicurius.domain.user.SearchUser
 import androidx.compose.foundation.background

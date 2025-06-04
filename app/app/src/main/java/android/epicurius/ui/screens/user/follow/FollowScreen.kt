@@ -3,10 +3,9 @@ package android.epicurius.ui.screens.user.follow
 import android.epicurius.domain.user.FollowUser
 import android.epicurius.domain.user.FollowingUser
 import android.epicurius.domain.user.UserProfile
-import android.epicurius.services.http.utils.Uris
 import android.epicurius.ui.screens.BottomBar
 import android.epicurius.ui.screens.FollowTopBar
-import android.epicurius.ui.screens.user.utils.UserBox
+import android.epicurius.ui.screens.user.components.UserBox
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -15,7 +14,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment

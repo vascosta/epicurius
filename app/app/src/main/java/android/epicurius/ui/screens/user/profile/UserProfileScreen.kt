@@ -3,7 +3,9 @@ package android.epicurius.ui.screens.user.profile
 import android.epicurius.domain.user.UserProfile
 import android.epicurius.ui.screens.BottomBar
 import android.epicurius.ui.screens.TopBar
-import android.epicurius.ui.screens.user.utils.UserProfilePicture
+import android.epicurius.ui.screens.user.components.FollowBox
+import android.epicurius.ui.screens.user.components.ProfileTabBar
+import android.epicurius.ui.screens.user.components.UserProfilePicture
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -77,51 +79,6 @@ fun UserProfileScreen(
             }
         }
     )
-}
-
-@Composable
-private fun FollowBox(name: String, number: Int) {
-    Box(
-        modifier = Modifier
-            .height(45.dp)
-            .width(180.dp)
-            .border(width = 1.dp, color = Color.Black, shape = RectangleShape),
-    ) {
-        Column(
-            modifier = Modifier.fillMaxSize(),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Text(text = name, fontWeight = FontWeight.Bold)
-            Text("$number")
-        }
-    }
-}
-
-@Composable
-private fun ProfileTabBar() {
-    var selectedTabIndex by remember { mutableIntStateOf(0) }
-
-    val tabs = listOf("Recipes", "Kitchen Book")
-
-    Column {
-        TabRow(
-            selectedTabIndex = selectedTabIndex,
-            containerColor = Color.White,
-            contentColor = Color.Black
-        ) {
-            tabs.forEachIndexed { index, name ->
-                Tab(
-                    selected = selectedTabIndex == index,
-                    onClick = { selectedTabIndex = index },
-                    modifier = Modifier.padding(15.dp)
-                ) {
-                    Text(name)
-                    Spacer(modifier = Modifier.fillMaxHeight(0.05f))
-                }
-            }
-        }
-    }
 }
 
 @Preview

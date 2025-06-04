@@ -1,4 +1,4 @@
-package android.epicurius.ui.screens.recipe.createRecipe.utils
+package android.epicurius.ui.screens.recipe.createRecipe.components
 
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.width
