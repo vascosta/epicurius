@@ -10,9 +10,7 @@ fun <T> LoadStateRenderer(
 ) {
     when (loadState) {
         is Idle -> {}
-        is Loading -> {
-        // add loading spinner
-        }
+        is Loading -> { LoadingSpinner() }
         is Loaded -> {
             when {
                 loadState.value.isSuccess -> RenderSuccess(loadState.getOrThrow(), swipeToRefresh, content)
