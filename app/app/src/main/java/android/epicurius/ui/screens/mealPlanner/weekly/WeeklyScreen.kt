@@ -9,8 +9,8 @@ import android.epicurius.domain.recipe.RecipeInfo
 import android.epicurius.ui.screens.BottomBar
 import android.epicurius.ui.screens.TopBar
 import android.epicurius.domain.mealPlanner.utils.getWeek
-import android.epicurius.ui.screens.mealPlanner.utils.MealPlannerComponent
-import android.epicurius.ui.screens.mealPlanner.utils.WeekCalendarRow
+import android.epicurius.ui.screens.mealPlanner.components.MealPlannerComponent
+import android.epicurius.ui.screens.mealPlanner.components.WeekCalendarRow
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column

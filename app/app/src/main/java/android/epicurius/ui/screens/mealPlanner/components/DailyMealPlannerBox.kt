@@ -1,16 +1,11 @@
-package android.epicurius.ui.screens.mealPlanner.utils
+package android.epicurius.ui.screens.mealPlanner.components
 
-import android.epicurius.domain.mealPlanner.DailyMealPlanner
 import android.epicurius.domain.mealPlanner.MealTime
-import android.epicurius.domain.recipe.Cuisine
-import android.epicurius.domain.recipe.MealType
 import android.epicurius.domain.recipe.RecipeInfo
 import android.epicurius.ui.screens.recipe.components.RecipeInfoSimpleBox
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
@@ -25,19 +20,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import java.time.DayOfWeek
-import java.time.LocalDate
-
-@Composable
-fun MealPlannerComponent(dailyPlanner: DailyMealPlanner?) {
-    MealTime.entries.forEach {
-        val recipe = dailyPlanner?.meals[it]
-        DailyMealPlannerBox(it, recipe)
-    }
-}
 
 @Composable
 fun DailyMealPlannerBox(mealTime: MealTime, recipe: RecipeInfo?) {
@@ -85,51 +69,4 @@ fun DailyMealPlannerBox(mealTime: MealTime, recipe: RecipeInfo?) {
             }
         }
     }
-}
-
-@Composable
-fun WeekCalendarRow() {
-    Row(Modifier.fillMaxWidth()) {
-        DayOfWeek.entries.forEach { dayOfWeek ->
-            Text(
-                text = dayOfWeek.name.take(3),
-                modifier = Modifier
-                    .weight(1f)
-                    .padding(vertical = 8.dp),
-                textAlign = TextAlign.Center,
-                fontWeight = FontWeight.Bold
-            )
-        }
-    }
-}
-
-
-@Preview
-@Composable
-fun DailyPlannerBoxPreview() {
-    val recipe = RecipeInfo(
-        id = 1,
-        name = "Pancakes",
-        authorUsername = "ChefBear",
-        cuisine = Cuisine.AMERICAN,
-        mealType = MealType.BREAKFAST,
-        preparationTime = 15,
-        servings = 2,
-        picture = ByteArray(0)
-    )
-
-    val dailyPlanner = DailyMealPlanner(
-        date = LocalDate.now(),
-        maxCalories = null,
-        meals = mapOf(
-            MealTime.BREAKFAST to recipe
-        )
-    )
-    DailyMealPlannerBox(MealTime.BREAKFAST, recipe)
-}
-
-@Preview
-@Composable
-fun WeekCalendarBoxPreview() {
-    WeekCalendarRow()
 }
