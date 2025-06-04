@@ -39,7 +39,7 @@ class GetDailyMenuIntegrationTests: MenuIntegrationTest() {
         // when retrieving the daily menu
         val body = getDailyMenu(user.token)
 
-        // then the menu contains nulls for all meals
+        // then the menu is retrieved with nulls for all recipes successfully with code 200
         assertNotNull(body)
         assertTrue(body.menu.all { it.value == null })
     }
