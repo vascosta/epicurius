@@ -36,6 +36,22 @@ inline fun <reified T> post(
         .expectBody(T::class.java)
         .returnResult()
 
+inline fun <reified T> postMultiPart(
+    client: WebTestClient,
+    uri: String,
+    body: BodyInserters.MultipartInserter,
+    responseStatus: HttpStatus = HttpStatus.NO_CONTENT,
+    token: String? = null
+) =
+    client.post().uri(uri)
+        .header("Authorization", "Bearer $token")
+        .contentType(MediaType.MULTIPART_FORM_DATA)
+        .body(body)
+        .exchange()
+        .expectStatus().isEqualTo(responseStatus)
+        .expectBody(T::class.java)
+        .returnResult()
+
 inline fun <reified T> patch(
     client: WebTestClient,
     uri: String,
