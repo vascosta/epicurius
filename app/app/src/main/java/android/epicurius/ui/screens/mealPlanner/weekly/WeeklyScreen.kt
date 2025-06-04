@@ -52,39 +52,40 @@ fun WeeklyScreen(
     Scaffold(
         topBar = { TopBar("Weekly Meal Planner", backButton = true, onBackButton) },
         bottomBar = { BottomBar() },
-        containerColor = Color.White
-    ) { paddingValues ->
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .verticalScroll(rememberScrollState())
-                .padding(paddingValues)
-                .padding(16.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            WeekCalendarRow()
+        content = { paddingValues ->
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .verticalScroll(rememberScrollState())
+                    .padding(paddingValues)
+                    .padding(16.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                WeekCalendarRow()
 
-            Row(Modifier.fillMaxWidth()) {
-                week.forEach { date ->
-                    Text(
-                        text = date.dayOfMonth.toString(),
-                        modifier = Modifier
-                            .weight(1f)
-                            .clip(RoundedCornerShape(8.dp))
-                            .border(1.dp, Color.LightGray)
-                            .padding(16.dp)
-                            .clickable { selectedDay = date },
-                        textAlign = TextAlign.Center,
-                        fontWeight = FontWeight.Normal,
-                        color = if (date == selectedDay) Color(0xFF4E0D8D) else Color.Black
-                    )
+                Row(Modifier.fillMaxWidth()) {
+                    week.forEach { date ->
+                        Text(
+                            text = date.dayOfMonth.toString(),
+                            modifier = Modifier
+                                .weight(1f)
+                                .clip(RoundedCornerShape(8.dp))
+                                .border(1.dp, Color.LightGray)
+                                .padding(16.dp)
+                                .clickable { selectedDay = date },
+                            textAlign = TextAlign.Center,
+                            fontWeight = FontWeight.Normal,
+                            color = if (date == selectedDay) Color(0xFF4E0D8D) else Color.Black
+                        )
+                    }
                 }
-            }
 
-            Spacer(Modifier.height(20.dp))
-            MealPlannerComponent(selectMealPlanner)
-        }
-    }
+                Spacer(Modifier.height(20.dp))
+                MealPlannerComponent(selectMealPlanner)
+            }
+        },
+        containerColor = Color.White
+    )
 }
 
 @Preview

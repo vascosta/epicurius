@@ -54,58 +54,60 @@ fun CalendarScreen(
     Scaffold(
         topBar = { TopBar("Meal Planner") },
         bottomBar = { BottomBar() },
-        containerColor = Color.White
-    ) { paddingValues ->
-        VerticalCalendar(
-            modifier = Modifier
-                .padding(paddingValues)
-                .padding(16.dp)
-                .background(Color.White),
-            state = state,
-            calendarScrollPaged = true,
-            dayContent = { day ->
-                if (day.position == DayPosition.MonthDate) {
-                    Box(
-                        modifier = Modifier
-                            .aspectRatio(1f)
-                            .padding(2.dp)
-                            .background(
-                                if (day.date == today) Color(0xFFCDFA7D) else Color.Transparent,
-                                shape = CircleShape
-                            )
-                            .clickable { onDayClick(day.date) },
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Text(text = day.date.dayOfMonth.toString())
-                    }
-                }
-            },
-            monthHeader = { month ->
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    Text(
-                        text = month.yearMonth.month.name,
-                        modifier = Modifier.padding(8.dp),
-                        color = Color.Black
-                    )
-
-                    if (month.yearMonth.month == today.month) {
-                        TextButton(
-                            onClick = { onWeeklyPlanner() }
+        content = { paddingValues ->
+            VerticalCalendar(
+                modifier = Modifier
+                    .padding(paddingValues)
+                    .padding(16.dp)
+                    .background(Color.White),
+                state = state,
+                calendarScrollPaged = true,
+                dayContent = { day ->
+                    if (day.position == DayPosition.MonthDate) {
+                        Box(
+                            modifier = Modifier
+                                .aspectRatio(1f)
+                                .padding(2.dp)
+                                .background(
+                                    if (day.date == today) Color(0xFFCDFA7D) else Color.Transparent,
+                                    shape = CircleShape
+                                )
+                                .clickable { onDayClick(day.date) },
+                            contentAlignment = Alignment.Center
                         ) {
-                            Text("Weekly Planner")
+                            Text(text = day.date.dayOfMonth.toString())
                         }
                     }
-                }
+                },
+                monthHeader = { month ->
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Text(
+                            text = month.yearMonth.month.name,
+                            modifier = Modifier.padding(8.dp),
+                            color = Color.Black
+                        )
 
-                WeekCalendarRow()
-            }
-        )
-    }
+                        if (month.yearMonth.month == today.month) {
+                            TextButton(
+                                onClick = { onWeeklyPlanner() }
+                            ) {
+                                Text("Weekly Planner")
+                            }
+                        }
+                    }
+
+                    WeekCalendarRow()
+                }
+            )
+        },
+        containerColor = Color.White
+    )
 }
+
 
 @Preview
 @Composable

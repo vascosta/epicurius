@@ -49,52 +49,53 @@ fun DailyScreen(
     Scaffold(
         topBar = { TopBar("Daily Meal Planner", backButton = true, onBackButton) },
         bottomBar = { BottomBar() },
-        containerColor = Color.White
-    ) { paddingValues ->
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .verticalScroll(rememberScrollState())
-                .padding(paddingValues)
-                .padding(16.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Text(
-                text = "Meal Planner for $date",
+        content = { paddingValues ->
+            Column(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .wrapContentSize(Alignment.Center)
-                    .padding(bottom = 16.dp),
-                color = Color(0xFFAC88DC),
-                style = MaterialTheme.typography.titleMedium
-            )
-
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .wrapContentSize(Alignment.Center)
-                    .padding(bottom = 16.dp)
-                    .clickable { showDialog = true }
+                    .fillMaxSize()
+                    .verticalScroll(rememberScrollState())
+                    .padding(paddingValues)
+                    .padding(16.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                MixedText(
-                    boldString = "Max Calories: ",
-                    normalString = dailyMealPlanner?.maxCalories?.toString() ?: "Not set"
+                Text(
+                    text = "Meal Planner for $date",
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .wrapContentSize(Alignment.Center)
+                        .padding(bottom = 16.dp),
+                    color = Color(0xFFAC88DC),
+                    style = MaterialTheme.typography.titleMedium
                 )
-            }
 
-            CaloriesUpdateDialog(
-                visible = showDialog,
-                initialValue = dailyMealPlanner?.maxCalories?.toString() ?: "",
-                onDismiss = { showDialog = false },
-                onConfirm = {
-                    onCaloriesUpdate(it)
-                    showDialog = false
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .wrapContentSize(Alignment.Center)
+                        .padding(bottom = 16.dp)
+                        .clickable { showDialog = true }
+                ) {
+                    MixedText(
+                        boldString = "Max Calories: ",
+                        normalString = dailyMealPlanner?.maxCalories?.toString() ?: "Not set"
+                    )
                 }
-            )
 
-            MealPlannerComponent(dailyMealPlanner)
-        }
-    }
+                CaloriesUpdateDialog(
+                    visible = showDialog,
+                    initialValue = dailyMealPlanner?.maxCalories?.toString() ?: "",
+                    onDismiss = { showDialog = false },
+                    onConfirm = {
+                        onCaloriesUpdate(it)
+                        showDialog = false
+                    }
+                )
+
+                MealPlannerComponent(dailyMealPlanner)
+            }
+        },
+        containerColor = Color.White
+    )
 }
 
 @Preview

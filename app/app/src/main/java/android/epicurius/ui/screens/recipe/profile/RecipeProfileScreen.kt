@@ -68,137 +68,138 @@ fun RecipeProfileScreen(
     Scaffold(
         topBar = { TopBar(text = recipe.name, backButton = true, onBackButton) },
         bottomBar = { BottomBar() },
-        containerColor = Color.White
-    ) { paddingValues ->
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .verticalScroll(rememberScrollState())
-                .padding(paddingValues)
-                .padding(16.dp)
-                .background(Color.White),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Row(
+        content = { paddingValues ->
+            Column(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(start = 10.dp, end = 10.dp),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
+                    .fillMaxSize()
+                    .verticalScroll(rememberScrollState())
+                    .padding(paddingValues)
+                    .padding(16.dp)
+                    .background(Color.White),
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Row{
-                    Text("$rating/5")
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(start = 10.dp, end = 10.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Row{
+                        Text("$rating/5")
 
-                    Spacer(Modifier.size(5.dp))
+                        Spacer(Modifier.size(5.dp))
 
-                    Image(
-                        painter = painterResource(id = R.drawable.star),
-                        contentDescription = "Favorites",
+                        Image(
+                            painter = painterResource(id = R.drawable.star),
+                            contentDescription = "Favorites",
+                            modifier = Modifier
+                                .padding(top = (0.5).dp)
+                                .size(15.dp),
+                            contentScale = ContentScale.Fit
+                        )
+                    }
+
+                    IconButton(onClick = { }) {
+                        Image(
+                            painter = painterResource(id = R.drawable.white_star),
+                            contentDescription = "Favorites",
+                            modifier = Modifier.size(25.dp),
+                            contentScale = ContentScale.Fit
+                        )
+                    }
+                }
+
+                RecipeProfileImages(images, pagerState)
+                HorizontalPagerIndicator(images.size, pagerState)
+
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(10.dp),
+                    contentAlignment = Alignment.CenterEnd
+                ) { MixedText("by ", recipe.authorUsername) }
+
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp),
+                    horizontalArrangement = Arrangement.Center,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = recipe.description,
+                        fontStyle = FontStyle.Italic,
+                        textAlign = TextAlign.Center
+                    )
+                }
+
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 16.dp, start = 10.dp, end = 10.dp)
+                        .border(1.dp, Color.Black, RoundedCornerShape(16.dp)),
+                    contentAlignment = Alignment.CenterStart
+                ) {
+
+                    if (isAuthor) {
+                        Button(
+                            onClick = { },
+                            modifier = Modifier
+                                .align(Alignment.TopEnd)
+                                .padding(top = 5.dp, end = 10.dp)
+                        ) {
+                            Text("Edit")
+                        }
+                    }
+
+                    Column(
                         modifier = Modifier
-                            .padding(top = (0.5).dp)
-                            .size(15.dp),
-                        contentScale = ContentScale.Fit
-                    )
+                            .fillMaxWidth()
+                            .padding(16.dp)
+                    ) {
+                        MixedText("Servings: ", "${recipe.servings} px")
+                        MixedText("Preparation Time: ", "${recipe.preparationTime} min")
+                        MixedText("Meal Type: ", recipe.mealType.displayName)
+                        MixedText("Cuisine: ", recipe.cuisine.displayName)
+                        MixedText("Intolerances: ", recipe.intolerances.joinToString(", ") { it.displayName })
+                        MixedText("Diets: ", recipe.diets.joinToString(", ") { it.displayName })
+                        MixedText("Calories: ", recipe.calories?.toString() ?: "N/A")
+                        MixedText("Protein: ", recipe.protein?.toString() ?: "N/A")
+                        MixedText("Fat: ", recipe.fat?.toString() ?: "N/A")
+                        MixedText("Carbs: ", recipe.carbs?.toString() ?: "N/A")
+
+                        val ingredients = recipe.ingredients.joinToString("\n") {
+                            val formattedQuantity = if (it.quantity % 1.0 == 0.0) {
+                                it.quantity.toInt()
+                            } else {
+                                it.quantity
+                            }
+                            val formattedUnit = it.unit.displayName
+                            "$formattedQuantity$formattedUnit ${it.name}"
+                        }
+                        Text("Ingredients:", fontWeight = FontWeight.Bold)
+                        Text(text = ingredients, modifier = Modifier.padding(start = 10.dp))
+
+                        val instructions = recipe.instructions.steps.entries.joinToString("\n") { "${it.key}: ${it.value}" }
+                        Text("Instructions:", fontWeight = FontWeight.Bold)
+                        Text(text = instructions, modifier = Modifier.padding(start = 10.dp))
+                    }
                 }
 
-                IconButton(onClick = { }) {
-                    Image(
-                        painter = painterResource(id = R.drawable.white_star),
-                        contentDescription = "Favorites",
-                        modifier = Modifier.size(25.dp),
-                        contentScale = ContentScale.Fit
-                    )
-                }
-            }
-
-            RecipeProfileImages(images, pagerState)
-            HorizontalPagerIndicator(images.size, pagerState)
-
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(10.dp),
-                contentAlignment = Alignment.CenterEnd
-            ) { MixedText("by ", recipe.authorUsername) }
-
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp),
-                horizontalArrangement = Arrangement.Center,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(
-                    text = recipe.description,
-                    fontStyle = FontStyle.Italic,
-                    textAlign = TextAlign.Center
-                )
-            }
-
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 16.dp, start = 10.dp, end = 10.dp)
-                    .border(1.dp, Color.Black, RoundedCornerShape(16.dp)),
-                contentAlignment = Alignment.CenterStart
-            ) {
-
-                if (isAuthor) {
+                Row {
                     Button(
                         onClick = { },
                         modifier = Modifier
-                            .align(Alignment.TopEnd)
-                            .padding(top = 5.dp, end = 10.dp)
+                            .padding(top = 5.dp, end = 10.dp),
                     ) {
-                        Text("Edit")
+                        Text("Make it!")
                     }
                 }
-
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(16.dp)
-                ) {
-                    MixedText("Servings: ", "${recipe.servings} px")
-                    MixedText("Preparation Time: ", "${recipe.preparationTime} min")
-                    MixedText("Meal Type: ", recipe.mealType.displayName)
-                    MixedText("Cuisine: ", recipe.cuisine.displayName)
-                    MixedText("Intolerances: ", recipe.intolerances.joinToString(", ") { it.displayName })
-                    MixedText("Diets: ", recipe.diets.joinToString(", ") { it.displayName })
-                    MixedText("Calories: ", recipe.calories?.toString() ?: "N/A")
-                    MixedText("Protein: ", recipe.protein?.toString() ?: "N/A")
-                    MixedText("Fat: ", recipe.fat?.toString() ?: "N/A")
-                    MixedText("Carbs: ", recipe.carbs?.toString() ?: "N/A")
-
-                    val ingredients = recipe.ingredients.joinToString("\n") {
-                        val formattedQuantity = if (it.quantity % 1.0 == 0.0) {
-                            it.quantity.toInt()
-                        } else {
-                            it.quantity
-                        }
-                        val formattedUnit = it.unit.displayName
-                        "$formattedQuantity$formattedUnit ${it.name}"
-                    }
-                    Text("Ingredients:", fontWeight = FontWeight.Bold)
-                    Text(text = ingredients, modifier = Modifier.padding(start = 10.dp))
-
-                    val instructions = recipe.instructions.steps.entries.joinToString("\n") { "${it.key}: ${it.value}" }
-                    Text("Instructions:", fontWeight = FontWeight.Bold)
-                    Text(text = instructions, modifier = Modifier.padding(start = 10.dp))
-                }
             }
-
-            Row {
-                Button(
-                    onClick = { },
-                    modifier = Modifier
-                        .padding(top = 5.dp, end = 10.dp),
-                ) {
-                    Text("Make it!")
-                }
-            }
-        }
-    }
+        },
+        containerColor = Color.White
+    )
 }
 
 @Preview
