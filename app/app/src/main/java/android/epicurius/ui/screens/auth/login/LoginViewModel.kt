@@ -30,23 +30,27 @@ class LoginViewModel(
         validateLoginInfo(name, email, password)
         val loginInfo = LoginInputModel(name, email, password)
         viewModelScope.launch {
-            val result = request {
-                service.authService.login(loginInfo)
+            submitLogin(loginInfo, navigateTo)
+        }
+    }
+
+    private suspend fun submitLogin(loginInfo: LoginInputModel, navigateTo: () -> Unit) {
+        val result = request {
+            service.authService.login(loginInfo)
+        }
+        when {
+            result.isFailure -> {
+                enableLogin()
             }
-            when {
-                result.isFailure -> {
-                    enableLogin()
-                }
-                result.isSuccess -> {
-                    val token = result.getTokenOrThrow()
-                    saveUserInfo(token)
-                    navigateTo()
-                }
+            result.isSuccess -> {
+                val token = result.getTokenOrThrow()
+                saveUserInfo(token)
+                navigateTo()
             }
         }
     }
 
-    fun validateLoginInfo(
+    private fun validateLoginInfo(
         name: String?,
         email: String?,
         password: String
@@ -58,12 +62,11 @@ class LoginViewModel(
             else -> true
         }
 
-
-    fun enableLogin() {
+    private fun enableLogin() {
         loginEnable = true
     }
 
-    fun disableLogin() {
+    private fun disableLogin() {
         loginEnable = false
     }
 }

@@ -23,6 +23,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import kotlin.math.log
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
@@ -54,12 +55,14 @@ fun LoginScreen(
             Row {
                 Button(
                     onClick = { onSignUp() },
-                    modifier = Modifier.padding(10.dp)
+                    modifier = Modifier.padding(10.dp),
+                    enabled = loginEnable
                 ) { Text("SignUp") }
 
                 Button(
                     onClick = { onLogin(username, email, password) },
-                    modifier = Modifier.padding(10.dp)
+                    modifier = Modifier.padding(10.dp),
+                    enabled = loginEnable
                 ) { Text("Login") }
             }
         }
