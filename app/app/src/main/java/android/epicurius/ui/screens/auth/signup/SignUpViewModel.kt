@@ -32,23 +32,27 @@ class SignUpViewModel(
         if (!validateSignUpInfo(name, email, password, confirmPassword)) return
         val signUpInfo = SignUpInputModel(name, email, password, confirmPassword, country)
         viewModelScope.launch {
-            val result = request {
-                service.authService.signUp(signUpInfo)
+            submitSignUp(signUpInfo, navigateTo)
+        }
+    }
+
+    private suspend fun submitSignUp(signUpInfo: SignUpInputModel, navigateTo: () -> Unit) {
+        val result = request {
+            service.authService.signUp(signUpInfo)
+        }
+        when {
+            result.isFailure -> {
+                enableSignUp()
             }
-            when {
-                result.isFailure -> {
-                    enableSignUp()
-                }
-                result.isSuccess -> {
-                    val token = result.getTokenOrThrow()
-                    saveUserInfo(token)
-                    navigateTo()
-                }
+            result.isSuccess -> {
+                val token = result.getTokenOrThrow()
+                saveUserInfo(token)
+                navigateTo()
             }
         }
     }
 
-    fun validateSignUpInfo(
+    private fun validateSignUpInfo(
         name: String,
         email: String,
         password: String,
@@ -63,11 +67,11 @@ class SignUpViewModel(
             else -> true
         }
 
-    fun enableSignUp() {
+    private fun enableSignUp() {
         signUpEnable = true
     }
 
-    fun disableSignUp() {
+    private fun disableSignUp() {
         signUpEnable = false
     }
 }
