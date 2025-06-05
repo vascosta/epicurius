@@ -1,7 +1,9 @@
 package android.epicurius.ui.screens.dailyMenu
 
 import android.epicurius.ui.EpicuriusActivity
+import android.epicurius.ui.navigation.Intents
 import android.epicurius.ui.screens.feed.FeedActivity
+import android.epicurius.ui.screens.recipe.profile.RecipeProfileActivity
 import android.epicurius.ui.screens.utils.Idle
 import android.epicurius.ui.screens.utils.idle
 import android.epicurius.ui.screens.utils.navigateTo
@@ -26,9 +28,16 @@ class DailyMenuActivity : EpicuriusActivity() {
             val menuState = viewModel.dailyMenu.collectAsState(idle())
             DailyMenuScreen(
                 onBackButton = { navigateTo<FeedActivity>() },
+                onRecipeRequest = ::navigateToRecipeProfileActivity,
                 onDailyMenuRefresh = { viewModel.getDailyMenu() },
                 menuState = menuState.value
             )
+        }
+    }
+
+    private fun navigateToRecipeProfileActivity(recipeId: Int) {
+        navigateTo<RecipeProfileActivity> { intent ->
+            intent.putExtra(Intents.RECIPE_ID, recipeId)
         }
     }
 }
