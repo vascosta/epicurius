@@ -1,6 +1,5 @@
 package android.epicurius.ui.screens.auth.login
 
-import android.epicurius.MainActivity
 import android.epicurius.ui.EpicuriusActivity
 import android.epicurius.ui.screens.auth.signup.SignUpActivity
 import android.epicurius.ui.screens.feed.FeedActivity
@@ -17,7 +16,6 @@ class LoginActivity : EpicuriusActivity() {
             MaterialTheme {
                 LoginScreen(
                     loginEnable = viewModel.loginEnable,
-                    onBackButton = { navigateTo<MainActivity>() },
                     onSignUp = { navigateTo<SignUpActivity>() },
                     onLogin = { name, email, password ->
                         viewModel.login(name, email, password) {
