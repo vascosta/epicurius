@@ -2,6 +2,7 @@ package android.epicurius.ui.screens.user.settings
 
 import android.epicurius.ui.navigation.BottomBar
 import android.epicurius.ui.navigation.TopBar
+import android.epicurius.ui.screens.user.settings.components.SettingsButton
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -59,13 +60,7 @@ fun SettingsScreen(onBackButton: () -> Unit = {}) {
     )
 }
 
-@Composable
-private fun SettingsButton(text: String) {
-    TextButton(
-        onClick = {},
-        modifier = Modifier.padding(start = 15.dp, end = 15.dp)
-    ) { Text(text) }
-}
+
 
 @Preview
 @Composable
