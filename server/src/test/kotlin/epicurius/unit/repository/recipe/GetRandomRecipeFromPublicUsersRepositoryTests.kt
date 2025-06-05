@@ -8,7 +8,7 @@ import kotlin.test.assertTrue
 class GetRandomRecipeFromPublicUsersRepositoryTests : RecipeRepositoryTest() {
 
     @Test
-    fun `Should retrieve a random recipe from public users`() {
+    fun `Should retrieve a random recipe from public users successfully`() {
         // given a user public user (testUser)
 
         // when retrieving a random recipe from public users
