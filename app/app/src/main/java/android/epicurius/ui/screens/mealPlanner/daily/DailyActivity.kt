@@ -27,6 +27,7 @@ class DailyActivity : ComponentActivity() {
                             id = 4,
                             name = "Fruit Smoothie",
                             authorUsername = "ChefBear",
+                            rating = 4.3,
                             cuisine = Cuisine.AMERICAN,
                             mealType = MealType.SNACK,
                             preparationTime = 5,

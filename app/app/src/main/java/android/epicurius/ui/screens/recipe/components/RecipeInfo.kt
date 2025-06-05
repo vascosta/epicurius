@@ -19,7 +19,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun RecipeInfoBox(recipeInfo: RecipeInfo) {
+fun RecipeInfoBox(
+    recipeInfo: RecipeInfo,
+    onRecipeRequest: (Int) -> Unit = {}
+) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -27,7 +30,7 @@ fun RecipeInfoBox(recipeInfo: RecipeInfo) {
             .clip(RoundedCornerShape(20.dp))
             .border(0.5.dp, Color.Black, RoundedCornerShape(20.dp))
             .padding(5.dp)
-            .clickable(onClick = {  })
+            .clickable(onClick = { onRecipeRequest(recipeInfo.id) })
     ) {
         Column {
             RecipeHeader(name = recipeInfo.name, author = recipeInfo.authorUsername)
@@ -37,7 +40,7 @@ fun RecipeInfoBox(recipeInfo: RecipeInfo) {
             RecipeDetails(
                 preparationTime = recipeInfo.preparationTime,
                 servings = recipeInfo.servings,
-                rating = 4.3f // Placeholder rating, replace with actual data
+                rating = recipeInfo.rating
             )
         }
     }
@@ -69,6 +72,7 @@ fun RecipeInfoPreview() {
             id = 1,
             name = "Recipe Name",
             authorUsername = "ChefBear",
+            rating = 4.3,
             cuisine = Cuisine.MEDITERRANEAN,
             mealType = MealType.SIDE_DISH,
             preparationTime = 30,
@@ -83,7 +87,7 @@ fun RecipeInfoPreview() {
                 0x00.toByte(), 0x04.toByte(), 0x00.toByte(), 0x01.toByte(), 0xE2.toByte(), 0x26.toByte(), 0x05.toByte(), 0x9B.toByte(),
                 0x00.toByte(), 0x00.toByte(), 0x00.toByte(), 0x00.toByte(), 0x49.toByte(), 0x45.toByte(), 0x4E.toByte(), 0x44.toByte(),
                 0xAE.toByte(), 0x42.toByte(), 0x60.toByte(), 0x82.toByte()
-            )
+            ),
         )
     )
 }
@@ -96,6 +100,7 @@ fun RecipeInfoSimpleBoxPreview() {
             id = 1,
             name = "Simple Recipe Name",
             authorUsername = "ChefBear",
+            rating = 4.3,
             cuisine = Cuisine.ASIAN,
             mealType = MealType.MAIN_COURSE,
             preparationTime = 20,

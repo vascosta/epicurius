@@ -14,7 +14,7 @@ import androidx.compose.ui.unit.dp
 
 
 @Composable
-fun RecipeDetails(preparationTime: Int, servings: Int, rating: Float) {
+fun RecipeDetails(preparationTime: Int, servings: Int, rating: Double) {
     Row(
         modifier = Modifier
             .fillMaxWidth()

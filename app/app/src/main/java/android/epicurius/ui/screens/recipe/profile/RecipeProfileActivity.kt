@@ -29,6 +29,7 @@ class RecipeProfileActivity : ComponentActivity() {
                     id = 1,
                     name = "Panquecas Americanas",
                     authorUsername = "MestreAndre",
+                    rating = 4.3,
                     date = LocalDate.of(2025, 5, 19),
                     description = "Deliciosas panquecas fofinhas perfeitas para o pequeno-almoço.",
                     servings = 4,
