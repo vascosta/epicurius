@@ -12,15 +12,28 @@ class JdbiFeedRepository(private val handle: Handle) : FeedRepository {
     override fun getFeed(info: GetFeedModel): List<JdbiRecipeInfo> {
         return handle.createQuery(
             """
-                SELECT r.id as recipe_id, r.name as recipe_name, u.name as author_username,
-                r.cuisine, r.meal_type, r.preparation_time, r.servings, r.pictures_names
+                SELECT 
+                    r.id as recipe_id, 
+                    r.name as recipe_name, 
+                    u.name as author_username,
+                    COALESCE(rr.average_rating, 0) AS average_rating,
+                    r.cuisine, 
+                    r.meal_type, 
+                    r.preparation_time, 
+                    r.servings, 
+                    r.pictures_names
                 FROM dbo.followers f 
                 JOIN dbo.recipe r ON f.user_id = r.author_id
                 JOIN dbo.user u on r.author_id = u.id
+                LEFT JOIN (
+                    SELECT recipe_id, ROUND(AVG(rating), 2) AS average_rating
+                    FROM dbo.recipe_rating
+                    GROUP BY recipe_id
+                ) rr ON r.id = rr.recipe_id
                 WHERE f.follower_id = :userId 
-                AND status = :status 
-                AND NOT (r.intolerances && :intolerances) 
-                AND r.diets @> :diets
+                    AND status = :status 
+                    AND NOT (r.intolerances && :intolerances) 
+                    AND r.diets @> :diets
                 ORDER BY r.date DESC, r.id DESC
                 LIMIT :limit OFFSET :skip
             """
