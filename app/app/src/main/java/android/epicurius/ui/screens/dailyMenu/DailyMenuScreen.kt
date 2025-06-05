@@ -25,8 +25,9 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun DailyMenuScreen(
-    onBackButton: () -> Unit = {},
-    onDailyMenuRefresh: () -> Unit = {},
+    onBackButton: () -> Unit,
+    onRecipeRequest: (Int) -> Unit,
+    onDailyMenuRefresh: () -> Unit,
     menuState: LoadState<Map<String, RecipeInfo?>>,
 ) {
     Scaffold(
@@ -46,11 +47,11 @@ fun DailyMenuScreen(
                             .verticalScroll(rememberScrollState()),
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
-                        MenuItemBox("Breakfast", menu["Breakfast"])
-                        MenuItemBox("Soup", menu["Soup"])
-                        MenuItemBox("Lunch", menu["Lunch"])
-                        MenuItemBox("Dinner", menu["Dinner"])
-                        MenuItemBox("Dessert", menu["Dessert"])
+                        MenuItemBox("Breakfast", menu["Breakfast"], onRecipeRequest)
+                        MenuItemBox("Soup", menu["Soup"], onRecipeRequest)
+                        MenuItemBox("Lunch", menu["Lunch"], onRecipeRequest)
+                        MenuItemBox("Dinner", menu["Dinner"], onRecipeRequest)
+                        MenuItemBox("Dessert", menu["Dessert"], onRecipeRequest)
                     }
                 }
             )
@@ -86,5 +87,5 @@ fun DailyMenuPreview() {
             picture = "".toByteArray()
         )
     )
-    DailyMenuScreen({}, {}, apiSuccess(menu))
+    DailyMenuScreen({}, {}, {}, apiSuccess(menu))
 }
