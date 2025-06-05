@@ -39,6 +39,7 @@ class SearchRecipesControllerTests : RecipeControllerTest() {
         RECIPE_ID,
         testRecipe.name,
         testRecipe.authorUsername,
+        0.0,
         testRecipe.cuisine,
         testRecipe.mealType,
         testRecipe.preparationTime,

@@ -58,6 +58,7 @@ open class CollectionControllerTest : HttpTest() {
             RECIPE_ID,
             generateRandomRecipeName(),
             publicAuthenticatedUsername,
+            0.0,
             Cuisine.MEDITERRANEAN,
             MealType.SOUP,
             1,

@@ -23,6 +23,7 @@ open class RateRecipeServiceTest : ServiceTest() {
             name = "Test Recipe",
             authorId = AUTHOR_ID,
             authorUsername = AUTHOR_USERNAME,
+            0.0,
             date = LocalDate.now(),
             servings = 4,
             preparationTime = 30,

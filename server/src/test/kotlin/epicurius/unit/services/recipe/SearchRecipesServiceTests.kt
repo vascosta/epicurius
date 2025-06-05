@@ -57,6 +57,7 @@ class SearchRecipesServiceTests : RecipeServiceTest() {
         id = RECIPE_ID,
         name = "Pastel de nata",
         generateRandomUsername(),
+        0.0,
         cuisine = Cuisine.MEDITERRANEAN,
         mealType = MealType.DESSERT,
         preparationTime = 30,

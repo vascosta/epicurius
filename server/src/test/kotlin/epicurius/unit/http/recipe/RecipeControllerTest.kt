@@ -58,6 +58,7 @@ open class RecipeControllerTest : HttpTest() {
             RECIPE_ID,
             "Pastel de nata",
             testAuthorAuthenticatedUser.user.name,
+            0.0,
             LocalDate.now(),
             "A delicious Portuguese dessert",
             4,

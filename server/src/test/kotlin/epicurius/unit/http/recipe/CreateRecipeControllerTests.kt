@@ -59,6 +59,7 @@ class CreateRecipeControllerTests : RecipeControllerTest() {
             RECIPE_ID,
             createRecipeInfo.name,
             testAuthenticatedUser.user.name,
+            0.0,
             LocalDate.now(),
             createRecipeInfo.description,
             createRecipeInfo.servings,

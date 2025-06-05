@@ -78,6 +78,7 @@ open class RecipeServiceTest : ServiceTest() {
             createRecipeInputInfo.name,
             AUTHOR_ID,
             authorUsername,
+            0.0,
             jdbiCreateRecipeInfo.date,
             createRecipeInputInfo.servings,
             createRecipeInputInfo.preparationTime,

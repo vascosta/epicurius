@@ -53,6 +53,7 @@ class UpdateRecipeServiceTests : RecipeServiceTest() {
             updateRecipeInputInfo.name!!,
             AUTHOR_ID,
             authorUsername,
+            0.0,
             jdbiCreateRecipeInfo.date,
             1,
             1,
