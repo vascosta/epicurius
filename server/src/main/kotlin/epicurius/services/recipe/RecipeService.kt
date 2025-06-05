@@ -63,6 +63,7 @@ class RecipeService(
                 recipeId,
                 recipeInfo.name,
                 authorName,
+                0.0, // Initial rating is 0
                 jdbiCreateRecipeModel.date,
                 recipeInfo.description,
                 recipeInfo.servings,
