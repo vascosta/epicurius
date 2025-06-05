@@ -29,9 +29,10 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun FavouritesListScreen(
     onBackButton: () -> Unit = {},
+    onRecipeRequest: (Int) -> Unit = {},
     onFavouritesRefresh: () -> Unit = {},
     favouritesListNameState: LoadState<String>,
-    recipesState: LoadState<List<RecipeInfo>>
+    recipesState: LoadState<List<RecipeInfo>>,
 ) {
     val favouritesListName = getFavouritesListName(favouritesListNameState)
     Scaffold(
@@ -52,7 +53,7 @@ fun FavouritesListScreen(
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         recipes.forEach {
-                            RecipeInfoBox(recipeInfo = it)
+                            RecipeInfoBox(it, onRecipeRequest)
                             Spacer(modifier = Modifier.height(10.dp))
                         }
                     }
@@ -75,6 +76,7 @@ fun FavouritesListScreenPreview() {
                 id = 1,
                 name = "Spaghetti Carbonara",
                 authorUsername = "ChefBear",
+                rating = 4.3,
                 cuisine = Cuisine.ITALIAN,
                 mealType = MealType.MAIN_COURSE,
                 preparationTime = 35,
