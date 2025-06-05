@@ -42,7 +42,6 @@ open class HttpTest : EpicuriusUnitTest() {
 
     companion object {
         val mockResponse: HttpServletResponse = mock()
-        val mockCookie: Cookie = mock()
 
         // USER
         fun getUserInfo(
@@ -173,6 +172,13 @@ open class HttpTest : EpicuriusUnitTest() {
             id: Int,
         ) =
             recipeController.getRecipe(authenticatedUser, id)
+
+        suspend fun getUserRecipes(
+            authenticatedUser: AuthenticatedUser,
+            skip: Int,
+            limit: Int
+        ) =
+            recipeController.getUserRecipes(authenticatedUser, skip, limit)
 
         fun searchRecipes(
             authenticatedUser: AuthenticatedUser,
