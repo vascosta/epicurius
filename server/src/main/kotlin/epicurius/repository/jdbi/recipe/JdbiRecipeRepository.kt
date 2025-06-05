@@ -132,6 +132,38 @@ class JdbiRecipeRepository(private val handle: Handle) : RecipeRepository {
             .mapTo<JdbiRecipeInfo>()
             .list()
 
+    override fun getUserRecipes(userId: Int, pagingParams: PagingParams): List<JdbiRecipeInfo> =
+        handle.createQuery(
+            """
+                SELECT 
+                    r.id AS recipe_id, 
+                    r.name AS recipe_name, 
+                    u.name AS author_username, 
+                    COALESCE(rr.average_rating, 0) AS average_rating,
+                    r.cuisine, 
+                    r.meal_type, 
+                    r.preparation_time, 
+                    r.servings, 
+                    r.pictures_names
+                FROM dbo.Recipe r
+                JOIN dbo.user u ON u.id = r.author_id
+                LEFT JOIN (
+                    SELECT recipe_id, ROUND(AVG(rating), 2) AS average_rating
+                    FROM dbo.recipe_rating
+                    GROUP BY recipe_id
+                ) rr ON r.id = rr.recipe_id
+                WHERE r.author_id = :userId
+                LIMIT :limit OFFSET :skip
+            """
+        )
+            .bind("userId", userId)
+            .bind("limit", pagingParams.limit)
+            .bind("skip", pagingParams.skip)
+            .mapTo<JdbiRecipeInfo>()
+            .list()
+            .takeIf { it.isNotEmpty() }
+            ?: emptyList()
+
     override fun searchRecipes(userId: Int, form: SearchRecipesModel, pagingParams: PagingParams): List<JdbiRecipeInfo> {
         val query = StringBuilder(
             """
