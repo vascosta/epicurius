@@ -2,6 +2,7 @@ package android.epicurius.ui.screens.auth.signup
 
 import android.annotation.SuppressLint
 import android.epicurius.ui.navigation.TopBar
+import android.epicurius.ui.screens.auth.components.AuthButton
 import android.epicurius.ui.screens.auth.components.PasswordTextField
 import android.epicurius.ui.screens.utils.DropdownMenuComponent
 import android.epicurius.ui.screens.utils.TextField
@@ -11,9 +12,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Button
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -29,10 +28,9 @@ import java.util.Locale
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun SignUpScreen(
-    signUpEnable: Boolean = true,
-    onBackButton: () -> Unit = {},
-    onSignUp: (String, String, String, String, String) -> Unit = {_, _, _, _, _ -> },
-    onLogin: () -> Unit = {}
+    signUpEnable: Boolean,
+    onSignUp: (String, String, String, String, String) -> Unit,
+    onLogin: () -> Unit
 ) {
     var username by remember { mutableStateOf("") }
     var email by remember{ mutableStateOf("") }
@@ -42,7 +40,7 @@ fun SignUpScreen(
 
     Scaffold(
         topBar = {
-            TopBar(text = "SignUp", backButton = true, onBackButton = { onBackButton() },  icon = null)
+            TopBar(text = "SignUp")
         }
     ) {
         Column(
@@ -71,29 +69,33 @@ fun SignUpScreen(
             )
 
             Row {
-                SignUpButton("LogIn", onClick = { onLogin() })
-                SignUpButton("SignUp", onClick = { onSignUp(
-                    username,
-                    email,
-                    password,
-                    confirmPassword,
-                    country
-                ) })
+                AuthButton(
+                    label = "Login",
+                    onClick = { onLogin() },
+                    enabled = signUpEnable
+                )
+                AuthButton(
+                    label = "SignUp",
+                    onClick = {
+                        onSignUp(
+                            username,
+                            email,
+                            password,
+                            confirmPassword,
+                            country
+                        )
+                    },
+                    enabled = signUpEnable
+                )
             }
         }
     }
 }
 
-@Composable
-private fun SignUpButton(label: String, onClick: () -> Unit) {
-    Button(
-        onClick = { onClick() },
-        modifier = Modifier.padding(10.dp)
-    ) { Text(label) }
-}
+
 
 @Preview
 @Composable
 fun SignUpPreview() {
-    SignUpScreen()
+    SignUpScreen(true, {_, _, _, _, _ -> }, {})
 }
