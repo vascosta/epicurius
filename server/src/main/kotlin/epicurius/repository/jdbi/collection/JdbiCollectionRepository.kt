@@ -161,19 +161,19 @@ class JdbiCollectionRepository(private val handle: Handle) : CollectionRepositor
         query.append(
             """
                 SELECT 
-                c.id as collection_id, 
-                c.owner_id as owner_id, 
-                c.name as collection_name, 
-                c.type as collection_type,
-                r.id AS recipe_id, 
-                r.name AS recipe_name, 
-                u.name as author_username,
-                COALESCE(rr.average_rating, 0) AS average_rating,
-                r.cuisine, 
-                r.meal_type, 
-                r.preparation_time, 
-                r.servings, 
-                r.pictures_names
+                    c.id as collection_id, 
+                    c.owner_id as owner_id, 
+                    c.name as collection_name, 
+                    c.type as collection_type,
+                    r.id AS recipe_id, 
+                    r.name AS recipe_name, 
+                    u.name as author_username,
+                    COALESCE(rr.average_rating, 0) AS average_rating,
+                    r.cuisine, 
+                    r.meal_type, 
+                    r.preparation_time, 
+                    r.servings, 
+                    r.pictures_names
                 FROM $collection c
                 LEFT JOIN dbo.collection_recipe cr ON cr.collection_id = c.id
                 LEFT JOIN dbo.recipe r ON r.id = cr.recipe_id

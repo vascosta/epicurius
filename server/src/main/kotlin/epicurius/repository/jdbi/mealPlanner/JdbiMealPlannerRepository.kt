@@ -28,16 +28,31 @@ class JdbiMealPlannerRepository(private val handle: Handle) : MealPlannerReposit
     override fun getWeeklyMealPlanner(userId: Int): JdbiMealPlanner {
         val list = handle.createQuery(
             """
-                SELECT mp.date, mp.max_calories, mpr.meal_time, 
-                       r.id AS recipe_id, r.name AS recipe_name, u.name AS author_username,
-                       r.cuisine, r.meal_type, r.preparation_time, r.servings, r.pictures_names
+                SELECT 
+                    mp.date, 
+                    mp.max_calories, 
+                    mpr.meal_time, 
+                    r.id AS recipe_id, 
+                    r.name AS recipe_name, 
+                    u.name AS author_username,
+                    COALESCE(rr.average_rating, 0) AS average_rating,
+                    r.cuisine, 
+                    r.meal_type, 
+                    r.preparation_time, 
+                    r.servings, 
+                    r.pictures_names
                 FROM dbo.meal_planner mp 
                 LEFT JOIN dbo.meal_planner_recipe mpr ON mp.user_id = mpr.user_id AND mp.date = mpr.date
                 LEFT JOIN dbo.recipe r ON mpr.recipe_id = r.id
                 LEFT JOIN dbo.user u ON u.id = r.author_id
+                LEFT JOIN (
+                    SELECT recipe_id, ROUND(AVG(rating), 2) AS average_rating
+                    FROM dbo.recipe_rating
+                    GROUP BY recipe_id
+                ) rr ON r.id = rr.recipe_id
                 WHERE mp.user_id = :id 
-                AND mp.date >= DATE_TRUNC('week', CURRENT_DATE)
-                AND mp.date < DATE_TRUNC('week', CURRENT_DATE) + INTERVAL '1 week'
+                    AND mp.date >= DATE_TRUNC('week', CURRENT_DATE)
+                    AND mp.date < DATE_TRUNC('week', CURRENT_DATE) + INTERVAL '1 week'
                 ORDER BY mp.date ASC, mpr.meal_time ASC
             """
         )
@@ -161,13 +176,28 @@ class JdbiMealPlannerRepository(private val handle: Handle) : MealPlannerReposit
     private fun dailyMealPlannerResults(userId: Int, date: LocalDate): List<JdbiDailyMealPlannerRow> =
         handle.createQuery(
             """
-                SELECT mp.date, mp.max_calories, mpr.meal_time, 
-                       r.id AS recipe_id, r.name AS recipe_name, u.name as author_username,
-                       r.cuisine, r.meal_type, r.preparation_time, r.servings, r.pictures_names
+                SELECT 
+                mp.date, 
+                mp.max_calories, 
+                mpr.meal_time,                      
+                r.id AS recipe_id, 
+                r.name AS recipe_name, 
+                u.name as author_username,
+                COALESCE(rr.average_rating, 0) AS average_rating,
+                r.cuisine, 
+                r.meal_type, 
+                r.preparation_time, 
+                r.servings, 
+                r.pictures_names
                 FROM dbo.meal_planner mp 
                 LEFT JOIN dbo.meal_planner_recipe mpr ON mp.user_id = mpr.user_id AND mp.date = mpr.date
                 LEFT JOIN dbo.recipe r ON mpr.recipe_id = r.id
                 LEFT JOIN dbo.user u ON u.id = r.author_id
+                LEFT JOIN (
+                    SELECT recipe_id, ROUND(AVG(rating), 2) AS average_rating
+                    FROM dbo.recipe_rating
+                    GROUP BY recipe_id
+                ) rr ON r.id = rr.recipe_id
                 WHERE mp.user_id = :userId AND mp.date = :date
                 ORDER BY mpr.meal_time ASC
             """
