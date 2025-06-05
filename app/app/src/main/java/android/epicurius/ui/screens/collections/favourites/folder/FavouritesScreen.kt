@@ -25,9 +25,9 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun FavouritesScreen(
-    onBackButton: () -> Unit = {},
-    onCollectionRequest: (Int) -> Unit = {},
-    onFavouritesRefresh: () -> Unit = {},
+    onBackButton: () -> Unit,
+    onCollectionRequest: (Int) -> Unit,
+    onFavouritesRefresh: () -> Unit,
     favouritesState: LoadState<List<CollectionProfile>>
 ) {
     Scaffold(

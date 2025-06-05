@@ -16,12 +16,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 
 @Composable
 fun CollectionProfileBox(
     collection: CollectionProfile,
-    onCollectionRequest: (Int) -> Unit = {}
+    onCollectionRequest: (Int) -> Unit
 ) {
     Box(
         modifier = Modifier
@@ -36,4 +37,10 @@ fun CollectionProfileBox(
     ) {
         Text(collection.name, fontWeight = FontWeight.Bold)
     }
+}
+
+@Preview
+@Composable
+fun CollectionProfileBoxPreview() {
+    CollectionProfileBox(CollectionProfile(1, "Italian Delights")) { }
 }
