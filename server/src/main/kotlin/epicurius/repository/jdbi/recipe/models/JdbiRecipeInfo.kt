@@ -8,6 +8,7 @@ data class JdbiRecipeInfo(
     val id: Int,
     val name: String,
     val authorUsername: String,
+    val rating: Double,
     val cuisine: Cuisine,
     val mealType: MealType,
     val preparationTime: Int,
@@ -16,6 +17,6 @@ data class JdbiRecipeInfo(
 ) {
     fun toRecipeInfo(picture: ByteArray) =
         RecipeInfo(
-            id, name, authorUsername, cuisine, mealType, preparationTime, servings, picture
+            id, name, authorUsername, rating, cuisine, mealType, preparationTime, servings, picture
         )
 }

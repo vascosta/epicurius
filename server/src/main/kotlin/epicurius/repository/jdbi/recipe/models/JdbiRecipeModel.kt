@@ -15,6 +15,7 @@ data class JdbiRecipeModel(
     val name: String,
     val authorId: Int,
     val authorUsername: String,
+    val rating: Double,
     val date: LocalDate,
     val servings: Int,
     val preparationTime: Int,
@@ -33,6 +34,7 @@ data class JdbiRecipeModel(
         id = id,
         name = name,
         authorUsername = authorUsername,
+        rating = rating,
         date = date,
         description = description,
         servings = servings,
@@ -51,5 +53,5 @@ data class JdbiRecipeModel(
     )
 
     fun toRecipeInfo(picture: ByteArray): RecipeInfo =
-        RecipeInfo(id, name, authorUsername, cuisine, mealType, preparationTime, servings, picture)
+        RecipeInfo(id, name, authorUsername, rating, cuisine, mealType, preparationTime, servings, picture)
 }

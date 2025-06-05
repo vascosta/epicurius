@@ -14,6 +14,7 @@ class AddRecipeToCollectionRepositoryTests : CollectionRepositoryTest() {
         testRecipe.id,
         testRecipe.name,
         testRecipe.authorUsername,
+        0.0,
         testRecipe.cuisine,
         testRecipe.mealType,
         testRecipe.preparationTime,

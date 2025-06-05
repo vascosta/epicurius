@@ -26,6 +26,7 @@ open class MealPlannerRepositoryTest : RepositoryTest() {
             id = testRecipe.id,
             name = testRecipe.name,
             authorUsername = testRecipe.authorUsername,
+            0.0,
             cuisine = testRecipe.cuisine,
             mealType = testRecipe.mealType,
             preparationTime = testRecipe.preparationTime,

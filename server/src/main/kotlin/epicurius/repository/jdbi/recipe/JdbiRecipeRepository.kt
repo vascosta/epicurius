@@ -70,13 +70,21 @@ class JdbiRecipeRepository(private val handle: Handle) : RecipeRepository {
     override fun getRecipeById(recipeId: Int): JdbiRecipeModel? =
         handle.createQuery(
             """
-                SELECT r.id, r.name, r.author_id, r.date, r.servings, r.preparation_time, 
-                       r.cuisine, r.meal_type, r.intolerances, r.diets, r.calories, 
-                       r.protein, r.fat, r.carbs, r.pictures_names, 
-                       i.name AS ingredient_name, i.quantity, i.unit, u.name as author_username
-                FROM dbo.Recipe r 
-                JOIN dbo.Ingredient i on r.id = i.recipe_id 
-                JOIN dbo.user u on r.author_id = u.id
+                SELECT 
+                    r.id, r.name, r.author_id, r.date, r.servings, r.preparation_time, 
+                    r.cuisine, r.meal_type, r.intolerances, r.diets, r.calories, 
+                    r.protein, r.fat, r.carbs, r.pictures_names, 
+                    i.name AS ingredient_name, i.quantity, i.unit, 
+                    u.name AS author_username,
+                    COALESCE(rr.average_rating, 0) AS average_rating
+                FROM dbo.Recipe r
+                JOIN dbo.Ingredient i ON r.id = i.recipe_id
+                JOIN dbo.User u ON r.author_id = u.id
+                LEFT JOIN (
+                    SELECT recipe_id, ROUND(AVG(rating), 2) AS average_rating
+                    FROM dbo.recipe_rating
+                    GROUP BY recipe_id
+                ) rr ON r.id = rr.recipe_id
                 WHERE r.id = :id
             """
         )
@@ -92,14 +100,27 @@ class JdbiRecipeRepository(private val handle: Handle) : RecipeRepository {
     ): List<JdbiRecipeInfo> =
         handle.createQuery(
             """
-                SELECT r.id as recipe_id, r.name as recipe_name, u.name as author_username, 
-                r.cuisine, r.meal_type, r.preparation_time, r.servings, r.pictures_names
+                SELECT 
+                    r.id AS recipe_id, 
+                    r.name AS recipe_name, 
+                    u.name AS author_username, 
+                    COALESCE(rr.average_rating, 0) AS average_rating,
+                    r.cuisine, 
+                    r.meal_type, 
+                    r.preparation_time, 
+                    r.servings, 
+                    r.pictures_names
                 FROM dbo.Recipe r
                 JOIN dbo.user u ON u.id = r.author_id
+                LEFT JOIN (
+                    SELECT recipe_id, ROUND(AVG(rating), 2) AS average_rating
+                    FROM dbo.recipe_rating
+                    GROUP BY recipe_id
+                ) rr ON r.id = rr.recipe_id
                 WHERE u.privacy = false 
-                AND r.meal_type = :mealType 
-                AND NOT (r.intolerances && :intolerances)
-                AND r.diets @> :diets
+                    AND r.meal_type = :mealType 
+                    AND NOT (r.intolerances && :intolerances)
+                    AND r.diets @> :diets
                 ORDER BY RANDOM()
                 LIMIT :limit
             """
@@ -115,15 +136,29 @@ class JdbiRecipeRepository(private val handle: Handle) : RecipeRepository {
         val query = StringBuilder(
             """
                 WITH available_recipes AS (
-                    SELECT r.*, u.name as author_username
+                    SELECT r.*, 
+                    u.name as author_username
                     FROM dbo.Recipe r
                     JOIN dbo.user u ON u.id = r.author_id
                     LEFT JOIN dbo.followers f ON f.user_id = r.author_id AND f.follower_id = :id
                     WHERE u.privacy = false OR f.follower_id IS NOT NULL
                 ) 
-                SELECT DISTINCT r.id as recipe_id, r.name as recipe_name, r.name as author_username, r.cuisine, 
-                r.meal_type, r.preparation_time, r.servings, r.pictures_names
+                SELECT DISTINCT 
+                    r.id as recipe_id, 
+                    r.name as recipe_name, 
+                    r.name as author_username, 
+                    COALESCE(rr.average_rating, 0) AS average_rating,
+                    r.cuisine, 
+                    r.meal_type, 
+                    r.preparation_time, 
+                    r.servings, 
+                    r.pictures_names
                 FROM available_recipes r JOIN dbo.Ingredient i ON r.id = i.recipe_id
+                LEFT JOIN (
+                    SELECT recipe_id, ROUND(AVG(rating), 2) AS average_rating
+                    FROM dbo.recipe_rating
+                    GROUP BY recipe_id
+                ) rr ON r.id = rr.recipe_id
                 WHERE r.author_id <> :id
             """
         )
@@ -136,7 +171,7 @@ class JdbiRecipeRepository(private val handle: Handle) : RecipeRepository {
 
         query.append(
             """
-                GROUP BY r.id, r.name, r.cuisine, r.meal_type, r.preparation_time, r.servings, r.pictures_names
+                GROUP BY r.id, r.name, rr.average_rating, r.cuisine, r.meal_type, r.preparation_time, r.servings, r.pictures_names
             """
         )
 
@@ -174,10 +209,20 @@ class JdbiRecipeRepository(private val handle: Handle) : RecipeRepository {
                     WHERE id = :id
                     RETURNING *
                 )
-                SELECT ur.*, i.name AS ingredient_name, i.quantity, i.unit, u.name as author_username
+                SELECT ur.*, 
+                i.name AS ingredient_name, 
+                rr.average_rating, 
+                i.quantity, 
+                i.unit, 
+                u.name as author_username
                 FROM updated_recipe ur
                 JOIN dbo.Ingredient i ON i.recipe_id = ur.id
-                JOIN dbo.user u ON u.id = ur.author_id;
+                JOIN dbo.user u ON u.id = ur.author_id
+                LEFT JOIN (
+                    SELECT recipe_id, ROUND(AVG(rating), 2) AS average_rating
+                    FROM dbo.recipe_rating
+                    GROUP BY recipe_id
+                ) rr ON ur.id = rr.recipe_id
             """
         )
             .bind("id", recipeInfo.id)
