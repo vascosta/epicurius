@@ -6,8 +6,8 @@ import android.epicurius.domain.mealPlanner.MealTime
 import android.epicurius.domain.recipe.Cuisine
 import android.epicurius.domain.recipe.MealType
 import android.epicurius.domain.recipe.RecipeInfo
-import android.epicurius.ui.screens.BottomBar
-import android.epicurius.ui.screens.TopBar
+import android.epicurius.ui.navigation.BottomBar
+import android.epicurius.ui.navigation.TopBar
 import android.epicurius.domain.mealPlanner.utils.getWeek
 import android.epicurius.ui.screens.mealPlanner.components.MealPlannerComponent
 import android.epicurius.ui.screens.mealPlanner.components.WeekCalendarRow

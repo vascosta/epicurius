@@ -1,4 +1,4 @@
-package android.epicurius.ui.screens
+package android.epicurius.ui.navigation
 
 import android.epicurius.R
 import android.epicurius.ui.screens.utils.TabComponent

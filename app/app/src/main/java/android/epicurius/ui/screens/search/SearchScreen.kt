@@ -1,7 +1,7 @@
 package android.epicurius.ui.screens.search
 
-import android.epicurius.ui.screens.BottomBar
-import android.epicurius.ui.screens.TopBar
+import android.epicurius.ui.navigation.BottomBar
+import android.epicurius.ui.navigation.TopBar
 import android.epicurius.ui.screens.search.components.FilterDialog
 import android.epicurius.ui.screens.search.components.FiltersIcon
 import android.epicurius.ui.screens.search.components.SearchPhotoComponent

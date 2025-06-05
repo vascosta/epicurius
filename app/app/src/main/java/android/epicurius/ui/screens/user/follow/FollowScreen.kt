@@ -3,8 +3,8 @@ package android.epicurius.ui.screens.user.follow
 import android.epicurius.domain.user.FollowUser
 import android.epicurius.domain.user.FollowingUser
 import android.epicurius.domain.user.UserProfile
-import android.epicurius.ui.screens.BottomBar
-import android.epicurius.ui.screens.FollowTopBar
+import android.epicurius.ui.navigation.BottomBar
+import android.epicurius.ui.navigation.FollowTopBar
 import android.epicurius.ui.screens.user.components.UserBox
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column

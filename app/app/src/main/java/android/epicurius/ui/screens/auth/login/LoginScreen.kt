@@ -1,7 +1,7 @@
 package android.epicurius.ui.screens.auth.login
 
 import android.annotation.SuppressLint
-import android.epicurius.ui.screens.TopBar
+import android.epicurius.ui.navigation.TopBar
 import android.epicurius.ui.screens.auth.components.PasswordTextField
 import android.epicurius.ui.screens.utils.TextField
 import androidx.compose.foundation.background

@@ -2,8 +2,8 @@ package android.epicurius.ui.screens.recipe.ingredients
 
 import android.epicurius.domain.recipe.Ingredient
 import android.epicurius.domain.recipe.IngredientUnit
-import android.epicurius.ui.screens.BottomBar
-import android.epicurius.ui.screens.TopBar
+import android.epicurius.ui.navigation.BottomBar
+import android.epicurius.ui.navigation.TopBar
 import android.epicurius.ui.screens.recipe.ingredients.components.IngredientTable
 import android.epicurius.ui.screens.recipe.ingredients.components.SubstituteIngredientsAlertDialog
 import androidx.compose.foundation.background

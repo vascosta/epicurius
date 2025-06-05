@@ -1,7 +1,7 @@
 package android.epicurius.ui.screens.mealPlanner.calendar
 
-import android.epicurius.ui.screens.BottomBar
-import android.epicurius.ui.screens.TopBar
+import android.epicurius.ui.navigation.BottomBar
+import android.epicurius.ui.navigation.TopBar
 import android.epicurius.ui.screens.mealPlanner.components.WeekCalendarRow
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable

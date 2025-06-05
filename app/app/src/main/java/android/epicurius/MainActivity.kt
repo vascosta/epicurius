@@ -4,8 +4,8 @@ import android.epicurius.ui.MainScreen
 import android.epicurius.ui.screens.auth.login.LoginActivity
 import android.epicurius.ui.screens.auth.signup.SignUpActivity
 import android.epicurius.ui.screens.dailyMenu.DailyMenuActivity
-import android.epicurius.ui.screens.favourites.folder.FavouritesActivity
-import android.epicurius.ui.screens.favourites.list.FavouritesListActivity
+import android.epicurius.ui.screens.collections.favourites.folder.FavouritesActivity
+import android.epicurius.ui.screens.collections.favourites.list.FavouritesListActivity
 import android.epicurius.ui.screens.feed.FeedActivity
 import android.epicurius.ui.screens.fridge.FridgeActivity
 import android.epicurius.ui.screens.mealPlanner.calendar.CalendarActivity

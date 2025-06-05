@@ -33,12 +33,12 @@
             android:label="Daily Menu"
             android:theme="@style/Theme.App" />
         <activity
-            android:name=".ui.screens.favourites.folder.FavouritesActivity"
+            android:name=".ui.screens.collections.favourites.folder.FavouritesActivity"
             android:exported="false"
             android:label="Favourites Folder"
             android:theme="@style/Theme.App" />
         <activity
-            android:name=".ui.screens.favourites.list.FavouritesListActivity"
+            android:name=".ui.screens.collections.favourites.list.FavouritesListActivity"
             android:exported="false"
             android:label="Favourites List"
             android:theme="@style/Theme.App" />

@@ -4,8 +4,8 @@ import android.epicurius.domain.Diet
 import android.epicurius.domain.Intolerance
 import android.epicurius.domain.recipe.Cuisine
 import android.epicurius.domain.recipe.MealType
-import android.epicurius.ui.screens.BottomBar
-import android.epicurius.ui.screens.TopBar
+import android.epicurius.ui.navigation.BottomBar
+import android.epicurius.ui.navigation.TopBar
 import android.epicurius.ui.screens.recipe.createRecipe.components.DividerComponent
 import android.epicurius.ui.screens.recipe.createRecipe.components.IngredientsComponent
 import android.epicurius.ui.screens.recipe.createRecipe.components.InstructionsComponent
