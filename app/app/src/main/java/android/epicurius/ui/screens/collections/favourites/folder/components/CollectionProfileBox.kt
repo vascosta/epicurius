@@ -1,4 +1,4 @@
-package android.epicurius.ui.screens.favourites.folder.components
+package android.epicurius.ui.screens.collections.favourites.folder.components
 
 import android.epicurius.domain.collection.CollectionProfile
 import androidx.compose.foundation.background
@@ -19,7 +19,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun CollectionProfileBox(profile: CollectionProfile) {
+fun CollectionProfileBox(collection: CollectionProfile, onCollectionRequest: (Int) -> Unit) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -27,10 +27,10 @@ fun CollectionProfileBox(profile: CollectionProfile) {
             .clip(RoundedCornerShape(20.dp))
             .border(0.5.dp, Color.Black, RoundedCornerShape(20.dp))
             .height(50.dp)
-            .clickable(onClick = {  })
+            .clickable(onClick = { onCollectionRequest(collection.id) })
             .padding(start = 20.dp),
         contentAlignment = Alignment.CenterStart
     ) {
-        Text(profile.name, fontWeight = FontWeight.Bold)
+        Text(collection.name, fontWeight = FontWeight.Bold)
     }
 }

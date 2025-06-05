@@ -1,12 +1,9 @@
-package android.epicurius.ui.screens.favourites.list
+package android.epicurius.ui.screens.collections.favourites.folder
 
-import android.epicurius.domain.recipe.Cuisine
-import android.epicurius.domain.recipe.MealType
-import android.epicurius.domain.recipe.RecipeInfo
-import android.epicurius.ui.screens.BottomBar
-import android.epicurius.ui.screens.TopBar
-import android.epicurius.ui.screens.favourites.folder.components.getFavouritesListName
-import android.epicurius.ui.screens.recipe.components.RecipeInfoBox
+import android.epicurius.domain.collection.CollectionProfile
+import android.epicurius.ui.navigation.BottomBar
+import android.epicurius.ui.navigation.TopBar
+import android.epicurius.ui.screens.collections.favourites.folder.components.CollectionProfileBox
 import android.epicurius.ui.screens.utils.LoadState
 import android.epicurius.ui.screens.utils.LoadStateRenderer
 import android.epicurius.ui.screens.utils.apiSuccess
@@ -27,21 +24,20 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun FavouritesListScreen(
+fun FavouritesScreen(
     onBackButton: () -> Unit = {},
+    onFavouriteRequest: (Int) -> Unit = {},
     onFavouritesRefresh: () -> Unit = {},
-    favouritesListNameState: LoadState<String>,
-    recipesState: LoadState<List<RecipeInfo>>
+    favouritesState: LoadState<List<CollectionProfile>>
 ) {
-    val favouritesListName = getFavouritesListName(favouritesListNameState)
     Scaffold(
-        topBar = { TopBar(text = favouritesListName, backButton = true, onBackButton) },
+        topBar = { TopBar("Favourites", backButton = true, onBackButton) },
         bottomBar = { BottomBar() },
         content = { paddingValues ->
             LoadStateRenderer(
-                loadState = recipesState,
+                loadState = favouritesState,
                 swipeToRefresh = onFavouritesRefresh,
-                content = { recipes ->
+                content = { favourites ->
                     Column(
                         modifier = Modifier
                             .fillMaxSize()
@@ -51,8 +47,8 @@ fun FavouritesListScreen(
                             .verticalScroll(rememberScrollState()),
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
-                        recipes.forEach {
-                            RecipeInfoBox(recipeInfo = it)
+                        favourites.forEach {
+                            CollectionProfileBox(it, onFavouriteRequest)
                             Spacer(modifier = Modifier.height(10.dp))
                         }
                     }
@@ -65,22 +61,12 @@ fun FavouritesListScreen(
 
 @Preview
 @Composable
-fun FavouritesListScreenPreview() {
-    FavouritesListScreen(
-        onBackButton = {},
-        onFavouritesRefresh = {},
-        favouritesListNameState = apiSuccess("My Favourite Recipes"),
-        recipesState = apiSuccess(listOf(
-            RecipeInfo(
-                id = 1,
-                name = "Spaghetti Carbonara",
-                authorUsername = "ChefBear",
-                cuisine = Cuisine.ITALIAN,
-                mealType = MealType.MAIN_COURSE,
-                preparationTime = 35,
-                servings = 4,
-                picture = "".toByteArray()
-            )
-        ))
+fun FavouritesScreenPreview() {
+    val collections = listOf(
+        CollectionProfile(1, "Italian Delights"),
+        CollectionProfile(2, "Quick Snacks"),
+        CollectionProfile(3, "Healthy Meals")
     )
+
+    FavouritesScreen({}, {}, {}, apiSuccess(collections))
 }

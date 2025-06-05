@@ -1,14 +1,13 @@
-package android.epicurius.ui.screens.favourites.folder
+package android.epicurius.ui.screens.collections.favourites.folder
 
 import android.epicurius.MainActivity
-import android.epicurius.domain.collection.CollectionProfile
 import android.epicurius.ui.EpicuriusActivity
-import android.epicurius.ui.EpicuriusViewModel
+import android.epicurius.ui.navigation.Intents
+import android.epicurius.ui.screens.collections.favourites.list.FavouritesListActivity
 import android.epicurius.ui.screens.utils.Idle
 import android.epicurius.ui.screens.utils.idle
 import android.epicurius.ui.screens.utils.navigateTo
 import android.os.Bundle
-import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.runtime.collectAsState
 import androidx.lifecycle.lifecycleScope
@@ -28,9 +27,17 @@ class FavouritesActivity : EpicuriusActivity() {
             val favouritesState = viewModel.favourites.collectAsState(idle())
             FavouritesScreen(
                 onBackButton = { navigateTo<MainActivity>() },
+                onFavouriteRequest = ::navigateToFavouritesListActivity,
                 onFavouritesRefresh = { viewModel.refreshFavourites() },
                 favouritesState = favouritesState.value,
             )
         }
     }
+
+    private fun navigateToFavouritesListActivity(collectionId: Int) {
+        navigateTo<FavouritesListActivity> { intent ->
+            intent.putExtra(Intents.COLLECTION_ID, collectionId)
+        }
+    }
 }
+

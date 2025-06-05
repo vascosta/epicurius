@@ -1,9 +1,9 @@
-package android.epicurius.ui.screens.favourites.list
+package android.epicurius.ui.screens.collections.favourites.list
 
 import android.epicurius.MainActivity
 import android.epicurius.ui.EpicuriusActivity
-import android.epicurius.ui.Intents
-import android.epicurius.ui.screens.favourites.folder.FavouritesActivity
+import android.epicurius.ui.navigation.Intents
+import android.epicurius.ui.screens.collections.favourites.folder.FavouritesActivity
 import android.epicurius.ui.screens.utils.Idle
 import android.epicurius.ui.screens.utils.idle
 import android.epicurius.ui.screens.utils.navigateTo

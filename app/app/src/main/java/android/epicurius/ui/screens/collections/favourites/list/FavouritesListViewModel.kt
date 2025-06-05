@@ -1,7 +1,6 @@
-package android.epicurius.ui.screens.favourites.list
+package android.epicurius.ui.screens.collections.favourites.list
 
 import android.content.Context
-import android.epicurius.domain.collection.CollectionProfile
 import android.epicurius.domain.recipe.RecipeInfo
 import android.epicurius.services.EpicuriusService
 import android.epicurius.storage.Session
@@ -12,7 +11,6 @@ import android.epicurius.ui.screens.utils.apiSuccess
 import android.epicurius.ui.screens.utils.idle
 import android.epicurius.ui.screens.utils.loading
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.viewModelScope

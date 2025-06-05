@@ -1,4 +1,4 @@
-package android.epicurius.ui.screens.favourites.folder.components
+package android.epicurius.ui.screens.collections.favourites.folder.components
 
 import android.epicurius.ui.screens.utils.Cached
 import android.epicurius.ui.screens.utils.Idle
