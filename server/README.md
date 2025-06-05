@@ -186,24 +186,25 @@ The __routes__ for the __API__ are organized as follow:
 
 #### User
 
-| Method  | Route                                     | Description                               | Authenticated | 
-|---------|-------------------------------------------|-------------------------------------------|:-------------:|
-| GET     | ``/api/users``                            | Search for users                          | Yes           |
-| GET     | ``/api/users/{username}``                 | Get a user's profile                      | Yes           |
-| GET     | ``/api/user``                             | Get a user                                | Yes           |
-| GET     | ``/api/user/intolerances``                | Get a user's intolerances                 | Yes           |
-| GET     | ``/api/user/diets``                       | Get a user's diets                        | Yes           |
-| GET     | ``/api/user/follow-requests``             | Get a user's follow requests              | Yes           |
-| GET     | ``/api/user/followers``                   | Get a user's followers                    | Yes           |
-| GET     | ``/api/user/following``                   | Get a user's following users              | Yes           |
-| GET     | ``/api/user/feed``                        | Get a user's feed                         | Yes           |
-| PATCH   | ``/api/user``                             | Update a user                             | Yes           |
-| PATCH   | ``/api/user/picture``                     | Update a user's profile picture           | Yes           |
-| PATCH   | ``/api/user/follow/{username}``           | Follow a user                             | Yes           |
-| PATCH   | ``/api/user/follow-requests/{username}``  | Accept, Reject or Cancel a follow request | Yes           |
-| PATCH   | ``/api/user/password``                    | Reset a user's password                   | No            |
-| DELETE  | ``/api/user``                             | Deletes the user                          | Yes           |
-| DELETE  | ``/api/user/follow/{username}``           | Unfollow a user                           | Yes           |
+| Method  | Route                                    | Description                               | Authenticated | 
+|---------|------------------------------------------|-------------------------------------------|:-------------:|
+| GET     | ``/api/users``                           | Search for users                          | Yes           |
+| GET     | ``/api/users/{username}``                | Get a user's profile                      | Yes           |
+| GET     | ``/api/user``                            | Get a user                                | Yes           |
+| GET     | ``/api/user/intolerances``               | Get a user's intolerances                 | Yes           |
+| GET     | ``/api/user/diets``                      | Get a user's diets                        | Yes           |
+| GET     | ``/api/user/follow-requests``            | Get a user's follow requests              | Yes           |
+| GET     | ``/api/user/followers``                  | Get a user's followers                    | Yes           |
+| GET     | ``/api/user/following``                  | Get a user's following users              | Yes           |
+| GET     | ``/api/user/feed``                       | Get a user's feed                         | Yes           |
+| GET     | ``/api/user/recipes``                    | Get a user's recipes                      | Yes           |
+| PATCH   | ``/api/user``                            | Update a user                             | Yes           |
+| PATCH   | ``/api/user/picture``                    | Update a user's profile picture           | Yes           |
+| PATCH   | ``/api/user/follow/{username}``          | Follow a user                             | Yes           |
+| PATCH   | ``/api/user/follow-requests/{username}`` | Accept, Reject or Cancel a follow request | Yes           |
+| PATCH   | ``/api/user/password``                   | Reset a user's password                   | No            |
+| DELETE  | ``/api/user``                            | Deletes the user                          | Yes           |
+| DELETE  | ``/api/user/follow/{username}``          | Unfollow a user                           | Yes           |
 
 
 #### Fridge
