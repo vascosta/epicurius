@@ -1,8 +1,11 @@
 package android.epicurius.ui.screens.feed
 
 import android.epicurius.ui.EpicuriusActivity
+import android.epicurius.ui.navigation.Intents
+import android.epicurius.ui.screens.recipe.profile.RecipeProfileActivity
 import android.epicurius.ui.screens.utils.Idle
 import android.epicurius.ui.screens.utils.idle
+import android.epicurius.ui.screens.utils.navigateTo
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.compose.runtime.collectAsState
@@ -20,14 +23,19 @@ class FeedActivity : EpicuriusActivity() {
                 if (state is Idle) viewModel.getUserFeed()
             }
         }
-
         setContent {
             val userFeedState = viewModel.userFeed.collectAsState(idle())
             FeedScreen(
-                onBackButton = { finish() },
+                onRecipeRequest = ::navigateToRecipeProfileActivity,
                 onUserFeedRefresh = { viewModel.refreshUserFeed() },
                 userFeedState = userFeedState.value
             )
+        }
+    }
+
+    private fun navigateToRecipeProfileActivity(recipeId: Int) {
+        navigateTo<RecipeProfileActivity> { intent ->
+            intent.putExtra(Intents.RECIPE_ID, recipeId)
         }
     }
 }

@@ -25,12 +25,12 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun FeedScreen(
-    onBackButton: () -> Unit,
-    onUserFeedRefresh: () -> Unit = {},
+    onRecipeRequest: (Int) -> Unit,
+    onUserFeedRefresh: () -> Unit,
     userFeedState: LoadState<List<RecipeInfo>>
 ) {
     Scaffold(
-        topBar = { TopBar(text = "For you to cook", backButton = true, onBackButton) },
+        topBar = { TopBar(text = "For you to cook") },
         bottomBar = { BottomBar() },
         content = { paddingValues ->
             LoadStateRenderer(
@@ -46,7 +46,7 @@ fun FeedScreen(
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         userFeed.forEach { recipe ->
-                            RecipeInfoBox(recipe)
+                            RecipeInfoBox(recipe, onRecipeRequest)
                             Spacer(modifier = Modifier.size(5.dp))
                         }
                     }
