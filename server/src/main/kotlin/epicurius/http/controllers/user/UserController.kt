@@ -18,12 +18,12 @@ import epicurius.http.controllers.user.models.output.GetUserProfileOutputModel
 import epicurius.http.controllers.user.models.output.SearchUsersOutputModel
 import epicurius.http.controllers.user.models.output.UpdateUserOutputModel
 import epicurius.http.controllers.user.models.output.UpdateUserProfilePictureOutputModel
-import epicurius.http.pipeline.authentication.cookie.addCookie
-import epicurius.http.pipeline.authentication.cookie.removeCookie
 import epicurius.http.media.Uris
 import epicurius.http.media.createdHttpResponse
 import epicurius.http.media.noContentHttpResponse
 import epicurius.http.media.okHttpResponse
+import epicurius.http.pipeline.authentication.cookie.addCookie
+import epicurius.http.pipeline.authentication.cookie.removeCookie
 import epicurius.services.user.UserService
 import jakarta.servlet.http.HttpServletResponse
 import jakarta.validation.Valid

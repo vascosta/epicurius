@@ -12,8 +12,8 @@ import epicurius.http.controllers.recipe.models.input.SearchRecipesInputModel
 import epicurius.http.controllers.recipe.models.input.UpdateRecipeInputModel
 import epicurius.http.controllers.recipe.models.output.CreateRecipeOutputModel
 import epicurius.http.controllers.recipe.models.output.GetRecipeOutputModel
-import epicurius.http.controllers.recipe.models.output.SearchRecipesOutputModel
 import epicurius.http.controllers.recipe.models.output.GetUserRecipesOutputModel
+import epicurius.http.controllers.recipe.models.output.SearchRecipesOutputModel
 import epicurius.http.controllers.recipe.models.output.UpdateRecipeOutputModel
 import epicurius.http.controllers.recipe.models.output.UpdateRecipePicturesOutputModel
 import epicurius.http.media.Uris

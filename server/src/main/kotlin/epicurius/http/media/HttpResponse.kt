@@ -20,7 +20,6 @@ fun createdHttpResponse(
         .header("Content-Type", APPLICATION_JSON_TYPE)
         .body(body)
 
-
 fun noContentHttpResponse(): ResponseEntity<*> =
     ResponseEntity
         .noContent()

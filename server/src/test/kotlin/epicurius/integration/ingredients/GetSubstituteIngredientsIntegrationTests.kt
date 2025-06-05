@@ -10,7 +10,7 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 
-class GetSubstituteIngredientsIntegrationTests: IngredientsIntegrationTest() {
+class GetSubstituteIngredientsIntegrationTests : IngredientsIntegrationTest() {
 
     private val testUser = createTestUser(tm)
     private val testSubstituteIngredients = listOf("1 cup quinces", "1 cup pears")

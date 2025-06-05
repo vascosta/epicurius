@@ -49,6 +49,4 @@ class DatabaseConfigurer {
             .build()
             .service
     }
-
-
 }

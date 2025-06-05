@@ -43,10 +43,12 @@ class SignUpControllerTests : UserControllerTest() {
         val response = signUp(signUpInfo, mockResponse)
 
         // then the user is created successfully
-        verify(mockResponse).addCookie(Cookie(TOKEN, mockToken).apply {
-            isHttpOnly = true
-            secure = true
-        })
+        verify(mockResponse).addCookie(
+            Cookie(TOKEN, mockToken).apply {
+                isHttpOnly = true
+                secure = true
+            }
+        )
         assertEquals(HttpStatus.CREATED, response.statusCode)
     }
 

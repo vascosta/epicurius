@@ -25,7 +25,6 @@ import epicurius.http.controllers.user.models.input.ResetPasswordInputModel
 import epicurius.http.controllers.user.models.input.SignUpInputModel
 import epicurius.http.controllers.user.models.input.UpdateUserInputModel
 import epicurius.unit.EpicuriusUnitTest
-import jakarta.servlet.http.Cookie
 import jakarta.servlet.http.HttpServletResponse
 import org.junit.jupiter.api.BeforeEach
 import org.mockito.Mockito.mock

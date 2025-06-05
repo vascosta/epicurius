@@ -7,7 +7,7 @@ import epicurius.utils.createTestUser
 import kotlin.test.Test
 import kotlin.test.assertNotNull
 
-class GetCollectionsRepositoryTests: CollectionRepositoryTest() {
+class GetCollectionsRepositoryTests : CollectionRepositoryTest() {
 
     @Test
     fun `Should retrieve multiple collections from a user successfully`() {

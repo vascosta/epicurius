@@ -10,7 +10,7 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
-class GetCollectionsControllerTests: CollectionControllerTest() {
+class GetCollectionsControllerTests : CollectionControllerTest() {
 
     @Test
     fun `Should retrieve multiple collections from a user successfully`() {

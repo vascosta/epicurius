@@ -20,8 +20,9 @@ class UpdateCollectionServiceTests : CollectionServiceTest() {
         // mock
         val mockUpdatedCollection = testFavouriteJdbiCollectionModel.copy(name = updateCollectionInputInfo.name!!)
         whenever(jdbiCollectionRepositoryMock.getCollectionById(FAVOURITE_COLLECTION_ID)).thenReturn(testFavouriteJdbiCollectionModel)
-        whenever(jdbiCollectionRepositoryMock
-            .getCollection(testPublicUser.id, updateCollectionInputInfo.name!!, testFavouriteJdbiCollectionModel.type)
+        whenever(
+            jdbiCollectionRepositoryMock
+                .getCollection(testPublicUser.id, updateCollectionInputInfo.name!!, testFavouriteJdbiCollectionModel.type)
         ).thenReturn(null)
         whenever(
             jdbiCollectionRepositoryMock.checkIfUserIsCollectionOwner(FAVOURITE_COLLECTION_ID, testPublicUser.id)
@@ -58,8 +59,9 @@ class UpdateCollectionServiceTests : CollectionServiceTest() {
 
         // mock
         whenever(jdbiCollectionRepositoryMock.getCollectionById(FAVOURITE_COLLECTION_ID)).thenReturn(testFavouriteJdbiCollectionModel)
-        whenever(jdbiCollectionRepositoryMock
-            .getCollection(testPublicUser.id, updateCollectionInputInfo.name!!, testFavouriteJdbiCollectionModel.type)
+        whenever(
+            jdbiCollectionRepositoryMock
+                .getCollection(testPublicUser.id, updateCollectionInputInfo.name!!, testFavouriteJdbiCollectionModel.type)
         ).thenReturn(testFavouriteJdbiCollectionModel)
 
         // when updating the collection
@@ -75,8 +77,9 @@ class UpdateCollectionServiceTests : CollectionServiceTest() {
 
         // mock
         whenever(jdbiCollectionRepositoryMock.getCollectionById(FAVOURITE_COLLECTION_ID)).thenReturn(testFavouriteJdbiCollectionModel)
-        whenever(jdbiCollectionRepositoryMock
-            .getCollection(testPublicUser.id, updateCollectionInputInfo.name!!, testFavouriteJdbiCollectionModel.type)
+        whenever(
+            jdbiCollectionRepositoryMock
+                .getCollection(testPublicUser.id, updateCollectionInputInfo.name!!, testFavouriteJdbiCollectionModel.type)
         ).thenReturn(null)
         whenever(
             jdbiCollectionRepositoryMock.checkIfUserIsCollectionOwner(FAVOURITE_COLLECTION_ID, testPrivateUser.id)

@@ -5,7 +5,7 @@ import epicurius.http.media.Uris
 import epicurius.integration.EpicuriusIntegrationTest
 import epicurius.integration.utils.get
 
-class MenuIntegrationTest: EpicuriusIntegrationTest() {
+class MenuIntegrationTest : EpicuriusIntegrationTest() {
 
     fun getDailyMenu(token: String) =
         get<GetDailyMenuOutputModel>(

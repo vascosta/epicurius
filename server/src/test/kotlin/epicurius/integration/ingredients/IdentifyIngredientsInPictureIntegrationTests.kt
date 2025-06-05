@@ -5,7 +5,7 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 
-class IdentifyIngredientsInPictureIntegrationTests: IngredientsIntegrationTest() {
+class IdentifyIngredientsInPictureIntegrationTests : IngredientsIntegrationTest() {
 
     private val testUser = createTestUser(tm)
     private val testIngredients = listOf("cherry tomato", "tomato", "plum tomato")

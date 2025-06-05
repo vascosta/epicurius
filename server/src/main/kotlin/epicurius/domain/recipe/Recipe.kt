@@ -25,5 +25,3 @@ data class Recipe(
     val instructions: Instructions,
     val pictures: List<ByteArray>
 )
-
-

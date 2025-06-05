@@ -9,7 +9,7 @@ import kotlin.test.Test
 import kotlin.test.assertNotNull
 import kotlin.test.assertTrue
 
-class GetDailyMenuIntegrationTests: MenuIntegrationTest() {
+class GetDailyMenuIntegrationTests : MenuIntegrationTest() {
 
     private val testUser = createTestUser(tm)
     private val testRecipe = createTestRecipe(tm, fs, testUser.user) // dessert recipe
@@ -31,10 +31,12 @@ class GetDailyMenuIntegrationTests: MenuIntegrationTest() {
     fun `Should retrieve a daily menu with nulls when there is no recipes matching the user intolerances and diets with code 200`() {
         // given a user with intolerances and diets that do not match any recipes
         val user = createTestUser(tm)
-        tm.run { it.userRepository.updateUser(
-            user.user.id,
-            JdbiUpdateUserModel(intolerances = listOf(Intolerance.SULFITE.ordinal), diets = listOf(Diet.LOW_FODMAP.ordinal))
-        ) }
+        tm.run {
+            it.userRepository.updateUser(
+                user.user.id,
+                JdbiUpdateUserModel(intolerances = listOf(Intolerance.SULFITE.ordinal), diets = listOf(Diet.LOW_FODMAP.ordinal))
+            )
+        }
 
         // when retrieving the daily menu
         val body = getDailyMenu(user.token)

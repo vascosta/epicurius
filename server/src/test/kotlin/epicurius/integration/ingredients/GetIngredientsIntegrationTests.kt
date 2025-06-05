@@ -5,7 +5,7 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 
-class GetIngredientsIntegrationTests: IngredientsIntegrationTest() {
+class GetIngredientsIntegrationTests : IngredientsIntegrationTest() {
 
     private val testUser = createTestUser(tm)
 

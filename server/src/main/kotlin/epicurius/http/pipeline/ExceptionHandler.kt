@@ -49,9 +49,9 @@ import epicurius.domain.exceptions.UserAlreadyRated
 import epicurius.domain.exceptions.UserHasNotRated
 import epicurius.domain.exceptions.UserNotFollowed
 import epicurius.domain.exceptions.UserNotFound
+import epicurius.http.media.Problem
 import epicurius.http.pipeline.authentication.AuthenticationInterceptor.Companion.WWW_AUTHENTICATE_HEADER
 import epicurius.http.pipeline.authentication.RequestTokenProcessor.Companion.SCHEME
-import epicurius.http.media.Problem
 import jakarta.servlet.http.HttpServletRequest
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus

@@ -4,13 +4,12 @@ import epicurius.domain.PagingParams
 import epicurius.domain.recipe.RecipeInfo
 import epicurius.http.controllers.recipe.models.output.GetUserRecipesOutputModel
 import kotlinx.coroutines.runBlocking
-import org.mockito.ArgumentMatchers.anyString
 import org.mockito.kotlin.whenever
 import org.springframework.http.HttpStatus
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
-class GetUserRecipesControllerTests: RecipeControllerTest() {
+class GetUserRecipesControllerTests : RecipeControllerTest() {
 
     @Test
     fun `Should retrieve the user's recipes successfully`() {

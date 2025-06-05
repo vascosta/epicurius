@@ -4,7 +4,6 @@ import epicurius.domain.exceptions.InvalidProduct
 import epicurius.domain.fridge.Fridge
 import epicurius.http.controllers.fridge.models.input.AddProductInputModel
 import epicurius.http.controllers.fridge.models.output.AddProductOutputModel
-import epicurius.http.controllers.fridge.models.output.GetFridgeOutputModel
 import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Test
 import org.mockito.kotlin.whenever

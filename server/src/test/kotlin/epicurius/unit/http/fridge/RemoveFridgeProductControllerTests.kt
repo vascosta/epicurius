@@ -2,7 +2,6 @@ package epicurius.unit.http.fridge
 
 import epicurius.domain.exceptions.ProductNotFound
 import epicurius.domain.fridge.Fridge
-import epicurius.http.controllers.fridge.models.output.GetFridgeOutputModel
 import epicurius.http.controllers.fridge.models.output.RemoveProductOutputModel
 import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Test

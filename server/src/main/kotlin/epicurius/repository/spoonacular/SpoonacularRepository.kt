@@ -10,7 +10,6 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.Json
 import org.springframework.stereotype.Component
-import java.io.FileInputStream
 
 @Component
 class SpoonacularRepository(private val httpClient: HttpClientConfigurer) : SpoonacularRepository {
@@ -47,7 +46,6 @@ class SpoonacularRepository(private val httpClient: HttpClientConfigurer) : Spoo
         val spoonacularAPIKeyFile = this::class.java.classLoader.getResourceAsStream("SpoonacularAPIKey.txt")
             ?: throw IllegalArgumentException("Spoonacular API key file not found")
         val spoonacularApiKey = spoonacularAPIKeyFile.bufferedReader().use { it.readText() }.trim()
-
 
         const val AUTOCOMPLETE_INGREDIENTS_URL = "https://api.spoonacular.com/food/ingredients/autocomplete"
         const val GET_INGREDIENT_SUBSTITUTES_URL = "https://api.spoonacular.com/food/ingredients/substitutes"

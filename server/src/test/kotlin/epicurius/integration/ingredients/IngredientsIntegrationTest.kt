@@ -13,7 +13,7 @@ import org.springframework.http.client.MultipartBodyBuilder
 import org.springframework.web.multipart.MultipartFile
 import org.springframework.web.reactive.function.BodyInserters
 
-class IngredientsIntegrationTest: EpicuriusIntegrationTest() {
+class IngredientsIntegrationTest : EpicuriusIntegrationTest() {
 
     fun getIngredients(token: String, partial: String) =
         get<GetIngredientsOutputModel>(

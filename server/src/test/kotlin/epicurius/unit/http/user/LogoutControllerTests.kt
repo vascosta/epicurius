@@ -17,12 +17,14 @@ class LogoutControllerTests : UserControllerTest() {
         val response = logout(publicTestUser, mockResponse)
 
         // then the user is logged out successfully
-        verify(mockResponse).addCookie(Cookie(TOKEN, "")
-            .apply {
-                isHttpOnly = true
-                secure = true
-                maxAge = 0
-            })
+        verify(mockResponse).addCookie(
+            Cookie(TOKEN, "")
+                .apply {
+                    isHttpOnly = true
+                    secure = true
+                    maxAge = 0
+                }
+        )
         assertEquals(HttpStatus.NO_CONTENT, response.statusCode)
     }
 }

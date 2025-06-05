@@ -18,12 +18,14 @@ class DeleteUserControllerTests : UserControllerTest() {
 
         // then the user is deleted successfully
         verify(userServiceMock).deleteUser(publicTestUser.user.id)
-        verify(mockResponse).addCookie(Cookie(TOKEN, "")
-            .apply {
-                isHttpOnly = true
-                secure = true
-                maxAge = 0
-            })
+        verify(mockResponse).addCookie(
+            Cookie(TOKEN, "")
+                .apply {
+                    isHttpOnly = true
+                    secure = true
+                    maxAge = 0
+                }
+        )
         assertEquals(HttpStatus.NO_CONTENT, response.statusCode)
     }
 }

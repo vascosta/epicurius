@@ -17,7 +17,6 @@ import epicurius.repository.jdbi.mealPlanner.models.JdbiDailyMealPlanner
 import epicurius.repository.jdbi.mealPlanner.models.JdbiDailyMealPlanner.Companion.toDailyMealPlannerList
 import epicurius.repository.jdbi.recipe.models.JdbiRecipeModel
 import epicurius.repository.transaction.TransactionManager
-import org.springframework.stereotype.Component
 import org.springframework.stereotype.Service
 import java.time.LocalDate
 

@@ -33,7 +33,6 @@ import epicurius.http.controllers.user.models.input.UpdateUserInputModel
 import epicurius.repository.cloudStorage.manager.CloudStorageManager
 import epicurius.repository.jdbi.user.models.JdbiUpdateUserModel
 import epicurius.repository.transaction.TransactionManager
-import org.springframework.stereotype.Component
 import org.springframework.stereotype.Service
 import org.springframework.web.multipart.MultipartFile
 import java.time.LocalDate

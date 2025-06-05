@@ -7,7 +7,7 @@ import epicurius.utils.createTestUser
 import kotlin.test.Test
 import kotlin.test.assertNotNull
 
-class GetCollectionsIntegrationTests: CollectionIntegrationTest() {
+class GetCollectionsIntegrationTests : CollectionIntegrationTest() {
 
     private val testUser = createTestUser(tm)
     private val testCollectionId = createTestCollection(tm, testUser.user.id, CollectionType.KITCHEN_BOOK)

@@ -30,10 +30,12 @@ class LoginControllerTests : UserControllerTest() {
         val response = login(loginInputInfo.copy(email = null), mockResponse)
 
         // then the user is logged in successfully
-        verify(mockResponse).addCookie(Cookie(TOKEN, mockToken).apply {
-            isHttpOnly = true
-            secure = true
-        })
+        verify(mockResponse).addCookie(
+            Cookie(TOKEN, mockToken).apply {
+                isHttpOnly = true
+                secure = true
+            }
+        )
         assertEquals(HttpStatus.NO_CONTENT, response.statusCode)
     }
 
@@ -49,10 +51,12 @@ class LoginControllerTests : UserControllerTest() {
         val response = login(loginInputInfo.copy(name = null), mockResponse)
 
         // then the user is logged in successfully
-        verify(mockResponse).addCookie(Cookie(TOKEN, mockToken).apply {
-            isHttpOnly = true
-            secure = true
-        })
+        verify(mockResponse).addCookie(
+            Cookie(TOKEN, mockToken).apply {
+                isHttpOnly = true
+                secure = true
+            }
+        )
         assertEquals(HttpStatus.NO_CONTENT, response.statusCode)
     }
 

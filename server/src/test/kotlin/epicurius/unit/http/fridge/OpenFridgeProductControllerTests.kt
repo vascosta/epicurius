@@ -4,7 +4,6 @@ import epicurius.domain.exceptions.ProductIsAlreadyOpen
 import epicurius.domain.exceptions.ProductNotFound
 import epicurius.domain.fridge.Fridge
 import epicurius.http.controllers.fridge.models.input.UpdateProductInputModel
-import epicurius.http.controllers.fridge.models.output.GetFridgeOutputModel
 import epicurius.http.controllers.fridge.models.output.UpdateProductOutputModel
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test

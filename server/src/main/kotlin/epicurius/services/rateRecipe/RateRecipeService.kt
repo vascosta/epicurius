@@ -9,7 +9,6 @@ import epicurius.domain.exceptions.UserAlreadyRated
 import epicurius.domain.exceptions.UserHasNotRated
 import epicurius.repository.jdbi.recipe.models.JdbiRecipeModel
 import epicurius.repository.transaction.TransactionManager
-import org.springframework.stereotype.Component
 import org.springframework.stereotype.Service
 
 @Service

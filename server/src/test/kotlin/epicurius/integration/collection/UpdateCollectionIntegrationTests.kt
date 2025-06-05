@@ -16,7 +16,7 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 
-class UpdateCollectionIntegrationTests: CollectionIntegrationTest() {
+class UpdateCollectionIntegrationTests : CollectionIntegrationTest() {
 
     private val testUser = createTestUser(tm)
     private val testCollectionId = createTestCollection(tm, testUser.user.id, CollectionType.KITCHEN_BOOK)
@@ -93,5 +93,4 @@ class UpdateCollectionIntegrationTests: CollectionIntegrationTest() {
         val errorBody = getBody(error)
         assertEquals(NotTheCollectionOwner().message, errorBody.detail)
     }
-
 }

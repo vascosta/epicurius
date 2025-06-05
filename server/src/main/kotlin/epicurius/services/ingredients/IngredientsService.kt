@@ -5,7 +5,6 @@ import epicurius.domain.picture.PictureDomain.Companion.INGREDIENTS_FOLDER
 import epicurius.repository.cloudFunction.manager.CloudFunctionManager
 import epicurius.repository.cloudStorage.manager.CloudStorageManager
 import epicurius.repository.spoonacular.manager.SpoonacularManager
-import org.springframework.stereotype.Component
 import org.springframework.stereotype.Service
 import org.springframework.web.multipart.MultipartFile
 

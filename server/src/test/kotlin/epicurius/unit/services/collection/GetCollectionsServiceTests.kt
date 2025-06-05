@@ -7,7 +7,7 @@ import org.mockito.kotlin.whenever
 import kotlin.test.Test
 import kotlin.test.assertNotNull
 
-class GetCollectionsServiceTests: CollectionServiceTest() {
+class GetCollectionsServiceTests : CollectionServiceTest() {
 
     @Test
     fun `Should retrieve multiple collections from a user successfully`() {

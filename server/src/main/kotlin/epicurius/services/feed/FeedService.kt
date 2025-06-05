@@ -8,7 +8,6 @@ import epicurius.domain.recipe.RecipeInfo
 import epicurius.repository.cloudStorage.manager.CloudStorageManager
 import epicurius.repository.transaction.TransactionManager
 import epicurius.services.feed.models.GetFeedModel
-import org.springframework.stereotype.Component
 import org.springframework.stereotype.Service
 
 @Service

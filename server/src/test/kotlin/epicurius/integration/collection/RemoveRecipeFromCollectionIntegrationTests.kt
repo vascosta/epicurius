@@ -18,7 +18,7 @@ import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 import kotlin.test.assertNull
 
-class RemoveRecipeFromCollectionIntegrationTests: CollectionIntegrationTest() {
+class RemoveRecipeFromCollectionIntegrationTests : CollectionIntegrationTest() {
 
     private val testUser = createTestUser(tm)
     private val testCollectionId = createTestCollection(tm, testUser.user.id, CollectionType.FAVOURITE)
