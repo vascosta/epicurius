@@ -19,7 +19,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun CollectionProfileBox(collection: CollectionProfile, onCollectionRequest: (Int) -> Unit) {
+fun CollectionProfileBox(
+    collection: CollectionProfile,
+    onCollectionRequest: (Int) -> Unit = {}
+) {
     Box(
         modifier = Modifier
             .fillMaxWidth()

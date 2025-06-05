@@ -27,7 +27,7 @@ class FavouritesActivity : EpicuriusActivity() {
             val favouritesState = viewModel.favourites.collectAsState(idle())
             FavouritesScreen(
                 onBackButton = { navigateTo<MainActivity>() },
-                onFavouriteRequest = ::navigateToFavouritesListActivity,
+                onCollectionRequest = ::navigateToFavouritesListActivity,
                 onFavouritesRefresh = { viewModel.refreshFavourites() },
                 favouritesState = favouritesState.value,
             )

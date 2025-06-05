@@ -26,7 +26,7 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun FavouritesScreen(
     onBackButton: () -> Unit = {},
-    onFavouriteRequest: (Int) -> Unit = {},
+    onCollectionRequest: (Int) -> Unit = {},
     onFavouritesRefresh: () -> Unit = {},
     favouritesState: LoadState<List<CollectionProfile>>
 ) {
@@ -48,7 +48,7 @@ fun FavouritesScreen(
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         favourites.forEach {
-                            CollectionProfileBox(it, onFavouriteRequest)
+                            CollectionProfileBox(it, onCollectionRequest)
                             Spacer(modifier = Modifier.height(10.dp))
                         }
                     }
