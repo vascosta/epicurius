@@ -12,6 +12,7 @@ import android.epicurius.services.api.recipe.models.output.CreateRecipeOutputMod
 import android.epicurius.services.api.recipe.models.output.GetRecipeOutputModel
 import android.epicurius.services.api.recipe.models.output.GetRecipeRateOutputModel
 import android.epicurius.services.api.recipe.models.output.GetUserRecipeRateOutputModel
+import android.epicurius.services.api.recipe.models.output.GetUserRecipesOutputModel
 import android.epicurius.services.api.recipe.models.output.RateRecipeOutputModel
 import android.epicurius.services.api.recipe.models.output.SearchRecipesOutputModel
 import android.epicurius.services.api.recipe.models.output.UpdateRecipeOutputModel
@@ -30,6 +31,17 @@ class RecipeService(private val httpService: HttpService) {
         httpService.get<GetRecipeOutputModel>(
             Uris.Recipe.RECIPE,
             pathParams = mapOf("id" to id),
+            token = token
+        )
+
+    suspend fun getUserRecipes(
+        token: String,
+        skip: Int,
+        limit: Int
+    ): APIResult<GetUserRecipesOutputModel> =
+        httpService.get<GetUserRecipesOutputModel>(
+            Uris.User.USER_RECIPES,
+            queryParams = mapOf("skip" to skip, "limit" to limit),
             token = token
         )
 

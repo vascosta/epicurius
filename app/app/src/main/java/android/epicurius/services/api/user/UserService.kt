@@ -43,7 +43,7 @@ class UserService(private val httpService: HttpService) {
         limit: Int,
     ): APIResult<GetUserProfileOutputModel> =
         httpService.get<GetUserProfileOutputModel>(
-            Uris.User.USER_PROFILE,
+            Uris.User.USERS,
             queryParams = mapOf(
                 "name" to partialUsername,
                 "skip" to skip,

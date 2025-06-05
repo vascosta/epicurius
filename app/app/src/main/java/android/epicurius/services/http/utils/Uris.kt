@@ -15,6 +15,7 @@ object Uris {
         const val USER_DIETS = "$USER/diets"
         const val USER_RESET_PASSWORD = "$USER/password"
         const val USER_FEED = "$USER/feed"
+        const val USER_RECIPES = "/user/recipes"
 
         const val USERS = "/users"
         const val USER_PROFILE = "/users/{name}"
