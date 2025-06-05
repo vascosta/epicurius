@@ -1,7 +1,7 @@
 package android.epicurius.ui.screens.search.camera
 
 import android.content.Intent
-import android.epicurius.ui.screens.TopBar
+import android.epicurius.ui.navigation.TopBar
 import android.epicurius.ui.screens.search.camera.components.CameraView
 import android.net.Uri
 import android.provider.Settings

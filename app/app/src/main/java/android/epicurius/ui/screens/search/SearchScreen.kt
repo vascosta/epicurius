@@ -1,22 +1,26 @@
 package android.epicurius.ui.screens.search
 
+import android.epicurius.domain.user.SearchUser
 import android.epicurius.ui.navigation.BottomBar
 import android.epicurius.ui.navigation.TopBar
 import android.epicurius.ui.screens.search.components.FilterDialog
 import android.epicurius.ui.screens.search.components.FiltersIcon
 import android.epicurius.ui.screens.search.components.SearchPhotoComponent
+import android.epicurius.ui.screens.user.components.UserBox
 import android.epicurius.ui.screens.utils.SearchTextField
 import android.epicurius.ui.screens.utils.TabComponent
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Button
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -32,6 +36,13 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun SearchScreen(
     onBackButton: () -> Unit = {},
+    onRecipeSearch: (String) -> Unit = {},
+    onUserSearch: (String) -> List<SearchUser> = { listOf<SearchUser>(
+        SearchUser(
+            name = "testuser",
+            profilePicture = null,
+        )
+    ) },
     onCamera: () -> Unit = {},
     onUpload: () -> Unit = {}
 ) {
@@ -57,74 +68,65 @@ fun SearchScreen(
     var minProtein by remember { mutableStateOf("") }
     var maxProtein by remember { mutableStateOf("") }
 
-    fun resetFilters() {
-        mealType = listOf()
-        cuisine = listOf()
-        intolerances = listOf()
-        diets = listOf()
-        preparationTime = ""
-        serving = ""
-        minCalories = ""
-        maxCalories = ""
-        minCarbs = ""
-        maxCarbs = ""
-        minFat = ""
-        maxFat = ""
-        minProtein = ""
-        maxProtein = ""
-    }
+    var userSearchResults by remember { mutableStateOf<List<SearchUser>>(emptyList()) }
 
     Scaffold(
         topBar = { TopBar("Search", backButton = true, onBackButton) },
         bottomBar = { BottomBar() },
         content = { paddingValues ->
-            Box(
+            Column(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(paddingValues)
                     .padding(16.dp)
+                    .verticalScroll(rememberScrollState()),
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Column(
+                SearchTextField(
+                    text = searchQuery,
+                    onSearchQueryChange = { searchQuery = it },
                     modifier = Modifier
-                        .verticalScroll(rememberScrollState())
-                        .background(Color.White),
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    SearchTextField(
-                        text = searchQuery,
-                        onSearchQueryChange = { searchQuery = it },
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(8.dp)
-                    )
+                        .fillMaxWidth()
+                        .padding(8.dp)
+                )
 
-                    TabComponent(tabs, selectedTabIndex, { selectedTabIndex = it })
+                TabComponent(tabs, selectedTabIndex, { selectedTabIndex = it })
 
-                    if (selectedTabIndex == 0)
-                        Row(modifier = Modifier.fillMaxWidth()) {
-                            FiltersIcon(onClick = { showFiltersDialog = true })
-                        }
-
-                    // search results
+                if (selectedTabIndex == 0) {
+                    Row(modifier = Modifier.fillMaxWidth()) {
+                        FiltersIcon(onClick = { showFiltersDialog = true })
+                    }
                 }
 
                 if (selectedTabIndex == 0) {
-                    Row(
+                    Spacer(modifier = Modifier.height(100.dp))
+                    Button(
+                        onClick = { onRecipeSearch(searchQuery) },
                         modifier = Modifier
-                            .align(Alignment.BottomCenter)
+                            .padding(16.dp)
                             .fillMaxWidth()
-                    ) {
-                        SearchPhotoComponent(onCamera, onUpload)
-                    }
+                    ) { Text("Search") }
+                    Text("or")
+                    SearchPhotoComponent(
+                        onCamera,
+                        onUpload,
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                } else {
+                    Button(
+                        onClick = { userSearchResults = onUserSearch(searchQuery) },
+                        modifier = Modifier
+                            .padding(16.dp)
+                            .fillMaxWidth()
+                    ) { Text("Search") }
+
+                    userSearchResults.forEach { user -> UserBox(user) }
                 }
 
                 if (showFiltersDialog) {
                     FilterDialog(
                         onDismiss = { showFiltersDialog = false },
-                        onCancel = {
-                            resetFilters()
-                            showFiltersDialog = false
-                        },
+                        onCancel = { showFiltersDialog = false },
                         mealType = mealType,
                         onMealTypeChange = { mealType = it },
                         cuisine = cuisine,

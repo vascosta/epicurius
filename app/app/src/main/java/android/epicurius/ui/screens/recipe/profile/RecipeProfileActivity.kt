@@ -19,7 +19,6 @@ import androidx.annotation.RequiresApi
 import java.time.LocalDate
 
 class RecipeProfileActivity : ComponentActivity() {
-    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
