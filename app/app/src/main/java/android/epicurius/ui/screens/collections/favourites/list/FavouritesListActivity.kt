@@ -1,6 +1,5 @@
 package android.epicurius.ui.screens.collections.favourites.list
 
-import android.epicurius.MainActivity
 import android.epicurius.ui.EpicuriusActivity
 import android.epicurius.ui.navigation.Intents
 import android.epicurius.ui.screens.collections.favourites.folder.FavouritesActivity
@@ -36,7 +35,7 @@ class FavouritesListActivity : EpicuriusActivity() {
             val recipes = viewModel.recipes.collectAsState(idle())
             val favouritesListName = viewModel.favouritesListName.collectAsState(idle())
             FavouritesListScreen(
-                onBackButton = { navigateTo<MainActivity>() },
+                onBackButton = { navigateTo<FavouritesActivity>() },
                 onRecipeRequest = ::navigateToRecipeProfileActivity,
                 onFavouritesRefresh = {
                     val recipeId = intent.getIntExtra(Intents.RECIPE_ID, -1)

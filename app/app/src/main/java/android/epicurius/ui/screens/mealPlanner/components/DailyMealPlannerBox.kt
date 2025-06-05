@@ -36,7 +36,7 @@ fun DailyMealPlannerBox(mealTime: MealTime, recipe: RecipeInfo?) {
                 color = Color.Black
             )
             if (recipe != null) {
-                RecipeInfoSimpleBox(recipe)
+                RecipeInfoSimpleBox(recipe, {})
                 IconButton(
                     onClick = {  },
                     modifier = Modifier

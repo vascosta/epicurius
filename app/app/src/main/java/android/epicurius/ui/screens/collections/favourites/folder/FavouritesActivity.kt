@@ -4,6 +4,7 @@ import android.epicurius.MainActivity
 import android.epicurius.ui.EpicuriusActivity
 import android.epicurius.ui.navigation.Intents
 import android.epicurius.ui.screens.collections.favourites.list.FavouritesListActivity
+import android.epicurius.ui.screens.user.profile.UserProfileActivity
 import android.epicurius.ui.screens.utils.Idle
 import android.epicurius.ui.screens.utils.idle
 import android.epicurius.ui.screens.utils.navigateTo
@@ -27,7 +28,7 @@ class FavouritesActivity : EpicuriusActivity() {
         setContent {
             val favouritesState = viewModel.favourites.collectAsState(idle())
             FavouritesScreen(
-                onBackButton = { navigateTo<MainActivity>() },
+                onBackButton = { navigateTo<UserProfileActivity>() },
                 onCollectionRequest = ::navigateToFavouritesListActivity,
                 onFavouritesRefresh = { viewModel.refreshFavourites() },
                 favouritesState = favouritesState.value,
