@@ -145,7 +145,7 @@ open class RecipeRepositoryTest : RepositoryTest() {
 
         suspend fun getFirestoreRecipeById(recipeId: Int) = fs.recipeRepository.getRecipeById(recipeId)
 
-        suspend fun getUserRecipes(userId: Int, pagingParams: PagingParams) =
+        fun getUserRecipes(userId: Int, pagingParams: PagingParams) =
             tm.run { it.recipeRepository.getUserRecipes(userId, pagingParams) }
 
         fun getRandomRecipesFromPublicUsers(mealType: MealType, intolerances: List<Intolerance>, diets: List<Diet>, limit: Int) =
