@@ -24,6 +24,7 @@ class JdbiRecipeInfoMapper : RowMapper<JdbiRecipeInfo> {
             id = rs.getInt("recipe_id"),
             name = rs.getString("recipe_name") ?: "",
             authorUsername = rs.getString("author_username") ?: "",
+            rating = rs.getDouble("average_rating"),
             cuisine = cuisine,
             mealType = mealType,
             preparationTime = rs.getInt("preparation_time"),

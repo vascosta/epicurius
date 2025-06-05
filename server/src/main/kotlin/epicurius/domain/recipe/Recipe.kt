@@ -8,6 +8,7 @@ data class Recipe(
     val id: Int,
     val name: String,
     val authorUsername: String,
+    val rating: Double,
     val date: LocalDate,
     val description: String,
     val servings: Int,
@@ -24,3 +25,5 @@ data class Recipe(
     val instructions: Instructions,
     val pictures: List<ByteArray>
 )
+
+

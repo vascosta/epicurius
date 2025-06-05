@@ -31,6 +31,7 @@ class JdbiRecipeModelMapper(
             name = rs.getString("name"),
             authorId = rs.getInt("author_id"),
             authorUsername = rs.getString("author_username"),
+            rating = rs.getDouble("average_rating"),
             date = rs.getDate("date").toLocalDate(),
             servings = rs.getInt("servings"),
             preparationTime = rs.getInt("preparation_time"),
