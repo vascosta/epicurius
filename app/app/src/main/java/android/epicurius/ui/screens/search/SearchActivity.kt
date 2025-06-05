@@ -1,6 +1,7 @@
 package android.epicurius.ui.screens.search
 
 import android.epicurius.MainActivity
+import android.epicurius.ui.screens.search.camera.CameraActivity
 import android.epicurius.ui.screens.utils.navigateTo
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -12,6 +13,7 @@ class SearchActivity : ComponentActivity() {
         setContent {
             SearchScreen(
                 onBackButton = { navigateTo<MainActivity>() },
+                onCamera = { navigateTo<CameraActivity>() }
             )
         }
     }

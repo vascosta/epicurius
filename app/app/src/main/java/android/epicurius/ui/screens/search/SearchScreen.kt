@@ -30,7 +30,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun SearchScreen(onBackButton: () -> Unit = {}) {
+fun SearchScreen(
+    onBackButton: () -> Unit = {},
+    onCamera: () -> Unit = {},
+    onUpload: () -> Unit = {}
+) {
     val tabs = listOf("Recipe", "Users")
     var selectedTabIndex by remember { mutableIntStateOf(0) }
     var searchQuery by remember { mutableStateOf("") }
@@ -110,7 +114,7 @@ fun SearchScreen(onBackButton: () -> Unit = {}) {
                             .align(Alignment.BottomCenter)
                             .fillMaxWidth()
                     ) {
-                        SearchPhotoComponent()
+                        SearchPhotoComponent(onCamera, onUpload)
                     }
                 }
 

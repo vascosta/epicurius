@@ -16,13 +16,13 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun SearchPhotoComponent() {
+fun SearchPhotoComponent(onCamera: () -> Unit, onUpload: () -> Unit) {
     Column(
         modifier = Modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         IconButton(
-            onClick = {  },
+            onClick = { onCamera() },
             modifier = Modifier.size(60.dp)
         ) {
             Image(
@@ -34,7 +34,7 @@ fun SearchPhotoComponent() {
         }
 
         Button(
-            onClick = { }
+            onClick = { onUpload() }
         ) {
             Text("Upload")
         }

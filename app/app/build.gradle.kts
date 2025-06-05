@@ -48,6 +48,12 @@ dependencies {
 
     implementation(libs.kizitonwose.calendar.compose)
 
+    implementation(libs.camerax.core)
+    implementation(libs.camerax.camera2)
+    implementation(libs.camerax.lifecycle)
+    implementation(libs.accompanist.permissions)
+    implementation(libs.coil.compose)
+
     implementation(libs.androidx.ui)
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
@@ -60,6 +66,7 @@ dependencies {
     implementation(libs.okhttp)
     implementation(libs.gson)
     implementation(libs.androidx.datastore.core.android)
+    implementation(libs.androidx.camera.view)
 
     testImplementation(kotlin("test"))
     androidTestImplementation(libs.androidx.junit)
