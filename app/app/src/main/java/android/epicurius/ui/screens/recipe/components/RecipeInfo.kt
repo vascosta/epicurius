@@ -21,7 +21,7 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun RecipeInfoBox(
     recipeInfo: RecipeInfo,
-    onRecipeRequest: (Int) -> Unit = {}
+    onRecipeRequest: (Int) -> Unit
 ) {
     Box(
         modifier = Modifier
@@ -47,7 +47,10 @@ fun RecipeInfoBox(
 }
 
 @Composable
-fun RecipeInfoSimpleBox(recipeInfo: RecipeInfo) {
+fun RecipeInfoSimpleBox(
+    recipeInfo: RecipeInfo,
+    onRecipeRequest: (Int) -> Unit
+) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -55,7 +58,7 @@ fun RecipeInfoSimpleBox(recipeInfo: RecipeInfo) {
             .clip(RoundedCornerShape(20.dp))
             .border(0.5.dp, Color.Black, RoundedCornerShape(20.dp))
             .padding(5.dp)
-            .clickable(onClick = {  })
+            .clickable(onClick = { onRecipeRequest(recipeInfo.id) })
     ) {
         Column {
             RecipeHeader(name = recipeInfo.name, author = recipeInfo.authorUsername)
@@ -88,7 +91,8 @@ fun RecipeInfoPreview() {
                 0x00.toByte(), 0x00.toByte(), 0x00.toByte(), 0x00.toByte(), 0x49.toByte(), 0x45.toByte(), 0x4E.toByte(), 0x44.toByte(),
                 0xAE.toByte(), 0x42.toByte(), 0x60.toByte(), 0x82.toByte()
             ),
-        )
+        ),
+        {}
     )
 }
 
@@ -106,6 +110,7 @@ fun RecipeInfoSimpleBoxPreview() {
             preparationTime = 20,
             servings = 2,
             picture = "".toByteArray()
-        )
+        ),
+        {}
     )
 }
