@@ -1,6 +1,5 @@
 package epicurius.unit.services.user
 
-import epicurius.domain.PagingParams
 import epicurius.domain.exceptions.UserNotFound
 import epicurius.domain.picture.PictureDomain
 import org.mockito.kotlin.whenever
@@ -15,12 +14,12 @@ class GetUserProfileServiceTests : UserServiceTest() {
     @Test
     fun `Should retrieve the user profile successfully`() {
         // given a user (publicTestUser)
-        val pagingParams = PagingParams()
+        val limit = 10
 
         // mock
         whenever(jdbiUserRepositoryMock.getUser(publicTestUsername)).thenReturn(publicTestUser)
-        whenever(jdbiUserRepositoryMock.getFollowers(publicTestUser.id, pagingParams)).thenReturn(emptyList())
-        whenever(jdbiUserRepositoryMock.getFollowing(publicTestUser.id, pagingParams)).thenReturn(emptyList())
+        whenever(jdbiUserRepositoryMock.getFollowers(publicTestUser.id, null, limit)).thenReturn(emptyList())
+        whenever(jdbiUserRepositoryMock.getFollowing(publicTestUser.id, null, limit)).thenReturn(emptyList())
         whenever(pictureRepositoryMock.getPicture(publicTestUser.profilePictureName!!, PictureDomain.USERS_FOLDER))
             .thenReturn(testPicture.bytes)
 

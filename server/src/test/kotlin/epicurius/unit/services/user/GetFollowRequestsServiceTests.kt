@@ -13,7 +13,7 @@ class GetFollowRequestsServiceTests : UserServiceTest() {
         // given a user (publicTestUser)
 
         // mock
-        val mockFollowing = SearchUserModel(privateTestUsername, privateTestUser.profilePictureName)
+        val mockFollowing = SearchUserModel(1, privateTestUsername, privateTestUser.profilePictureName)
         val mockFollowings = listOf(mockFollowing)
         whenever(jdbiUserRepositoryMock.getFollowRequests(publicTestUser.id)).thenReturn(mockFollowings)
 
@@ -22,6 +22,6 @@ class GetFollowRequestsServiceTests : UserServiceTest() {
 
         // then the following are retrieved successfully
         assertEquals(mockFollowings.size, followings.size)
-        assertEquals(SearchUser(mockFollowing.name, null), followings.first())
+        assertEquals(SearchUser(1, mockFollowing.name, null), followings.first())
     }
 }
