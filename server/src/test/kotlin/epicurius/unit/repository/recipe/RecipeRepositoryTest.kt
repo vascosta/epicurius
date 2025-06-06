@@ -2,7 +2,6 @@ package epicurius.unit.repository.recipe
 
 import epicurius.domain.Diet
 import epicurius.domain.Intolerance
-import epicurius.domain.PagingParams
 import epicurius.domain.recipe.Cuisine
 import epicurius.domain.recipe.Ingredient
 import epicurius.domain.recipe.IngredientUnit
@@ -151,8 +150,13 @@ open class RecipeRepositoryTest : RepositoryTest() {
         fun getRandomRecipesFromPublicUsers(mealType: MealType, intolerances: List<Intolerance>, diets: List<Diet>, limit: Int) =
             tm.run { it.recipeRepository.getRandomRecipesFromPublicUsers(mealType, intolerances, diets, limit) }
 
-        fun searchRecipes(userId: Int, form: SearchRecipesModel, pagingParams: PagingParams) =
-            tm.run { it.recipeRepository.searchRecipes(userId, form, pagingParams) }
+        fun searchRecipes(
+            userId: Int,
+            form: SearchRecipesModel,
+            lastRecipeId: Int?,
+            limit: Int
+        ) =
+            tm.run { it.recipeRepository.searchRecipes(userId, form, lastRecipeId, limit) }
 
         fun followUser(userId: Int, followedUserId: Int) =
             tm.run { it.userRepository.follow(userId, followedUserId, FollowingStatus.ACCEPTED.ordinal) }

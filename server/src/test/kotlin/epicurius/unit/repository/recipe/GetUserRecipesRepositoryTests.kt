@@ -1,6 +1,5 @@
 package epicurius.unit.repository.recipe
 
-import epicurius.domain.PagingParams
 import epicurius.utils.createTestRecipe
 import epicurius.utils.createTestUser
 import kotlin.test.Test

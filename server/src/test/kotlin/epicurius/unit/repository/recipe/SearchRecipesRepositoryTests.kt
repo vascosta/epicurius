@@ -2,7 +2,6 @@ package epicurius.unit.repository.recipe
 
 import epicurius.domain.Diet
 import epicurius.domain.Intolerance
-import epicurius.domain.PagingParams
 import epicurius.domain.recipe.Cuisine
 import epicurius.domain.recipe.MealType
 import epicurius.domain.recipe.SearchRecipesModel
@@ -12,14 +11,15 @@ import kotlin.test.assertTrue
 
 class SearchRecipesRepositoryTests : RecipeRepositoryTest() {
 
+    val limit = 10
+
     @Test
     fun `Should search a recipe by name`() {
-        // given a user and a recipe (testUserPublic, testRecipe) and paging params
-        val pagingParams = PagingParams()
+        // given a user and a recipe (testUserPublic, testRecipe)
 
         // when searching for the recipe by name
         val searchName = SearchRecipesModel(name = testRecipe.name)
-        val nameResults = searchRecipes(testUserPublic.user.id, searchName, pagingParams)
+        val nameResults = searchRecipes(testUserPublic.user.id, searchName, null, limit)
 
         // then the recipe is found
         assertEquals(1, nameResults.size)
@@ -27,7 +27,7 @@ class SearchRecipesRepositoryTests : RecipeRepositoryTest() {
 
         // when searching for a nonexistent recipe name
         val searchDifferentName = SearchRecipesModel(name = "Nonexistent Recipe")
-        val differentNameResults = searchRecipes(testUserPublic.user.id, searchDifferentName, pagingParams)
+        val differentNameResults = searchRecipes(testUserPublic.user.id, searchDifferentName, null, limit)
 
         // then no recipes are found
         assertEquals(0, differentNameResults.size)
@@ -41,11 +41,8 @@ class SearchRecipesRepositoryTests : RecipeRepositoryTest() {
         // given user intolerances that correspond to the recipe
         val filtersToTest = SearchRecipesModel(intolerances = listOf(Intolerance.GLUTEN.ordinal))
 
-        // given paging params
-        val pagingParams = PagingParams()
-
         // when searching for the recipe with the current filter
-        val emptyList = searchRecipes(testUserPublic.user.id, filtersToTest, pagingParams)
+        val emptyList = searchRecipes(testUserPublic.user.id, filtersToTest, null, limit)
 
         // then the recipe is not found
         assertTrue(emptyList.isEmpty())
@@ -54,7 +51,7 @@ class SearchRecipesRepositoryTests : RecipeRepositoryTest() {
         val nonMatchingFilters = SearchRecipesModel(intolerances = listOf(Intolerance.DAIRY.ordinal))
 
         // when searching for the recipe with the current filter
-        val recipeList = searchRecipes(testUserPublic.user.id, nonMatchingFilters, pagingParams)
+        val recipeList = searchRecipes(testUserPublic.user.id, nonMatchingFilters, null, limit)
 
         // then no recipes are found
         assertEquals(1, recipeList.size)
@@ -87,11 +84,8 @@ class SearchRecipesRepositoryTests : RecipeRepositoryTest() {
                 maxCarbs = 100
             )
 
-        // given paging params
-        val pagingParams = PagingParams()
-
         // when searching for the recipe with the current filter
-        val recipeList = searchRecipes(testUserPublic.user.id, filtersToTest, pagingParams)
+        val recipeList = searchRecipes(testUserPublic.user.id, filtersToTest, null, limit)
 
         // then the recipe is found
         assertEquals(1, recipeList.size)
@@ -119,7 +113,7 @@ class SearchRecipesRepositoryTests : RecipeRepositoryTest() {
             )
 
         // when searching for the recipe with the current filter
-        val emptyList = searchRecipes(testUserPublic.user.id, nonMatchingFilters, pagingParams)
+        val emptyList = searchRecipes(testUserPublic.user.id, nonMatchingFilters, null, limit)
 
         // then no recipes are found
         assertEquals(0, emptyList.size)
@@ -149,11 +143,8 @@ class SearchRecipesRepositoryTests : RecipeRepositoryTest() {
                 maxCarbs = 50
             )
 
-        // given paging params
-        val pagingParams = PagingParams()
-
         // when searching for the recipe with the current filter
-        val recipeList = searchRecipes(testUserPublic.user.id, filtersToTest, pagingParams)
+        val recipeList = searchRecipes(testUserPublic.user.id, filtersToTest, null, limit)
 
         // then the recipe is found
         assertEquals(1, recipeList.size)
@@ -187,11 +178,8 @@ class SearchRecipesRepositoryTests : RecipeRepositoryTest() {
                 maxCarbs = 100
             )
 
-        // given paging params
-        val pagingParams = PagingParams()
-
         // when private user searches for public user recipe
-        val recipeList = searchRecipes(testUserPrivate.user.id, filtersToTest2, pagingParams)
+        val recipeList = searchRecipes(testUserPrivate.user.id, filtersToTest2, null, limit)
 
         // then the recipe is found
         assertEquals(1, recipeList.size)
@@ -225,11 +213,8 @@ class SearchRecipesRepositoryTests : RecipeRepositoryTest() {
                 maxCarbs = 100
             )
 
-        // given paging params
-        val pagingParams = PagingParams()
-
         // when searching for the recipe with the current filter
-        val emptyList = searchRecipes(testUserPublic.user.id, filtersToTest, pagingParams)
+        val emptyList = searchRecipes(testUserPublic.user.id, filtersToTest, null, limit)
 
         // then the recipe is found, public user does not follow private user
         assertTrue(emptyList.isEmpty())
@@ -238,7 +223,7 @@ class SearchRecipesRepositoryTests : RecipeRepositoryTest() {
         followUser(testUserPublic.user.id, testUserPrivate.user.id)
 
         // when searching for the recipe that match the private user recipe
-        val recipeList2 = searchRecipes(testUserPublic.user.id, filtersToTest, pagingParams)
+        val recipeList2 = searchRecipes(testUserPublic.user.id, filtersToTest, null, limit)
 
         // then the recipe is found
         assertEquals(1, recipeList2.size)
