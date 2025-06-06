@@ -10,6 +10,7 @@ import android.epicurius.domain.user.MIN_PASSWORD_LENGTH
 import android.epicurius.domain.user.MIN_USERNAME_LENGTH
 import android.epicurius.domain.user.PASSWORD_LENGTH_MSG
 import android.epicurius.domain.user.USERNAME_LENGTH_MSG
+import android.epicurius.domain.user.UserProfile
 import android.epicurius.domain.user.VALID_EMAIL_MSG
 import android.epicurius.domain.user.VALID_PASSWORD_MSG
 import android.epicurius.domain.user.VALID_USERNAME_MSG
@@ -19,6 +20,9 @@ import android.epicurius.domain.user.usernameRegex
 import android.epicurius.services.EpicuriusService
 import android.epicurius.storage.Session
 import android.epicurius.ui.EpicuriusViewModel
+import android.epicurius.ui.screens.utils.LoadState
+import android.epicurius.ui.screens.utils.idle
+import kotlinx.coroutines.flow.MutableStateFlow
 
 open class UserViewModel(
     service: EpicuriusService,
