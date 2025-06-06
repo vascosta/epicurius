@@ -5,6 +5,7 @@ import epicurius.domain.user.AuthenticatedUser
 import epicurius.http.controllers.feed.models.output.GetUserFeedOutputModel
 import epicurius.http.media.Uris
 import epicurius.integration.EpicuriusIntegrationTest
+import epicurius.integration.utils.addQueryParams
 import epicurius.integration.utils.get
 import epicurius.integration.utils.patch
 import epicurius.utils.createTestRecipe
@@ -24,10 +25,15 @@ class FeedIntegrationTest : EpicuriusIntegrationTest() {
         testRecipe = createTestRecipe(tm, fs, testAuthorUser.user)
     }
 
-    fun getFeed(token: String, skip: Int = 0, limit: Int = 10) =
+    fun getFeed(token: String, lastRecipeId: Int?, limit: Int = 10) =
         get<GetUserFeedOutputModel>(
             client,
-            api("${Uris.User.USER_FEED}?skip=$skip&limit=$limit"),
+            api(Uris.User.USER_FEED).addQueryParams(
+                mapOf(
+                    "lastRecipeId" to lastRecipeId,
+                    "limit" to limit
+                )
+            ),
             token = token
         )
 

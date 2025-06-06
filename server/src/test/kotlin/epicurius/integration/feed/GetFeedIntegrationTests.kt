@@ -12,7 +12,7 @@ class GetFeedIntegrationTests : FeedIntegrationTest() {
         // given a user (testUser)
 
         // when getting the user's feed
-        val feedBody = getFeed(testUser.token)
+        val feedBody = getFeed(testUser.token, null)
 
         // then the feed should contain any recipes
         assertNotNull(feedBody)
@@ -27,7 +27,7 @@ class GetFeedIntegrationTests : FeedIntegrationTest() {
         follow(testUser.token, testAuthorUser.user.name)
 
         // and getting the user's feed
-        val feedBody = getFeed(testUser.token)
+        val feedBody = getFeed(testUser.token, null)
 
         // then the feed should contain the test recipe
         assertNotNull(feedBody)
