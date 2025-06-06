@@ -1,6 +1,5 @@
 package epicurius.repository.jdbi.user
 
-import epicurius.domain.PagingParams
 import epicurius.domain.exceptions.UserNotFound
 import epicurius.domain.user.FollowingStatus
 import epicurius.domain.user.User
@@ -85,20 +84,22 @@ class JdbiUserRepository(private val handle: Handle) : UserRepository {
             .mapTo<SearchUserModel>()
             .list()
 
-    override fun getFollowers(userId: Int, pagingParams: PagingParams): List<SearchUserModel> =
+    override fun getFollowers(userId: Int, lastFollowerId: Int?, limit: Int): List<SearchUserModel> =
         handle.createQuery(
             """
                 SELECT u.name, u.profile_picture_name
                 FROM dbo.user u
                 JOIN dbo.followers f ON u.id = f.follower_id
-                WHERE f.user_id = :user_id AND f.status = :status
-                LIMIT :limit OFFSET :skip
+                WHERE f.user_id = :user_id 
+                    AND f.status = :status
+                    AND (:lastFollowerId IS NULL OR f.follower_id < :lastFollowerId)
+                LIMIT :limit
             """
         )
             .bind("user_id", userId)
             .bind("status", FollowingStatus.ACCEPTED.ordinal)
-            .bind("limit", pagingParams.limit)
-            .bind("skip", pagingParams.skip)
+            .bind("lastFollowerId", lastFollowerId)
+            .bind("limit", limit)
             .mapTo<SearchUserModel>()
             .list()
 
@@ -116,7 +117,7 @@ class JdbiUserRepository(private val handle: Handle) : UserRepository {
             .mapTo<Int>()
             .one()
 
-    override fun getFollowing(userId: Int, pagingParams: PagingParams): List<SearchUserModel> =
+    override fun getFollowing(userId: Int, lastFollowingId: Int?, limit: Int): List<SearchUserModel> =
         handle.createQuery(
             """
                 SELECT u.name, u.profile_picture_name
@@ -128,8 +129,8 @@ class JdbiUserRepository(private val handle: Handle) : UserRepository {
         )
             .bind("user_id", userId)
             .bind("status", FollowingStatus.ACCEPTED.ordinal)
-            .bind("limit", pagingParams.limit)
-            .bind("skip", pagingParams.skip)
+            .bind("lastFollowingId", lastFollowingId)
+            .bind("limit", limit)
             .mapTo<SearchUserModel>()
             .list()
 

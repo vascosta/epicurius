@@ -1,6 +1,5 @@
 package epicurius.http.controllers.user
 
-import epicurius.domain.PagingParams
 import epicurius.domain.user.AuthenticatedUser
 import epicurius.domain.user.FollowRequestType
 import epicurius.domain.user.UserProfile
@@ -107,22 +106,20 @@ class UserController(val userService: UserService) {
     @GetMapping(Uris.User.USER_FOLLOWERS)
     fun getUserFollowers(
         authenticatedUser: AuthenticatedUser,
-        @RequestParam skip: Int,
+        @RequestParam lastFollowerId: Int?,
         @RequestParam limit: Int
     ): ResponseEntity<*> {
-        val pagingParams = PagingParams(skip, limit)
-        val followers = userService.getFollowers(authenticatedUser.user.id, pagingParams)
+        val followers = userService.getFollowers(authenticatedUser.user.id, lastFollowerId, limit)
         return okHttpResponse(GetUserFollowersOutputModel(followers))
     }
 
     @GetMapping(Uris.User.USER_FOLLOWING)
     fun getUserFollowing(
         authenticatedUser: AuthenticatedUser,
-        @RequestParam skip: Int,
+        @RequestParam lastFollowingId: Int?,
         @RequestParam limit: Int
     ): ResponseEntity<*> {
-        val pagingParams = PagingParams(skip, limit)
-        val following = userService.getFollowing(authenticatedUser.user.id, pagingParams)
+        val following = userService.getFollowing(authenticatedUser.user.id, lastFollowingId, limit)
         return okHttpResponse(GetUserFollowingOutputModel(following))
     }
 

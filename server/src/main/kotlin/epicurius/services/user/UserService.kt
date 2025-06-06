@@ -1,6 +1,5 @@
 package epicurius.services.user
 
-import epicurius.domain.PagingParams
 import epicurius.domain.exceptions.FollowRequestAlreadyBeenSent
 import epicurius.domain.exceptions.FollowRequestNotFound
 import epicurius.domain.exceptions.IncorrectPassword
@@ -83,15 +82,15 @@ class UserService(
             .map { user -> SearchUser(user.name, getProfilePicture(user.profilePictureName)) }
     }
 
-    fun getFollowers(userId: Int, pagingParams: PagingParams) =
-        tm.run { it.userRepository.getFollowers(userId, pagingParams) }
+    fun getFollowers(userId: Int, lastFollowerId: Int?, limit: Int) =
+        tm.run { it.userRepository.getFollowers(userId, lastFollowerId, limit) }
             .map { user -> FollowUser(user.name, getProfilePicture(user.profilePictureName)) }
 
     fun getFollowersCount(userId: Int) =
         tm.run { it.userRepository.getFollowersCount(userId) }
 
-    fun getFollowing(userId: Int, pagingParams: PagingParams) =
-        tm.run { it.userRepository.getFollowing(userId, pagingParams) }
+    fun getFollowing(userId: Int, lastFollowingId: Int?, limit: Int) =
+        tm.run { it.userRepository.getFollowing(userId, lastFollowingId, limit) }
             .map { user -> FollowingUser(user.name, getProfilePicture(user.profilePictureName)) }
 
     fun getFollowingCount(userId: Int) =
