@@ -81,7 +81,7 @@ class JdbiUserRepository(private val handle: Handle) : UserRepository {
                 WHERE LOWER(name) LIKE LOWER(:partialUsername) 
                     AND id <> :userId
                     AND (:lastUserId IS NULL OR id < :lastUserId)
-                LIMIT :limit OFFSET :skip
+                LIMIT :limit
             """
         )
             .bind("partialUsername", "%$partialUsername%")
@@ -131,7 +131,7 @@ class JdbiUserRepository(private val handle: Handle) : UserRepository {
                 FROM dbo.user u
                 JOIN dbo.followers f ON u.id = f.user_id
                 WHERE f.follower_id = :user_id AND f.status = :status
-                LIMIT :limit OFFSET :skip
+                LIMIT :limit
             """
         )
             .bind("user_id", userId)
@@ -158,7 +158,7 @@ class JdbiUserRepository(private val handle: Handle) : UserRepository {
     override fun getFollowRequests(userId: Int): List<SearchUserModel> =
         handle.createQuery(
             """
-                SELECT u.name, u.profile_picture_name
+                SELECT u.id, u.name, u.profile_picture_name
                 FROM dbo.user u
                 JOIN dbo.followers f ON u.id = f.follower_id
                 WHERE f.user_id = :user_id AND f.status = :status

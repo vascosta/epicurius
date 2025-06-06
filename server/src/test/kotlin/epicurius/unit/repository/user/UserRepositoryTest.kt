@@ -1,6 +1,5 @@
 package epicurius.unit.repository.user
 
-import epicurius.domain.PagingParams
 import epicurius.repository.jdbi.user.models.JdbiUpdateUserModel
 import epicurius.unit.repository.RepositoryTest
 
@@ -17,16 +16,21 @@ open class UserRepositoryTest : RepositoryTest() {
         fun getUserByTokenHash(tokenHash: String) = tm.run { it.userRepository.getUser(tokenHash = tokenHash) }
         fun getUserProfilePictureName(userId: Int) = tm.run { it.userRepository.getUserProfilePictureName(userId) }
 
-        fun searchUsers(userId: Int, partialUsername: String, pagingParams: PagingParams) =
-            tm.run { it.userRepository.searchUsers(userId, partialUsername, pagingParams) }
+        fun searchUsers(
+            userId: Int,
+            partialUsername: String,
+            lastUserId: Int?,
+            limit: Int
+        ) =
+            tm.run { it.userRepository.searchUsers(userId, partialUsername, lastUserId, limit) }
 
-        fun getFollowers(userId: Int, pagingParams: PagingParams) =
-            tm.run { it.userRepository.getFollowers(userId, pagingParams) }
+        fun getFollowers(userId: Int, lastFollowerId: Int?, limit: Int) =
+            tm.run { it.userRepository.getFollowers(userId, lastFollowerId, limit) }
 
         fun getFollowersCount(userId: Int) = tm.run { it.userRepository.getFollowersCount(userId) }
 
-        fun getFollowing(userId: Int, pagingParams: PagingParams) =
-            tm.run { it.userRepository.getFollowing(userId, pagingParams) }
+        fun getFollowing(userId: Int, lastFollowingId: Int?, limit: Int) =
+            tm.run { it.userRepository.getFollowing(userId, lastFollowingId, limit) }
 
         fun getFollowingCount(userId: Int) = tm.run { it.userRepository.getFollowingCount(userId) }
 

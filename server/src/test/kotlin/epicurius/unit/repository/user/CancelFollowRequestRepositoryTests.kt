@@ -5,6 +5,7 @@ import epicurius.repository.jdbi.user.models.SearchUserModel
 import epicurius.utils.createTestUser
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertNotNull
 import kotlin.test.assertTrue
 
 class CancelFollowRequestRepositoryTests : UserRepositoryTest() {
@@ -23,7 +24,7 @@ class CancelFollowRequestRepositoryTests : UserRepositoryTest() {
         val privateUserFollowRequests = getFollowRequests(privateTestUser.user.id)
         assertTrue(privateUserFollowRequests.isNotEmpty())
         assertEquals(1, privateUserFollowRequests.size)
-        assertTrue(privateUserFollowRequests.contains(SearchUserModel(publicTestUser.user.name, publicTestUser.user.profilePictureName)))
+        assertNotNull(privateUserFollowRequests.firstOrNull { it.id == publicTestUser.user.id })
 
         // when cancelling the follow request
         cancelFollowRequest(privateTestUser.user.id, publicTestUser.user.id)

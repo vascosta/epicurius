@@ -1,6 +1,5 @@
 package epicurius.unit.repository.user
 
-import epicurius.domain.PagingParams
 import epicurius.repository.jdbi.user.models.SearchUserModel
 import epicurius.utils.createTestUser
 import epicurius.utils.generateEmail
@@ -8,6 +7,8 @@ import epicurius.utils.generateSecurePassword
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
+import kotlin.test.assertNotNull
+import kotlin.test.assertNull
 import kotlin.test.assertTrue
 
 class SearchUsersRepositoryTests : UserRepositoryTest() {
@@ -25,15 +26,16 @@ class SearchUsersRepositoryTests : UserRepositoryTest() {
         val passwordHash = userDomain.encodePassword(generateSecurePassword())
         createUser(username, email, country, passwordHash)
         createUser(username2, email2, country, passwordHash)
+        val limit = 2
 
         // when retrieving the users by a partial username
-        val users = searchUsers(publicTestUser.user.id, "partial", PagingParams(limit = 2))
+        val users = searchUsers(publicTestUser.user.id, "partial", null, limit)
 
         // then the users are retrieved successfully
         assertTrue(users.isNotEmpty())
         assertEquals(2, users.size)
-        assertTrue(users.contains(SearchUserModel(username, null)))
-        assertTrue(users.contains(SearchUserModel(username2, null)))
-        assertFalse(users.contains(SearchUserModel(publicTestUser.user.name, publicTestUser.user.profilePictureName)))
+        assertNotNull(users.firstOrNull { it.name == username })
+        assertNotNull(users.firstOrNull { it.name == username2 })
+        assertNull(users.firstOrNull { it.name == publicTestUser.user.name })
     }
 }
