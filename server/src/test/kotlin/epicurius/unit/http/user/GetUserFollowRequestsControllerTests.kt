@@ -15,7 +15,7 @@ class GetUserFollowRequestsControllerTests : UserControllerTest() {
         // given a user (publicTestUser)
 
         // mock
-        val mockFollowing = FollowUser(privateTestUsername, null)
+        val mockFollowing = FollowUser(1, privateTestUsername, null)
         val mockFollowings = listOf(mockFollowing)
         whenever(userServiceMock.getFollowRequests(publicTestUser.user.id)).thenReturn(mockFollowings)
 
@@ -26,6 +26,6 @@ class GetUserFollowRequestsControllerTests : UserControllerTest() {
         // then the following are retrieved successfully
         assertEquals(HttpStatus.OK, response.statusCode)
         assertEquals(mockFollowings.size, body.users.size)
-        assertEquals(SearchUser(mockFollowing.name, null), body.users.first())
+        assertEquals(SearchUser(1, mockFollowing.name, null), body.users.first())
     }
 }
