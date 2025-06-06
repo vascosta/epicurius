@@ -2,7 +2,6 @@ package epicurius.unit.http.feed
 
 import epicurius.domain.Diet
 import epicurius.domain.Intolerance
-import epicurius.domain.PagingParams
 import epicurius.domain.user.AuthenticatedUser
 import epicurius.domain.user.User
 import epicurius.http.controllers.feed.models.output.GetUserFeedOutputModel
@@ -16,7 +15,7 @@ import kotlin.test.Test
 
 class GetUserFeedControllerTests : FeedControllerTest() {
 
-    private val pagingParams = PagingParams(0, 10)
+    private val limit = 10
     private val testAuthenticatedUser = AuthenticatedUser(
         User(
             1,
@@ -35,15 +34,15 @@ class GetUserFeedControllerTests : FeedControllerTest() {
 
     @Test
     fun `Should retrieve user's empty feed`() {
-        // given a user (testAuthenticatedUser) that follows no users and pagination params (pagingParams
+        // given a user (testAuthenticatedUser) that follows no users
 
         // mock
         whenever(
-            feedServiceMock.getFeed(testAuthenticatedUser.user.id, emptyList(), emptyList(), pagingParams)
+            feedServiceMock.getFeed(testAuthenticatedUser.user.id, emptyList(), emptyList(), null, limit)
         ).thenReturn(emptyList())
 
         // when retrieving the feed
-        val response = getUserFeed(testAuthenticatedUser, pagingParams.skip, pagingParams.limit)
+        val response = getUserFeed(testAuthenticatedUser, null, limit)
 
         // then feed should be empty
         assertEquals(HttpStatus.OK, response.statusCode)
@@ -52,15 +51,15 @@ class GetUserFeedControllerTests : FeedControllerTest() {
 
     @Test
     fun `Should retrieve user's feed with recipes`() {
-        // given a user (testAuthenticatedUser) that follows another user with recipe and pagination params (pagingParams)
+        // given a user (testAuthenticatedUser) that follows another user with recipe
 
         // mock
         whenever(
-            feedServiceMock.getFeed(testAuthenticatedUser.user.id, emptyList(), emptyList(), pagingParams)
+            feedServiceMock.getFeed(testAuthenticatedUser.user.id, emptyList(), emptyList(), null, limit)
         ).thenReturn(listOf(recipeInfo))
 
         // when retrieving the feed
-        val response = getUserFeed(testAuthenticatedUser, pagingParams.skip, pagingParams.limit)
+        val response = getUserFeed(testAuthenticatedUser, null, limit)
 
         // then feed should contain recipes
         assertEquals(HttpStatus.OK, response.statusCode)
@@ -69,15 +68,15 @@ class GetUserFeedControllerTests : FeedControllerTest() {
 
     @Test
     fun `Should retrieve user's feed order by most recent recipe`() {
-        // given a user (testAuthenticatedUser) that follows another user with recipe and pagination params (pagingParams)
+        // given a user (testAuthenticatedUser) that follows another user with recipe
 
         // mock
         whenever(
-            feedServiceMock.getFeed(testAuthenticatedUser.user.id, emptyList(), emptyList(), pagingParams)
+            feedServiceMock.getFeed(testAuthenticatedUser.user.id, emptyList(), emptyList(), null, limit)
         ).thenReturn(listOf(recipeInfo2, recipeInfo))
 
         // when retrieving the feed
-        val response = getUserFeed(testAuthenticatedUser, pagingParams.skip, pagingParams.limit)
+        val response = getUserFeed(testAuthenticatedUser, null, limit)
 
         // then feed should contain recipes
         assertEquals(HttpStatus.OK, response.statusCode)
@@ -86,7 +85,7 @@ class GetUserFeedControllerTests : FeedControllerTest() {
 
     @Test
     fun `Should retrieve user's feed according to intolerances`() {
-        // given a user (testAuthenticatedUser) with intolerances that follows another user, pagination params (pagingParams) and a recipe
+        // given a user (testAuthenticatedUser) with intolerances that follows another user and a recipe
         val testAuthenticatedUserWithIntolerances = testAuthenticatedUser.copy(
             user = testAuthenticatedUser.user.copy(intolerances = listOf(Intolerance.GLUTEN))
         )
@@ -97,12 +96,13 @@ class GetUserFeedControllerTests : FeedControllerTest() {
                 testAuthenticatedUserWithIntolerances.user.id,
                 listOf(Intolerance.GLUTEN),
                 emptyList(),
-                pagingParams
+                null,
+                limit
             )
         ).thenReturn(listOf(recipeInfo2))
 
         // when retrieving the feed with intolerance and no diets
-        val response = getUserFeed(testAuthenticatedUserWithIntolerances, pagingParams.skip, pagingParams.limit)
+        val response = getUserFeed(testAuthenticatedUserWithIntolerances, null, limit)
 
         // then feed should contain recipes
         assertEquals(HttpStatus.OK, response.statusCode)
@@ -111,7 +111,7 @@ class GetUserFeedControllerTests : FeedControllerTest() {
 
     @Test
     fun `Should retrieve user's feed according to diets`() {
-        // given a user (testAuthenticatedUser) with diets that follows another user, pagination params (pagingParams) and a recipe
+        // given a user (testAuthenticatedUser) with diets that follows another user and a recipe
         val testAuthenticatedUserWithDiets = testAuthenticatedUser.copy(
             user = testAuthenticatedUser.user.copy(diets = listOf(Diet.LACTO_VEGETARIAN))
         )
@@ -122,11 +122,12 @@ class GetUserFeedControllerTests : FeedControllerTest() {
                 testAuthenticatedUserWithDiets.user.id,
                 emptyList(),
                 listOf(Diet.LACTO_VEGETARIAN),
-                pagingParams
+                null,
+                limit
             )
         ).thenReturn(listOf(recipeInfo))
         // when retrieving the feed with diets and no intolerances
-        val response = getUserFeed(testAuthenticatedUserWithDiets, pagingParams.skip, pagingParams.limit)
+        val response = getUserFeed(testAuthenticatedUserWithDiets, null, limit)
 
         // then feed should contain recipes
         assertEquals(HttpStatus.OK, response.statusCode)
@@ -135,7 +136,7 @@ class GetUserFeedControllerTests : FeedControllerTest() {
 
     @Test
     fun `Should retrieve user's feed according to intolerances and diets`() {
-        // given a user (testAuthenticatedUser) with intolerances and diets that follows another user, pagination params (pagingParams) and a recipe
+        // given a user (testAuthenticatedUser) with intolerances and diets that follows another user and a recipe
         val testAuthenticatedUserWithIntolerancesAndDiets = testAuthenticatedUser.copy(
             user = testAuthenticatedUser.user.copy(
                 intolerances = listOf(Intolerance.GLUTEN),
@@ -149,12 +150,13 @@ class GetUserFeedControllerTests : FeedControllerTest() {
                 testAuthenticatedUserWithIntolerancesAndDiets.user.id,
                 listOf(Intolerance.GLUTEN),
                 listOf(Diet.LACTO_VEGETARIAN),
-                pagingParams
+                null,
+                limit
             )
         ).thenReturn(listOf(recipeInfo2, recipeInfo))
 
         // when retrieving the feed with intolerance and no diets
-        val response = getUserFeed(testAuthenticatedUserWithIntolerancesAndDiets, pagingParams.skip, pagingParams.limit)
+        val response = getUserFeed(testAuthenticatedUserWithIntolerancesAndDiets, null, limit)
 
         // then feed should contain recipes
         assertEquals(HttpStatus.OK, response.statusCode)

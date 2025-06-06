@@ -18,7 +18,7 @@ class FeedController(private val feedService: FeedService) {
     @GetMapping(Uris.User.USER_FEED)
     fun getUserFeed(
         authenticatedUser: AuthenticatedUser,
-        @RequestParam lastRecipeId: Int,
+        @RequestParam lastRecipeId: Int?,
         @RequestParam limit: Int,
     ): ResponseEntity<*> {
         val feed = feedService.getFeed(
