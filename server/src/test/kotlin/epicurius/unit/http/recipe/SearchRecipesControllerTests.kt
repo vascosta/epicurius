@@ -271,7 +271,7 @@ class SearchRecipesControllerTests : RecipeControllerTest() {
             searchRecipesInputInfo.minProtein,
             searchRecipesInputInfo.maxProtein,
             searchRecipesInputInfo.minTime,
-           searchRecipesInputInfo.maxTime,
+            searchRecipesInputInfo.maxTime,
             null,
             limit
         )

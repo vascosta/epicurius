@@ -1,7 +1,6 @@
 package epicurius.unit.repository.user
 
 import epicurius.domain.user.FollowingStatus
-import epicurius.repository.jdbi.user.models.SearchUserModel
 import epicurius.utils.createTestUser
 import kotlin.test.Test
 import kotlin.test.assertEquals
