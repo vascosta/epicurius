@@ -2,7 +2,6 @@ package epicurius.unit.repository.feed
 
 import epicurius.domain.Diet
 import epicurius.domain.Intolerance
-import epicurius.domain.PagingParams
 import epicurius.domain.user.FollowingStatus
 import epicurius.services.feed.models.GetFeedModel
 import epicurius.unit.repository.RepositoryTest
@@ -23,9 +22,10 @@ open class FeedRepositoryTest : RepositoryTest() {
             userId: Int,
             intolerances: List<Intolerance>,
             diets: List<Diet>,
-            pagingParams: PagingParams
+            lastRecipeId: Int?,
+            limit: Int
         ) = tm.run {
-            it.feedRepository.getFeed(GetFeedModel(userId, intolerances, diets, pagingParams))
+            it.feedRepository.getFeed(GetFeedModel(userId, intolerances, diets, lastRecipeId, limit))
         }
 
         fun followUser(userId: Int, userIdToFollow: Int) {
