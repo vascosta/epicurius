@@ -2,7 +2,6 @@ package epicurius.unit.services
 
 import epicurius.domain.Diet
 import epicurius.domain.Intolerance
-import epicurius.domain.PagingParams
 import epicurius.domain.collection.CollectionType
 import epicurius.domain.mealPlanner.MealTime
 import epicurius.domain.user.FollowRequestType
@@ -33,12 +32,25 @@ open class ServiceTest : EpicuriusUnitTest() {
 
         fun getProfilePicture(profilePictureName: String?) = userService.getProfilePicture(profilePictureName)
 
-        fun searchUsers(userId: Int, partialUsername: String, pagingParams: PagingParams) =
-            userService.searchUsers(userId, partialUsername, pagingParams)
+        fun searchUsers(
+            userId: Int,
+            partialUsername: String,
+            lastUserId: Int?,
+            limit: Int
+        ) =
+            userService.searchUsers(userId, partialUsername, lastUserId, limit)
 
-        fun getFollowers(userId: Int, pagingParams: PagingParams) = userService.getFollowers(userId, pagingParams)
+        fun getFollowers(
+            userId: Int,
+            lastFollowerId: Int?,
+            limit: Int
+        ) = userService.getFollowers(userId, lastFollowerId, limit)
 
-        fun getFollowing(userId: Int, pagingParams: PagingParams) = userService.getFollowing(userId, pagingParams)
+        fun getFollowing(
+            userId: Int,
+            lastFollowingId: Int?,
+            limit: Int
+        ) = userService.getFollowing(userId, lastFollowingId, limit)
 
         fun getFollowRequests(userId: Int) = userService.getFollowRequests(userId)
 
@@ -70,8 +82,9 @@ open class ServiceTest : EpicuriusUnitTest() {
             userId: Int,
             intolerances: List<Intolerance>,
             diets: List<Diet>,
-            pagingParams: PagingParams
-        ) = feedService.getFeed(userId, intolerances, diets, pagingParams)
+            lastRecipeId: Int?,
+            limit: Int
+        ) = feedService.getFeed(userId, intolerances, diets, lastRecipeId, limit)
 
         // FRIDGE
         fun getFridge(userId: Int) = fridgeService.getFridge(userId)
@@ -93,8 +106,8 @@ open class ServiceTest : EpicuriusUnitTest() {
         suspend fun getUserRecipes(userId: Int, lastRecipeId: Int?, limit: Int) =
             recipeService.getUserRecipes(userId, lastRecipeId, limit)
 
-        fun searchRecipes(userId: Int, form: SearchRecipesInputModel, skip: Int, limit: Int) =
-            recipeService.searchRecipes(userId, form, PagingParams(skip, limit))
+        fun searchRecipes(userId: Int, form: SearchRecipesInputModel, lastRecipeId: Int?, limit: Int) =
+            recipeService.searchRecipes(userId, form, lastRecipeId, limit)
 
         suspend fun updateRecipe(userId: Int, recipeId: Int, recipeInfo: UpdateRecipeInputModel) =
             recipeService.updateRecipe(userId, recipeId, recipeInfo)
@@ -134,8 +147,13 @@ open class ServiceTest : EpicuriusUnitTest() {
         fun getCollection(userId: Int, collectionId: Int) =
             collectionService.getCollection(userId, collectionId)
 
-        fun getCollections(userId: Int, collectionType: CollectionType, pagingParams: PagingParams) =
-            collectionService.getCollections(userId, collectionType, pagingParams)
+        fun getCollections(
+            userId: Int,
+            collectionType: CollectionType,
+            lastCollectionId: Int?,
+            limit: Int
+        ) =
+            collectionService.getCollections(userId, collectionType, lastCollectionId, limit)
 
         fun updateCollection(userId: Int, collectionId: Int, updateCollectionInfo: UpdateCollectionInputModel) =
             collectionService.updateCollection(userId, collectionId, updateCollectionInfo)
