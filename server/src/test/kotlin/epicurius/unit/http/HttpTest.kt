@@ -2,7 +2,6 @@ package epicurius.unit.http
 
 import epicurius.domain.Diet
 import epicurius.domain.Intolerance
-import epicurius.domain.PagingParams
 import epicurius.domain.collection.CollectionType
 import epicurius.domain.mealPlanner.MealTime
 import epicurius.domain.recipe.Cuisine
@@ -56,8 +55,9 @@ open class HttpTest : EpicuriusUnitTest() {
         fun searchUsers(
             authenticatedUser: AuthenticatedUser,
             partialUsername: String,
-            pagingParams: PagingParams,
-        ) = userController.searchUsers(authenticatedUser, partialUsername, pagingParams.skip, pagingParams.limit)
+            lastUserId: Int?,
+            limit: Int
+        ) = userController.searchUsers(authenticatedUser, partialUsername, lastUserId, limit)
 
         fun getUserIntolerances(
             authenticatedUser: AuthenticatedUser,
@@ -70,15 +70,15 @@ open class HttpTest : EpicuriusUnitTest() {
 
         fun getUserFollowers(
             authenticatedUser: AuthenticatedUser,
-            skip: Int,
+            lastFollowerId: Int?,
             limit: Int
-        ) = userController.getUserFollowers(authenticatedUser, skip, limit)
+        ) = userController.getUserFollowers(authenticatedUser, lastFollowerId, limit)
 
         fun getUserFollowing(
             authenticatedUser: AuthenticatedUser,
-            skip: Int,
+            lastFollowingId: Int?,
             limit: Int
-        ) = userController.getUserFollowing(authenticatedUser, skip, limit)
+        ) = userController.getUserFollowing(authenticatedUser, lastFollowingId, limit)
 
         fun getUserFollowRequests(
             authenticatedUser: AuthenticatedUser,
@@ -137,10 +137,10 @@ open class HttpTest : EpicuriusUnitTest() {
         // FEED
         fun getUserFeed(
             authenticatedUser: AuthenticatedUser,
-            skip: Int,
+            lastRecipeId: Int?,
             limit: Int,
         ) =
-            feedController.getUserFeed(authenticatedUser, skip, limit)
+            feedController.getUserFeed(authenticatedUser, lastRecipeId, limit)
 
         // FRIDGE
         fun getFridge(
@@ -197,6 +197,8 @@ open class HttpTest : EpicuriusUnitTest() {
             maxProtein: Int? = null,
             minTime: Int? = null,
             maxTime: Int? = null,
+            lastRecipeId: Int?,
+            limit: Int
         ) = recipeController.searchRecipes(
             authenticatedUser,
             name,
@@ -215,8 +217,8 @@ open class HttpTest : EpicuriusUnitTest() {
             maxProtein,
             minTime,
             maxTime,
-            skip = 0,
-            limit = 5
+            lastRecipeId,
+            limit
         )
 
         suspend fun createRecipe(
@@ -313,10 +315,10 @@ open class HttpTest : EpicuriusUnitTest() {
         fun getCollections(
             authenticatedUser: AuthenticatedUser,
             collectionType: CollectionType,
-            skip: Int,
+            lastCollectionId: Int?,
             limit: Int
         ) =
-            collectionController.getCollections(authenticatedUser, collectionType, skip, limit)
+            collectionController.getCollections(authenticatedUser, collectionType, lastCollectionId, limit)
 
         fun createCollection(
             authenticatedUser: AuthenticatedUser,
