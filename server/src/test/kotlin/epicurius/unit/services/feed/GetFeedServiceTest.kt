@@ -2,7 +2,6 @@ package epicurius.unit.services.feed
 
 import epicurius.domain.Diet
 import epicurius.domain.Intolerance
-import epicurius.domain.PagingParams
 import epicurius.domain.picture.PictureDomain.Companion.RECIPES_FOLDER
 import epicurius.services.feed.models.GetFeedModel
 import org.mockito.kotlin.whenever
@@ -12,18 +11,19 @@ import kotlin.test.assertTrue
 
 class GetFeedServiceTest : FeedServiceTest() {
 
+    val limit = 10
+
     @Test
     fun `Should retrieve user's empty feed`() {
-        // given a user that follows no users and pagination params
-        val pagingParams = PagingParams(0, 10)
-        val info = GetFeedModel(USER_ID, emptyList(), emptyList(), pagingParams)
+        // given a user that follows no users
+        val info = GetFeedModel(USER_ID, emptyList(), emptyList(), null, limit)
 
         // mock
         whenever(jdbiFeedRepositoryMock.getFeed(info)).thenReturn(emptyList())
         whenever(pictureRepositoryMock.getPicture("", RECIPES_FOLDER)).thenReturn(null)
 
         // when retrieving the feed
-        val feed = getFeed(info.userId, info.intolerances, info.diets, info.pagingParams)
+        val feed = getFeed(info.userId, info.intolerances, info.diets, info.lastRecipeId, limit)
 
         // then feed should be empty
         assert(feed.isEmpty())
@@ -31,9 +31,8 @@ class GetFeedServiceTest : FeedServiceTest() {
 
     @Test
     fun `Should retrieve user's feed with recipes`() {
-        // given a user that follows another user with recipe and pagination params
-        val pagingParams = PagingParams(0, 10)
-        val info = GetFeedModel(USER_ID, emptyList(), emptyList(), pagingParams)
+        // given a user that follows another user with recipe
+        val info = GetFeedModel(USER_ID, emptyList(), emptyList(), null, limit)
 
         // mock
         whenever(jdbiFeedRepositoryMock.getFeed(info)).thenReturn(listOf(jdbiRecipeInfo))
@@ -42,7 +41,7 @@ class GetFeedServiceTest : FeedServiceTest() {
         ).thenReturn(ByteArray(0))
 
         // when retrieving the feed
-        val feed = getFeed(info.userId, info.intolerances, info.diets, info.pagingParams)
+        val feed = getFeed(info.userId, info.intolerances, info.diets, info.lastRecipeId, limit)
 
         // then feed should contain recipes
         assertTrue(feed.isNotEmpty())
@@ -56,9 +55,8 @@ class GetFeedServiceTest : FeedServiceTest() {
 
     @Test
     fun `Should retrieve user's feed order by most recent recipe`() {
-        // given a user that follows another user with recipe and pagination params
-        val pagingParams = PagingParams(0, 10)
-        val info = GetFeedModel(USER_ID, emptyList(), emptyList(), pagingParams)
+        // given a user that follows another user with recipe
+        val info = GetFeedModel(USER_ID, emptyList(), emptyList(), null, limit)
 
         // mock
         whenever(jdbiFeedRepositoryMock.getFeed(info)).thenReturn(listOf(jdbiRecipeInfo2, jdbiRecipeInfo))
@@ -70,7 +68,7 @@ class GetFeedServiceTest : FeedServiceTest() {
         ).thenReturn(ByteArray(0))
 
         // when retrieving the feed
-        val feed = getFeed(info.userId, info.intolerances, info.diets, info.pagingParams)
+        val feed = getFeed(info.userId, info.intolerances, info.diets, info.lastRecipeId, limit)
 
         // then feed should contain recipes
         assertTrue(feed.isNotEmpty())
@@ -91,9 +89,8 @@ class GetFeedServiceTest : FeedServiceTest() {
 
     @Test
     fun `Should retrieve user's feed according to intolerances`() {
-        // given a user with intolerances and diets that follows another user with recipe, pagination params and a recipe
-        val pagingParams = PagingParams(0, 10)
-        val info = GetFeedModel(USER_ID, listOf(Intolerance.GLUTEN), emptyList(), pagingParams)
+        // given a user with intolerances and diets that follows another user with recipe and a recipe
+        val info = GetFeedModel(USER_ID, listOf(Intolerance.GLUTEN), emptyList(), null, limit)
 
         // mock
         whenever(jdbiFeedRepositoryMock.getFeed(info)).thenReturn(emptyList())
@@ -102,7 +99,7 @@ class GetFeedServiceTest : FeedServiceTest() {
         ).thenReturn(ByteArray(0))
 
         // when retrieving the feed
-        val feed = getFeed(info.userId, info.intolerances, info.diets, info.pagingParams)
+        val feed = getFeed(info.userId, info.intolerances, info.diets, info.lastRecipeId, limit)
 
         // then feed should be empty
         assertTrue(feed.isEmpty())
@@ -110,9 +107,8 @@ class GetFeedServiceTest : FeedServiceTest() {
 
     @Test
     fun `Should retrieve user's feed according to diets`() {
-        // given a user with intolerances and diets that follows another user with recipe, pagination params and a recipe
-        val pagingParams = PagingParams(0, 10)
-        val info = GetFeedModel(USER_ID, emptyList(), listOf(Diet.LACTO_VEGETARIAN), pagingParams)
+        // given a user with intolerances and diets that follows another user with recipe and a recipe
+        val info = GetFeedModel(USER_ID, emptyList(), listOf(Diet.LACTO_VEGETARIAN), null, limit)
 
         // mock
         whenever(jdbiFeedRepositoryMock.getFeed(info)).thenReturn(listOf(jdbiRecipeInfo))
@@ -121,7 +117,7 @@ class GetFeedServiceTest : FeedServiceTest() {
         ).thenReturn(ByteArray(0))
 
         // when retrieving the feed
-        val feed = getFeed(info.userId, info.intolerances, info.diets, info.pagingParams)
+        val feed = getFeed(info.userId, info.intolerances, info.diets, info.lastRecipeId, limit)
 
         // then feed should contain recipes
         assertTrue(feed.isNotEmpty())
@@ -135,9 +131,8 @@ class GetFeedServiceTest : FeedServiceTest() {
 
     @Test
     fun `Should retrieve user's feed according to intolerances and diets`() {
-        // given a user with intolerances and diets that follows another user with recipe, pagination params and a recipe
-        val pagingParams = PagingParams(0, 10)
-        val info = GetFeedModel(USER_ID, listOf(Intolerance.GLUTEN), listOf(Diet.LACTO_VEGETARIAN), pagingParams)
+        // given a user with intolerances and diets that follows another user with recipe and a recipe
+        val info = GetFeedModel(USER_ID, listOf(Intolerance.GLUTEN), listOf(Diet.LACTO_VEGETARIAN), null, limit)
 
         // mock
         whenever(jdbiFeedRepositoryMock.getFeed(info)).thenReturn(emptyList())
@@ -146,7 +141,7 @@ class GetFeedServiceTest : FeedServiceTest() {
         ).thenReturn(ByteArray(0))
 
         // when retrieving the feed
-        val feed = getFeed(info.userId, info.intolerances, info.diets, info.pagingParams)
+        val feed = getFeed(info.userId, info.intolerances, info.diets, info.lastRecipeId, limit)
 
         // then feed should be empty
         assertTrue(feed.isEmpty())
