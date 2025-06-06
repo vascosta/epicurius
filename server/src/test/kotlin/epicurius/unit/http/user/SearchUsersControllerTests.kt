@@ -1,6 +1,5 @@
 package epicurius.unit.http.user
 
-import epicurius.domain.PagingParams
 import epicurius.domain.user.AuthenticatedUser
 import epicurius.domain.user.SearchUser
 import epicurius.domain.user.User
@@ -22,16 +21,17 @@ class SearchUsersControllerTests : UserControllerTest() {
             randomUUID().toString(),
         )
         val commonName = "test"
+        val limit = 10
 
         // mock
-        val mockSearchUser = SearchUser(publicTestUsername, null)
-        val mockSearchUser2 = SearchUser(privateTestUsername, null)
+        val mockSearchUser = SearchUser(1, publicTestUsername, null)
+        val mockSearchUser2 = SearchUser(2, privateTestUsername, null)
         val mockSearchUsers = listOf(mockSearchUser, mockSearchUser2)
-        whenever(userServiceMock.searchUsers(authenticatedUser.user.id, commonName, PagingParams()))
+        whenever(userServiceMock.searchUsers(authenticatedUser.user.id, commonName, null, limit))
             .thenReturn(mockSearchUsers)
 
         // when retrieving the users by a common string
-        val response = searchUsers(authenticatedUser, commonName, PagingParams())
+        val response = searchUsers(authenticatedUser, commonName, null, limit)
         val body = response.body as SearchUsersOutputModel
 
         // then the users are retrieved successfully

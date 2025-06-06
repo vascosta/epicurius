@@ -1,6 +1,5 @@
 package epicurius.unit.http.user
 
-import epicurius.domain.PagingParams
 import epicurius.domain.exceptions.UserNotFound
 import epicurius.domain.user.UserProfile
 import epicurius.http.controllers.user.models.output.GetUserProfileOutputModel
@@ -17,12 +16,12 @@ class GetUserProfileControllerTests : UserControllerTest() {
     @Test
     fun `Should retrieve the user profile successfully`() {
         // given a user (publicTestUser)
-        val pagingParams = PagingParams()
+        val limit = 10
 
         // mock
         whenever(userServiceMock.getProfilePicture(publicTestUser.user.profilePictureName)).thenReturn(testPicture.bytes)
-        whenever(userServiceMock.getFollowers(publicTestUser.user.id, pagingParams)).thenReturn(emptyList())
-        whenever(userServiceMock.getFollowing(publicTestUser.user.id, pagingParams)).thenReturn(emptyList())
+        whenever(userServiceMock.getFollowers(publicTestUser.user.id, null, limit)).thenReturn(emptyList())
+        whenever(userServiceMock.getFollowing(publicTestUser.user.id, null, limit)).thenReturn(emptyList())
 
         // when retrieving the user profile
         val response = getUserProfile(publicTestUser, publicTestUsername)
