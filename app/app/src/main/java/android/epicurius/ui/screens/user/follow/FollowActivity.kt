@@ -28,12 +28,14 @@ class FollowActivity : ComponentActivity() {
                     ),
                     followers = listOf(
                         FollowUser(
+                            id = 1,
                             name = "Jane Smith",
                             profilePicture = null
                         )
                     ),
                     following = listOf(
                         FollowingUser(
+                            id = 2,
                             name = "Alice Johnson",
                             profilePicture = null
                         )

@@ -1,4 +1,4 @@
-package android.epicurius.ui.screens.search.camera.components
+package android.epicurius.ui.screens.search.components
 
 import android.epicurius.ui.screens.utils.TextField
 import androidx.compose.foundation.layout.Column

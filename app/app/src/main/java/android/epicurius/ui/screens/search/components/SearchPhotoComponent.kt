@@ -15,7 +15,11 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun SearchPhotoComponent(onCamera: () -> Unit, onUpload: () -> Unit, modifier: Modifier = Modifier) {
+fun SearchPhotoComponent(
+    onCamera: () -> Unit,
+    onUpload: () -> Unit,
+    modifier: Modifier = Modifier
+) {
     Column(
         modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally

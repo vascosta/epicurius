@@ -1,4 +1,4 @@
-package android.epicurius.ui.screens.search
+package android.epicurius.ui.screens.search.general
 
 import android.epicurius.MainActivity
 import android.epicurius.ui.screens.search.camera.CameraActivity

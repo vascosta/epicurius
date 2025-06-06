@@ -12,8 +12,7 @@ import android.epicurius.ui.screens.mealPlanner.calendar.CalendarActivity
 import android.epicurius.ui.screens.recipe.createRecipe.CreateRecipeActivity
 import android.epicurius.ui.screens.recipe.ingredients.ConfirmIngredientsActivity
 import android.epicurius.ui.screens.recipe.profile.RecipeProfileActivity
-import android.epicurius.ui.screens.search.SearchActivity
-import android.epicurius.ui.screens.search.camera.CameraActivity
+import android.epicurius.ui.screens.search.general.SearchActivity
 import android.epicurius.ui.screens.user.follow.FollowActivity
 import android.epicurius.ui.screens.user.profile.UserProfileActivity
 import android.epicurius.ui.screens.user.settings.SettingsActivity

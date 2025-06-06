@@ -75,6 +75,7 @@ fun FollowPreview() {
 
     val followers = listOf(
         FollowUser(
+            id = 1,
             name = "Jane Smith",
             profilePicture = null
         )
@@ -82,6 +83,7 @@ fun FollowPreview() {
 
     val following = listOf(
         FollowingUser(
+            id = 2,
             name = "Alice Johnson",
             profilePicture = null
         )

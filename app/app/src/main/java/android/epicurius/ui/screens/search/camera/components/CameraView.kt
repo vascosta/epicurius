@@ -1,5 +1,6 @@
 package android.epicurius.ui.screens.search.camera.components
 
+import android.epicurius.ui.screens.search.components.ConfirmIngredientsDialog
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.ImageCapture
 import androidx.camera.core.Preview

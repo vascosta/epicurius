@@ -33,7 +33,6 @@ fun CameraScreen(
     onBackButton: () -> Unit = {}
 ) {
     val cameraPermissionState = rememberPermissionState(android.Manifest.permission.CAMERA)
-    val context = LocalContext.current
 
     Scaffold(
         topBar = { TopBar("Camera", backButton = true, onBackButton, icon = null) }
@@ -44,36 +43,8 @@ fun CameraScreen(
                     CameraView(onTakePicture)
                 }
                 cameraPermissionState.status.shouldShowRationale -> {
-                    Column(
-                        modifier = Modifier.fillMaxSize(),
-                        verticalArrangement = Arrangement.Center,
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                        Text("Need access to the camera to continue")
-                        Spacer(modifier = Modifier.height(16.dp))
-                        Button(onClick = { cameraPermissionState.launchPermissionRequest() }) {
-                            Text("Allow Camera Access")
-                        }
-                    }
-                }
-                !cameraPermissionState.status.isGranted && !cameraPermissionState.status.shouldShowRationale -> {
-                    Column(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(16.dp),
-                        verticalArrangement = Arrangement.Center,
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                        Text("Permission denied. You can enable it in settings.")
-                        Spacer(modifier = Modifier.height(16.dp))
-                        Button(onClick = {
-                            val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
-                                data = Uri.fromParts("package", context.packageName, null)
-                            }
-                            context.startActivity(intent)
-                        }) {
-                            Text("Open Settings")
-                        }
+                    LaunchedEffect(Unit) {
+                        cameraPermissionState.launchPermissionRequest()
                     }
                 }
                 else -> {

@@ -45,6 +45,7 @@ fun UserBox(user: SearchUser) {
 @Composable
 fun UserBoxPreview() {
     val userProfile = SearchUser(
+        id = 1,
         name = "John Doe",
         profilePicture = null
     )

@@ -4,7 +4,7 @@ import android.epicurius.domain.recipe.Cuisine
 import android.epicurius.domain.recipe.MealType
 import android.epicurius.domain.recipe.RecipeInfo
 import android.epicurius.ui.screens.recipe.profile.RecipeProfileActivity
-import android.epicurius.ui.screens.search.SearchActivity
+import android.epicurius.ui.screens.search.general.SearchActivity
 import android.epicurius.ui.screens.utils.navigateTo
 import android.os.Bundle
 import androidx.activity.ComponentActivity
