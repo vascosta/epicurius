@@ -34,16 +34,17 @@ class JdbiFeedRepository(private val handle: Handle) : FeedRepository {
                     AND status = :status 
                     AND NOT (r.intolerances && :intolerances) 
                     AND r.diets @> :diets
+                    AND (:lastRecipeId IS NULL OR r.id < :lastRecipeId)
                 ORDER BY r.date DESC, r.id DESC
-                LIMIT :limit OFFSET :skip
+                LIMIT :limit
             """
         )
             .bind("userId", info.userId)
             .bind("status", FollowingStatus.ACCEPTED.ordinal)
             .bind("intolerances", info.intolerances.map { it.ordinal }.toTypedArray())
             .bind("diets", info.diets.map { it.ordinal }.toTypedArray())
-            .bind("limit", info.pagingParams.limit)
-            .bind("skip", info.pagingParams.skip)
+            .bind("lastRecipeId", info.lastRecipeId)
+            .bind("limit", info.limit)
             .mapTo<JdbiRecipeInfo>()
             .list()
     }

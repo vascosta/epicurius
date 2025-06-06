@@ -2,7 +2,6 @@ package epicurius.services.feed
 
 import epicurius.domain.Diet
 import epicurius.domain.Intolerance
-import epicurius.domain.PagingParams
 import epicurius.domain.picture.PictureDomain.Companion.RECIPES_FOLDER
 import epicurius.domain.recipe.RecipeInfo
 import epicurius.repository.cloudStorage.manager.CloudStorageManager
@@ -17,9 +16,12 @@ class FeedService(private val tm: TransactionManager, private val cs: CloudStora
         userId: Int,
         intolerances: List<Intolerance>,
         diets: List<Diet>,
-        pagingParams: PagingParams
+        lastRecipeId: Int?,
+        limit: Int
     ): List<RecipeInfo> {
-        val recipes = tm.run { it.feedRepository.getFeed(GetFeedModel(userId, intolerances, diets, pagingParams)) }
+        val recipes = tm.run {
+            it.feedRepository.getFeed(GetFeedModel(userId, intolerances, diets, lastRecipeId, limit))
+        }
 
         return recipes.map {
             it.toRecipeInfo(cs.pictureRepository.getPicture(it.picturesNames.first(), RECIPES_FOLDER))

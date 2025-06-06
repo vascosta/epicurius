@@ -1,6 +1,5 @@
 package epicurius.http.controllers.feed
 
-import epicurius.domain.PagingParams
 import epicurius.domain.user.AuthenticatedUser
 import epicurius.http.controllers.feed.models.output.GetUserFeedOutputModel
 import epicurius.http.media.Uris
@@ -19,15 +18,15 @@ class FeedController(private val feedService: FeedService) {
     @GetMapping(Uris.User.USER_FEED)
     fun getUserFeed(
         authenticatedUser: AuthenticatedUser,
-        @RequestParam skip: Int,
+        @RequestParam lastRecipeId: Int,
         @RequestParam limit: Int,
     ): ResponseEntity<*> {
-        val pagingParams = PagingParams(skip, limit)
         val feed = feedService.getFeed(
             authenticatedUser.user.id,
             authenticatedUser.user.intolerances,
             authenticatedUser.user.diets,
-            pagingParams
+            lastRecipeId,
+            limit
         )
         return okHttpResponse(GetUserFeedOutputModel(feed))
     }
