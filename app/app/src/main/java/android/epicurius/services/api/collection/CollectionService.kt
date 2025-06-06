@@ -34,7 +34,11 @@ class CollectionService(private val httpService: HttpService) {
     ): APIResult<GetCollectionsOutputModel> =
         httpService.get<GetCollectionsOutputModel>(
             Uris.Collection.COLLECTIONS,
-            queryParams = mapOf("collectionType" to type, "lastCollectionId" to lastCollectionId, "limit" to limit),
+            queryParams = mapOf(
+                "collectionType" to type,
+                "lastCollectionId" to lastCollectionId,
+                "limit" to limit
+            ),
             token = token
         )
 

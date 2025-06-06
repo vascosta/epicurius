@@ -115,8 +115,8 @@ class UserService(private val httpService: HttpService) {
     suspend fun updateUserProfilePicture(
         token: String,
         picture: Picture
-    ): APIResult<UpdateUserProfilePictureOutputModel> =
-        httpService.patchMultipart<UpdateUserProfilePictureOutputModel>(
+    ): APIResult<UpdateUserProfilePictureOutputModel?> =
+        httpService.patchMultipart<UpdateUserProfilePictureOutputModel?>(
             Uris.User.USER_PICTURE,
             "picture",
             listOf(picture),
