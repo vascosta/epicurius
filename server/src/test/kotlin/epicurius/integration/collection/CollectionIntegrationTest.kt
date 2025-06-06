@@ -9,6 +9,7 @@ import epicurius.http.controllers.collection.models.output.RemoveRecipeFromColle
 import epicurius.http.controllers.collection.models.output.UpdateCollectionOutputModel
 import epicurius.http.media.Uris
 import epicurius.integration.EpicuriusIntegrationTest
+import epicurius.integration.utils.addQueryParams
 import epicurius.integration.utils.delete
 import epicurius.integration.utils.get
 import epicurius.integration.utils.getBody
@@ -25,10 +26,16 @@ class CollectionIntegrationTest : EpicuriusIntegrationTest() {
             token = token
         )
 
-    fun getCollections(token: String, type: CollectionType, skip: Int, limit: Int) =
+    fun getCollections(token: String, type: CollectionType, lastCollectionId: Int?, limit: Int) =
         get<GetCollectionsOutputModel>(
             client,
-            api(Uris.Collection.COLLECTIONS) + "?collectionType=$type&skip=$skip&limit=$limit",
+            api(Uris.Collection.COLLECTIONS).addQueryParams(
+                mapOf(
+                    "collectionType" to type,
+                    "lastCollectionId" to lastCollectionId,
+                    "limit" to limit
+                )
+            ),
             token = token
         )
 

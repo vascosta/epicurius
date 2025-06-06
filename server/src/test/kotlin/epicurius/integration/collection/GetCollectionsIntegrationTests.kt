@@ -1,6 +1,5 @@
 package epicurius.integration.collection
 
-import epicurius.domain.PagingParams
 import epicurius.domain.collection.CollectionType
 import epicurius.utils.createTestCollection
 import epicurius.utils.createTestUser
@@ -15,12 +14,12 @@ class GetCollectionsIntegrationTests : CollectionIntegrationTest() {
 
     @Test
     fun `Should retrieve multiple collections from a user successfully`() {
-        // given a collection type and paging parameters
+        // given a collection type
         val collectionType = CollectionType.KITCHEN_BOOK
-        val pagingParams = PagingParams(0, 10)
+        val limit = 2
 
         // when retrieving the collections
-        val body = getCollections(testUser.token, collectionType, pagingParams.skip, pagingParams.limit)
+        val body = getCollections(testUser.token, collectionType, null, limit)
 
         // then the collections are retrieved successfully
         assertNotNull(body)
