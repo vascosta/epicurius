@@ -79,11 +79,10 @@ class UserController(val userService: UserService) {
     fun searchUsers(
         authenticatedUser: AuthenticatedUser,
         @RequestParam partialUsername: String,
-        @RequestParam skip: Int,
+        @RequestParam lastUserId: Int?,
         @RequestParam limit: Int,
     ): ResponseEntity<*> {
-        val pagingParams = PagingParams(skip, limit)
-        val users = userService.searchUsers(authenticatedUser.user.id, partialUsername, pagingParams)
+        val users = userService.searchUsers(authenticatedUser.user.id, partialUsername, lastUserId, limit)
         return okHttpResponse(SearchUsersOutputModel(users))
     }
 

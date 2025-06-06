@@ -68,26 +68,33 @@ class JdbiUserRepository(private val handle: Handle) : UserRepository {
             .mapTo<User>()
             .firstOrNull()
 
-    override fun searchUsers(userId: Int, partialUsername: String, pagingParams: PagingParams): List<SearchUserModel> =
+    override fun searchUsers(
+        userId: Int,
+        partialUsername: String,
+        lastUserId: Int?,
+        limit: Int
+    ): List<SearchUserModel> =
         handle.createQuery(
             """
-                SELECT name, profile_picture_name
+                SELECT id, name, profile_picture_name
                 FROM dbo.user
-                WHERE LOWER(name) LIKE LOWER(:partialUsername) AND id <> :userId
+                WHERE LOWER(name) LIKE LOWER(:partialUsername) 
+                    AND id <> :userId
+                    AND (:lastUserId IS NULL OR id < :lastUserId)
                 LIMIT :limit OFFSET :skip
             """
         )
             .bind("partialUsername", "%$partialUsername%")
             .bind("userId", userId)
-            .bind("limit", pagingParams.limit)
-            .bind("skip", pagingParams.skip)
+            .bind("lastUserId", lastUserId)
+            .bind("limit", limit)
             .mapTo<SearchUserModel>()
             .list()
 
     override fun getFollowers(userId: Int, lastFollowerId: Int?, limit: Int): List<SearchUserModel> =
         handle.createQuery(
             """
-                SELECT u.name, u.profile_picture_name
+                SELECT u.id, u.name, u.profile_picture_name
                 FROM dbo.user u
                 JOIN dbo.followers f ON u.id = f.follower_id
                 WHERE f.user_id = :user_id 
@@ -120,7 +127,7 @@ class JdbiUserRepository(private val handle: Handle) : UserRepository {
     override fun getFollowing(userId: Int, lastFollowingId: Int?, limit: Int): List<SearchUserModel> =
         handle.createQuery(
             """
-                SELECT u.name, u.profile_picture_name
+                SELECT u.id, u.name, u.profile_picture_name
                 FROM dbo.user u
                 JOIN dbo.followers f ON u.id = f.user_id
                 WHERE f.follower_id = :user_id AND f.status = :status

@@ -10,7 +10,12 @@ interface UserRepository {
 
     fun getUser(name: String? = null, email: String? = null, tokenHash: String? = null): User?
     fun getUserById(userId: Int): User?
-    fun searchUsers(userId: Int, partialUsername: String, pagingParams: PagingParams): List<SearchUserModel>
+    fun searchUsers(
+        userId: Int,
+        partialUsername: String,
+        lastUserId: Int? = null,
+        limit: Int
+    ): List<SearchUserModel>
     fun getFollowers(userId: Int, lastFollowerId: Int?, limit: Int): List<SearchUserModel>
     fun getFollowersCount(userId: Int): Int
     fun getFollowing(userId: Int, lastFollowingId: Int?, limit: Int): List<SearchUserModel>

@@ -77,28 +77,28 @@ class UserService(
         return cs.pictureRepository.getPicture(profilePictureName, PictureDomain.USERS_FOLDER)
     }
 
-    fun searchUsers(userId: Int, partialUsername: String, pagingParams: PagingParams): List<SearchUser> {
-        return tm.run { it.userRepository.searchUsers(userId, partialUsername, pagingParams) }
-            .map { user -> SearchUser(user.name, getProfilePicture(user.profilePictureName)) }
+    fun searchUsers(userId: Int, partialUsername: String, lastUserId: Int?, limit: Int): List<SearchUser> {
+        return tm.run { it.userRepository.searchUsers(userId, partialUsername, lastUserId, limit) }
+            .map { user -> SearchUser(user.id, user.name, getProfilePicture(user.profilePictureName)) }
     }
 
     fun getFollowers(userId: Int, lastFollowerId: Int?, limit: Int) =
         tm.run { it.userRepository.getFollowers(userId, lastFollowerId, limit) }
-            .map { user -> FollowUser(user.name, getProfilePicture(user.profilePictureName)) }
+            .map { user -> FollowUser(user.id, user.name, getProfilePicture(user.profilePictureName)) }
 
     fun getFollowersCount(userId: Int) =
         tm.run { it.userRepository.getFollowersCount(userId) }
 
     fun getFollowing(userId: Int, lastFollowingId: Int?, limit: Int) =
         tm.run { it.userRepository.getFollowing(userId, lastFollowingId, limit) }
-            .map { user -> FollowingUser(user.name, getProfilePicture(user.profilePictureName)) }
+            .map { user -> FollowingUser(user.id, user.name, getProfilePicture(user.profilePictureName)) }
 
     fun getFollowingCount(userId: Int) =
         tm.run { it.userRepository.getFollowingCount(userId) }
 
     fun getFollowRequests(userId: Int) =
         tm.run { it.userRepository.getFollowRequests(userId) }
-            .map { user -> FollowUser(user.name, getProfilePicture(user.profilePictureName)) }
+            .map { user -> FollowUser(user.id, user.name, getProfilePicture(user.profilePictureName)) }
 
     fun login(name: String? = null, email: String? = null, password: String): String {
         val user = checkIfUserExists(name, email) ?: throw UserNotFound(name ?: email)
