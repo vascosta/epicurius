@@ -17,7 +17,7 @@ object Idle : LoadState<Nothing>()
 /**
  * The loading state, i.e. the state while the load operation is in progress.
  */
-object Loading : LoadState<Nothing>()
+data class Loading<T>(val cachedValue: CachedResult<T>?): LoadState<T>()
 
 /**
  * The loaded state, i.e. the state after the load operation has finished.
@@ -39,7 +39,7 @@ fun idle(): Idle = Idle
 /**
  * Returns a new [LoadState] in the loading state.
  */
-fun loading(): Loading = Loading
+fun <T> loading(cachedValue: CachedResult<T>? = null): Loading<T> = Loading(cachedValue)
 
 /**
  * Returns a new [LoadState] in the loaded state.
@@ -81,6 +81,14 @@ fun <T> cacheFailure(problem: Problem): Loaded<T> = loaded(CachedResult.failure(
 fun <T> LoadState<T>.getOrThrow(): T = when (this) {
     is Loaded -> value.getValueOrThrow()
     else -> throw IllegalStateException("No value available")
+}
+
+/**
+ * Returns the result of the load operation, if one is available.
+ */
+fun <T> LoadState<T>.getOrNull(): T? = when (this) {
+    is Loaded -> value.getOrNull()
+    else -> null
 }
 
 /**

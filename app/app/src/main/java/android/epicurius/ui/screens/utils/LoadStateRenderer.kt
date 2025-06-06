@@ -10,7 +10,25 @@ fun <T> LoadStateRenderer(
 ) {
     when (loadState) {
         is Idle -> {}
-        is Loading -> { LoadingSpinner() }
+        is Loading -> {
+            if (loadState.cachedValue != null) {
+                when {
+                    loadState.cachedValue.isSuccess -> RenderSuccess(
+                        loadState.getOrThrow(),
+                        swipeToRefresh,
+                        {
+                            content
+                            LoadingSpinner()
+                        }
+                    )
+                    loadState.cachedValue.isFailure -> RenderFailure(swipeToRefresh)
+                }
+            }
+            else {
+                LoadingSpinner()
+            }
+
+        }
         is Loaded -> {
             when {
                 loadState.value.isSuccess -> RenderSuccess(loadState.getOrThrow(), swipeToRefresh, content)
