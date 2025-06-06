@@ -15,11 +15,14 @@ class LoggingFilter : Filter {
     override fun doFilter(request: ServletRequest, response: ServletResponse, chain: FilterChain) {
         request as HttpServletRequest
         response as HttpServletResponse
-        logger.info(
-            "Incoming Request: method={}, uri={}",
-            request.method,
-            request.requestURI
-        )
+        val fullPath = buildString {
+            append(request.requestURI)
+            request.queryString?.let {
+                append("?").append(it)
+            }
+        }
+
+        logger.info("Incoming Request: method={}, uri={}", request.method, fullPath)
         chain.doFilter(request, response)
         logger.info(
             "Outgoing Response: status={}, content-type={}",
