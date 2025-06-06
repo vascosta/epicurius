@@ -36,12 +36,12 @@ class RecipeService(private val httpService: HttpService) {
 
     suspend fun getUserRecipes(
         token: String,
-        skip: Int,
+        lastRecipeId: Int?,
         limit: Int
     ): APIResult<GetUserRecipesOutputModel> =
         httpService.get<GetUserRecipesOutputModel>(
             Uris.User.USER_RECIPES,
-            queryParams = mapOf("skip" to skip, "limit" to limit),
+            queryParams = mapOf("lastRecipeId" to lastRecipeId, "limit" to limit),
             token = token
         )
 
@@ -83,7 +83,7 @@ class RecipeService(private val httpService: HttpService) {
         maxProtein: Int?,
         minTime: Int?,
         maxTime: Int?,
-        skip: Int,
+        lastRecipeId: Int?,
         limit: Int,
     ): APIResult<SearchRecipesOutputModel> =
         httpService.get<SearchRecipesOutputModel>(
@@ -105,7 +105,7 @@ class RecipeService(private val httpService: HttpService) {
                 "maxProtein" to maxProtein,
                 "minTime" to minTime,
                 "maxTime" to maxTime,
-                "skip" to skip,
+                "lastRecipeId" to lastRecipeId,
                 "limit" to limit,
             ),
             token = token
