@@ -27,7 +27,7 @@ class FavouritesViewModel(
     context: Context
 ): CollectionsViewModel(service, session, context) {
 
-    private val favouritesFlow = MutableStateFlow<LoadState< List<CollectionProfile>>>(idle())
+    private val favouritesFlow = MutableStateFlow<LoadState<List<CollectionProfile>>>(idle())
     val favourites = favouritesFlow.asStateFlow()
 
     var createCollectionEnable by mutableStateOf(true)

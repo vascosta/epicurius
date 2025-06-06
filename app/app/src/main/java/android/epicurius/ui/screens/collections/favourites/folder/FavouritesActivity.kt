@@ -1,6 +1,5 @@
 package android.epicurius.ui.screens.collections.favourites.folder
 
-import android.epicurius.MainActivity
 import android.epicurius.ui.EpicuriusActivity
 import android.epicurius.ui.navigation.Intents
 import android.epicurius.ui.screens.collections.favourites.list.FavouritesListActivity
