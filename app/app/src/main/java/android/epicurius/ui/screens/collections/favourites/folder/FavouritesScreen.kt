@@ -9,17 +9,20 @@ import android.epicurius.ui.screens.utils.LoadState
 import android.epicurius.ui.screens.utils.LoadStateRenderer
 import android.epicurius.ui.screens.utils.apiSuccess
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -37,7 +40,7 @@ fun FavouritesScreen(
     onBackButton: () -> Unit,
     onCollectionCreate: () -> Unit,
     onCollectionRequest: (Int) -> Unit,
-    onCollectionDelete: (Int) -> Unit,
+    onDeleteCollection: (Int) -> Unit,
     onFavouritesRefresh: () -> Unit,
     favouritesState: LoadState<List<CollectionProfile>>
 ) {
@@ -46,16 +49,6 @@ fun FavouritesScreen(
     Scaffold(
         topBar = { TopBar("Favourites", backButton = true, onBackButton) },
         bottomBar = { BottomBar() },
-        floatingActionButton = {
-            FloatingActionButton(
-                onClick = { showCreateCollectionDialog = true },
-            ) {
-                Icon(
-                    imageVector = Icons.Default.Add,
-                    contentDescription = "Create Collection"
-                )
-            }
-        },
         content = { paddingValues ->
             LoadStateRenderer(
                 loadState = favouritesState,
@@ -70,11 +63,24 @@ fun FavouritesScreen(
                             .verticalScroll(rememberScrollState()),
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
+                        Box(Modifier.fillMaxWidth()) {
+                            Row {
+                                Spacer(Modifier.weight(0.9f))
+                                IconButton(
+                                    onClick = { showCreateCollectionDialog = true }
+                                ) {
+                                    Icon(
+                                        imageVector = Icons.Default.Add,
+                                        contentDescription = "Create Collection"
+                                    )
+                                }
+                            }
+                        }
                         favourites.forEach {
                             CollectionProfileBox(
                                 collection = it,
                                 onCollectionRequest = onCollectionRequest,
-                                onCollectionDelete = onCollectionDelete
+                                onCollectionDelete = onDeleteCollection
                             )
                             Spacer(modifier = Modifier.height(10.dp))
                         }

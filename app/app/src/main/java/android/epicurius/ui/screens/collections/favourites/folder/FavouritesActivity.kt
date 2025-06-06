@@ -30,7 +30,7 @@ class FavouritesActivity : EpicuriusActivity() {
                 onBackButton = { navigateTo<UserProfileActivity>() },
                 onCollectionCreate = {  },
                 onCollectionRequest = ::navigateToFavouritesListActivity,
-                onCollectionDelete = {  },
+                onDeleteCollection = {  },
                 onFavouritesRefresh = { viewModel.refreshFavourites() },
                 favouritesState = favouritesState.value,
             )
