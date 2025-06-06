@@ -98,6 +98,12 @@ inline fun <reified T> delete(
         .expectBody(T::class.java)
         .returnResult()
 
+fun String.addQueryParams(vararg params: Map<String, Any?>): String = params
+    .flatMap { it.entries }
+    .filter { it.value != null }
+    .joinToString("&") { "${it.key}=${it.value}" }
+    .let { if (it.isEmpty()) this else "$this?$it" }
+
 inline fun <reified T> getBody(result: EntityExchangeResult<T>): T = result.responseBody
     ?: throw IllegalStateException("Response body is null")
 
