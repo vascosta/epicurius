@@ -15,6 +15,7 @@ import epicurius.http.controllers.user.models.output.UpdateUserOutputModel
 import epicurius.http.controllers.user.models.output.UpdateUserProfilePictureOutputModel
 import epicurius.http.media.Uris
 import epicurius.integration.EpicuriusIntegrationTest
+import epicurius.integration.utils.addQueryParams
 import epicurius.integration.utils.delete
 import epicurius.integration.utils.get
 import epicurius.integration.utils.getBody
@@ -38,10 +39,16 @@ class UserIntegrationTest : EpicuriusIntegrationTest() {
             token = token
         )
 
-    fun searchUsers(token: String, partialUsername: String, skip: Int = 0, limit: Int = 10) =
+    fun searchUsers(token: String, partialUsername: String, lastUserId: Int?, limit: Int) =
         get<SearchUsersOutputModel>(
             client,
-            api(Uris.User.USERS) + "?partialUsername=$partialUsername&skip=$skip&limit=$limit",
+            api(Uris.User.USERS).addQueryParams(
+                mapOf(
+                    "partialUsername" to partialUsername,
+                    "lastUserId" to lastUserId,
+                    "limit" to limit
+                )
+            ),
             token = token
         )
 
@@ -50,17 +57,27 @@ class UserIntegrationTest : EpicuriusIntegrationTest() {
 
     fun getUserDiets(token: String) = get<GetUserDietsOutputModel>(client, api(Uris.User.USER_DIETS), token = token)
 
-    fun getUserFollowers(token: String, skip: Int = 0, limit: Int = 10) =
+    fun getUserFollowers(token: String, lastFollowerId: Int?, limit: Int) =
         get<GetUserFollowersOutputModel>(
             client,
-            api(Uris.User.USER_FOLLOWERS) + "?skip=$skip&limit=$limit",
+            api(Uris.User.USER_FOLLOWERS).addQueryParams(
+                mapOf(
+                    "lastFollowerId" to lastFollowerId,
+                    "limit" to limit
+                )
+            ),
             token = token
         )
 
-    fun getUserFollowing(token: String, skip: Int = 0, limit: Int = 10) =
+    fun getUserFollowing(token: String, lastFollowingId: Int?, limit: Int) =
         get<GetUserFollowingOutputModel>(
             client,
-            api(Uris.User.USER_FOLLOWING) + "?skip=$skip&limit=$limit",
+            api(Uris.User.USER_FOLLOWING).addQueryParams(
+                mapOf(
+                    "lastFollowingId" to lastFollowingId,
+                    "limit" to limit
+                )
+            ),
             token = token
         )
 

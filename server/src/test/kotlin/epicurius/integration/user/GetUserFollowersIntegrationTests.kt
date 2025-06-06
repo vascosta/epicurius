@@ -13,7 +13,7 @@ class GetUserFollowersIntegrationTests : UserIntegrationTest() {
         val user = createTestUser(tm)
 
         // when retrieving the followers of the user
-        val body = getUserFollowers(user.token)
+        val body = getUserFollowers(user.token, null, 10)
 
         // then the followers are retrieved successfully
         assertNotNull(body)
