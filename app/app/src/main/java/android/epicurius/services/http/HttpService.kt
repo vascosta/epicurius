@@ -189,18 +189,22 @@ class HttpService(
 
     suspend inline fun <reified T> Request.getResponseResult(): APIResult<T> =
         send(client) { res ->
+            val setCookieHeader = res.headers.values("Set-Cookie")
+            val token = setCookieHeader.firstNotNullOfOrNull { cookieHeader ->
+                val cookieParts = cookieHeader.split(";").map { it.trim() }
+                cookieParts.find { it.startsWith("token=") }
+                    ?.substringAfter("token=")
+            }
+
+            if (res.code == 204) {
+                return@send APIResult.success(null, token)
+            }
+
             val body = res.getBodyOrThrow()
             val json = JsonReader(body.charStream())
             when {
                 res.isSuccessful && body.isApplicationJson -> {
                     val jsonBody = gson.fromJson<T>(json, T::class.java)
-
-                    val setCookieHeader = res.headers.values("Set-Cookie")
-                    val token = setCookieHeader.firstNotNullOfOrNull { cookieHeader ->
-                        val cookieParts = cookieHeader.split(";").map { it.trim() }
-                        cookieParts.find { it.startsWith("token=") }
-                            ?.substringAfter("token=")
-                    }
 
                     APIResult.success(jsonBody, token)
                 }
