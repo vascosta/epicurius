@@ -132,7 +132,7 @@ class JdbiRecipeRepository(private val handle: Handle) : RecipeRepository {
             .mapTo<JdbiRecipeInfo>()
             .list()
 
-    override fun getUserRecipes(userId: Int, pagingParams: PagingParams): List<JdbiRecipeInfo> =
+    override fun getUserRecipes(userId: Int, lastRecipeId: Int?, limit: Int): List<JdbiRecipeInfo> =
         handle.createQuery(
             """
                 SELECT 
@@ -153,16 +153,16 @@ class JdbiRecipeRepository(private val handle: Handle) : RecipeRepository {
                     GROUP BY recipe_id
                 ) rr ON r.id = rr.recipe_id
                 WHERE r.author_id = :userId
-                LIMIT :limit OFFSET :skip
+                    AND (:lastRecipeId IS NULL OR r.id < :lastRecipeId)
+                ORDER BY r.id DESC
+                LIMIT :limit
             """
         )
             .bind("userId", userId)
-            .bind("limit", pagingParams.limit)
-            .bind("skip", pagingParams.skip)
+            .bind("lastRecipeId", lastRecipeId)
+            .bind("limit", limit)
             .mapTo<JdbiRecipeInfo>()
             .list()
-            .takeIf { it.isNotEmpty() }
-            ?: emptyList()
 
     override fun searchRecipes(userId: Int, form: SearchRecipesModel, pagingParams: PagingParams): List<JdbiRecipeInfo> {
         val query = StringBuilder(

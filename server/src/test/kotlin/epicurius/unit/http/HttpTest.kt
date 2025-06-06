@@ -174,10 +174,10 @@ open class HttpTest : EpicuriusUnitTest() {
 
         suspend fun getUserRecipes(
             authenticatedUser: AuthenticatedUser,
-            skip: Int,
+            lastRecipeId: Int?,
             limit: Int
         ) =
-            recipeController.getUserRecipes(authenticatedUser, skip, limit)
+            recipeController.getUserRecipes(authenticatedUser, lastRecipeId, limit)
 
         fun searchRecipes(
             authenticatedUser: AuthenticatedUser,

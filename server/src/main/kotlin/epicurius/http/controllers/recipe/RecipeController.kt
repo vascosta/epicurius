@@ -53,11 +53,10 @@ class RecipeController(private val recipeService: RecipeService) {
     @GetMapping(Uris.User.USER_RECIPES)
     suspend fun getUserRecipes(
         authenticatedUser: AuthenticatedUser,
-        @RequestParam skip: Int,
+        @RequestParam lastRecipeId: Int?,
         @RequestParam limit: Int,
     ): ResponseEntity<*> {
-        val pagingParams = PagingParams(skip, limit)
-        val recipes = recipeService.getUserRecipes(authenticatedUser.user.id, pagingParams)
+        val recipes = recipeService.getUserRecipes(authenticatedUser.user.id, lastRecipeId, limit)
         return okHttpResponse(GetUserRecipesOutputModel(recipes))
     }
 

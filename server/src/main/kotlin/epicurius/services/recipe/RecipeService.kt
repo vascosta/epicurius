@@ -95,8 +95,8 @@ class RecipeService(
         return jdbiRecipe.toRecipe(firestoreRecipe.description, firestoreRecipe.instructions, recipePictures)
     }
 
-    suspend fun getUserRecipes(userId: Int, pagingParams: PagingParams): List<RecipeInfo> {
-        val recipes = tm.run { it.recipeRepository.getUserRecipes(userId, pagingParams) }
+    suspend fun getUserRecipes(userId: Int, lastRecipeId: Int?, limit: Int): List<RecipeInfo> {
+        val recipes = tm.run { it.recipeRepository.getUserRecipes(userId, lastRecipeId, limit) }
 
         return recipes.map {
             it.toRecipeInfo(cs.pictureRepository.getPicture(it.picturesNames.first(), RECIPES_FOLDER))

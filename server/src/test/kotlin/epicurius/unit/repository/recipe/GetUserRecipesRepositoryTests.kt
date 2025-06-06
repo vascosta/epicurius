@@ -14,9 +14,10 @@ class GetUserRecipesRepositoryTests : RecipeRepositoryTest() {
         // given a user with recipes
         val user = createTestUser(tm)
         val userRecipe = createTestRecipe(tm, fs, user.user)
+        val limit = 1
 
         // when retrieving the user's recipes
-        val retrievedRecipes = getUserRecipes(user.user.id, PagingParams())
+        val retrievedRecipes = getUserRecipes(user.user.id, null, limit)
 
         // then the recipes are retrieved successfully
         assertNotNull(retrievedRecipes.find { it.id == userRecipe.id })
@@ -26,9 +27,10 @@ class GetUserRecipesRepositoryTests : RecipeRepositoryTest() {
     fun `Should retrieve an empty list when the user has no recipes successfully`() {
         // given a user with recipes
         val user = createTestUser(tm)
+        val limit = 1
 
         // when retrieving the user's recipes
-        val retrievedRecipes = getUserRecipes(user.user.id, PagingParams())
+        val retrievedRecipes = getUserRecipes(user.user.id, null, limit)
 
         // then the recipes are retrieved successfully
         assertTrue(retrievedRecipes.isEmpty())

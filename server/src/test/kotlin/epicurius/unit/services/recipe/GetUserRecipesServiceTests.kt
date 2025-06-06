@@ -1,6 +1,5 @@
 package epicurius.unit.services.recipe
 
-import epicurius.domain.PagingParams
 import epicurius.domain.picture.PictureDomain.Companion.RECIPES_FOLDER
 import epicurius.repository.jdbi.recipe.models.JdbiRecipeInfo
 import kotlinx.coroutines.runBlocking
@@ -8,12 +7,12 @@ import org.mockito.kotlin.whenever
 import kotlin.test.Test
 import kotlin.test.assertTrue
 
-class GetUserRecipesServiceTests: RecipeServiceTest() {
+class GetUserRecipesServiceTests : RecipeServiceTest() {
 
     @Test
     fun `Should retrieve the user's recipes successfully`() {
         // given a user id (AUTHOR_ID)
-        val pagingParams = PagingParams()
+        val limit = 1
 
         // mock
         val jdbiRecipeInfoMock = JdbiRecipeInfo(
@@ -27,12 +26,12 @@ class GetUserRecipesServiceTests: RecipeServiceTest() {
             servings = createRecipeInputInfo.servings,
             picturesNames = listOf(testPicture.name),
         )
-        whenever(jdbiRecipeRepositoryMock.getUserRecipes(AUTHOR_ID, pagingParams))
+        whenever(jdbiRecipeRepositoryMock.getUserRecipes(AUTHOR_ID, null, limit))
             .thenReturn(listOf(jdbiRecipeInfoMock))
         whenever(pictureRepositoryMock.getPicture(testPicture.name, RECIPES_FOLDER)).thenReturn(testPicture.bytes)
 
         // when retrieving the user's recipes
-        val recipes = runBlocking { getUserRecipes(AUTHOR_ID, pagingParams) }
+        val recipes = runBlocking { getUserRecipes(AUTHOR_ID, null, limit) }
 
         // then the recipes are retrieved successfully
         assertTrue(recipes.contains(jdbiRecipeInfoMock.toRecipeInfo(testPicture.bytes)))

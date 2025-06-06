@@ -1,6 +1,5 @@
 package epicurius.unit.http.recipe
 
-import epicurius.domain.PagingParams
 import epicurius.domain.recipe.RecipeInfo
 import epicurius.http.controllers.recipe.models.output.GetUserRecipesOutputModel
 import kotlinx.coroutines.runBlocking
@@ -14,7 +13,7 @@ class GetUserRecipesControllerTests : RecipeControllerTest() {
     @Test
     fun `Should retrieve the user's recipes successfully`() {
         // given a user id
-        val pagingParams = PagingParams()
+        val limit = 10
 
         // mock
         val recipeInfoMock = RecipeInfo(
@@ -30,12 +29,12 @@ class GetUserRecipesControllerTests : RecipeControllerTest() {
         )
         whenever(
             runBlocking {
-                recipeServiceMock.getUserRecipes(testAuthenticatedUser.user.id, pagingParams)
+                recipeServiceMock.getUserRecipes(testAuthenticatedUser.user.id, null, limit)
             }
         ).thenReturn(listOf(recipeInfoMock))
 
         // when retrieving the user's recipes
-        val response = runBlocking { getUserRecipes(testAuthenticatedUser, pagingParams.skip, pagingParams.limit) }
+        val response = runBlocking { getUserRecipes(testAuthenticatedUser, null, limit) }
         val body = response.body as GetUserRecipesOutputModel
 
         // then the recipes are retrieved successfully
