@@ -3,7 +3,6 @@ package epicurius.http.controllers.recipe
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import epicurius.domain.Diet
 import epicurius.domain.Intolerance
-import epicurius.domain.PagingParams
 import epicurius.domain.recipe.Cuisine
 import epicurius.domain.recipe.MealType
 import epicurius.domain.user.AuthenticatedUser
@@ -79,10 +78,9 @@ class RecipeController(private val recipeService: RecipeService) {
         @RequestParam maxProtein: Int?,
         @RequestParam minTime: Int?,
         @RequestParam maxTime: Int?,
-        @RequestParam skip: Int,
+        @RequestParam lastRecipeId: Int?,
         @RequestParam limit: Int,
     ): ResponseEntity<*> {
-        val pagingParams = PagingParams(skip, limit)
         val searchForm = SearchRecipesInputModel(
             name = name?.replace("-", " "),
             cuisine = cuisine,
@@ -101,7 +99,7 @@ class RecipeController(private val recipeService: RecipeService) {
             minTime = minTime,
             maxTime = maxTime
         )
-        val results = recipeService.searchRecipes(authenticatedUser.user.id, searchForm, pagingParams)
+        val results = recipeService.searchRecipes(authenticatedUser.user.id, searchForm, lastRecipeId, limit)
         return okHttpResponse(SearchRecipesOutputModel(results))
     }
 

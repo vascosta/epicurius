@@ -2,7 +2,6 @@ package epicurius.repository.jdbi.recipe
 
 import epicurius.domain.Diet
 import epicurius.domain.Intolerance
-import epicurius.domain.PagingParams
 import epicurius.domain.recipe.Ingredient
 import epicurius.domain.recipe.MealType
 import epicurius.domain.recipe.SearchRecipesModel
@@ -164,7 +163,12 @@ class JdbiRecipeRepository(private val handle: Handle) : RecipeRepository {
             .mapTo<JdbiRecipeInfo>()
             .list()
 
-    override fun searchRecipes(userId: Int, form: SearchRecipesModel, pagingParams: PagingParams): List<JdbiRecipeInfo> {
+    override fun searchRecipes(
+        userId: Int,
+        form: SearchRecipesModel,
+        lastRecipeId: Int?,
+        limit: Int
+    ): List<JdbiRecipeInfo> {
         val query = StringBuilder(
             """
                 WITH available_recipes AS (
@@ -178,7 +182,7 @@ class JdbiRecipeRepository(private val handle: Handle) : RecipeRepository {
                 SELECT DISTINCT 
                     r.id as recipe_id, 
                     r.name as recipe_name, 
-                    r.name as author_username, 
+                    r.author_username, 
                     COALESCE(rr.average_rating, 0) AS average_rating,
                     r.cuisine, 
                     r.meal_type, 
@@ -197,18 +201,25 @@ class JdbiRecipeRepository(private val handle: Handle) : RecipeRepository {
 
         val params = mutableMapOf<String, Any?>("id" to userId)
 
-        appendSearchConditions(query, params, form)
+        appendSearchConditions(query, params, form, lastRecipeId)
 
         if (!form.ingredients.isNullOrEmpty()) appendIngredients(query, form.ingredients, params)
 
         query.append(
             """
-                GROUP BY r.id, r.name, rr.average_rating, r.cuisine, r.meal_type, r.preparation_time, r.servings, r.pictures_names
+                GROUP BY r.id, 
+                r.name, 
+                r.author_username, 
+                rr.average_rating, 
+                r.cuisine, 
+                r.meal_type, 
+                r.preparation_time, 
+                r.servings, 
+                r.pictures_names
             """
         )
 
-        addCondition(query, params, "LIMIT :limit", "limit", pagingParams.limit)
-        addCondition(query, params, "OFFSET :skip", "skip", pagingParams.skip)
+        addCondition(query, params, "LIMIT :limit", "limit", limit)
 
         val result = handle.createQuery(query.toString())
         params.toMap().forEach { (key, value) -> result.bind(key, value) }
@@ -285,7 +296,12 @@ class JdbiRecipeRepository(private val handle: Handle) : RecipeRepository {
             .execute()
     }
 
-    private fun appendSearchConditions(query: StringBuilder, params: MutableMap<String, Any?>, form: SearchRecipesModel) {
+    private fun appendSearchConditions(
+        query: StringBuilder,
+        params: MutableMap<String, Any?>,
+        form: SearchRecipesModel,
+        lastRecipeId: Int?
+    ) {
         addCondition(
             query,
             params,
@@ -313,6 +329,7 @@ class JdbiRecipeRepository(private val handle: Handle) : RecipeRepository {
         addCondition(query, params, "AND r.protein <= :maxProt", "maxProt", form.maxProtein)
         addCondition(query, params, "AND r.preparation_time >= :minTime", "minTime", form.minTime)
         addCondition(query, params, "AND r.preparation_time <= :maxTime", "maxTime", form.maxTime)
+        addCondition(query, params, "AND (:lastRecipeId IS NULL OR r.id < :lastRecipeId)", "lastRecipeId", lastRecipeId)
     }
 
     private fun appendIngredients(query: StringBuilder, ingredientsList: List<String>, params: MutableMap<String, Any?>) {

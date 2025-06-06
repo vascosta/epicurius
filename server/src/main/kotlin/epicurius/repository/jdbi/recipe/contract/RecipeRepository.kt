@@ -2,7 +2,6 @@ package epicurius.repository.jdbi.recipe.contract
 
 import epicurius.domain.Diet
 import epicurius.domain.Intolerance
-import epicurius.domain.PagingParams
 import epicurius.domain.recipe.MealType
 import epicurius.domain.recipe.SearchRecipesModel
 import epicurius.repository.jdbi.recipe.models.JdbiCreateRecipeModel
@@ -22,7 +21,12 @@ interface RecipeRepository {
         limit: Int
     ): List<JdbiRecipeInfo>
     fun getUserRecipes(userId: Int, lastRecipeId: Int?, limit: Int): List<JdbiRecipeInfo>
-    fun searchRecipes(userId: Int, form: SearchRecipesModel, pagingParams: PagingParams): List<JdbiRecipeInfo>
+    fun searchRecipes(
+        userId: Int,
+        form: SearchRecipesModel,
+        lastRecipeId: Int?,
+        limit: Int
+    ): List<JdbiRecipeInfo>
 
     fun updateRecipe(recipeInfo: JdbiUpdateRecipeModel): JdbiRecipeModel
 

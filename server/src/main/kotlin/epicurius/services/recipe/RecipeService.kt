@@ -1,6 +1,5 @@
 package epicurius.services.recipe
 
-import epicurius.domain.PagingParams
 import epicurius.domain.exceptions.InvalidIngredient
 import epicurius.domain.exceptions.InvalidNumberOfRecipePictures
 import epicurius.domain.exceptions.NotTheRecipeAuthor
@@ -103,9 +102,9 @@ class RecipeService(
         }
     }
 
-    fun searchRecipes(userId: Int, form: SearchRecipesInputModel, pagingParams: PagingParams): List<RecipeInfo> {
+    fun searchRecipes(userId: Int, form: SearchRecipesInputModel, lastRecipeId: Int?, limit: Int): List<RecipeInfo> {
         val fillForm = form.toSearchRecipeModel(form.name)
-        val recipes = tm.run { it.recipeRepository.searchRecipes(userId, fillForm, pagingParams) }
+        val recipes = tm.run { it.recipeRepository.searchRecipes(userId, fillForm, lastRecipeId, limit) }
 
         return recipes.map {
             it.toRecipeInfo(cs.pictureRepository.getPicture(it.picturesNames.first(), RECIPES_FOLDER))
