@@ -39,14 +39,14 @@ class UserService(private val httpService: HttpService) {
     suspend fun searchUsers(
         token: String,
         partialUsername: String,
-        skip: Int,
+        lastUserId: Int?,
         limit: Int,
     ): APIResult<GetUserProfileOutputModel> =
         httpService.get<GetUserProfileOutputModel>(
             Uris.User.USERS,
             queryParams = mapOf(
                 "name" to partialUsername,
-                "skip" to skip,
+                "lastUserId" to lastUserId,
                 "limit" to limit,
             ),
             token = token
@@ -54,13 +54,13 @@ class UserService(private val httpService: HttpService) {
 
     suspend fun getUserFollowers(
         token: String,
-        skip: Int,
+        lastFollowerId: Int?,
         limit: Int,
     ): APIResult<GetUserFollowersOutputModel> =
         httpService.get<GetUserFollowersOutputModel>(
             Uris.User.USER_FOLLOWERS,
             queryParams = mapOf(
-                "skip" to skip,
+                "lastFollowerId" to lastFollowerId,
                 "limit" to limit,
             ),
             token = token
@@ -68,13 +68,13 @@ class UserService(private val httpService: HttpService) {
 
     suspend fun getUserFollowing(
         token: String,
-        skip: Int,
+        lastFollowingId: Int?,
         limit: Int,
     ): APIResult<GetUserFollowingOutputModel> =
         httpService.get<GetUserFollowingOutputModel>(
             Uris.User.USER_FOLLOWING,
             queryParams = mapOf(
-                "skip" to skip,
+                "lastFollowingId" to lastFollowingId,
                 "limit" to limit,
             ),
             token = token
@@ -90,13 +90,13 @@ class UserService(private val httpService: HttpService) {
 
     suspend fun getUserFeed(
         token: String,
-        skip: Int,
+        lastRecipeId: Int?,
         limit: Int
     ): APIResult<GetUserFeedOutputModel> =
         httpService.get<GetUserFeedOutputModel>(
             Uris.User.USER_FEED,
             queryParams = mapOf(
-                "skip" to skip,
+                "lastRecipeId" to lastRecipeId,
                 "limit" to limit,
             ),
             token = token
