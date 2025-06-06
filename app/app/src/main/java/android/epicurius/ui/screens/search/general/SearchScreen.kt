@@ -3,6 +3,7 @@ package android.epicurius.ui.screens.search.general
 import android.epicurius.domain.user.SearchUser
 import android.epicurius.ui.navigation.BottomBar
 import android.epicurius.ui.navigation.TopBar
+import android.epicurius.ui.screens.search.components.ConfirmIngredientsDialog
 import android.epicurius.ui.screens.search.components.FilterDialog
 import android.epicurius.ui.screens.search.components.FiltersIcon
 import android.epicurius.ui.screens.search.components.SearchPhotoComponent
@@ -58,7 +59,8 @@ fun SearchScreen(
         )
     ) },
     onCamera: () -> Unit = {},
-    onUpload: (Uri) -> Unit = {}
+    onUpload: (Uri) -> Unit = {},
+    onConfirm: (List<String>) -> Unit = { _ -> }
 ) {
     val tabs = listOf("Recipe", "Users")
     var selectedTabIndex by remember { mutableIntStateOf(0) }
@@ -105,6 +107,8 @@ fun SearchScreen(
         rememberPermissionState(android.Manifest.permission.READ_EXTERNAL_STORAGE)
     }
 
+    var showConfirmIngredientsDialog by remember { mutableStateOf(false) }
+
     Scaffold(
         topBar = { TopBar("Search", backButton = true, onBackButton) },
         bottomBar = { BottomBar() },
@@ -149,6 +153,7 @@ fun SearchScreen(
                                             ActivityResultContracts.PickVisualMedia.ImageOnly
                                         )
                                     )
+                                    showConfirmIngredientsDialog = true
                                 }
                                 galleryPermissionState.status.shouldShowRationale -> {
                                     showGalleryAccessDialog = true
@@ -208,6 +213,14 @@ fun SearchScreen(
                     LaunchedEffect(Unit) {
                         galleryPermissionState.launchPermissionRequest()
                     }
+                }
+
+                if (showConfirmIngredientsDialog && selectedImageUri != null) {
+                    ConfirmIngredientsDialog(
+                        ingredients = listOf(),
+                        onConfirm = onConfirm,
+                        onDismiss = { showConfirmIngredientsDialog = false }
+                    )
                 }
             }
         },
