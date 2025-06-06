@@ -1,12 +1,10 @@
 package epicurius.unit.repository.user
 
-import epicurius.repository.jdbi.user.models.SearchUserModel
 import epicurius.utils.createTestUser
 import epicurius.utils.generateEmail
 import epicurius.utils.generateSecurePassword
 import kotlin.test.Test
 import kotlin.test.assertEquals
-import kotlin.test.assertFalse
 import kotlin.test.assertNotNull
 import kotlin.test.assertNull
 import kotlin.test.assertTrue

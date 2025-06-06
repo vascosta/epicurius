@@ -31,20 +31,24 @@ class FollowRepositoryTests : UserRepositoryTest() {
         assertEquals(1, publicUserFollowersCount)
         assertEquals(1, privateUserFollowing.size)
         assertEquals(1, privateUserFollowingCount)
-        assertTrue(publicUserFollowers.contains(
-            SearchUserModel(
-                privateTestUser.user.id,
-                privateTestUser.user.name,
-                privateTestUser.user.profilePictureName
+        assertTrue(
+            publicUserFollowers.contains(
+                SearchUserModel(
+                    privateTestUser.user.id,
+                    privateTestUser.user.name,
+                    privateTestUser.user.profilePictureName
+                )
             )
-        ))
-        assertTrue(privateUserFollowing.contains(
-            SearchUserModel(
-                publicTestUser.user.id,
-                publicTestUser.user.name,
-                publicTestUser.user.profilePictureName
+        )
+        assertTrue(
+            privateUserFollowing.contains(
+                SearchUserModel(
+                    publicTestUser.user.id,
+                    publicTestUser.user.name,
+                    publicTestUser.user.profilePictureName
+                )
             )
-        ))
+        )
 
         // when unfollowing the user
         unfollow(privateTestUser.user.id, publicTestUser.user.id)
