@@ -39,14 +39,14 @@ class FavouritesListViewModel(
     var removeRecipeFromCollectionEnable by mutableStateOf(true)
         private set
 
-    fun getCollection(id: Int, navigateTo: () -> Unit) {
+    fun getFavouriteCollection(id: Int, navigateTo: () -> Unit) {
         if (id == -1) {
-            showToast("Missing RECIPE_ID in intent")
+            showToast("Missing COLLECTION_ID in intent")
             navigateTo()
             return
         }
         viewModelScope.launch {
-            fetchCollection(id)
+            fetchFavouriteCollection(id)
         }
     }
 
@@ -78,7 +78,7 @@ class FavouritesListViewModel(
         }
     }
 
-    private suspend fun fetchCollection(id: Int) {
+    private suspend fun fetchFavouriteCollection(id: Int) {
         val result = request {
             val token = session.getToken()
             service.collectionService.getCollection(token, id)

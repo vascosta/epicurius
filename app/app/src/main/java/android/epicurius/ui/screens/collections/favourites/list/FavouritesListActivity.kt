@@ -27,7 +27,7 @@ class FavouritesListActivity : EpicuriusActivity() {
                 .collectLatest { (recipesState, favouritesNameState) ->
                     val recipeId = intent.getIntExtra(Intents.RECIPE_ID, -1)
                     if (recipesState is Idle || favouritesNameState is Idle) {
-                        viewModel.getCollection(recipeId) { navigateTo<FavouritesActivity>() }
+                        viewModel.getFavouriteCollection(recipeId) { navigateTo<FavouritesActivity>() }
                     }
                 }
         }
@@ -39,7 +39,7 @@ class FavouritesListActivity : EpicuriusActivity() {
                 onRecipeRequest = ::navigateToRecipeProfileActivity,
                 onFavouritesRefresh = {
                     val recipeId = intent.getIntExtra(Intents.RECIPE_ID, -1)
-                    viewModel.getCollection(recipeId) { navigateTo<FavouritesActivity>() }
+                    viewModel.getFavouriteCollection(recipeId) { navigateTo<FavouritesActivity>() }
                 },
                 favouritesListNameState = favouritesListName.value,
                 recipesState = recipes.value
