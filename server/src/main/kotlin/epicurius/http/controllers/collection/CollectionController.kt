@@ -1,6 +1,5 @@
 package epicurius.http.controllers.collection
 
-import epicurius.domain.PagingParams
 import epicurius.domain.collection.CollectionType
 import epicurius.domain.user.AuthenticatedUser
 import epicurius.http.controllers.collection.models.input.AddRecipeToCollectionInputModel
@@ -46,11 +45,10 @@ class CollectionController(private val collectionService: CollectionService) {
     fun getCollections(
         authenticatedUser: AuthenticatedUser,
         @RequestParam collectionType: CollectionType,
-        @RequestParam skip: Int,
+        @RequestParam lastCollectionId: Int?,
         @RequestParam limit: Int
     ): ResponseEntity<*> {
-        val pagingParams = PagingParams(skip, limit)
-        val collections = collectionService.getCollections(authenticatedUser.user.id, collectionType, pagingParams)
+        val collections = collectionService.getCollections(authenticatedUser.user.id, collectionType, lastCollectionId, limit)
         return okHttpResponse(GetCollectionsOutputModel(collections))
     }
 

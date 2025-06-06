@@ -1,6 +1,5 @@
 package epicurius.repository.jdbi.collection
 
-import epicurius.domain.PagingParams
 import epicurius.domain.collection.CollectionType
 import epicurius.domain.exceptions.CollectionNotFound
 import epicurius.repository.jdbi.collection.contract.CollectionRepository
@@ -54,20 +53,27 @@ class JdbiCollectionRepository(private val handle: Handle) : CollectionRepositor
             .firstOrNull()
     }
 
-    override fun getCollections(ownerId: Int, collectionType: CollectionType, pagingParams: PagingParams): List<JdbiCollectionProfileModel> {
+    override fun getCollections(
+        ownerId: Int,
+        collectionType: CollectionType,
+        lastCollectionId: Int?,
+        limit: Int
+    ): List<JdbiCollectionProfileModel> {
         return handle.createQuery(
             """
                 SELECT c.id as collection_id, c.name as collection_name
                 FROM dbo.collection c
-                WHERE c.type = :collectionType AND c.owner_id = :userId
+                WHERE c.type = :collectionType 
+                    AND c.owner_id = :userId
+                    AND (:lastCollectionId IS NULL OR c.id < :lastCollectionId)
                 ORDER BY c.id DESC
                 LIMIT :limit OFFSET :skip
             """
         )
             .bind("userId", ownerId)
             .bind("collectionType", collectionType.ordinal)
-            .bind("skip", pagingParams.skip)
-            .bind("limit", pagingParams.limit)
+            .bind("lastCollectionId", lastCollectionId)
+            .bind("limit", limit)
             .mapTo<JdbiCollectionProfileModel>()
             .list()
     }

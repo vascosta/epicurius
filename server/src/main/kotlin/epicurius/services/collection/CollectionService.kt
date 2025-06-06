@@ -1,6 +1,5 @@
 package epicurius.services.collection
 
-import epicurius.domain.PagingParams
 import epicurius.domain.collection.Collection
 import epicurius.domain.collection.CollectionProfile
 import epicurius.domain.collection.CollectionType
@@ -56,8 +55,15 @@ class CollectionService(private val tm: TransactionManager, private val cs: Clou
         )
     }
 
-    fun getCollections(userId: Int, collectionType: CollectionType, pagingParams: PagingParams): List<CollectionProfile> {
-        val jdbiCollectionsProfileModels = tm.run { it.collectionRepository.getCollections(userId, collectionType, pagingParams) }
+    fun getCollections(
+        userId: Int,
+        collectionType: CollectionType,
+        lastCollectionId: Int?,
+        limit: Int
+    ): List<CollectionProfile> {
+        val jdbiCollectionsProfileModels = tm.run {
+            it.collectionRepository.getCollections(userId, collectionType, lastCollectionId, limit)
+        }
         return jdbiCollectionsProfileModels.map { it.toCollectionProfile() }
     }
 
