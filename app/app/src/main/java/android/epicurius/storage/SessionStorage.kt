@@ -62,14 +62,7 @@ class SessionDataStore(
                 it[USER_PROFILE_PICTURE_NAME_KEY] = userInfo.profilePictureName
         }
 
-        if (profilePicture != null && userInfo.profilePictureName != null) {
-            try {
-                val file = File(context.filesDir, userInfo.profilePictureName)
-                file.writeBytes(profilePicture)
-            } catch (e: IOException) {
-                throw UserProfilePictureNotSaved()
-            }
-        }
+        saveProfilePicture(context, userInfo.profilePictureName, profilePicture)
     }
 
     override suspend fun updateUserInfo(userInfo: UserInfo) {
@@ -78,9 +71,19 @@ class SessionDataStore(
         }
     }
 
-    override suspend fun updateUserProfilePicture(context: Context, profilePicture: ByteArray?) {
-        if (profilePicture == null)
-            deleteProfilePicture(context)
+    override suspend fun updateUserProfilePicture(
+        context: Context,
+        profilePictureName: String?,
+        profilePicture: ByteArray?
+    ) {
+        store.edit {
+            if (profilePictureName != null) {
+                it[USER_PROFILE_PICTURE_NAME_KEY] = profilePictureName
+            }
+        }
+
+        saveProfilePicture(context, profilePictureName, profilePicture)
+
     }
 
     override suspend fun updateDailyMenu(dailyMenu: DailyMenu) {
@@ -107,6 +110,17 @@ class SessionDataStore(
 
         store.edit {
             it.remove(USER_PROFILE_PICTURE_NAME_KEY)
+        }
+    }
+
+    private fun saveProfilePicture(context: Context, profilePictureName: String?, profilePicture: ByteArray?) {
+        if (profilePictureName != null && profilePicture != null) {
+            try {
+                val file = File(context.filesDir, profilePictureName)
+                file.writeBytes(profilePicture)
+            } catch (e: IOException) {
+                throw UserProfilePictureNotSaved()
+            }
         }
     }
 
