@@ -1,6 +1,5 @@
 package epicurius.unit.repository.collection
 
-import epicurius.domain.PagingParams
 import epicurius.domain.collection.CollectionType
 import epicurius.utils.createTestCollection
 import epicurius.utils.createTestUser
@@ -15,10 +14,11 @@ class GetCollectionsRepositoryTests : CollectionRepositoryTest() {
         val user = createTestUser(tm)
         val collectionFavouriteId = createTestCollection(tm, user.user.id, CollectionType.FAVOURITE)
         val collectionKitchenBookId = createTestCollection(tm, user.user.id, CollectionType.KITCHEN_BOOK)
+        val limit = 1
 
         // when retrieving collections of a specific type
-        val favouriteCollections = getCollections(user.user.id, CollectionType.FAVOURITE, PagingParams(0, 1))
-        val kitchenBookCollections = getCollections(user.user.id, CollectionType.KITCHEN_BOOK, PagingParams(0, 1))
+        val favouriteCollections = getCollections(user.user.id, CollectionType.FAVOURITE, null, limit)
+        val kitchenBookCollections = getCollections(user.user.id, CollectionType.KITCHEN_BOOK, null, limit)
 
         // then the collections are retrieved successfully
         assertNotNull(favouriteCollections.find { it.id == collectionFavouriteId })

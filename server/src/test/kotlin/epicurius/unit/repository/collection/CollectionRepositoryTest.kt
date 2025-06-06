@@ -1,6 +1,5 @@
 package epicurius.unit.repository.collection
 
-import epicurius.domain.PagingParams
 import epicurius.domain.collection.CollectionType
 import epicurius.unit.repository.RepositoryTest
 import epicurius.utils.createTestCollection
@@ -23,8 +22,13 @@ open class CollectionRepositoryTest : RepositoryTest() {
         fun getCollectionById(collectionId: Int) =
             tm.run { it.collectionRepository.getCollectionById(collectionId) }
 
-        fun getCollections(ownerId: Int, collectionType: CollectionType, pagingParams: PagingParams) =
-            tm.run { it.collectionRepository.getCollections(ownerId, collectionType, pagingParams) }
+        fun getCollections(
+            ownerId: Int,
+            collectionType: CollectionType,
+            lastCollectionId: Int?,
+            limit: Int
+        ) =
+            tm.run { it.collectionRepository.getCollections(ownerId, collectionType, lastCollectionId, limit) }
 
         fun updateCollection(collectionId: Int, newName: String?) =
             tm.run { it.collectionRepository.updateCollection(collectionId, newName) }

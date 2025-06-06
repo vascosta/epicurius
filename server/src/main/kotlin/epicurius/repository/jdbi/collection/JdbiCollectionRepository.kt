@@ -67,7 +67,7 @@ class JdbiCollectionRepository(private val handle: Handle) : CollectionRepositor
                     AND c.owner_id = :userId
                     AND (:lastCollectionId IS NULL OR c.id < :lastCollectionId)
                 ORDER BY c.id DESC
-                LIMIT :limit OFFSET :skip
+                LIMIT :limit
             """
         )
             .bind("userId", ownerId)
