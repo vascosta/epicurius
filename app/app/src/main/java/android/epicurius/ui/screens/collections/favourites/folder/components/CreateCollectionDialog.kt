@@ -1,14 +1,21 @@
 package android.epicurius.ui.screens.collections.favourites.folder.components
 
+import android.epicurius.domain.collection.CollectionProfile
+import android.epicurius.ui.screens.utils.Cached
+import android.epicurius.ui.screens.utils.LoadState
+import android.epicurius.ui.screens.utils.Loaded
+import android.epicurius.ui.screens.utils.LoadingSpinner
 import android.epicurius.ui.screens.utils.TextField
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -19,7 +26,8 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun CreateCollectionDialog(
     onDismiss: () -> Unit,
-    onCreate: (String) -> Unit
+    onCreate: (String) -> Unit,
+    enableButtons: Boolean
 ) {
     var collectionName by remember { mutableStateOf("") }
 
@@ -39,11 +47,22 @@ fun CreateCollectionDialog(
         },
         confirmButton = {
             TextButton(
-                onClick = { onDismiss() }
+                onClick = { onDismiss() },
+                enabled = enableButtons
             ) { Text("Cancel") }
             TextButton(
-                onClick = { onCreate(collectionName) }
-            ) { Text("Create") }
+                onClick = {
+                    onCreate(collectionName)
+                          },
+                enabled = enableButtons
+            ) {
+                if (enableButtons) {
+                    Text("Create")
+                }
+                else {
+                    LoadingSpinner(Modifier.size(30.dp))
+                }
+            }
         }
     )
 }
