@@ -34,6 +34,7 @@ fun TopBar(
     text: String,
     backButton: Boolean = false,
     onBackButton: () -> Unit = {},
+    onIconClick: () -> Unit = {},
     icon: ImageVector? = Icons.Filled.Person
 ) {
     val context = LocalContext.current
@@ -63,8 +64,7 @@ fun TopBar(
         },
         actions = {
             icon?.let {
-                IconButton(onClick = {
-                    context.startActivity(Intent(context, UserProfileActivity::class.java)) }
+                IconButton(onClick = onIconClick
                 ) {
                     Icon(
                         imageVector = it,
