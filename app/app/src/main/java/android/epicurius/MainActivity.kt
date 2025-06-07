@@ -40,7 +40,6 @@ class MainActivity : ComponentActivity() {
                     onFeed = { navigateTo<FeedActivity>() },
                     onDailyMenu = { navigateTo<DailyMenuActivity>() },
                     onFavouritesFolders = { navigateTo<FavouritesActivity>() },
-                    onFavouritesRecipes = { navigateTo<FavouritesListActivity>() },
                     onCalendar = { navigateTo<CalendarActivity>() },
                     onFridge = { navigateTo<FridgeActivity>() },
                 )

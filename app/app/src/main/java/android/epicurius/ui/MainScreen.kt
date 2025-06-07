@@ -30,7 +30,6 @@ fun MainScreen(
     onFeed: () -> Unit = {},
     onDailyMenu: () -> Unit = {},
     onFavouritesFolders: () -> Unit = {},
-    onFavouritesRecipes: () -> Unit = {},
     onCalendar: () -> Unit = {},
     onFridge: () -> Unit = {}
 ) {
@@ -77,10 +76,7 @@ fun MainScreen(
             Text("Daily Menu")
         }
         Button(onClick = { onFavouritesFolders() }) {
-            Text("Favourites Folders")
-        }
-        Button(onClick = { onFavouritesRecipes() }) {
-            Text("Favourites Recipes")
+            Text("Favourites")
         }
         Button(onClick = { onCalendar() }) {
             Text("Calendar")
