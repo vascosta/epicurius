@@ -28,13 +28,10 @@ class FavouritesViewModel(
 ): CollectionsViewModel(service, session, context) {
 
     private val favouritesFlow = MutableStateFlow<LoadState<List<CollectionProfile>>>(idle())
+    private val cachedFavourites = MutableStateFlow<List<CollectionProfile>>(emptyList())
     val favourites = favouritesFlow.asStateFlow()
 
-    var createCollectionEnable by mutableStateOf(true)
-        private set
-
-    var skip by mutableIntStateOf(0)
-        private set
+    var enableButtons by mutableStateOf(true)
 
     var limit by mutableIntStateOf(10)
 
@@ -45,10 +42,10 @@ class FavouritesViewModel(
         }
     }
 
-    fun createFavouriteCollection(name: String, navigateTo: () -> Unit) {
-        disableCreateCollection()
+    fun createFavouriteCollection(name: String, navigateTo: (Int) -> Unit) {
+        disableButtons()
         if (!validateCollectionName(name)) {
-            enableCreateCollection()
+            enableButtons()
             return
         }
         val createCollectionInfo = CreateCollectionInputModel(name, CollectionType.FAVOURITE)
@@ -57,30 +54,43 @@ class FavouritesViewModel(
         }
     }
 
+    fun deleteFavouriteCollection(id: Int) {
+        disableButtons()
+        viewModelScope.launch {
+            handleDeleteFavouriteCollection(id)
+        }
+    }
+
     fun refreshFavourites() {
-        resetSkip()
         getFavourites()
     }
 
     private suspend fun fetchFavourites() {
         val result = request {
             val token = session.getToken()
-            service.collectionService.getCollections(token, CollectionType.FAVOURITE, skip, limit)
+            val lastCollectionId = cachedFavourites.value.lastOrNull()?.id
+            service.collectionService.getCollections(
+                token,
+                CollectionType.FAVOURITE,
+                lastCollectionId,
+                limit
+            )
         }
         when {
             result.isFailure -> {
                 favouritesFlow.value = apiFailure(result.getProblemOrThrow())
             }
             result.isSuccess -> {
-                favouritesFlow.value = apiSuccess(result.getValueOrThrow().collections)
-                increaseSkip()
+                val fetchedFavourites = result.getValueOrThrow().collections
+                cachedFavourites.value = fetchedFavourites
+                favouritesFlow.value = apiSuccess(fetchedFavourites)
             }
         }
     }
 
     private suspend fun handleCreateFavouriteCollection(
         createCollectionInfo: CreateCollectionInputModel,
-        navigateTo: () -> Unit
+        navigateTo: (Int) -> Unit
     ) {
         val result = request {
             val token = session.getToken()
@@ -88,28 +98,34 @@ class FavouritesViewModel(
         }
         when {
             result.isFailure -> {
-                favouritesFlow.value = apiFailure(result.getProblemOrThrow())
-                enableCreateCollection()
+                enableButtons()
             }
             result.isSuccess -> {
-                navigateTo()
+                navigateTo(result.getValueOrThrow().collection.id)
             }
         }
     }
 
-    private fun enableCreateCollection() {
-        createCollectionEnable = true
+    private suspend fun handleDeleteFavouriteCollection(id: Int) {
+        val result = request {
+            val token = session.getToken()
+            service.collectionService.deleteCollection(token, id)
+        }
+        when {
+            result.isSuccess -> {
+                val updatedFavourites = cachedFavourites.value.filter { it.id != id }
+                cachedFavourites.value = updatedFavourites
+                favouritesFlow.value = apiSuccess(updatedFavourites)
+            }
+        }
+        enableButtons()
     }
 
-    private fun disableCreateCollection() {
-        createCollectionEnable = false
+    private fun enableButtons() {
+        enableButtons = true
     }
 
-    private fun increaseSkip() {
-        skip += 10
-    }
-
-    private fun resetSkip() {
-        skip = 0
+    private fun disableButtons() {
+        enableButtons = false
     }
 }
