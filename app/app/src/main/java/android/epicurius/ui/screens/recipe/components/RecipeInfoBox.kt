@@ -20,10 +20,13 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun RecipeInfoBox(
+    collectionId: Int?,
     recipeInfo: RecipeInfo,
-    onRecipeRequest: (Int) -> Unit,
     isFavourite: Boolean = false,
-    onFavouriteStarClick: () -> Unit = {},
+    onAddRecipeToCollection: (Int, Int) -> Unit,
+    onRemoveRecipeFromCollection: (Int, Int) -> Unit,
+    onRecipeRequest: (Int) -> Unit,
+    enableButtons: Boolean
 ) {
     Box(
         modifier = Modifier
@@ -36,10 +39,14 @@ fun RecipeInfoBox(
     ) {
         Column {
             RecipeHeader(
+                collectionId = collectionId,
+                recipeId = recipeInfo.id,
                 name = recipeInfo.name,
                 author = recipeInfo.authorUsername,
                 isFavourite,
-                onFavouritesClick = onFavouriteStarClick
+                onAddRecipeToCollection = onAddRecipeToCollection,
+                onRemoveRecipeFromCollection = onRemoveRecipeFromCollection,
+                enableButtons = enableButtons
             )
 
             RecipeImage(recipeInfo.picture)
@@ -58,7 +65,7 @@ fun RecipeInfoSimpleBox(
     recipeInfo: RecipeInfo,
     onRecipeRequest: (Int) -> Unit
 ) {
-    Box(
+    /*Box(
         modifier = Modifier
             .fillMaxWidth()
             .background(Color.White)
@@ -71,13 +78,14 @@ fun RecipeInfoSimpleBox(
             RecipeHeader(name = recipeInfo.name, author = recipeInfo.authorUsername)
             RecipeImage(recipeInfo.picture)
         }
-    }
+    }*/
 }
 
 @Preview
 @Composable
 fun RecipeInfoPreview() {
     RecipeInfoBox(
+        collectionId = null,
         recipeInfo = RecipeInfo(
             id = 1,
             name = "Recipe Name",
@@ -99,7 +107,11 @@ fun RecipeInfoPreview() {
                 0xAE.toByte(), 0x42.toByte(), 0x60.toByte(), 0x82.toByte()
             ),
         ),
-        {}
+        isFavourite = true,
+        {_, _ ->},
+        {_, _ ->},
+        {},
+        true
     )
 }
 
