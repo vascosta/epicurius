@@ -92,6 +92,7 @@ class JdbiRecipeRepository(private val handle: Handle) : RecipeRepository {
             .firstOrNull()
 
     override fun getRandomRecipesFromPublicUsers(
+        userId: Int,
         mealType: MealType,
         intolerances: List<Intolerance>,
         diets: List<Diet>,
@@ -120,10 +121,12 @@ class JdbiRecipeRepository(private val handle: Handle) : RecipeRepository {
                     AND r.meal_type = :mealType 
                     AND NOT (r.intolerances && :intolerances)
                     AND r.diets @> :diets
+                    AND r.author_id <> :userId
                 ORDER BY RANDOM()
                 LIMIT :limit
             """
         )
+            .bind("userId", userId)
             .bind("mealType", mealType.ordinal)
             .bind("intolerances", intolerances.map { it.ordinal }.toTypedArray())
             .bind("diets", diets.map { it.ordinal }.toTypedArray())

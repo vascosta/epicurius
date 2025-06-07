@@ -147,8 +147,14 @@ open class RecipeRepositoryTest : RepositoryTest() {
         fun getUserRecipes(userId: Int, lastRecipeId: Int?, limit: Int) =
             tm.run { it.recipeRepository.getUserRecipes(userId, lastRecipeId, limit) }
 
-        fun getRandomRecipesFromPublicUsers(mealType: MealType, intolerances: List<Intolerance>, diets: List<Diet>, limit: Int) =
-            tm.run { it.recipeRepository.getRandomRecipesFromPublicUsers(mealType, intolerances, diets, limit) }
+        fun getRandomRecipesFromPublicUsers(
+            userId: Int,
+            mealType: MealType,
+            intolerances: List<Intolerance>,
+            diets: List<Diet>,
+            limit: Int
+        ) =
+            tm.run { it.recipeRepository.getRandomRecipesFromPublicUsers(userId, mealType, intolerances, diets, limit) }
 
         fun searchRecipes(
             userId: Int,

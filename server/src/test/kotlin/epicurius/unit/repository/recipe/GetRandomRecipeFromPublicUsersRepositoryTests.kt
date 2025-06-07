@@ -2,25 +2,24 @@ package epicurius.unit.repository.recipe
 
 import epicurius.domain.recipe.MealType
 import kotlin.test.Test
-import kotlin.test.assertNotNull
 import kotlin.test.assertTrue
 
 class GetRandomRecipeFromPublicUsersRepositoryTests : RecipeRepositoryTest() {
 
     @Test
     fun `Should retrieve a random recipe from public users successfully`() {
-        // given a user public user (testUser)
+        // given a user
 
         // when retrieving a random recipe from public users
-        val retrievedRecipe = getRandomRecipesFromPublicUsers(
+        val retrievedRecipes = getRandomRecipesFromPublicUsers(
+            testUserPrivate.user.id,
             MealType.DESSERT,
             testUserPublic.user.intolerances,
             testUserPublic.user.diets,
             1
         )
 
-        // then the recipe is retrieved successfully
-        assertNotNull(retrievedRecipe)
-        assertTrue(retrievedRecipe.isNotEmpty())
+        // then a list of recipes is returned successfully
+        assertTrue(retrievedRecipes.isNotEmpty())
     }
 }
