@@ -61,10 +61,6 @@ class FavouritesViewModel(
         }
     }
 
-    fun refreshFavourites() {
-        getFavourites()
-    }
-
     private suspend fun fetchFavourites() {
         val result = request {
             val token = session.getToken()
