@@ -90,6 +90,6 @@ open class CollectionServiceTest : ServiceTest() {
             testJdbiRecipeModel.picturesNames,
         )
 
-        val testRecipeInfo = testJdbiRecipeInfo.toRecipeInfo(byteArrayOf())
+        val testRecipeInfo = testJdbiRecipeInfo.toRecipeInfo(byteArrayOf(), false)
     }
 }
