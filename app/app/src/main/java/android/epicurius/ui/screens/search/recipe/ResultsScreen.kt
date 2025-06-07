@@ -24,7 +24,7 @@ import androidx.compose.ui.unit.dp
 fun ResultsScreen(
     recipeList: List<RecipeInfo>,
     onBackButton: () -> Unit = {},
-    onRecipeClick: (Int) -> Unit = {}
+    onRecipeRequest: (Int) -> Unit = {}
 ) {
     Scaffold(
         topBar = { TopBar("Search Recipes", backButton = true, onBackButton) },
@@ -40,8 +40,13 @@ fun ResultsScreen(
             ) {
                 recipeList.forEach { recipe ->
                     RecipeInfoBox(
+                        collectionId = null,
                         recipeInfo = recipe,
-                        onRecipeRequest = { onRecipeClick(recipe.id) },
+                        isFavourite = TODO(),
+                        onAddRecipeToCollection = TODO(),
+                        onRemoveRecipeFromCollection = TODO(),
+                        onRecipeRequest = { onRecipeRequest(recipe.id) },
+                        enableButtons = TODO(),
                     )
                     Spacer(modifier = Modifier.padding(8.dp))
                 }

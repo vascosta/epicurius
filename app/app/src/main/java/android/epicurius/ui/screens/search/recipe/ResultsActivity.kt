@@ -30,7 +30,7 @@ class ResultsActivity : ComponentActivity() {
             ResultsScreen(
                 recipeList = dummyRecipes,
                 onBackButton = { navigateTo<SearchActivity>() },
-                onRecipeClick = { navigateTo<RecipeProfileActivity>() }
+                onRecipeRequest = { navigateTo<RecipeProfileActivity>() }
             )
         }
     }
