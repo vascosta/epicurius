@@ -43,7 +43,8 @@ open class MenuControllerTest : HttpTest() {
             MealType.BREAKFAST,
             1,
             2,
-            byteArrayOf()
+            byteArrayOf(),
+            isInCollection = false
         )
 
         val publicSoupRecipeInfo = RecipeInfo(
@@ -55,7 +56,8 @@ open class MenuControllerTest : HttpTest() {
             MealType.SOUP,
             1,
             2,
-            byteArrayOf()
+            byteArrayOf(),
+            isInCollection = false
         )
 
         val publicDessertRecipeInfo = RecipeInfo(
@@ -67,7 +69,8 @@ open class MenuControllerTest : HttpTest() {
             MealType.DESSERT,
             1,
             2,
-            byteArrayOf()
+            byteArrayOf(),
+            isInCollection = false
         )
 
         val publicLunchJdbiRecipeModel = RecipeInfo(
@@ -79,7 +82,8 @@ open class MenuControllerTest : HttpTest() {
             MealType.MAIN_COURSE,
             1,
             2,
-            byteArrayOf()
+            byteArrayOf(),
+            isInCollection = false
         )
 
         val publicDinnerJdbiRecipeModel2 = publicLunchJdbiRecipeModel.copy(
