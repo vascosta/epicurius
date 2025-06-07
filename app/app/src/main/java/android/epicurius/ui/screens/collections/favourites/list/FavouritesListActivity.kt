@@ -25,9 +25,9 @@ class FavouritesListActivity : EpicuriusActivity() {
                 viewModel.favouritesListName
             ) { recipesState, favouritesNameState -> recipesState to favouritesNameState }
                 .collectLatest { (recipesState, favouritesNameState) ->
-                    val recipeId = intent.getIntExtra(Intents.RECIPE_ID, -1)
+                    val collectionId = intent.getIntExtra(Intents.COLLECTION_ID, -1)
                     if (recipesState is Idle || favouritesNameState is Idle) {
-                        viewModel.getFavouriteCollection(recipeId) { navigateTo<FavouritesActivity>() }
+                        viewModel.getFavouriteCollection(collectionId) { navigateTo<FavouritesActivity>() }
                     }
                 }
         }
@@ -35,14 +35,25 @@ class FavouritesListActivity : EpicuriusActivity() {
             val recipes = viewModel.recipes.collectAsState(idle())
             val favouritesListName = viewModel.favouritesListName.collectAsState(idle())
             FavouritesListScreen(
-                onBackButton = { navigateTo<FavouritesActivity>() },
-                onRecipeRequest = ::navigateToRecipeProfileActivity,
-                onFavouritesRefresh = {
-                    val recipeId = intent.getIntExtra(Intents.RECIPE_ID, -1)
-                    viewModel.getFavouriteCollection(recipeId) { navigateTo<FavouritesActivity>() }
-                },
+                collectionId = intent.getIntExtra(Intents.COLLECTION_ID, -1),
                 favouritesListNameState = favouritesListName.value,
-                recipesState = recipes.value
+                recipesState = recipes.value,
+                onBackButton = { navigateTo<FavouritesActivity>() },
+                onCollectionEdit = { id, name ->
+                    viewModel.updateFavouriteCollection(id, name) { navigateTo<FavouritesActivity>() }
+                },
+                onCollectionDelete = { id ->
+                    viewModel.deleteFavouriteCollection(id) { navigateTo<FavouritesActivity>() }
+                },
+                onRecipeDelete = { collectionId, recipeId ->
+                    viewModel.removeRecipeFromFavouriteCollection(collectionId, recipeId)
+                },
+                onRecipeRequest = ::navigateToRecipeProfileActivity,
+                onFavouriteCollectionRefresh = {
+                    val collectionId = intent.getIntExtra(Intents.COLLECTION_ID, -1)
+                    viewModel.getFavouriteCollection(collectionId) { navigateTo<FavouritesActivity>() }
+                },
+                enableButtons = viewModel.enableButtons
             )
         }
     }

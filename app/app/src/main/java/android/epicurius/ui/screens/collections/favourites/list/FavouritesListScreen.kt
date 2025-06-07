@@ -11,6 +11,7 @@ import android.epicurius.ui.screens.collections.favourites.folder.components.get
 import android.epicurius.ui.screens.recipe.components.RecipeInfoBox
 import android.epicurius.ui.screens.utils.LoadState
 import android.epicurius.ui.screens.utils.LoadStateRenderer
+import android.epicurius.ui.screens.utils.Loaded
 import android.epicurius.ui.screens.utils.apiSuccess
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -27,6 +28,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -39,19 +41,28 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun FavouritesListScreen(
-    onBackButton: () -> Unit = {},
-    onEditCollection: (String) -> Unit = {},
-    onDeleteCollection: (Int) -> Unit = {},
-    onRecipeRequest: (Int) -> Unit = {},
-    onRecipeDelete: () -> Unit = {},
-    onFavouritesRefresh: () -> Unit = {},
+    collectionId: Int,
     favouritesListNameState: LoadState<String>,
     recipesState: LoadState<List<RecipeInfo>>,
+    onBackButton: () -> Unit,
+    onCollectionEdit: (Int, String) -> Unit,
+    onCollectionDelete: (Int) -> Unit,
+    onRecipeDelete: (Int, Int) -> Unit,
+    onRecipeRequest: (Int) -> Unit,
+    onFavouriteCollectionRefresh: () -> Unit,
+    enableButtons: Boolean
 ) {
-    val favouritesListName = getFavouritesListName(favouritesListNameState)
+
+    var favouritesListName = getFavouritesListName(favouritesListNameState)
 
     var showEditCollectionDialog by remember { mutableStateOf(false) }
     var showDeleteCollectionDialog by remember { mutableStateOf(false) }
+
+    LaunchedEffect(favouritesListNameState) {
+        if (favouritesListNameState is Loaded) {
+            showEditCollectionDialog = false
+        }
+    }
 
     Scaffold(
         topBar = { TopBar(text = favouritesListName, backButton = true, onBackButton) },
@@ -59,7 +70,7 @@ fun FavouritesListScreen(
         content = { paddingValues ->
             LoadStateRenderer(
                 loadState = recipesState,
-                swipeToRefresh = onFavouritesRefresh,
+                swipeToRefresh = onFavouriteCollectionRefresh,
                 content = { recipes ->
                     Column(
                         modifier = Modifier
@@ -92,10 +103,13 @@ fun FavouritesListScreen(
                             recipes.forEach {
                                 Row {
                                     RecipeInfoBox(
+                                        collectionId = collectionId,
                                         recipeInfo = it,
-                                        onRecipeRequest,
                                         isFavourite = true,
-                                        onFavouriteStarClick = onRecipeDelete
+                                        onAddRecipeToCollection = {_, _ ->},
+                                        onRemoveRecipeFromCollection = onRecipeDelete,
+                                        onRecipeRequest = onRecipeRequest,
+                                        enableButtons = enableButtons
                                     )
                                     Spacer(modifier = Modifier.height(10.dp))
                                 }
@@ -105,21 +119,21 @@ fun FavouritesListScreen(
 
                     if (showEditCollectionDialog) {
                         EditCollectionDialog(
+                            collectionName = favouritesListName,
+                            collectionId = collectionId,
                             onDismiss = { showEditCollectionDialog = false },
-                            onEditCollection = onEditCollection,
-                            collectionName = favouritesListName
+                            onEditCollection = onCollectionEdit,
+                            enableButtons = enableButtons
                         )
                     }
 
                     if (showDeleteCollectionDialog) {
                         DeleteCollectionDialog(
                             collectionName = favouritesListName,
-                            collectionId = 1,
-                            onDelete = {
-                                onDeleteCollection(1)
-                                showDeleteCollectionDialog = false
-                            },
-                            onDismissRequest = { showDeleteCollectionDialog = false }
+                            collectionId = collectionId,
+                            onDelete = onCollectionDelete,
+                            onDismissRequest = { showDeleteCollectionDialog = false },
+                            enableButtons = enableButtons
                         )
                     }
                 }
@@ -133,9 +147,7 @@ fun FavouritesListScreen(
 @Composable
 fun FavouritesListScreenPreview() {
     FavouritesListScreen(
-        onBackButton = {},
-        onFavouritesRefresh = {},
-        favouritesListNameState = apiSuccess("My Favourite Recipes"),
+        collectionId = 1,
         recipesState = apiSuccess(listOf(
             RecipeInfo(
                 id = 1,
@@ -148,6 +160,14 @@ fun FavouritesListScreenPreview() {
                 servings = 4,
                 picture = "".toByteArray()
             )
-        ))
+        )),
+        favouritesListNameState = apiSuccess("My Favourite Recipes"),
+        onBackButton = {},
+        onCollectionEdit = {_, _ ->},
+        onCollectionDelete = {},
+        onRecipeDelete = {_, _ ->},
+        onRecipeRequest = {},
+        onFavouriteCollectionRefresh = {},
+        enableButtons = true
     )
 }
