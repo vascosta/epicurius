@@ -29,11 +29,14 @@ class GetUserRecipesServiceTests : RecipeServiceTest() {
         whenever(jdbiRecipeRepositoryMock.getUserRecipes(AUTHOR_ID, null, limit))
             .thenReturn(listOf(jdbiRecipeInfoMock))
         whenever(pictureRepositoryMock.getPicture(testPicture.name, RECIPES_FOLDER)).thenReturn(testPicture.bytes)
+        whenever(
+            jdbiCollectionRepositoryMock.checkIfRecipeInAnyUserCollection(AUTHOR_ID, jdbiRecipeInfoMock.id)
+        ).thenReturn(false)
 
         // when retrieving the user's recipes
         val recipes = runBlocking { getUserRecipes(AUTHOR_ID, null, limit) }
 
         // then the recipes are retrieved successfully
-        assertTrue(recipes.contains(jdbiRecipeInfoMock.toRecipeInfo(testPicture.bytes)))
+        assertTrue(recipes.contains(jdbiRecipeInfoMock.toRecipeInfo(testPicture.bytes, false)))
     }
 }

@@ -3,6 +3,8 @@ package epicurius.unit.services.recipe
 import epicurius.domain.exceptions.RecipeNotAccessible
 import epicurius.domain.exceptions.RecipeNotFound
 import epicurius.domain.picture.PictureDomain.Companion.RECIPES_FOLDER
+import epicurius.unit.services.mealPlanner.MealPlannerServiceTest
+import epicurius.unit.services.menu.MenuServiceTest.Companion.publicBreakfastJdbiRecipeModel
 import kotlinx.coroutines.runBlocking
 import org.mockito.kotlin.whenever
 import kotlin.test.Test
@@ -21,6 +23,9 @@ class GetRecipeServiceTests : RecipeServiceTest() {
         whenever(jdbiUserRepositoryMock.checkUserVisibility(authorUsername, AUTHOR_ID)).thenReturn(true)
         whenever(runBlocking { firestoreRecipeRepositoryMock.getRecipeById(RECIPE_ID) }).thenReturn(firestoreRecipeInfo)
         whenever(pictureRepositoryMock.getPicture(testPicture.name, RECIPES_FOLDER)).thenReturn(testPicture.bytes)
+        whenever(
+            jdbiCollectionRepositoryMock.checkIfRecipeInAnyUserCollection(AUTHOR_ID, jdbiRecipeModel.id)
+        ).thenReturn(false)
 
         // when retrieving the recipe
         val recipe = runBlocking { getRecipe(RECIPE_ID, AUTHOR_ID) }
@@ -55,6 +60,9 @@ class GetRecipeServiceTests : RecipeServiceTest() {
         whenever(jdbiUserRepositoryMock.checkUserVisibility(authorUsername, userId)).thenReturn(true)
         whenever(runBlocking { firestoreRecipeRepositoryMock.getRecipeById(RECIPE_ID) }).thenReturn(firestoreRecipeInfo)
         whenever(pictureRepositoryMock.getPicture(testPicture.name, RECIPES_FOLDER)).thenReturn(testPicture.bytes)
+        whenever(
+            jdbiCollectionRepositoryMock.checkIfRecipeInAnyUserCollection(AUTHOR_ID, jdbiRecipeModel.id)
+        ).thenReturn(false)
 
         // when retrieving the recipe
         val recipe = runBlocking { getRecipe(RECIPE_ID, userId) }
