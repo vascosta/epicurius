@@ -62,10 +62,17 @@ tasks.withType<Test> {
     useJUnitPlatform()
 }
 
-tasks.named<Jar>("bootJar") {
-    archiveFileName.set("epicurius-server.jar")
-    destinationDirectory.set(layout.projectDirectory.dir("../demo"))
+tasks.register<Copy>("copyJarToDemo") {
+    dependsOn("bootJar")
+
+    val jarFile = layout.buildDirectory.file("libs/${rootProject.name}-${version}.jar")
+    val outputDir = layout.projectDirectory.dir("../demo")
+
+    from(jarFile.map { it.asFile })
+    into(outputDir)
+    rename { "epicurius-server.jar" }
 }
+
 
 tasks.register<Copy>("extractUberJar") {
     dependsOn("assemble")
