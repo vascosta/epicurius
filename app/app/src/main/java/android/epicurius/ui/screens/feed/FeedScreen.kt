@@ -25,9 +25,12 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun FeedScreen(
+    userFeedState: LoadState<List<RecipeInfo>>,
+    onAddRecipeToCollection: (Int, Int) -> Unit,
+    onRemoveRecipeFromCollection: (Int, Int) -> Unit,
     onRecipeRequest: (Int) -> Unit,
     onUserFeedRefresh: () -> Unit,
-    userFeedState: LoadState<List<RecipeInfo>>
+    enableButtons: Boolean
 ) {
     Scaffold(
         topBar = { TopBar(text = "For you to cook") },
@@ -49,11 +52,10 @@ fun FeedScreen(
                             RecipeInfoBox(
                                 collectionId = null,
                                 recipeInfo = recipe,
-                                isFavourite = TODO(),
-                                onAddRecipeToCollection = TODO(),
-                                onRemoveRecipeFromCollection = TODO(),
-                                onRecipeRequest = TODO(),
-                                enableButtons = TODO()
+                                onAddRecipeToCollection = onAddRecipeToCollection,
+                                onRemoveRecipeFromCollection = onRemoveRecipeFromCollection,
+                                onRecipeRequest = onRecipeRequest,
+                                enableButtons = enableButtons
                             )
                             Spacer(modifier = Modifier.size(5.dp))
                         }
@@ -78,7 +80,8 @@ fun FeedPreview() {
             mealType = MealType.MAIN_COURSE,
             preparationTime = 30,
             servings = 4,
-            picture = "".toByteArray()
+            picture = "".toByteArray(),
+            isInCollection = true
         ),
         RecipeInfo(
             id = 2,
@@ -89,9 +92,10 @@ fun FeedPreview() {
             mealType = MealType.MAIN_COURSE,
             preparationTime = 45,
             servings = 4,
-            picture = "".toByteArray()
+            picture = "".toByteArray(),
+            isInCollection = false
         )
     )
 
-    FeedScreen({}, {}, apiSuccess(recipeList))
+    FeedScreen(apiSuccess(recipeList), {_, _ ->}, {_, _ ->}, {}, {}, true)
 }

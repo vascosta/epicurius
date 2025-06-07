@@ -26,9 +26,12 @@ class FeedActivity : EpicuriusActivity() {
         setContent {
             val userFeedState = viewModel.userFeed.collectAsState(idle())
             FeedScreen(
+                userFeedState = userFeedState.value,
+                onAddRecipeToCollection = TODO(),
+                onRemoveRecipeFromCollection = TODO(),
                 onRecipeRequest = ::navigateToRecipeProfileActivity,
                 onUserFeedRefresh = { viewModel.refreshUserFeed() },
-                userFeedState = userFeedState.value
+                enableButtons = TODO()
             )
         }
     }
