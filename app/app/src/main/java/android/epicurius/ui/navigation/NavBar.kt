@@ -1,6 +1,12 @@
 package android.epicurius.ui.navigation
 
+import android.content.Intent
 import android.epicurius.R
+import android.epicurius.ui.screens.feed.FeedActivity
+import android.epicurius.ui.screens.fridge.FridgeActivity
+import android.epicurius.ui.screens.mealPlanner.calendar.CalendarActivity
+import android.epicurius.ui.screens.recipe.createRecipe.CreateRecipeActivity
+import android.epicurius.ui.screens.search.general.SearchActivity
 import android.epicurius.ui.screens.utils.TabComponent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
@@ -30,6 +36,7 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -126,6 +133,7 @@ fun FollowTopBar(
 
 @Composable
 fun BottomBar() {
+    val context = LocalContext.current
     NavigationBar(containerColor = Color.White) {
         Row(
             modifier = Modifier
@@ -143,11 +151,34 @@ fun BottomBar() {
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            BottomBarButton({}, R.drawable.home, "Home")
-            BottomBarButton({}, R.drawable.pencil, "Pencil")
-            BottomBarButton({}, R.drawable.magnifier, "Magnifier", 41)
-            BottomBarButton({}, R.drawable.plate, "Plate", 45)
-            BottomBarButton({}, R.drawable.star, "Star")
+            BottomBarButton(
+                onClick = { context.startActivity(Intent(context, FeedActivity::class.java)) },
+                imageId = R.drawable.home,
+                description = "Home"
+            )
+            BottomBarButton(
+                onClick = { context.startActivity(Intent(context, CreateRecipeActivity::class.java)) },
+                imageId = R.drawable.pencil,
+                description = "Pencil"
+            )
+            BottomBarButton(
+                onClick = { context.startActivity(Intent(context, SearchActivity::class.java)) },
+                imageId = R.drawable.magnifier,
+                description = "Magnifier",
+                imageSize = 41
+            )
+            BottomBarButton(
+                onClick = { context.startActivity(Intent(context, CalendarActivity::class.java)) },
+                imageId = R.drawable.plate,
+                description = "Plate",
+                imageSize = 45
+            )
+            BottomBarButton(
+                onClick = { context.startActivity(Intent(context, FridgeActivity::class.java)) },
+                imageId = R.drawable.fridge,
+                description = "Fridge",
+                imageSize = 40
+            )
         }
     }
 }

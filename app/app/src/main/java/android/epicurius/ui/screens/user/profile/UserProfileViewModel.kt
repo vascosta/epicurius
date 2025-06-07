@@ -10,6 +10,7 @@ import android.epicurius.domain.user.UserProfile
 import android.epicurius.services.EpicuriusService
 import android.epicurius.services.api.collection.models.input.AddRecipeToCollectionInputModel
 import android.epicurius.services.http.utils.APIResult
+import android.epicurius.services.http.utils.CachedResult
 import android.epicurius.storage.Session
 import android.epicurius.ui.EpicuriusViewModel
 import android.epicurius.ui.screens.utils.LoadState
