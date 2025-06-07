@@ -18,7 +18,8 @@ open class CollectionsViewModel(
     fun validateCollectionName(name: String): Boolean = validateName(name)
 
     private fun validateName(name: String): Boolean {
-        if (!name.isBlank() || name.length !in MIN_COLLECTION_NAME_LENGTH..MAX_COLLECTION_NAME_LENGTH) {
+        println(name.length)
+        if (name.length !in MIN_COLLECTION_NAME_LENGTH..MAX_COLLECTION_NAME_LENGTH) {
             showToast(COLLECTION_NAME_LENGTH_MSG)
             return false
         }
