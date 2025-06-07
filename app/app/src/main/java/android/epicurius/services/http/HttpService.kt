@@ -196,7 +196,7 @@ class HttpService(
                     ?.substringAfter("token=")
             }
 
-            if (res.code == 204) {
+            if (res.code == 204) { // no body
                 return@send APIResult.success(null, token)
             }
 
@@ -205,7 +205,6 @@ class HttpService(
             when {
                 res.isSuccessful && body.isApplicationJson -> {
                     val jsonBody = gson.fromJson<T>(json, T::class.java)
-
                     APIResult.success(jsonBody, token)
                 }
                 res.isFailure && body.isProblem -> {

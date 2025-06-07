@@ -35,6 +35,7 @@ class APIResult<out T>(private val value: Any?, private val token: String? = nul
 
     companion object {
         fun <T> success(value: T?, token: String?): APIResult<T> = APIResult(value, token)
+        fun <T> cached(value: T?, token: String?): CachedResult<T> = CachedResult(value, token)
         fun <T> failure(problem: Problem): APIResult<T> = APIResult(Failure(problem))
     }
 
