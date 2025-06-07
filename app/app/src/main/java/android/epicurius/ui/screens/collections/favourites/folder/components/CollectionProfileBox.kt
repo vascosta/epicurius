@@ -36,7 +36,8 @@ import androidx.compose.ui.unit.dp
 fun CollectionProfileBox(
     collection: CollectionProfile,
     onCollectionRequest: (Int) -> Unit,
-    onCollectionDelete: (Int) -> Unit
+    onCollectionDelete: (Int) -> Unit,
+    enableButtons: Boolean
 ) {
     var showDeleteDialog by remember { mutableStateOf(false) }
 
@@ -74,11 +75,9 @@ fun CollectionProfileBox(
             DeleteCollectionDialog(
                 collectionName = collection.name,
                 collectionId = collection.id,
-                onDelete = {
-                    onCollectionDelete(it)
-                    showDeleteDialog = false
-                },
-                onDismissRequest = { showDeleteDialog = false }
+                onDelete = onCollectionDelete,
+                onDismissRequest = { showDeleteDialog = false },
+                enableButtons = enableButtons
             )
         }
     }
@@ -87,7 +86,5 @@ fun CollectionProfileBox(
 @Preview
 @Composable
 fun CollectionProfileBoxPreview() {
-    CollectionProfileBox(
-        CollectionProfile(1, "Italian Delights"), {}, {}
-    )
+    CollectionProfileBox(CollectionProfile(1, "Italian Delights"), {}, {}, true)
 }
