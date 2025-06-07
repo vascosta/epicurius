@@ -25,7 +25,8 @@ class GetUserRecipesControllerTests : RecipeControllerTest() {
             mealType = testRecipe.mealType,
             preparationTime = testRecipe.preparationTime,
             servings = testRecipe.servings,
-            picture = testRecipe.pictures.first()
+            picture = testRecipe.pictures.first(),
+            isInCollection = false
         )
         whenever(
             runBlocking {

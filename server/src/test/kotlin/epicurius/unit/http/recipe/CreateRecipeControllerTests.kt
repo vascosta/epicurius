@@ -74,7 +74,8 @@ class CreateRecipeControllerTests : RecipeControllerTest() {
             createRecipeInfo.fat,
             createRecipeInfo.carbs,
             createRecipeInfo.instructions,
-            recipePictures.map { it.bytes }
+            recipePictures.map { it.bytes },
+            false
         )
         whenever(
             runBlocking {

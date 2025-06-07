@@ -43,7 +43,8 @@ class SearchRecipesControllerTests : RecipeControllerTest() {
         testRecipe.mealType,
         testRecipe.preparationTime,
         testRecipe.servings,
-        testRecipe.pictures.first()
+        testRecipe.pictures.first(),
+        false
     )
 
     private val limit = 10
