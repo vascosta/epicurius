@@ -68,11 +68,11 @@ open class MenuServiceTest : ServiceTest() {
             name = generateRandomRecipeName(),
         )
 
-        private val breakfastRecipes = listOf(publicBreakfastJdbiRecipeModel.toRecipeInfo(byteArrayOf()))
-        private val soupRecipes = listOf(publicSoupJdbiRecipeModel.toRecipeInfo(byteArrayOf()))
-        private val dessertRecipes = listOf(publicDessertJdbiRecipeModel.toRecipeInfo(byteArrayOf()))
-        private val lunchRecipes = listOf(publicLunchJdbiRecipeModel.toRecipeInfo(byteArrayOf()))
-        private val dinnerRecipes = listOf(publicDinnerJdbiRecipeModel2.toRecipeInfo(byteArrayOf()))
+        private val breakfastRecipes = listOf(publicBreakfastJdbiRecipeModel.toRecipeInfo(byteArrayOf(), false))
+        private val soupRecipes = listOf(publicSoupJdbiRecipeModel.toRecipeInfo(byteArrayOf(), false))
+        private val dessertRecipes = listOf(publicDessertJdbiRecipeModel.toRecipeInfo(byteArrayOf(), false))
+        private val lunchRecipes = listOf(publicLunchJdbiRecipeModel.toRecipeInfo(byteArrayOf(), false))
+        private val dinnerRecipes = listOf(publicDinnerJdbiRecipeModel2.toRecipeInfo(byteArrayOf(), false))
         val testDailyMenu = mapOf(
             "breakfast" to breakfastRecipes,
             "soup" to soupRecipes,

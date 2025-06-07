@@ -2,6 +2,8 @@ package epicurius.unit.services.menu
 
 import epicurius.domain.picture.PictureDomain.Companion.RECIPES_FOLDER
 import epicurius.domain.recipe.MealType
+import epicurius.unit.services.mealPlanner.MealPlannerServiceTest.Companion.USER_ID
+import epicurius.unit.services.mealPlanner.MealPlannerServiceTest.Companion.jdbiRecipeInfo
 import org.mockito.kotlin.whenever
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -9,6 +11,8 @@ import kotlin.test.assertNotNull
 import kotlin.test.assertNull
 
 class GetDailyMenuServiceTests : MenuServiceTest() {
+
+    private val userId = 1
 
     @Test
     fun `Should retrieve the daily menu for a given user successfully`() {
@@ -22,11 +26,17 @@ class GetDailyMenuServiceTests : MenuServiceTest() {
             pictureRepositoryMock.getPicture(publicBreakfastJdbiRecipeModel.picturesNames.first(), RECIPES_FOLDER)
         ).thenReturn(byteArrayOf())
         whenever(
+            jdbiCollectionRepositoryMock.checkIfRecipeInAnyUserCollection(USER_ID, publicBreakfastJdbiRecipeModel.id)
+        ).thenReturn(false)
+        whenever(
             jdbiRecipeRepositoryMock.getRandomRecipesFromPublicUsers(MealType.SOUP, userIntolerances, userDiets, 1)
         ).thenReturn(listOf(publicSoupJdbiRecipeModel))
         whenever(
             pictureRepositoryMock.getPicture(publicSoupJdbiRecipeModel.picturesNames.first(), RECIPES_FOLDER)
         ).thenReturn(byteArrayOf())
+        whenever(
+            jdbiCollectionRepositoryMock.checkIfRecipeInAnyUserCollection(USER_ID, publicSoupJdbiRecipeModel.id)
+        ).thenReturn(false)
         whenever(
             jdbiRecipeRepositoryMock.getRandomRecipesFromPublicUsers(MealType.DESSERT, userIntolerances, userDiets, 1)
         ).thenReturn(listOf(publicDessertJdbiRecipeModel))
@@ -34,17 +44,26 @@ class GetDailyMenuServiceTests : MenuServiceTest() {
             pictureRepositoryMock.getPicture(publicDessertJdbiRecipeModel.picturesNames.first(), RECIPES_FOLDER)
         ).thenReturn(byteArrayOf())
         whenever(
+            jdbiCollectionRepositoryMock.checkIfRecipeInAnyUserCollection(USER_ID, publicDessertJdbiRecipeModel.id)
+        ).thenReturn(false)
+        whenever(
             jdbiRecipeRepositoryMock.getRandomRecipesFromPublicUsers(MealType.MAIN_COURSE, userIntolerances, userDiets, 2)
         ).thenReturn(listOf(publicLunchJdbiRecipeModel, publicDinnerJdbiRecipeModel2))
         whenever(
             pictureRepositoryMock.getPicture(publicLunchJdbiRecipeModel.picturesNames.first(), RECIPES_FOLDER)
         ).thenReturn(byteArrayOf())
         whenever(
+            jdbiCollectionRepositoryMock.checkIfRecipeInAnyUserCollection(USER_ID, publicLunchJdbiRecipeModel.id)
+        ).thenReturn(false)
+        whenever(
             pictureRepositoryMock.getPicture(publicDinnerJdbiRecipeModel2.picturesNames.first(), RECIPES_FOLDER)
         ).thenReturn(byteArrayOf())
+        whenever(
+            jdbiCollectionRepositoryMock.checkIfRecipeInAnyUserCollection(USER_ID, publicDinnerJdbiRecipeModel2.id)
+        ).thenReturn(false)
 
         // when retrieving the daily menu
-        val dailyMenu = getDailyMenu(userIntolerances, userDiets)
+        val dailyMenu = getDailyMenu(userId, userIntolerances, userDiets)
         val breakfast = dailyMenu["breakfast"]
         val soup = dailyMenu["soup"]
         val dessert = dailyMenu["dessert"]
@@ -83,7 +102,7 @@ class GetDailyMenuServiceTests : MenuServiceTest() {
         ).thenReturn(emptyList())
 
         // when retrieving the daily menu
-        val dailyMenu = getDailyMenu(userIntolerances, userDiets)
+        val dailyMenu = getDailyMenu(userId, userIntolerances, userDiets)
         val breakfast = dailyMenu["breakfast"]
         val soup = dailyMenu["soup"]
         val dessert = dailyMenu["dessert"]
@@ -110,11 +129,17 @@ class GetDailyMenuServiceTests : MenuServiceTest() {
             pictureRepositoryMock.getPicture(publicBreakfastJdbiRecipeModel.picturesNames.first(), RECIPES_FOLDER)
         ).thenReturn(byteArrayOf())
         whenever(
+            jdbiCollectionRepositoryMock.checkIfRecipeInAnyUserCollection(USER_ID, publicBreakfastJdbiRecipeModel.id)
+        ).thenReturn(false)
+        whenever(
             jdbiRecipeRepositoryMock.getRandomRecipesFromPublicUsers(MealType.SOUP, userIntolerances, userDiets, 1)
         ).thenReturn(listOf(publicSoupJdbiRecipeModel))
         whenever(
             pictureRepositoryMock.getPicture(publicSoupJdbiRecipeModel.picturesNames.first(), RECIPES_FOLDER)
         ).thenReturn(byteArrayOf())
+        whenever(
+            jdbiCollectionRepositoryMock.checkIfRecipeInAnyUserCollection(USER_ID, publicSoupJdbiRecipeModel.id)
+        ).thenReturn(false)
         whenever(
             jdbiRecipeRepositoryMock.getRandomRecipesFromPublicUsers(MealType.DESSERT, userIntolerances, userDiets, 1)
         ).thenReturn(listOf(publicDessertJdbiRecipeModel))
@@ -122,14 +147,20 @@ class GetDailyMenuServiceTests : MenuServiceTest() {
             pictureRepositoryMock.getPicture(publicDessertJdbiRecipeModel.picturesNames.first(), RECIPES_FOLDER)
         ).thenReturn(byteArrayOf())
         whenever(
+            jdbiCollectionRepositoryMock.checkIfRecipeInAnyUserCollection(USER_ID, publicDessertJdbiRecipeModel.id)
+        ).thenReturn(false)
+        whenever(
             jdbiRecipeRepositoryMock.getRandomRecipesFromPublicUsers(MealType.MAIN_COURSE, userIntolerances, userDiets, 2)
         ).thenReturn(listOf(publicLunchJdbiRecipeModel))
         whenever(
             pictureRepositoryMock.getPicture(publicLunchJdbiRecipeModel.picturesNames.first(), RECIPES_FOLDER)
         ).thenReturn(byteArrayOf())
+        whenever(
+            jdbiCollectionRepositoryMock.checkIfRecipeInAnyUserCollection(USER_ID, publicLunchJdbiRecipeModel.id)
+        ).thenReturn(false)
 
         // when retrieving the daily menu
-        val dailyMenu = getDailyMenu(userIntolerances, userDiets)
+        val dailyMenu = getDailyMenu(userId, userIntolerances, userDiets)
         val breakfast = dailyMenu["breakfast"]
         val soup = dailyMenu["soup"]
         val dessert = dailyMenu["dessert"]
