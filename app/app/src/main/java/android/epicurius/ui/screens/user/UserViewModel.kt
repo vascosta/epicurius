@@ -42,7 +42,7 @@ open class UserViewModel(
     }
 
     fun validateName(name: String): Boolean {
-        if (!name.isBlank() && !name.matches(usernameRegex)) {
+        if (!name.matches(usernameRegex)) {
             showToast(VALID_USERNAME_MSG)
             return false
         }
@@ -56,7 +56,7 @@ open class UserViewModel(
     }
 
     fun validateEmail(email: String): Boolean {
-        if (!email.isBlank() && !email.matches(emailRegex)) {
+        if (!email.matches(emailRegex)) {
             showToast(VALID_EMAIL_MSG)
             return false
         }
@@ -68,7 +68,7 @@ open class UserViewModel(
     }
 
     fun validatePassword(password: String): Boolean {
-        if (!password.isBlank() && !password.matches(passwordRegex)) {
+        if (!password.matches(passwordRegex)) {
             showToast(VALID_PASSWORD_MSG)
             return false
         }
