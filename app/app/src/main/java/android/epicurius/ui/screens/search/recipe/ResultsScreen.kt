@@ -42,6 +42,7 @@ fun ResultsScreen(
                     RecipeInfoBox(
                         collectionId = null,
                         recipeInfo = recipe,
+                        collectionsState = TODO(),
                         onAddRecipeToCollection = TODO(),
                         onRemoveRecipeFromCollection = TODO(),
                         onRecipeRequest = { onRecipeRequest(recipe.id) },

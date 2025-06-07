@@ -1,8 +1,10 @@
 package android.epicurius.ui.screens.recipe.components
 
+import android.epicurius.domain.collection.CollectionProfile
 import android.epicurius.domain.recipe.Cuisine
 import android.epicurius.domain.recipe.MealType
 import android.epicurius.domain.recipe.RecipeInfo
+import android.epicurius.ui.screens.utils.LoadState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -22,9 +24,11 @@ import androidx.compose.ui.unit.dp
 fun RecipeInfoBox(
     collectionId: Int?,
     recipeInfo: RecipeInfo,
+    collectionsState: LoadState<List<CollectionProfile>>?,
     onAddRecipeToCollection: (Int, Int) -> Unit,
     onRemoveRecipeFromCollection: (Int, Int) -> Unit,
     onRecipeRequest: (Int) -> Unit,
+    onCollectionsRequest: (Int, Boolean) -> Unit = {_, _ ->},
     enableButtons: Boolean
 ) {
     Box(
@@ -42,9 +46,11 @@ fun RecipeInfoBox(
                 recipeId = recipeInfo.id,
                 name = recipeInfo.name,
                 author = recipeInfo.authorUsername,
-                isFavourite = recipeInfo.isInCollection,
+                isInCollection = recipeInfo.isInCollection,
+                collectionsState = collectionsState,
                 onAddRecipeToCollection = onAddRecipeToCollection,
                 onRemoveRecipeFromCollection = onRemoveRecipeFromCollection,
+                onCollectionsRequest = onCollectionsRequest,
                 enableButtons = enableButtons
             )
 
@@ -86,9 +92,11 @@ fun RecipeInfoPreview() {
             ),
             isInCollection = true
         ),
+        null,
         {_, _ ->},
         {_, _ ->},
         {},
+        {_, _ ->},
         true
     )
 }
