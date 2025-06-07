@@ -108,7 +108,7 @@ fun FavouritesScreen(
                     if (showCreateCollectionDialog) {
                         CreateCollectionDialog(
                             onDismiss = { showCreateCollectionDialog = false },
-                            onCreate = { onCollectionCreate(it) },
+                            onCreate = onCollectionCreate,
                             enableButtons
                         )
                     }
