@@ -25,5 +25,5 @@ data class UpdateRecipeModel(
     val protein: Int?,
     val fat: Int?,
     val carbs: Int?,
-    val instructions: Instructions
+    val instructions: Instructions,
 )

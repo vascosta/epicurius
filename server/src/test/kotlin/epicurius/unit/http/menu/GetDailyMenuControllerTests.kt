@@ -14,10 +14,12 @@ class GetDailyMenuControllerTests : MenuControllerTest() {
         // given a user (testAuthenticatedUser)
 
         // mock
-        whenever(menuServiceMock.getDailyMenu(
-            testAuthenticatedUser.user.id,
-            testAuthenticatedUser.user.intolerances,
-            testAuthenticatedUser.user.diets)
+        whenever(
+            menuServiceMock.getDailyMenu(
+                testAuthenticatedUser.user.id,
+                testAuthenticatedUser.user.intolerances,
+                testAuthenticatedUser.user.diets
+            )
         )
             .thenReturn(testDailyMenu)
 
@@ -42,10 +44,12 @@ class GetDailyMenuControllerTests : MenuControllerTest() {
             "lunch" to null,
             "dinner" to null
         )
-        whenever(menuServiceMock.getDailyMenu(
-            testAuthenticatedUser.user.id,
-            testAuthenticatedUser.user.intolerances,
-            testAuthenticatedUser.user.diets)
+        whenever(
+            menuServiceMock.getDailyMenu(
+                testAuthenticatedUser.user.id,
+                testAuthenticatedUser.user.intolerances,
+                testAuthenticatedUser.user.diets
+            )
         )
             .thenReturn(mockDailyMenu)
 
@@ -70,10 +74,12 @@ class GetDailyMenuControllerTests : MenuControllerTest() {
             "lunch" to publicBreakfastRecipeInfo,
             "dinner" to null
         )
-        whenever(menuServiceMock.getDailyMenu(
-            testAuthenticatedUser.user.id,
-            testAuthenticatedUser.user.intolerances,
-            testAuthenticatedUser.user.diets)
+        whenever(
+            menuServiceMock.getDailyMenu(
+                testAuthenticatedUser.user.id,
+                testAuthenticatedUser.user.intolerances,
+                testAuthenticatedUser.user.diets
+            )
         )
             .thenReturn(mockDailyMenu)
 

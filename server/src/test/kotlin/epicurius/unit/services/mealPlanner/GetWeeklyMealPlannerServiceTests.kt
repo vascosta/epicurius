@@ -2,7 +2,6 @@ package epicurius.unit.services.mealPlanner
 
 import epicurius.domain.picture.PictureDomain.Companion.RECIPES_FOLDER
 import epicurius.repository.jdbi.mealPlanner.models.JdbiMealPlanner
-import epicurius.unit.services.feed.FeedServiceTest
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.mockito.kotlin.whenever
 import kotlin.test.Test

@@ -2,7 +2,6 @@ package epicurius.unit.services.mealPlanner
 
 import epicurius.domain.exceptions.DailyMealPlannerNotFound
 import epicurius.domain.exceptions.MealTimeDoesNotExist
-import epicurius.domain.picture.PictureDomain.Companion.RECIPES_FOLDER
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
