@@ -152,7 +152,7 @@ class CollectionService(private val tm: TransactionManager, private val cs: Clou
     private fun getRecipesInfo(recipes: List<JdbiRecipeInfo>): List<RecipeInfo> {
         return recipes.map {
             val recipePicture = cs.pictureRepository.getPicture(it.picturesNames.first(), RECIPES_FOLDER)
-            it.toRecipeInfo(recipePicture)
+            it.toRecipeInfo(recipePicture, true)
         }
     }
 
