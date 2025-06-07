@@ -24,6 +24,7 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -76,13 +77,25 @@ fun FavouritesScreen(
                                 }
                             }
                         }
-                        favourites.forEach {
-                            CollectionProfileBox(
-                                collection = it,
-                                onCollectionRequest = onCollectionRequest,
-                                onCollectionDelete = onDeleteCollection
+                        if (favourites.isEmpty()) {
+                            Text(
+                                text = "You have no collections yet.",
+                                modifier = Modifier.padding(16.dp),
+                                color = Color.Gray
                             )
-                            Spacer(modifier = Modifier.height(10.dp))
+                            Text(
+                                text = "Create your first collection by clicking the '+' button above.",
+                                color = Color(0xFF4E0D8D)
+                            )
+                        } else {
+                            favourites.forEach {
+                                CollectionProfileBox(
+                                    collection = it,
+                                    onCollectionRequest = onCollectionRequest,
+                                    onCollectionDelete = onDeleteCollection
+                                )
+                                Spacer(modifier = Modifier.height(10.dp))
+                            }
                         }
                     }
 
@@ -111,5 +124,7 @@ fun FavouritesScreenPreview() {
         CollectionProfile(3, "Healthy Meals")
     )
 
-    FavouritesScreen({}, {}, {}, {}, {}, apiSuccess(collections))
+    val emptyCollections = emptyList<CollectionProfile>()
+
+    FavouritesScreen({}, {}, {}, {}, {}, apiSuccess(emptyCollections))
 }

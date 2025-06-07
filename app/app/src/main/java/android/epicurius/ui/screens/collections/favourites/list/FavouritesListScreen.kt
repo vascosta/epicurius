@@ -81,16 +81,24 @@ fun FavouritesListScreen(
                                 onClick = { showDeleteCollectionDialog = true }
                             ) { Text("Delete Collection", color = Color.Red) }
                         }
-                        
-                        recipes.forEach {
-                            Row {
-                                RecipeInfoBox(
-                                    recipeInfo = it,
-                                    onRecipeRequest,
-                                    isFavourite = true,
-                                    onFavouriteStarClick = onRecipeDelete
-                                )
-                                Spacer(modifier = Modifier.height(10.dp))
+
+                        if (recipes.isEmpty()) {
+                            Text(
+                                text = "You have no recipes in this collection.",
+                                modifier = Modifier.padding(16.dp),
+                                color = Color.Gray
+                            )
+                        } else {
+                            recipes.forEach {
+                                Row {
+                                    RecipeInfoBox(
+                                        recipeInfo = it,
+                                        onRecipeRequest,
+                                        isFavourite = true,
+                                        onFavouriteStarClick = onRecipeDelete
+                                    )
+                                    Spacer(modifier = Modifier.height(10.dp))
+                                }
                             }
                         }
                     }
