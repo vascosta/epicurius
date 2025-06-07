@@ -1,9 +1,11 @@
 package android.epicurius.ui.screens.dailyMenu.components
 
+import android.epicurius.domain.collection.CollectionProfile
 import android.epicurius.domain.recipe.Cuisine
 import android.epicurius.domain.recipe.MealType
 import android.epicurius.domain.recipe.RecipeInfo
 import android.epicurius.ui.screens.recipe.components.RecipeInfoBox
+import android.epicurius.ui.screens.utils.LoadState
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
@@ -22,9 +24,11 @@ import androidx.compose.ui.unit.sp
 fun MenuItemBox(
     title: String,
     recipe: RecipeInfo?,
+    collectionsState: LoadState<List<CollectionProfile>>?,
     onAddRecipeToCollection: (Int, Int) -> Unit,
     onRemoveRecipeFromCollection: (Int, Int) -> Unit,
     onRecipeRequest: (Int) -> Unit,
+    onCollectionsRequest: (Int, Boolean) -> Unit = {_, _ ->},
     enableButtons: Boolean
 ) {
     Box(modifier = Modifier.padding(10.dp)) {
@@ -41,9 +45,11 @@ fun MenuItemBox(
                 RecipeInfoBox(
                     collectionId = null,
                     recipeInfo = recipe,
+                    collectionsState = collectionsState,
                     onAddRecipeToCollection = onAddRecipeToCollection,
                     onRemoveRecipeFromCollection = onRemoveRecipeFromCollection,
                     onRecipeRequest = onRecipeRequest,
+                    onCollectionsRequest = onCollectionsRequest,
                     enableButtons = enableButtons
                 )
             } else {
@@ -72,11 +78,13 @@ fun MenuItemBoxPreview() {
             preparationTime = 20,
             servings = 2,
             picture = "".toByteArray(),
-            isInCollection = false
+            isInCollection = true
         ),
+        null,
         {_, _ ->},
         {_, _ ->},
         {},
+        {_, _ ->},
         true
     )
 }

@@ -1,6 +1,7 @@
 package android.epicurius.ui.screens.dailyMenu
 
 import android.content.Context
+import android.epicurius.domain.collection.Collection
 import android.epicurius.domain.collection.CollectionProfile
 import android.epicurius.domain.recipe.RecipeInfo
 import android.epicurius.services.EpicuriusService
@@ -60,11 +61,11 @@ class DailyMenuViewModel(
         }
     }
 
-    fun getCollections() {
+    fun getCollections(recipeId: Int, recipeInCollection: Boolean) {
         disableButtons()
         collectionsFlow.value = loading()
         viewModelScope.launch {
-            fetchCollections()
+            fetchCollections(recipeId, recipeInCollection)
         }
     }
 
@@ -98,7 +99,7 @@ class DailyMenuViewModel(
         }
     }
 
-    private suspend fun fetchCollections() {
+    private suspend fun fetchCollections(recipeId: Int, recipeInCollection: Boolean) {
         val result = request {
             val token = session.getToken()
             val lastCollectionId = cachedCollectionsFlow.value.lastOrNull()?.id
@@ -111,12 +112,41 @@ class DailyMenuViewModel(
         }
         when {
             result.isSuccess -> {
-                val fetchedCollections = result.getValueOrThrow().collections
-                cachedCollectionsFlow.value = fetchedCollections
-                collectionsFlow.value = apiSuccess(fetchedCollections)
+                val fetchedCollections =
+                    result.getValueOrThrow().collections.mapNotNull { collection ->
+                        fetchCollection(collection.id)
+                    }
+
+                val updatedCollections = if (recipeInCollection) { // collections to remove the recipe
+                    fetchedCollections.filter { collection ->
+                        val recipesIds = collection.recipes.map { it.id }
+                        recipesIds.contains(recipeId)
+                    }.map { it.toCollectionProfile() }
+                }
+                else { // collections to add the recipe
+                    fetchedCollections.filter { collection ->
+                        val recipesIds = collection.recipes.map { it.id }
+                        !recipesIds.contains(recipeId)
+                    }.map { it.toCollectionProfile() }
+                }
+                cachedCollectionsFlow.value = updatedCollections
+                collectionsFlow.value = apiSuccess(updatedCollections)
             }
         }
         enableButtons()
+    }
+
+    private suspend fun fetchCollection(id: Int): Collection? {
+        val result = request {
+            val token = session.getToken()
+            service.collectionService.getCollection(token, id)
+        }
+        when {
+            result.isSuccess -> {
+                return result.getValueOrThrow().collection
+            }
+        }
+        return null
     }
 
     private suspend fun handleAddRecipeToFavouriteCollection(
