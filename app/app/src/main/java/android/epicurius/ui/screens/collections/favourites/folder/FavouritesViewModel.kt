@@ -35,10 +35,10 @@ class FavouritesViewModel(
 
     var limit by mutableIntStateOf(10)
 
-    fun getFavourites() {
+    fun getFavourites(navigateTo: () -> Unit) {
         favouritesFlow.value = loading()
         viewModelScope.launch {
-            fetchFavourites()
+            fetchFavourites(navigateTo)
         }
     }
 
@@ -61,7 +61,7 @@ class FavouritesViewModel(
         }
     }
 
-    private suspend fun fetchFavourites() {
+    private suspend fun fetchFavourites(navigateTo: () -> Unit) {
         val result = request {
             val token = session.getToken()
             val lastCollectionId = cachedFavourites.value.lastOrNull()?.id
@@ -74,7 +74,7 @@ class FavouritesViewModel(
         }
         when {
             result.isFailure -> {
-                favouritesFlow.value = apiFailure(result.getProblemOrThrow())
+                navigateTo()
             }
             result.isSuccess -> {
                 val fetchedFavourites = result.getValueOrThrow().collections
