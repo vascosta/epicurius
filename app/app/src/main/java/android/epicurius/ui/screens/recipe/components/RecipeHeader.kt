@@ -1,6 +1,7 @@
 package android.epicurius.ui.screens.recipe.components
 
 import android.epicurius.R
+import android.epicurius.ui.screens.utils.LoadingSpinner
 import android.epicurius.ui.screens.utils.MixedText
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
@@ -23,10 +24,14 @@ import androidx.compose.ui.unit.sp
 
 @Composable
 fun RecipeHeader(
+    collectionId: Int?,
+    recipeId: Int,
     name: String,
     author: String,
     isFavourite: Boolean = false,
-    onFavouritesClick: () -> Unit = {  }
+    onAddRecipeToCollection: (Int, Int) -> Unit,
+    onRemoveRecipeFromCollection: (Int, Int) -> Unit,
+    enableButtons: Boolean
 ) {
     Column(
         modifier = Modifier
@@ -53,21 +58,34 @@ fun RecipeHeader(
             MixedText(boldString = "by ", normalString = author)
 
             IconButton(
-                onClick = { onFavouritesClick() },
+                onClick = {
+                    if (collectionId != null && isFavourite) {
+                        onRemoveRecipeFromCollection(collectionId, recipeId)
+                    }
+                    else if (!isFavourite) {
+                        // change for popUp and retrieve collectionId from it
+                        onAddRecipeToCollection(1, recipeId)
+                    }
+                },
                 modifier = Modifier.size(24.dp),
+                enabled = enableButtons
             ) {
-                val painter = if (isFavourite) {
-                    painterResource(R.drawable.star)
-                } else {
-                    painterResource(R.drawable.white_star)
+                if (enableButtons) {
+                    val painter = if (isFavourite) {
+                        painterResource(R.drawable.star)
+                    } else {
+                        painterResource(R.drawable.white_star)
+                    }
+                    Image(
+                        painter = painter,
+                        contentDescription = "Favorites",
+                        modifier = Modifier.size(20.dp),
+                        contentScale = ContentScale.Fit
+                    )
                 }
-
-                Image(
-                    painter = painter,
-                    contentDescription = "Favorites",
-                    modifier = Modifier.size(20.dp),
-                    contentScale = ContentScale.Fit
-                )
+                else {
+                    LoadingSpinner(Modifier.size(30.dp))
+                }
             }
         }
     }
