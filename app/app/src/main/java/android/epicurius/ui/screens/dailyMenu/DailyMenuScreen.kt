@@ -25,10 +25,13 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun DailyMenuScreen(
+    menuState: LoadState<Map<String, RecipeInfo?>>,
     onBackButton: () -> Unit,
+    onAddRecipeToCollection: (Int, Int) -> Unit,
+    onRemoveRecipeFromCollection: (Int, Int) -> Unit,
     onRecipeRequest: (Int) -> Unit,
     onDailyMenuRefresh: () -> Unit,
-    menuState: LoadState<Map<String, RecipeInfo?>>,
+    enableButtons: Boolean
 ) {
     Scaffold(
         topBar = { TopBar("Today's Menu", backButton = true, onBackButton) },
@@ -47,11 +50,46 @@ fun DailyMenuScreen(
                             .verticalScroll(rememberScrollState()),
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
-                        MenuItemBox("Breakfast", menu["Breakfast"], onRecipeRequest)
-                        MenuItemBox("Soup", menu["Soup"], onRecipeRequest)
-                        MenuItemBox("Lunch", menu["Lunch"], onRecipeRequest)
-                        MenuItemBox("Dinner", menu["Dinner"], onRecipeRequest)
-                        MenuItemBox("Dessert", menu["Dessert"], onRecipeRequest)
+                        MenuItemBox(
+                            title = "Breakfast",
+                            recipe = menu["Breakfast"],
+                            onAddRecipeToCollection = onAddRecipeToCollection,
+                            onRemoveRecipeFromCollection = onRemoveRecipeFromCollection,
+                            onRecipeRequest = onRecipeRequest,
+                            enableButtons = enableButtons
+                        )
+                        MenuItemBox(
+                            title = "Soup",
+                            recipe = menu["Soup"],
+                            onAddRecipeToCollection = onAddRecipeToCollection,
+                            onRemoveRecipeFromCollection = onRemoveRecipeFromCollection,
+                            onRecipeRequest = onRecipeRequest,
+                            enableButtons = enableButtons
+                        )
+                        MenuItemBox(
+                            title = "Lunch",
+                            recipe = menu["Lunch"],
+                            onAddRecipeToCollection = onAddRecipeToCollection,
+                            onRemoveRecipeFromCollection = onRemoveRecipeFromCollection,
+                            onRecipeRequest = onRecipeRequest,
+                            enableButtons = enableButtons
+                        )
+                        MenuItemBox(
+                            title = "Dinner",
+                            recipe = menu["Dinner"],
+                            onAddRecipeToCollection = onAddRecipeToCollection,
+                            onRemoveRecipeFromCollection = onRemoveRecipeFromCollection,
+                            onRecipeRequest = onRecipeRequest,
+                            enableButtons = enableButtons
+                        )
+                        MenuItemBox(
+                            title = "Dessert",
+                            recipe = menu["Dessert"],
+                            onAddRecipeToCollection = onAddRecipeToCollection,
+                            onRemoveRecipeFromCollection = onRemoveRecipeFromCollection,
+                            onRecipeRequest = onRecipeRequest,
+                            enableButtons = enableButtons
+                        )
                     }
                 }
             )
@@ -73,7 +111,8 @@ fun DailyMenuPreview() {
             mealType = MealType.BREAKFAST,
             preparationTime = 20,
             servings = 2,
-            picture = "".toByteArray()
+            picture = "".toByteArray(),
+            isInCollection = false
         ),
         "Lunch" to RecipeInfo(
             id = 2,
@@ -84,8 +123,9 @@ fun DailyMenuPreview() {
             mealType = MealType.MAIN_COURSE,
             preparationTime = 15,
             servings = 1,
-            picture = "".toByteArray()
+            picture = "".toByteArray(),
+            isInCollection = true
         )
     )
-    DailyMenuScreen({}, {}, {}, apiSuccess(menu))
+    DailyMenuScreen(apiSuccess(menu), {}, {_, _ ->}, {_, _ ->}, {}, {}, true)
 }

@@ -3,7 +3,7 @@ package android.epicurius.ui.screens.dailyMenu.components
 import android.epicurius.domain.recipe.Cuisine
 import android.epicurius.domain.recipe.MealType
 import android.epicurius.domain.recipe.RecipeInfo
-import android.epicurius.ui.screens.recipe.components.RecipeInfoSimpleBox
+import android.epicurius.ui.screens.recipe.components.RecipeInfoBox
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
@@ -22,7 +22,10 @@ import androidx.compose.ui.unit.sp
 fun MenuItemBox(
     title: String,
     recipe: RecipeInfo?,
-    onRecipeRequest: (Int) -> Unit
+    onAddRecipeToCollection: (Int, Int) -> Unit,
+    onRemoveRecipeFromCollection: (Int, Int) -> Unit,
+    onRecipeRequest: (Int) -> Unit,
+    enableButtons: Boolean
 ) {
     Box(modifier = Modifier.padding(10.dp)) {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
@@ -35,7 +38,14 @@ fun MenuItemBox(
                 color = Color.Black
             )
             if (recipe != null) {
-                RecipeInfoSimpleBox(recipe, onRecipeRequest)
+                RecipeInfoBox(
+                    collectionId = null,
+                    recipeInfo = recipe,
+                    onAddRecipeToCollection = onAddRecipeToCollection,
+                    onRemoveRecipeFromCollection = onRemoveRecipeFromCollection,
+                    onRecipeRequest = onRecipeRequest,
+                    enableButtons = enableButtons
+                )
             } else {
                 Text(
                     text = "$title recipe is not available today",
@@ -61,7 +71,12 @@ fun MenuItemBoxPreview() {
             mealType = MealType.BREAKFAST,
             preparationTime = 20,
             servings = 2,
-            picture = "".toByteArray()
-        )
-    ) {}
+            picture = "".toByteArray(),
+            isInCollection = false
+        ),
+        {_, _ ->},
+        {_, _ ->},
+        {},
+        true
+    )
 }
