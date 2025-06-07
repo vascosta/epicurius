@@ -21,6 +21,7 @@ class UpdateDailyCaloriesServiceTests : MealPlannerServiceTest() {
         whenever(
             jdbiMealPlannerRepositoryMock.updateDailyCalories(USER_ID, today, CALORIES)
         ).thenReturn(jdbiDailyMealPlannerToday)
+        whenever(jdbiCollectionRepositoryMock.checkIfRecipeInAnyUserCollection(USER_ID, jdbiRecipeInfo.id)).thenReturn(false)
         whenever(pictureRepositoryMock.getPicture(testPicture.name, RECIPES_FOLDER)).thenReturn(testPicture.bytes)
 
         // when the user updates the daily meal planner calories

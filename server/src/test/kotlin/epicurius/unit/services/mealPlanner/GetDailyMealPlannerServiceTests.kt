@@ -15,6 +15,7 @@ class GetDailyMealPlannerServiceTests : MealPlannerServiceTest() {
 
         // mock
         whenever(jdbiMealPlannerRepositoryMock.checkIfDailyMealPlannerExists(USER_ID, today)).thenReturn(jdbiDailyMealPlannerToday)
+        whenever(jdbiCollectionRepositoryMock.checkIfRecipeInAnyUserCollection(USER_ID, jdbiRecipeInfo.id)).thenReturn(false)
         whenever(pictureRepositoryMock.getPicture(testPicture.name, RECIPES_FOLDER)).thenReturn(testPicture.bytes)
 
         // when the user gets the daily meal planner

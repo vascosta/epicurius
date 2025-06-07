@@ -2,6 +2,7 @@ package epicurius.unit.services.mealPlanner
 
 import epicurius.domain.picture.PictureDomain.Companion.RECIPES_FOLDER
 import epicurius.repository.jdbi.mealPlanner.models.JdbiMealPlanner
+import epicurius.unit.services.feed.FeedServiceTest
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.mockito.kotlin.whenever
 import kotlin.test.Test
@@ -15,6 +16,7 @@ class GetWeeklyMealPlannerServiceTests : MealPlannerServiceTest() {
 
         // mock
         whenever(jdbiMealPlannerRepositoryMock.getWeeklyMealPlanner(USER_ID)).thenReturn(jdbiMealPlanner)
+        whenever(jdbiCollectionRepositoryMock.checkIfRecipeInAnyUserCollection(USER_ID, jdbiRecipeInfo.id)).thenReturn(false)
         whenever(pictureRepositoryMock.getPicture(testPicture.name, RECIPES_FOLDER)).thenReturn(testPicture.bytes)
 
         // when the user gets the weekly meal planner

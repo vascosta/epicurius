@@ -32,6 +32,7 @@ class AddRecipeDailyMealPlannerServiceTests : MealPlannerServiceTest() {
         whenever(
             jdbiMealPlannerRepositoryMock.addRecipeToDailyMealPlanner(USER_ID, today, RECIPE_ID, mealTime)
         ).thenReturn(jdbiDailyMealPlannerToday)
+        whenever(jdbiCollectionRepositoryMock.checkIfRecipeInAnyUserCollection(USER_ID, jdbiRecipeInfo.id)).thenReturn(false)
         whenever(pictureRepositoryMock.getPicture(testPicture.name, RECIPES_FOLDER)).thenReturn(testPicture.bytes)
 
         // when the user adds a recipe to the daily meal planner

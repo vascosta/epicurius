@@ -21,6 +21,7 @@ class DeleteDailyMealPlannerServiceTests : MealPlannerServiceTest() {
             jdbiMealPlannerRepositoryMock.deleteDailyMealPlanner(USER_ID, today)
         ).thenReturn(jdbiMealPlanner)
         whenever(pictureRepositoryMock.getPicture(testPicture.name, RECIPES_FOLDER)).thenReturn(testPicture.bytes)
+        whenever(jdbiCollectionRepositoryMock.checkIfRecipeInAnyUserCollection(USER_ID, jdbiRecipeInfo.id)).thenReturn(false)
 
         // when the user deletes the daily meal planner
         val result = deleteDailyMealPlanner(USER_ID, today)
