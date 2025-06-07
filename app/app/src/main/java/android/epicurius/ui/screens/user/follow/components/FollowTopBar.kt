@@ -1,0 +1,62 @@
+package android.epicurius.ui.screens.user.follow.components
+
+import android.epicurius.ui.screens.utils.TabComponent
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.sharp.ArrowBack
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun FollowTopBar(
+    following: Int,
+    followers: Int,
+    selectedTabIndex: Int,
+    onTabSelected: (Int) -> Unit,
+    onBackButton: () -> Unit
+) {
+    val tabs = listOf("$followers Followers", "$following Following")
+
+    TopAppBar(
+        title = {
+            Row(
+                modifier = Modifier
+                    .height(56.dp)
+                    .fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                TabComponent(tabs, selectedTabIndex, onTabSelected)
+            }
+        },
+        navigationIcon = {
+            IconButton(onClick = { onBackButton()}) {
+                Icon(
+                    imageVector = Icons.AutoMirrored.Sharp.ArrowBack,
+                    contentDescription = "Go Back"
+                )
+            }
+        },
+        colors = TopAppBarDefaults.topAppBarColors(
+            containerColor = Color.White,
+            titleContentColor = Color.Black
+        )
+    )
+}
+
+@Preview
+@Composable
+fun FollowTopBarPreview() {
+    FollowTopBar(100, 200, 0, {}) {}
+}
