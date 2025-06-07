@@ -1,9 +1,11 @@
 package android.epicurius.ui.screens.collections.favourites.folder.components
 
+import android.epicurius.ui.screens.utils.LoadingSpinner
 import android.epicurius.ui.screens.utils.TextField
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Text
@@ -18,9 +20,11 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun EditCollectionDialog(
+    collectionName: String,
     onDismiss: () -> Unit,
     onEditCollection: (String) -> Unit,
-    collectionName: String
+    enableButtons: Boolean
+
 ) {
     var newCollectionName by remember { mutableStateOf(collectionName) }
 
@@ -41,11 +45,16 @@ fun EditCollectionDialog(
         },
         confirmButton = {
             TextButton(
-                onClick = { onDismiss() }
+                onClick = { onDismiss() },
+                enabled = enableButtons
             ) { Text("Cancel") }
             TextButton(
-                onClick = { onEditCollection(newCollectionName) }
-            ) { Text("Edit") }
+                onClick = { onEditCollection(newCollectionName) },
+                enabled = enableButtons
+            ) {
+                if (enableButtons) { Text("Edit") }
+                else { LoadingSpinner(Modifier.size(30.dp)) }
+            }
         }
     )
 }
