@@ -11,10 +11,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun LoadingSpinner() {
+fun LoadingSpinner(modifier: Modifier = Modifier.fillMaxSize()) {
     Box(
         contentAlignment = Alignment.Center,
-        modifier = Modifier.fillMaxSize()
+        modifier = modifier
     ) {
         CircularProgressIndicator(
             modifier = Modifier.size(50.dp),
