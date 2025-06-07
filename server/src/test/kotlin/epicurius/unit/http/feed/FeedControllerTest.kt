@@ -21,7 +21,8 @@ open class FeedControllerTest : HttpTest() {
             mealType = MealType.MAIN_COURSE,
             preparationTime = 30,
             servings = 4,
-            picture = ByteArray(0)
+            picture = ByteArray(0),
+            false
         )
 
         val recipeInfo2 = RecipeInfo(
@@ -33,7 +34,8 @@ open class FeedControllerTest : HttpTest() {
             mealType = MealType.APPETIZER,
             preparationTime = 20,
             servings = 2,
-            picture = ByteArray(0)
+            picture = ByteArray(0),
+            false
         )
     }
 }
