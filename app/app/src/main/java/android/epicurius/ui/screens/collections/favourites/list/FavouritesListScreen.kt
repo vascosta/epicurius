@@ -112,6 +112,7 @@ fun FavouritesListScreen(
                                     RecipeInfoBox(
                                         collectionId = collectionId,
                                         recipeInfo = it,
+                                        collectionsState = null,
                                         onAddRecipeToCollection = {_, _ ->},
                                         onRemoveRecipeFromCollection = onRecipeDelete,
                                         onRecipeRequest = onRecipeRequest,

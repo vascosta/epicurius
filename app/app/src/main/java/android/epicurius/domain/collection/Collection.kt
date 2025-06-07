@@ -9,4 +9,7 @@ data class Collection(
     val name: String,
     val type: CollectionType,
     val recipes: List<RecipeInfo>
-)
+) {
+    fun toCollectionProfile() = CollectionProfile(id, name)
+}
+
