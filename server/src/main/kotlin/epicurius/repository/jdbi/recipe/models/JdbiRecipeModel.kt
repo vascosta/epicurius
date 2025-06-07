@@ -7,7 +7,6 @@ import epicurius.domain.recipe.Ingredient
 import epicurius.domain.recipe.Instructions
 import epicurius.domain.recipe.MealType
 import epicurius.domain.recipe.Recipe
-import epicurius.domain.recipe.RecipeInfo
 import java.time.LocalDate
 
 data class JdbiRecipeModel(
@@ -28,9 +27,14 @@ data class JdbiRecipeModel(
     val protein: Int? = null,
     val fat: Int? = null,
     val carbs: Int? = null,
-    val picturesNames: List<String>,
+    val picturesNames: List<String>
 ) {
-    fun toRecipe(description: String, instructions: Instructions, pictures: List<ByteArray>): Recipe = Recipe(
+    fun toRecipe(
+        description: String,
+        instructions: Instructions,
+        pictures: List<ByteArray>,
+        isInCollection: Boolean
+    ): Recipe = Recipe(
         id = id,
         name = name,
         authorUsername = authorUsername,
@@ -50,8 +54,6 @@ data class JdbiRecipeModel(
         fat = fat,
         carbs = carbs,
         pictures = pictures,
+        isInCollection = isInCollection
     )
-
-    fun toRecipeInfo(picture: ByteArray): RecipeInfo =
-        RecipeInfo(id, name, authorUsername, rating, cuisine, mealType, preparationTime, servings, picture)
 }
