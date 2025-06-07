@@ -7,7 +7,6 @@ import android.epicurius.services.api.collection.models.input.CreateCollectionIn
 import android.epicurius.storage.Session
 import android.epicurius.ui.screens.collections.CollectionsViewModel
 import android.epicurius.ui.screens.utils.LoadState
-import android.epicurius.ui.screens.utils.apiFailure
 import android.epicurius.ui.screens.utils.apiSuccess
 import android.epicurius.ui.screens.utils.idle
 import android.epicurius.ui.screens.utils.loading
