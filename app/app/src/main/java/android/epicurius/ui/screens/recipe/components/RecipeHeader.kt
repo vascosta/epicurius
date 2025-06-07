@@ -28,7 +28,7 @@ fun RecipeHeader(
     recipeId: Int,
     name: String,
     author: String,
-    isFavourite: Boolean = false,
+    isFavourite: Boolean,
     onAddRecipeToCollection: (Int, Int) -> Unit,
     onRemoveRecipeFromCollection: (Int, Int) -> Unit,
     enableButtons: Boolean

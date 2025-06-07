@@ -22,7 +22,6 @@ import androidx.compose.ui.unit.dp
 fun RecipeInfoBox(
     collectionId: Int?,
     recipeInfo: RecipeInfo,
-    isFavourite: Boolean = false,
     onAddRecipeToCollection: (Int, Int) -> Unit,
     onRemoveRecipeFromCollection: (Int, Int) -> Unit,
     onRecipeRequest: (Int) -> Unit,
@@ -43,7 +42,7 @@ fun RecipeInfoBox(
                 recipeId = recipeInfo.id,
                 name = recipeInfo.name,
                 author = recipeInfo.authorUsername,
-                isFavourite,
+                isFavourite = recipeInfo.isInCollection,
                 onAddRecipeToCollection = onAddRecipeToCollection,
                 onRemoveRecipeFromCollection = onRemoveRecipeFromCollection,
                 enableButtons = enableButtons
@@ -58,27 +57,6 @@ fun RecipeInfoBox(
             )
         }
     }
-}
-
-@Composable
-fun RecipeInfoSimpleBox(
-    recipeInfo: RecipeInfo,
-    onRecipeRequest: (Int) -> Unit
-) {
-    /*Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .background(Color.White)
-            .clip(RoundedCornerShape(20.dp))
-            .border(0.5.dp, Color.Black, RoundedCornerShape(20.dp))
-            .padding(5.dp)
-            .clickable(onClick = { onRecipeRequest(recipeInfo.id) })
-    ) {
-        Column {
-            RecipeHeader(name = recipeInfo.name, author = recipeInfo.authorUsername)
-            RecipeImage(recipeInfo.picture)
-        }
-    }*/
 }
 
 @Preview
@@ -106,30 +84,11 @@ fun RecipeInfoPreview() {
                 0x00.toByte(), 0x00.toByte(), 0x00.toByte(), 0x00.toByte(), 0x49.toByte(), 0x45.toByte(), 0x4E.toByte(), 0x44.toByte(),
                 0xAE.toByte(), 0x42.toByte(), 0x60.toByte(), 0x82.toByte()
             ),
+            isInCollection = true
         ),
-        isFavourite = true,
         {_, _ ->},
         {_, _ ->},
         {},
         true
-    )
-}
-
-@Preview
-@Composable
-fun RecipeInfoSimpleBoxPreview() {
-    RecipeInfoSimpleBox(
-        recipeInfo = RecipeInfo(
-            id = 1,
-            name = "Simple Recipe Name",
-            authorUsername = "ChefBear",
-            rating = 4.3,
-            cuisine = Cuisine.ASIAN,
-            mealType = MealType.MAIN_COURSE,
-            preparationTime = 20,
-            servings = 2,
-            picture = "".toByteArray()
-        ),
-        {}
     )
 }
