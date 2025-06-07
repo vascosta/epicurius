@@ -78,12 +78,12 @@ class CollectionService(private val httpService: HttpService) {
 
     suspend fun removeRecipeFromCollection(
         token: String,
-        id: Int,
+        collectionId: Int,
         recipeId: Int
     ): APIResult<RemoveRecipeFromCollectionOutputModel> =
         httpService.delete<RemoveRecipeFromCollectionOutputModel>(
             Uris.Collection.COLLECTION_RECIPE,
-            pathParams = mapOf("id" to id, "recipeId" to recipeId),
+            pathParams = mapOf("id" to collectionId, "recipeId" to recipeId),
             token = token
         )
 
