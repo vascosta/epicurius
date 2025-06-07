@@ -158,7 +158,8 @@ fun FavouritesListScreenPreview() {
                 mealType = MealType.MAIN_COURSE,
                 preparationTime = 35,
                 servings = 4,
-                picture = "".toByteArray()
+                picture = "".toByteArray(),
+                isInCollection = true
             )
         )),
         favouritesListNameState = apiSuccess("My Favourite Recipes"),
