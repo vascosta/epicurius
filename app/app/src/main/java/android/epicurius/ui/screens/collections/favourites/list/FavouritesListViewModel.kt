@@ -6,7 +6,6 @@ import android.epicurius.services.EpicuriusService
 import android.epicurius.storage.Session
 import android.epicurius.ui.screens.collections.CollectionsViewModel
 import android.epicurius.ui.screens.utils.LoadState
-import android.epicurius.ui.screens.utils.apiFailure
 import android.epicurius.ui.screens.utils.apiSuccess
 import android.epicurius.ui.screens.utils.idle
 import android.epicurius.ui.screens.utils.loading
@@ -30,36 +29,28 @@ class FavouritesListViewModel(
     val recipes = recipesFlow.asStateFlow()
     val favouritesListName = favouritesListNameFlow.asStateFlow()
 
-    var deleteCollectionEnable by mutableStateOf(true)
-        private set
-
-    var updateCollectionEnable by mutableStateOf(true)
-        private set
-
-    var removeRecipeFromCollectionEnable by mutableStateOf(true)
-        private set
+    var enableButtons by mutableStateOf(true)
 
     fun getFavouriteCollection(id: Int, navigateTo: () -> Unit) {
+        recipesFlow.value = loading()
+        favouritesListNameFlow.value = loading()
         if (id == -1) {
             showToast("Missing COLLECTION_ID in intent")
             navigateTo()
             return
         }
         viewModelScope.launch {
-            fetchFavouriteCollection(id)
+            fetchFavouriteCollection(id, navigateTo)
         }
     }
 
-    fun deleteFavouriteCollection(id: Int, navigateTo: () -> Unit) {
+    fun updateFavouriteCollection(id: Int, name: String, navigateTo: () -> Unit) {
         disableButtons()
-        viewModelScope.launch {
-            handleDeleteFavouriteCollection(id, navigateTo)
+        if (id == -1) {
+            showToast("Missing COLLECTION_ID in intent")
+            navigateTo()
+            return
         }
-    }
-
-    fun updateFavouriteCollection(id: Int, name: String) {
-        disableButtons()
-        favouritesListNameFlow.value = loading()
         if (!validateCollectionName(name)) {
             enableButtons()
             return
@@ -70,46 +61,33 @@ class FavouritesListViewModel(
         }
     }
 
-    fun removeRecipeFromFavouriteCollection(id: Int, recipeId: Int) {
+    fun deleteFavouriteCollection(id: Int, navigateTo: () -> Unit) {
         disableButtons()
-        recipesFlow.value = loading()
         viewModelScope.launch {
-            handleRemoveRecipeFromFavouriteCollection(id, recipeId)
+            handleDeleteFavouriteCollection(id, navigateTo)
         }
     }
 
-    private suspend fun fetchFavouriteCollection(id: Int) {
+    fun removeRecipeFromFavouriteCollection(collectionId: Int, recipeId: Int) {
+        disableButtons()
+        viewModelScope.launch {
+            handleRemoveRecipeFromFavouriteCollection(collectionId, recipeId)
+        }
+    }
+
+    private suspend fun fetchFavouriteCollection(id: Int, navigateTo: () -> Unit) {
         val result = request {
             val token = session.getToken()
             service.collectionService.getCollection(token, id)
         }
         when {
             result.isFailure -> {
-                recipesFlow.value = apiFailure(result.getProblemOrThrow())
-                favouritesListNameFlow.value = apiFailure(result.getProblemOrThrow())
-            }
-            result.isSuccess -> {
-                recipesFlow.value = apiSuccess(result.getValueOrThrow().collection.recipes)
-                favouritesListNameFlow.value = apiSuccess(result.getValueOrThrow().collection.name)
-            }
-        }
-    }
-
-    private suspend fun handleDeleteFavouriteCollection(
-        id: Int,
-        navigateTo: () -> Unit
-    ) {
-        val result = request {
-            val token = session.getToken()
-            service.collectionService.deleteCollection(token, id)
-        }
-        when {
-            result.isFailure -> {
-                recipesFlow.value = apiFailure(result.getProblemOrThrow())
-                enableButtons()
-            }
-            result.isSuccess -> {
                 navigateTo()
+            }
+            result.isSuccess -> {
+                val fetchedResult = result.getValueOrThrow().collection
+                recipesFlow.value = apiSuccess(fetchedResult.recipes)
+                favouritesListNameFlow.value = apiSuccess(fetchedResult.name)
             }
         }
     }
@@ -123,9 +101,6 @@ class FavouritesListViewModel(
             service.collectionService.updateCollection(token, id, updateCollectionInfo)
         }
         when {
-            result.isFailure -> {
-                favouritesListNameFlow.value = apiFailure(result.getProblemOrThrow())
-            }
             result.isSuccess -> {
                 favouritesListNameFlow.value = apiSuccess(result.getValueOrThrow().collection.name)
             }
@@ -133,19 +108,33 @@ class FavouritesListViewModel(
         enableButtons()
     }
 
-    private suspend fun handleRemoveRecipeFromFavouriteCollection(
+    private suspend fun handleDeleteFavouriteCollection(
         id: Int,
+        navigateTo: () -> Unit
+    ) {
+        val result = request {
+            val token = session.getToken()
+            service.collectionService.deleteCollection(token, id)
+        }
+        when {
+            result.isFailure -> {
+                enableButtons()
+            }
+            result.isSuccess -> {
+                navigateTo()
+            }
+        }
+    }
+
+    private suspend fun handleRemoveRecipeFromFavouriteCollection(
+        collectionId: Int,
         recipeId: Int
     ) {
         val result = request {
             val token = session.getToken()
-            service.collectionService.removeRecipeFromCollection(token, id, recipeId)
+            service.collectionService.removeRecipeFromCollection(token, collectionId, recipeId)
         }
         when {
-            result.isFailure -> {
-                recipesFlow.value = apiFailure(result.getProblemOrThrow())
-                enableDeleteCollection()
-            }
             result.isSuccess -> {
                 recipesFlow.value = apiSuccess(result.getValueOrThrow().collection.recipes)
             }
@@ -153,39 +142,11 @@ class FavouritesListViewModel(
         enableButtons()
     }
 
-    private fun enableDeleteCollection() {
-        deleteCollectionEnable = true
-    }
-
-    private fun disableDeleteCollection() {
-        deleteCollectionEnable = false
-    }
-
-    private fun enableUpdateCollection() {
-        updateCollectionEnable = true
-    }
-
-    private fun disableUpdateCollection() {
-        updateCollectionEnable = false
-    }
-
-    private fun enableRemoveRecipeFromCollection() {
-        removeRecipeFromCollectionEnable = true
-    }
-
-    private fun disableRemoveRecipeFromCollection() {
-        removeRecipeFromCollectionEnable = false
-    }
-
     private fun enableButtons() {
-        enableDeleteCollection()
-        enableUpdateCollection()
-        enableRemoveRecipeFromCollection()
+        enableButtons = true
     }
 
     private fun disableButtons() {
-        disableDeleteCollection()
-        disableUpdateCollection()
-        disableRemoveRecipeFromCollection()
+        enableButtons = false
     }
 }
