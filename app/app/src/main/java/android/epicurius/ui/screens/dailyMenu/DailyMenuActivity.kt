@@ -27,10 +27,13 @@ class DailyMenuActivity : EpicuriusActivity() {
         setContent {
             val menuState = viewModel.dailyMenu.collectAsState(idle())
             DailyMenuScreen(
+                menuState = menuState.value,
                 onBackButton = { navigateTo<FeedActivity>() },
+                onAddRecipeToCollection = TODO(),
+                onRemoveRecipeFromCollection = TODO(),
                 onRecipeRequest = ::navigateToRecipeProfileActivity,
                 onDailyMenuRefresh = { viewModel.getDailyMenu() },
-                menuState = menuState.value
+                enableButtons = TODO()
             )
         }
     }
