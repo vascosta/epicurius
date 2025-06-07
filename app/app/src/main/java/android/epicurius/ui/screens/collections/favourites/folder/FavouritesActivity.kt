@@ -34,7 +34,7 @@ class FavouritesActivity : EpicuriusActivity() {
                 },
                 onCollectionRequest = ::navigateToFavouritesListActivity,
                 onCollectionDelete = { id -> viewModel.deleteFavouriteCollection(id) },
-                onFavouritesRefresh = { viewModel.refreshFavourites() },
+                onFavouritesRefresh = { viewModel.getFavourites() },
                 enableButtons = viewModel.enableButtons,
             )
         }
