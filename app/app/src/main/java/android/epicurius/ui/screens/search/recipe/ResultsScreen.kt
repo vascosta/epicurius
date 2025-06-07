@@ -42,7 +42,6 @@ fun ResultsScreen(
                     RecipeInfoBox(
                         collectionId = null,
                         recipeInfo = recipe,
-                        isFavourite = TODO(),
                         onAddRecipeToCollection = TODO(),
                         onRemoveRecipeFromCollection = TODO(),
                         onRecipeRequest = { onRecipeRequest(recipe.id) },
@@ -69,7 +68,8 @@ fun ResultsScreenPreview() {
             mealType = MealType.MAIN_COURSE,
             preparationTime = 30,
             servings = 4,
-            picture = ByteArray(0)
+            picture = ByteArray(0),
+            isInCollection = true
         )
     }
     ResultsScreen(dummyRecipes)

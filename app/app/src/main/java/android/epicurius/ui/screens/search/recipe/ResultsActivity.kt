@@ -23,7 +23,8 @@ class ResultsActivity : ComponentActivity() {
                 mealType = MealType.MAIN_COURSE,
                 preparationTime = 30,
                 servings = 4,
-                picture = ByteArray(0)
+                picture = ByteArray(0),
+                isInCollection = false
             )
         }
         setContent {
