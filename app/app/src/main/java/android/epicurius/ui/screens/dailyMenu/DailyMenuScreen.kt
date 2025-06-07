@@ -1,5 +1,6 @@
 package android.epicurius.ui.screens.dailyMenu
 
+import android.epicurius.domain.collection.CollectionProfile
 import android.epicurius.domain.recipe.Cuisine
 import android.epicurius.domain.recipe.MealType
 import android.epicurius.domain.recipe.RecipeInfo
@@ -26,15 +27,23 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun DailyMenuScreen(
     menuState: LoadState<Map<String, RecipeInfo?>>,
+    collectionsState: LoadState<List<CollectionProfile>>,
     onBackButton: () -> Unit,
     onAddRecipeToCollection: (Int, Int) -> Unit,
     onRemoveRecipeFromCollection: (Int, Int) -> Unit,
     onRecipeRequest: (Int) -> Unit,
+    onUserProfileRequest: () -> Unit,
+    onCollectionsRequest: () -> Unit,
     onDailyMenuRefresh: () -> Unit,
     enableButtons: Boolean
 ) {
     Scaffold(
-        topBar = { TopBar("Today's Menu", backButton = true, onBackButton) },
+        topBar = { TopBar(
+            text = "Today's Menu",
+            backButton = true,
+            onBackButton = onBackButton,
+            onIconClick = onUserProfileRequest
+        ) },
         bottomBar = { BottomBar() },
         content = { paddingValues ->
             LoadStateRenderer(
@@ -127,5 +136,7 @@ fun DailyMenuPreview() {
             isInCollection = true
         )
     )
-    DailyMenuScreen(apiSuccess(menu), {}, {_, _ ->}, {_, _ ->}, {}, {}, true)
+    DailyMenuScreen(
+        apiSuccess(menu), apiSuccess(emptyList()), {}, {_, _ ->}, {_, _ ->}, {}, {}, {}, {}, true
+    )
 }
