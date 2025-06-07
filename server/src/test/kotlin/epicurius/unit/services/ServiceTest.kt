@@ -138,7 +138,11 @@ open class ServiceTest : EpicuriusUnitTest() {
         suspend fun identifyIngredientsInPicture(picture: MultipartFile) = ingredientsService.identifyIngredientsInPicture(picture)
 
         // MENU
-        fun getDailyMenu(intolerances: List<Intolerance>, diets: List<Diet>) = menuService.getDailyMenu(intolerances, diets)
+        fun getDailyMenu(
+            userId: Int,
+            intolerances: List<Intolerance>,
+            diets: List<Diet>
+        ) = menuService.getDailyMenu(userId, intolerances, diets)
 
         // COLLECTION
         fun createCollection(ownerId: Int, createCollectionInfo: CreateCollectionInputModel) =

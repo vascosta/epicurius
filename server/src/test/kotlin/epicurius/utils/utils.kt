@@ -91,7 +91,8 @@ fun createTestRecipe(tm: TransactionManager, fs: FirestoreManager, user: User): 
         jdbiRecipeInfo.fat,
         jdbiRecipeInfo.carbs,
         firestoreRecipeInfo.instructions,
-        listOf(ByteArray(1))
+        listOf(ByteArray(1)),
+        false
     )
 }
 

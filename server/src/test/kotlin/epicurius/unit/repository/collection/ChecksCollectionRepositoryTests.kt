@@ -1,5 +1,6 @@
 package epicurius.unit.repository.collection
 
+import epicurius.utils.createTestRecipe
 import kotlin.test.Test
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
@@ -24,7 +25,20 @@ class ChecksCollectionRepositoryTests : CollectionRepositoryTest() {
         // when checking if the recipe is in the collection
         val isInCollection = checkIfRecipeInCollection(testCollectionId, testRecipe.id)
 
-        // then the recipe is in the collection
+        // then the recipe is not in the collection
         assertFalse(isInCollection)
+    }
+
+    @Test
+    fun `Should check if a recipe is in any user collection successfully`() {
+        // given a user id and a recipe id
+        val recipe = createTestRecipe(tm, fs, testOwner.user)
+        tm.run { it.collectionRepository.addRecipeToCollection(testCollectionId, recipe.id) }
+
+        // when checking if the recipe is in the collection
+        val isInCollection = checkIfRecipeInAnyUserCollection(testOwner.user.id, recipe.id)
+
+        // then the recipe is not in the collection
+        assertTrue(isInCollection)
     }
 }

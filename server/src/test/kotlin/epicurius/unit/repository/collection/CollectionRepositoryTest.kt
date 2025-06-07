@@ -10,7 +10,7 @@ open class CollectionRepositoryTest : RepositoryTest() {
 
     companion object {
         val testOwner = createTestUser(tm)
-        val testCollectionId = createTestCollection(tm, testOwner.user.id, CollectionType.FAVOURITE)
+        val testCollectionId = createTestCollection(tm, testOwner.user.id, CollectionType.KITCHEN_BOOK)
         val testRecipe = createTestRecipe(tm, fs, testOwner.user)
 
         fun createCollection(ownerId: Int, collectionName: String, collectionType: CollectionType) =
@@ -46,5 +46,8 @@ open class CollectionRepositoryTest : RepositoryTest() {
 
         fun checkIfRecipeInCollection(collectionId: Int, recipeId: Int) =
             tm.run { it.collectionRepository.checkIfRecipeInCollection(collectionId, recipeId) }
+
+        fun checkIfRecipeInAnyUserCollection(userId: Int, recipeId: Int) =
+            tm.run { it.collectionRepository.checkIfRecipeInAnyUserCollection(userId, recipeId) }
     }
 }
