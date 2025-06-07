@@ -10,5 +10,6 @@ data class RecipeInfo(
     val preparationTime: Int,
     val servings: Int,
     val calories: Int? = null,
-    val picture: ByteArray
+    val picture: ByteArray,
+    val isInCollection: Boolean
 )
