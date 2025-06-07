@@ -23,8 +23,14 @@ class FeedService(private val tm: TransactionManager, private val cs: CloudStora
             it.feedRepository.getFeed(GetFeedModel(userId, intolerances, diets, lastRecipeId, limit))
         }
 
-        return recipes.map {
-            it.toRecipeInfo(cs.pictureRepository.getPicture(it.picturesNames.first(), RECIPES_FOLDER))
+        return recipes.map { jdbiRecipeInfo ->
+            val isInCollection = tm.run {
+                it.collectionRepository.checkIfRecipeInAnyUserCollection(userId, jdbiRecipeInfo.id)
+            }
+            jdbiRecipeInfo.toRecipeInfo(
+                cs.pictureRepository.getPicture(jdbiRecipeInfo.picturesNames.first(), RECIPES_FOLDER),
+                isInCollection
+            )
         }
     }
 }
