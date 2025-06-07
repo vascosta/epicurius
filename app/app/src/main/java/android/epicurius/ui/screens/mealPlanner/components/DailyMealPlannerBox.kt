@@ -2,7 +2,7 @@ package android.epicurius.ui.screens.mealPlanner.components
 
 import android.epicurius.domain.mealPlanner.MealTime
 import android.epicurius.domain.recipe.RecipeInfo
-import android.epicurius.ui.screens.recipe.components.RecipeInfoSimpleBox
+import android.epicurius.ui.screens.recipe.components.RecipeInfoBox
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -36,7 +36,7 @@ fun DailyMealPlannerBox(mealTime: MealTime, recipe: RecipeInfo?) {
                 color = Color.Black
             )
             if (recipe != null) {
-                RecipeInfoSimpleBox(recipe, {})
+                RecipeInfoBox(null, recipe, TODO(), TODO(), TODO(), TODO())
                 IconButton(
                     onClick = {  },
                     modifier = Modifier

@@ -107,7 +107,8 @@ fun WeeklyScreenPreview() {
                         mealType = MealType.BREAKFAST,
                         preparationTime = 15,
                         servings = 2,
-                        picture = ByteArray(0)
+                        picture = ByteArray(0),
+                        isInCollection = true
                     ),
                     MealTime.LUNCH to RecipeInfo(
                         id = 2,
@@ -118,7 +119,8 @@ fun WeeklyScreenPreview() {
                         mealType = MealType.SALAD,
                         preparationTime = 10,
                         servings = 1,
-                        picture = ByteArray(0)
+                        picture = ByteArray(0),
+                        isInCollection = false
                     ),
                 )
             ),
@@ -135,7 +137,8 @@ fun WeeklyScreenPreview() {
                         mealType = MealType.MAIN_COURSE,
                         preparationTime = 30,
                         servings = 4,
-                        picture = ByteArray(0)
+                        picture = ByteArray(0),
+                        isInCollection = true
                     )
                 )
             ),
@@ -152,7 +155,8 @@ fun WeeklyScreenPreview() {
                         mealType = MealType.SNACK,
                         preparationTime = 5,
                         servings = 1,
-                        picture = ByteArray(0)
+                        picture = ByteArray(0),
+                        isInCollection = false
                     )
                 )
             )
