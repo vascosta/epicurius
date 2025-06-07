@@ -52,6 +52,7 @@ fun FeedScreen(
                             RecipeInfoBox(
                                 collectionId = null,
                                 recipeInfo = recipe,
+                                collectionsState = TODO(),
                                 onAddRecipeToCollection = onAddRecipeToCollection,
                                 onRemoveRecipeFromCollection = onRemoveRecipeFromCollection,
                                 onRecipeRequest = onRecipeRequest,
