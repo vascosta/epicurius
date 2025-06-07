@@ -46,7 +46,15 @@ fun FeedScreen(
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         userFeed.forEach { recipe ->
-                            RecipeInfoBox(recipe, onRecipeRequest)
+                            RecipeInfoBox(
+                                collectionId = null,
+                                recipeInfo = recipe,
+                                isFavourite = TODO(),
+                                onAddRecipeToCollection = TODO(),
+                                onRemoveRecipeFromCollection = TODO(),
+                                onRecipeRequest = TODO(),
+                                enableButtons = TODO()
+                            )
                             Spacer(modifier = Modifier.size(5.dp))
                         }
                     }
