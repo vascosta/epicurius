@@ -32,21 +32,15 @@ fun DeleteCollectionDialog(
                 onClick = { onDelete(collectionId) },
                 enabled = enableButtons
             ) {
-                if (enableButtons) {
-                    Text("Delete", color = Color.Red)
-                }
-                else {
-                    LoadingSpinner(Modifier.size(30.dp))
-                }
+                if (enableButtons) { Text("Delete", color = Color.Red) }
+                else { LoadingSpinner(Modifier.size(30.dp)) }
             }
         },
         dismissButton = {
             TextButton(
                 onClick = { onDismissRequest() },
                 enabled = enableButtons
-            ) {
-                Text("Cancel")
-            }
+            ) { Text("Cancel") }
         }
     )
 }

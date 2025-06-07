@@ -51,17 +51,11 @@ fun CreateCollectionDialog(
                 enabled = enableButtons
             ) { Text("Cancel") }
             TextButton(
-                onClick = {
-                    onCreate(collectionName)
-                          },
+                onClick = { onCreate(collectionName) },
                 enabled = enableButtons
             ) {
-                if (enableButtons) {
-                    Text("Create")
-                }
-                else {
-                    LoadingSpinner(Modifier.size(30.dp))
-                }
+                if (enableButtons) { Text("Create") }
+                else { LoadingSpinner(Modifier.size(30.dp)) }
             }
         }
     )
