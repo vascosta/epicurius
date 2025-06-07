@@ -2,7 +2,7 @@ package android.epicurius.ui.screens.utils
 
 import android.epicurius.services.http.media.Problem
 import android.epicurius.services.http.utils.APIResult
-import android.epicurius.storage.CachedResult
+import android.epicurius.services.http.utils.CachedResult
 
 /**
  * Sum type that represents the state of a load operation.
@@ -57,22 +57,11 @@ fun <T> cached(value: CachedResult<T>): Cached<T> = Cached(value)
 fun <T> apiSuccess(value: T, token: String? = null): Loaded<T> = loaded(APIResult.success(value, token))
 
 /**
- * Returns a new [LoadState] in the loaded state with a successful result
- * that was retrieved from a local cache.
- */
-fun <T> cacheSuccess(value: T, token: String? = null): Loaded<T> = loaded(CachedResult.success(value, token))
-
-/**
  * Returns a new [LoadState] in the loaded state with a failed result.
  */
 fun <T> apiFailure(problem: Problem): Loaded<T> = loaded(APIResult.failure(problem))
 
-/**
- * Returns a new [LoadState] in the loaded state with a failed result
- * that was retrieved from a local cache.
- */
-fun <T> cacheFailure(problem: Problem): Loaded<T> = loaded(CachedResult.failure(problem))
-
+fun <T> cache(value: T, token: String? = null): Cached<T> = cached(CachedResult.cached(value, token))
 
 /**
  * Returns the result of the load operation, if one is available
@@ -80,6 +69,7 @@ fun <T> cacheFailure(problem: Problem): Loaded<T> = loaded(CachedResult.failure(
  */
 fun <T> LoadState<T>.getOrThrow(): T = when (this) {
     is Loaded -> value.getValueOrThrow()
+    is Cached -> value.getValueOrThrow()
     else -> throw IllegalStateException("No value available")
 }
 

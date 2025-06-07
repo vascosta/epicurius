@@ -6,7 +6,7 @@ import androidx.compose.runtime.Composable
 fun <T> LoadStateRenderer(
     loadState: LoadState<T>,
     swipeToRefresh: (() -> Unit)? = null,
-    content: @Composable (T) -> Unit = {}
+    content: @Composable (T) -> Unit = {},
 ) {
     when (loadState) {
         is Idle -> {}
@@ -35,7 +35,10 @@ fun <T> LoadStateRenderer(
                 loadState.value.isFailure -> RenderFailure(swipeToRefresh)
             }
         }
-        is Cached -> RenderSuccess(loadState.getOrThrow(), swipeToRefresh, content)
+        is Cached -> when {
+            loadState.value.isSuccess -> RenderSuccess(loadState.getOrThrow(), swipeToRefresh, content)
+        }
+
     }
 }
 
