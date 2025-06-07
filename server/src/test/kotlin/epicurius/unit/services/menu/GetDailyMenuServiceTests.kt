@@ -19,7 +19,7 @@ class GetDailyMenuServiceTests : MenuServiceTest() {
 
         // mock
         whenever(
-            jdbiRecipeRepositoryMock.getRandomRecipesFromPublicUsers(MealType.BREAKFAST, userIntolerances, userDiets, 1)
+            jdbiRecipeRepositoryMock.getRandomRecipesFromPublicUsers(userId, MealType.BREAKFAST, userIntolerances, userDiets, 1)
         ).thenReturn(listOf(publicBreakfastJdbiRecipeModel))
         whenever(
             pictureRepositoryMock.getPicture(publicBreakfastJdbiRecipeModel.picturesNames.first(), RECIPES_FOLDER)
@@ -28,7 +28,7 @@ class GetDailyMenuServiceTests : MenuServiceTest() {
             jdbiCollectionRepositoryMock.checkIfRecipeInAnyUserCollection(USER_ID, publicBreakfastJdbiRecipeModel.id)
         ).thenReturn(false)
         whenever(
-            jdbiRecipeRepositoryMock.getRandomRecipesFromPublicUsers(MealType.SOUP, userIntolerances, userDiets, 1)
+            jdbiRecipeRepositoryMock.getRandomRecipesFromPublicUsers(userId, MealType.SOUP, userIntolerances, userDiets, 1)
         ).thenReturn(listOf(publicSoupJdbiRecipeModel))
         whenever(
             pictureRepositoryMock.getPicture(publicSoupJdbiRecipeModel.picturesNames.first(), RECIPES_FOLDER)
@@ -37,7 +37,7 @@ class GetDailyMenuServiceTests : MenuServiceTest() {
             jdbiCollectionRepositoryMock.checkIfRecipeInAnyUserCollection(USER_ID, publicSoupJdbiRecipeModel.id)
         ).thenReturn(false)
         whenever(
-            jdbiRecipeRepositoryMock.getRandomRecipesFromPublicUsers(MealType.DESSERT, userIntolerances, userDiets, 1)
+            jdbiRecipeRepositoryMock.getRandomRecipesFromPublicUsers(userId, MealType.DESSERT, userIntolerances, userDiets, 1)
         ).thenReturn(listOf(publicDessertJdbiRecipeModel))
         whenever(
             pictureRepositoryMock.getPicture(publicDessertJdbiRecipeModel.picturesNames.first(), RECIPES_FOLDER)
@@ -46,7 +46,7 @@ class GetDailyMenuServiceTests : MenuServiceTest() {
             jdbiCollectionRepositoryMock.checkIfRecipeInAnyUserCollection(USER_ID, publicDessertJdbiRecipeModel.id)
         ).thenReturn(false)
         whenever(
-            jdbiRecipeRepositoryMock.getRandomRecipesFromPublicUsers(MealType.MAIN_COURSE, userIntolerances, userDiets, 2)
+            jdbiRecipeRepositoryMock.getRandomRecipesFromPublicUsers(userId, MealType.MAIN_COURSE, userIntolerances, userDiets, 2)
         ).thenReturn(listOf(publicLunchJdbiRecipeModel, publicDinnerJdbiRecipeModel2))
         whenever(
             pictureRepositoryMock.getPicture(publicLunchJdbiRecipeModel.picturesNames.first(), RECIPES_FOLDER)
@@ -88,16 +88,16 @@ class GetDailyMenuServiceTests : MenuServiceTest() {
 
         // mock
         whenever(
-            jdbiRecipeRepositoryMock.getRandomRecipesFromPublicUsers(MealType.BREAKFAST, userIntolerances, userDiets, 1)
+            jdbiRecipeRepositoryMock.getRandomRecipesFromPublicUsers(userId, MealType.BREAKFAST, userIntolerances, userDiets, 1)
         ).thenReturn(emptyList())
         whenever(
-            jdbiRecipeRepositoryMock.getRandomRecipesFromPublicUsers(MealType.SOUP, userIntolerances, userDiets, 1)
+            jdbiRecipeRepositoryMock.getRandomRecipesFromPublicUsers(userId, MealType.SOUP, userIntolerances, userDiets, 1)
         ).thenReturn(emptyList())
         whenever(
-            jdbiRecipeRepositoryMock.getRandomRecipesFromPublicUsers(MealType.DESSERT, userIntolerances, userDiets, 1)
+            jdbiRecipeRepositoryMock.getRandomRecipesFromPublicUsers(userId, MealType.DESSERT, userIntolerances, userDiets, 1)
         ).thenReturn(emptyList())
         whenever(
-            jdbiRecipeRepositoryMock.getRandomRecipesFromPublicUsers(MealType.MAIN_COURSE, userIntolerances, userDiets, 2)
+            jdbiRecipeRepositoryMock.getRandomRecipesFromPublicUsers(userId, MealType.MAIN_COURSE, userIntolerances, userDiets, 2)
         ).thenReturn(emptyList())
 
         // when retrieving the daily menu
@@ -122,7 +122,7 @@ class GetDailyMenuServiceTests : MenuServiceTest() {
 
         // mock
         whenever(
-            jdbiRecipeRepositoryMock.getRandomRecipesFromPublicUsers(MealType.BREAKFAST, userIntolerances, userDiets, 1)
+            jdbiRecipeRepositoryMock.getRandomRecipesFromPublicUsers(userId, MealType.BREAKFAST, userIntolerances, userDiets, 1)
         ).thenReturn(listOf(publicBreakfastJdbiRecipeModel))
         whenever(
             pictureRepositoryMock.getPicture(publicBreakfastJdbiRecipeModel.picturesNames.first(), RECIPES_FOLDER)
@@ -131,7 +131,7 @@ class GetDailyMenuServiceTests : MenuServiceTest() {
             jdbiCollectionRepositoryMock.checkIfRecipeInAnyUserCollection(USER_ID, publicBreakfastJdbiRecipeModel.id)
         ).thenReturn(false)
         whenever(
-            jdbiRecipeRepositoryMock.getRandomRecipesFromPublicUsers(MealType.SOUP, userIntolerances, userDiets, 1)
+            jdbiRecipeRepositoryMock.getRandomRecipesFromPublicUsers(userId, MealType.SOUP, userIntolerances, userDiets, 1)
         ).thenReturn(listOf(publicSoupJdbiRecipeModel))
         whenever(
             pictureRepositoryMock.getPicture(publicSoupJdbiRecipeModel.picturesNames.first(), RECIPES_FOLDER)
@@ -140,7 +140,7 @@ class GetDailyMenuServiceTests : MenuServiceTest() {
             jdbiCollectionRepositoryMock.checkIfRecipeInAnyUserCollection(USER_ID, publicSoupJdbiRecipeModel.id)
         ).thenReturn(false)
         whenever(
-            jdbiRecipeRepositoryMock.getRandomRecipesFromPublicUsers(MealType.DESSERT, userIntolerances, userDiets, 1)
+            jdbiRecipeRepositoryMock.getRandomRecipesFromPublicUsers(userId, MealType.DESSERT, userIntolerances, userDiets, 1)
         ).thenReturn(listOf(publicDessertJdbiRecipeModel))
         whenever(
             pictureRepositoryMock.getPicture(publicDessertJdbiRecipeModel.picturesNames.first(), RECIPES_FOLDER)
@@ -149,7 +149,7 @@ class GetDailyMenuServiceTests : MenuServiceTest() {
             jdbiCollectionRepositoryMock.checkIfRecipeInAnyUserCollection(USER_ID, publicDessertJdbiRecipeModel.id)
         ).thenReturn(false)
         whenever(
-            jdbiRecipeRepositoryMock.getRandomRecipesFromPublicUsers(MealType.MAIN_COURSE, userIntolerances, userDiets, 2)
+            jdbiRecipeRepositoryMock.getRandomRecipesFromPublicUsers(userId, MealType.MAIN_COURSE, userIntolerances, userDiets, 2)
         ).thenReturn(listOf(publicLunchJdbiRecipeModel))
         whenever(
             pictureRepositoryMock.getPicture(publicLunchJdbiRecipeModel.picturesNames.first(), RECIPES_FOLDER)

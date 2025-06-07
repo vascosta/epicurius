@@ -31,7 +31,7 @@ class MenuService(private val tm: TransactionManager, private val cs: CloudStora
 
     private fun getRecipe(userId: Int, intolerances: List<Intolerance>, diets: List<Diet>, mealType: MealType): RecipeInfo? {
         val recipeFromPublicUsers = tm.run {
-            it.recipeRepository.getRandomRecipesFromPublicUsers(mealType, intolerances, diets, 1)
+            it.recipeRepository.getRandomRecipesFromPublicUsers(userId, mealType, intolerances, diets, 1)
         }
 
         return if (recipeFromPublicUsers.isNotEmpty()) {
@@ -48,7 +48,7 @@ class MenuService(private val tm: TransactionManager, private val cs: CloudStora
 
     private fun getMainCourseRecipes(userId: Int, intolerances: List<Intolerance>, diets: List<Diet>): List<RecipeInfo?> {
         val mainCourseFromPublicUsers = tm.run {
-            it.recipeRepository.getRandomRecipesFromPublicUsers(MealType.MAIN_COURSE, intolerances, diets, 2)
+            it.recipeRepository.getRandomRecipesFromPublicUsers(userId, MealType.MAIN_COURSE, intolerances, diets, 2)
         }
 
         return when (mainCourseFromPublicUsers.size) {
