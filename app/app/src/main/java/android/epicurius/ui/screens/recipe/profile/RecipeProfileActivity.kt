@@ -59,7 +59,8 @@ class RecipeProfileActivity : ComponentActivity() {
                             "5" to "Serve quente com xarope de ácer ou frutas."
                         )
                     ),
-                    pictures = listOf()
+                    pictures = listOf(),
+                    isInCollection = false
                 ),
                 rating = 4.0,
                 listOf(R.drawable.home, R.drawable.star, R.drawable.pencil), true

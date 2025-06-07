@@ -232,7 +232,8 @@ fun RecipeProfilePreview(){
                 "5" to "Serve quente com xarope de ácer ou frutas."
             )
         ),
-        pictures = listOf()
+        pictures = listOf(),
+        isInCollection = true
     )
     val rating = 4.0
     RecipeProfileScreen({}, recipe, rating, listOf(R.drawable.home, R.drawable.star, R.drawable.pencil), true)
