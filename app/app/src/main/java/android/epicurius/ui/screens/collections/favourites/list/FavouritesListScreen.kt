@@ -65,7 +65,14 @@ fun FavouritesListScreen(
     }
 
     Scaffold(
-        topBar = { TopBar(text = favouritesListName, backButton = true, onBackButton) },
+        topBar = {
+            TopBar(
+                text = favouritesListName,
+                backButton = true,
+                onBackButton = onBackButton,
+                icon = null
+            )
+                 },
         bottomBar = { BottomBar() },
         content = { paddingValues ->
             LoadStateRenderer(
@@ -105,7 +112,6 @@ fun FavouritesListScreen(
                                     RecipeInfoBox(
                                         collectionId = collectionId,
                                         recipeInfo = it,
-                                        isFavourite = true,
                                         onAddRecipeToCollection = {_, _ ->},
                                         onRemoveRecipeFromCollection = onRecipeDelete,
                                         onRecipeRequest = onRecipeRequest,
