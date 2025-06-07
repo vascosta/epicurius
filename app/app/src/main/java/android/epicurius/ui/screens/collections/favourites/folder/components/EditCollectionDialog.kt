@@ -21,8 +21,9 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun EditCollectionDialog(
     collectionName: String,
+    collectionId: Int,
     onDismiss: () -> Unit,
-    onEditCollection: (String) -> Unit,
+    onEditCollection: (Int, String) -> Unit,
     enableButtons: Boolean
 
 ) {
@@ -49,7 +50,7 @@ fun EditCollectionDialog(
                 enabled = enableButtons
             ) { Text("Cancel") }
             TextButton(
-                onClick = { onEditCollection(newCollectionName) },
+                onClick = { onEditCollection(collectionId, newCollectionName) },
                 enabled = enableButtons
             ) {
                 if (enableButtons) { Text("Edit") }
