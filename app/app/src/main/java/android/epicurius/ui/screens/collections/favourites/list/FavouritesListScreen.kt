@@ -43,7 +43,7 @@ fun FavouritesListScreen(
     onEditCollection: (String) -> Unit = {},
     onDeleteCollection: (Int) -> Unit = {},
     onRecipeRequest: (Int) -> Unit = {},
-    onRecipeDelete: (Int) -> Unit = {},
+    onRecipeDelete: () -> Unit = {},
     onFavouritesRefresh: () -> Unit = {},
     favouritesListNameState: LoadState<String>,
     recipesState: LoadState<List<RecipeInfo>>,
@@ -84,7 +84,12 @@ fun FavouritesListScreen(
                         
                         recipes.forEach {
                             Row {
-                                RecipeInfoBox(it, onRecipeRequest)
+                                RecipeInfoBox(
+                                    recipeInfo = it,
+                                    onRecipeRequest,
+                                    isFavourite = true,
+                                    onFavouriteStarClick = onRecipeDelete
+                                )
                                 Spacer(modifier = Modifier.height(10.dp))
                             }
                         }

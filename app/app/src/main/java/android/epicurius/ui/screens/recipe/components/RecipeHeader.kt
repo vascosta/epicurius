@@ -22,7 +22,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 @Composable
-fun RecipeHeader(name: String, author: String) {
+fun RecipeHeader(
+    name: String,
+    author: String,
+    isFavourite: Boolean = false,
+    onFavouritesClick: () -> Unit = {  }
+) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -48,11 +53,17 @@ fun RecipeHeader(name: String, author: String) {
             MixedText(boldString = "by ", normalString = author)
 
             IconButton(
-                onClick = { },
+                onClick = { onFavouritesClick() },
                 modifier = Modifier.size(24.dp),
             ) {
+                val painter = if (isFavourite) {
+                    painterResource(R.drawable.star)
+                } else {
+                    painterResource(R.drawable.white_star)
+                }
+
                 Image(
-                    painter = painterResource(R.drawable.white_star),
+                    painter = painter,
                     contentDescription = "Favorites",
                     modifier = Modifier.size(20.dp),
                     contentScale = ContentScale.Fit

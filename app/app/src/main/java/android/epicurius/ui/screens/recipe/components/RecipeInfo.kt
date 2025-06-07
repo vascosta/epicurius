@@ -21,7 +21,9 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun RecipeInfoBox(
     recipeInfo: RecipeInfo,
-    onRecipeRequest: (Int) -> Unit
+    onRecipeRequest: (Int) -> Unit,
+    isFavourite: Boolean = false,
+    onFavouriteStarClick: () -> Unit = {},
 ) {
     Box(
         modifier = Modifier
@@ -33,7 +35,12 @@ fun RecipeInfoBox(
             .clickable(onClick = { onRecipeRequest(recipeInfo.id) })
     ) {
         Column {
-            RecipeHeader(name = recipeInfo.name, author = recipeInfo.authorUsername)
+            RecipeHeader(
+                name = recipeInfo.name,
+                author = recipeInfo.authorUsername,
+                isFavourite,
+                onFavouritesClick = onFavouriteStarClick
+            )
 
             RecipeImage(recipeInfo.picture)
 
