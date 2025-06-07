@@ -13,11 +13,11 @@ import org.springframework.stereotype.Service
 @Service
 class MenuService(private val tm: TransactionManager, private val cs: CloudStorageManager) {
 
-    fun getDailyMenu(intolerances: List<Intolerance>, diets: List<Diet>): Menu {
-        val breakfast = getRecipe(intolerances, diets, MealType.BREAKFAST)
-        val soup = getRecipe(intolerances, diets, MealType.SOUP)
-        val dessert = getRecipe(intolerances, diets, MealType.DESSERT)
-        val mainCourses = getMainCourseRecipes(intolerances, diets)
+    fun getDailyMenu(userId: Int, intolerances: List<Intolerance>, diets: List<Diet>): Menu {
+        val breakfast = getRecipe(userId, intolerances, diets, MealType.BREAKFAST)
+        val soup = getRecipe(userId, intolerances, diets, MealType.SOUP)
+        val dessert = getRecipe(userId, intolerances, diets, MealType.DESSERT)
+        val mainCourses = getMainCourseRecipes(userId, intolerances, diets)
         val lunch = mainCourses[0]
         val dinner = mainCourses[1]
         return mapOf(
@@ -29,7 +29,7 @@ class MenuService(private val tm: TransactionManager, private val cs: CloudStora
         )
     }
 
-    private fun getRecipe(intolerances: List<Intolerance>, diets: List<Diet>, mealType: MealType): RecipeInfo? {
+    private fun getRecipe(userId: Int, intolerances: List<Intolerance>, diets: List<Diet>, mealType: MealType): RecipeInfo? {
         val recipeFromPublicUsers = tm.run {
             it.recipeRepository.getRandomRecipesFromPublicUsers(mealType, intolerances, diets, 1)
         }
@@ -37,13 +37,16 @@ class MenuService(private val tm: TransactionManager, private val cs: CloudStora
         return if (recipeFromPublicUsers.isNotEmpty()) {
             val jdbiRecipeModel = recipeFromPublicUsers.first()
             val recipePicture = cs.pictureRepository.getPicture(jdbiRecipeModel.picturesNames.first(), RECIPES_FOLDER)
-            jdbiRecipeModel.toRecipeInfo(recipePicture)
+            val isInCollection = tm.run {
+                it.collectionRepository.checkIfRecipeInAnyUserCollection(userId, jdbiRecipeModel.id)
+            }
+            jdbiRecipeModel.toRecipeInfo(recipePicture, isInCollection)
         } else {
             null
         }
     }
 
-    private fun getMainCourseRecipes(intolerances: List<Intolerance>, diets: List<Diet>): List<RecipeInfo?> {
+    private fun getMainCourseRecipes(userId: Int, intolerances: List<Intolerance>, diets: List<Diet>): List<RecipeInfo?> {
         val mainCourseFromPublicUsers = tm.run {
             it.recipeRepository.getRandomRecipesFromPublicUsers(MealType.MAIN_COURSE, intolerances, diets, 2)
         }
@@ -52,14 +55,26 @@ class MenuService(private val tm: TransactionManager, private val cs: CloudStora
             2 -> {
                 val jdbiLunchRecipeModel = mainCourseFromPublicUsers[0]
                 val lunchPicture = cs.pictureRepository.getPicture(jdbiLunchRecipeModel.picturesNames.first(), RECIPES_FOLDER)
+                val isLunchInCollection = tm.run {
+                    it.collectionRepository.checkIfRecipeInAnyUserCollection(userId, jdbiLunchRecipeModel.id)
+                }
                 val jdbiDinnerRecipeModel = mainCourseFromPublicUsers[1]
                 val dinnerPicture = cs.pictureRepository.getPicture(jdbiDinnerRecipeModel.picturesNames.first(), RECIPES_FOLDER)
-                listOf(jdbiLunchRecipeModel.toRecipeInfo(lunchPicture), jdbiDinnerRecipeModel.toRecipeInfo(dinnerPicture))
+                val isDinnerInCollection = tm.run {
+                    it.collectionRepository.checkIfRecipeInAnyUserCollection(userId, jdbiDinnerRecipeModel.id)
+                }
+                listOf(
+                    jdbiLunchRecipeModel.toRecipeInfo(lunchPicture, isLunchInCollection),
+                    jdbiDinnerRecipeModel.toRecipeInfo(dinnerPicture, isDinnerInCollection)
+                )
             }
             1 -> {
                 val lunchRecipeModel = mainCourseFromPublicUsers.first() // lunch has priority over dinner
                 val lunchPicture = cs.pictureRepository.getPicture(lunchRecipeModel.picturesNames.first(), RECIPES_FOLDER)
-                listOf(lunchRecipeModel.toRecipeInfo(lunchPicture), null)
+                val isInCollection = tm.run {
+                    it.collectionRepository.checkIfRecipeInAnyUserCollection(userId, lunchRecipeModel.id)
+                }
+                listOf(lunchRecipeModel.toRecipeInfo(lunchPicture, isInCollection), null)
             }
             else -> { listOf(null, null) }
         }
