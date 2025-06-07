@@ -7,6 +7,7 @@ import android.epicurius.ui.screens.collections.favourites.folder.components.Col
 import android.epicurius.ui.screens.collections.favourites.folder.components.CreateCollectionDialog
 import android.epicurius.ui.screens.utils.LoadState
 import android.epicurius.ui.screens.utils.LoadStateRenderer
+import android.epicurius.ui.screens.utils.Loaded
 import android.epicurius.ui.screens.utils.apiSuccess
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -38,12 +39,13 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun FavouritesScreen(
+    favouritesState: LoadState<List<CollectionProfile>>,
     onBackButton: () -> Unit,
-    onCollectionCreate: () -> Unit,
+    onCollectionCreate: (String) -> Unit,
     onCollectionRequest: (Int) -> Unit,
-    onDeleteCollection: (Int) -> Unit,
+    onCollectionDelete: (Int) -> Unit,
     onFavouritesRefresh: () -> Unit,
-    favouritesState: LoadState<List<CollectionProfile>>
+    enableButtons: Boolean
 ) {
     var showCreateCollectionDialog by remember { mutableStateOf(false) }
 
@@ -64,16 +66,18 @@ fun FavouritesScreen(
                             .verticalScroll(rememberScrollState()),
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
-                        Box(Modifier.fillMaxWidth()) {
-                            Row {
-                                Spacer(Modifier.weight(0.9f))
-                                IconButton(
-                                    onClick = { showCreateCollectionDialog = true }
-                                ) {
-                                    Icon(
-                                        imageVector = Icons.Default.Add,
-                                        contentDescription = "Create Collection"
-                                    )
+                        if (favouritesState is Loaded) {
+                            Box(Modifier.fillMaxWidth()) {
+                                Row {
+                                    Spacer(Modifier.weight(0.9f))
+                                    IconButton(
+                                        onClick = { showCreateCollectionDialog = true }
+                                    ) {
+                                        Icon(
+                                            imageVector = Icons.Default.Add,
+                                            contentDescription = "Create Collection"
+                                        )
+                                    }
                                 }
                             }
                         }
@@ -82,6 +86,7 @@ fun FavouritesScreen(
                                 text = "You have no collections yet.",
                                 modifier = Modifier.padding(16.dp),
                                 color = Color.Gray
+
                             )
                             Text(
                                 text = "Create your first collection by clicking the '+' button above.",
@@ -92,7 +97,8 @@ fun FavouritesScreen(
                                 CollectionProfileBox(
                                     collection = it,
                                     onCollectionRequest = onCollectionRequest,
-                                    onCollectionDelete = onDeleteCollection
+                                    onCollectionDelete = onCollectionDelete,
+                                    enableButtons = enableButtons
                                 )
                                 Spacer(modifier = Modifier.height(10.dp))
                             }
@@ -102,10 +108,8 @@ fun FavouritesScreen(
                     if (showCreateCollectionDialog) {
                         CreateCollectionDialog(
                             onDismiss = { showCreateCollectionDialog = false },
-                            onCreate = {
-                                onCollectionCreate()
-                                showCreateCollectionDialog = false
-                            }
+                            onCreate = { onCollectionCreate(it) },
+                            enableButtons
                         )
                     }
                 }
@@ -123,8 +127,10 @@ fun FavouritesScreenPreview() {
         CollectionProfile(2, "Quick Snacks"),
         CollectionProfile(3, "Healthy Meals")
     )
-
     val emptyCollections = emptyList<CollectionProfile>()
 
-    FavouritesScreen({}, {}, {}, {}, {}, apiSuccess(emptyCollections))
+    FavouritesScreen(apiSuccess(emptyCollections), {}, {}, {}, {}, {}, true)
+
+    FavouritesScreen(apiSuccess(collections), {}, {}, {}, {}, {}, true)
+
 }
