@@ -10,7 +10,7 @@ import android.epicurius.ui.screens.utils.apiFailure
 import android.epicurius.ui.screens.utils.idle
 import android.epicurius.ui.screens.utils.loading
 import android.epicurius.ui.screens.utils.apiSuccess
-import android.epicurius.ui.screens.utils.cacheSuccess
+import android.epicurius.ui.screens.utils.cache
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -34,7 +34,7 @@ class DailyMenuViewModel(
 
             if (storedDailyMenu != null) {
                 if (today == storedDailyMenu.date) {
-                    dailyMenuFlow.value = cacheSuccess(storedDailyMenu.menu)
+                    dailyMenuFlow.value = cache(storedDailyMenu.menu)
                 }
                 else {
                     fetchDailyMenu()
