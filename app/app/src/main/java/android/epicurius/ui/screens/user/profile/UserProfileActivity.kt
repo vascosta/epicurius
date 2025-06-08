@@ -99,6 +99,7 @@ class UserProfileActivity : EpicuriusActivity() {
                     onSettingsButton = { navigateTo<SettingsActivity>() },
                     onFollowersButton = { navigateTo<FollowActivity>() },
                     onFollowingButton = { navigateTo<FollowActivity>() },
+                    onFollowRequest = {  },
                     onCollectionRequest = { collectionId ->
                         viewModel.getKitchenBookCollectionRecipes(collectionId)
                     },

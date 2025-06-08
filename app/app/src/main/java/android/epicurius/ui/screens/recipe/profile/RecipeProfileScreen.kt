@@ -11,6 +11,7 @@ import android.epicurius.domain.recipe.MealType
 import android.epicurius.domain.recipe.Recipe
 import android.epicurius.ui.navigation.BottomBar
 import android.epicurius.ui.navigation.TopBar
+import android.epicurius.ui.screens.recipe.profile.components.EditRecipeDialog
 import android.epicurius.ui.screens.recipe.profile.components.HorizontalPagerIndicator
 import android.epicurius.ui.screens.recipe.profile.components.RecipeProfileImages
 import android.epicurius.ui.screens.utils.MixedText
@@ -35,6 +36,10 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -49,16 +54,19 @@ import java.time.LocalDate
 
 @Composable
 fun RecipeProfileScreen(
-    onBackButton: () -> Unit = {},
     recipe: Recipe,
     rating: Double,
     images: List<Int>,
-    isAuthor: Boolean
+    isAuthor: Boolean,
+    onBackButton: () -> Unit = {},
+    onEdit: () -> Unit = {},
+    onMakeIt: () -> Unit = {},
 ) {
     val pagerState = rememberPagerState(pageCount = { images.size })
+    var showEditRecipeDialog by remember { mutableStateOf(false) }
 
     Scaffold(
-        topBar = { TopBar(text = recipe.name, backButton = true, onBackButton) },
+        topBar = { TopBar(text = recipe.name, backButton = true, onBackButton = onBackButton) },
         bottomBar = { BottomBar() },
         content = { paddingValues ->
             Column(
@@ -136,7 +144,7 @@ fun RecipeProfileScreen(
 
                     if (isAuthor) {
                         Button(
-                            onClick = { },
+                            onClick = { showEditRecipeDialog = true },
                             modifier = Modifier
                                 .align(Alignment.TopEnd)
                                 .padding(top = 5.dp, end = 10.dp)
@@ -181,12 +189,20 @@ fun RecipeProfileScreen(
 
                 Row {
                     Button(
-                        onClick = { },
-                        modifier = Modifier
-                            .padding(top = 5.dp, end = 10.dp),
-                    ) {
-                        Text("Make it!")
-                    }
+                        onClick = { onMakeIt() },
+                        modifier = Modifier.padding(top = 5.dp, end = 10.dp),
+                    ) { Text("Make it!") }
+                }
+
+                if (showEditRecipeDialog) {
+                    EditRecipeDialog(
+                        recipe = recipe,
+                        onDismissRequest = { showEditRecipeDialog = false },
+                        onEditRecipe = {
+                            onEdit()
+                            showEditRecipeDialog = false
+                        }
+                    )
                 }
             }
         },
@@ -236,5 +252,12 @@ fun RecipeProfilePreview(){
         isInCollection = true
     )
     val rating = 4.0
-    RecipeProfileScreen({}, recipe, rating, listOf(R.drawable.home, R.drawable.star, R.drawable.pencil), true)
+    RecipeProfileScreen(
+        recipe = recipe,
+        rating = rating,
+        images = listOf(R.drawable.home, R.drawable.star, R.drawable.pencil),
+        isAuthor = true,
+        {},
+        {},
+    )
 }

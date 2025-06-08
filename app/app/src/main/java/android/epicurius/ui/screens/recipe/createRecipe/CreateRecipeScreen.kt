@@ -3,6 +3,9 @@ package android.epicurius.ui.screens.recipe.createRecipe
 import android.epicurius.domain.Diet
 import android.epicurius.domain.Intolerance
 import android.epicurius.domain.recipe.Cuisine
+import android.epicurius.domain.recipe.Ingredient
+import android.epicurius.domain.recipe.IngredientUnit
+import android.epicurius.domain.recipe.Instructions
 import android.epicurius.domain.recipe.MealType
 import android.epicurius.ui.navigation.BottomBar
 import android.epicurius.ui.navigation.TopBar
@@ -49,7 +52,21 @@ data class IngredientComponent(
 )
 
 @Composable
-fun CreateRecipeScreen(onBackButton: () -> Unit = {}) {
+fun CreateRecipeScreen(
+    onBackButton: () -> Unit = {},
+    onPublish: (
+        name: String,
+        description: String,
+        duration: Int,
+        serving: Int,
+        mealType: MealType,
+        cuisine: Cuisine,
+        intolerances: List<Intolerance>,
+        diets: List<Diet>,
+        ingredients: List<Ingredient>,
+        instructions: List<Instructions>
+    ) -> Unit = { _, _, _, _, _, _, _, _, _, _ -> }
+) {
     var name by remember { mutableStateOf("") }
     var description by remember { mutableStateOf("") }
     var duration by remember { mutableStateOf("") }
@@ -148,7 +165,28 @@ fun CreateRecipeScreen(onBackButton: () -> Unit = {}) {
                 }
 
                 Button(
-                    onClick = { },
+                    onClick = {
+                        onPublish(
+                            name,
+                            description,
+                            duration.toIntOrNull() ?: 0,
+                            serving.toIntOrNull() ?: 0,
+                            MealType.valueOf(mealType),
+                            Cuisine.valueOf(cuisine),
+                            intolerances.map { Intolerance.valueOf(it) },
+                            diets.map { Diet.valueOf(it) },
+                            ingredients.map {
+                                Ingredient(it.name, it.quantity.toDouble(), IngredientUnit.fromString(it.unit))
+                            },
+                            instructions.map {
+                                val stepsMap = instructions.mapIndexed { index, step ->
+                                    (index + 1).toString() to step
+                                }.toMap()
+
+                               Instructions(steps = stepsMap)
+                            }
+                        )
+                    },
                     modifier = Modifier.padding(10.dp)
                 ) {
                     Text("Publish")

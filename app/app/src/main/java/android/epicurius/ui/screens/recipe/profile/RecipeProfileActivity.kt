@@ -10,6 +10,7 @@ import android.epicurius.domain.recipe.Instructions
 import android.epicurius.domain.recipe.MealType
 import android.epicurius.domain.recipe.Recipe
 import android.epicurius.ui.navigation.navigateTo
+import android.epicurius.ui.screens.recipe.ingredients.ConfirmIngredientsActivity
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -20,7 +21,6 @@ class RecipeProfileActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             RecipeProfileScreen(
-                onBackButton = {  },
                 recipe = Recipe(
                     id = 1,
                     name = "Panquecas Americanas",
@@ -60,7 +60,11 @@ class RecipeProfileActivity : ComponentActivity() {
                     isInCollection = false
                 ),
                 rating = 4.0,
-                listOf(R.drawable.home, R.drawable.star, R.drawable.pencil), true
+                images = listOf(R.drawable.home, R.drawable.star, R.drawable.pencil),
+                isAuthor = true,
+                onBackButton = {},
+                onEdit = {},
+                onMakeIt = { navigateTo<ConfirmIngredientsActivity>() }
             )
         }
     }
