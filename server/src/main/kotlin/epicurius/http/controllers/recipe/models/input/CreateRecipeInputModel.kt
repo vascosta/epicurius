@@ -11,7 +11,6 @@ import epicurius.domain.recipe.MAX_NUMBER_OF_INGREDIENTS
 import epicurius.domain.recipe.MAX_NUMBER_OF_INSTRUCTIONS_STEPS
 import epicurius.domain.recipe.MAX_RECIPE_DESCRIPTION_LENGTH
 import epicurius.domain.recipe.MAX_RECIPE_NAME_LENGTH
-import epicurius.domain.recipe.MIN_RECIPE_DESCRIPTION_LENGTH
 import epicurius.domain.recipe.MIN_RECIPE_NAME_LENGTH
 import epicurius.domain.recipe.MealType
 import epicurius.domain.recipe.RECIPE_DESCRIPTION_LENGTH_MSG
@@ -26,7 +25,7 @@ data class CreateRecipeInputModel(
     @field:Size(min = MIN_RECIPE_NAME_LENGTH, max = MAX_RECIPE_NAME_LENGTH, message = RECIPE_NAME_LENGTH_MSG)
     val name: String,
 
-    @field:Size(min = MIN_RECIPE_DESCRIPTION_LENGTH, max = MAX_RECIPE_DESCRIPTION_LENGTH, message = RECIPE_DESCRIPTION_LENGTH_MSG)
+    @field:Size(max = MAX_RECIPE_DESCRIPTION_LENGTH, message = RECIPE_DESCRIPTION_LENGTH_MSG)
     val description: String,
 
     @field:Positive(message = UserDomain.POSITIVE_NUMBER_MSG)

@@ -4,7 +4,6 @@ const val MIN_RECIPE_NAME_LENGTH = 3
 const val MAX_RECIPE_NAME_LENGTH = 50
 const val RECIPE_NAME_LENGTH_MSG = "must be between $MIN_RECIPE_NAME_LENGTH and $MAX_RECIPE_NAME_LENGTH characters"
 
-const val MIN_RECIPE_DESCRIPTION_LENGTH = 1
 const val MAX_RECIPE_DESCRIPTION_LENGTH = 200
 const val RECIPE_DESCRIPTION_LENGTH_MSG = "must be less than $MAX_RECIPE_DESCRIPTION_LENGTH characters"
 
@@ -29,7 +28,7 @@ const val MAX_NUMBER_OF_INSTRUCTIONS_STEPS = 20
 const val INSTRUCTIONS_STEPS_SIZE_MSG = "The number of instructions steps must be at most $MAX_NUMBER_OF_INSTRUCTIONS_STEPS steps"
 const val INSTRUCTIONS_STEP_LENGTH_MSG =
     "The length of the instructions` step must be between $MIN_INSTRUCTIONS_STEP_LENGTH and $MAX_INSTRUCTIONS_STEP_LENGTH characters"
-const val INSTRUCTIONS_STEP_NUMBER_MSG = "Instructions step number must be a number"
+const val INSTRUCTIONS_STEP_NUMBER_MSG = "Instructions step identifier must be a number"
 
 const val MIN_PICTURES = 1
 const val MAX_PICTURES = 3
