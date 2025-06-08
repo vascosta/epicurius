@@ -3,6 +3,7 @@ package android.epicurius.ui.screens.recipe.profile
 import android.epicurius.R
 import android.epicurius.domain.Diet
 import android.epicurius.domain.Intolerance
+import android.epicurius.domain.collection.CollectionProfile
 import android.epicurius.domain.recipe.Cuisine
 import android.epicurius.domain.recipe.Ingredient
 import android.epicurius.domain.recipe.IngredientUnit
@@ -11,13 +12,19 @@ import android.epicurius.domain.recipe.MealType
 import android.epicurius.domain.recipe.Recipe
 import android.epicurius.ui.navigation.BottomBar
 import android.epicurius.ui.navigation.TopBar
+import android.epicurius.ui.screens.collections.components.CollectionsListDialog
+import android.epicurius.ui.screens.recipe.profile.components.EditRatingDialog
 import android.epicurius.ui.screens.recipe.profile.components.EditRecipeDialog
 import android.epicurius.ui.screens.recipe.profile.components.HorizontalPagerIndicator
 import android.epicurius.ui.screens.recipe.profile.components.RecipeProfileImages
+import android.epicurius.ui.screens.utils.LoadState
+import android.epicurius.ui.screens.utils.LoadingSpinner
 import android.epicurius.ui.screens.utils.MixedText
+import android.epicurius.ui.screens.utils.apiSuccess
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -58,12 +65,23 @@ fun RecipeProfileScreen(
     rating: Double,
     images: List<Int>,
     isAuthor: Boolean,
+    userRating: Int = 0,
+    collectionId: Int?,
+    collectionsState: LoadState<List<CollectionProfile>>?,
+    enableButtons: Boolean,
     onBackButton: () -> Unit = {},
-    onEdit: () -> Unit = {},
+    onEditRating: (Int) -> Unit = {},
+    onEditRecipe: () -> Unit = {},
     onMakeIt: () -> Unit = {},
+    onAddRecipeToCollection: (Int, Int) -> Unit,
+    onRemoveRecipeFromCollection: (Int, Int) -> Unit,
+    onCollectionsRequest: (Int, Boolean) -> Unit
 ) {
     val pagerState = rememberPagerState(pageCount = { images.size })
     var showEditRecipeDialog by remember { mutableStateOf(false) }
+    var showEditRatingDialog by remember { mutableStateOf(false) }
+    var showCollectionsDialog by remember { mutableStateOf(false) }
+    var enableStarIcon by remember { mutableStateOf(recipe.isInCollection) }
 
     Scaffold(
         topBar = { TopBar(text = recipe.name, backButton = true, onBackButton = onBackButton, buttonsEnable = true) },
@@ -100,25 +118,74 @@ fun RecipeProfileScreen(
                         )
                     }
 
-                    IconButton(onClick = { }) {
-                        Image(
-                            painter = painterResource(id = R.drawable.white_star),
-                            contentDescription = "Favorites",
-                            modifier = Modifier.size(25.dp),
-                            contentScale = ContentScale.Fit
-                        )
+                    IconButton(
+                        onClick = {
+                            if (collectionId != null) {
+                                onRemoveRecipeFromCollection(collectionId, recipe.id)
+                            }
+                            else {
+                                showCollectionsDialog = true
+                            }
+                        },
+                        modifier = Modifier.size(24.dp),
+                        enabled = enableButtons
+                    ) {
+                        if (enableButtons) {
+                            val painter = if (enableStarIcon) {
+                                painterResource(R.drawable.star)
+                            } else {
+                                painterResource(R.drawable.white_star)
+                            }
+                            Image(
+                                painter = painter,
+                                contentDescription = "Favorites",
+                                modifier = Modifier.size(20.dp),
+                                contentScale = ContentScale.Fit
+                            )
+                        }
+                        else {
+                            LoadingSpinner(Modifier.size(30.dp))
+                        }
+
+                        if (showCollectionsDialog) {
+                            CollectionsListDialog(
+                                recipeId = recipe.id,
+                                isInCollection = enableStarIcon,
+                                collectionsState = collectionsState,
+                                onDismissRequest = { showCollectionsDialog = false },
+                                onCollectionChange = { enableStarIcon = !enableStarIcon },
+                                onAddRecipeToCollection = onAddRecipeToCollection,
+                                onRemoveRecipeFromCollection = onRemoveRecipeFromCollection,
+                                onCollectionsRequest = onCollectionsRequest,
+                                buttonsEnable = enableButtons
+                            )
+                        }
                     }
                 }
 
                 RecipeProfileImages(images, pagerState)
                 HorizontalPagerIndicator(images.size, pagerState)
 
-                Box(
+                Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(10.dp),
-                    contentAlignment = Alignment.CenterEnd
-                ) { MixedText("by ", recipe.authorUsername) }
+                        .padding(16.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    if (isAuthor) {
+                        Spacer(Modifier.weight(1f))
+                    } else {
+                        Box(Modifier.clickable { showEditRatingDialog = true }) {
+                            Row {
+                                Text("Your Rating: ", fontWeight = FontWeight.Bold)
+                                Text("$userRating")
+                            }
+                        }
+                    }
+                    Box(contentAlignment = Alignment.CenterEnd) {
+                        MixedText("by ", recipe.authorUsername)
+                    }
+                }
 
                 Row(
                     modifier = Modifier
@@ -199,8 +266,18 @@ fun RecipeProfileScreen(
                         recipe = recipe,
                         onDismissRequest = { showEditRecipeDialog = false },
                         onEditRecipe = {
-                            onEdit()
+                            onEditRecipe()
                             showEditRecipeDialog = false
+                        }
+                    )
+                }
+                if (showEditRatingDialog) {
+                    EditRatingDialog(
+                        previousRating = userRating,
+                        onDismissRequest = { showEditRatingDialog = false },
+                        onEditRating = {
+                            onEditRating
+                            showEditRatingDialog = false
                         }
                     )
                 }
@@ -252,12 +329,25 @@ fun RecipeProfilePreview(){
         isInCollection = true
     )
     val rating = 4.0
+    val collections = listOf(
+        CollectionProfile(id = 1, name = "Favorites"),
+        CollectionProfile(id = 2, name = "Breakfast Recipes")
+    )
     RecipeProfileScreen(
         recipe = recipe,
         rating = rating,
         images = listOf(R.drawable.home, R.drawable.star, R.drawable.pencil),
-        isAuthor = true,
+        isAuthor = false,
+        userRating = 4,
+        collectionId = null,
+        collectionsState = apiSuccess(collections),
+        enableButtons = true,
         {},
         {},
+        {},
+        {},
+        { _, _ -> },
+        { _, _ -> },
+        { _, _ -> }
     )
 }
