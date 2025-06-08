@@ -1,8 +1,7 @@
 package android.epicurius.ui.screens.fridge
 
-import android.epicurius.MainActivity
 import android.epicurius.domain.fridge.Product
-import android.epicurius.ui.screens.utils.navigateTo
+import android.epicurius.ui.navigation.navigateTo
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -21,7 +20,7 @@ class FridgeActivity : ComponentActivity() {
             )
             FridgeScreen(
                 products = sampleProducts,
-                onBackButton = { navigateTo<MainActivity>() },
+                onBackButton = {  },
             )
         }
     }
