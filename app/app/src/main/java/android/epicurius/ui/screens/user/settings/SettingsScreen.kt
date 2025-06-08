@@ -13,19 +13,26 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 
 @Composable
-fun SettingsScreen(onBackButton: () -> Unit = {}) {
+fun SettingsScreen(
+    onBackButton: () -> Unit,
+    onFavouritesRequest: () -> Unit,
+    onLogout: () -> Unit,
+    buttonsEnable: Boolean
+) {
     Scaffold(
-        topBar = { TopBar(text = "Settings", backButton = true, onBackButton = onBackButton, icon = null) },
+        topBar = { TopBar(
+            text = "Settings",
+            backButton = true,
+            onBackButton = onBackButton,
+            icon = null
+        ) },
         bottomBar = { BottomBar() },
         content = { paddingValues ->
             Column(
@@ -36,14 +43,46 @@ fun SettingsScreen(onBackButton: () -> Unit = {}) {
             ) {
                 Spacer(modifier = Modifier.fillMaxHeight(0.02f))
 
-                SettingsButton("Favorites")
-                SettingsButton("Change username")
-                SettingsButton("Change email")
-                SettingsButton("Change password")
-                SettingsButton("Change country")
-                SettingsButton("Change privacy")
-                SettingsButton("Change intolerances")
-                SettingsButton("Change diets")
+                SettingsButton(
+                    onClick = onFavouritesRequest,
+                    enabled = buttonsEnable,
+                    text = "Favorites"
+                )
+                SettingsButton(
+                    onClick = {},
+                    enabled = buttonsEnable,
+                    text = "Change username"
+                )
+                SettingsButton(
+                    onClick = {},
+                    enabled = buttonsEnable,
+                    text = "Change email"
+                )
+                SettingsButton(
+                    onClick = {},
+                    enabled = buttonsEnable,
+                    text = "Change password"
+                )
+                SettingsButton(
+                    onClick = {},
+                    enabled = buttonsEnable,
+                    text = "Change country"
+                )
+                SettingsButton(
+                    onClick = {},
+                    enabled = buttonsEnable,
+                    text = "Change privacy"
+                )
+                SettingsButton(
+                    onClick = {},
+                    enabled = buttonsEnable,
+                    text = "Change intolerances"
+                )
+                SettingsButton(
+                    onClick = {},
+                    enabled = buttonsEnable,
+                    text = "Change diets"
+                )
 
                 Spacer(modifier = Modifier.fillMaxHeight(0.8f))
 
@@ -52,8 +91,16 @@ fun SettingsScreen(onBackButton: () -> Unit = {}) {
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    SettingsButton("Delete account")
-                    SettingsButton("Logout")
+                    SettingsButton(
+                        onClick = {},
+                        enabled = buttonsEnable,
+                        text = "Delete account"
+                    )
+                    SettingsButton(
+                        onClick = onLogout,
+                        enabled = buttonsEnable,
+                        text = "Logout"
+                    )
                 }
             }
         }
@@ -65,5 +112,5 @@ fun SettingsScreen(onBackButton: () -> Unit = {}) {
 @Preview
 @Composable
 fun SettingsPreview() {
-    SettingsScreen()
+    SettingsScreen({}, {}, {}, true)
 }
