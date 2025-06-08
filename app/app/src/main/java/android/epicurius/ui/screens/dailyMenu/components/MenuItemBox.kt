@@ -6,6 +6,7 @@ import android.epicurius.domain.recipe.MealType
 import android.epicurius.domain.recipe.RecipeInfo
 import android.epicurius.ui.screens.recipe.components.RecipeInfoBox
 import android.epicurius.ui.screens.utils.LoadState
+import android.epicurius.ui.screens.utils.apiSuccess
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
@@ -24,7 +25,7 @@ import androidx.compose.ui.unit.sp
 fun MenuItemBox(
     title: String,
     recipe: RecipeInfo?,
-    collectionsState: LoadState<List<CollectionProfile>>?,
+    collectionsState: LoadState<List<CollectionProfile>>,
     onAddRecipeToCollection: (Int, Int) -> Unit,
     onRemoveRecipeFromCollection: (Int, Int) -> Unit,
     onRecipeRequest: (Int) -> Unit,
@@ -80,7 +81,7 @@ fun MenuItemBoxPreview() {
             picture = "".toByteArray(),
             isInCollection = true
         ),
-        null,
+        apiSuccess(emptyList()),
         {_, _ ->},
         {_, _ ->},
         {},
