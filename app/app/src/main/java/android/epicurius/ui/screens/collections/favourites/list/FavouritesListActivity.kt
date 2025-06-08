@@ -7,6 +7,7 @@ import android.epicurius.ui.screens.recipe.profile.RecipeProfileActivity
 import android.epicurius.ui.screens.utils.Idle
 import android.epicurius.ui.screens.utils.idle
 import android.epicurius.ui.navigation.navigateTo
+import android.epicurius.ui.screens.user.profile.UserProfileActivity
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.compose.runtime.collectAsState
@@ -39,14 +40,14 @@ class FavouritesListActivity : EpicuriusActivity() {
                 collectionId = intent.getIntExtra(Intents.COLLECTION_ID, -1),
                 favouritesListNameState = favouritesListName.value,
                 recipesState = recipes.value,
-                onBackButton = { finish() },
-                onCollectionEdit = { id, name ->
-                    viewModel.updateFavouriteCollection(id, name) { navigateTo<FavouritesActivity>() }
+                onBackButton = { navigateTo<FavouritesActivity>(true) },
+                onCollectionEdit = { collectionId: Int, collectionName: String ->
+                    viewModel.updateFavouriteCollection(collectionId, collectionName) { navigateTo<FavouritesActivity>() }
                 },
-                onCollectionDelete = { id ->
-                    viewModel.deleteFavouriteCollection(id) { navigateTo<FavouritesActivity>() }
+                onCollectionDelete = { collectionId: Int ->
+                    viewModel.deleteFavouriteCollection(collectionId) { navigateTo<FavouritesActivity>() }
                 },
-                onRecipeDelete = { collectionId, recipeId ->
+                onRecipeDelete = { collectionId: Int, recipeId: Int ->
                     viewModel.removeRecipeFromFavouriteCollection(collectionId, recipeId)
                 },
                 onRecipeRequest = ::navigateToRecipeProfileActivity,

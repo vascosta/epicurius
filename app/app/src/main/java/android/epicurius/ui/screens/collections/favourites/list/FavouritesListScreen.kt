@@ -45,10 +45,10 @@ fun FavouritesListScreen(
     favouritesListNameState: LoadState<String>,
     recipesState: LoadState<List<RecipeInfo>>,
     onBackButton: () -> Unit,
-    onCollectionEdit: (Int, String) -> Unit,
-    onCollectionDelete: (Int) -> Unit,
-    onRecipeDelete: (Int, Int) -> Unit,
-    onRecipeRequest: (Int) -> Unit,
+    onCollectionEdit: (collectionId: Int, collectionName: String) -> Unit,
+    onCollectionDelete: (collectionId: Int) -> Unit,
+    onRecipeDelete: (collectionId: Int, recipeId: Int) -> Unit,
+    onRecipeRequest: (recipeId: Int) -> Unit,
     onFavouriteCollectionRefresh: () -> Unit,
     buttonsEnable: Boolean
 ) {
@@ -69,10 +69,11 @@ fun FavouritesListScreen(
                 text = favouritesListName,
                 backButton = true,
                 onBackButton = onBackButton,
+                buttonsEnable = buttonsEnable,
                 icon = null
             )
                  },
-        bottomBar = { BottomBar() },
+        bottomBar = { BottomBar(buttonsEnable = buttonsEnable) },
         content = { paddingValues ->
             LoadStateRenderer(
                 loadState = recipesState,
@@ -137,7 +138,7 @@ fun FavouritesListScreen(
                         DeleteCollectionDialog(
                             collectionName = favouritesListName,
                             collectionId = collectionId,
-                            onDelete = onCollectionDelete,
+                            onCollectionDelete = onCollectionDelete,
                             onDismissRequest = { showDeleteCollectionDialog = false },
                             buttonsEnable = buttonsEnable
                         )
