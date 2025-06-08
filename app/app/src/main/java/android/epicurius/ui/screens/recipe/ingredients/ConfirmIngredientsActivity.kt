@@ -1,9 +1,8 @@
 package android.epicurius.ui.screens.recipe.ingredients
 
-import android.epicurius.MainActivity
 import android.epicurius.domain.recipe.Ingredient
 import android.epicurius.domain.recipe.IngredientUnit
-import android.epicurius.ui.screens.utils.navigateTo
+import android.epicurius.ui.navigation.navigateTo
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -13,7 +12,7 @@ class ConfirmIngredientsActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             ConfirmIngredientsScreen(
-                onBackButton = { navigateTo<MainActivity>() },
+                onBackButton = {  },
                 recipeName = "Chocolate Cake",
                 ingredientsList = listOf(
                     Ingredient("Flour", 2.0, IngredientUnit.COFFEE_CUP),

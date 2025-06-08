@@ -1,7 +1,6 @@
 package android.epicurius.ui.screens.recipe.createRecipe
 
-import android.epicurius.MainActivity
-import android.epicurius.ui.screens.utils.navigateTo
+import android.epicurius.ui.navigation.navigateTo
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -11,7 +10,7 @@ class CreateRecipeActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             CreateRecipeScreen(
-                onBackButton = { navigateTo<MainActivity>() },
+                onBackButton = {  },
             )
         }
     }

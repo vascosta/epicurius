@@ -1,6 +1,5 @@
 package android.epicurius.ui.screens.recipe.profile
 
-import android.epicurius.MainActivity
 import android.epicurius.R
 import android.epicurius.domain.Diet
 import android.epicurius.domain.Intolerance
@@ -10,12 +9,10 @@ import android.epicurius.domain.recipe.IngredientUnit
 import android.epicurius.domain.recipe.Instructions
 import android.epicurius.domain.recipe.MealType
 import android.epicurius.domain.recipe.Recipe
-import android.epicurius.ui.screens.utils.navigateTo
-import android.os.Build
+import android.epicurius.ui.navigation.navigateTo
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.annotation.RequiresApi
 import java.time.LocalDate
 
 class RecipeProfileActivity : ComponentActivity() {
@@ -23,7 +20,7 @@ class RecipeProfileActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             RecipeProfileScreen(
-                onBackButton = { navigateTo<MainActivity>() },
+                onBackButton = {  },
                 recipe = Recipe(
                     id = 1,
                     name = "Panquecas Americanas",

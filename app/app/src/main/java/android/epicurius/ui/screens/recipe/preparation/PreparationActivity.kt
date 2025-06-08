@@ -1,8 +1,7 @@
 package android.epicurius.ui.screens.recipe.preparation
 
-import android.epicurius.MainActivity
 import android.epicurius.domain.recipe.Instructions
-import android.epicurius.ui.screens.utils.navigateTo
+import android.epicurius.ui.navigation.navigateTo
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -12,7 +11,7 @@ class PreparationActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             PreparationScreen(
-                onBackButton = { navigateTo<MainActivity>() },
+                onBackButton = {  },
                 recipeName = "Chocolate Cake",
                 instructions =  Instructions(
                     steps = mapOf(
