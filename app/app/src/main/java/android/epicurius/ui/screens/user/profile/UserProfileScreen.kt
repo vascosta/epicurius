@@ -120,10 +120,11 @@ fun UserProfileScreen(
                 text = "Profile",
                 backButton = true,
                 onBackButton = onBackButton,
+                buttonsEnable = true,
                 icon = if (!isAnotherUserProfile) Icons.Filled.Settings else null,
             )
         },
-        bottomBar = { BottomBar() },
+        bottomBar = { BottomBar(buttonsEnable = true) },
         content = { paddingValues ->
             LoadStateRenderer(
                 loadState = userProfileState,
