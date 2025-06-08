@@ -27,8 +27,8 @@ fun ResultsScreen(
     onRecipeRequest: (Int) -> Unit = {}
 ) {
     Scaffold(
-        topBar = { TopBar("Search Recipes", backButton = true, onBackButton) },
-        bottomBar = { BottomBar() },
+        topBar = { TopBar("Search Recipes", backButton = true, onBackButton = onBackButton, buttonsEnable = true) },
+        bottomBar = { BottomBar(buttonsEnable = true) },
         content = { paddingValues ->
             Column(
                 modifier = Modifier

@@ -110,8 +110,8 @@ fun SearchScreen(
     var showConfirmIngredientsDialog by remember { mutableStateOf(false) }
 
     Scaffold(
-        topBar = { TopBar("Search", backButton = true, onBackButton) },
-        bottomBar = { BottomBar() },
+        topBar = { TopBar("Search", backButton = true, onBackButton = onBackButton, buttonsEnable = true) },
+        bottomBar = { BottomBar(buttonsEnable = true) },
         content = { paddingValues ->
             Column(
                 modifier = Modifier
