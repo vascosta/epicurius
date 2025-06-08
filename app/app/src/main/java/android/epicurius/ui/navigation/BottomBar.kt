@@ -23,7 +23,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun BottomBar(onFeedRefresh: () -> Unit = {}) {
+fun BottomBar(
+    onFeedRefresh: () -> Unit = {},
+    buttonsEnable: Boolean
+) {
     val context = LocalContext.current
     val currentActivityClass = context::class.java
     NavigationBar(containerColor = Color.White) {
@@ -50,33 +53,33 @@ fun BottomBar(onFeedRefresh: () -> Unit = {}) {
                     }
                     else { onFeedRefresh }
                 },
-                enabled = true,
+                enabled = buttonsEnable,
                 imageId = R.drawable.home,
                 description = "Home"
             )
             BottomBarButton(
                 onClick = { context.startActivity(Intent(context, CreateRecipeActivity::class.java)) },
-                enabled = currentActivityClass != CreateRecipeActivity::class.java,
+                enabled = buttonsEnable && currentActivityClass != CreateRecipeActivity::class.java,
                 imageId = R.drawable.pencil,
                 description = "Pencil"
             )
             BottomBarButton(
                 onClick = { context.startActivity(Intent(context, SearchActivity::class.java)) },
-                enabled = currentActivityClass != SearchActivity::class.java,
+                enabled = buttonsEnable && currentActivityClass != SearchActivity::class.java,
                 imageId = R.drawable.magnifier,
                 description = "Magnifier",
                 imageSize = 41
             )
             BottomBarButton(
                 onClick = { context.startActivity(Intent(context, CalendarActivity::class.java)) },
-                enabled = currentActivityClass != CalendarActivity::class.java,
+                enabled = buttonsEnable && currentActivityClass != CalendarActivity::class.java,
                 imageId = R.drawable.plate,
                 description = "Plate",
                 imageSize = 45
             )
             BottomBarButton(
                 onClick = { context.startActivity(Intent(context, FridgeActivity::class.java)) },
-                enabled = currentActivityClass != FridgeActivity::class.java,
+                enabled = buttonsEnable && currentActivityClass != FridgeActivity::class.java,
                 imageId = R.drawable.fridge,
                 description = "Fridge",
                 imageSize = 40
@@ -88,5 +91,5 @@ fun BottomBar(onFeedRefresh: () -> Unit = {}) {
 @Preview
 @Composable
 fun BottomBarPreview() {
-    BottomBar()
+    BottomBar(buttonsEnable = true)
 }

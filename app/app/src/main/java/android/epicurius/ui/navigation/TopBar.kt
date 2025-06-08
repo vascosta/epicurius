@@ -35,6 +35,7 @@ fun TopBar(
     text: String,
     backButton: Boolean = false,
     onBackButton: () -> Unit = {},
+    buttonsEnable: Boolean,
     icon: ImageVector? = Icons.Filled.Person
 ) {
     val context = LocalContext.current
@@ -54,6 +55,7 @@ fun TopBar(
             if (backButton) {
                 IconButton(
                     onClick = onBackButton,
+                    enabled = buttonsEnable
                 ) {
                     Icon(
                         imageVector = Icons.AutoMirrored.Sharp.ArrowBack,
@@ -72,7 +74,8 @@ fun TopBar(
                         else {
                             context.navigateTo<SettingsActivity>()
                         }
-                    }
+                    },
+                    enabled = buttonsEnable
                 ) {
                     Icon(
                         imageVector = it,
@@ -122,5 +125,5 @@ private fun FollowTab(
 @Preview
 @Composable
 fun TopBarPreview() {
-    TopBar("Settings", true)
+    TopBar("Settings", true, buttonsEnable = true)
 }
