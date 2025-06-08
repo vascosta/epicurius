@@ -19,7 +19,7 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun CreateCollectionDialog(
     onDismiss: () -> Unit,
-    onCreate: (String) -> Unit,
+    onCollectionCreate: (collectionName: String) -> Unit,
     buttonsEnable: Boolean
 ) {
     var collectionName by remember { mutableStateOf("") }
@@ -44,7 +44,7 @@ fun CreateCollectionDialog(
                 enabled = buttonsEnable
             ) { Text("Cancel") }
             TextButton(
-                onClick = { onCreate(collectionName) },
+                onClick = { onCollectionCreate(collectionName) },
                 enabled = buttonsEnable
             ) {
                 if (buttonsEnable) { Text("Create") }

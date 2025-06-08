@@ -29,12 +29,16 @@ class FavouritesActivity : EpicuriusActivity() {
             val favouritesState = viewModel.favourites.collectAsState(idle())
             FavouritesScreen(
                 favouritesState = favouritesState.value,
-                onBackButton = { navigateTo<SettingsActivity>() },
-                onCollectionCreate = { name ->
-                    viewModel.createFavouriteCollection(name) { id -> navigateToFavouritesListActivity(id) }
+                onBackButton = { navigateTo<SettingsActivity>(true) },
+                onCollectionCreate = { collectionName: String ->
+                    viewModel.createFavouriteCollection(collectionName) {
+                        collectionId -> navigateToFavouritesListActivity(collectionId)
+                    }
                 },
                 onCollectionRequest = ::navigateToFavouritesListActivity,
-                onCollectionDelete = { id -> viewModel.deleteFavouriteCollection(id) },
+                onCollectionDelete = { collectionId: Int ->
+                    viewModel.deleteFavouriteCollection(collectionId)
+                },
                 onFavouritesRefresh = { viewModel.getFavourites { navigateTo<SettingsActivity>() } },
                 buttonsEnable = viewModel.buttonsEnable,
             )

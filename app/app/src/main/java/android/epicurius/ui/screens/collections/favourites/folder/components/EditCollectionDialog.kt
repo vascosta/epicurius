@@ -23,7 +23,7 @@ fun EditCollectionDialog(
     collectionName: String,
     collectionId: Int,
     onDismiss: () -> Unit,
-    onEditCollection: (Int, String) -> Unit,
+    onEditCollection: (collectionId: Int, collectionName: String) -> Unit,
     buttonsEnable: Boolean
 ) {
     var newCollectionName by remember { mutableStateOf(collectionName) }

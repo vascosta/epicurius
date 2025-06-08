@@ -14,7 +14,7 @@ import androidx.compose.ui.unit.dp
 fun DeleteCollectionDialog(
     collectionName: String,
     collectionId: Int,
-    onDelete: (Int) -> Unit,
+    onCollectionDelete: (collectionId: Int) -> Unit,
     onDismissRequest: () -> Unit,
     buttonsEnable: Boolean
 ) {
@@ -25,7 +25,7 @@ fun DeleteCollectionDialog(
         text = { Text("Are you sure you want to delete '${collectionName}'?") },
         confirmButton = {
             TextButton(
-                onClick = { onDelete(collectionId) },
+                onClick = { onCollectionDelete(collectionId) },
                 enabled = buttonsEnable
             ) {
                 if (buttonsEnable) { Text("Delete", color = Color.Red) }

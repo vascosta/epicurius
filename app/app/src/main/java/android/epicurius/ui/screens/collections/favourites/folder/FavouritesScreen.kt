@@ -41,9 +41,9 @@ import androidx.compose.ui.unit.dp
 fun FavouritesScreen(
     favouritesState: LoadState<List<CollectionProfile>>,
     onBackButton: () -> Unit,
-    onCollectionCreate: (String) -> Unit,
-    onCollectionRequest: (Int) -> Unit,
-    onCollectionDelete: (Int) -> Unit,
+    onCollectionCreate: (collectionName: String) -> Unit,
+    onCollectionRequest: (collectionId: Int) -> Unit,
+    onCollectionDelete: (collectionId: Int) -> Unit,
     onFavouritesRefresh: () -> Unit,
     buttonsEnable: Boolean
 ) {
@@ -55,10 +55,11 @@ fun FavouritesScreen(
                 text = "Favourites",
                 backButton = true,
                 onBackButton = onBackButton,
+                buttonsEnable = buttonsEnable,
                 icon = null
             )
         },
-        bottomBar = { BottomBar() },
+        bottomBar = { BottomBar(buttonsEnable = buttonsEnable) },
         content = { paddingValues ->
             LoadStateRenderer(
                 loadState = favouritesState,
@@ -115,7 +116,7 @@ fun FavouritesScreen(
                     if (showCreateCollectionDialog) {
                         CreateCollectionDialog(
                             onDismiss = { showCreateCollectionDialog = false },
-                            onCreate = onCollectionCreate,
+                            onCollectionCreate = onCollectionCreate,
                             buttonsEnable
                         )
                     }
