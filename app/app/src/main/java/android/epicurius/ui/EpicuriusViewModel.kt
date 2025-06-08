@@ -13,6 +13,7 @@ import android.epicurius.services.http.media.Problem
 import android.epicurius.storage.Session
 import android.epicurius.ui.screens.auth.login.LoginActivity
 import android.epicurius.ui.navigation.navigateTo
+import android.epicurius.ui.screens.auth.resetPassword.ResetPasswordActivity
 import android.epicurius.ui.screens.auth.signup.SignUpActivity
 import android.widget.Toast
 import androidx.compose.runtime.getValue
@@ -48,7 +49,8 @@ open class EpicuriusViewModel(
             if (
                 !isLoggedIn &&
                 context::class.java != LoginActivity::class.java &&
-                context::class.java != SignUpActivity::class.java
+                context::class.java != SignUpActivity::class.java &&
+                context::class.java != ResetPasswordActivity::class.java
                 ) {
                 onSessionExpired()
             }
@@ -90,11 +92,13 @@ open class EpicuriusViewModel(
     }
 
     fun showToast(message: String) {
-        Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+        Toast.makeText(context, message, Toast.LENGTH_LONG).show()
     }
 
-    fun onSessionExpired() {
-        showToast(context.getString(R.string.session_expired_msg))
+    fun onSessionExpired(showSessionExpiredMessage: Boolean = true) {
+        if (showSessionExpiredMessage) {
+            showToast(context.getString(R.string.session_expired_msg))
+        }
         viewModelScope.launch { session.delete(context) }
         context.navigateTo<LoginActivity>()
     }
