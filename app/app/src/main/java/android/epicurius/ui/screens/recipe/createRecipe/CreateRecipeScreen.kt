@@ -110,14 +110,22 @@ fun CreateRecipeScreen(
 
     var isNutritionalInfoExpanded by remember { mutableStateOf(false) }
 
-    var selectedImageUris by remember { mutableStateOf<List<Uri>>(emptyList()) }
+    var selectedImageBytesList by remember { mutableStateOf<List<ByteArray>>(emptyList()) }
     val context = LocalContext.current
 
     val imagePickerLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.PickMultipleVisualMedia(maxItems = 3)
     ) { uris ->
         if (uris.isNotEmpty()) {
-            selectedImageUris = uris
+            val byteArrayList = uris.mapNotNull { uri ->
+                try {
+                    context.contentResolver.openInputStream(uri)?.use { it.readBytes() }
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                    null
+                }
+            }
+            selectedImageBytesList = byteArrayList
         } else {
             Toast.makeText(context, "No image selected", Toast.LENGTH_SHORT).show()
         }
@@ -271,9 +279,9 @@ fun CreateRecipeScreen(
                 }
                 Spacer(modifier = Modifier.height(16.dp))
                 Row {
-                    selectedImageUris.forEach { uri ->
+                    selectedImageBytesList.forEach { byteArray ->
                         Image(
-                            painter = rememberAsyncImagePainter(uri),
+                            painter = rememberAsyncImagePainter(byteArray),
                             contentDescription = null,
                             modifier = Modifier
                                 .size(100.dp)
