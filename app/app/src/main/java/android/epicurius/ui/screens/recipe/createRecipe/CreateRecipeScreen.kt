@@ -2,6 +2,7 @@ package android.epicurius.ui.screens.recipe.createRecipe
 
 import android.epicurius.domain.Diet
 import android.epicurius.domain.Intolerance
+import android.epicurius.domain.Picture
 import android.epicurius.domain.recipe.Cuisine
 import android.epicurius.domain.recipe.Ingredient
 import android.epicurius.domain.recipe.IngredientUnit
@@ -41,6 +42,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Image
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -74,44 +76,45 @@ data class IngredientComponent(
 @Composable
 fun CreateRecipeScreen(
     onBackButton: () -> Unit,
-    onCreateRecipe: () -> Unit,
-    onPublish: (
+    onCreateRecipe: (
         name: String,
         description: String,
-        duration: Int,
-        serving: Int,
-        mealType: MealType,
+        servings: Int,
+        preparationTime: Int,
         cuisine: Cuisine,
-        intolerances: List<Intolerance>,
-        diets: List<Diet>,
+        mealType: MealType,
+        intolerances: Set<Intolerance>,
+        diets: Set<Diet>,
         ingredients: List<Ingredient>,
-        instructions: List<Instructions>,
         calories: Int?,
         protein: Int?,
         fat: Int?,
-        carbs: Int?
+        carbs: Int?,
+        instructions: Instructions,
+        pictures: List<Picture>
     ) -> Unit,
     buttonsEnable: Boolean
 ) {
+    val context = LocalContext.current
+
     var name by remember { mutableStateOf("") }
     var description by remember { mutableStateOf("") }
-    var duration by remember { mutableStateOf("") }
-    var serving by remember { mutableStateOf("") }
+    var servings by remember { mutableStateOf("") }
+    var preparationTime by remember { mutableStateOf("") }
     var mealType by remember { mutableStateOf("") }
     var cuisine by remember { mutableStateOf("") }
     var intolerances by remember { mutableStateOf(listOf<String>()) }
     var diets by remember { mutableStateOf(listOf<String>()) }
     var ingredients by remember { mutableStateOf(listOf<IngredientComponent>()) }
-    var instructions by remember { mutableStateOf(listOf<String>()) }
     var calories by remember { mutableStateOf("") }
     var protein by remember { mutableStateOf("") }
     var fat by remember { mutableStateOf("") }
     var carbs by remember { mutableStateOf("") }
+    var instructions by remember { mutableStateOf(listOf<String>()) }
 
-    var isNutritionalInfoExpanded by remember { mutableStateOf(false) }
+    var expandNutritionalInfo by remember { mutableStateOf(false) }
 
     var selectedImageBytesList by remember { mutableStateOf<List<ByteArray>>(emptyList()) }
-    val context = LocalContext.current
 
     val imagePickerLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.PickMultipleVisualMedia(maxItems = 3)
@@ -140,12 +143,14 @@ fun CreateRecipeScreen(
     Scaffold(
         topBar = {
             TopBar(
-                text = "Create recipe",
+                text = "Create a Recipe",
                 backButton = true,
-                onBackButton = onBackButton
+                onBackButton = onBackButton,
+                buttonsEnable = buttonsEnable,
+                icon = if (buttonsEnable) Icons.Filled.Person else null
             )
         },
-        bottomBar = { BottomBar() },
+        bottomBar = { BottomBar(buttonsEnable = buttonsEnable) },
         containerColor = Color.White,
         content = { paddingValues ->
             Column(
@@ -167,8 +172,8 @@ fun CreateRecipeScreen(
                 FormTextField("Name", name, Modifier.height(56.dp)) { name = it }
                 FormTextField("Description", description, Modifier.height(56.dp)) { description = it }
 
-                NumberLineTextField("Duration (min)", duration) { duration = it }
-                NumberLineTextField("Serving (px)", serving) { serving = it }
+                NumberLineTextField("Duration (min)", preparationTime) { preparationTime = it }
+                NumberLineTextField("Serving (px)", servings) { servings = it }
 
                 DropdownMenuComponent(
                     options = MealType.entries.map { it.displayName },
@@ -217,16 +222,16 @@ fun CreateRecipeScreen(
                         .padding(start = 10.dp, top = 10.dp)
                 ) {
                     TextButton(
-                        onClick = { isNutritionalInfoExpanded = !isNutritionalInfoExpanded }
+                        onClick = { expandNutritionalInfo = !expandNutritionalInfo }
                     ) {
                         Text(
-                            if (isNutritionalInfoExpanded) "- Hide nutritional info"
+                            if (expandNutritionalInfo) "- Hide nutritional info"
                             else "+ Add nutritional info"
                         )
                     }
                 }
 
-                AnimatedVisibility(visible = isNutritionalInfoExpanded) {
+                AnimatedVisibility(visible = expandNutritionalInfo) {
                     Column(modifier = Modifier.padding(top = 8.dp)) {
                         NumberTextField(
                             value = calories,
@@ -289,18 +294,21 @@ fun CreateRecipeScreen(
                         )
                     }
                 }
-
                 Button(
                     onClick = {
-                        onPublish(
+                        val instructionsSteps = instructions.mapIndexed { index, step ->
+                            (index + 1).toString() to step
+                        }.toMap()
+
+                        onCreateRecipe(
                             name,
                             description,
-                            duration.toIntOrNull() ?: 0,
-                            serving.toIntOrNull() ?: 0,
-                            MealType.valueOf(mealType),
+                            preparationTime.toInt(),
+                            servings.toInt(),
                             Cuisine.valueOf(cuisine),
-                            intolerances.map { Intolerance.valueOf(it) },
-                            diets.map { Diet.valueOf(it) },
+                            MealType.valueOf(mealType),
+                            intolerances.map { Intolerance.valueOf(it) }.toSet(),
+                            diets.map { Diet.valueOf(it) }.toSet(),
                             ingredients.map {
                                 Ingredient(
                                     it.name,
@@ -308,22 +316,18 @@ fun CreateRecipeScreen(
                                     IngredientUnit.fromString(it.unit)
                                 )
                             },
-                            instructions.map {
-                                val stepsMap = instructions.mapIndexed { index, step ->
-                                    (index + 1).toString() to step
-                                }.toMap()
-
-                               Instructions(steps = stepsMap)
-                            },
                             calories.toIntOrNull(),
                             protein.toIntOrNull(),
                             fat.toIntOrNull(),
-                            carbs.toIntOrNull()
+                            carbs.toIntOrNull(),
+                            Instructions(instructionsSteps)
+                            ,
+                            emptyList() // change to pictures
                         )
                     },
                     modifier = Modifier.padding(10.dp)
                 ) {
-                    Text("Publish")
+                    Text("Create")
                 }
             }
         }
@@ -332,6 +336,6 @@ fun CreateRecipeScreen(
 
 @Preview
 @Composable
-fun AddRecipeScreenPreview() {
-    CreateRecipeScreen({}, {}, { _, _, _, _, _, _, _, _, _, _, _, _, _, _ -> }, true)
+fun CreateRecipeScreenPreview() {
+    CreateRecipeScreen({}, { _, _, _, _, _, _, _, _, _, _, _, _, _, _, _ -> }, true)
 }

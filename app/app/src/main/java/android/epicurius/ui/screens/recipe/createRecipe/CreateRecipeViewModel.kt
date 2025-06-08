@@ -92,8 +92,7 @@ class CreateRecipeViewModel(
                 enableButtons()
             }
             result.isSuccess -> {
-                val recipeId = result.getValueOrThrow().recipe.id
-                navigateTo(recipeId)
+                navigateTo(result.getValueOrThrow().recipe.id)
             }
         }
     }
