@@ -62,6 +62,7 @@ class UserProfileActivity : EpicuriusActivity() {
             MaterialTheme {
                 UserProfileScreen(
                     isAnotherUserProfile = viewModel.isAnotherUserProfile,
+                    isFollower = true,
                     userProfileVisibility = viewModel.userProfileVisibility,
                     userRecipes = apiSuccess(listOf(
                         RecipeInfo(

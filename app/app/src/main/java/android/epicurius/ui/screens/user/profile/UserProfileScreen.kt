@@ -29,6 +29,9 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -47,6 +50,7 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun UserProfileScreen(
     isAnotherUserProfile: Boolean,
+    isFollower: Boolean,
     userProfileVisibility: Boolean,
     userRecipes: LoadState<List<RecipeInfo>>?,
     recipeCollectionsState: LoadState<List<CollectionProfile>>?,
@@ -56,6 +60,7 @@ fun UserProfileScreen(
     onSettingsButton: () -> Unit,
     onFollowersButton: () -> Unit,
     onFollowingButton: () -> Unit,
+    onFollowRequest: (String) -> Unit,
     //onFollow: (String) -> Unit,
     //onUnfollow: (String) -> Unit,
     onCollectionRequest: (Int) -> Unit,
@@ -95,13 +100,9 @@ fun UserProfileScreen(
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         Spacer(modifier = Modifier.fillMaxHeight(0.02f))
-
                         UserProfilePicture(userProfile.profilePicture, 120)
-
                         Spacer(modifier = Modifier.fillMaxHeight(0.02f))
-
                         Text(text = userProfile.name, fontWeight = FontWeight.Bold)
-
                         Spacer(modifier = Modifier.fillMaxHeight(0.05f))
 
                         Row(
@@ -111,16 +112,28 @@ fun UserProfileScreen(
                             FollowBox(
                                 name = "Followers",
                                 number = userProfile.followersCount,
-                                onClick = onFollowersButton
+                                onClick = onFollowersButton,
+                                enabled = userProfileVisibility
                             )
                             FollowBox(
                                 name = "Following",
                                 number = userProfile.followingCount,
-                                onClick = onFollowingButton
+                                onClick = onFollowingButton,
+                                enabled = userProfileVisibility
                             )
                         }
+                        if (isAnotherUserProfile) {
+                            val buttonText = if (isFollower) "Unfollow" else "Follow"
+                            val buttonColor = if (isFollower) Color.Black else Color.Unspecified
 
-                        Spacer(modifier = Modifier.fillMaxHeight(0.03f))
+                            Button(
+                                onClick = { onFollowRequest(userProfile.name) },
+                                modifier = Modifier.fillMaxWidth().padding(5.dp),
+                                colors = ButtonDefaults.buttonColors(containerColor = buttonColor)
+                            ) {
+                                Text(text = buttonText)
+                            }
+                        }
 
                         if (userProfileVisibility) {
                             ProfileTabBar(
@@ -129,74 +142,85 @@ fun UserProfileScreen(
                                 onKitchenBookClick = { selectedTabIndex = 1 },
                             )
                             Spacer(Modifier.size(10.dp))
-                        }
 
-                        if (selectedTabIndex == 0 && userRecipes != null) {
-                            LoadStateRenderer(
-                                loadState = userRecipes,
-                                content = { recipes ->
-                                    Column(
-                                        modifier = Modifier
-                                            .fillMaxSize()
-                                            .verticalScroll(rememberScrollState()),
-                                        verticalArrangement = Arrangement.spacedBy(16.dp)
-                                    ) {
-                                        if (recipes.isEmpty()) {
-                                            Text(
-                                                "User has no recipes yet.",
-                                                color = Color.Gray,
-                                                modifier = Modifier.fillMaxWidth(),
-                                                textAlign = TextAlign.Center
-                                            )
-                                        } else {
-                                            recipes.forEach { recipe ->
-                                                RecipeInfoBox(
-                                                    collectionId = null,
-                                                    recipeInfo = recipe,
-                                                    collectionsState = recipeCollectionsState,
-                                                    onAddRecipeToCollection = { _, _ ->},
-                                                    onRemoveRecipeFromCollection = { _, _ ->},
-                                                    onRecipeRequest = { _ -> },
-                                                    onCollectionsRequest = { _, _ -> },
-                                                    enableButtons = true
+                            if (selectedTabIndex == 0 && userRecipes != null) {
+                                LoadStateRenderer(
+                                    loadState = userRecipes,
+                                    content = { recipes ->
+                                        Column(
+                                            modifier = Modifier
+                                                .fillMaxSize()
+                                                .verticalScroll(rememberScrollState()),
+                                            verticalArrangement = Arrangement.spacedBy(16.dp)
+                                        ) {
+                                            if (recipes.isEmpty()) {
+                                                Text(
+                                                    "User has no recipes yet.",
+                                                    color = Color.Gray,
+                                                    modifier = Modifier.fillMaxWidth(),
+                                                    textAlign = TextAlign.Center
                                                 )
+                                            } else {
+                                                recipes.forEach { recipe ->
+                                                    RecipeInfoBox(
+                                                        collectionId = null,
+                                                        recipeInfo = recipe,
+                                                        collectionsState = recipeCollectionsState,
+                                                        onAddRecipeToCollection = { _, _ ->},
+                                                        onRemoveRecipeFromCollection = { _, _ ->},
+                                                        onRecipeRequest = { _ -> },
+                                                        onCollectionsRequest = { _, _ -> },
+                                                        enableButtons = true
+                                                    )
+                                                }
                                             }
                                         }
                                     }
-                                }
-                            )
-                        } else if (selectedTabIndex == 1 && kitchenBookCollectionsState != null) {
-                            LoadStateRenderer(
-                                loadState = kitchenBookCollectionsState,
-                                content = { collections ->
-                                    Column(
-                                        modifier = Modifier
-                                            .fillMaxSize()
-                                            .verticalScroll(rememberScrollState()),
-                                        verticalArrangement = Arrangement.spacedBy(16.dp)
-                                    ) {
-                                        if (collections.isEmpty()) {
-                                            Text(
-                                                "User has no kitchen book collections yet.",
-                                                color = Color.Gray,
-                                                modifier = Modifier.fillMaxWidth(),
-                                                textAlign = TextAlign.Center
-                                            )
-                                        } else {
-                                            collections.forEach { collection ->
-                                                CollectionProfileBox(
-                                                    collection = collection,
-                                                    onCollectionRequest = onCollectionRequest,
-                                                    onCollectionDelete = { _ -> },
-                                                    buttonsEnable = true
+                                )
+                            } else if (selectedTabIndex == 1 && kitchenBookCollectionsState != null) {
+                                LoadStateRenderer(
+                                    loadState = kitchenBookCollectionsState,
+                                    content = { collections ->
+                                        Column(
+                                            modifier = Modifier
+                                                .fillMaxSize()
+                                                .verticalScroll(rememberScrollState()),
+                                            verticalArrangement = Arrangement.spacedBy(16.dp)
+                                        ) {
+                                            if (collections.isEmpty()) {
+                                                Text(
+                                                    "User has no kitchen book collections yet.",
+                                                    color = Color.Gray,
+                                                    modifier = Modifier.fillMaxWidth(),
+                                                    textAlign = TextAlign.Center
                                                 )
+                                            } else {
+                                                collections.forEach { collection ->
+                                                    CollectionProfileBox(
+                                                        collection = collection,
+                                                        onCollectionRequest = onCollectionRequest,
+                                                        onCollectionDelete = { _ -> },
+                                                        buttonsEnable = true
+                                                    )
+                                                }
                                             }
                                         }
                                     }
-                                }
+                                )
+                            }
+                        } else {
+                            HorizontalDivider(
+                                modifier = Modifier.padding(vertical = 8.dp),
+                                thickness = 0.5.dp,
+                                color = Color.Black
+                            )
+                            Text(
+                                text = "This profile is private.",
+                                color = Color.Gray,
+                                modifier = Modifier.fillMaxWidth().padding(5.dp),
+                                textAlign = TextAlign.Center
                             )
                         }
-
                     }
                 }
             )
@@ -252,11 +276,13 @@ fun UserProfilePreview() {
     )
 
     UserProfileScreen(
-        false,
-        true,
+        isAnotherUserProfile = true,
+        isFollower = false,
+        userProfileVisibility = false,
         apiSuccess(userRecipes),
         null,
         apiSuccess(kitchenBookCollections),
+        {},
         {},
         {},
         {},

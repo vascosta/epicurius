@@ -21,14 +21,18 @@ import androidx.compose.ui.unit.dp
 fun FollowBox(
     name: String,
     number: Int,
-    onClick: () -> Unit
+    onClick: () -> Unit,
+    enabled: Boolean
 ) {
     Box(
         modifier = Modifier
             .height(45.dp)
             .width(180.dp)
             .border(width = 1.dp, color = Color.Black, shape = RectangleShape)
-            .clickable { onClick() },
+            .clickable(
+                enabled = enabled,
+                onClick = { onClick() }
+            ),
     ) {
         Column(
             modifier = Modifier.fillMaxSize(),
