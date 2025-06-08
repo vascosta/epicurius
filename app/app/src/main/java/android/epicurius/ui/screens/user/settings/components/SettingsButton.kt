@@ -17,8 +17,8 @@ import androidx.compose.ui.unit.dp
 fun SettingsButton(
     onClick: () -> Unit,
     enabled: Boolean,
-    text: String,
-    ) {
+    text: String
+) {
     var showLoadingSpinner by remember { mutableStateOf(false) }
 
     TextButton(
@@ -29,7 +29,7 @@ fun SettingsButton(
         modifier = Modifier.padding(start = 15.dp, end = 15.dp),
         enabled = enabled
     ) {
-        if (!showLoadingSpinner) {
+        if (!showLoadingSpinner || enabled) {
             Text(text)
         }
         else {

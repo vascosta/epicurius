@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -18,7 +17,7 @@ import androidx.compose.ui.unit.dp
 fun AuthButton(
     onClick: () -> Unit,
     enabled: Boolean,
-    label: String,
+    text: String
 ) {
     var showLoadingSpinner by remember { mutableStateOf(!enabled) }
 
@@ -31,7 +30,7 @@ fun AuthButton(
         enabled = enabled
     ) {
         if (!showLoadingSpinner || enabled) {
-            Text(label)
+            Text(text)
         }
         else {
             LoadingSpinner(Modifier.size(25.dp))
