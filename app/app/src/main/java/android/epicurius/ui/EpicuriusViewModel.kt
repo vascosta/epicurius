@@ -13,6 +13,7 @@ import android.epicurius.services.http.media.Problem
 import android.epicurius.storage.Session
 import android.epicurius.ui.screens.auth.login.LoginActivity
 import android.epicurius.ui.navigation.navigateTo
+import android.epicurius.ui.screens.auth.signup.SignUpActivity
 import android.widget.Toast
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -44,7 +45,11 @@ open class EpicuriusViewModel(
     init {
         viewModelScope.launch {
             isLoggedIn = session.isLoggedIn()
-            if (!isLoggedIn && context::class.java != LoginActivity::class.java) {
+            if (
+                !isLoggedIn &&
+                context::class.java != LoginActivity::class.java &&
+                context::class.java != SignUpActivity::class.java
+                ) {
                 onSessionExpired()
             }
         }
