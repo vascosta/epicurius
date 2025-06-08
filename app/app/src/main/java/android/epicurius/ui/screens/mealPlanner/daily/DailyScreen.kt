@@ -47,8 +47,8 @@ fun DailyScreen(
     var showDialog by remember { mutableStateOf(false) }
 
     Scaffold(
-        topBar = { TopBar("Daily Meal Planner", backButton = true, onBackButton) },
-        bottomBar = { BottomBar() },
+        topBar = { TopBar("Daily Meal Planner", backButton = true, onBackButton = onBackButton, buttonsEnable = true) },
+        bottomBar = { BottomBar(buttonsEnable = true) },
         content = { paddingValues ->
             Column(
                 modifier = Modifier

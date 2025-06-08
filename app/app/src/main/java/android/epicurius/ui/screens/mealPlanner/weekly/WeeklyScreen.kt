@@ -50,8 +50,8 @@ fun WeeklyScreen(
     val selectMealPlanner = mealPlanner.planner.find { daily -> daily.date == selectedDay }
 
     Scaffold(
-        topBar = { TopBar("Weekly Meal Planner", backButton = true, onBackButton) },
-        bottomBar = { BottomBar() },
+        topBar = { TopBar("Weekly Meal Planner", backButton = true, onBackButton = onBackButton, buttonsEnable = true) },
+        bottomBar = { BottomBar(buttonsEnable = true) },
         content = { paddingValues ->
             Column(
                 modifier = Modifier

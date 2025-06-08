@@ -52,8 +52,8 @@ fun CalendarScreen(
     }
 
     Scaffold(
-        topBar = { TopBar("Meal Planner") },
-        bottomBar = { BottomBar() },
+        topBar = { TopBar("Meal Planner", buttonsEnable = true) },
+        bottomBar = { BottomBar(buttonsEnable = true) },
         content = { paddingValues ->
             VerticalCalendar(
                 modifier = Modifier
