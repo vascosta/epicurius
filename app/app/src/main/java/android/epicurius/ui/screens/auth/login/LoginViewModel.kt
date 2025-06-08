@@ -17,9 +17,6 @@ class LoginViewModel(
     context: Context
 ): UserViewModel(service, session, context) {
 
-    var buttonsEnable by mutableStateOf(true)
-        private set
-
     fun login(
         name: String,
         email: String,
@@ -66,14 +63,5 @@ class LoginViewModel(
             !validatePassword(password) -> false
             else -> true
         }
-    }
-
-
-    private fun enableButtons() {
-        buttonsEnable = true
-    }
-
-    private fun disableButtons() {
-        buttonsEnable = false
     }
 }

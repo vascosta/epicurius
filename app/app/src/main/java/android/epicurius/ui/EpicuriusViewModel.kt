@@ -12,8 +12,11 @@ import android.epicurius.services.http.utils.APIResult
 import android.epicurius.services.http.media.Problem
 import android.epicurius.storage.Session
 import android.epicurius.ui.screens.auth.login.LoginActivity
-import android.epicurius.ui.screens.utils.navigateTo
+import android.epicurius.ui.navigation.navigateTo
 import android.widget.Toast
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
@@ -31,6 +34,21 @@ open class EpicuriusViewModel(
 
     private val contextRef: WeakReference<Context> = WeakReference(context)
     val context get() = contextRef.get() ?: error("Activity Context is null")
+
+    var isLoggedIn by mutableStateOf(false)
+        protected set
+
+    var buttonsEnable by mutableStateOf(false)
+        protected set
+
+    init {
+        viewModelScope.launch {
+            isLoggedIn = session.isLoggedIn()
+            if (!isLoggedIn) {
+                onSessionExpired()
+            }
+        }
+    }
 
     inline fun <reified T> request(
         showError: Boolean = true,
@@ -74,6 +92,14 @@ open class EpicuriusViewModel(
         showToast(context.getString(R.string.session_expired_msg))
         viewModelScope.launch { session.delete(context) }
         context.navigateTo<LoginActivity>()
+    }
+
+    fun enableButtons() {
+        buttonsEnable = true
+    }
+
+    fun disableButtons() {
+        buttonsEnable = false
     }
 
     companion object {
