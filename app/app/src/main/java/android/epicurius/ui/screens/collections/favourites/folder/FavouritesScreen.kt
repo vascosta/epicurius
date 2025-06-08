@@ -50,7 +50,14 @@ fun FavouritesScreen(
     var showCreateCollectionDialog by remember { mutableStateOf(false) }
 
     Scaffold(
-        topBar = { TopBar("Favourites", backButton = true, onBackButton = onBackButton, icon = null) },
+        topBar = {
+            TopBar(
+                text = "Favourites",
+                backButton = true,
+                onBackButton = onBackButton,
+                icon = null
+            )
+        },
         bottomBar = { BottomBar() },
         content = { paddingValues ->
             LoadStateRenderer(

@@ -29,7 +29,7 @@ class FavouritesActivity : EpicuriusActivity() {
             val favouritesState = viewModel.favourites.collectAsState(idle())
             FavouritesScreen(
                 favouritesState = favouritesState.value,
-                onBackButton = { navigateTo<UserProfileActivity>() },
+                onBackButton = { navigateTo<SettingsActivity>() },
                 onCollectionCreate = { name ->
                     viewModel.createFavouriteCollection(name) { id -> navigateToFavouritesListActivity(id) }
                 },
