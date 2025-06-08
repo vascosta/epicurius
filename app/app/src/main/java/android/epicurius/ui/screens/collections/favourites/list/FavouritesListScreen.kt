@@ -52,7 +52,6 @@ fun FavouritesListScreen(
     onFavouriteCollectionRefresh: () -> Unit,
     buttonsEnable: Boolean
 ) {
-
     var favouritesListName = getFavouritesListName(favouritesListNameState)
 
     var showEditCollectionDialog by remember { mutableStateOf(false) }
