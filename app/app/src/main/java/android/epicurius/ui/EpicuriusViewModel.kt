@@ -1,5 +1,6 @@
 package android.epicurius.ui
 
+import android.app.Activity
 import android.content.Context
 import android.epicurius.R
 import android.epicurius.domain.exceptions.AuthenticatedUserNotFound
@@ -76,9 +77,12 @@ open class EpicuriusViewModel(
             if (e is UserNotLoggedInException) {
                 onSessionExpired()
             }
+            if (e is ConnectException) {
+                showToast(context.getString(R.string.could_not_connect_to_server_msg))
+                disableButtons()
+            }
             else {
                 val message = when (e) {
-                    is ConnectException,
                     is SocketTimeoutException,
                     is UnknownHostException,
                     is InvalidResponseException -> context.getString(R.string.could_not_connect_to_server_msg)
