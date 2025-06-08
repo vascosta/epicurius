@@ -44,6 +44,7 @@ fun FeedScreen(
     collectionsState: LoadState<List<CollectionProfile>>,
     onAddRecipeToCollection: (Int, Int) -> Unit,
     onRemoveRecipeFromCollection: (Int, Int) -> Unit,
+    onUserIconRequest: () -> Unit,
     onRecipeRequest: (Int) -> Unit,
     onUserFeedRefresh: () -> Unit,
     onLoadMore: () -> Unit,
@@ -52,7 +53,10 @@ fun FeedScreen(
     val context = LocalContext.current
 
     Scaffold(
-        topBar = { TopBar(text = "For you to cook") },
+        topBar = { TopBar(
+            text = "For you to cook",
+            onIconClick = onUserIconRequest
+        ) },
         bottomBar = { BottomBar() },
         content = { paddingValues ->
             LoadStateRenderer(
@@ -147,5 +151,15 @@ fun FeedPreview() {
         )
     )
 
-    FeedScreen(apiSuccess(recipeList), apiSuccess(collection), {_, _ ->}, {_, _ ->}, {}, {}, {}, true)
+    FeedScreen(
+        apiSuccess(recipeList),
+        apiSuccess(collection),
+        { _, _ -> },
+        { _, _ -> },
+        {},
+        {},
+        {},
+        {},
+        true
+    )
 }

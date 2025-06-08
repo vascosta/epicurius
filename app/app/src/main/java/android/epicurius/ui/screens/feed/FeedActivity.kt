@@ -6,6 +6,7 @@ import android.epicurius.ui.screens.recipe.profile.RecipeProfileActivity
 import android.epicurius.ui.screens.utils.Idle
 import android.epicurius.ui.screens.utils.idle
 import android.epicurius.ui.navigation.navigateTo
+import android.epicurius.ui.screens.user.profile.UserProfileActivity
 import android.epicurius.ui.screens.utils.apiSuccess
 import android.os.Bundle
 import androidx.activity.compose.setContent
@@ -31,6 +32,7 @@ class FeedActivity : EpicuriusActivity() {
                 collectionsState = apiSuccess(emptyList()),
                 onAddRecipeToCollection = {_, _ ->},
                 onRemoveRecipeFromCollection = {_, _ ->},
+                onUserIconRequest = { navigateTo<UserProfileActivity>() },
                 onRecipeRequest = ::navigateToRecipeProfileActivity,
                 onUserFeedRefresh = { viewModel.refreshUserFeed() },
                 onLoadMore = { },
