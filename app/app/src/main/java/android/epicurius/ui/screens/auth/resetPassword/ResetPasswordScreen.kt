@@ -1,9 +1,8 @@
 package android.epicurius.ui.screens.auth.resetPassword
 
-import android.content.Intent
 import android.epicurius.ui.navigation.TopBar
 import android.epicurius.ui.screens.auth.components.PasswordTextField
-import android.epicurius.ui.screens.auth.login.LoginActivity
+import android.epicurius.ui.screens.utils.LoadingSpinner
 import android.epicurius.ui.screens.utils.TextField
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -23,20 +22,18 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 
 @Composable
 fun ResetPasswordScreen(
     onBackButton: () -> Unit,
-    onResetPassword: (String, String, String) -> Unit
+    onResetPassword: (String, String, String) -> Unit,
+    buttonsEnable: Boolean
 ) {
     var email by remember { mutableStateOf("") }
     var newPassword by remember { mutableStateOf("") }
     var confirmPassword by remember { mutableStateOf("") }
-
-    val context = LocalContext.current
 
     Scaffold(
         topBar = {
@@ -74,12 +71,16 @@ fun ResetPasswordScreen(
                 )
                 Spacer(Modifier.size(10.dp))
                 Button(
-                    onClick = {
-                        onResetPassword(email, newPassword, confirmPassword)
-                        context.startActivity(Intent(context, LoginActivity::class.java))
-                    },
-                    enabled = email.isNotBlank() && newPassword.isNotBlank() && confirmPassword.isNotBlank() && newPassword == confirmPassword
-                ) { Text("Reset Password") }
+                    onClick = { onResetPassword(email, newPassword, confirmPassword) },
+                    enabled = buttonsEnable
+                ) {
+                    if (buttonsEnable) {
+                        Text("Reset Password")
+                    }
+                    else {
+                        LoadingSpinner(Modifier.size(30.dp))
+                    }
+                }
             }
         },
         containerColor = Color.White
@@ -89,5 +90,5 @@ fun ResetPasswordScreen(
 @Preview
 @Composable
 fun ResetPasswordScreenPreview() {
-    ResetPasswordScreen({}, { _, _, _ -> })
+    ResetPasswordScreen({}, { _, _, _ -> }, true)
 }

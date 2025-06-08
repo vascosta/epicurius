@@ -1,0 +1,61 @@
+package android.epicurius.ui.screens.auth.resetPassword
+
+import android.content.Context
+import android.epicurius.services.EpicuriusService
+import android.epicurius.services.api.user.models.input.ResetPasswordInputModel
+import android.epicurius.storage.Session
+import android.epicurius.ui.screens.user.UserViewModel
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.launch
+
+class ResetPasswordViewModel(
+    service: EpicuriusService,
+    session: Session,
+    context: Context
+): UserViewModel(service, session, context) {
+
+    fun resetPassword(
+        email: String,
+        password: String,
+        confirmPassword: String
+    ) {
+        disableButtons()
+        if (!validateResetPasswordInfo(email, password, confirmPassword)) {
+            enableButtons()
+            return
+        }
+        val resetPasswordInfo = ResetPasswordInputModel(email, password, confirmPassword)
+        viewModelScope.launch {
+            handleResetPassword(resetPasswordInfo)
+        }
+    }
+
+    private suspend fun handleResetPassword(resetPasswordInfo: ResetPasswordInputModel) {
+        val result = request {
+            val token = session.getToken()
+            service.userService.resetUserPassword(token, resetPasswordInfo)
+        }
+        when {
+            result.isFailure -> {
+                enableButtons()
+            }
+            result.isSuccess -> {
+                onSessionExpired()
+            }
+        }
+    }
+
+    private fun validateResetPasswordInfo(
+        email: String,
+        password: String,
+        confirmPassword: String
+    ): Boolean =
+        when {
+            password != confirmPassword -> {
+                showToast("passwords must be equal")
+                false
+            }
+            !validateEmail(email) || !validatePassword(password) -> false
+            else -> true
+        }
+}
