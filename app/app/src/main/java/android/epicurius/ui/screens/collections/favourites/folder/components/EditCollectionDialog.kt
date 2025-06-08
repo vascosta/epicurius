@@ -24,8 +24,7 @@ fun EditCollectionDialog(
     collectionId: Int,
     onDismiss: () -> Unit,
     onEditCollection: (Int, String) -> Unit,
-    enableButtons: Boolean
-
+    buttonsEnable: Boolean
 ) {
     var newCollectionName by remember { mutableStateOf(collectionName) }
 
@@ -47,13 +46,13 @@ fun EditCollectionDialog(
         confirmButton = {
             TextButton(
                 onClick = { onDismiss() },
-                enabled = enableButtons
+                enabled = buttonsEnable
             ) { Text("Cancel") }
             TextButton(
                 onClick = { onEditCollection(collectionId, newCollectionName) },
-                enabled = enableButtons
+                enabled = buttonsEnable
             ) {
-                if (enableButtons) { Text("Edit") }
+                if (buttonsEnable) { Text("Edit") }
                 else { LoadingSpinner(Modifier.size(30.dp)) }
             }
         }

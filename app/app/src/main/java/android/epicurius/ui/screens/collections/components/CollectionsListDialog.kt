@@ -32,7 +32,7 @@ fun CollectionsListDialog(
     onAddRecipeToCollection: (Int, Int) -> Unit,
     onRemoveRecipeFromCollection: (Int, Int) -> Unit,
     onCollectionsRequest: (Int, Boolean) -> Unit,
-    enableButtons: Boolean
+    buttonsEnable: Boolean
 ) {
     if (collectionsState != null) {
 
@@ -67,9 +67,9 @@ fun CollectionsListDialog(
                                                     onCollectionChange()
                                                 }
                                             },
-                                            enabled = enableButtons
+                                            enabled = buttonsEnable
                                         )
-                                        if (enableButtons) {
+                                        if (buttonsEnable) {
                                             Text(
                                                 text = collection.name,
                                                 modifier = Modifier.weight(1f)
@@ -97,9 +97,9 @@ fun CollectionsListDialog(
                                                     onCollectionChange()
                                                 }
                                             },
-                                            enabled = enableButtons
+                                            enabled = buttonsEnable
                                         )
-                                        if (enableButtons) {
+                                        if (buttonsEnable) {
                                             Text(
                                                 text = collection.name,
                                                 modifier = Modifier.weight(1f)

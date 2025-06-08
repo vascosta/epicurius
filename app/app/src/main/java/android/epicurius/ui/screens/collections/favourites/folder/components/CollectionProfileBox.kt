@@ -14,11 +14,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -37,7 +35,7 @@ fun CollectionProfileBox(
     collection: CollectionProfile,
     onCollectionRequest: (Int) -> Unit,
     onCollectionDelete: (Int) -> Unit,
-    enableButtons: Boolean
+    buttonsEnable: Boolean
 ) {
     var showDeleteDialog by remember { mutableStateOf(false) }
 
@@ -77,7 +75,7 @@ fun CollectionProfileBox(
                 collectionId = collection.id,
                 onDelete = onCollectionDelete,
                 onDismissRequest = { showDeleteDialog = false },
-                enableButtons = enableButtons
+                buttonsEnable = buttonsEnable
             )
         }
     }
