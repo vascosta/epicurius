@@ -1,6 +1,7 @@
 package android.epicurius.ui.screens.recipe
 
 import android.content.Context
+import android.epicurius.domain.Picture
 import android.epicurius.domain.recipe.INGREDIENTS_SIZE_MSG
 import android.epicurius.domain.recipe.INSTRUCTIONS_STEPS_SIZE_MSG
 import android.epicurius.domain.recipe.INSTRUCTIONS_STEP_NUMBER_MSG
@@ -10,14 +11,17 @@ import android.epicurius.domain.recipe.MAX_INGREDIENT_NAME_LENGTH
 import android.epicurius.domain.recipe.MAX_INSTRUCTIONS_STEP_LENGTH
 import android.epicurius.domain.recipe.MAX_NUMBER_OF_INGREDIENTS
 import android.epicurius.domain.recipe.MAX_NUMBER_OF_INSTRUCTIONS_STEPS
+import android.epicurius.domain.recipe.MAX_NUMBER_OF_RECIPE_PICTURES
 import android.epicurius.domain.recipe.MAX_RECIPE_DESCRIPTION_LENGTH
 import android.epicurius.domain.recipe.MAX_RECIPE_NAME_LENGTH
 import android.epicurius.domain.recipe.MIN_INGREDIENT_NAME_LENGTH
 import android.epicurius.domain.recipe.MIN_INGREDIENT_QUANTITY
 import android.epicurius.domain.recipe.MIN_INSTRUCTIONS_STEP_LENGTH
 import android.epicurius.domain.recipe.MIN_RECIPE_NAME_LENGTH
+import android.epicurius.domain.recipe.MIN_NUMBER_OF_RECIPE_PICTURES
 import android.epicurius.domain.recipe.RECIPE_DESCRIPTION_LENGTH_MSG
 import android.epicurius.domain.recipe.RECIPE_NAME_LENGTH_MSG
+import android.epicurius.domain.recipe.RECIPE_PICTURES_MSG
 import android.epicurius.domain.recipe.getIngredientNameMessage
 import android.epicurius.domain.recipe.getIngredientQuantityMessage
 import android.epicurius.domain.recipe.getInstructionStepMessage
@@ -26,7 +30,7 @@ import android.epicurius.services.EpicuriusService
 import android.epicurius.storage.Session
 import android.epicurius.ui.EpicuriusViewModel
 
-class RecipeViewModel(
+open class RecipeViewModel(
     service: EpicuriusService,
     session: Session,
     context: Context
@@ -96,6 +100,14 @@ class RecipeViewModel(
                 showToast(getInstructionStepMessage(stepNumber))
                 return false
             }
+        }
+        return true
+    }
+
+    fun validatePictures(pictures: List<Picture>): Boolean {
+        if (pictures.size !in MIN_NUMBER_OF_RECIPE_PICTURES..MAX_NUMBER_OF_RECIPE_PICTURES) {
+            showToast(RECIPE_PICTURES_MSG)
+            return false
         }
         return true
     }
