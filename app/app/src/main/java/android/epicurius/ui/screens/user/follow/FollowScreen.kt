@@ -24,12 +24,13 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun FollowScreen(
+    selectedTab: Int,
     onBackButton: () -> Unit = {},
     userProfile: UserProfile,
     followers: List<FollowUser>,
     following: List<FollowingUser>
 ) {
-    var selectedTabIndex by remember { mutableIntStateOf(0) }
+    var selectedTabIndex by remember { mutableIntStateOf(selectedTab) }
 
     Scaffold(
         topBar = {
@@ -89,5 +90,5 @@ fun FollowPreview() {
         )
     )
 
-    FollowScreen({}, userProfile, followers, following)
+    FollowScreen(0, {}, userProfile, followers, following)
 }

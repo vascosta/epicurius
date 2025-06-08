@@ -17,9 +17,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun ProfileTabBar() {
-    var selectedTabIndex by remember { mutableIntStateOf(0) }
-
+fun ProfileTabBar(
+    selectedTabIndex: Int,
+    onRecipesClick: () -> Unit,
+    onKitchenBookClick: () -> Unit
+) {
     val tabs = listOf("Recipes", "Kitchen Book")
 
     Column {
@@ -31,7 +33,12 @@ fun ProfileTabBar() {
             tabs.forEachIndexed { index, name ->
                 Tab(
                     selected = selectedTabIndex == index,
-                    onClick = { selectedTabIndex = index },
+                    onClick = {
+                        when (index) {
+                            0 -> onRecipesClick()
+                            1 -> onKitchenBookClick()
+                        }
+                    },
                     modifier = Modifier.padding(15.dp)
                 ) {
                     Text(name)

@@ -1,16 +1,20 @@
 package android.epicurius.ui.screens.user.profile
 
 import android.epicurius.domain.collection.CollectionProfile
+import android.epicurius.domain.recipe.Cuisine
+import android.epicurius.domain.recipe.MealType
 import android.epicurius.domain.recipe.RecipeInfo
 import android.epicurius.domain.user.FollowUser
 import android.epicurius.domain.user.FollowingUser
 import android.epicurius.domain.user.UserProfile
 import android.epicurius.ui.EpicuriusActivity
 import android.epicurius.ui.navigation.Intents
+import android.epicurius.ui.screens.user.follow.FollowActivity
 import android.epicurius.ui.screens.user.settings.SettingsActivity
 import android.epicurius.ui.screens.utils.Idle
 import android.epicurius.ui.screens.utils.LoadState
 import android.epicurius.ui.screens.utils.Loaded
+import android.epicurius.ui.screens.utils.apiSuccess
 import android.epicurius.ui.screens.utils.navigateTo
 import android.os.Bundle
 import androidx.activity.compose.setContent
@@ -59,8 +63,41 @@ class UserProfileActivity : EpicuriusActivity() {
                 UserProfileScreen(
                     isAnotherUserProfile = viewModel.isAnotherUserProfile,
                     userProfileVisibility = viewModel.userProfileVisibility,
+                    userRecipes = apiSuccess(listOf(
+                        RecipeInfo(
+                            id = 1,
+                            name = "Spaghetti Carbonara",
+                            authorUsername = "John Doe",
+                            rating = 3.5,
+                            cuisine = Cuisine.ITALIAN,
+                            mealType = MealType.MAIN_COURSE,
+                            preparationTime = 45,
+                            servings = 4,
+                            picture = ByteArray(0),
+                            isInCollection = false,
+                        ),
+                        RecipeInfo(
+                            id = 2,
+                            name = "Chicken Curry",
+                            authorUsername = "John Doe",
+                            rating = 4.0,
+                            cuisine = Cuisine.INDIAN,
+                            mealType = MealType.MAIN_COURSE,
+                            preparationTime = 30,
+                            servings = 2,
+                            picture = ByteArray(0),
+                            isInCollection = false,
+                        )
+                    )),
+                    recipeCollectionsState = null,
+                    kitchenBookCollectionsState = apiSuccess(listOf(
+                        CollectionProfile(1, "Italian Delights"),
+                        CollectionProfile(2, "Quick Meals")
+                    )),
                     onBackButton = { finish() },
                     onSettingsButton = { navigateTo<SettingsActivity>() },
+                    onFollowersButton = { navigateTo<FollowActivity>() },
+                    onFollowingButton = { navigateTo<FollowActivity>() },
                     onCollectionRequest = { collectionId ->
                         viewModel.getKitchenBookCollectionRecipes(collectionId)
                     },

@@ -17,6 +17,7 @@ class FollowActivity : ComponentActivity() {
         setContent {
             MaterialTheme {
                 FollowScreen(
+                    selectedTab = 0,
                     onBackButton = { navigateTo<UserProfileActivity>() },
                     userProfile = UserProfile(
                             name = "John Doe",

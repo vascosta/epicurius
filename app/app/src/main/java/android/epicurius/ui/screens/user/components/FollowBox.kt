@@ -1,6 +1,7 @@
 package android.epicurius.ui.screens.user.components
 
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -17,12 +18,17 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun FollowBox(name: String, number: Int) {
+fun FollowBox(
+    name: String,
+    number: Int,
+    onClick: () -> Unit
+) {
     Box(
         modifier = Modifier
             .height(45.dp)
             .width(180.dp)
-            .border(width = 1.dp, color = Color.Black, shape = RectangleShape),
+            .border(width = 1.dp, color = Color.Black, shape = RectangleShape)
+            .clickable { onClick() },
     ) {
         Column(
             modifier = Modifier.fillMaxSize(),
