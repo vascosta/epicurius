@@ -14,7 +14,7 @@ const val VALID_USERNAME_MSG = "username must have at least one letter and one n
 const val USERNAME_LENGTH_MSG = "username must be between $MIN_USERNAME_LENGTH and $MAX_USERNAME_LENGTH characters"
 
 val passwordRegex = Regex("(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%^&*()\\-__+.]).*$")
-const val VALID_PASSWORD_MSG = "password must have uppercase and lowercase letters, at least a number and a special character"
+const val VALID_PASSWORD_MSG = "password must have upper/lower case letters, a number and a special character"
 const val PASSWORD_LENGTH_MSG = "password must be between $MIN_PASSWORD_LENGTH and $MAX_PASSWORD_LENGTH characters"
 
 val emailRegex = Regex("^[A-Za-z0-9+_.-]+@(.+)\$")

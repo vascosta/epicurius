@@ -124,13 +124,11 @@ class UserService(private val httpService: HttpService) {
         )
 
     suspend fun resetUserPassword(
-        token: String,
         resetPasswordInfo: ResetPasswordInputModel
     ): APIResult<Unit> =
         httpService.patch<Unit>(
             Uris.User.USER_RESET_PASSWORD,
             body = resetPasswordInfo,
-            token = token
         )
 
     suspend fun follow(
