@@ -34,7 +34,11 @@ fun UserBox(user: SearchUser) {
             verticalAlignment = Alignment.CenterVertically
         ) {
             Spacer(modifier = Modifier.size(10.dp))
-            UserProfilePicture(user.profilePicture, 60)
+            UserProfilePicture(
+                profilePicture = user.profilePicture,
+                iconSize = 60,
+                onClick = {}
+            )
             Spacer(modifier = Modifier.width(70.dp))
             Text(user.name)
         }

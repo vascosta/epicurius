@@ -1,8 +1,11 @@
 package android.epicurius.ui.screens.user.components
 
 import android.graphics.BitmapFactory
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
@@ -19,31 +22,32 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun UserProfilePicture(profilePicture: ByteArray?, iconSize: Int) {
+fun UserProfilePicture(
+    profilePicture: ByteArray?,
+    iconSize: Int,
+    onClick: () -> Unit
+) {
     Box(
         modifier = Modifier
             .size(iconSize.dp)
             .clip(CircleShape)
-            .background(Color.LightGray),
+            .background(Color.LightGray)
+            .clickable { onClick() },
         contentAlignment = Alignment.Center
     ) {
         if (profilePicture == null) {
-            IconButton(onClick = {}) {
-                Icon(
-                    imageVector = Icons.Default.Person,
-                    contentDescription = "Default Profile",
-                    tint = Color.White,
-                    modifier = Modifier.size(64.dp)
-                )
-            }
+            Icon(
+                imageVector = Icons.Default.Person,
+                contentDescription = "Default Profile",
+                tint = Color.White,
+                modifier = Modifier.size(64.dp)
+            )
         } else {
             val bitmap = BitmapFactory.decodeByteArray(profilePicture, 0, profilePicture.size)
-            IconButton(onClick = {}) {
-                Icon(
-                    bitmap = bitmap.asImageBitmap(),
-                    contentDescription = "User Profile Picture",
-                )
-            }
+            Image(
+                bitmap = bitmap.asImageBitmap(),
+                contentDescription = "User Profile Picture"
+            )
         }
     }
 }
@@ -51,5 +55,5 @@ fun UserProfilePicture(profilePicture: ByteArray?, iconSize: Int) {
 @Preview
 @Composable
 fun UserProfilePicturePreview() {
-    UserProfilePicture(null, 120)
+    UserProfilePicture(null, 120, {})
 }

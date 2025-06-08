@@ -15,6 +15,12 @@ import android.epicurius.ui.screens.user.components.UserProfilePicture
 import android.epicurius.ui.screens.utils.LoadState
 import android.epicurius.ui.screens.utils.LoadStateRenderer
 import android.epicurius.ui.screens.utils.apiSuccess
+import android.net.Uri
+import android.os.Build
+import android.widget.Toast
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -37,16 +43,22 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.isGranted
+import com.google.accompanist.permissions.rememberPermissionState
 
+@OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun UserProfileScreen(
     isAnotherUserProfile: Boolean,
@@ -67,6 +79,7 @@ fun UserProfileScreen(
     //onRecipeRequest: (Int) -> Unit,
     //onAddRecipeToCollectionRequest: (Int, Int) -> Unit,
     onUserProfileRefresh: () -> Unit,
+    onUserPictureChange: (ByteArray) -> Unit,
     onUserRecipesLoadMore: () -> Unit,
     onUserKitchenBookLoadMore: () -> Unit,
     userProfileState: LoadState<UserProfile>,
@@ -75,6 +88,31 @@ fun UserProfileScreen(
     //kitchenBookCollectionRecipesState: LoadState<List<RecipeInfo>>
 ) {
     var selectedTabIndex by remember { mutableIntStateOf(0) }
+
+    var selectedImageBytes by remember { mutableStateOf<ByteArray?>(null) }
+    val context = LocalContext.current
+
+    val imagePickerLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.PickVisualMedia()
+    ) { uri ->
+        if (uri != null) {
+            val inputStream = context.contentResolver.openInputStream(uri)
+            val bytes = inputStream?.readBytes()
+            inputStream?.close()
+            if (bytes != null) {
+                selectedImageBytes = bytes
+                onUserPictureChange(bytes)
+            }
+        } else {
+            Toast.makeText(context, "No image selected", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    val galleryPermissionState = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+        rememberPermissionState(android.Manifest.permission.READ_MEDIA_IMAGES)
+    } else {
+        rememberPermissionState(android.Manifest.permission.READ_EXTERNAL_STORAGE)
+    }
 
     Scaffold(
         topBar = {
@@ -99,7 +137,19 @@ fun UserProfileScreen(
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         Spacer(modifier = Modifier.fillMaxHeight(0.02f))
-                        UserProfilePicture(userProfile.profilePicture, 120)
+                        UserProfilePicture(
+                            profilePicture = selectedImageBytes ?: userProfile.profilePicture,
+                            iconSize = 120,
+                            onClick = {
+                                if (!isAnotherUserProfile && galleryPermissionState.status.isGranted) {
+                                    imagePickerLauncher.launch(
+                                        PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
+                                    )
+                                } else if (!isAnotherUserProfile){
+                                    galleryPermissionState.launchPermissionRequest()
+                                }
+                            }
+                        )
                         Spacer(modifier = Modifier.fillMaxHeight(0.02f))
                         Text(text = userProfile.name, fontWeight = FontWeight.Bold)
                         Spacer(modifier = Modifier.fillMaxHeight(0.05f))
@@ -132,6 +182,8 @@ fun UserProfileScreen(
                             ) {
                                 Text(text = buttonText)
                             }
+                        } else {
+                            Spacer(modifier = Modifier.fillMaxHeight(0.05f))
                         }
 
                         if (userProfileVisibility) {
@@ -275,12 +327,13 @@ fun UserProfilePreview() {
     )
 
     UserProfileScreen(
-        isAnotherUserProfile = true,
+        isAnotherUserProfile = false,
         isFollower = false,
         userProfileVisibility = false,
         apiSuccess(userRecipes),
         null,
         apiSuccess(kitchenBookCollections),
+        {},
         {},
         {},
         {},

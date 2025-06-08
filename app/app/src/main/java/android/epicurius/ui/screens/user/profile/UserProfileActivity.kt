@@ -109,6 +109,7 @@ class UserProfileActivity : EpicuriusActivity() {
                     },
                     onUserRecipesLoadMore = { viewModel.getUserRecipes() },
                     onUserKitchenBookLoadMore = { viewModel.getUserKitchenBook() },
+                    onUserPictureChange = {},
                     userProfileState = userProfile.value,
                 )
             }
