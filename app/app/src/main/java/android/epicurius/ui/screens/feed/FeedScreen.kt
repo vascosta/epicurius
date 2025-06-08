@@ -54,8 +54,9 @@ fun FeedScreen(
     Scaffold(
         topBar = { TopBar(
             text = "For you to cook",
+            buttonsEnable = buttonsEnable
         ) },
-        bottomBar = { BottomBar() },
+        bottomBar = { BottomBar(buttonsEnable = buttonsEnable) },
         content = { paddingValues ->
             LoadStateRenderer(
                 loadState = userFeedState,
