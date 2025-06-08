@@ -17,9 +17,6 @@ class SignUpViewModel(
     context: Context
 ): UserViewModel(service, session, context) {
 
-    var signUpEnable by mutableStateOf(true)
-        private set
-
     fun signUp(
         name: String,
         email: String,
@@ -28,9 +25,9 @@ class SignUpViewModel(
         country: String,
         navigateTo: () -> Unit
     ) {
-        disableSignUp()
+        disableButtons()
         if (!validateSignUpInfo(name, email, password, confirmPassword)) {
-            enableSignUp()
+            enableButtons()
             return
         }
         val signUpInfo = SignUpInputModel(name, email, password, confirmPassword, country)
@@ -45,7 +42,7 @@ class SignUpViewModel(
         }
         when {
             result.isFailure -> {
-                enableSignUp()
+                enableButtons()
             }
             result.isSuccess -> {
                 val token = result.getTokenOrThrow()
@@ -69,12 +66,4 @@ class SignUpViewModel(
             !validateName(name) || !validateEmail(email) || !validatePassword(password) -> false
             else -> true
         }
-
-    private fun enableSignUp() {
-        signUpEnable = true
-    }
-
-    private fun disableSignUp() {
-        signUpEnable = false
-    }
 }

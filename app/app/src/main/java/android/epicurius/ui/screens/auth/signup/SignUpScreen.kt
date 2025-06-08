@@ -28,7 +28,7 @@ import java.util.Locale
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun SignUpScreen(
-    signUpEnable: Boolean,
+    buttonsEnable: Boolean,
     onSignUp: (String, String, String, String, String) -> Unit,
     onLogin: () -> Unit
 ) {
@@ -72,7 +72,7 @@ fun SignUpScreen(
                 AuthButton(
                     label = "Login",
                     onClick = { onLogin() },
-                    enabled = signUpEnable
+                    enabled = buttonsEnable
                 )
                 AuthButton(
                     label = "SignUp",
@@ -85,7 +85,7 @@ fun SignUpScreen(
                             country
                         )
                     },
-                    enabled = signUpEnable
+                    enabled = buttonsEnable
                 )
             }
         }
