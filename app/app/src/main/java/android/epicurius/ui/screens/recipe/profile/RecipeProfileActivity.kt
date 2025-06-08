@@ -62,9 +62,16 @@ class RecipeProfileActivity : ComponentActivity() {
                 rating = 4.0,
                 images = listOf(R.drawable.home, R.drawable.star, R.drawable.pencil),
                 isAuthor = true,
+                collectionId = null,
+                collectionsState = null,
+                enableButtons = true,
                 onBackButton = {},
-                onEdit = {},
-                onMakeIt = { navigateTo<ConfirmIngredientsActivity>() }
+                onEditRecipe = {},
+                onMakeIt = { navigateTo<ConfirmIngredientsActivity>() },
+                onEditRating = { },
+                onCollectionsRequest = { _, _ -> },
+                onAddRecipeToCollection = { _, _ -> },
+                onRemoveRecipeFromCollection = { _, _ -> },
             )
         }
     }
