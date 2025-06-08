@@ -62,8 +62,7 @@ class SettingsViewModel(
                 enableButtons()
             }
             result.isSuccess -> {
-                session.delete(context)
-                context.navigateTo<LoginActivity>()
+                onSessionExpired(false)
             }
         }
     }

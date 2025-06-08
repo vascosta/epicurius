@@ -32,15 +32,14 @@ class ResetPasswordViewModel(
 
     private suspend fun handleResetPassword(resetPasswordInfo: ResetPasswordInputModel) {
         val result = request {
-            val token = session.getToken()
-            service.userService.resetUserPassword(token, resetPasswordInfo)
+            service.userService.resetUserPassword(resetPasswordInfo)
         }
         when {
             result.isFailure -> {
                 enableButtons()
             }
             result.isSuccess -> {
-                onSessionExpired()
+                onSessionExpired(false)
             }
         }
     }
@@ -55,7 +54,7 @@ class ResetPasswordViewModel(
                 showToast("passwords must be equal")
                 false
             }
-            !validateEmail(email) || !validatePassword(password) -> false
+            !validateEmail(email) || !validatePassword(password) || !validatePassword(confirmPassword) -> false
             else -> true
         }
 }
