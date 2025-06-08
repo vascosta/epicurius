@@ -16,12 +16,25 @@ import android.epicurius.ui.screens.utils.DropdownMenuComponent
 import android.epicurius.ui.screens.utils.FormTextField
 import android.epicurius.ui.screens.utils.MultiSelectDropdownMenuComponent
 import android.epicurius.ui.screens.utils.NumberLineTextField
+import android.epicurius.ui.screens.utils.NumberTextField
+import android.net.Uri
+import android.os.Build
+import android.widget.Toast
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -33,6 +46,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -42,8 +56,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import coil.compose.rememberAsyncImagePainter
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.isGranted
+import com.google.accompanist.permissions.rememberPermissionState
 
 data class IngredientComponent(
     val name: String = "",
@@ -51,6 +70,7 @@ data class IngredientComponent(
     val unit: String = ""
 )
 
+@OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun CreateRecipeScreen(
     onBackButton: () -> Unit,
@@ -65,7 +85,11 @@ fun CreateRecipeScreen(
         intolerances: List<Intolerance>,
         diets: List<Diet>,
         ingredients: List<Ingredient>,
-        instructions: List<Instructions>
+        instructions: List<Instructions>,
+        calories: Int?,
+        protein: Int?,
+        fat: Int?,
+        carbs: Int?
     ) -> Unit,
     buttonsEnable: Boolean
 ) {
@@ -79,6 +103,31 @@ fun CreateRecipeScreen(
     var diets by remember { mutableStateOf(listOf<String>()) }
     var ingredients by remember { mutableStateOf(listOf<IngredientComponent>()) }
     var instructions by remember { mutableStateOf(listOf<String>()) }
+    var calories by remember { mutableStateOf("") }
+    var protein by remember { mutableStateOf("") }
+    var fat by remember { mutableStateOf("") }
+    var carbs by remember { mutableStateOf("") }
+
+    var isNutritionalInfoExpanded by remember { mutableStateOf(false) }
+
+    var selectedImageUris by remember { mutableStateOf<List<Uri>>(emptyList()) }
+    val context = LocalContext.current
+
+    val imagePickerLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.PickMultipleVisualMedia(maxItems = 3)
+    ) { uris ->
+        if (uris.isNotEmpty()) {
+            selectedImageUris = uris
+        } else {
+            Toast.makeText(context, "No image selected", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    val galleryPermissionState = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+        rememberPermissionState(android.Manifest.permission.READ_MEDIA_IMAGES)
+    } else {
+        rememberPermissionState(android.Manifest.permission.READ_EXTERNAL_STORAGE)
+    }
 
     Scaffold(
         topBar = {
@@ -153,6 +202,47 @@ fun CreateRecipeScreen(
                         .align(Alignment.CenterHorizontally)
                 )
 
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .align(Alignment.Start)
+                        .padding(start = 10.dp, top = 10.dp)
+                ) {
+                    TextButton(
+                        onClick = { isNutritionalInfoExpanded = !isNutritionalInfoExpanded }
+                    ) {
+                        Text(
+                            if (isNutritionalInfoExpanded) "- Hide nutritional info"
+                            else "+ Add nutritional info"
+                        )
+                    }
+                }
+
+                AnimatedVisibility(visible = isNutritionalInfoExpanded) {
+                    Column(modifier = Modifier.padding(top = 8.dp)) {
+                        NumberTextField(
+                            value = calories,
+                            onValueChange = { calories = it },
+                            label = "Calories (kcal)"
+                        )
+                        NumberTextField(
+                            value = protein,
+                            onValueChange = { protein = it },
+                            label = "Protein (g)"
+                        )
+                        NumberTextField(
+                            value = fat,
+                            onValueChange = { fat = it },
+                            label = "Fat (g)"
+                        )
+                        NumberTextField(
+                            value = carbs,
+                            onValueChange = { carbs = it },
+                            label = "Carbohydrates (g)"
+                        )
+                    }
+                }
+
                 DividerComponent()
 
                 IngredientsComponent(ingredients) { ingredients = it }
@@ -164,12 +254,32 @@ fun CreateRecipeScreen(
                 DividerComponent()
 
                 Button(
-                    onClick = { },
+                    onClick = {
+                        if (galleryPermissionState.status.isGranted) {
+                            imagePickerLauncher.launch(
+                                PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
+                            )
+                        } else {
+                            galleryPermissionState.launchPermissionRequest()
+                        }
+                    },
                     modifier = Modifier.padding(top = 10.dp)
                 ) {
                     Text("Upload")
                     Spacer(Modifier.width(4.dp))
                     Icon(Icons.Default.Image, contentDescription = null)
+                }
+                Spacer(modifier = Modifier.height(16.dp))
+                Row {
+                    selectedImageUris.forEach { uri ->
+                        Image(
+                            painter = rememberAsyncImagePainter(uri),
+                            contentDescription = null,
+                            modifier = Modifier
+                                .size(100.dp)
+                                .padding(4.dp)
+                        )
+                    }
                 }
 
                 Button(
@@ -184,7 +294,11 @@ fun CreateRecipeScreen(
                             intolerances.map { Intolerance.valueOf(it) },
                             diets.map { Diet.valueOf(it) },
                             ingredients.map {
-                                Ingredient(it.name, it.quantity.toDouble(), IngredientUnit.fromString(it.unit))
+                                Ingredient(
+                                    it.name,
+                                    it.quantity.toDouble(),
+                                    IngredientUnit.fromString(it.unit)
+                                )
                             },
                             instructions.map {
                                 val stepsMap = instructions.mapIndexed { index, step ->
@@ -192,7 +306,11 @@ fun CreateRecipeScreen(
                                 }.toMap()
 
                                Instructions(steps = stepsMap)
-                            }
+                            },
+                            calories.toIntOrNull(),
+                            protein.toIntOrNull(),
+                            fat.toIntOrNull(),
+                            carbs.toIntOrNull()
                         )
                     },
                     modifier = Modifier.padding(10.dp)
@@ -207,5 +325,5 @@ fun CreateRecipeScreen(
 @Preview
 @Composable
 fun AddRecipeScreenPreview() {
-    CreateRecipeScreen({}, {}, { _, _, _, _, _, _, _, _, _, _ -> }, true)
+    CreateRecipeScreen({}, {}, { _, _, _, _, _, _, _, _, _, _, _, _, _, _ -> }, true)
 }
