@@ -15,7 +15,6 @@ import android.epicurius.ui.screens.user.components.UserProfilePicture
 import android.epicurius.ui.screens.utils.LoadState
 import android.epicurius.ui.screens.utils.LoadStateRenderer
 import android.epicurius.ui.screens.utils.apiSuccess
-import android.widget.Button
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -189,7 +188,7 @@ fun UserProfileScreen(
                                                     collection = collection,
                                                     onCollectionRequest = onCollectionRequest,
                                                     onCollectionDelete = { _ -> },
-                                                    enableButtons = true
+                                                    buttonsEnable = true
                                                 )
                                             }
                                         }

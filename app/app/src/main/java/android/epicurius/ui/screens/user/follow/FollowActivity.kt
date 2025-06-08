@@ -2,10 +2,9 @@ package android.epicurius.ui.screens.user.follow
 
 import android.epicurius.domain.user.FollowUser
 import android.epicurius.domain.user.FollowingUser
-import android.epicurius.domain.user.SearchUser
 import android.epicurius.domain.user.UserProfile
 import android.epicurius.ui.screens.user.profile.UserProfileActivity
-import android.epicurius.ui.screens.utils.navigateTo
+import android.epicurius.ui.navigation.navigateTo
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
