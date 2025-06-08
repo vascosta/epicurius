@@ -25,6 +25,7 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun BottomBar() {
     val context = LocalContext.current
+    val currentActivityClass = context::class.java
     NavigationBar(containerColor = Color.White) {
         Row(
             modifier = Modifier
@@ -44,28 +45,33 @@ fun BottomBar() {
         ) {
             BottomBarButton(
                 onClick = { context.startActivity(Intent(context, FeedActivity::class.java)) },
+                enabled = true,
                 imageId = R.drawable.home,
                 description = "Home"
             )
             BottomBarButton(
                 onClick = { context.startActivity(Intent(context, CreateRecipeActivity::class.java)) },
+                enabled = currentActivityClass != CreateRecipeActivity::class.java,
                 imageId = R.drawable.pencil,
                 description = "Pencil"
             )
             BottomBarButton(
                 onClick = { context.startActivity(Intent(context, SearchActivity::class.java)) },
+                enabled = currentActivityClass != SearchActivity::class.java,
                 imageId = R.drawable.magnifier,
                 description = "Magnifier",
                 imageSize = 41
             )
             BottomBarButton(
                 onClick = { context.startActivity(Intent(context, CalendarActivity::class.java)) },
+                enabled = currentActivityClass != CalendarActivity::class.java,
                 imageId = R.drawable.plate,
                 description = "Plate",
                 imageSize = 45
             )
             BottomBarButton(
                 onClick = { context.startActivity(Intent(context, FridgeActivity::class.java)) },
+                enabled = currentActivityClass != FridgeActivity::class.java,
                 imageId = R.drawable.fridge,
                 description = "Fridge",
                 imageSize = 40

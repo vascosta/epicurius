@@ -10,8 +10,18 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun BottomBarButton(onClick: () -> Unit, imageId: Int, description: String, imageSize: Int = 36) {
-    IconButton(onClick = onClick, modifier = Modifier.size(70.dp)) {
+fun BottomBarButton(
+    onClick: () -> Unit,
+    enabled: Boolean,
+    imageId: Int,
+    description: String,
+    imageSize: Int = 36
+) {
+    IconButton(
+        onClick = onClick,
+        modifier = Modifier.size(70.dp),
+        enabled = enabled
+    ) {
         Image(
             painter = painterResource(id = imageId),
             contentDescription = description,
