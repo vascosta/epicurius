@@ -23,7 +23,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun BottomBar() {
+fun BottomBar(onFeedRefresh: () -> Unit = {}) {
     val context = LocalContext.current
     val currentActivityClass = context::class.java
     NavigationBar(containerColor = Color.White) {
@@ -44,7 +44,12 @@ fun BottomBar() {
             verticalAlignment = Alignment.CenterVertically
         ) {
             BottomBarButton(
-                onClick = { context.startActivity(Intent(context, FeedActivity::class.java)) },
+                onClick = {
+                    if (currentActivityClass != FeedActivity::class.java) {
+                        context.startActivity(Intent(context, FeedActivity::class.java))
+                    }
+                    else { onFeedRefresh }
+                },
                 enabled = true,
                 imageId = R.drawable.home,
                 description = "Home"
