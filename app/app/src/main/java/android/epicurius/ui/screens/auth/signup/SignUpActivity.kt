@@ -23,9 +23,14 @@ class SignUpActivity : EpicuriusActivity() {
             MaterialTheme {
                 SignUpScreen(
                     buttonsEnable = viewModel.buttonsEnable,
-                    onSignUp = { name, email, password, confirmPassword, country ->
-                        viewModel.signUp(name, email, password, confirmPassword, country) {
-                            navigateTo<FeedActivity>() // TODO: change to activity to change intolerances and diets
+                    onSignUp = {
+                        name: String,
+                        email: String,
+                        password: String,
+                        confirmPassword: String,
+                        country: String ->
+                            viewModel.signUp(name, email, password, confirmPassword, country) {
+                                navigateTo<FeedActivity>() // TODO: change to activity to change intolerances and diets
                         }
                     },
                     onLogin = { navigateTo<LoginActivity>() },

@@ -29,7 +29,13 @@ import java.util.Locale
 @Composable
 fun SignUpScreen(
     buttonsEnable: Boolean,
-    onSignUp: (String, String, String, String, String) -> Unit,
+    onSignUp: (
+        name: String,
+        email: String,
+        password: String,
+        confirmPassword: String,
+        country: String
+    ) -> Unit,
     onLogin: () -> Unit
 ) {
     var username by remember { mutableStateOf("") }
@@ -40,7 +46,11 @@ fun SignUpScreen(
 
     Scaffold(
         topBar = {
-            TopBar(text = "SignUp", icon = null)
+            TopBar(
+                text = "SignUp",
+                buttonsEnable = buttonsEnable,
+                icon = null
+            )
         }
     ) {
         Column(
