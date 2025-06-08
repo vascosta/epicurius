@@ -3,7 +3,10 @@ package android.epicurius.ui.screens.recipe.preparation
 import android.epicurius.domain.recipe.Instructions
 import android.epicurius.ui.navigation.BottomBar
 import android.epicurius.ui.navigation.TopBar
+import android.epicurius.ui.screens.recipe.components.RateRecipeDialog
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -19,6 +22,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -31,11 +35,15 @@ import androidx.compose.ui.unit.sp
 
 @Composable
 fun PreparationScreen(
-    onBackButton: () -> Unit,
     recipeName: String,
-    instructions: Instructions
+    instructions: Instructions,
+    onBackButton: () -> Unit,
+    onRateRecipe: (Int) -> Unit,
+    onSkipRating: () -> Unit,
+    onCancelPreparation: () -> Unit
 ) {
     var currentStep by remember { mutableIntStateOf(1) }
+    var showRateDialog by remember { mutableStateOf(false) }
 
     Scaffold(
         topBar = { TopBar(recipeName, backButton = true, onBackButton) },
@@ -57,7 +65,9 @@ fun PreparationScreen(
                 )
 
                 instructions.steps.entries.forEach { (stepNumber, instruction) ->
-                    val backgroundColor = if (stepNumber.toInt() == currentStep) Color(0xFFA8E6CF) else Color.Transparent
+                    val backgroundColor =
+                        if (stepNumber.toInt() == currentStep) Color(0xFFCDFA7D)
+                        else Color.Transparent
                     Box(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -73,17 +83,28 @@ fun PreparationScreen(
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = androidx.compose.foundation.layout.Arrangement.SpaceBetween
+                    horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     Button(
-                        onClick = { if(currentStep < instructions.steps.size) currentStep++ }
+                        onClick = { if (currentStep < instructions.steps.size) currentStep++ }
                     ) {
-                        if (currentStep >= instructions.steps.size) Text("Done")
+                        if (currentStep >= instructions.steps.size)
+                            Text(
+                                text = "Done",
+                                modifier = Modifier.clickable{ showRateDialog = true }
+                            )
                         else Text("Next")
                     }
 
-                    Button(onClick = {  }) { Text("Cancel") }
+                    Button(onClick = { onCancelPreparation() }) { Text("Cancel") }
                 }
+            }
+            if (showRateDialog) {
+                RateRecipeDialog(
+                    onDismissRequest = { showRateDialog = false },
+                    onSkipRating = { onSkipRating() },
+                    onRateRecipe = { rating -> onRateRecipe(rating) }
+                )
             }
         },
         containerColor = Color.White
@@ -103,8 +124,11 @@ fun PreparationScreenPreview() {
     )
 
     PreparationScreen(
-        {},
         recipeName = "Sample Recipe",
-        instructions = sampleInstructions
+        instructions = sampleInstructions,
+        {},
+        {},
+        {},
+        {}
     )
 }
