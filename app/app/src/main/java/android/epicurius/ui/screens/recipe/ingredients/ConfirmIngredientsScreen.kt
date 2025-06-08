@@ -42,8 +42,8 @@ fun ConfirmIngredientsScreen(
     val selectedIngredient = remember { mutableStateOf<Ingredient?>(null) }
 
     Scaffold(
-        topBar = { TopBar(recipeName, backButton = true, onBackButton = onBackButton) },
-        bottomBar = { BottomBar() },
+        topBar = { TopBar(recipeName, backButton = true, onBackButton = onBackButton, buttonsEnable = true) },
+        bottomBar = { BottomBar(buttonsEnable = true) },
         content = { paddingValues ->
             Column(
                 modifier = Modifier

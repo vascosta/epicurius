@@ -46,8 +46,8 @@ fun PreparationScreen(
     var showRateDialog by remember { mutableStateOf(false) }
 
     Scaffold(
-        topBar = { TopBar(recipeName, backButton = true, onBackButton) },
-        bottomBar = { BottomBar() },
+        topBar = { TopBar(recipeName, backButton = true, onBackButton = onBackButton, buttonsEnable = true) },
+        bottomBar = { BottomBar(buttonsEnable = true) },
         content = { paddingValues ->
             Column(
                 modifier = Modifier

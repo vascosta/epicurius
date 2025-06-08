@@ -66,8 +66,8 @@ fun RecipeProfileScreen(
     var showEditRecipeDialog by remember { mutableStateOf(false) }
 
     Scaffold(
-        topBar = { TopBar(text = recipe.name, backButton = true, onBackButton = onBackButton) },
-        bottomBar = { BottomBar() },
+        topBar = { TopBar(text = recipe.name, backButton = true, onBackButton = onBackButton, buttonsEnable = true) },
+        bottomBar = { BottomBar(buttonsEnable = true) },
         content = { paddingValues ->
             Column(
                 modifier = Modifier
