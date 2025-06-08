@@ -5,7 +5,8 @@ import android.epicurius.ui.navigation.Intents
 import android.epicurius.ui.screens.recipe.profile.RecipeProfileActivity
 import android.epicurius.ui.screens.utils.Idle
 import android.epicurius.ui.screens.utils.idle
-import android.epicurius.ui.screens.utils.navigateTo
+import android.epicurius.ui.navigation.navigateTo
+import android.epicurius.ui.screens.utils.apiSuccess
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.compose.runtime.collectAsState
@@ -14,7 +15,7 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 class FeedActivity : EpicuriusActivity() {
-    val viewModel: FeedViewModel by getViewModel<FeedViewModel>()
+    override val viewModel: FeedViewModel by getViewModel<FeedViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,13 +28,13 @@ class FeedActivity : EpicuriusActivity() {
             val userFeedState = viewModel.userFeed.collectAsState(idle())
             FeedScreen(
                 userFeedState = userFeedState.value,
-                collectionsState = TODO(),
-                onAddRecipeToCollection = TODO(),
-                onRemoveRecipeFromCollection = TODO(),
+                collectionsState = apiSuccess(emptyList()),
+                onAddRecipeToCollection = {_, _ ->},
+                onRemoveRecipeFromCollection = {_, _ ->},
                 onRecipeRequest = ::navigateToRecipeProfileActivity,
                 onUserFeedRefresh = { viewModel.refreshUserFeed() },
                 onLoadMore = { },
-                enableButtons = TODO()
+                buttonsEnable = true
             )
         }
     }

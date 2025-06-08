@@ -47,7 +47,7 @@ fun FeedScreen(
     onRecipeRequest: (Int) -> Unit,
     onUserFeedRefresh: () -> Unit,
     onLoadMore: () -> Unit,
-    enableButtons: Boolean
+    buttonsEnable: Boolean
 ) {
     val context = LocalContext.current
 
@@ -95,7 +95,7 @@ fun FeedScreen(
                                 onAddRecipeToCollection = onAddRecipeToCollection,
                                 onRemoveRecipeFromCollection = onRemoveRecipeFromCollection,
                                 onRecipeRequest = onRecipeRequest,
-                                enableButtons = enableButtons
+                                enableButtons = buttonsEnable
                             )
                         }
                         Button(
