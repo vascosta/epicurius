@@ -29,10 +29,10 @@ fun DailyMenuScreen(
     menuState: LoadState<Map<String, RecipeInfo?>>,
     collectionsState: LoadState<List<CollectionProfile>>,
     onBackButton: () -> Unit,
-    onAddRecipeToCollection: (Int, Int) -> Unit,
-    onRemoveRecipeFromCollection: (Int, Int) -> Unit,
-    onRecipeRequest: (Int) -> Unit,
-    onCollectionsRequest: (Int, Boolean) -> Unit,
+    onAddRecipeToCollection: (collectionId: Int, recipeId: Int) -> Unit,
+    onRemoveRecipeFromCollection: (collectionId: Int, recipeId: Int) -> Unit,
+    onRecipeRequest: (recipeId: Int) -> Unit,
+    onCollectionsRequest: (recipeId: Int, recipeInCollection: Boolean) -> Unit,
     onDailyMenuRefresh: () -> Unit,
     buttonsEnable: Boolean
 ) {
@@ -40,9 +40,10 @@ fun DailyMenuScreen(
         topBar = { TopBar(
             text = "Today's Menu",
             backButton = true,
+            buttonsEnable = buttonsEnable,
             onBackButton = onBackButton
         ) },
-        bottomBar = { BottomBar() },
+        bottomBar = { BottomBar(buttonsEnable = buttonsEnable) },
         content = { paddingValues ->
             LoadStateRenderer(
                 loadState = menuState,

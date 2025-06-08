@@ -26,10 +26,10 @@ fun MenuItemBox(
     title: String,
     recipe: RecipeInfo?,
     collectionsState: LoadState<List<CollectionProfile>>,
-    onAddRecipeToCollection: (Int, Int) -> Unit,
-    onRemoveRecipeFromCollection: (Int, Int) -> Unit,
-    onRecipeRequest: (Int) -> Unit,
-    onCollectionsRequest: (Int, Boolean) -> Unit = {_, _ ->},
+    onAddRecipeToCollection: (collectionId: Int, recipeId: Int) -> Unit,
+    onRemoveRecipeFromCollection: (collectionId: Int, recipeId: Int) -> Unit,
+    onRecipeRequest: (recipeId: Int) -> Unit,
+    onCollectionsRequest: (recipeId: Int, recipeInCollection: Boolean) -> Unit = {_, _ ->},
     enableButtons: Boolean
 ) {
     Box(modifier = Modifier.padding(10.dp)) {

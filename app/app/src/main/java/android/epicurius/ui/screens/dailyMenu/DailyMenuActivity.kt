@@ -31,16 +31,17 @@ class DailyMenuActivity : EpicuriusActivity() {
             DailyMenuScreen(
                 menuState = menuState.value,
                 collectionsState = collectionsState.value,
-                onBackButton = { navigateTo<FeedActivity>() },
-                onAddRecipeToCollection = { collectionId, recipeId ->
+                onBackButton = { navigateTo<FeedActivity>(true) },
+                onAddRecipeToCollection = { collectionId: Int, recipeId: Int ->
                     viewModel.addRecipeToCollection(collectionId, recipeId) { navigateTo<FeedActivity>() }
                 },
-                onRemoveRecipeFromCollection = { collectionId, recipeId ->
+                onRemoveRecipeFromCollection = { collectionId: Int, recipeId: Int ->
                     viewModel.removeRecipeFromCollection(collectionId, recipeId) { navigateTo<FeedActivity>() }
                 },
                 onRecipeRequest = ::navigateToRecipeProfileActivity,
-                onCollectionsRequest = { recipeId, recipeInCollection ->
-                    viewModel.getCollections(recipeId, recipeInCollection) },
+                onCollectionsRequest = { recipeId: Int, recipeInCollection: Boolean ->
+                    viewModel.getCollections(recipeId, recipeInCollection)
+                },
                 onDailyMenuRefresh = { viewModel.getDailyMenu { navigateTo<FeedActivity>() } },
                 buttonsEnable = viewModel.buttonsEnable
             )
