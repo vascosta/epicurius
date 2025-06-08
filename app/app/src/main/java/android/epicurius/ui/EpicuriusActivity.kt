@@ -42,6 +42,7 @@ abstract class EpicuriusActivity : ComponentActivity() {
                 )
         }
 
+    @Suppress("UNCHECKED_CAST")
     inline fun <reified T : ViewModel> ComponentActivity.createViewModel(crossinline block: () -> T) =
         viewModels<T> {
             object : ViewModelProvider.Factory {

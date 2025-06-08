@@ -2,6 +2,8 @@ package android.epicurius.services.http.utils
 
 import android.epicurius.services.http.media.Problem
 
+
+@Suppress("UNCHECKED_CAST")
 class APIResult<out T>(private val value: Any?, private val token: String? = null) {
 
     val isSuccess get() = value !is Failure
