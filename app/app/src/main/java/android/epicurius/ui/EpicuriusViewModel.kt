@@ -38,13 +38,13 @@ open class EpicuriusViewModel(
     var isLoggedIn by mutableStateOf(false)
         protected set
 
-    var buttonsEnable by mutableStateOf(false)
+    var buttonsEnable by mutableStateOf(true)
         protected set
 
     init {
         viewModelScope.launch {
             isLoggedIn = session.isLoggedIn()
-            if (!isLoggedIn) {
+            if (!isLoggedIn && context::class.java != LoginActivity::class.java) {
                 onSessionExpired()
             }
         }
