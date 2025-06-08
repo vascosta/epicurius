@@ -4,6 +4,7 @@ import android.content.Intent
 import android.epicurius.domain.user.UserProfile
 import android.epicurius.ui.screens.feed.FeedActivity
 import android.epicurius.ui.screens.user.profile.UserProfileActivity
+import android.epicurius.ui.screens.user.settings.SettingsActivity
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
@@ -34,7 +35,6 @@ fun TopBar(
     text: String,
     backButton: Boolean = false,
     onBackButton: () -> Unit = {},
-    onIconClick: () -> Unit = {},
     icon: ImageVector? = Icons.Filled.Person
 ) {
     val context = LocalContext.current
@@ -64,7 +64,15 @@ fun TopBar(
         },
         actions = {
             icon?.let {
-                IconButton(onClick = onIconClick
+                IconButton(
+                    onClick = {
+                        if (it == Icons.Filled.Person) {
+                            context.navigateTo<UserProfileActivity>()
+                        }
+                        else {
+                            context.navigateTo<SettingsActivity>()
+                        }
+                    }
                 ) {
                     Icon(
                         imageVector = it,
