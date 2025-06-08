@@ -28,17 +28,23 @@ import androidx.compose.ui.unit.dp
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun LoginScreen(
-    buttonsEnable: Boolean,
     onSignUp: () -> Unit,
-    onLogin: (String, String, String) -> Unit,
-    onForgotPassword: () -> Unit
+    onLogin: (name: String?, email: String?, password: String) -> Unit,
+    onForgotPassword: () -> Unit,
+    buttonsEnable: Boolean,
 ) {
     var username by rememberSaveable { mutableStateOf("") }
     var email by rememberSaveable { mutableStateOf("") }
     var password by rememberSaveable { mutableStateOf("") }
 
     Scaffold(
-        topBar = { TopBar(text = "Login", icon = null) }
+        topBar = {
+            TopBar(
+                text = "Login",
+                buttonsEnable = buttonsEnable,
+                icon = null
+            )
+        }
     ) {
         Column(
             modifier = Modifier
@@ -51,7 +57,6 @@ fun LoginScreen(
             TextField(value = username, onValueChange = { username = it }, label = "Username")
             TextField(value = email, onValueChange = { email = it }, label = "Email")
             PasswordTextField(value = password, onValueChange = { password = it }, label = "Password")
-
             Row {
                 AuthButton(
                     onClick = { onSignUp() },
@@ -59,14 +64,22 @@ fun LoginScreen(
                     text = "SignUp"
                 )
                 AuthButton(
-                    onClick = { onLogin(username, email, password) },
+                    onClick = {
+                        onLogin(
+                            if (username.isBlank()) { null }
+                            else { username },
+                            if (email.isBlank()) { null }
+                            else { email },
+                            password
+                        )
+                    },
                     enabled = buttonsEnable,
                     text = "Login",
                 )
             }
-
             TextButton(
-                onClick = { onForgotPassword() }
+                onClick = { onForgotPassword() },
+                enabled = buttonsEnable
             ) { Text("Forgot your password?") }
         }
     }
@@ -75,5 +88,5 @@ fun LoginScreen(
 @Preview
 @Composable
 fun LoginPreview() {
-   LoginScreen(true, {}, {_, _, _ -> }, {})
+   LoginScreen({}, {_, _, _ -> }, {}, true)
 }

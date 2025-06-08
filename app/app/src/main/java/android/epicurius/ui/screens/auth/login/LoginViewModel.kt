@@ -18,8 +18,8 @@ class LoginViewModel(
 ): UserViewModel(service, session, context) {
 
     fun login(
-        name: String,
-        email: String,
+        name: String?,
+        email: String?,
         password: String,
         navigateTo: () -> Unit
     ) {
@@ -51,15 +51,13 @@ class LoginViewModel(
     }
 
     private fun validateLoginInfo(
-        name: String,
-        email: String,
+        name: String?,
+        email: String?,
         password: String
     ): Boolean  {
-        val nullableName = if (name.isEmpty()) null else name
-        val nullableEmail = if (email.isBlank()) null else email
         return when {
-            nullableName != null && !validateName(name) -> false
-            nullableEmail != null && !validateEmail(email) -> false
+            name != null && !validateName(name) -> false
+            email != null && !validateEmail(email) -> false
             !validatePassword(password) -> false
             else -> true
         }
