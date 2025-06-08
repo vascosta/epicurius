@@ -1,6 +1,7 @@
 package android.epicurius.ui.screens.auth.login
 
 import android.epicurius.ui.EpicuriusActivity
+import android.epicurius.ui.screens.auth.resetPassword.ResetPasswordActivity
 import android.epicurius.ui.screens.auth.signup.SignUpActivity
 import android.epicurius.ui.screens.feed.FeedActivity
 import android.epicurius.ui.screens.utils.navigateTo
@@ -30,7 +31,8 @@ class LoginActivity : EpicuriusActivity() {
                         viewModel.login(name, email, password) {
                             navigateTo<FeedActivity>()
                         }
-                    }
+                    },
+                    onForgotPassword = { navigateTo<ResetPasswordActivity>() }
                 )
             }
         }

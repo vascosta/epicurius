@@ -1,0 +1,93 @@
+package android.epicurius.ui.screens.auth.resetPassword
+
+import android.content.Intent
+import android.epicurius.ui.navigation.TopBar
+import android.epicurius.ui.screens.auth.components.PasswordTextField
+import android.epicurius.ui.screens.auth.login.LoginActivity
+import android.epicurius.ui.screens.utils.TextField
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.material3.Button
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+
+@Composable
+fun ResetPasswordScreen(
+    onBackButton: () -> Unit,
+    onResetPassword: (String, String, String) -> Unit
+) {
+    var email by remember { mutableStateOf("") }
+    var newPassword by remember { mutableStateOf("") }
+    var confirmPassword by remember { mutableStateOf("") }
+
+    val context = LocalContext.current
+
+    Scaffold(
+        topBar = {
+            TopBar(
+                text = "Reset Password",
+                backButton = true,
+                onBackButton = onBackButton,
+                icon = null
+            )
+         },
+        content = { paddingValues ->
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(paddingValues)
+                    .padding(16.dp)
+                    .background(Color.White),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
+            ) {
+                TextField(
+                    value = email,
+                    label = "Email",
+                    onValueChange = { email = it },
+                )
+                PasswordTextField(
+                    value = newPassword,
+                    label = "New Password",
+                    onValueChange = { newPassword = it },
+                )
+                PasswordTextField(
+                    value = confirmPassword,
+                    label = "Confirm New Password",
+                    onValueChange = { confirmPassword = it },
+                )
+                Spacer(Modifier.size(10.dp))
+                Button(
+                    onClick = {
+                        onResetPassword(email, newPassword, confirmPassword)
+                        context.startActivity(Intent(context, LoginActivity::class.java))
+                    },
+                    enabled = email.isNotBlank() && newPassword.isNotBlank() && confirmPassword.isNotBlank() && newPassword == confirmPassword
+                ) { Text("Reset Password") }
+            }
+        },
+        containerColor = Color.White
+    )
+}
+
+@Preview
+@Composable
+fun ResetPasswordScreenPreview() {
+    ResetPasswordScreen({}, { _, _, _ -> })
+}

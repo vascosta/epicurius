@@ -31,6 +31,11 @@
             android:label="@string/title_activity_login_screen"
             android:theme="@style/Theme.App" />
         <activity
+            android:name=".ui.screens.auth.resetPassword.ResetPasswordActivity"
+            android:exported="false"
+            android:label="Reset Password"
+            android:theme="@style/Theme.App" />
+        <activity
             android:name=".ui.screens.auth.signup.SignUpActivity"
             android:exported="false"
             android:label="Sign Up"

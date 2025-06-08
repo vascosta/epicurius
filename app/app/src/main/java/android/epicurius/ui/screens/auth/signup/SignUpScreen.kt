@@ -40,7 +40,7 @@ fun SignUpScreen(
 
     Scaffold(
         topBar = {
-            TopBar(text = "SignUp")
+            TopBar(text = "SignUp", icon = null)
         }
     ) {
         Column(
