@@ -9,13 +9,12 @@ import android.epicurius.services.api.collection.models.input.AddRecipeToCollect
 import android.epicurius.storage.Session
 import android.epicurius.ui.EpicuriusViewModel
 import android.epicurius.ui.screens.utils.LoadState
-import android.epicurius.ui.screens.utils.idle
-import android.epicurius.ui.screens.utils.loading
 import android.epicurius.ui.screens.utils.apiSuccess
 import android.epicurius.ui.screens.utils.cache
+import android.epicurius.ui.screens.utils.idle
+import android.epicurius.ui.screens.utils.loading
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.viewModelScope
 import epicurius.domain.collection.CollectionType
@@ -36,8 +35,6 @@ class DailyMenuViewModel(
 
     val dailyMenu = dailyMenuFlow.asStateFlow()
     val collections = collectionsFlow.asStateFlow()
-
-    var enableButtons by mutableStateOf(true)
 
     var limit by mutableIntStateOf(10)
 
@@ -185,13 +182,5 @@ class DailyMenuViewModel(
                 getDailyMenu(navigateTo)
             }
         }
-    }
-
-    private fun enableButtons() {
-        enableButtons = true
-    }
-
-    private fun disableButtons() {
-        enableButtons = false
     }
 }

@@ -7,7 +7,7 @@ import android.epicurius.ui.screens.recipe.profile.RecipeProfileActivity
 import android.epicurius.ui.screens.user.profile.UserProfileActivity
 import android.epicurius.ui.screens.utils.Idle
 import android.epicurius.ui.screens.utils.idle
-import android.epicurius.ui.screens.utils.navigateTo
+import android.epicurius.ui.navigation.navigateTo
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.compose.runtime.collectAsState
@@ -16,7 +16,7 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 class DailyMenuActivity : EpicuriusActivity() {
-    val viewModel: DailyMenuViewModel by getViewModel<DailyMenuViewModel>()
+    override val viewModel: DailyMenuViewModel by getViewModel<DailyMenuViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,7 +43,7 @@ class DailyMenuActivity : EpicuriusActivity() {
                 onCollectionsRequest = { recipeId, recipeInCollection ->
                     viewModel.getCollections(recipeId, recipeInCollection) },
                 onDailyMenuRefresh = { viewModel.getDailyMenu { navigateTo<FeedActivity>() } },
-                enableButtons = viewModel.enableButtons
+                buttonsEnable = viewModel.buttonsEnable
             )
         }
     }

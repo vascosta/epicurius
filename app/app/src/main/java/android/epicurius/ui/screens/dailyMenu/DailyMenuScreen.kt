@@ -35,7 +35,7 @@ fun DailyMenuScreen(
     onUserProfileRequest: () -> Unit,
     onCollectionsRequest: (Int, Boolean) -> Unit,
     onDailyMenuRefresh: () -> Unit,
-    enableButtons: Boolean
+    buttonsEnable: Boolean
 ) {
     Scaffold(
         topBar = { TopBar(
@@ -67,7 +67,7 @@ fun DailyMenuScreen(
                             onRemoveRecipeFromCollection = onRemoveRecipeFromCollection,
                             onRecipeRequest = onRecipeRequest,
                             onCollectionsRequest = onCollectionsRequest,
-                            enableButtons = enableButtons
+                            enableButtons = buttonsEnable
                         )
                         MenuItemBox(
                             title = "Soup",
@@ -77,7 +77,7 @@ fun DailyMenuScreen(
                             onRemoveRecipeFromCollection = onRemoveRecipeFromCollection,
                             onRecipeRequest = onRecipeRequest,
                             onCollectionsRequest = onCollectionsRequest,
-                            enableButtons = enableButtons
+                            enableButtons = buttonsEnable
                         )
                         MenuItemBox(
                             title = "Lunch",
@@ -87,7 +87,7 @@ fun DailyMenuScreen(
                             onRemoveRecipeFromCollection = onRemoveRecipeFromCollection,
                             onRecipeRequest = onRecipeRequest,
                             onCollectionsRequest = onCollectionsRequest,
-                            enableButtons = enableButtons
+                            enableButtons = buttonsEnable
                         )
                         MenuItemBox(
                             title = "Dinner",
@@ -97,7 +97,7 @@ fun DailyMenuScreen(
                             onRemoveRecipeFromCollection = onRemoveRecipeFromCollection,
                             onRecipeRequest = onRecipeRequest,
                             onCollectionsRequest = onCollectionsRequest,
-                            enableButtons = enableButtons
+                            enableButtons = buttonsEnable
                         )
                         MenuItemBox(
                             title = "Dessert",
@@ -107,7 +107,7 @@ fun DailyMenuScreen(
                             onRemoveRecipeFromCollection = onRemoveRecipeFromCollection,
                             onRecipeRequest = onRecipeRequest,
                             onCollectionsRequest = onCollectionsRequest,
-                            enableButtons = enableButtons
+                            enableButtons = buttonsEnable
                         )
                     }
                 }
