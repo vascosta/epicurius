@@ -39,6 +39,7 @@ class ResetPasswordViewModel(
                 enableButtons()
             }
             result.isSuccess -> {
+                showToast("password was reset successfully")
                 onSessionExpired(false)
             }
         }
