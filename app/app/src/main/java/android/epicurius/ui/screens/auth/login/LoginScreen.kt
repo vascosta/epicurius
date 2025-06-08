@@ -56,12 +56,12 @@ fun LoginScreen(
                 AuthButton(
                     onClick = { onSignUp() },
                     enabled = buttonsEnable,
-                    label = "SignUp"
+                    text = "SignUp"
                 )
                 AuthButton(
                     onClick = { onLogin(username, email, password) },
                     enabled = buttonsEnable,
-                    label = "Login",
+                    text = "Login",
                 )
             }
 

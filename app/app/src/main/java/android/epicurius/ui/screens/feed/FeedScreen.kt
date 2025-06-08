@@ -44,7 +44,6 @@ fun FeedScreen(
     collectionsState: LoadState<List<CollectionProfile>>,
     onAddRecipeToCollection: (Int, Int) -> Unit,
     onRemoveRecipeFromCollection: (Int, Int) -> Unit,
-    onUserIconRequest: () -> Unit,
     onRecipeRequest: (Int) -> Unit,
     onUserFeedRefresh: () -> Unit,
     onLoadMore: () -> Unit,
@@ -55,7 +54,6 @@ fun FeedScreen(
     Scaffold(
         topBar = { TopBar(
             text = "For you to cook",
-            onIconClick = onUserIconRequest
         ) },
         bottomBar = { BottomBar() },
         content = { paddingValues ->
@@ -156,7 +154,6 @@ fun FeedPreview() {
         apiSuccess(collection),
         { _, _ -> },
         { _, _ -> },
-        {},
         {},
         {},
         {},

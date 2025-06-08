@@ -83,7 +83,6 @@ fun UserProfileScreen(
                 backButton = true,
                 onBackButton = onBackButton,
                 icon = if (!isAnotherUserProfile) Icons.Filled.Settings else null,
-                onIconClick = onSettingsButton
             )
         },
         bottomBar = { BottomBar() },

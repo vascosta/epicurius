@@ -85,8 +85,7 @@ fun CreateRecipeScreen(
             TopBar(
                 text = "Create recipe",
                 backButton = true,
-                onBackButton = onBackButton,
-                onIconClick = {}
+                onBackButton = onBackButton
             )
         },
         bottomBar = { BottomBar() },

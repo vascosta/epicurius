@@ -32,7 +32,6 @@ fun DailyMenuScreen(
     onAddRecipeToCollection: (Int, Int) -> Unit,
     onRemoveRecipeFromCollection: (Int, Int) -> Unit,
     onRecipeRequest: (Int) -> Unit,
-    onUserProfileRequest: () -> Unit,
     onCollectionsRequest: (Int, Boolean) -> Unit,
     onDailyMenuRefresh: () -> Unit,
     buttonsEnable: Boolean
@@ -41,8 +40,7 @@ fun DailyMenuScreen(
         topBar = { TopBar(
             text = "Today's Menu",
             backButton = true,
-            onBackButton = onBackButton,
-            onIconClick = onUserProfileRequest
+            onBackButton = onBackButton
         ) },
         bottomBar = { BottomBar() },
         content = { paddingValues ->
@@ -147,6 +145,6 @@ fun DailyMenuPreview() {
         )
     )
     DailyMenuScreen(
-        apiSuccess(menu), apiSuccess(emptyList()), {}, {_, _ ->}, {_, _ ->}, {}, {}, {_, _ ->}, {}, true
+        apiSuccess(menu), apiSuccess(emptyList()), {}, {_, _ ->}, {_, _ ->}, {}, {_, _ ->}, {}, true
     )
 }
