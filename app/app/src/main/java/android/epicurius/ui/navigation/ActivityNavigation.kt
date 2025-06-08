@@ -1,4 +1,4 @@
-package android.epicurius.ui.screens.utils
+package android.epicurius.ui.navigation
 
 import android.content.Context
 import android.content.Intent
