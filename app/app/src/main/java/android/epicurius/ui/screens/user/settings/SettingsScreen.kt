@@ -31,9 +31,10 @@ fun SettingsScreen(
             text = "Settings",
             backButton = true,
             onBackButton = onBackButton,
+            buttonsEnable = buttonsEnable,
             icon = null
         ) },
-        bottomBar = { BottomBar() },
+        bottomBar = { BottomBar(buttonsEnable = buttonsEnable) },
         content = { paddingValues ->
             Column(
                 modifier = Modifier

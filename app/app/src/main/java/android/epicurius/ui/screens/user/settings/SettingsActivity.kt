@@ -3,6 +3,7 @@ package android.epicurius.ui.screens.user.settings
 import android.epicurius.ui.EpicuriusActivity
 import android.epicurius.ui.navigation.navigateTo
 import android.epicurius.ui.screens.collections.favourites.folder.FavouritesActivity
+import android.epicurius.ui.screens.user.profile.UserProfileActivity
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -16,7 +17,7 @@ class SettingsActivity : EpicuriusActivity() {
         setContent {
             MaterialTheme {
                 SettingsScreen(
-                    onBackButton = { finish() },
+                    onBackButton = { navigateTo<UserProfileActivity>(true) },
                     onFavouritesRequest = { navigateTo<FavouritesActivity>() },
                     onLogout = { viewModel.logout() },
                     buttonsEnable = viewModel.buttonsEnable
