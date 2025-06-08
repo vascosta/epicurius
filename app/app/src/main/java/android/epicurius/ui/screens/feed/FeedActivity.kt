@@ -32,7 +32,6 @@ class FeedActivity : EpicuriusActivity() {
                 collectionsState = apiSuccess(emptyList()),
                 onAddRecipeToCollection = {_, _ ->},
                 onRemoveRecipeFromCollection = {_, _ ->},
-                onUserIconRequest = { navigateTo<UserProfileActivity>() },
                 onRecipeRequest = ::navigateToRecipeProfileActivity,
                 onUserFeedRefresh = { viewModel.refreshUserFeed() },
                 onLoadMore = { },

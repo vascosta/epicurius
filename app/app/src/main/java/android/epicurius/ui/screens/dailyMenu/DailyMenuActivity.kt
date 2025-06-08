@@ -39,7 +39,6 @@ class DailyMenuActivity : EpicuriusActivity() {
                     viewModel.removeRecipeFromCollection(collectionId, recipeId) { navigateTo<FeedActivity>() }
                 },
                 onRecipeRequest = ::navigateToRecipeProfileActivity,
-                onUserProfileRequest = { navigateTo<UserProfileActivity>() },
                 onCollectionsRequest = { recipeId, recipeInCollection ->
                     viewModel.getCollections(recipeId, recipeInCollection) },
                 onDailyMenuRefresh = { viewModel.getDailyMenu { navigateTo<FeedActivity>() } },
