@@ -15,7 +15,7 @@ import android.epicurius.ui.screens.utils.Idle
 import android.epicurius.ui.screens.utils.LoadState
 import android.epicurius.ui.screens.utils.Loaded
 import android.epicurius.ui.screens.utils.apiSuccess
-import android.epicurius.ui.screens.utils.navigateTo
+import android.epicurius.ui.navigation.navigateTo
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.compose.material3.MaterialTheme
@@ -26,7 +26,7 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 
 class UserProfileActivity : EpicuriusActivity() {
-    val viewModel: UserProfileViewModel by getViewModel<UserProfileViewModel>()
+    override val viewModel: UserProfileViewModel by getViewModel<UserProfileViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

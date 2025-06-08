@@ -1,7 +1,6 @@
 package android.epicurius.ui.screens.user.settings
 
-import android.epicurius.MainActivity
-import android.epicurius.ui.screens.utils.navigateTo
+import android.epicurius.ui.navigation.navigateTo
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -13,7 +12,7 @@ class SettingsActivity : ComponentActivity() {
         setContent {
             MaterialTheme {
                 SettingsScreen(
-                    onBackButton = { navigateTo<MainActivity>() }
+                    onBackButton = {  }
                 )
             }
         }
