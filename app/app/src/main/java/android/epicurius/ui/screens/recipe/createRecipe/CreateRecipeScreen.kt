@@ -53,7 +53,8 @@ data class IngredientComponent(
 
 @Composable
 fun CreateRecipeScreen(
-    onBackButton: () -> Unit = {},
+    onBackButton: () -> Unit,
+    onCreateRecipe: () -> Unit,
     onPublish: (
         name: String,
         description: String,
@@ -65,7 +66,8 @@ fun CreateRecipeScreen(
         diets: List<Diet>,
         ingredients: List<Ingredient>,
         instructions: List<Instructions>
-    ) -> Unit = { _, _, _, _, _, _, _, _, _, _ -> }
+    ) -> Unit,
+    buttonsEnable: Boolean
 ) {
     var name by remember { mutableStateOf("") }
     var description by remember { mutableStateOf("") }
@@ -79,7 +81,14 @@ fun CreateRecipeScreen(
     var instructions by remember { mutableStateOf(listOf<String>()) }
 
     Scaffold(
-        topBar = { TopBar("Create recipe", backButton = true, onBackButton) },
+        topBar = {
+            TopBar(
+                text = "Create recipe",
+                backButton = true,
+                onBackButton = onBackButton,
+                onIconClick = {}
+            )
+        },
         bottomBar = { BottomBar() },
         containerColor = Color.White,
         content = { paddingValues ->
@@ -199,5 +208,5 @@ fun CreateRecipeScreen(
 @Preview
 @Composable
 fun AddRecipeScreenPreview() {
-    CreateRecipeScreen()
+    CreateRecipeScreen({}, {}, { _, _, _, _, _, _, _, _, _, _ -> }, true)
 }
