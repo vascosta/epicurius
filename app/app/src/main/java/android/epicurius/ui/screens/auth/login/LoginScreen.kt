@@ -28,7 +28,7 @@ import androidx.compose.ui.unit.dp
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun LoginScreen(
-    loginEnable: Boolean,
+    buttonsEnable: Boolean,
     onSignUp: () -> Unit,
     onLogin: (String, String, String) -> Unit,
     onForgotPassword: () -> Unit
@@ -54,14 +54,14 @@ fun LoginScreen(
 
             Row {
                 AuthButton(
-                    label = "SignUp",
                     onClick = { onSignUp() },
-                    enabled = loginEnable
+                    enabled = buttonsEnable,
+                    label = "SignUp"
                 )
                 AuthButton(
-                    label = "Login",
                     onClick = { onLogin(username, email, password) },
-                    enabled = loginEnable
+                    enabled = buttonsEnable,
+                    label = "Login",
                 )
             }
 

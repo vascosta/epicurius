@@ -17,7 +17,7 @@ class LoginViewModel(
     context: Context
 ): UserViewModel(service, session, context) {
 
-    var loginEnable by mutableStateOf(true)
+    var buttonsEnable by mutableStateOf(true)
         private set
 
     fun login(
@@ -26,9 +26,9 @@ class LoginViewModel(
         password: String,
         navigateTo: () -> Unit
     ) {
-        disableLogin()
+        disableButtons()
         if (!validateLoginInfo(name, email, password)) {
-            enableLogin()
+            enableButtons()
             return
         }
         val loginInfo = LoginInputModel(name, email, password)
@@ -43,7 +43,7 @@ class LoginViewModel(
         }
         when {
             result.isFailure -> {
-                enableLogin()
+                enableButtons()
             }
             result.isSuccess -> {
                 val token = result.getTokenOrThrow()
@@ -69,11 +69,11 @@ class LoginViewModel(
     }
 
 
-    private fun enableLogin() {
-        loginEnable = true
+    private fun enableButtons() {
+        buttonsEnable = true
     }
 
-    private fun disableLogin() {
-        loginEnable = false
+    private fun disableButtons() {
+        buttonsEnable = false
     }
 }
