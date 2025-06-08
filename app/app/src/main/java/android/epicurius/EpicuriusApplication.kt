@@ -27,4 +27,3 @@ class EpicuriusApplication : Application(), Dependencies {
 }
 
 val Context.sessionDataStore: DataStore<Preferences> by preferencesDataStore(name = "session")
-

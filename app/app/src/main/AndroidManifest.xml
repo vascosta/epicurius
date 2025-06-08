@@ -56,11 +56,6 @@
             android:label="Favourites List"
             android:theme="@style/Theme.App" />
         <activity
-            android:name=".ui.screens.feed.FeedActivity"
-            android:exported="false"
-            android:label="Feed"
-            android:theme="@style/Theme.App" />
-        <activity
             android:name=".ui.screens.fridge.FridgeActivity"
             android:exported="false"
             android:label="Fridge"
@@ -126,12 +121,12 @@
             android:label="Settings"
             android:theme="@style/Theme.App" />
         <activity
-            android:name=".MainActivity"
+            android:name=".ui.screens.feed.FeedActivity"
             android:exported="true"
+            android:label="Feed"
             android:theme="@style/Theme.App">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>

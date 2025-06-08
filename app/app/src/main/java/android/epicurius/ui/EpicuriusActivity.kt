@@ -10,9 +10,10 @@ import androidx.activity.viewModels
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 
-open class EpicuriusActivity : ComponentActivity() {
+abstract class EpicuriusActivity : ComponentActivity() {
 
     val dependencies by lazy { application as Dependencies }
+    abstract val viewModel: EpicuriusViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
