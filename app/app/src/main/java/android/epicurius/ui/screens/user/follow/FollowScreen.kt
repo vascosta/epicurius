@@ -42,7 +42,7 @@ fun FollowScreen(
                 onBackButton = onBackButton,
             )
         },
-        bottomBar = { BottomBar() },
+        bottomBar = { BottomBar(buttonsEnable = true) },
         content = { paddingValues ->
             Column(
                 modifier = Modifier
