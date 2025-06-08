@@ -45,7 +45,7 @@ fun FavouritesScreen(
     onCollectionRequest: (Int) -> Unit,
     onCollectionDelete: (Int) -> Unit,
     onFavouritesRefresh: () -> Unit,
-    enableButtons: Boolean
+    buttonsEnable: Boolean
 ) {
     var showCreateCollectionDialog by remember { mutableStateOf(false) }
 
@@ -98,7 +98,7 @@ fun FavouritesScreen(
                                     collection = it,
                                     onCollectionRequest = onCollectionRequest,
                                     onCollectionDelete = onCollectionDelete,
-                                    enableButtons = enableButtons
+                                    buttonsEnable = buttonsEnable
                                 )
                                 Spacer(modifier = Modifier.height(10.dp))
                             }
@@ -109,7 +109,7 @@ fun FavouritesScreen(
                         CreateCollectionDialog(
                             onDismiss = { showCreateCollectionDialog = false },
                             onCreate = onCollectionCreate,
-                            enableButtons
+                            buttonsEnable
                         )
                     }
                 }

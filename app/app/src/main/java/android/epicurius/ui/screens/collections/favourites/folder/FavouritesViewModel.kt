@@ -30,8 +30,6 @@ class FavouritesViewModel(
     private val cachedFavourites = MutableStateFlow<List<CollectionProfile>>(emptyList())
     val favourites = favouritesFlow.asStateFlow()
 
-    var enableButtons by mutableStateOf(true)
-
     var limit by mutableIntStateOf(10)
 
     fun getFavourites(navigateTo: () -> Unit) {
@@ -114,13 +112,5 @@ class FavouritesViewModel(
             }
         }
         enableButtons()
-    }
-
-    private fun enableButtons() {
-        enableButtons = true
-    }
-
-    private fun disableButtons() {
-        enableButtons = false
     }
 }
