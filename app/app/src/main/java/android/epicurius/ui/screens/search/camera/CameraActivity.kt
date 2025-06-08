@@ -1,7 +1,7 @@
 package android.epicurius.ui.screens.search.camera
 
 import android.epicurius.ui.screens.search.general.SearchActivity
-import android.epicurius.ui.screens.utils.navigateTo
+import android.epicurius.ui.navigation.navigateTo
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
