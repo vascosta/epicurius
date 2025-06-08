@@ -50,7 +50,7 @@ fun FavouritesListScreen(
     onRecipeDelete: (Int, Int) -> Unit,
     onRecipeRequest: (Int) -> Unit,
     onFavouriteCollectionRefresh: () -> Unit,
-    enableButtons: Boolean
+    buttonsEnable: Boolean
 ) {
 
     var favouritesListName = getFavouritesListName(favouritesListNameState)
@@ -116,7 +116,7 @@ fun FavouritesListScreen(
                                         onAddRecipeToCollection = {_, _ ->},
                                         onRemoveRecipeFromCollection = onRecipeDelete,
                                         onRecipeRequest = onRecipeRequest,
-                                        enableButtons = enableButtons
+                                        enableButtons = buttonsEnable
                                     )
                                     Spacer(modifier = Modifier.height(10.dp))
                                 }
@@ -130,7 +130,7 @@ fun FavouritesListScreen(
                             collectionId = collectionId,
                             onDismiss = { showEditCollectionDialog = false },
                             onEditCollection = onCollectionEdit,
-                            enableButtons = enableButtons
+                            buttonsEnable = buttonsEnable
                         )
                     }
 
@@ -140,7 +140,7 @@ fun FavouritesListScreen(
                             collectionId = collectionId,
                             onDelete = onCollectionDelete,
                             onDismissRequest = { showDeleteCollectionDialog = false },
-                            enableButtons = enableButtons
+                            buttonsEnable = buttonsEnable
                         )
                     }
                 }
@@ -176,6 +176,6 @@ fun FavouritesListScreenPreview() {
         onRecipeDelete = {_, _ ->},
         onRecipeRequest = {},
         onFavouriteCollectionRefresh = {},
-        enableButtons = true
+        buttonsEnable = true
     )
 }

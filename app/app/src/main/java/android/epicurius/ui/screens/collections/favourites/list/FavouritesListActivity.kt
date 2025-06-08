@@ -6,7 +6,7 @@ import android.epicurius.ui.screens.collections.favourites.folder.FavouritesActi
 import android.epicurius.ui.screens.recipe.profile.RecipeProfileActivity
 import android.epicurius.ui.screens.utils.Idle
 import android.epicurius.ui.screens.utils.idle
-import android.epicurius.ui.screens.utils.navigateTo
+import android.epicurius.ui.navigation.navigateTo
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.compose.runtime.collectAsState
@@ -16,7 +16,8 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 
 class FavouritesListActivity : EpicuriusActivity() {
-    val viewModel: FavouritesListViewModel by getViewModel<FavouritesListViewModel>()
+    override val viewModel: FavouritesListViewModel by getViewModel<FavouritesListViewModel>()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         lifecycleScope.launch {
@@ -53,7 +54,7 @@ class FavouritesListActivity : EpicuriusActivity() {
                     val collectionId = intent.getIntExtra(Intents.COLLECTION_ID, -1)
                     viewModel.getFavouriteCollection(collectionId) { navigateTo<FavouritesActivity>() }
                 },
-                enableButtons = viewModel.enableButtons
+                buttonsEnable = viewModel.buttonsEnable
             )
         }
     }

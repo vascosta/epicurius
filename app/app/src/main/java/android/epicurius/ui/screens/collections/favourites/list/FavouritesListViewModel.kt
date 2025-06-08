@@ -29,8 +29,6 @@ class FavouritesListViewModel(
     val recipes = recipesFlow.asStateFlow()
     val favouritesListName = favouritesListNameFlow.asStateFlow()
 
-    var enableButtons by mutableStateOf(true)
-
     fun getFavouriteCollection(id: Int, navigateTo: () -> Unit) {
         recipesFlow.value = loading()
         favouritesListNameFlow.value = loading()
@@ -140,13 +138,5 @@ class FavouritesListViewModel(
             }
         }
         enableButtons()
-    }
-
-    private fun enableButtons() {
-        enableButtons = true
-    }
-
-    private fun disableButtons() {
-        enableButtons = false
     }
 }
