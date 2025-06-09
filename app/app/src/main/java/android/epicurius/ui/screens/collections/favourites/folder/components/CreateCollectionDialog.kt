@@ -48,7 +48,7 @@ fun CreateCollectionDialog(
                     onValueChange = { collectionName = it },
                     modifier = Modifier.fillMaxWidth(),
                     enabled = buttonsEnable,
-                    label = "Collection Name",
+                    label = "Collection Name"
                 )
             }
         }

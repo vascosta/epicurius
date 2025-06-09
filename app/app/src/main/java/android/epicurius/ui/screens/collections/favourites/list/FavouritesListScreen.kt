@@ -62,11 +62,10 @@ fun FavouritesListScreen(
             showEditCollectionDialog = false
         }
     }
-
     Scaffold(
         topBar = {
             TopBar(
-                text = favouritesListName,
+                titleText = favouritesListName,
                 backButton = true,
                 onBackButton = onBackButton,
                 buttonsEnable = buttonsEnable,
@@ -123,7 +122,6 @@ fun FavouritesListScreen(
                             }
                         }
                     }
-
                     if (showEditCollectionDialog) {
                         EditCollectionDialog(
                             collectionName = favouritesListName,
@@ -133,7 +131,6 @@ fun FavouritesListScreen(
                             buttonsEnable = buttonsEnable
                         )
                     }
-
                     if (showDeleteCollectionDialog) {
                         DeleteCollectionDialog(
                             collectionName = favouritesListName,

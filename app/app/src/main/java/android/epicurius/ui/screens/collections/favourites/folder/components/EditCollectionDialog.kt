@@ -30,19 +30,6 @@ fun EditCollectionDialog(
 
     AlertDialog(
         onDismissRequest = { onDismiss() },
-        title = { Text("Edit Collection") },
-        text = {
-            Column {
-                Text("Edit your collection name:")
-                Spacer(Modifier.width(10.dp))
-                TextField(
-                    value = newCollectionName,
-                    onValueChange = { newCollectionName = it },
-                    label = "Collection Name",
-                    modifier = Modifier.fillMaxWidth()
-                )
-            }
-        },
         confirmButton = {
             TextButton(
                 onClick = { onDismiss() },
@@ -54,6 +41,20 @@ fun EditCollectionDialog(
             ) {
                 if (buttonsEnable) { Text("Edit") }
                 else { LoadingSpinner(Modifier.size(30.dp)) }
+            }
+        },
+        title = { Text("Edit Collection") },
+        text = {
+            Column {
+                Text("Edit your collection name:")
+                Spacer(Modifier.width(10.dp))
+                TextField(
+                    value = newCollectionName,
+                    onValueChange = { newCollectionName = it },
+                    modifier = Modifier.fillMaxWidth(),
+                    enabled = buttonsEnable,
+                    label = "Collection Name"
+                )
             }
         }
     )

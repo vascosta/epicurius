@@ -54,12 +54,11 @@ fun RecipeHeader(
     ) {
         Text(
             text = name,
+            fontSize = 18.sp,
             fontWeight = FontWeight.Bold,
-            maxLines = 3,
             overflow = TextOverflow.Ellipsis,
-            fontSize = 18.sp
+            maxLines = 3
         )
-
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -68,15 +67,10 @@ fun RecipeHeader(
             verticalAlignment = Alignment.CenterVertically
         ) {
             MixedText(boldString = "by ", normalString = author)
-
             IconButton(
                 onClick = {
-                    if (collectionId != null) {
-                        onRemoveRecipeFromCollection(collectionId, recipeId)
-                    }
-                    else {
-                        showCollectionsDialog = true
-                    }
+                    if (collectionId != null) { onRemoveRecipeFromCollection(collectionId, recipeId) }
+                    else { showCollectionsDialog = true }
                 },
                 modifier = Modifier.size(24.dp),
                 enabled = enableButtons
@@ -94,10 +88,7 @@ fun RecipeHeader(
                         contentScale = ContentScale.Fit
                     )
                 }
-                else {
-                    LoadingSpinner(Modifier.size(30.dp))
-                }
-
+                else { LoadingSpinner(Modifier.size(30.dp)) }
                 if (showCollectionsDialog) {
                     CollectionsListDialog(
                         recipeId = recipeId,

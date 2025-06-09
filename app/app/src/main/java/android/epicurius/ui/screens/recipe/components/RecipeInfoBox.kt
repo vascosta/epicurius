@@ -53,9 +53,7 @@ fun RecipeInfoBox(
                 onCollectionsRequest = onCollectionsRequest,
                 enableButtons = enableButtons
             )
-
             RecipeImage(recipeInfo.picture)
-
             RecipeDetails(
                 preparationTime = recipeInfo.preparationTime,
                 servings = recipeInfo.servings,
