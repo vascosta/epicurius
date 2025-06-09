@@ -29,11 +29,7 @@ fun AuthButton(
         modifier = Modifier.padding(10.dp),
         enabled = enabled
     ) {
-        if (!showLoadingSpinner || enabled) {
-            Text(text)
-        }
-        else {
-            LoadingSpinner(Modifier.size(25.dp))
-        }
+        if (!showLoadingSpinner || enabled) { Text(text) }
+        else { LoadingSpinner(Modifier.size(25.dp)) }
     }
 }

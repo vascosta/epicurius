@@ -18,16 +18,18 @@ import androidx.compose.ui.text.input.KeyboardType
 @Composable
 fun TextField(
     value: String,
-    label: String,
+    onValueChange: (String) -> Unit,
     modifier: Modifier = Modifier,
-    onValueChange: (String) -> Unit
+    enabled: Boolean,
+    label: String,
 ) {
     OutlinedTextField(
         value = value,
         onValueChange = onValueChange,
-        singleLine = true,
+        modifier = modifier,
+        enabled = enabled,
         label = { Text(label) },
-        modifier = modifier
+        singleLine = true,
     )
 }
 
@@ -56,11 +58,18 @@ fun SearchTextField(
 }
 
 @Composable
-fun FormTextField(parameterName: String, value: String, modifier: Modifier = Modifier, onValueChange: (String) -> Unit) {
+fun FormTextField(
+    parameterName: String,
+    value: String,
+    onValueChange: (String) -> Unit,
+    modifier: Modifier = Modifier,
+    enabled: Boolean
+) {
     TextField(
         value = value,
         onValueChange = onValueChange,
         modifier = modifier,
+        enabled = enabled,
         label = { Text(parameterName) },
         maxLines = 1,
         colors = TextFieldDefaults.colors(
@@ -72,11 +81,19 @@ fun FormTextField(parameterName: String, value: String, modifier: Modifier = Mod
 }
 
 @Composable
-fun NumberLineTextField(parameterName: String, value: String, modifier: Modifier = Modifier, onValueChange: (String) -> Unit) {
+fun NumberLineTextField(
+    parameterName: String,
+    value: String,
+    onValueChange: (String) -> Unit,
+    modifier: Modifier = Modifier,
+    enabled: Boolean
+
+) {
     TextField(
         value = value,
         onValueChange = onValueChange,
         modifier = modifier,
+        enabled = enabled,
         label = { Text(parameterName) },
         singleLine = true,
         keyboardOptions = KeyboardOptions.Default.copy(

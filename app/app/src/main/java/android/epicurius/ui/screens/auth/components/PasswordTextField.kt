@@ -26,20 +26,19 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun PasswordTextField(
     value: String,
-    label: String,
+    onValueChange: (String) -> Unit,
     modifier: Modifier = Modifier,
-    onValueChange: (String) -> Unit
+    enabled: Boolean,
+    label: String
 ) {
     var passwordVisible by rememberSaveable { mutableStateOf(false) }
     OutlinedTextField(
         value = value,
         onValueChange = onValueChange,
-        singleLine = true,
+        modifier = modifier,
+        enabled = enabled,
         label = { Text(label) },
         leadingIcon = { Icon(Icons.Filled.Lock, label) },
-        modifier = modifier,
-        visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
-        keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Password),
         trailingIcon = {
             val image = if (passwordVisible) Icons.Filled.Visibility else Icons.Filled.VisibilityOff
             val description = if (passwordVisible) "Hide password" else "Show password"
@@ -53,6 +52,9 @@ fun PasswordTextField(
                         passwordVisible = !passwordVisible
                     }
             )
-        }
+        },
+        visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
+        keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Password),
+        singleLine = true,
     )
 }

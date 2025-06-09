@@ -47,7 +47,7 @@ fun SignUpScreen(
     Scaffold(
         topBar = {
             TopBar(
-                text = "SignUp",
+                titleText = "SignUp",
                 buttonsEnable = buttonsEnable,
                 icon = null
             )
@@ -60,24 +60,39 @@ fun SignUpScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-            TextField(value = username, onValueChange = { username = it }, label = "Username")
-            TextField(value = email, onValueChange = { email = it }, label = "Email")
-            PasswordTextField(value = password, onValueChange = { password = it }, label = "Password")
+            TextField(
+                value = username,
+                onValueChange = { username = it },
+                enabled = buttonsEnable,
+                label = "Username"
+            )
+            TextField(
+                value = email,
+                onValueChange = { email = it },
+                enabled = buttonsEnable,
+                label = "Email"
+            )
+            PasswordTextField(
+                value = password,
+                onValueChange = { password = it },
+                enabled = buttonsEnable,
+                label = "Password"
+            )
             PasswordTextField(
                 value = confirmPassword,
                 onValueChange = { confirmPassword = it },
-                label = "Confirm Password"
+                enabled = buttonsEnable,
+                label = "Confirm Password",
             )
-
             val countryCodes = remember { Locale.getISOCountries().sorted() }
             DropdownMenuComponent(
                 options = countryCodes,
                 value = country,
                 onValueChange = { country = it },
                 label = "Country",
-                modifier = Modifier.padding(5.dp)
+                modifier = Modifier.padding(5.dp),
+                enabled = buttonsEnable
             )
-
             Row {
                 AuthButton(
                     text = "Login",
