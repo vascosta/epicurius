@@ -1,8 +1,5 @@
 package android.epicurius.ui.navigation
 
-import android.content.Intent
-import android.epicurius.domain.user.UserProfile
-import android.epicurius.ui.screens.feed.FeedActivity
 import android.epicurius.ui.screens.user.profile.UserProfileActivity
 import android.epicurius.ui.screens.user.settings.SettingsActivity
 import androidx.compose.foundation.layout.Column
@@ -32,15 +29,16 @@ import androidx.compose.ui.unit.sp
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TopBar(
-    text: String,
+    titleText: String,
     backButton: Boolean = false,
     onBackButton: () -> Unit = {},
     buttonsEnable: Boolean,
     icon: ImageVector? = Icons.Filled.Person
 ) {
     val context = LocalContext.current
+
     TopAppBar(
-        title = { Text(text) },
+        title = { Text(titleText) },
         modifier = Modifier
             .drawWithContent {
                 drawContent()
@@ -68,12 +66,8 @@ fun TopBar(
             icon?.let {
                 IconButton(
                     onClick = {
-                        if (it == Icons.Filled.Person) {
-                            context.navigateTo<UserProfileActivity>()
-                        }
-                        else {
-                            context.navigateTo<SettingsActivity>()
-                        }
+                        if (it == Icons.Filled.Person) { context.navigateTo<UserProfileActivity>() }
+                        else { context.navigateTo<SettingsActivity>() }
                     },
                     enabled = buttonsEnable
                 ) {
@@ -87,8 +81,8 @@ fun TopBar(
         },
         colors = TopAppBarDefaults.topAppBarColors(
             containerColor = Color.White,
-            titleContentColor = Color.Black,
-            navigationIconContentColor = Color.Black
+            navigationIconContentColor = Color.Black,
+            titleContentColor = Color.Black
         ),
     )
 }
