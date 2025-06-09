@@ -3,6 +3,7 @@ package android.epicurius.domain.recipe
 import android.epicurius.domain.Diet
 import android.epicurius.domain.Intolerance
 import java.time.LocalDate
+import java.util.Base64
 
 data class Recipe(
     val id: Int,
@@ -23,6 +24,10 @@ data class Recipe(
     val fat: Int?,
     val carbs: Int?,
     val instructions: Instructions,
-    val pictures: List<ByteArray>,
+    val pictures: List<String>,
     val isInCollection: Boolean
-)
+) {
+    val picturesBytes by lazy {
+        pictures.map { Base64.getDecoder().decode(it) }
+    }
+}

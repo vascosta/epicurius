@@ -105,7 +105,7 @@ class HttpService(
         multipartBuilder.addFormDataPart(jsonPartName, null, json.toRequestBody("application/json".toMediaTypeOrNull()))
 
         files.forEach { (filename, bytes) ->
-            val fileBody = bytes.toRequestBody("image/*".toMediaTypeOrNull())
+            val fileBody = bytes.toRequestBody("image/png".toMediaTypeOrNull())
             multipartBuilder.addFormDataPart(filePartName, filename, fileBody)
         }
 
@@ -233,7 +233,7 @@ class HttpService(
             val multipartBuilder = MultipartBody.Builder().setType(MultipartBody.FORM)
 
             files.forEach { (filename, bytes) ->
-                val fileBody = bytes.toRequestBody("image/*".toMediaTypeOrNull())
+                val fileBody = bytes.toRequestBody("image/png".toMediaTypeOrNull())
                 multipartBuilder.addFormDataPart(filePartName, filename, fileBody)
             }
 
