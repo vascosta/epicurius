@@ -15,11 +15,13 @@ import androidx.compose.ui.unit.dp
 fun AddFieldButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
+    enabled: Boolean,
     text: String
 ) {
     Button(
         onClick = { onClick() },
-        modifier = modifier
+        modifier = modifier,
+        enabled = enabled
     ) {
         Icon(Icons.Default.Add, contentDescription = "Add field")
         Spacer(Modifier.width(4.dp))

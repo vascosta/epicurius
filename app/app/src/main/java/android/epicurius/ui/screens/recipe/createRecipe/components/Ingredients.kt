@@ -22,7 +22,8 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun IngredientsComponent(
     ingredients: List<IngredientComponent>,
-    onIngredientsChange: (List<IngredientComponent>) -> Unit
+    onIngredientsChange: (ingredients: List<IngredientComponent>) -> Unit,
+    enabled: Boolean
 ) {
     Column(
         modifier = Modifier
@@ -30,8 +31,10 @@ fun IngredientsComponent(
             .padding(horizontal = 10.dp, vertical = 5.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text("Ingredients", style = MaterialTheme.typography.titleMedium)
-
+        Text(
+            text = "Ingredients",
+            style = MaterialTheme.typography.titleMedium
+        )
         ingredients.forEachIndexed { index, ingredient ->
             Column(
                 modifier = Modifier
@@ -46,13 +49,14 @@ fun IngredientsComponent(
                     NumberLineTextField(
                         parameterName = "Quantity",
                         value = ingredient.quantity,
-                        modifier = Modifier.weight(1f)
-                    ) { newQuantity ->
-                        val updatedList = ingredients.toMutableList()
-                        updatedList[index] = updatedList[index].copy(quantity = newQuantity)
-                        onIngredientsChange(updatedList)
-                    }
-
+                        onValueChange = { newQuantity ->
+                            val updatedList = ingredients.toMutableList()
+                            updatedList[index] = updatedList[index].copy(quantity = newQuantity)
+                            onIngredientsChange(updatedList)
+                        },
+                        modifier = Modifier.weight(1f),
+                        enabled = enabled
+                    )
                     DropdownMenuComponent(
                         options = IngredientUnit.entries.map { it.name },
                         value = ingredient.unit,
@@ -61,11 +65,11 @@ fun IngredientsComponent(
                             updatedList[index] = updatedList[index].copy(unit = newUnit)
                             onIngredientsChange(updatedList)
                         },
+                        modifier = Modifier.weight(1f),
+                        enabled = enabled,
                         label = "Unit",
-                        modifier = Modifier.weight(1f)
                     )
                 }
-
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically
@@ -77,18 +81,19 @@ fun IngredientsComponent(
                             updatedList[index] = updatedList[index].copy(name = newName)
                             onIngredientsChange(updatedList)
                         },
-                        label = { Text("Ingredient") },
                         modifier = Modifier
                             .weight(1f)
-                            .padding(end = 8.dp)
+                            .padding(end = 8.dp),
+                        enabled = enabled,
+                        label = { Text("Ingredient") }
                     )
-
                     DeleteFieldButton(
                         onClick = {
                             val updatedList = ingredients.toMutableList()
                             updatedList.removeAt(index)
                             onIngredientsChange(updatedList)
-                        }
+                        },
+                        enabled = enabled
                     )
                 }
             }
@@ -105,6 +110,7 @@ fun IngredientsComponent(
                 onIngredientsChange(ingredients + IngredientComponent("", "", ""))
             },
             modifier = Modifier.padding(top = 8.dp),
+            enabled = enabled,
             text = "Add Ingredient"
         )
     }

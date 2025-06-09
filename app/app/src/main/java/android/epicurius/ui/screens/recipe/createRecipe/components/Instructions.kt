@@ -15,7 +15,8 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun InstructionsComponent(
     steps: List<String>,
-    onStepsChange: (List<String>) -> Unit
+    onStepsChange: (steps: List<String>) -> Unit,
+    enabled: Boolean
 ) {
     Column(
         modifier = Modifier
@@ -23,8 +24,10 @@ fun InstructionsComponent(
             .padding(horizontal = 10.dp, vertical = 5.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text("Instructions", style = MaterialTheme.typography.titleMedium)
-
+        Text(
+            text = "Instructions",
+            style = MaterialTheme.typography.titleMedium
+        )
         steps.forEachIndexed { index, step ->
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -37,18 +40,19 @@ fun InstructionsComponent(
                         updatedSteps[index] = newStep
                         onStepsChange(updatedSteps)
                     },
-                    label = { Text("Step ${index + 1}") },
                     modifier = Modifier
                         .weight(1f)
-                        .padding(end = 8.dp)
+                        .padding(end = 8.dp),
+                    enabled = enabled,
+                    label = { Text("Step ${index + 1}") }
                 )
-
                 DeleteFieldButton(
                     onClick = {
                         val updatedSteps = steps.toMutableList()
                         updatedSteps.removeAt(index)
                         onStepsChange(updatedSteps)
-                    }
+                    },
+                    enabled = enabled
                 )
             }
         }
@@ -61,6 +65,7 @@ fun InstructionsComponent(
                 onStepsChange(steps + "")
             },
             modifier = Modifier.padding(top = 8.dp),
+            enabled = enabled,
             text = "Add Step"
         )
     }

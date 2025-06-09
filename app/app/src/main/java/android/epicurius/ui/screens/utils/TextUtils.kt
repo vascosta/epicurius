@@ -110,18 +110,18 @@ fun NumberLineTextField(
 @Composable
 fun NumberTextField(
     value: String,
-    label: String,
+    onValueChange: (String) -> Unit,
     modifier: Modifier = Modifier,
-    enabled: () -> Boolean = { true },
-    onValueChange: (String) -> Unit
+    enabled: Boolean,
+    label: String
 ) {
     OutlinedTextField(
         value = value,
         onValueChange = onValueChange,
-        enabled = enabled(),
-        singleLine = true,
-        label = { Text(label) },
         modifier = modifier,
+        enabled = enabled,
+        label = { Text(label) },
+        singleLine = true,
         keyboardOptions = KeyboardOptions.Default.copy(
             keyboardType = KeyboardType.Number
         )

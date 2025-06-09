@@ -11,11 +11,13 @@ import androidx.compose.ui.graphics.Color
 @Composable
 fun DeleteFieldButton(
     onClick: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    enabled: Boolean
 ) {
     IconButton(
         onClick = { onClick() },
-        modifier = modifier
+        modifier = modifier,
+        enabled = enabled
     ) {
         Icon(Icons.Default.Delete, contentDescription = "Delete field", tint = Color.Red)
     }

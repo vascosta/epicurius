@@ -31,27 +31,28 @@ fun DropdownMenuComponent(
     options: List<String>,
     value: String,
     onValueChange: (String) -> Unit,
-    label: String,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    enabled: Boolean,
+    label: String
 ) {
     var expanded by remember { mutableStateOf(false) }
 
     ExposedDropdownMenuBox(
         expanded = expanded,
         onExpandedChange = { expanded = !expanded },
-        modifier = modifier
+        modifier = modifier,
     ) {
         OutlinedTextField(
             value = value,
             onValueChange = onValueChange,
-            label = { Text(label) },
+            modifier = Modifier.menuAnchor(MenuAnchorType.PrimaryNotEditable, enabled = true),
+            enabled = enabled,
             readOnly = true,
+            label = { Text(label) },
             trailingIcon = {
                 ExposedDropdownMenuDefaults.TrailingIcon(expanded)
-            },
-            modifier = Modifier.menuAnchor(MenuAnchorType.PrimaryNotEditable, enabled = true)
+            }
         )
-
         DropdownMenu(
             expanded = expanded,
             onDismissRequest = { expanded = false }
@@ -75,8 +76,9 @@ fun MultiSelectDropdownMenuComponent(
     options: List<String>,
     values: List<String>,
     onValuesChange: (List<String>) -> Unit,
-    label: String,
     modifier: Modifier = Modifier,
+    enabled: Boolean,
+    label: String,
 ) {
     var expanded by remember { mutableStateOf(false) }
 
@@ -88,17 +90,17 @@ fun MultiSelectDropdownMenuComponent(
         OutlinedTextField(
             value = values.joinToString(),
             onValueChange = {},
-            label = { Text(label) },
-            readOnly = true,
-            trailingIcon = {
-                ExposedDropdownMenuDefaults.TrailingIcon(expanded)
-            },
             modifier = Modifier
                 .menuAnchor(MenuAnchorType.PrimaryNotEditable, enabled = true)
                 .width(280.dp)
-                .height(60.dp)
+                .height(60.dp),
+            enabled = enabled,
+            readOnly = true,
+            label = { Text(label) },
+            trailingIcon = {
+                ExposedDropdownMenuDefaults.TrailingIcon(expanded)
+            }
         )
-
         DropdownMenu(
             expanded = expanded,
             onDismissRequest = { expanded = false }

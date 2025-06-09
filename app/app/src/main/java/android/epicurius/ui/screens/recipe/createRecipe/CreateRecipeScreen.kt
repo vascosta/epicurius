@@ -15,10 +15,10 @@ import android.epicurius.ui.screens.recipe.createRecipe.components.IngredientsCo
 import android.epicurius.ui.screens.recipe.createRecipe.components.InstructionsComponent
 import android.epicurius.ui.screens.utils.DropdownMenuComponent
 import android.epicurius.ui.screens.utils.FormTextField
+import android.epicurius.ui.screens.utils.LoadingSpinner
 import android.epicurius.ui.screens.utils.MultiSelectDropdownMenuComponent
 import android.epicurius.ui.screens.utils.NumberLineTextField
 import android.epicurius.ui.screens.utils.NumberTextField
-import android.net.Uri
 import android.os.Build
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -111,10 +111,9 @@ fun CreateRecipeScreen(
     var fat by remember { mutableStateOf("") }
     var carbs by remember { mutableStateOf("") }
     var instructions by remember { mutableStateOf(listOf<String>()) }
+    var selectedImageBytesList by remember { mutableStateOf<List<ByteArray>>(emptyList()) }
 
     var expandNutritionalInfo by remember { mutableStateOf(false) }
-
-    var selectedImageBytesList by remember { mutableStateOf<List<ByteArray>>(emptyList()) }
 
     val imagePickerLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.PickMultipleVisualMedia(maxItems = 3)
@@ -143,11 +142,11 @@ fun CreateRecipeScreen(
     Scaffold(
         topBar = {
             TopBar(
-                text = "Create a Recipe",
+                titleText = "Create a Recipe",
                 backButton = true,
                 onBackButton = onBackButton,
                 buttonsEnable = buttonsEnable,
-                icon = if (buttonsEnable) Icons.Filled.Person else null
+                icon = Icons.Filled.Person
             )
         },
         bottomBar = { BottomBar(buttonsEnable = buttonsEnable) },
@@ -168,53 +167,72 @@ fun CreateRecipeScreen(
                     modifier = Modifier.padding(top = 16.dp),
                     style = MaterialTheme.typography.titleMedium
                 )
-
-                FormTextField("Name", name, Modifier.height(56.dp)) { name = it }
-                FormTextField("Description", description, Modifier.height(56.dp)) { description = it }
-
-                NumberLineTextField("Duration (min)", preparationTime) { preparationTime = it }
-                NumberLineTextField("Serving (px)", servings) { servings = it }
-
+                FormTextField(
+                    parameterName = "Name",
+                    value = name,
+                    onValueChange = { name = it },
+                    modifier = Modifier.height(56.dp),
+                    enabled = buttonsEnable
+                )
+                FormTextField(
+                    parameterName = "Description",
+                    value = description,
+                    onValueChange = { description = it },
+                    modifier = Modifier.height(56.dp),
+                    enabled = buttonsEnable
+                )
+                NumberLineTextField(
+                    parameterName = "Duration (min)",
+                    value = preparationTime,
+                    onValueChange = { preparationTime = it },
+                    enabled = buttonsEnable
+                )
+                NumberLineTextField(
+                    parameterName = "Serving (px)",
+                    value = servings,
+                    onValueChange = { servings = it },
+                    enabled = buttonsEnable
+                )
                 DropdownMenuComponent(
                     options = MealType.entries.map { it.displayName },
                     value = mealType,
                     onValueChange = { mealType = it },
-                    label = "Meal Type",
                     modifier = Modifier
                         .padding(vertical = 5.dp)
-                        .align(Alignment.CenterHorizontally)
+                        .align(Alignment.CenterHorizontally),
+                    enabled = buttonsEnable,
+                    label = "Meal Type",
                 )
-
                 DropdownMenuComponent(
                     options = Cuisine.entries.map { it.displayName },
                     value = cuisine,
                     onValueChange = { cuisine = it },
-                    label = "Cuisine",
                     modifier = Modifier
                         .padding(vertical = 5.dp)
-                        .align(Alignment.CenterHorizontally)
+                        .align(Alignment.CenterHorizontally),
+                    enabled = buttonsEnable,
+                    label = "Cuisine",
                 )
-
                 MultiSelectDropdownMenuComponent(
                     options = Intolerance.entries.map { it.displayName },
                     values = intolerances,
                     onValuesChange = { intolerances = it },
-                    label = "Intolerances",
                     modifier = Modifier
                         .padding(vertical = 5.dp)
-                        .align(Alignment.CenterHorizontally)
+                        .align(Alignment.CenterHorizontally),
+                    enabled = buttonsEnable,
+                    label = "Intolerances"
                 )
-
                 MultiSelectDropdownMenuComponent(
                     options = Diet.entries.map { it.displayName },
                     values = diets,
                     onValuesChange = { diets = it },
-                    label = "Diets",
                     modifier = Modifier
                         .padding(vertical = 5.dp)
-                        .align(Alignment.CenterHorizontally)
+                        .align(Alignment.CenterHorizontally),
+                    enabled = buttonsEnable,
+                    label = "Diets"
                 )
-
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -230,42 +248,47 @@ fun CreateRecipeScreen(
                         )
                     }
                 }
-
                 AnimatedVisibility(visible = expandNutritionalInfo) {
                     Column(modifier = Modifier.padding(top = 8.dp)) {
                         NumberTextField(
                             value = calories,
                             onValueChange = { calories = it },
+                            enabled = buttonsEnable,
                             label = "Calories (kcal)"
                         )
                         NumberTextField(
                             value = protein,
                             onValueChange = { protein = it },
+                            enabled = buttonsEnable,
                             label = "Protein (g)"
                         )
                         NumberTextField(
                             value = fat,
                             onValueChange = { fat = it },
+                            enabled = buttonsEnable,
                             label = "Fat (g)"
                         )
                         NumberTextField(
                             value = carbs,
                             onValueChange = { carbs = it },
+                            enabled = buttonsEnable,
                             label = "Carbohydrates (g)"
                         )
                     }
                 }
-
                 DividerComponent()
-
-                IngredientsComponent(ingredients) { ingredients = it }
-
+                IngredientsComponent(
+                    ingredients = ingredients,
+                    onIngredientsChange = { ingredients = it },
+                    enabled = buttonsEnable
+                )
                 DividerComponent()
-
-                InstructionsComponent(steps = instructions) { instructions = it }
-
+                InstructionsComponent(
+                    steps = instructions,
+                    onStepsChange = { instructions = it },
+                    enabled = buttonsEnable
+                )
                 DividerComponent()
-
                 Button(
                     onClick = {
                         if (galleryPermissionState.status.isGranted) {
@@ -276,7 +299,8 @@ fun CreateRecipeScreen(
                             galleryPermissionState.launchPermissionRequest()
                         }
                     },
-                    modifier = Modifier.padding(top = 10.dp)
+                    modifier = Modifier.padding(top = 10.dp),
+                    enabled = buttonsEnable
                 ) {
                     Text("Upload")
                     Spacer(Modifier.width(4.dp))
@@ -320,14 +344,19 @@ fun CreateRecipeScreen(
                             protein.toIntOrNull(),
                             fat.toIntOrNull(),
                             carbs.toIntOrNull(),
-                            Instructions(instructionsSteps)
-                            ,
-                            emptyList() // change to pictures
+                            Instructions(instructionsSteps),
+                            selectedImageBytesList.map { imageByteArray ->
+                                Picture("picture", imageByteArray)
+                            }
                         )
                     },
-                    modifier = Modifier.padding(10.dp)
+                    modifier = Modifier.padding(10.dp),
+                    enabled = buttonsEnable && !name.isEmpty() && !description.isEmpty() &&
+                    !preparationTime.isEmpty() && !servings.isEmpty() && !cuisine.isEmpty() &&
+                    !mealType.isEmpty() && !ingredients.isEmpty() && !instructions.isEmpty()
                 ) {
-                    Text("Create")
+                    if (buttonsEnable) { Text("Create") }
+                    else { LoadingSpinner(Modifier.size(30.dp)) }
                 }
             }
         }

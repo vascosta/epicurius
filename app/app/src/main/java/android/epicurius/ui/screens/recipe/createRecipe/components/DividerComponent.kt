@@ -16,7 +16,7 @@ fun DividerComponent() {
             start = 15.dp,
             end = 15.dp
         ),
-        color = Color.Black,
-        thickness = 1.dp
+        thickness = 1.dp,
+        color = Color.Black
     )
 }
