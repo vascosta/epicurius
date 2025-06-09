@@ -15,9 +15,9 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun SettingsButton(
+    text: String,
     onClick: () -> Unit,
     enabled: Boolean,
-    text: String
 ) {
     var showLoadingSpinner by remember { mutableStateOf(false) }
 

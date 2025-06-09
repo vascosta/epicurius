@@ -37,7 +37,14 @@ fun FridgeScreen(
     var showDialog by remember { mutableStateOf(false) }
 
     Scaffold(
-        topBar = { TopBar("Fridge", backButton = true, onBackButton = onBackButton, buttonsEnable = true,) },
+        topBar = {
+            TopBar(
+                titleText = "Fridge",
+                backButton = true,
+                onBackButton = onBackButton,
+                buttonsEnable = true
+            )
+        },
         bottomBar = { BottomBar(buttonsEnable = true) },
         floatingActionButton = {
             FloatingActionButton(onClick = { showDialog = true }) {
