@@ -24,7 +24,7 @@ class ResetPasswordViewModel(
             enableButtons()
             return
         }
-        val resetPasswordInfo = ResetPasswordInputModel(email, password, confirmPassword)
+        val resetPasswordInfo = ResetPasswordInputModel(email, password)
         viewModelScope.launch {
             handleResetPassword(resetPasswordInfo)
         }

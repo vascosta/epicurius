@@ -8,7 +8,6 @@ data class UpdateUserInputModel(
     val email: String? = null,
     val country: String? = null,
     val password: String? = null,
-    val confirmPassword: String? = null,
     val privacy: Boolean? = null,
     val intolerances: Set<Intolerance>? = null,
     val diets: Set<Diet>? = null

@@ -30,7 +30,7 @@ class SignUpViewModel(
             enableButtons()
             return
         }
-        val signUpInfo = SignUpInputModel(name, email, password, confirmPassword, country)
+        val signUpInfo = SignUpInputModel(name, email, password, country)
         viewModelScope.launch {
             handleSignUp(signUpInfo, navigateTo)
         }
