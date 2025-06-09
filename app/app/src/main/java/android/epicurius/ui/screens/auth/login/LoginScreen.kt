@@ -40,49 +40,65 @@ fun LoginScreen(
     Scaffold(
         topBar = {
             TopBar(
-                text = "Login",
+                titleText = "Login",
                 buttonsEnable = buttonsEnable,
                 icon = null
             )
-        }
-    ) {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(16.dp)
-                .background(Color.Companion.White),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            TextField(value = username, onValueChange = { username = it }, label = "Username")
-            TextField(value = email, onValueChange = { email = it }, label = "Email")
-            PasswordTextField(value = password, onValueChange = { password = it }, label = "Password")
-            Row {
-                AuthButton(
-                    onClick = { onSignUp() },
+        },
+        content = {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(16.dp)
+                    .background(Color.Companion.White),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                TextField(
+                    value = username,
+                    onValueChange = { username = it },
                     enabled = buttonsEnable,
-                    text = "SignUp"
+                    label = "Username"
                 )
-                AuthButton(
-                    onClick = {
-                        onLogin(
-                            if (username.isBlank()) { null }
-                            else { username },
-                            if (email.isBlank()) { null }
-                            else { email },
-                            password
-                        )
-                    },
+                TextField(
+                    value = email,
+                    onValueChange = { email = it },
                     enabled = buttonsEnable,
-                    text = "Login",
+                    label = "Email"
                 )
+                PasswordTextField(
+                    value = password,
+                    onValueChange = { password = it },
+                    enabled = buttonsEnable,
+                    label = "Password"
+                )
+                Row {
+                    AuthButton(
+                        onClick = { onSignUp() },
+                        enabled = buttonsEnable,
+                        text = "SignUp"
+                    )
+                    AuthButton(
+                        onClick = {
+                            onLogin(
+                                if (username.isBlank()) { null }
+                                else { username },
+                                if (email.isBlank()) { null }
+                                else { email },
+                                password
+                            )
+                        },
+                        enabled = buttonsEnable,
+                        text = "Login",
+                    )
+                }
+                TextButton(
+                    onClick = { onForgotPassword() },
+                    enabled = buttonsEnable
+                ) { Text("Forgot your password?") }
             }
-            TextButton(
-                onClick = { onForgotPassword() },
-                enabled = buttonsEnable
-            ) { Text("Forgot your password?") }
         }
-    }
+    )
 }
 
 @Preview
