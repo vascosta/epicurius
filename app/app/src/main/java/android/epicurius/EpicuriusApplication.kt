@@ -8,12 +8,21 @@ import android.epicurius.storage.SessionDataStore
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
-import com.google.gson.Gson
+import com.google.gson.GsonBuilder
+import com.google.gson.JsonDeserializer
 import okhttp3.OkHttpClient
+import java.time.LocalDate
+import java.util.Base64
 
 
 class EpicuriusApplication : Application(), Dependencies {
-    private val gson = Gson()
+
+    private val gson = GsonBuilder()
+        .registerTypeAdapter(LocalDate::class.java, JsonDeserializer { json, _, _ ->
+            LocalDate.parse(json.asString)
+        })
+        .create()
+
     private val httpService = HttpService(BASE_URL, OkHttpClient(), gson)
 
     override val service = EpicuriusService(httpService)
@@ -23,6 +32,10 @@ class EpicuriusApplication : Application(), Dependencies {
 
     companion object {
         private const val BASE_URL = "http://10.0.2.2:8080/api"
+
+        val byteArrayListDeserializer = JsonDeserializer { json, _, _ ->
+            json.asJsonArray.map { Base64.getDecoder().decode(it.asString) } as List<ByteArray>
+        }
     }
 }
 
