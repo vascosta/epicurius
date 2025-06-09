@@ -29,6 +29,17 @@ fun ConfirmIngredientsDialog(
 
     AlertDialog(
         onDismissRequest = { onDismiss() },
+        confirmButton = {
+            Button(onClick = { onDismiss() }) {
+                Text("Cancel")
+            }
+            Button(onClick = {
+                onConfirm(ingredientsList)
+                onDismiss()
+            }) {
+                Text("OK")
+            }
+        },
         title = { Text("Confirm Ingredients") },
         text = {
             Column {
@@ -59,6 +70,7 @@ fun ConfirmIngredientsDialog(
                             .weight(0.5f)
                             .padding(end = 8.dp),
                         onValueChange = { newIngredient = it },
+                        enabled = true
                     )
                     Button(
                         onClick = {
@@ -72,17 +84,6 @@ fun ConfirmIngredientsDialog(
                         Text("Add")
                     }
                 }
-            }
-        },
-        confirmButton = {
-            Button(onClick = { onDismiss() }) {
-                Text("Cancel")
-            }
-            Button(onClick = {
-                onConfirm(ingredientsList)
-                onDismiss()
-            }) {
-                Text("OK")
             }
         }
     )

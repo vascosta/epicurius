@@ -53,7 +53,7 @@ fun FeedScreen(
 
     Scaffold(
         topBar = { TopBar(
-            text = "For you to cook",
+            titleText = "For you to cook",
             buttonsEnable = buttonsEnable
         ) },
         bottomBar = { BottomBar(buttonsEnable = buttonsEnable) },

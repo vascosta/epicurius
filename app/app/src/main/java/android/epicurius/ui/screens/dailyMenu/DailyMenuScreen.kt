@@ -38,7 +38,7 @@ fun DailyMenuScreen(
 ) {
     Scaffold(
         topBar = { TopBar(
-            text = "Today's Menu",
+            titleText = "Today's Menu",
             backButton = true,
             buttonsEnable = buttonsEnable,
             onBackButton = onBackButton

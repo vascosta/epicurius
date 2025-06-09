@@ -36,7 +36,8 @@ import androidx.compose.ui.unit.dp
 fun EditRecipeDialog(
     recipe: Recipe,
     onDismissRequest: () -> Unit,
-    onEditRecipe: () -> Unit
+    onEditRecipe: () -> Unit,
+    buttonsEnable: Boolean
 ) {
     var name by remember { mutableStateOf(recipe.name) }
     var description by remember { mutableStateOf(recipe.description) }
@@ -77,56 +78,84 @@ fun EditRecipeDialog(
                     .verticalScroll(rememberScrollState()),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                FormTextField("Name", name, Modifier.height(56.dp)) { name = it }
-                FormTextField("Description", description, Modifier.height(56.dp)) { description = it }
-
-                NumberLineTextField("Duration (min)", duration) { duration = it }
-                NumberLineTextField("Serving (px)", serving) { serving = it }
-
+                FormTextField(
+                    parameterName = "Name",
+                    value = name,
+                    onValueChange = { name = it },
+                    modifier = Modifier.height(56.dp),
+                    enabled = buttonsEnable
+                )
+                FormTextField(
+                    parameterName = "Description",
+                    value = description,
+                    onValueChange = { description = it },
+                    modifier = Modifier.height(56.dp),
+                    enabled = buttonsEnable
+                )
+                NumberLineTextField(
+                    parameterName = "Duration (min)",
+                    value = duration,
+                    onValueChange = { duration = it },
+                    enabled = buttonsEnable
+                )
+                NumberLineTextField(
+                    parameterName = "Serving (px)",
+                    value = serving,
+                    onValueChange = { serving = it },
+                    enabled = buttonsEnable
+                )
                 DropdownMenuComponent(
                     options = MealType.entries.map { it.displayName },
                     value = mealType,
                     onValueChange = { mealType = it },
-                    label = "Meal Type",
                     modifier = Modifier
                         .padding(vertical = 5.dp)
-                        .align(Alignment.CenterHorizontally)
+                        .align(Alignment.CenterHorizontally),
+                    enabled = buttonsEnable,
+                    label = "Meal Type"
                 )
-
                 DropdownMenuComponent(
                     options = Cuisine.entries.map { it.displayName },
                     value = cuisine,
                     onValueChange = { cuisine = it },
-                    label = "Cuisine",
                     modifier = Modifier
                         .padding(vertical = 5.dp)
-                        .align(Alignment.CenterHorizontally)
+                        .align(Alignment.CenterHorizontally),
+                    enabled = buttonsEnable,
+                    label = "Cuisine"
                 )
-
                 MultiSelectDropdownMenuComponent(
                     options = Intolerance.entries.map { it.displayName },
                     values = intolerances,
                     onValuesChange = { intolerances = it },
-                    label = "Intolerances",
                     modifier = Modifier
                         .padding(vertical = 5.dp)
-                        .align(Alignment.CenterHorizontally)
+                        .align(Alignment.CenterHorizontally),
+                    enabled = buttonsEnable,
+                    label = "Intolerances"
                 )
-
                 MultiSelectDropdownMenuComponent(
                     options = Diet.entries.map { it.displayName },
                     values = diets,
                     onValuesChange = { diets = it },
-                    label = "Diets",
                     modifier = Modifier
                         .padding(vertical = 5.dp)
-                        .align(Alignment.CenterHorizontally)
+                        .align(Alignment.CenterHorizontally),
+                    enabled = buttonsEnable,
+                    label = "Diets",
                 )
-
                 DividerComponent()
-                IngredientsComponent(ingredients) { ingredients = it }
+                IngredientsComponent(
+                    ingredients = ingredients,
+                    onIngredientsChange = { ingredients = it },
+                    enabled = buttonsEnable
+                )
                 DividerComponent()
-                InstructionsComponent(steps = instructions) { instructions = it }
+                InstructionsComponent(
+                    steps = instructions,
+                    onStepsChange = { instructions = it },
+                    enabled = buttonsEnable
+                )
             }
         },
         containerColor = Color.White,

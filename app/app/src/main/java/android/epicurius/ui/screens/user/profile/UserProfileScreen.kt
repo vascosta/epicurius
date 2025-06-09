@@ -15,7 +15,6 @@ import android.epicurius.ui.screens.user.components.UserProfilePicture
 import android.epicurius.ui.screens.utils.LoadState
 import android.epicurius.ui.screens.utils.LoadStateRenderer
 import android.epicurius.ui.screens.utils.apiSuccess
-import android.net.Uri
 import android.os.Build
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -117,7 +116,7 @@ fun UserProfileScreen(
     Scaffold(
         topBar = {
             TopBar(
-                text = "Profile",
+                titleText = "Profile",
                 backButton = true,
                 onBackButton = onBackButton,
                 buttonsEnable = true,

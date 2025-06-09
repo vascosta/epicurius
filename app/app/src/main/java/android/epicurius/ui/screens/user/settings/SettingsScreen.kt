@@ -28,7 +28,7 @@ fun SettingsScreen(
 ) {
     Scaffold(
         topBar = { TopBar(
-            text = "Settings",
+            titleText = "Settings",
             backButton = true,
             onBackButton = onBackButton,
             buttonsEnable = buttonsEnable,

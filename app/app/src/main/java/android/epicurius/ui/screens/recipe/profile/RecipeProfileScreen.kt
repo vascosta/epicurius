@@ -84,7 +84,7 @@ fun RecipeProfileScreen(
     var enableStarIcon by remember { mutableStateOf(recipe.isInCollection) }
 
     Scaffold(
-        topBar = { TopBar(text = recipe.name, backButton = true, onBackButton = onBackButton, buttonsEnable = true) },
+        topBar = { TopBar(titleText = recipe.name, backButton = true, onBackButton = onBackButton, buttonsEnable = true) },
         bottomBar = { BottomBar(buttonsEnable = true) },
         content = { paddingValues ->
             Column(
@@ -268,7 +268,8 @@ fun RecipeProfileScreen(
                         onEditRecipe = {
                             onEditRecipe()
                             showEditRecipeDialog = false
-                        }
+                        },
+                        enableButtons
                     )
                 }
                 if (showEditRatingDialog) {

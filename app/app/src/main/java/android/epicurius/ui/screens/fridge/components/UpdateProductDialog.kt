@@ -35,7 +35,7 @@ fun UpdateProductDialog(
             Column {
                 NumberTextField(
                     value = quantity?.toString() ?: "",
-                    enabled = { openDate == null },
+                    enabled = openDate == null,
                     label = "New quantity",
                     onValueChange = { quantity = it.toIntOrNull() }
                 )
@@ -49,7 +49,7 @@ fun UpdateProductDialog(
                 NumberTextField(
                     value = (duration?.days ?: "").toString(),
                     label = "Duration (days)",
-                    enabled = { openDate != null && expirationDate == null && quantity == null },
+                    enabled = openDate != null && expirationDate == null && quantity == null,
                     onValueChange = { newValue ->
                         duration = newValue.toIntOrNull()?.let { Period.ofDays(it) }
                     }

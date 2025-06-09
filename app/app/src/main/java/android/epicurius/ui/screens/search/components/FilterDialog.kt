@@ -48,10 +48,21 @@ fun FilterDialog(
     minProtein: String,
     onMinProteinChange: (String) -> Unit,
     maxProtein: String,
-    onMaxProteinChange: (String) -> Unit
+    onMaxProteinChange: (String) -> Unit,
+    buttonsEnable: Boolean
 ) {
     AlertDialog(
         onDismissRequest = onDismiss,
+        confirmButton = {
+            TextButton(onClick = onDismiss) {
+                Text("Apply")
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = onCancel) {
+                Text("Cancel")
+            }
+        },
         title = {
             Text("Filters")
         },
@@ -61,62 +72,107 @@ fun FilterDialog(
                     options = MealType.entries.map { it.displayName },
                     values = mealType,
                     onValuesChange = onMealTypeChange,
+                    enabled = buttonsEnable,
                     label = "Meal Type"
                 )
-
                 MultiSelectDropdownMenuComponent(
                     options = Cuisine.entries.map { it.displayName },
                     values = cuisine,
                     onValuesChange = onCuisineChange,
+                    enabled = buttonsEnable,
                     label = "Cuisine"
                 )
-
                 MultiSelectDropdownMenuComponent(
                     options = Intolerance.entries.map { it.displayName },
                     values = intolerances,
                     onValuesChange = onIntolerancesChange,
+                    enabled = buttonsEnable,
                     label = "Intolerances"
                 )
-
                 MultiSelectDropdownMenuComponent(
                     options = Diet.entries.map { it.displayName },
                     values = diets,
                     onValuesChange = onDietsChange,
+                    enabled = buttonsEnable,
                     label = "Diets"
                 )
-
-                NumberTextField("Preparation Time", preparationTime, onValueChange = onPreparationTimeChange)
-                NumberTextField("Servings", servings, onValueChange = onServingsChange)
-
+                NumberTextField(
+                    value = preparationTime,
+                    onValueChange = onPreparationTimeChange,
+                    enabled = buttonsEnable,
+                    label = "Preparation Time"
+                )
+                NumberTextField(
+                    value = servings,
+                    onValueChange = onServingsChange,
+                    enabled = buttonsEnable,
+                    label = "Servings"
+                )
                 Row(modifier = Modifier.fillMaxWidth()) {
-                    NumberTextField("Min Calories", minCalories, modifier = Modifier.fillMaxWidth(0.5f), onValueChange = onMinCaloriesChange)
-                    NumberTextField("Max Calories", maxCalories, modifier = Modifier.fillMaxWidth(), onValueChange = onMaxCaloriesChange)
+                    NumberTextField(
+                        value = minCalories,
+                        onValueChange = onMinCaloriesChange,
+                        modifier = Modifier.fillMaxWidth(0.5f),
+                        enabled = buttonsEnable,
+                        label = "Min Calories",
+                    )
+                    NumberTextField(
+                        value = maxCalories,
+                        onValueChange = onMaxCaloriesChange,
+                        modifier = Modifier.fillMaxWidth(),
+                        enabled = buttonsEnable,
+                        label = "Max Calories"
+                    )
+                }
+                Row(modifier = Modifier.fillMaxWidth()) {
+                    NumberTextField(
+                        value = minCarbs,
+                        onValueChange = onMinCarbsChange,
+                        modifier = Modifier.fillMaxWidth(0.5f),
+                        enabled = buttonsEnable,
+                        label = "Min Carbs"
+                    )
+                    NumberTextField(
+                        value = maxCarbs,
+                        onValueChange = onMaxCarbsChange,
+                        modifier = Modifier.fillMaxWidth(),
+                        enabled = buttonsEnable,
+                        label = "Max Carbs"
+                    )
+                }
+                Row(modifier = Modifier.fillMaxWidth()) {
+                    NumberTextField(
+                        value = minFat,
+                        modifier = Modifier.fillMaxWidth(0.5f),
+                        onValueChange = onMinFatChange,
+                        enabled = buttonsEnable,
+                        label = "Min Fat"
+                    )
+                    NumberTextField(
+                        value = maxFat,
+                        onValueChange = onMaxFatChange,
+                        modifier = Modifier.fillMaxWidth(),
+                        enabled = buttonsEnable,
+                        label = "Max Fat"
+                    )
                 }
 
                 Row(modifier = Modifier.fillMaxWidth()) {
-                    NumberTextField("Min Carbs", minCarbs, modifier = Modifier.fillMaxWidth(0.5f), onValueChange = onMinCarbsChange)
-                    NumberTextField("Max Carbs", maxCarbs, modifier = Modifier.fillMaxWidth(), onValueChange = onMaxCarbsChange)
+                    NumberTextField(
+                        value = minProtein,
+                        onValueChange = onMinProteinChange,
+                        modifier = Modifier.fillMaxWidth(0.5f),
+                        enabled = buttonsEnable,
+                        label = "Min Protein"
+                    )
+                    NumberTextField(
+                        value = maxProtein,
+                        onValueChange = onMaxProteinChange,
+                        modifier = Modifier.fillMaxWidth(),
+                        enabled = buttonsEnable,
+                        label = "Max Protein"
+                    )
                 }
-
-                Row(modifier = Modifier.fillMaxWidth()) {
-                    NumberTextField("Min Fat", minFat, modifier = Modifier.fillMaxWidth(0.5f), onValueChange = onMinFatChange)
-                    NumberTextField("Max Fat", maxFat, modifier = Modifier.fillMaxWidth(), onValueChange = onMaxFatChange)
-                }
-
-                Row(modifier = Modifier.fillMaxWidth()) {
-                    NumberTextField("Min Protein", minProtein, modifier = Modifier.fillMaxWidth(0.5f), onValueChange = onMinProteinChange)
-                    NumberTextField("Max Protein", maxProtein, modifier = Modifier.fillMaxWidth(), onValueChange = onMaxProteinChange)
-                }
-            }
-        },
-        confirmButton = {
-            TextButton(onClick = onDismiss) {
-                Text("Apply")
-            }
-        },
-        dismissButton = {
-            TextButton(onClick = onCancel) {
-                Text("Cancel")
             }
         }
     )

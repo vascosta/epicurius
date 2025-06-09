@@ -205,7 +205,8 @@ fun SearchScreen(
                         minProtein = minProtein,
                         onMinProteinChange = { minProtein = it },
                         maxProtein = maxProtein,
-                        onMaxProteinChange = { maxProtein = it }
+                        onMaxProteinChange = { maxProtein = it },
+                        true
                     )
                 }
 

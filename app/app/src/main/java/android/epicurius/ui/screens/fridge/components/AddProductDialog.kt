@@ -32,12 +32,14 @@ fun AddProductDialog(
                 TextField(
                     value = name,
                     label = "Product Name",
-                    onValueChange = { name = it }
+                    onValueChange = { name = it },
+                    enabled = true
                 )
                 TextField(
                     value = if (quantity == 0) "" else quantity.toString(),
                     label = "Quantity",
-                    onValueChange = { quantity = it.toIntOrNull() ?: 0 }
+                    onValueChange = { quantity = it.toIntOrNull() ?: 0 },
+                    enabled = true
                 )
                 DateField(
                     label = "Opened Date",
