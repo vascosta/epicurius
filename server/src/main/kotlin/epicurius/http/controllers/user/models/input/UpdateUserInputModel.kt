@@ -27,10 +27,6 @@ data class UpdateUserInputModel(
     @field:Pattern(regexp = UserDomain.VALID_PASSWORD, message = UserDomain.VALID_PASSWORD_MSG)
     val password: String? = null,
 
-    @field:Size(min = MIN_PASSWORD_LENGTH, max = MAX_PASSWORD_LENGTH)
-    @field:Pattern(regexp = UserDomain.VALID_PASSWORD, message = UserDomain.VALID_PASSWORD_MSG)
-    val confirmPassword: String? = null,
-
     val privacy: Boolean? = null,
 
     val intolerances: Set<Intolerance>? = null,

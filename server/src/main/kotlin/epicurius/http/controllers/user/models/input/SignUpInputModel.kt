@@ -26,11 +26,6 @@ data class SignUpInputModel(
     val password: String,
 
     @field:NotBlank
-    @field:Size(min = MIN_PASSWORD_LENGTH, max = MAX_PASSWORD_LENGTH, message = UserDomain.PASSWORD_LENGTH_MSG)
-    @field:Pattern(regexp = UserDomain.VALID_PASSWORD, message = UserDomain.VALID_PASSWORD_MSG)
-    val confirmPassword: String,
-
-    @field:NotBlank
     @field:Pattern(regexp = UserDomain.VALID_STRING, message = UserDomain.VALID_STRING_MSG)
     val country: String
 )

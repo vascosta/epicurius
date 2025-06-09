@@ -1,7 +1,6 @@
 package epicurius.unit.services.user
 
 import epicurius.domain.exceptions.InvalidCountry
-import epicurius.domain.exceptions.PasswordsDoNotMatch
 import epicurius.domain.exceptions.UserAlreadyExists
 import epicurius.utils.generateEmail
 import epicurius.utils.generateRandomUsername
@@ -40,7 +39,7 @@ class CreateUserServiceTests : UserServiceTest() {
         whenever(userDomainMock.hashToken(mockToken)).thenReturn(mockTokenHash)
 
         // when creating a user
-        val createToken = createUser(username, email, country, password, password)
+        val createToken = createUser(username, email, country, password)
 
         // then the user is created successfully
         verify(jdbiTokenRepositoryMock).createToken(mockTokenHash, mockLastUsed, mockUserId)
@@ -61,19 +60,19 @@ class CreateUserServiceTests : UserServiceTest() {
         // when creating a user with an existing username
         // then the user cannot be created and throws UserAlreadyExists exception
         assertFailsWith<UserAlreadyExists> {
-            createUser(publicTestUsername, randomEmail, "PT", password, password)
+            createUser(publicTestUsername, randomEmail, "PT", password)
         }
 
         // when creating a user with an existing email
         // then the user cannot be created and throws UserAlreadyExists exception
         assertFailsWith<UserAlreadyExists> {
-            createUser(randomUsername, publicTestUser.email, "PT", password, password)
+            createUser(randomUsername, publicTestUser.email, "PT", password)
         }
 
         // when creating a user with an existing username and email
         // then the user cannot be created and throws UserAlreadyExists exception
         assertFailsWith<UserAlreadyExists> {
-            createUser(publicTestUsername, publicTestUser.email, "PT", password, password)
+            createUser(publicTestUsername, publicTestUser.email, "PT", password)
         }
     }
 
@@ -88,23 +87,6 @@ class CreateUserServiceTests : UserServiceTest() {
 
         // when creating a user with an invalid country
         // then the user cannot be created and throws InvalidCountry exception
-        assertFailsWith<InvalidCountry> { createUser(username, email, invalidCounty, password, password) }
-    }
-
-    @Test
-    fun `Should throw PasswordsDoNotMatch exception when creating an user with different passwords`() {
-        // given different passwords
-        val password1 = generateSecurePassword()
-        val password2 = generateSecurePassword()
-
-        // mock
-        whenever(jdbiUserRepositoryMock.getUser(username, email)).thenReturn(null)
-        whenever(countriesDomainMock.checkIfCountryCodeIsValid(country)).thenReturn(true)
-
-        // when creating a user with different passwords
-        // then the user cannot be created and throws PasswordsDoNotMatch exception
-        assertFailsWith<PasswordsDoNotMatch> {
-            createUser(username, generateEmail(username), "PT", password1, password2)
-        }
+        assertFailsWith<InvalidCountry> { createUser(username, email, invalidCounty, password) }
     }
 }

@@ -135,7 +135,7 @@ class UserController(val userService: UserService) {
         @Valid @RequestBody body: SignUpInputModel,
         response: HttpServletResponse
     ): ResponseEntity<*> {
-        val token = userService.createUser(body.name, body.email, body.country, body.password, body.confirmPassword)
+        val token = userService.createUser(body.name, body.email, body.country, body.password)
         return createdHttpResponse(Uris.User.userProfile(body.name), Unit).addCookie(response, token)
     }
 
@@ -187,7 +187,7 @@ class UserController(val userService: UserService) {
     fun resetUserPassword(
         @Valid @RequestBody body: ResetPasswordInputModel
     ): ResponseEntity<*> {
-        userService.resetPassword(body.email, body.newPassword, body.confirmPassword)
+        userService.resetPassword(body.email, body.newPassword)
         return noContentHttpResponse()
     }
 

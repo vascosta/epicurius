@@ -3,7 +3,6 @@ package epicurius.integration.user
 import epicurius.domain.Diet
 import epicurius.domain.Intolerance
 import epicurius.domain.exceptions.InvalidCountry
-import epicurius.domain.exceptions.PasswordsDoNotMatch
 import epicurius.domain.exceptions.UserAlreadyExists
 import epicurius.http.media.Problem
 import epicurius.http.media.Uris
@@ -39,7 +38,6 @@ class UpdateUserIntegrationTests : UserIntegrationTest() {
             newUsername,
             newEmail,
             newCountry,
-            newPassword,
             newPassword,
             newPrivacy,
             newIntolerances,
@@ -124,28 +122,5 @@ class UpdateUserIntegrationTests : UserIntegrationTest() {
         // then the user cannot be updated and fails with code 400
         val errorBody = getBody(error)
         assertEquals(InvalidCountry().message, errorBody.detail)
-    }
-
-    @Test
-    fun `Should fail with code 400 when updating a user with different passwords`() {
-        // given a user (testUser) and different passwords
-        val password1 = generateSecurePassword()
-        val password2 = generateSecurePassword()
-
-        // when updating the user with different passwords
-        val error = patch<Problem>(
-            client,
-            api(Uris.User.USER),
-            body = mapOf(
-                "password" to password1,
-                "confirmPassword" to password2,
-            ),
-            responseStatus = HttpStatus.BAD_REQUEST,
-            token = testUser.token
-        )
-
-        // then the user cannot be updated and fails with code 400
-        val errorBody = getBody(error)
-        assertEquals(PasswordsDoNotMatch().message, errorBody.detail)
     }
 }

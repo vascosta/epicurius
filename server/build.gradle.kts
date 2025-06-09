@@ -65,14 +65,13 @@ tasks.withType<Test> {
 tasks.register<Copy>("copyJarToDemo") {
     dependsOn("bootJar")
 
-    val jarFile = layout.buildDirectory.file("libs/${rootProject.name}-${version}.jar")
+    val jarFile = layout.buildDirectory.file("libs/${rootProject.name}-$version.jar")
     val outputDir = layout.projectDirectory.dir("../demo")
 
     from(jarFile.map { it.asFile })
     into(outputDir)
     rename { "epicurius-server.jar" }
 }
-
 
 tasks.register<Copy>("extractUberJar") {
     dependsOn("assemble")

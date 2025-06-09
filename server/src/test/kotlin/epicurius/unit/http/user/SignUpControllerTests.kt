@@ -1,7 +1,6 @@
 package epicurius.unit.http.user
 
 import epicurius.domain.exceptions.InvalidCountry
-import epicurius.domain.exceptions.PasswordsDoNotMatch
 import epicurius.domain.exceptions.UserAlreadyExists
 import epicurius.http.controllers.user.models.input.SignUpInputModel
 import epicurius.http.pipeline.authentication.cookie.TOKEN
@@ -24,7 +23,6 @@ class SignUpControllerTests : UserControllerTest() {
         username,
         generateEmail(username),
         "PT",
-        password,
         password
     )
 
@@ -36,7 +34,7 @@ class SignUpControllerTests : UserControllerTest() {
         val mockToken = userDomain.generateTokenValue()
         whenever(
             userServiceMock
-                .createUser(signUpInfo.name, signUpInfo.email, signUpInfo.country, signUpInfo.password, signUpInfo.confirmPassword)
+                .createUser(signUpInfo.name, signUpInfo.email, signUpInfo.country, signUpInfo.password)
         ).thenReturn(mockToken)
 
         // when creating a user
@@ -62,15 +60,15 @@ class SignUpControllerTests : UserControllerTest() {
         // mock
         whenever(
             userServiceMock
-                .createUser(signUpInfoExistingUsername.name, signUpInfoExistingUsername.email, signUpInfo.country, signUpInfo.password, signUpInfo.confirmPassword)
+                .createUser(signUpInfoExistingUsername.name, signUpInfoExistingUsername.email, signUpInfo.country, signUpInfo.password)
         ).thenThrow(UserAlreadyExists())
         whenever(
             userServiceMock
-                .createUser(signUpInfoExistingEmail.name, signUpInfoExistingEmail.email, signUpInfo.country, signUpInfo.password, signUpInfo.confirmPassword)
+                .createUser(signUpInfoExistingEmail.name, signUpInfoExistingEmail.email, signUpInfo.country, signUpInfo.password)
         ).thenThrow(UserAlreadyExists())
         whenever(
             userServiceMock
-                .createUser(signUpInfoExistingUsernameAndEmail.name, signUpInfoExistingUsernameAndEmail.email, signUpInfo.country, signUpInfo.password, signUpInfo.confirmPassword)
+                .createUser(signUpInfoExistingUsernameAndEmail.name, signUpInfoExistingUsernameAndEmail.email, signUpInfo.country, signUpInfo.password)
         ).thenThrow(UserAlreadyExists())
 
         // when creating a user with an existing username
@@ -100,29 +98,11 @@ class SignUpControllerTests : UserControllerTest() {
         // mock
         whenever(
             userServiceMock
-                .createUser(signUpInfo.name, signUpInfo.email, signUpInfoInvalidCountry.country, signUpInfo.password, signUpInfo.confirmPassword)
+                .createUser(signUpInfo.name, signUpInfo.email, signUpInfoInvalidCountry.country, signUpInfo.password)
         ).thenThrow(InvalidCountry())
 
         // when creating a user with an invalid country
         // then the user cannot be created and throws InvalidCountry exception
         assertFailsWith<InvalidCountry> { signUp(signUpInfoInvalidCountry, mockResponse) }
-    }
-
-    @Test
-    fun `Should throw PasswordsDoNotMatch exception when creating an user with different passwords`() {
-        // given different passwords
-        val signUpInfoDifferentPasswords = signUpInfo.copy(password = generateSecurePassword(), confirmPassword = generateSecurePassword())
-
-        // mock
-        whenever(
-            userServiceMock
-                .createUser(signUpInfo.name, signUpInfo.email, signUpInfo.country, signUpInfoDifferentPasswords.password, signUpInfoDifferentPasswords.confirmPassword)
-        ).thenThrow(PasswordsDoNotMatch())
-
-        // when creating a user with different passwords
-        // then the user cannot be created and throws PasswordsDoNotMatch exception
-        assertFailsWith<PasswordsDoNotMatch> {
-            signUp(signUpInfoDifferentPasswords, mockResponse)
-        }
     }
 }

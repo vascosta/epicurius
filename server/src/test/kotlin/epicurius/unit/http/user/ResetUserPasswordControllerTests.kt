@@ -1,9 +1,7 @@
 package epicurius.unit.http.user
 
-import epicurius.domain.exceptions.PasswordsDoNotMatch
 import epicurius.domain.exceptions.UserNotFound
 import epicurius.http.controllers.user.models.input.ResetPasswordInputModel
-import epicurius.unit.services.ServiceTest.Companion.resetPassword
 import epicurius.utils.generateEmail
 import epicurius.utils.generateSecurePassword
 import org.mockito.kotlin.verify
@@ -16,7 +14,7 @@ import kotlin.test.assertFailsWith
 class ResetUserPasswordControllerTests : UserControllerTest() {
 
     private val password = generateSecurePassword()
-    private val resetPasswordInputInfo = ResetPasswordInputModel(publicTestUser.user.email, password, password)
+    private val resetPasswordInputInfo = ResetPasswordInputModel(publicTestUser.user.email, password)
 
     @Test
     fun `Should reset a user's password successfully`() {
@@ -27,7 +25,7 @@ class ResetUserPasswordControllerTests : UserControllerTest() {
 
         // then the password was reset successfully
         verify(userServiceMock)
-            .resetPassword(resetPasswordInputInfo.email, resetPasswordInputInfo.newPassword, resetPasswordInputInfo.confirmPassword)
+            .resetPassword(resetPasswordInputInfo.email, resetPasswordInputInfo.newPassword)
         assertEquals(HttpStatus.NO_CONTENT, response.statusCode)
     }
 
@@ -37,28 +35,12 @@ class ResetUserPasswordControllerTests : UserControllerTest() {
         val nonExistingUserEmail = generateEmail("nonexistinguser")
 
         // mock
-        whenever(userServiceMock.resetPassword(nonExistingUserEmail, password, password)).thenThrow(UserNotFound(nonExistingUserEmail))
+        whenever(userServiceMock.resetPassword(nonExistingUserEmail, password)).thenThrow(UserNotFound(nonExistingUserEmail))
 
         // when resetting the password
         // then the password cannot be reset and throws UserNotFound exception
         assertFailsWith<UserNotFound> {
             resetUserPassword(resetPasswordInputInfo.copy(email = nonExistingUserEmail))
-        }
-    }
-
-    @Test
-    fun `Should throw PasswordsDoNotMatch when resetting a user's password with different passwords`() {
-        // given a user (publicTestUser) and different passwords
-        val password1 = generateSecurePassword()
-        val password2 = generateSecurePassword()
-
-        // mock
-        whenever(userServiceMock.resetPassword(publicTestUser.user.email, password1, password2)).thenThrow(PasswordsDoNotMatch())
-
-        // when resetting the password with different passwords
-        // then the password cannot be reset and throws PasswordsDoNotMatch exception
-        assertFailsWith<PasswordsDoNotMatch> {
-            resetUserPassword(resetPasswordInputInfo.copy(newPassword = password1, confirmPassword = password2))
         }
     }
 }

@@ -3,7 +3,6 @@ package epicurius.unit.services.user
 import epicurius.domain.Diet
 import epicurius.domain.Intolerance
 import epicurius.domain.exceptions.InvalidCountry
-import epicurius.domain.exceptions.PasswordsDoNotMatch
 import epicurius.domain.exceptions.UserAlreadyExists
 import epicurius.domain.user.User
 import epicurius.http.controllers.user.models.input.UpdateUserInputModel
@@ -27,7 +26,6 @@ class UpdateUserServiceTests : UserServiceTest() {
             email = generateEmail(newUsername),
             country = "ES",
             password = newPassword,
-            confirmPassword = newPassword,
             privacy = true,
             intolerances = setOf(Intolerance.GLUTEN),
             diets = setOf(Diet.VEGAN)
@@ -125,39 +123,6 @@ class UpdateUserServiceTests : UserServiceTest() {
                 publicTestUser.id,
                 UpdateUserInputModel(
                     country = invalidCountry
-                )
-            )
-        }
-    }
-
-    @Test
-    fun `Should throw PasswordsDoNotMatch exception when updating a user with different passwords`() {
-        // given a user (publicTestUser) and different passwords
-        val password1 = generateSecurePassword()
-        val password2 = generateSecurePassword()
-
-        // mock
-        whenever(jdbiUserRepositoryMock.getUser(publicTestUsername)).thenReturn(null)
-        whenever(countriesDomainMock.checkIfCountryCodeIsValid(publicTestUser.country)).thenReturn(true)
-
-        // when updating the user with different passwords
-        // then the user cannot be updated and throws PasswordsDoNotMatch exception
-        assertFailsWith<PasswordsDoNotMatch> {
-            updateUser(
-                publicTestUser.id,
-                UpdateUserInputModel(
-                    password = password1,
-                    confirmPassword = password2
-                )
-            )
-        }
-
-        assertFailsWith<PasswordsDoNotMatch> {
-            updateUser(
-                publicTestUser.id,
-                UpdateUserInputModel(
-                    password = password1,
-                    confirmPassword = null
                 )
             )
         }

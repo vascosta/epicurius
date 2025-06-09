@@ -33,7 +33,6 @@ import epicurius.domain.exceptions.MealTimeAlreadyExistsInPlanner
 import epicurius.domain.exceptions.MissingUserToken
 import epicurius.domain.exceptions.NotTheCollectionOwner
 import epicurius.domain.exceptions.NotTheRecipeAuthor
-import epicurius.domain.exceptions.PasswordsDoNotMatch
 import epicurius.domain.exceptions.PictureNotFound
 import epicurius.domain.exceptions.ProductIsAlreadyOpen
 import epicurius.domain.exceptions.ProductNotFound
@@ -131,7 +130,6 @@ class ExceptionHandler {
             IllegalStateException::class,
             InvalidCountry::class,
             IncorrectPassword::class,
-            PasswordsDoNotMatch::class,
             InvalidIntolerancesIdx::class,
             InvalidDietIdx::class,
             InvalidProduct::class,

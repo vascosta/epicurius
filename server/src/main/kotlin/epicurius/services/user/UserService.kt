@@ -9,7 +9,6 @@ import epicurius.domain.exceptions.InvalidSelfCancelFollowRequest
 import epicurius.domain.exceptions.InvalidSelfFollow
 import epicurius.domain.exceptions.InvalidSelfUnfollow
 import epicurius.domain.exceptions.InvalidToken
-import epicurius.domain.exceptions.PasswordsDoNotMatch
 import epicurius.domain.exceptions.PictureNotFound
 import epicurius.domain.exceptions.UserAlreadyBeingFollowed
 import epicurius.domain.exceptions.UserAlreadyExists
@@ -44,10 +43,9 @@ class UserService(
     private val pictureDomain: PictureDomain,
     private val countriesDomain: CountriesDomain
 ) {
-    fun createUser(name: String, email: String, country: String, password: String, confirmPassword: String): String {
+    fun createUser(name: String, email: String, country: String, password: String): String {
         if (checkIfUserExists(name, email) != null) throw UserAlreadyExists()
         if (!countriesDomain.checkIfCountryCodeIsValid(country)) throw InvalidCountry()
-        checkIfPasswordsMatch(password, confirmPassword)
         val passwordHash = userDomain.encodePassword(password)
         val userId = tm.run { it.userRepository.createUser(name, email, country, passwordHash) }
         return createToken(userId)
@@ -118,10 +116,6 @@ class UserService(
         if (userUpdateInfo.country != null)
             if (!countriesDomain.checkIfCountryCodeIsValid(userUpdateInfo.country)) throw InvalidCountry()
 
-        if (userUpdateInfo.password != null) {
-            checkIfPasswordsMatch(userUpdateInfo.password, userUpdateInfo.confirmPassword)
-        }
-
         return tm.run {
             it.userRepository.updateUser(
                 userId,
@@ -166,9 +160,8 @@ class UserService(
         }
     }
 
-    fun resetPassword(email: String, newPassword: String, confirmPassword: String) {
+    fun resetPassword(email: String, newPassword: String) {
         val user = checkIfUserExists(email = email) ?: throw UserNotFound(email)
-        checkIfPasswordsMatch(newPassword, confirmPassword)
         val passwordHash = userDomain.encodePassword(newPassword)
 
         tm.run { it.userRepository.resetPassword(user.id, passwordHash) }
@@ -258,10 +251,6 @@ class UserService(
 
     private fun checkIfUserAlreadySentFollowRequest(userId: Int, followerId: Int) =
         tm.run { it.userRepository.checkIfUserAlreadySentFollowRequest(userId, followerId) }
-
-    private fun checkIfPasswordsMatch(password: String, confirmPassword: String?) {
-        if (password != confirmPassword) throw PasswordsDoNotMatch()
-    }
 
     private fun checkSelf(userId: String, userId2: String) = userId == userId2
 

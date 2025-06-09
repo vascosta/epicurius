@@ -3,7 +3,6 @@ package epicurius.unit.http.user
 import epicurius.domain.Diet
 import epicurius.domain.Intolerance
 import epicurius.domain.exceptions.InvalidCountry
-import epicurius.domain.exceptions.PasswordsDoNotMatch
 import epicurius.domain.exceptions.UserAlreadyExists
 import epicurius.domain.user.UserInfo
 import epicurius.http.controllers.user.models.input.UpdateUserInputModel
@@ -26,7 +25,6 @@ class UpdateUserControllerTests : UserControllerTest() {
         email = generateEmail(newUsername),
         country = "ES",
         password = newPassword,
-        confirmPassword = newPassword,
         privacy = true,
         intolerances = setOf(Intolerance.GLUTEN),
         diets = setOf(Diet.VEGAN)
@@ -113,32 +111,5 @@ class UpdateUserControllerTests : UserControllerTest() {
         // when updating the user with an invalid country
         // then the user cannot be updated and throws InvalidCountry exception
         assertFailsWith<InvalidCountry> { updateUser(publicTestUser, updateUserInputInfo.copy(country = invalidCountry)) }
-    }
-
-    @Test
-    fun `Should throw PasswordsDoNotMatch exception when updating a user with different passwords`() {
-        // given a user (publicTestUser) and different passwords
-        val password1 = generateSecurePassword()
-        val password2 = generateSecurePassword()
-
-        // mock
-        whenever(
-            userServiceMock
-                .updateUser(publicTestUser.user.id, updateUserInputInfo.copy(password = password1, confirmPassword = password2))
-        ).thenThrow(PasswordsDoNotMatch())
-        whenever(
-            userServiceMock
-                .updateUser(publicTestUser.user.id, updateUserInputInfo.copy(password = password1, confirmPassword = null))
-        ).thenThrow(PasswordsDoNotMatch())
-
-        // when updating the user with different passwords
-        // then the user cannot be updated and throws PasswordsDoNotMatch exception
-        assertFailsWith<PasswordsDoNotMatch> {
-            updateUser(publicTestUser, updateUserInputInfo.copy(password = password1, confirmPassword = password2))
-        }
-
-        assertFailsWith<PasswordsDoNotMatch> {
-            updateUser(publicTestUser, updateUserInputInfo.copy(password = password1, confirmPassword = null))
-        }
     }
 }

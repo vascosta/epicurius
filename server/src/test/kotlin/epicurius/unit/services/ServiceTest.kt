@@ -23,8 +23,8 @@ open class ServiceTest : EpicuriusUnitTest() {
 
     companion object {
         // USER
-        fun createUser(username: String, email: String, country: String, password: String, confirmPassword: String) =
-            userService.createUser(username, email, country, password, confirmPassword)
+        fun createUser(username: String, email: String, country: String, password: String) =
+            userService.createUser(username, email, country, password)
 
         fun getAuthenticatedUser(token: String) = userService.getAuthenticatedUser(token)
 
@@ -65,8 +65,8 @@ open class ServiceTest : EpicuriusUnitTest() {
         fun updateProfilePicture(userId: Int, profilePictureName: String? = null, profilePicture: MultipartFile? = null) =
             userService.updateProfilePicture(userId, profilePictureName, profilePicture)
 
-        fun resetPassword(email: String, newPassword: String, confirmPassword: String) =
-            userService.resetPassword(email, newPassword, confirmPassword)
+        fun resetPassword(email: String, newPassword: String) =
+            userService.resetPassword(email, newPassword)
 
         fun follow(userId: Int, username: String, usernameToFollow: String) = userService.follow(userId, username, usernameToFollow)
 

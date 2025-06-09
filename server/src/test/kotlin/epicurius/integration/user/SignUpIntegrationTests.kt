@@ -1,7 +1,6 @@
 package epicurius.integration.user
 
 import epicurius.domain.exceptions.InvalidCountry
-import epicurius.domain.exceptions.PasswordsDoNotMatch
 import epicurius.domain.exceptions.UserAlreadyExists
 import epicurius.http.media.Problem
 import epicurius.http.media.Uris
@@ -27,7 +26,7 @@ class SignUpIntegrationTests : UserIntegrationTest() {
         // given information to create a user
 
         // when creating a user
-        val cookieHeader = signUp(username, email, "PT", password, password)
+        val cookieHeader = signUp(username, email, "PT", password)
 
         // then the user is created successfully
         assertTrue(cookieHeader.isNotEmpty())
@@ -46,7 +45,6 @@ class SignUpIntegrationTests : UserIntegrationTest() {
                 "name" to user.user.name,
                 "email" to email,
                 "password" to password,
-                "confirmPassword" to password,
                 "country" to user.user.country
             ),
             responseStatus = HttpStatus.CONFLICT
@@ -60,7 +58,6 @@ class SignUpIntegrationTests : UserIntegrationTest() {
                 "name" to username,
                 "email" to user.user.email,
                 "password" to password,
-                "confirmPassword" to password,
                 "country" to user.user.country
             ),
             responseStatus = HttpStatus.CONFLICT
@@ -74,7 +71,6 @@ class SignUpIntegrationTests : UserIntegrationTest() {
                 "name" to user.user.name,
                 "email" to user.user.email,
                 "password" to password,
-                "confirmPassword" to password,
                 "country" to user.user.country
             ),
             responseStatus = HttpStatus.CONFLICT
@@ -102,7 +98,6 @@ class SignUpIntegrationTests : UserIntegrationTest() {
                 "name" to username,
                 "email" to email,
                 "password" to password,
-                "confirmPassword" to password,
                 "country" to invalidCountry
             ),
             responseStatus = HttpStatus.BAD_REQUEST
@@ -111,29 +106,5 @@ class SignUpIntegrationTests : UserIntegrationTest() {
         // then the user cannot be created and fails with code 400
         val errorBody = getBody(error)
         assertEquals(InvalidCountry().message, errorBody.detail)
-    }
-
-    @Test
-    fun `Should fail with code 400 when creating an user with different passwords`() {
-        // given different passwords
-        val differentPassword = generateSecurePassword()
-
-        // when creating a user with different passwords
-        val error = post<Problem>(
-            client,
-            api(Uris.User.SIGNUP),
-            mapOf(
-                "name" to username,
-                "email" to email,
-                "password" to password,
-                "confirmPassword" to differentPassword,
-                "country" to "PT"
-            ),
-            responseStatus = HttpStatus.BAD_REQUEST
-        )
-
-        // then the user cannot be created and fails with code 400
-        val errorBody = getBody(error)
-        assertEquals(PasswordsDoNotMatch().message, errorBody.detail)
     }
 }

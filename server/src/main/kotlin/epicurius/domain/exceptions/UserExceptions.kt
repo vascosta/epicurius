@@ -13,7 +13,6 @@ class FollowRequestAlreadyBeenSent(name: String) : RuntimeException("Follow requ
 class FollowRequestNotFound(name: String) : RuntimeException("Follow request to user $name not found")
 
 class IncorrectPassword : RuntimeException("Incorrect password")
-class PasswordsDoNotMatch : RuntimeException("Passwords don't match")
 
 class PictureNotFound : RuntimeException("Picture not found")
 
