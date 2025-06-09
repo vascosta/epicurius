@@ -329,10 +329,20 @@ fun CreateRecipeScreen(
                             description,
                             preparationTime.toInt(),
                             servings.toInt(),
-                            Cuisine.valueOf(cuisine),
-                            MealType.valueOf(mealType),
-                            intolerances.map { Intolerance.valueOf(it) }.toSet(),
-                            diets.map { Diet.valueOf(it) }.toSet(),
+                            Cuisine.valueOf(
+                                cuisine.uppercase().replace(Regex("[\\s-]"), "_")
+                            ),
+                            MealType.valueOf(
+                                mealType.uppercase().replace(Regex("[\\s-]"), "_")
+                            ),
+                            intolerances.map {
+                                Intolerance.valueOf(
+                                    it.uppercase().replace(Regex("[\\s-]"), "_")
+                                )
+                            }.toSet(),
+                            diets.map { Diet.valueOf(
+                                it.uppercase().replace(Regex("[\\s-]"), "_")
+                            ) }.toSet(),
                             ingredients.map {
                                 Ingredient(
                                     it.name,

@@ -55,8 +55,9 @@ class CreateRecipeActivity : EpicuriusActivity() {
                         fat,
                         carbs,
                         instructions,
-                        pictures
-                    ) { ::navigateToRecipeProfileActivity }
+                        pictures,
+                        ::navigateToRecipeProfileActivity
+                    )
                 },
                 buttonsEnable = viewModel.buttonsEnable
             )

@@ -37,7 +37,7 @@ class CreateRecipeViewModel(
         carbs: Int?,
         instructions: Instructions,
         pictures: List<Picture>,
-        navigateTo: (Int) -> Unit
+        navigateTo: (recipeId: Int) -> Unit
     ) {
         disableButtons()
         if (
@@ -82,7 +82,7 @@ class CreateRecipeViewModel(
     private suspend fun handleCreateRecipe(
         createRecipeInfo: CreateRecipeInputModel,
         recipePictures: List<Picture>,
-        navigateTo: (Int) -> Unit) {
+        navigateTo: (recipeId: Int) -> Unit) {
         val result = request {
             val token = session.getToken()
             service.recipeService.createRecipe(token, createRecipeInfo, recipePictures)
