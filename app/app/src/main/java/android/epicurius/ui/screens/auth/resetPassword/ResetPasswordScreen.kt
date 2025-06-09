@@ -38,7 +38,7 @@ fun ResetPasswordScreen(
     Scaffold(
         topBar = {
             TopBar(
-                text = "Reset Password",
+                titleText = "Reset Password",
                 backButton = true,
                 onBackButton = onBackButton,
                 buttonsEnable,
@@ -57,30 +57,29 @@ fun ResetPasswordScreen(
             ) {
                 TextField(
                     value = email,
-                    label = "Email",
                     onValueChange = { email = it },
+                    enabled = buttonsEnable,
+                    label = "Email"
                 )
                 PasswordTextField(
                     value = newPassword,
-                    label = "New Password",
                     onValueChange = { newPassword = it },
+                    enabled = buttonsEnable,
+                    label = "New Password"
                 )
                 PasswordTextField(
                     value = confirmPassword,
-                    label = "Confirm New Password",
                     onValueChange = { confirmPassword = it },
+                    enabled = buttonsEnable,
+                    label = "Confirm New Password"
                 )
                 Spacer(Modifier.size(10.dp))
                 Button(
                     onClick = { onResetPassword(email, newPassword, confirmPassword) },
                     enabled = buttonsEnable
                 ) {
-                    if (buttonsEnable) {
-                        Text("Reset Password")
-                    }
-                    else {
-                        LoadingSpinner(Modifier.size(30.dp))
-                    }
+                    if (buttonsEnable) { Text("Reset Password") }
+                    else { LoadingSpinner(Modifier.size(30.dp)) }
                 }
             }
         },
