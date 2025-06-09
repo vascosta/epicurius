@@ -13,6 +13,7 @@ import android.epicurius.domain.recipe.Recipe
 import android.epicurius.ui.navigation.BottomBar
 import android.epicurius.ui.navigation.TopBar
 import android.epicurius.ui.screens.collections.components.CollectionsListDialog
+import android.epicurius.ui.screens.recipe.profile.components.ConfirmDeleteRecipeDialog
 import android.epicurius.ui.screens.recipe.profile.components.EditRatingDialog
 import android.epicurius.ui.screens.recipe.profile.components.EditRecipeDialog
 import android.epicurius.ui.screens.recipe.profile.components.HorizontalPagerIndicator
@@ -38,10 +39,15 @@ import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
+import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -68,23 +74,32 @@ fun RecipeProfileScreen(
     userRating: Int = 0,
     collectionId: Int?,
     collectionsState: LoadState<List<CollectionProfile>>?,
-    enableButtons: Boolean,
-    onBackButton: () -> Unit = {},
-    onEditRating: (Int) -> Unit = {},
-    onEditRecipe: () -> Unit = {},
-    onMakeIt: () -> Unit = {},
+    onBackButton: () -> Unit,
+    onEditRating: (Int) -> Unit,
+    onEditRecipe: () -> Unit,
+    onMakeIt: () -> Unit,
+    onDeleteRecipe: (Int) -> Unit,
     onAddRecipeToCollection: (Int, Int) -> Unit,
     onRemoveRecipeFromCollection: (Int, Int) -> Unit,
-    onCollectionsRequest: (Int, Boolean) -> Unit
+    onCollectionsRequest: (Int, Boolean) -> Unit,
+    enableButtons: Boolean,
 ) {
     val pagerState = rememberPagerState(pageCount = { images.size })
     var showEditRecipeDialog by remember { mutableStateOf(false) }
     var showEditRatingDialog by remember { mutableStateOf(false) }
     var showCollectionsDialog by remember { mutableStateOf(false) }
     var enableStarIcon by remember { mutableStateOf(recipe.isInCollection) }
+    var confirmRecipeDelete by remember { mutableStateOf(false) }
 
     Scaffold(
-        topBar = { TopBar(titleText = recipe.name, backButton = true, onBackButton = onBackButton, buttonsEnable = true) },
+        topBar = {
+            TopBar(
+                titleText = recipe.name,
+                backButton = true,
+                onBackButton = onBackButton,
+                buttonsEnable = true
+            )
+        },
         bottomBar = { BottomBar(buttonsEnable = true) },
         content = { paddingValues ->
             Column(
@@ -167,13 +182,14 @@ fun RecipeProfileScreen(
                 HorizontalPagerIndicator(images.size, pagerState)
 
                 Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(16.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
                     if (isAuthor) {
-                        Spacer(Modifier.weight(1f))
+                        TextButton(
+                            onClick = { confirmRecipeDelete = true }
+                        ) { Text("Delete recipe", color = Color.Red) }
                     } else {
                         Box(Modifier.clickable { showEditRatingDialog = true }) {
                             Row {
@@ -277,8 +293,18 @@ fun RecipeProfileScreen(
                         previousRating = userRating,
                         onDismissRequest = { showEditRatingDialog = false },
                         onEditRating = {
-                            onEditRating
+                            onEditRating(it)
                             showEditRatingDialog = false
+                        }
+                    )
+                }
+                if (confirmRecipeDelete) {
+                    ConfirmDeleteRecipeDialog(
+                        recipeId = recipe.id,
+                        onDismissRequest = { confirmRecipeDelete = false },
+                        onConfirmDelete = {
+                            onDeleteRecipe(it)
+                            confirmRecipeDelete = false
                         }
                     )
                 }
@@ -338,17 +364,18 @@ fun RecipeProfilePreview(){
         recipe = recipe,
         rating = rating,
         images = listOf(R.drawable.home, R.drawable.star, R.drawable.pencil),
-        isAuthor = false,
+        isAuthor = true,
         userRating = 4,
         collectionId = null,
         collectionsState = apiSuccess(collections),
+        {},
+        {},
+        {},
+        {},
+        {},
+        { _, _ -> },
+        { _, _ -> },
+        { _, _ -> },
         enableButtons = true,
-        {},
-        {},
-        {},
-        {},
-        { _, _ -> },
-        { _, _ -> },
-        { _, _ -> }
     )
 }

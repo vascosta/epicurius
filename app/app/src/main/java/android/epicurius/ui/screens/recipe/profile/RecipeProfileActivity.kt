@@ -68,14 +68,15 @@ class RecipeProfileActivity : EpicuriusActivity() {
                 isAuthor = true,
                 collectionId = null,
                 collectionsState = null,
-                enableButtons = true,
                 onBackButton = {},
                 onEditRecipe = {},
-                onMakeIt = { navigateTo<ConfirmIngredientsActivity>() },
                 onEditRating = { },
+                onMakeIt = { navigateTo<ConfirmIngredientsActivity>() },
+                onDeleteRecipe = {},
                 onCollectionsRequest = { _, _ -> },
                 onAddRecipeToCollection = { _, _ -> },
                 onRemoveRecipeFromCollection = { _, _ -> },
+                enableButtons = true,
             )
         }
     }
