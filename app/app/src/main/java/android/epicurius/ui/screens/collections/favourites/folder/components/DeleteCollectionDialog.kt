@@ -18,11 +18,8 @@ fun DeleteCollectionDialog(
     onDismissRequest: () -> Unit,
     buttonsEnable: Boolean
 ) {
-
     AlertDialog(
         onDismissRequest = { onDismissRequest() },
-        title = { Text("Delete Collection") },
-        text = { Text("Are you sure you want to delete '${collectionName}'?") },
         confirmButton = {
             TextButton(
                 onClick = { onCollectionDelete(collectionId) },
@@ -37,6 +34,8 @@ fun DeleteCollectionDialog(
                 onClick = { onDismissRequest() },
                 enabled = buttonsEnable
             ) { Text("Cancel") }
-        }
+        },
+        title = { Text("Delete Collection") },
+        text = { Text("Are you sure you want to delete '${collectionName}'?") }
     )
 }

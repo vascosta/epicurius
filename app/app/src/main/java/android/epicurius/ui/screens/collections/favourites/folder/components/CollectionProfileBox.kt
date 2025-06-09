@@ -56,7 +56,7 @@ fun CollectionProfileBox(
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Text(
-                collection.name,
+                text = collection.name,
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.padding(start = 10.dp)
             )
@@ -68,7 +68,6 @@ fun CollectionProfileBox(
                 )
             }
         }
-
         if (showDeleteDialog) {
             DeleteCollectionDialog(
                 collectionName = collection.name,

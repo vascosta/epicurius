@@ -52,7 +52,7 @@ fun FavouritesScreen(
     Scaffold(
         topBar = {
             TopBar(
-                text = "Favourites",
+                titleText = "Favourites",
                 backButton = true,
                 onBackButton = onBackButton,
                 buttonsEnable = buttonsEnable,
@@ -94,7 +94,6 @@ fun FavouritesScreen(
                                 text = "You have no collections yet.",
                                 modifier = Modifier.padding(16.dp),
                                 color = Color.Gray
-
                             )
                             Text(
                                 text = "Create your first collection by clicking the '+' button above.",
@@ -112,12 +111,11 @@ fun FavouritesScreen(
                             }
                         }
                     }
-
                     if (showCreateCollectionDialog) {
                         CreateCollectionDialog(
                             onDismiss = { showCreateCollectionDialog = false },
                             onCollectionCreate = onCollectionCreate,
-                            buttonsEnable
+                            buttonsEnable = buttonsEnable
                         )
                     }
                 }
@@ -140,5 +138,4 @@ fun FavouritesScreenPreview() {
     FavouritesScreen(apiSuccess(emptyCollections), {}, {}, {}, {}, {}, true)
 
     FavouritesScreen(apiSuccess(collections), {}, {}, {}, {}, {}, true)
-
 }

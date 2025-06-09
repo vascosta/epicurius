@@ -26,18 +26,6 @@ fun CreateCollectionDialog(
 
     AlertDialog(
         onDismissRequest = { onDismiss() },
-        title = { Text("Create Collection") },
-        text = {
-            Column {
-                Text("Enter the name of the new collection:")
-                TextField(
-                    value = collectionName,
-                    onValueChange = { collectionName = it },
-                    label = "Collection Name",
-                    modifier = Modifier.fillMaxWidth()
-                )
-            }
-        },
         confirmButton = {
             TextButton(
                 onClick = { onDismiss() },
@@ -49,6 +37,19 @@ fun CreateCollectionDialog(
             ) {
                 if (buttonsEnable) { Text("Create") }
                 else { LoadingSpinner(Modifier.size(30.dp)) }
+            }
+        },
+        title = { Text("Create Collection") },
+        text = {
+            Column {
+                Text("Enter the name of the new collection:")
+                TextField(
+                    value = collectionName,
+                    onValueChange = { collectionName = it },
+                    modifier = Modifier.fillMaxWidth(),
+                    enabled = buttonsEnable,
+                    label = "Collection Name",
+                )
             }
         }
     )
