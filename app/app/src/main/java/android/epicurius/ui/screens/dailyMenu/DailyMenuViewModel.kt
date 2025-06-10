@@ -25,13 +25,7 @@ class DailyMenuViewModel(
 ): CollectionsViewModel(service, session, context) {
 
     private val dailyMenuFlow = MutableStateFlow<LoadState<Map<String, RecipeInfo?>>>(idle())
-    val collectionsToAddRecipeFlow = MutableStateFlow<LoadState<List<CollectionProfile>>>(idle())
-    val collectionsToRemoveRecipeFlow = MutableStateFlow<LoadState<List<CollectionProfile>>>(idle())
-    val lastFetchedCollectionIdFlow = MutableStateFlow<Int?>(null)
-
     val dailyMenu = dailyMenuFlow.asStateFlow()
-    val collectionsToAddRecipe = collectionsToAddRecipeFlow.asStateFlow()
-    val collectionsToRemoveRecipe = collectionsToRemoveRecipeFlow.asStateFlow()
 
     fun getDailyMenu(navigateTo: () -> Unit) {
         dailyMenuFlow.value = loading()
@@ -51,6 +45,11 @@ class DailyMenuViewModel(
                 fetchDailyMenu(navigateTo)
             }
         }
+    }
+
+    fun refreshDailyMenu(navigateTo: () -> Unit) {
+        clearCollections()
+        getDailyMenu(navigateTo)
     }
 
     private suspend fun fetchDailyMenu(navigateTo: () -> Unit) {

@@ -46,9 +46,7 @@ class DailyMenuActivity : EpicuriusActivity() {
                         collectionsAvailableToAdd,
                         collectionsAvailableToRemove,
                         collectionsToAdd,
-                        recipeId,
-                        viewModel.collectionsToAddRecipeFlow,
-                        viewModel.collectionsToRemoveRecipeFlow,
+                        recipeId
                     )
                 },
                 onRemoveRecipeFromCollections = {
@@ -60,28 +58,17 @@ class DailyMenuActivity : EpicuriusActivity() {
                         collectionsAvailableToAdd,
                         collectionsAvailableToRemove,
                         collectionsToRemove,
-                        recipeId,
-                        viewModel.collectionsToAddRecipeFlow,
-                        viewModel.collectionsToRemoveRecipeFlow,
+                        recipeId
                     )
                 },
                 onRecipeRequest = ::navigateToRecipeProfileActivity,
                 onCollectionsRequest = { recipeId: Int ->
-                    viewModel.getCollections(
-                        recipeId,
-                        viewModel.collectionsToAddRecipeFlow,
-                        viewModel.collectionsToRemoveRecipeFlow,
-                        viewModel.lastFetchedCollectionIdFlow
-                    )
+                    viewModel.getCollections(recipeId)
                 },
-                onCollectionsClear = {
-                    viewModel.clearCollections(
-                        viewModel.collectionsToAddRecipeFlow,
-                        viewModel.collectionsToRemoveRecipeFlow,
-                        viewModel.lastFetchedCollectionIdFlow
-                    )
+                onCollectionsClear = { viewModel.clearCollections() },
+                onDailyMenuRefresh = {
+                    viewModel.refreshDailyMenu { navigateTo<FeedActivity>(true) }
                 },
-                onDailyMenuRefresh = { viewModel.getDailyMenu { navigateTo<FeedActivity>(true) } },
                 enableButtons = viewModel.enableButtons
             )
         }

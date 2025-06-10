@@ -52,7 +52,7 @@ fun DailyMenuScreen(
         topBar = { TopBar(
             titleText = "Today's Menu",
             backButton = true,
-            buttonsEnable = enableButtons,
+            enableButtons = enableButtons,
             onBackButton = onBackButton
         ) },
         bottomBar = { BottomBar(buttonsEnable = enableButtons) },
