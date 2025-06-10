@@ -60,7 +60,7 @@ fun DailyMenuScreen(
                     ) {
                         MenuItemBox(
                             title = "Breakfast",
-                            recipe = menu["Breakfast"],
+                            recipe = menu["breakfast"],
                             collectionsState = collectionsState,
                             onAddRecipeToCollection = onAddRecipeToCollection,
                             onRemoveRecipeFromCollection = onRemoveRecipeFromCollection,
@@ -70,7 +70,7 @@ fun DailyMenuScreen(
                         )
                         MenuItemBox(
                             title = "Soup",
-                            recipe = menu["Soup"],
+                            recipe = menu["soup"],
                             collectionsState = collectionsState,
                             onAddRecipeToCollection = onAddRecipeToCollection,
                             onRemoveRecipeFromCollection = onRemoveRecipeFromCollection,
@@ -80,7 +80,7 @@ fun DailyMenuScreen(
                         )
                         MenuItemBox(
                             title = "Lunch",
-                            recipe = menu["Lunch"],
+                            recipe = menu["lunch"],
                             collectionsState = collectionsState,
                             onAddRecipeToCollection = onAddRecipeToCollection,
                             onRemoveRecipeFromCollection = onRemoveRecipeFromCollection,
@@ -90,7 +90,7 @@ fun DailyMenuScreen(
                         )
                         MenuItemBox(
                             title = "Dinner",
-                            recipe = menu["Dinner"],
+                            recipe = menu["dinner"],
                             collectionsState = collectionsState,
                             onAddRecipeToCollection = onAddRecipeToCollection,
                             onRemoveRecipeFromCollection = onRemoveRecipeFromCollection,
@@ -100,7 +100,7 @@ fun DailyMenuScreen(
                         )
                         MenuItemBox(
                             title = "Dessert",
-                            recipe = menu["Dessert"],
+                            recipe = menu["dessert"],
                             collectionsState = collectionsState,
                             onAddRecipeToCollection = onAddRecipeToCollection,
                             onRemoveRecipeFromCollection = onRemoveRecipeFromCollection,
@@ -129,7 +129,7 @@ fun DailyMenuPreview() {
             mealType = MealType.BREAKFAST,
             preparationTime = 20,
             servings = 2,
-            picture = "".toByteArray(),
+            picture = "",
             isInCollection = false
         ),
         "Lunch" to RecipeInfo(
@@ -141,7 +141,7 @@ fun DailyMenuPreview() {
             mealType = MealType.MAIN_COURSE,
             preparationTime = 15,
             servings = 1,
-            picture = "".toByteArray(),
+            picture = "",
             isInCollection = true
         )
     )

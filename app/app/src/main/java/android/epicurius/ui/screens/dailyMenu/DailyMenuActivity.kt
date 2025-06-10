@@ -22,7 +22,7 @@ class DailyMenuActivity : EpicuriusActivity() {
         super.onCreate(savedInstanceState)
         lifecycleScope.launch {
             viewModel.dailyMenu.collectLatest { state ->
-                if (state is Idle) viewModel.getDailyMenu { navigateTo<FeedActivity>() }
+                if (state is Idle) viewModel.getDailyMenu { navigateTo<FeedActivity>(true) }
             }
         }
         setContent {
@@ -33,16 +33,21 @@ class DailyMenuActivity : EpicuriusActivity() {
                 collectionsState = collectionsState.value,
                 onBackButton = { navigateTo<FeedActivity>(true) },
                 onAddRecipeToCollection = { collectionId: Int, recipeId: Int ->
-                    viewModel.addRecipeToCollection(collectionId, recipeId) { navigateTo<FeedActivity>() }
+                    viewModel.addRecipeToCollection(collectionId, recipeId)
                 },
                 onRemoveRecipeFromCollection = { collectionId: Int, recipeId: Int ->
-                    viewModel.removeRecipeFromCollection(collectionId, recipeId) { navigateTo<FeedActivity>() }
+                    viewModel.removeRecipeFromCollection(collectionId, recipeId)
                 },
                 onRecipeRequest = ::navigateToRecipeProfileActivity,
                 onCollectionsRequest = { recipeId: Int, recipeInCollection: Boolean ->
-                    viewModel.getCollections(recipeId, recipeInCollection)
+                    viewModel.getCollections(
+                        recipeId,
+                        recipeInCollection,
+                        viewModel.collectionsFlow,
+                        viewModel.cachedCollectionsFlow
+                    )
                 },
-                onDailyMenuRefresh = { viewModel.getDailyMenu { navigateTo<FeedActivity>() } },
+                onDailyMenuRefresh = { viewModel.getDailyMenu { navigateTo<FeedActivity>(true) } },
                 buttonsEnable = viewModel.buttonsEnable
             )
         }
