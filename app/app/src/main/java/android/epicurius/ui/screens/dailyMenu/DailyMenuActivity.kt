@@ -74,6 +74,13 @@ class DailyMenuActivity : EpicuriusActivity() {
                         viewModel.lastFetchedCollectionIdFlow
                     )
                 },
+                onCollectionsClear = {
+                    viewModel.clearCollections(
+                        viewModel.collectionsToAddRecipeFlow,
+                        viewModel.collectionsToRemoveRecipeFlow,
+                        viewModel.lastFetchedCollectionIdFlow
+                    )
+                },
                 onDailyMenuRefresh = { viewModel.getDailyMenu { navigateTo<FeedActivity>(true) } },
                 enableButtons = viewModel.enableButtons
             )

@@ -4,8 +4,8 @@ import android.epicurius.domain.collection.CollectionProfile
 import android.epicurius.domain.recipe.Cuisine
 import android.epicurius.domain.recipe.MealType
 import android.epicurius.domain.recipe.RecipeInfo
+import android.epicurius.ui.screens.collections.components.CollectionsStateBundle
 import android.epicurius.ui.screens.recipe.components.RecipeInfoBox
-import android.epicurius.ui.screens.utils.LoadState
 import android.epicurius.ui.screens.utils.apiSuccess
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -25,11 +25,22 @@ import androidx.compose.ui.unit.sp
 fun MenuItemBox(
     title: String,
     recipe: RecipeInfo?,
-    collectionsState: LoadState<List<CollectionProfile>>,
-    onAddRecipeToCollection: (collectionId: Int, recipeId: Int) -> Unit,
-    onRemoveRecipeFromCollection: (collectionId: Int, recipeId: Int) -> Unit,
+    collectionsStateBundle: CollectionsStateBundle,
+    onAddRecipeToCollections: (
+        collectionsAvailableToAdd: List<CollectionProfile>,
+        collectionsAvailableToRemove: List<CollectionProfile>,
+        collectionsToAdd: List<CollectionProfile>,
+        recipeId: Int
+    ) -> Unit,
+    onRemoveRecipeFromCollections: (
+        collectionsAvailableToAdd: List<CollectionProfile>,
+        collectionsAvailableToRemove: List<CollectionProfile>,
+        collectionsToRemove: List<CollectionProfile>,
+        recipeId: Int
+    ) -> Unit,
     onRecipeRequest: (recipeId: Int) -> Unit,
-    onCollectionsRequest: (recipeId: Int, recipeInCollection: Boolean) -> Unit = {_, _ ->},
+    onCollectionsRequest: (recipeId: Int) -> Unit,
+    onCollectionsClear: () -> Unit,
     enableButtons: Boolean
 ) {
     Box(modifier = Modifier.padding(10.dp)) {
@@ -46,11 +57,13 @@ fun MenuItemBox(
                 RecipeInfoBox(
                     collectionId = null,
                     recipeInfo = recipe,
-                    collectionsState = collectionsState,
-                    onAddRecipeToCollection = onAddRecipeToCollection,
-                    onRemoveRecipeFromCollection = onRemoveRecipeFromCollection,
+                    collectionsStateBundle = collectionsStateBundle,
+                    onAddRecipeToCollections = onAddRecipeToCollections,
+                    onRemoveRecipeFromCollections = onRemoveRecipeFromCollections,
                     onRecipeRequest = onRecipeRequest,
                     onCollectionsRequest = onCollectionsRequest,
+                    onRemoveRecipeFromCollection = {_, _ ->},
+                    onCollectionsClear = onCollectionsClear,
                     enableButtons = enableButtons
                 )
             } else {
@@ -81,11 +94,12 @@ fun MenuItemBoxPreview() {
             picture = "",
             isInCollection = true
         ),
-        apiSuccess(emptyList()),
-        {_, _ ->},
-        {_, _ ->},
+        CollectionsStateBundle(apiSuccess(emptyList()), apiSuccess(emptyList())),
+        {_, _, _, _ ->},
+        {_, _, _, _ ->},
         {},
-        {_, _ ->},
+        {},
+        {},
         true
     )
 }

@@ -44,6 +44,7 @@ fun DailyMenuScreen(
     ) -> Unit,
     onRecipeRequest: (recipeId: Int) -> Unit,
     onCollectionsRequest: (recipeId: Int) -> Unit,
+    onCollectionsClear: () -> Unit,
     onDailyMenuRefresh: () -> Unit,
     enableButtons: Boolean
 ) {
@@ -77,6 +78,7 @@ fun DailyMenuScreen(
                             onRemoveRecipeFromCollections = onRemoveRecipeFromCollections,
                             onRecipeRequest = onRecipeRequest,
                             onCollectionsRequest = onCollectionsRequest,
+                            onCollectionsClear = onCollectionsClear,
                             enableButtons = enableButtons
                         )
                         MenuItemBox(
@@ -87,6 +89,7 @@ fun DailyMenuScreen(
                             onRemoveRecipeFromCollections = onRemoveRecipeFromCollections,
                             onRecipeRequest = onRecipeRequest,
                             onCollectionsRequest = onCollectionsRequest,
+                            onCollectionsClear = onCollectionsClear,
                             enableButtons = enableButtons
                         )
                         MenuItemBox(
@@ -97,6 +100,7 @@ fun DailyMenuScreen(
                             onRemoveRecipeFromCollections = onRemoveRecipeFromCollections,
                             onRecipeRequest = onRecipeRequest,
                             onCollectionsRequest = onCollectionsRequest,
+                            onCollectionsClear = onCollectionsClear,
                             enableButtons = enableButtons
                         )
                         MenuItemBox(
@@ -107,6 +111,7 @@ fun DailyMenuScreen(
                             onRemoveRecipeFromCollections = onRemoveRecipeFromCollections,
                             onRecipeRequest = onRecipeRequest,
                             onCollectionsRequest = onCollectionsRequest,
+                            onCollectionsClear = onCollectionsClear,
                             enableButtons = enableButtons
                         )
                         MenuItemBox(
@@ -117,6 +122,7 @@ fun DailyMenuScreen(
                             onRemoveRecipeFromCollections = onRemoveRecipeFromCollections,
                             onRecipeRequest = onRecipeRequest,
                             onCollectionsRequest = onCollectionsRequest,
+                            onCollectionsClear = onCollectionsClear,
                             enableButtons = enableButtons
                         )
                     }
@@ -162,6 +168,7 @@ fun DailyMenuPreview() {
         {},
         { _, _, _, _ -> },
         { _, _, _, _ -> },
+        {},
         {},
         {},
         {},
