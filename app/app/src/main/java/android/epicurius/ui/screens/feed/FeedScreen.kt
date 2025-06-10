@@ -1,6 +1,5 @@
 package android.epicurius.ui.screens.feed
 
-import android.content.Intent
 import android.epicurius.R
 import android.epicurius.domain.collection.CollectionProfile
 import android.epicurius.domain.recipe.Cuisine
@@ -8,10 +7,13 @@ import android.epicurius.domain.recipe.MealType
 import android.epicurius.domain.recipe.RecipeInfo
 import android.epicurius.ui.navigation.BottomBar
 import android.epicurius.ui.navigation.TopBar
-import android.epicurius.ui.screens.dailyMenu.DailyMenuActivity
+import android.epicurius.ui.screens.collections.components.CollectionsStateBundle
 import android.epicurius.ui.screens.recipe.components.RecipeInfoBox
 import android.epicurius.ui.screens.utils.LoadState
 import android.epicurius.ui.screens.utils.LoadStateRenderer
+import android.epicurius.ui.screens.utils.Loaded
+import android.epicurius.ui.screens.utils.Loading
+import android.epicurius.ui.screens.utils.LoadingSpinner
 import android.epicurius.ui.screens.utils.apiSuccess
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -29,11 +31,15 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -41,73 +47,111 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun FeedScreen(
     userFeedState: LoadState<List<RecipeInfo>>,
-    collectionsState: LoadState<List<CollectionProfile>>,
-    onAddRecipeToCollection: (Int, Int) -> Unit,
-    onRemoveRecipeFromCollection: (Int, Int) -> Unit,
-    onRecipeRequest: (Int) -> Unit,
+    collectionsStateBundle: CollectionsStateBundle,
+    onAddRecipeToCollections: (
+        collectionsAvailableToAdd: List<CollectionProfile>,
+        collectionsAvailableToRemove: List<CollectionProfile>,
+        collectionsToAdd: List<CollectionProfile>,
+        recipeId: Int
+    ) -> Unit,
+    onRemoveRecipeFromCollections: (
+        collectionsAvailableToAdd: List<CollectionProfile>,
+        collectionsAvailableToRemove: List<CollectionProfile>,
+        collectionsToRemove: List<CollectionProfile>,
+        recipeId: Int
+    ) -> Unit,
+    onRecipeRequest: (recipeId: Int) -> Unit,
+    onCollectionsRequest: (recipeId: Int) -> Unit,
+    onDailyMenuRequest: () -> Unit,
+    onCollectionsClear: () -> Unit,
     onUserFeedRefresh: () -> Unit,
-    onLoadMore: () -> Unit,
-    buttonsEnable: Boolean
+    enableButtons: Boolean
 ) {
-    val context = LocalContext.current
+    var showLoadingSpinnerOnLoadMore by remember { mutableStateOf(!enableButtons) }
+    var enableLoadMoreButton by remember { mutableStateOf(!enableButtons) }
 
+    LaunchedEffect(userFeedState) {
+        if (userFeedState is Loaded) {
+            enableLoadMoreButton = true
+            showLoadingSpinnerOnLoadMore = false
+        }
+    }
     Scaffold(
-        topBar = { TopBar(
-            titleText = "For you to cook",
-            buttonsEnable = buttonsEnable
+        topBar = {
+            TopBar(
+                titleText = "For you to cook",
+                enableButtons = enableButtons
         ) },
-        bottomBar = { BottomBar(buttonsEnable = buttonsEnable) },
+        bottomBar = { BottomBar(buttonsEnable = enableButtons) },
         content = { paddingValues ->
-            LoadStateRenderer(
-                loadState = userFeedState,
-                swipeToRefresh = onUserFeedRefresh,
-                content = { userFeed ->
-                    Column(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(paddingValues)
-                            .padding(16.dp)
-                            .background(Color.White),
-                        horizontalAlignment = Alignment.CenterHorizontally
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(paddingValues)
+                    .padding(16.dp)
+                    .background(Color.White),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Row(
+                    modifier = Modifier.fillMaxWidth().height(45.dp),
+                    horizontalArrangement = Arrangement.End,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    IconButton(
+                        onClick = onDailyMenuRequest
                     ) {
-                        Row(
-                            modifier = Modifier.fillMaxWidth().height(45.dp),
-                            horizontalArrangement = Arrangement.End,
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            IconButton(
-                                onClick = {
-                                    context.startActivity(Intent(context, DailyMenuActivity::class.java))
-                                }
-                            ) {
-                                Image(
-                                    painter = painterResource(R.drawable.menu),
-                                    contentDescription = "Daily Menu",
-                                    modifier = Modifier.size(45.dp),
-                                    contentScale = ContentScale.Fit
-                                )
-                            }
-                        }
-
-                        userFeed.forEach { recipe ->
-                            Spacer(modifier = Modifier.size(10.dp))
-                            RecipeInfoBox(
-                                collectionId = null,
-                                recipeInfo = recipe,
-                                collectionsState = collectionsState,
-                                onAddRecipeToCollections = {_, _ ->},
-                                onRemoveRecipeFromCollection = onRemoveRecipeFromCollection,
-                                onRecipeRequest = onRecipeRequest,
-                                enableButtons = buttonsEnable
-                            )
-                        }
-                        Button(
-                            onClick = { onLoadMore() },
-                            modifier = Modifier.fillMaxWidth().padding(10.dp),
-                        ) { Text("Load More") }
+                        Image(
+                            painter = painterResource(R.drawable.menu),
+                            contentDescription = "Daily Menu",
+                            modifier = Modifier.size(45.dp),
+                            contentScale = ContentScale.Fit
+                        )
                     }
                 }
-            )
+                LoadStateRenderer(
+                    loadState = userFeedState,
+                    swipeToRefresh = onUserFeedRefresh,
+                    content = { userFeed ->
+                        if (userFeed.isNotEmpty()) {
+                            userFeed.forEach { recipe ->
+                                Spacer(modifier = Modifier.size(10.dp))
+                                RecipeInfoBox(
+                                    collectionId = null,
+                                    recipeInfo = recipe,
+                                    collectionsStateBundle = collectionsStateBundle,
+                                    onAddRecipeToCollections = onAddRecipeToCollections,
+                                    onRemoveRecipeFromCollections = onRemoveRecipeFromCollections,
+                                    onRecipeRequest = onRecipeRequest,
+                                    onCollectionsRequest = onCollectionsRequest,
+                                    onRemoveRecipeFromCollection = {_, _ ->},
+                                    onCollectionsClear = onCollectionsClear,
+                                    enableButtons = enableButtons
+                                )
+                            }
+                        } else if (userFeedState is Loaded) {
+                            Text(
+                                text = "No recipes for you to cook, how about following new users?",
+                                modifier = Modifier.padding(10.dp),
+                                color = Color.Gray
+                            )
+                        }
+                    }
+                )
+                Button(
+                    onClick = {
+                        onUserFeedRefresh()
+                        showLoadingSpinnerOnLoadMore = true
+                        enableLoadMoreButton = false
+                    },
+                    modifier = Modifier.fillMaxWidth().padding(10.dp),
+                    enabled = enableLoadMoreButton
+                ) {
+                    if (!showLoadingSpinnerOnLoadMore) {
+                        Text("Load More")
+                    }
+                    else { LoadingSpinner(Modifier.size(30.dp)) }
+                }
+            }
         },
         containerColor = Color.White
     )
@@ -143,18 +187,13 @@ fun FeedPreview() {
         )
     )
 
-    val collection = listOf(
-        CollectionProfile(
-            id = 1,
-            name = "Favourites",
-        )
-    )
-
     FeedScreen(
         apiSuccess(recipeList),
-        apiSuccess(collection),
-        { _, _ -> },
-        { _, _ -> },
+        CollectionsStateBundle(apiSuccess(emptyList()), apiSuccess(emptyList())),
+        { _, _, _, _ -> },
+        { _, _, _, _ -> },
+        {},
+        {},
         {},
         {},
         {},

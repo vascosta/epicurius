@@ -3,11 +3,14 @@ package android.epicurius.ui.screens.feed
 import android.content.Context
 import android.epicurius.domain.recipe.RecipeInfo
 import android.epicurius.services.EpicuriusService
+import android.epicurius.services.http.utils.CachedResult
 import android.epicurius.storage.Session
 import android.epicurius.ui.EpicuriusViewModel
+import android.epicurius.ui.screens.collections.CollectionsViewModel
 import android.epicurius.ui.screens.utils.LoadState
 import android.epicurius.ui.screens.utils.apiFailure
 import android.epicurius.ui.screens.utils.apiSuccess
+import android.epicurius.ui.screens.utils.cache
 import android.epicurius.ui.screens.utils.idle
 import android.epicurius.ui.screens.utils.loading
 import androidx.compose.runtime.getValue
@@ -22,46 +25,46 @@ class FeedViewModel(
     service: EpicuriusService,
     session: Session,
     context: Context
-): EpicuriusViewModel(service, session, context) {
+): CollectionsViewModel(service, session, context) {
 
     private val userFeedFlow = MutableStateFlow<LoadState<List<RecipeInfo>>>(idle())
-    val userFeed = userFeedFlow.asStateFlow()
+    private val cacheUserFeedFlow = MutableStateFlow<List<RecipeInfo>>(emptyList())
+    private val lastFetchedRecipeIdFlow = MutableStateFlow<Int?>(null)
 
-    var skip by mutableIntStateOf(0)
-        private set
+    val userFeed = userFeedFlow.asStateFlow()
+    val cacheUserFeed = cacheUserFeedFlow.asStateFlow()
 
     fun getUserFeed() {
-        userFeedFlow.value = loading()
+        userFeedFlow.value = loading(CachedResult(cacheUserFeed.value))
         viewModelScope.launch {
             fetchUserFeed()
         }
     }
 
     fun refreshUserFeed() {
-        resetSkip()
         getUserFeed()
+        // when swipe to refresh is implemented
     }
 
     private suspend fun fetchUserFeed() {
         val result = request {
             val token = session.getToken()
-            service.userService.getUserFeed(token, skip, limit)
+            val lastRecipeId = lastFetchedRecipeIdFlow.value
+            service.userService.getUserFeed(token, lastRecipeId, limit)
         }
         when {
-            result.isFailure -> {
-                userFeedFlow.value = apiFailure(result.getProblemOrThrow())
-            }
             result.isSuccess -> {
-                userFeedFlow.value = apiSuccess(result.getValueOrThrow().feed)
+                val fetchedFeed = result.getValueOrThrow().feed
+                if (fetchedFeed.isNotEmpty()) {
+                    val updatedFeed = cacheUserFeed.value + fetchedFeed
+                    userFeedFlow.value = apiSuccess(updatedFeed)
+                    cacheUserFeedFlow.value = updatedFeed
+                    lastFetchedRecipeIdFlow.value = fetchedFeed.last().id
+                }
+                else {
+                    userFeedFlow.value = cache(cacheUserFeed.value)
+                }
             }
         }
-    }
-
-    private fun increaseSkip(increaseValue: Int) {
-        skip += increaseValue
-    }
-
-    private fun resetSkip() {
-        skip = 0
     }
 }

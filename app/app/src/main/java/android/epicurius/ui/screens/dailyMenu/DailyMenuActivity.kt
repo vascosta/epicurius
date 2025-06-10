@@ -62,9 +62,7 @@ class DailyMenuActivity : EpicuriusActivity() {
                     )
                 },
                 onRecipeRequest = ::navigateToRecipeProfileActivity,
-                onCollectionsRequest = { recipeId: Int ->
-                    viewModel.getCollections(recipeId)
-                },
+                onCollectionsRequest = { recipeId: Int -> viewModel.getCollections(recipeId) },
                 onCollectionsClear = { viewModel.clearCollections() },
                 onDailyMenuRefresh = {
                     viewModel.refreshDailyMenu { navigateTo<FeedActivity>(true) }
