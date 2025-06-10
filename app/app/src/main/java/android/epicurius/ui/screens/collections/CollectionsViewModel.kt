@@ -58,7 +58,7 @@ open class CollectionsViewModel(
         }
         val addRecipeInfo = AddRecipeToCollectionInputModel(recipeId)
         viewModelScope.launch {
-            handleAddRecipeToFavouriteCollection(
+            handleAddRecipeToFavouriteCollections(
                 collectionsAvailableToAdd,
                 collectionsAvailableToRemove,
                 collectionsToAdd,
@@ -69,7 +69,7 @@ open class CollectionsViewModel(
         }
     }
 
-    fun removeRecipeFromCollection(
+    fun removeRecipeFromCollections(
         collectionsAvailableToAdd: List<CollectionProfile>,
         collectionsAvailableToRemove: List<CollectionProfile>,
         collectionsToRemove: List<CollectionProfile>,
@@ -83,7 +83,7 @@ open class CollectionsViewModel(
             return
         }
         viewModelScope.launch {
-            handleRemoveRecipeFromFavouriteCollection(
+            handleRemoveRecipeFromFavouriteCollections(
                 collectionsAvailableToAdd,
                 collectionsAvailableToRemove,
                 collectionsToRemove,
@@ -127,7 +127,9 @@ open class CollectionsViewModel(
                     recipesIds.contains(recipeId)
                 }.map { it.toCollectionProfile() }
 
-                lastFetchedCollectionIdFlow.value = fetchedCollections.last().id
+                if (fetchedCollections.isNotEmpty()) {
+                    lastFetchedCollectionIdFlow.value = fetchedCollections.last().id
+                }
                 collectionsToAddRecipeFlow.value = apiSuccess(collectionsToAddRecipe)
                 collectionsToRemoveRecipeFlow.value = apiSuccess(collectionsToRemoveRecipe)
             }
@@ -148,7 +150,7 @@ open class CollectionsViewModel(
         return null
     }
 
-    private suspend fun handleAddRecipeToFavouriteCollection(
+    private suspend fun handleAddRecipeToFavouriteCollections(
         collectionsAvailableToAdd: List<CollectionProfile>,
         collectionsAvailableToRemove: List<CollectionProfile>,
         collectionsToAdd: List<CollectionProfile>,
@@ -184,7 +186,7 @@ open class CollectionsViewModel(
         enableButtons()
     }
 
-    private suspend fun handleRemoveRecipeFromFavouriteCollection(
+    private suspend fun handleRemoveRecipeFromFavouriteCollections(
         collectionsAvailableToAdd: List<CollectionProfile>,
         collectionsAvailableToRemove: List<CollectionProfile>,
         collectionsToAdd: List<CollectionProfile>,
