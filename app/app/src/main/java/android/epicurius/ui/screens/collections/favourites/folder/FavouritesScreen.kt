@@ -55,7 +55,7 @@ fun FavouritesScreen(
                 titleText = "Favourites",
                 backButton = true,
                 onBackButton = onBackButton,
-                buttonsEnable = buttonsEnable,
+                enableButtons = buttonsEnable,
                 icon = null
             )
         },

@@ -134,7 +134,7 @@ fun RecipeProfileScreen(
                 titleText = recipe.name,
                 backButton = true,
                 onBackButton = onBackButton,
-                buttonsEnable = true
+                enableButtons = true
             )
         },
         bottomBar = { BottomBar(buttonsEnable = true) },
@@ -203,12 +203,12 @@ fun RecipeProfileScreen(
                             CollectionsListDialog(
                                 recipeId = recipe.id,
                                 isInCollection = enableStarIcon,
-                                collectionsState = collectionsState,
+                                collectionsStateBundle = null,
                                 onDismissRequest = { showCollectionsDialog = false },
                                 onCollectionChange = { enableStarIcon = !enableStarIcon },
-                                onAddRecipeToCollection = {_, _ ->},
-                                onRemoveRecipeFromCollection = onRemoveRecipeFromCollection,
-                                onCollectionsRequest = onCollectionsRequest,
+                                onAddRecipeToCollections = {_, _, _, _ ->},
+                                onRemoveRecipeFromCollections = {_, _, _, _ ->},
+                                onCollectionsRequest = {},
                                 enableButtons = enableButtons
                             )
                         }

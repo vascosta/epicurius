@@ -66,7 +66,7 @@ class UserProfileViewModel(
         viewModelScope.launch {
             checkIfIsAnotherUserProfile(name)
             fetchUserProfile(name)
-            checkUserVisibility(name, userProfile.value.getOrThrow())
+            checkUserVisibility(name, userProfile.value.getOrThrow()) // change
         }
     }
 

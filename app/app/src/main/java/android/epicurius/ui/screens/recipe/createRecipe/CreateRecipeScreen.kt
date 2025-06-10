@@ -145,7 +145,7 @@ fun CreateRecipeScreen(
                 titleText = "Create a Recipe",
                 backButton = true,
                 onBackButton = onBackButton,
-                buttonsEnable = buttonsEnable,
+                enableButtons = buttonsEnable,
                 icon = Icons.Filled.Person
             )
         },

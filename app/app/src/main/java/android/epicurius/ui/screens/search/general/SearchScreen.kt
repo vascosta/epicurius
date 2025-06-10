@@ -10,7 +10,6 @@ import android.epicurius.ui.screens.search.components.SearchPhotoComponent
 import android.epicurius.ui.screens.user.components.UserBox
 import android.epicurius.ui.screens.utils.SearchTextField
 import android.epicurius.ui.screens.utils.TabComponent
-import android.net.Uri
 import android.os.Build
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -115,7 +114,7 @@ fun SearchScreen(
     var showConfirmIngredientsDialog by remember { mutableStateOf(false) }
 
     Scaffold(
-        topBar = { TopBar("Search", backButton = true, onBackButton = onBackButton, buttonsEnable = true) },
+        topBar = { TopBar("Search", backButton = true, onBackButton = onBackButton, enableButtons = true) },
         bottomBar = { BottomBar(buttonsEnable = true) },
         content = { paddingValues ->
             Column(

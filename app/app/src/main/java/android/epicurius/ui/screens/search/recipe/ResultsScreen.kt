@@ -27,7 +27,7 @@ fun ResultsScreen(
     onRecipeRequest: (Int) -> Unit = {}
 ) {
     Scaffold(
-        topBar = { TopBar("Search Recipes", backButton = true, onBackButton = onBackButton, buttonsEnable = true) },
+        topBar = { TopBar("Search Recipes", backButton = true, onBackButton = onBackButton, enableButtons = true) },
         bottomBar = { BottomBar(buttonsEnable = true) },
         content = { paddingValues ->
             Column(
@@ -42,10 +42,13 @@ fun ResultsScreen(
                     RecipeInfoBox(
                         collectionId = null,
                         recipeInfo = recipe,
-                        collectionsState = TODO(),
-                        onAddRecipeToCollections = TODO(),
-                        onRemoveRecipeFromCollection = TODO(),
+                        collectionsStateBundle = TODO(),
+                        onAddRecipeToCollections = {_, _, _, _ ->},
+                        onRemoveRecipeFromCollections = {_, _, _, _ ->},
+                        onRemoveRecipeFromCollection = {_, _ ->},
                         onRecipeRequest = { onRecipeRequest(recipe.id) },
+                        onCollectionsRequest = {},
+                        onCollectionsClear = {},
                         enableButtons = TODO(),
                     )
                     Spacer(modifier = Modifier.padding(8.dp))

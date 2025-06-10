@@ -23,7 +23,7 @@ fun CameraScreen(
     val cameraPermissionState = rememberPermissionState(android.Manifest.permission.CAMERA)
 
     Scaffold(
-        topBar = { TopBar("Camera", backButton = true, onBackButton, icon = null, buttonsEnable = true) }
+        topBar = { TopBar("Camera", backButton = true, onBackButton, icon = null, enableButtons = true) }
     ) { innerPadding ->
         Box(modifier = Modifier.padding(innerPadding)) {
             when {

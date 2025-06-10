@@ -71,7 +71,7 @@ fun SettingsScreen(
                 titleText = "Settings",
                 backButton = true,
                 onBackButton = onBackButton,
-                buttonsEnable = buttonsEnable,
+                enableButtons = buttonsEnable,
                 icon = null
             )
         },

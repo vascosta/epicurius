@@ -48,7 +48,7 @@ fun SignUpScreen(
         topBar = {
             TopBar(
                 titleText = "SignUp",
-                buttonsEnable = buttonsEnable,
+                enableButtons = buttonsEnable,
                 icon = null
             )
         },

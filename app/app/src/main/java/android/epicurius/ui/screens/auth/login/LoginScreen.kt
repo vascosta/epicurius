@@ -41,7 +41,7 @@ fun LoginScreen(
         topBar = {
             TopBar(
                 titleText = "Login",
-                buttonsEnable = buttonsEnable,
+                enableButtons = buttonsEnable,
                 icon = null
             )
         },

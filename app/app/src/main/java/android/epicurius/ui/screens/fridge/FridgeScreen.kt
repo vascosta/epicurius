@@ -42,7 +42,7 @@ fun FridgeScreen(
                 titleText = "Fridge",
                 backButton = true,
                 onBackButton = onBackButton,
-                buttonsEnable = true
+                enableButtons = true
             )
         },
         bottomBar = { BottomBar(buttonsEnable = true) },

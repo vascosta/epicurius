@@ -119,7 +119,7 @@ fun UserProfileScreen(
                 titleText = "Profile",
                 backButton = true,
                 onBackButton = onBackButton,
-                buttonsEnable = true,
+                enableButtons = true,
                 icon = if (!isAnotherUserProfile) Icons.Filled.Settings else null,
             )
         },
@@ -216,11 +216,13 @@ fun UserProfileScreen(
                                                     RecipeInfoBox(
                                                         collectionId = null,
                                                         recipeInfo = recipe,
-                                                        collectionsState = recipeCollectionsState,
-                                                        onAddRecipeToCollections = { _, _ ->},
-                                                        onRemoveRecipeFromCollection = { _, _ ->},
+                                                        collectionsStateBundle = null,
+                                                        onAddRecipeToCollections = {_, _, _, _ ->},
+                                                        onRemoveRecipeFromCollections = {_, _, _, _ ->},
+                                                        onRemoveRecipeFromCollection = {_, _ ->},
                                                         onRecipeRequest = { _ -> },
-                                                        onCollectionsRequest = { _, _ -> },
+                                                        onCollectionsRequest = {},
+                                                        onCollectionsClear = {},
                                                         enableButtons = true
                                                     )
                                                 }

@@ -68,7 +68,7 @@ fun FavouritesListScreen(
                 titleText = favouritesListName,
                 backButton = true,
                 onBackButton = onBackButton,
-                buttonsEnable = buttonsEnable,
+                enableButtons = buttonsEnable,
                 icon = null
             )
                  },
