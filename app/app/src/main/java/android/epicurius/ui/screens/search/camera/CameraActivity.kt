@@ -11,7 +11,9 @@ class CameraActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             CameraScreen(
-                onBackButton = { navigateTo<SearchActivity>() }
+                onBackButton = { navigateTo<SearchActivity>() },
+                onIdentifyIngredients = {TODO()},
+                onConfirmIngredients = {}
             )
         }
     }
