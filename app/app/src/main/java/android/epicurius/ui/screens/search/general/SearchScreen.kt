@@ -33,6 +33,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -62,30 +63,30 @@ fun SearchScreen(
     onConfirm: (List<String>) -> Unit = { _ -> }
 ) {
     val tabs = listOf("Recipe", "Users")
-    var selectedTabIndex by remember { mutableIntStateOf(0) }
-    var searchQuery by remember { mutableStateOf("") }
+    var selectedTabIndex by rememberSaveable { mutableIntStateOf(0) }
+    var searchQuery by rememberSaveable { mutableStateOf("") }
 
-    var showFiltersDialog by remember { mutableStateOf(false) }
+    var showFiltersDialog by rememberSaveable { mutableStateOf(false) }
 
-    var mealType by remember { mutableStateOf(listOf<String>()) }
-    var cuisine by remember { mutableStateOf(listOf<String>()) }
-    var intolerances by remember { mutableStateOf(listOf<String>()) }
-    var diets by remember { mutableStateOf(listOf<String>()) }
+    var mealType by rememberSaveable { mutableStateOf(listOf<String>()) }
+    var cuisine by rememberSaveable { mutableStateOf(listOf<String>()) }
+    var intolerances by rememberSaveable { mutableStateOf(listOf<String>()) }
+    var diets by rememberSaveable { mutableStateOf(listOf<String>()) }
 
-    var preparationTime by remember { mutableStateOf("") }
-    var serving by remember { mutableStateOf("") }
-    var minCalories by remember { mutableStateOf("") }
-    var maxCalories by remember { mutableStateOf("") }
-    var minCarbs by remember { mutableStateOf("") }
-    var maxCarbs by remember { mutableStateOf("") }
-    var minFat by remember { mutableStateOf("") }
-    var maxFat by remember { mutableStateOf("") }
-    var minProtein by remember { mutableStateOf("") }
-    var maxProtein by remember { mutableStateOf("") }
+    var preparationTime by rememberSaveable { mutableStateOf("") }
+    var serving by rememberSaveable { mutableStateOf("") }
+    var minCalories by rememberSaveable { mutableStateOf("") }
+    var maxCalories by rememberSaveable { mutableStateOf("") }
+    var minCarbs by rememberSaveable { mutableStateOf("") }
+    var maxCarbs by rememberSaveable { mutableStateOf("") }
+    var minFat by rememberSaveable { mutableStateOf("") }
+    var maxFat by rememberSaveable { mutableStateOf("") }
+    var minProtein by rememberSaveable { mutableStateOf("") }
+    var maxProtein by rememberSaveable { mutableStateOf("") }
 
-    var userSearchResults by remember { mutableStateOf<List<SearchUser>>(emptyList()) }
+    var userSearchResults by rememberSaveable { mutableStateOf<List<SearchUser>>(emptyList()) }
 
-    var selectedImageBytes by remember { mutableStateOf<ByteArray?>(null) }
+    var selectedImageBytes by rememberSaveable { mutableStateOf<ByteArray?>(null) }
     val context = LocalContext.current
 
     val imagePickerLauncher = rememberLauncherForActivityResult(
@@ -104,14 +105,14 @@ fun SearchScreen(
         }
     }
 
-    var showGalleryAccessDialog by remember { mutableStateOf(false) }
+    var showGalleryAccessDialog by rememberSaveable { mutableStateOf(false) }
     val galleryPermissionState = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
         rememberPermissionState(android.Manifest.permission.READ_MEDIA_IMAGES)
     } else {
         rememberPermissionState(android.Manifest.permission.READ_EXTERNAL_STORAGE)
     }
 
-    var showConfirmIngredientsDialog by remember { mutableStateOf(false) }
+    var showConfirmIngredientsDialog by rememberSaveable { mutableStateOf(false) }
 
     Scaffold(
         topBar = { TopBar("Search", backButton = true, onBackButton = onBackButton, enableButtons = true) },

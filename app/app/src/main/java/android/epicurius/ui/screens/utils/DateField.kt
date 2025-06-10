@@ -13,6 +13,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -29,8 +30,8 @@ fun DateField(
     val context = LocalContext.current
     val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
 
-    var selectedDate by remember { mutableStateOf(initialDate) }
-    var text by remember { mutableStateOf(initialDate?.format(formatter) ?: "") }
+    var selectedDate by rememberSaveable { mutableStateOf(initialDate) }
+    var text by rememberSaveable { mutableStateOf(initialDate?.format(formatter) ?: "") }
 
     LaunchedEffect(initialDate) {
         selectedDate = initialDate

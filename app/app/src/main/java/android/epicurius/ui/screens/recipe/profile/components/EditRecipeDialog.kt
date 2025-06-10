@@ -26,6 +26,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -39,23 +40,23 @@ fun EditRecipeDialog(
     onEditRecipe: () -> Unit,
     buttonsEnable: Boolean
 ) {
-    var name by remember { mutableStateOf(recipe.name) }
-    var description by remember { mutableStateOf(recipe.description) }
-    var duration by remember { mutableStateOf(recipe.preparationTime.toString()) }
-    var serving by remember { mutableStateOf(recipe.servings.toString()) }
-    var mealType by remember { mutableStateOf(recipe.mealType.displayName) }
-    var cuisine by remember { mutableStateOf(recipe.cuisine.displayName) }
-    var intolerances by remember {
+    var name by rememberSaveable { mutableStateOf(recipe.name) }
+    var description by rememberSaveable { mutableStateOf(recipe.description) }
+    var duration by rememberSaveable { mutableStateOf(recipe.preparationTime.toString()) }
+    var serving by rememberSaveable { mutableStateOf(recipe.servings.toString()) }
+    var mealType by rememberSaveable { mutableStateOf(recipe.mealType.displayName) }
+    var cuisine by rememberSaveable { mutableStateOf(recipe.cuisine.displayName) }
+    var intolerances by rememberSaveable {
         mutableStateOf(listOf<String>(
             recipe.intolerances.map { it.displayName }.toString()
         ))
     }
-    var diets by remember {
+    var diets by rememberSaveable {
         mutableStateOf(listOf<String>(
             recipe.diets.map { it.displayName }.toString()
         ))
     }
-    var ingredients by remember {
+    var ingredients by rememberSaveable {
         mutableStateOf(
             recipe.ingredients.map {
                 IngredientComponent(
@@ -66,7 +67,7 @@ fun EditRecipeDialog(
             }
         )
     }
-    var instructions by remember { mutableStateOf(recipe.instructions.steps.values.map { it }) }
+    var instructions by rememberSaveable { mutableStateOf(recipe.instructions.steps.values.map { it }) }
 
     AlertDialog(
         onDismissRequest = onDismissRequest,

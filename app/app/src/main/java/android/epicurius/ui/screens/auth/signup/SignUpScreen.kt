@@ -17,6 +17,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -38,11 +39,11 @@ fun SignUpScreen(
     ) -> Unit,
     onLogin: () -> Unit
 ) {
-    var username by remember { mutableStateOf("") }
-    var email by remember{ mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
-    var confirmPassword by remember { mutableStateOf("") }
-    var country by remember { mutableStateOf("") }
+    var username by rememberSaveable { mutableStateOf("") }
+    var email by rememberSaveable{ mutableStateOf("") }
+    var password by rememberSaveable { mutableStateOf("") }
+    var confirmPassword by rememberSaveable { mutableStateOf("") }
+    var country by rememberSaveable { mutableStateOf("") }
 
     Scaffold(
         topBar = {

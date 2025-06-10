@@ -11,6 +11,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import java.time.LocalDate
 
@@ -19,10 +20,10 @@ fun AddProductDialog(
     onAddProduct: (String, Int, LocalDate?, LocalDate) -> Unit,
     onDismiss: () -> Unit
 ) {
-    var name by remember { mutableStateOf("") }
-    var quantity by remember { mutableIntStateOf(0) }
-    var openDate by remember { mutableStateOf<LocalDate?>(null) }
-    var expirationDate by remember { mutableStateOf<LocalDate?>(null) }
+    var name by rememberSaveable { mutableStateOf("") }
+    var quantity by rememberSaveable { mutableIntStateOf(0) }
+    var openDate by rememberSaveable { mutableStateOf<LocalDate?>(null) }
+    var expirationDate by rememberSaveable { mutableStateOf<LocalDate?>(null) }
 
     AlertDialog(
         onDismissRequest = { onDismiss() },

@@ -24,6 +24,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -42,8 +43,8 @@ fun PreparationScreen(
     onSkipRating: () -> Unit,
     onCancelPreparation: () -> Unit
 ) {
-    var currentStep by remember { mutableIntStateOf(1) }
-    var showRateDialog by remember { mutableStateOf(false) }
+    var currentStep by rememberSaveable { mutableIntStateOf(1) }
+    var showRateDialog by rememberSaveable { mutableStateOf(false) }
 
     Scaffold(
         topBar = { TopBar(recipeName, backButton = true, onBackButton = onBackButton, enableButtons = true) },

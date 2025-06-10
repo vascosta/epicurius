@@ -13,6 +13,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -24,8 +25,8 @@ fun ConfirmIngredientsDialog(
     onConfirm: (List<String>) -> Unit,
     onDismiss: () -> Unit
 ) {
-    var ingredientsList by remember { mutableStateOf(ingredients) }
-    var newIngredient by remember { mutableStateOf("") }
+    var ingredientsList by rememberSaveable { mutableStateOf(ingredients) }
+    var newIngredient by rememberSaveable { mutableStateOf("") }
 
     AlertDialog(
         onDismissRequest = { onDismiss() },

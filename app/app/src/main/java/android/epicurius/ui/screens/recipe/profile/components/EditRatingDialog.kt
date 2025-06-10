@@ -18,6 +18,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -30,7 +31,7 @@ fun EditRatingDialog(
     onDismissRequest: () -> Unit,
     onEditRating: (Int) -> Unit
 ) {
-    var newRating by remember { mutableIntStateOf(previousRating) }
+    var newRating by rememberSaveable { mutableIntStateOf(previousRating) }
 
     AlertDialog(
         onDismissRequest = { onDismissRequest() },

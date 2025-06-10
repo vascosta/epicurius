@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
@@ -13,7 +14,7 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun RecipeImage(picture: ByteArray) {
-    val bitmap = remember(picture) {
+    val bitmap = rememberSaveable(picture) {
         BitmapFactory.decodeByteArray(picture, 0, picture.size)
     }
 

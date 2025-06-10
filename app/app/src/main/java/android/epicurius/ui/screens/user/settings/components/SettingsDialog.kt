@@ -21,6 +21,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -44,14 +45,14 @@ fun SettingsDialog(
     ) -> Unit,
     buttonsEnable: Boolean
 ) {
-    var username by remember { mutableStateOf("") }
-    var email by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
-    var confirmPassword by remember { mutableStateOf("") }
-    var privacy by remember { mutableStateOf(user.privacy) }
-    var country by remember { mutableStateOf(user.country) }
-    var intolerances by remember { mutableStateOf(user.intolerances.map { it.displayName }) }
-    var diets by remember { mutableStateOf(user.diets.map { it.displayName }) }
+    var username by rememberSaveable { mutableStateOf("") }
+    var email by rememberSaveable { mutableStateOf("") }
+    var password by rememberSaveable { mutableStateOf("") }
+    var confirmPassword by rememberSaveable { mutableStateOf("") }
+    var privacy by rememberSaveable { mutableStateOf(user.privacy) }
+    var country by rememberSaveable { mutableStateOf(user.country) }
+    var intolerances by rememberSaveable { mutableStateOf(user.intolerances.map { it.displayName }) }
+    var diets by rememberSaveable { mutableStateOf(user.diets.map { it.displayName }) }
 
     val txt = title.removePrefix("Change ").lowercase()
 
