@@ -1,6 +1,9 @@
 package android.epicurius.ui.screens.utils
 
+import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 
 @Composable
 fun <T> LoadStateRenderer(
@@ -16,9 +19,9 @@ fun <T> LoadStateRenderer(
                     loadState.cachedValue.isSuccess -> RenderSuccess(
                         loadState.getOrThrow(),
                         swipeToRefresh,
-                        {
-                            content
-                            LoadingSpinner()
+                        { value ->
+                            content(value)
+                            LoadingSpinner(Modifier.size(30.dp))
                         }
                     )
                     loadState.cachedValue.isFailure -> RenderFailure(swipeToRefresh)

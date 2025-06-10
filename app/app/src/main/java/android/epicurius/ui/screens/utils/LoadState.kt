@@ -65,7 +65,7 @@ fun <T> apiFailure(problem: Problem): Loaded<T> = loaded(APIResult.failure(probl
  */
 fun <T> LoadState<T>.getOrThrow(): T = when (this) {
     is Loaded -> value.getValueOrThrow()
-    is Cached -> value.getValueOrThrow()
+    is Loading -> cachedValue?.getValueOrThrow() ?: throw IllegalStateException("No value available")
     else -> throw IllegalStateException("No value available")
 }
 
