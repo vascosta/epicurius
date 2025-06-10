@@ -70,6 +70,7 @@ class RecipeProfileActivity : EpicuriusActivity() {
                 collectionsState = null,
                 onBackButton = {},
                 onEditRecipe = {},
+                onEditRecipeImages = {},
                 onEditRating = { },
                 onMakeIt = { navigateTo<ConfirmIngredientsActivity>() },
                 onDeleteRecipe = {},

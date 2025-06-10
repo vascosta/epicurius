@@ -18,10 +18,16 @@ import android.epicurius.ui.screens.recipe.profile.components.EditRatingDialog
 import android.epicurius.ui.screens.recipe.profile.components.EditRecipeDialog
 import android.epicurius.ui.screens.recipe.profile.components.HorizontalPagerIndicator
 import android.epicurius.ui.screens.recipe.profile.components.RecipeProfileImages
+import android.epicurius.ui.screens.recipe.profile.utils.generateTestImageByteArray
 import android.epicurius.ui.screens.utils.LoadState
 import android.epicurius.ui.screens.utils.LoadingSpinner
 import android.epicurius.ui.screens.utils.MixedText
 import android.epicurius.ui.screens.utils.apiSuccess
+import android.os.Build
+import android.widget.Toast
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -53,18 +59,25 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.toMutableStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.isGranted
+import com.google.accompanist.permissions.rememberPermissionState
 import java.time.LocalDate
+import java.util.Base64
 
+@OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun RecipeProfileScreen(
     recipe: Recipe,
@@ -77,6 +90,7 @@ fun RecipeProfileScreen(
     onBackButton: () -> Unit,
     onEditRating: (Int) -> Unit,
     onEditRecipe: () -> Unit,
+    onEditRecipeImages: (List<ByteArray>) -> Unit,
     onMakeIt: () -> Unit,
     onDeleteRecipe: (Int) -> Unit,
     onAddRecipeToCollection: (Int, Int) -> Unit,
@@ -84,12 +98,40 @@ fun RecipeProfileScreen(
     onCollectionsRequest: (Int, Boolean) -> Unit,
     enableButtons: Boolean,
 ) {
-    val pagerState = rememberPagerState(pageCount = { images.size })
     var showEditRecipeDialog by remember { mutableStateOf(false) }
     var showEditRatingDialog by remember { mutableStateOf(false) }
     var showCollectionsDialog by remember { mutableStateOf(false) }
     var enableStarIcon by remember { mutableStateOf(recipe.isInCollection) }
     var confirmRecipeDelete by remember { mutableStateOf(false) }
+
+    val pagerState = rememberPagerState(pageCount = { images.size })
+    var recipePicturesBytes by remember { mutableStateOf(recipe.picturesBytes.toList())}
+    val context = LocalContext.current
+
+    val imagePickerLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.PickVisualMedia()
+    ) { uri ->
+        if (uri != null) {
+            val inputStream = context.contentResolver.openInputStream(uri)
+            val bytes = inputStream?.readBytes()
+            inputStream?.close()
+            if (bytes != null) {
+                val currentPage = pagerState.currentPage
+                recipePicturesBytes = recipePicturesBytes.toMutableList().also {
+                    it[currentPage] = bytes
+                }
+                onEditRecipeImages(recipePicturesBytes)
+            }
+        } else {
+            Toast.makeText(context, "No image selected", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    val galleryPermissionState = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+        rememberPermissionState(android.Manifest.permission.READ_MEDIA_IMAGES)
+    } else {
+        rememberPermissionState(android.Manifest.permission.READ_EXTERNAL_STORAGE)
+    }
 
     Scaffold(
         topBar = {
@@ -178,11 +220,24 @@ fun RecipeProfileScreen(
                     }
                 }
 
-                RecipeProfileImages(images, pagerState)
+                RecipeProfileImages(
+                    images = recipePicturesBytes,
+                    pagerState = pagerState,
+                    onImageClick = {
+                        if (galleryPermissionState.status.isGranted) {
+                            imagePickerLauncher.launch(
+                                PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
+                            )
+                        } else {
+                            galleryPermissionState.launchPermissionRequest()
+                        }
+                    },
+                    enabled = enableButtons && isAuthor
+                )
                 HorizontalPagerIndicator(images.size, pagerState)
 
                 Row(
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier.fillMaxWidth().padding(horizontal = 10.dp),
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
@@ -317,6 +372,12 @@ fun RecipeProfileScreen(
 @Preview
 @Composable
 fun RecipeProfilePreview(){
+    val testImages = listOf(
+        Base64.getEncoder().encodeToString(generateTestImageByteArray(R.drawable.test_tomato)),
+        Base64.getEncoder().encodeToString(generateTestImageByteArray(R.drawable.test_tomato)),
+        Base64.getEncoder().encodeToString(generateTestImageByteArray(R.drawable.test_tomato))
+    )
+
     val recipe = Recipe(
         id = 1,
         name = "Panquecas Americanas",
@@ -352,7 +413,7 @@ fun RecipeProfilePreview(){
                 "5" to "Serve quente com xarope de ácer ou frutas."
             )
         ),
-        pictures = listOf(),
+        pictures = testImages,
         isInCollection = true
     )
     val rating = 4.0
@@ -368,6 +429,7 @@ fun RecipeProfilePreview(){
         userRating = 4,
         collectionId = null,
         collectionsState = apiSuccess(collections),
+        {},
         {},
         {},
         {},
