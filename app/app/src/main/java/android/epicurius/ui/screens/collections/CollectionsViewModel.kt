@@ -12,6 +12,7 @@ import android.epicurius.storage.Session
 import android.epicurius.ui.EpicuriusViewModel
 import android.epicurius.ui.screens.utils.LoadState
 import android.epicurius.ui.screens.utils.apiSuccess
+import android.epicurius.ui.screens.utils.idle
 import android.epicurius.ui.screens.utils.loading
 import androidx.lifecycle.viewModelScope
 import epicurius.domain.collection.CollectionType
@@ -75,7 +76,7 @@ open class CollectionsViewModel(
         collectionsToRemove: List<CollectionProfile>,
         recipeId: Int,
         collectionsToAddRecipeFlow: MutableStateFlow<LoadState<List<CollectionProfile>>>,
-        collectionsToRemoveRecipeFlow: MutableStateFlow<LoadState<List<CollectionProfile>>>,
+        collectionsToRemoveRecipeFlow: MutableStateFlow<LoadState<List<CollectionProfile>>>
     ) {
         disableButtons()
         if (collectionsAvailableToRemove.isEmpty()) {
@@ -92,6 +93,16 @@ open class CollectionsViewModel(
                 collectionsToRemoveRecipeFlow
             )
         }
+    }
+
+    fun clearCollections(
+        collectionsToAddRecipeFlow: MutableStateFlow<LoadState<List<CollectionProfile>>>,
+        collectionsToRemoveRecipeFlow: MutableStateFlow<LoadState<List<CollectionProfile>>>,
+        lastFetchedCollectionIdFlow: MutableStateFlow<Int?>
+    ) {
+        collectionsToAddRecipeFlow.value = idle()
+        collectionsToRemoveRecipeFlow.value = idle()
+        lastFetchedCollectionIdFlow.value = null
     }
 
     private suspend fun fetchCollections(
