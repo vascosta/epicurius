@@ -92,10 +92,12 @@ fun FavouritesListScreen(
                             horizontalArrangement = Arrangement.SpaceBetween
                         ) {
                             TextButton(
-                                onClick = { showEditCollectionDialog = true }
+                                onClick = { showEditCollectionDialog = true },
+                                enabled = buttonsEnable
                             ) { Text("Edit Collection") }
                             TextButton(
-                                onClick = { showDeleteCollectionDialog = true }
+                                onClick = { showDeleteCollectionDialog = true },
+                                enabled = buttonsEnable
                             ) { Text("Delete Collection", color = Color.Red) }
                         }
 
@@ -111,10 +113,12 @@ fun FavouritesListScreen(
                                     RecipeInfoBox(
                                         collectionId = collectionId,
                                         recipeInfo = it,
-                                        collectionsState = null,
-                                        onAddRecipeToCollection = {_, _ ->},
+                                        collectionsStateBundle = null,
+                                        onAddRecipeToCollections = {_, _, _, _ ->},
+                                        onRemoveRecipeFromCollections = {_, _, _, _ ->},
                                         onRemoveRecipeFromCollection = onRecipeDelete,
                                         onRecipeRequest = onRecipeRequest,
+                                        onCollectionsRequest = {},
                                         enableButtons = buttonsEnable
                                     )
                                     Spacer(modifier = Modifier.height(10.dp))
@@ -122,7 +126,7 @@ fun FavouritesListScreen(
                             }
                         }
                     }
-                    if (showEditCollectionDialog) {
+                    if (showEditCollectionDialog && buttonsEnable) {
                         EditCollectionDialog(
                             collectionName = favouritesListName,
                             collectionId = collectionId,
@@ -131,7 +135,7 @@ fun FavouritesListScreen(
                             buttonsEnable = buttonsEnable
                         )
                     }
-                    if (showDeleteCollectionDialog) {
+                    if (showDeleteCollectionDialog && buttonsEnable) {
                         DeleteCollectionDialog(
                             collectionName = favouritesListName,
                             collectionId = collectionId,
