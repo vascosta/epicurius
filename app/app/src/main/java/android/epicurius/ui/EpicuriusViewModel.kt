@@ -1,6 +1,5 @@
 package android.epicurius.ui
 
-import android.app.Activity
 import android.content.Context
 import android.epicurius.R
 import android.epicurius.domain.exceptions.AuthenticatedUserNotFound
@@ -42,7 +41,7 @@ open class EpicuriusViewModel(
     var isLoggedIn by mutableStateOf(false)
         protected set
 
-    var buttonsEnable by mutableStateOf(true)
+    var enableButtons by mutableStateOf(true)
         protected set
 
     var limit by mutableIntStateOf(10)
@@ -111,11 +110,11 @@ open class EpicuriusViewModel(
     }
 
     fun enableButtons() {
-        buttonsEnable = true
+        enableButtons = true
     }
 
     fun disableButtons() {
-        buttonsEnable = false
+        enableButtons = false
     }
 
     companion object {

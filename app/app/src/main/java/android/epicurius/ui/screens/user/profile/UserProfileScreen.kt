@@ -217,7 +217,7 @@ fun UserProfileScreen(
                                                         collectionId = null,
                                                         recipeInfo = recipe,
                                                         collectionsState = recipeCollectionsState,
-                                                        onAddRecipeToCollection = { _, _ ->},
+                                                        onAddRecipeToCollections = { _, _ ->},
                                                         onRemoveRecipeFromCollection = { _, _ ->},
                                                         onRecipeRequest = { _ -> },
                                                         onCollectionsRequest = { _, _ -> },

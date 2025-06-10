@@ -3,7 +3,6 @@ package android.epicurius.ui.screens.collections.favourites.folder
 import android.epicurius.ui.EpicuriusActivity
 import android.epicurius.ui.navigation.Intents
 import android.epicurius.ui.screens.collections.favourites.list.FavouritesListActivity
-import android.epicurius.ui.screens.user.profile.UserProfileActivity
 import android.epicurius.ui.screens.user.settings.SettingsActivity
 import android.epicurius.ui.screens.utils.Idle
 import android.epicurius.ui.screens.utils.idle
@@ -40,7 +39,7 @@ class FavouritesActivity : EpicuriusActivity() {
                     viewModel.deleteFavouriteCollection(collectionId)
                 },
                 onFavouritesRefresh = { viewModel.getFavourites { navigateTo<SettingsActivity>() } },
-                buttonsEnable = viewModel.buttonsEnable,
+                buttonsEnable = viewModel.enableButtons,
             )
         }
     }

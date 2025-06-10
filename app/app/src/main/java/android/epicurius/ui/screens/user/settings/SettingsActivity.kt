@@ -8,7 +8,6 @@ import android.epicurius.ui.navigation.navigateTo
 import android.epicurius.ui.screens.collections.favourites.folder.FavouritesActivity
 import android.epicurius.ui.screens.user.profile.UserProfileActivity
 import android.os.Bundle
-import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.material3.MaterialTheme
 
@@ -40,7 +39,7 @@ class SettingsActivity : EpicuriusActivity() {
                     },
                     onLogout = { viewModel.logout() },
                     onDeleteAccount = {  },
-                    buttonsEnable = viewModel.buttonsEnable
+                    buttonsEnable = viewModel.enableButtons
                 )
             }
         }

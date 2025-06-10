@@ -22,7 +22,7 @@ class SignUpActivity : EpicuriusActivity() {
         setContent {
             MaterialTheme {
                 SignUpScreen(
-                    buttonsEnable = viewModel.buttonsEnable,
+                    buttonsEnable = viewModel.enableButtons,
                     onSignUp = {
                         name: String,
                         email: String,

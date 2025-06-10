@@ -10,7 +10,6 @@ import android.epicurius.domain.recipe.MealType
 import android.epicurius.ui.EpicuriusActivity
 import android.epicurius.ui.navigation.Intents
 import android.epicurius.ui.navigation.navigateTo
-import android.epicurius.ui.screens.collections.favourites.list.FavouritesListActivity
 import android.epicurius.ui.screens.recipe.profile.RecipeProfileActivity
 import android.os.Bundle
 import androidx.activity.compose.setContent
@@ -59,7 +58,7 @@ class CreateRecipeActivity : EpicuriusActivity() {
                         ::navigateToRecipeProfileActivity
                     )
                 },
-                buttonsEnable = viewModel.buttonsEnable
+                buttonsEnable = viewModel.enableButtons
             )
         }
     }

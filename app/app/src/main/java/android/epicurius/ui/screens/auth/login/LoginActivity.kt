@@ -23,7 +23,7 @@ class LoginActivity : EpicuriusActivity() {
         setContent {
             MaterialTheme {
                 LoginScreen(
-                    buttonsEnable = viewModel.buttonsEnable,
+                    buttonsEnable = viewModel.enableButtons,
                     onSignUp = { navigateTo<SignUpActivity>() },
                     onLogin = { name: String?, email: String?, password: String ->
                         viewModel.login(name, email, password) {

@@ -45,11 +45,7 @@ import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
-import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -59,7 +55,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.runtime.toMutableStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -211,10 +206,10 @@ fun RecipeProfileScreen(
                                 collectionsState = collectionsState,
                                 onDismissRequest = { showCollectionsDialog = false },
                                 onCollectionChange = { enableStarIcon = !enableStarIcon },
-                                onAddRecipeToCollection = onAddRecipeToCollection,
+                                onAddRecipeToCollection = {_, _ ->},
                                 onRemoveRecipeFromCollection = onRemoveRecipeFromCollection,
                                 onCollectionsRequest = onCollectionsRequest,
-                                buttonsEnable = enableButtons
+                                enableButtons = enableButtons
                             )
                         }
                     }

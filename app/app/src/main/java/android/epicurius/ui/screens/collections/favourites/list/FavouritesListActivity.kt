@@ -7,7 +7,6 @@ import android.epicurius.ui.screens.recipe.profile.RecipeProfileActivity
 import android.epicurius.ui.screens.utils.Idle
 import android.epicurius.ui.screens.utils.idle
 import android.epicurius.ui.navigation.navigateTo
-import android.epicurius.ui.screens.user.profile.UserProfileActivity
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.compose.runtime.collectAsState
@@ -55,7 +54,7 @@ class FavouritesListActivity : EpicuriusActivity() {
                     val collectionId = intent.getIntExtra(Intents.COLLECTION_ID, -1)
                     viewModel.getFavouriteCollection(collectionId) { navigateTo<FavouritesActivity>() }
                 },
-                buttonsEnable = viewModel.buttonsEnable
+                buttonsEnable = viewModel.enableButtons
             )
         }
     }
