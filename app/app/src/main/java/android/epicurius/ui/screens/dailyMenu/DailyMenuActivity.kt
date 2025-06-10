@@ -56,7 +56,7 @@ class DailyMenuActivity : EpicuriusActivity() {
                     collectionsAvailableToRemove: List<CollectionProfile>,
                     collectionsToRemove: List<CollectionProfile>,
                     recipeId: Int ->
-                    viewModel.removeRecipeFromCollection(
+                    viewModel.removeRecipeFromCollections(
                         collectionsAvailableToAdd,
                         collectionsAvailableToRemove,
                         collectionsToRemove,
