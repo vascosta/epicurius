@@ -12,6 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -22,7 +23,7 @@ fun CreateCollectionDialog(
     onCollectionCreate: (collectionName: String) -> Unit,
     buttonsEnable: Boolean
 ) {
-    var collectionName by remember { mutableStateOf("") }
+    var collectionName by rememberSaveable { mutableStateOf("") }
 
     AlertDialog(
         onDismissRequest = { onDismiss() },
