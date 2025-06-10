@@ -3,6 +3,7 @@ package android.epicurius.ui.screens.recipe.components
 import android.epicurius.R
 import android.epicurius.domain.collection.CollectionProfile
 import android.epicurius.ui.screens.collections.components.CollectionsListDialog
+import android.epicurius.ui.screens.collections.components.CollectionsStateBundle
 import android.epicurius.ui.screens.utils.LoadState
 import android.epicurius.ui.screens.utils.LoadingSpinner
 import android.epicurius.ui.screens.utils.MixedText
@@ -36,13 +37,29 @@ fun RecipeHeader(
     name: String,
     author: String,
     isInCollection: Boolean,
-    collectionsState: LoadState<List<CollectionProfile>>?,
-    onAddRecipeToCollection: (Int, Int) -> Unit,
-    onRemoveRecipeFromCollection: (Int, Int) -> Unit,
-    onCollectionsRequest: (Int, Boolean) -> Unit = {_, _ ->},
+    collectionsStateBundle: CollectionsStateBundle?,
+    onAddRecipeToCollections: (
+        collectionsAvailableToAdd: List<CollectionProfile>,
+        collectionsAvailableToRemove: List<CollectionProfile>,
+        collectionsToAdd: List<CollectionProfile>,
+        recipeId: Int
+    ) -> Unit,
+    onRemoveRecipeFromCollections: (
+        collectionsAvailableToAdd: List<CollectionProfile>,
+        collectionsAvailableToRemove: List<CollectionProfile>,
+        collectionsToRemove: List<CollectionProfile>,
+        recipeId: Int
+    ) -> Unit,
+    onRemoveRecipeFromCollection: (
+        collectionId: Int,
+        recipeId: Int
+    ) -> Unit,
+    onCollectionsRequest: (recipeId: Int) -> Unit,
+    onCollectionsClear: () -> Unit,
     enableButtons: Boolean
 ) {
     var showCollectionsDialog by remember { mutableStateOf(false) }
+    var showLoadingSpinner by remember { mutableStateOf(!enableButtons) }
     var enableStarIcon by remember { mutableStateOf(isInCollection) }
 
     Column(
@@ -69,13 +86,16 @@ fun RecipeHeader(
             MixedText(boldString = "by ", normalString = author)
             IconButton(
                 onClick = {
-                    if (collectionId != null) { onRemoveRecipeFromCollection(collectionId, recipeId) }
+                    if (collectionId != null) {
+                        onRemoveRecipeFromCollection(collectionId, recipeId)
+                        showLoadingSpinner = true
+                    }
                     else { showCollectionsDialog = true }
                 },
                 modifier = Modifier.size(24.dp),
                 enabled = enableButtons
             ) {
-                if (enableButtons) {
+                if (!showLoadingSpinner || enableButtons) {
                     val painter = if (enableStarIcon) {
                         painterResource(R.drawable.star)
                     } else {
@@ -93,13 +113,16 @@ fun RecipeHeader(
                     CollectionsListDialog(
                         recipeId = recipeId,
                         isInCollection = enableStarIcon,
-                        collectionsState = collectionsState,
-                        onDismissRequest = { showCollectionsDialog = false },
-                        onCollectionChange = { enableStarIcon = !enableStarIcon },
-                        onAddRecipeToCollection = onAddRecipeToCollection,
-                        onRemoveRecipeFromCollection = onRemoveRecipeFromCollection,
+                        collectionsStateBundle = collectionsStateBundle,
+                        onDismissRequest = {
+                            showCollectionsDialog = false
+                            onCollectionsClear()
+                        },
+                        onCollectionChange = { enableStarIcon = !enableStarIcon }, // CHANGE IN FUTURE
+                        onAddRecipeToCollections = onAddRecipeToCollections,
+                        onRemoveRecipeFromCollections = onRemoveRecipeFromCollections,
                         onCollectionsRequest = onCollectionsRequest,
-                        buttonsEnable = enableButtons
+                        enableButtons = enableButtons
                     )
                 }
             }

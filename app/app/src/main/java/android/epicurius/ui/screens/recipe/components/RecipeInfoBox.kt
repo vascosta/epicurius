@@ -4,6 +4,7 @@ import android.epicurius.domain.collection.CollectionProfile
 import android.epicurius.domain.recipe.Cuisine
 import android.epicurius.domain.recipe.MealType
 import android.epicurius.domain.recipe.RecipeInfo
+import android.epicurius.ui.screens.collections.components.CollectionsStateBundle
 import android.epicurius.ui.screens.utils.LoadState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -24,11 +25,26 @@ import androidx.compose.ui.unit.dp
 fun RecipeInfoBox(
     collectionId: Int?,
     recipeInfo: RecipeInfo,
-    collectionsState: LoadState<List<CollectionProfile>>?,
-    onAddRecipeToCollection: (Int, Int) -> Unit,
-    onRemoveRecipeFromCollection: (Int, Int) -> Unit,
-    onRecipeRequest: (Int) -> Unit,
-    onCollectionsRequest: (Int, Boolean) -> Unit = {_, _ ->},
+    collectionsStateBundle: CollectionsStateBundle?,
+    onAddRecipeToCollections: (
+        collectionsAvailableToAdd: List<CollectionProfile>,
+        collectionsAvailableToRemove: List<CollectionProfile>,
+        collectionsToAdd: List<CollectionProfile>,
+        recipeId: Int
+    ) -> Unit,
+    onRemoveRecipeFromCollections: (
+        collectionsAvailableToAdd: List<CollectionProfile>,
+        collectionsAvailableToRemove: List<CollectionProfile>,
+        collectionsToRemove: List<CollectionProfile>,
+        recipeId: Int
+    ) -> Unit,
+    onRemoveRecipeFromCollection: (
+        collectionId: Int,
+        recipeId: Int
+    ) -> Unit,
+    onRecipeRequest: (recipeId: Int) -> Unit,
+    onCollectionsRequest: (recipeId: Int) -> Unit,
+    onCollectionsClear: () -> Unit,
     enableButtons: Boolean
 ) {
     Box(
@@ -38,7 +54,10 @@ fun RecipeInfoBox(
             .clip(RoundedCornerShape(20.dp))
             .border(0.5.dp, Color.Black, RoundedCornerShape(20.dp))
             .padding(5.dp)
-            .clickable(onClick = { onRecipeRequest(recipeInfo.id) })
+            .clickable(
+                enabled = enableButtons,
+                onClick = { onRecipeRequest(recipeInfo.id) }
+            )
     ) {
         Column {
             RecipeHeader(
@@ -47,10 +66,12 @@ fun RecipeInfoBox(
                 name = recipeInfo.name,
                 author = recipeInfo.authorUsername,
                 isInCollection = recipeInfo.isInCollection,
-                collectionsState = collectionsState,
-                onAddRecipeToCollection = onAddRecipeToCollection,
+                collectionsStateBundle = collectionsStateBundle,
+                onAddRecipeToCollections = onAddRecipeToCollections,
+                onRemoveRecipeFromCollections = onRemoveRecipeFromCollections,
                 onRemoveRecipeFromCollection = onRemoveRecipeFromCollection,
                 onCollectionsRequest = onCollectionsRequest,
+                onCollectionsClear = onCollectionsClear,
                 enableButtons = enableButtons
             )
             RecipeImage(recipeInfo.pictureBytes)
@@ -91,10 +112,12 @@ fun RecipeInfoPreview() {
             isInCollection = true
         ),
         null,
-        {_, _ ->},
+        {_, _, _, _ ->},
+        {_, _, _, _ ->},
         {_, _ ->},
         {},
-        {_, _ ->},
+        {},
+        {},
         true
     )
 }
