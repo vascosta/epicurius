@@ -20,7 +20,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -59,9 +58,9 @@ fun RecipeHeader(
     onCollectionsClear: () -> Unit,
     enableButtons: Boolean
 ) {
-    var showCollectionsDialog by rememberSaveable { mutableStateOf(false) }
-    var showLoadingSpinner by rememberSaveable { mutableStateOf(!enableButtons) }
-    var enableStarIcon by rememberSaveable { mutableStateOf(isInCollection) }
+    var showCollectionsDialog by remember { mutableStateOf(false) }
+    var showLoadingSpinner by remember { mutableStateOf(!enableButtons) }
+    var enableStarIcon by remember { mutableStateOf(isInCollection) }
 
     Column(
         modifier = Modifier

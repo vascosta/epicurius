@@ -71,12 +71,7 @@ fun CollectionsListDialog(
             }
         }
         AlertDialog(
-            onDismissRequest = {
-                if (collectionsStateBundle.collectionsToAddRecipeState is Loaded ||
-                    collectionsStateBundle.collectionsToRemoveRecipeState is Loaded) {
-                    onDismissRequest()
-                }
-            },
+            onDismissRequest = { onDismissRequest() },
             confirmButton = {
                 Button(
                     onClick = {

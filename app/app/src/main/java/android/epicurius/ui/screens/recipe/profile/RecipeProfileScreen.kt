@@ -54,7 +54,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -94,14 +93,14 @@ fun RecipeProfileScreen(
     onCollectionsRequest: (Int, Boolean) -> Unit,
     enableButtons: Boolean,
 ) {
-    var showEditRecipeDialog by rememberSaveable { mutableStateOf(false) }
-    var showEditRatingDialog by rememberSaveable { mutableStateOf(false) }
-    var showCollectionsDialog by rememberSaveable { mutableStateOf(false) }
-    var enableStarIcon by rememberSaveable { mutableStateOf(recipe.isInCollection) }
-    var confirmRecipeDelete by rememberSaveable { mutableStateOf(false) }
+    var showEditRecipeDialog by remember { mutableStateOf(false) }
+    var showEditRatingDialog by remember { mutableStateOf(false) }
+    var showCollectionsDialog by remember { mutableStateOf(false) }
+    var enableStarIcon by remember { mutableStateOf(recipe.isInCollection) }
+    var confirmRecipeDelete by remember { mutableStateOf(false) }
 
     val pagerState = rememberPagerState(pageCount = { images.size })
-    var recipePicturesBytes by rememberSaveable { mutableStateOf(recipe.picturesBytes.toList())}
+    var recipePicturesBytes by remember { mutableStateOf(recipe.picturesBytes.toList())}
     val context = LocalContext.current
 
     val imagePickerLauncher = rememberLauncherForActivityResult(

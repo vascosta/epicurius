@@ -21,7 +21,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -36,11 +35,11 @@ fun ConfirmIngredientsScreen(
     recipeName: String,
     ingredientsList: List<Ingredient>
 ) {
-    val checkboxStates = rememberSaveable { mutableStateListOf<Boolean>().apply {
+    val checkboxStates = remember { mutableStateListOf<Boolean>().apply {
         repeat(ingredientsList.size) { add(false) }
     }}
-    val showDialog = rememberSaveable { mutableStateOf(false) }
-    val selectedIngredient = rememberSaveable { mutableStateOf<Ingredient?>(null) }
+    val showDialog = remember { mutableStateOf(false) }
+    val selectedIngredient = remember { mutableStateOf<Ingredient?>(null) }
 
     Scaffold(
         topBar = { TopBar(recipeName, backButton = true, onBackButton = onBackButton, enableButtons = true) },

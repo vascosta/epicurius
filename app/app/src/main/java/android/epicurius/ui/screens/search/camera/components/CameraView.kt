@@ -16,7 +16,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -32,14 +31,14 @@ fun CameraView(
 ) {
     val context = LocalContext.current
     val lifecycleOwner = LocalLifecycleOwner.current
-    val imageCapture = rememberSaveable { mutableStateOf<ImageCapture?>(null) }
+    val imageCapture = remember { mutableStateOf<ImageCapture?>(null) }
 
-    val cameraProvider = rememberSaveable {
+    val cameraProvider = remember {
         ProcessCameraProvider.getInstance(context)
     }
 
-    var showDialog by rememberSaveable { mutableStateOf(false) }
-    var ingredientsList by rememberSaveable { mutableStateOf(listOf<String>()) }
+    var showDialog by remember { mutableStateOf(false) }
+    var ingredientsList by remember { mutableStateOf(listOf<String>()) }
 
     Column(modifier = Modifier.fillMaxSize()) {
         AndroidView(

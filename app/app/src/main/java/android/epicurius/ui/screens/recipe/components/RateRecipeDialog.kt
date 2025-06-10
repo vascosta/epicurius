@@ -18,7 +18,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -31,7 +30,7 @@ fun RateRecipeDialog(
     onSkipRating: () -> Unit,
     onRateRecipe: (Int) -> Unit
 ) {
-    var selectedRating by rememberSaveable { mutableIntStateOf(0) }
+    var selectedRating by remember { mutableIntStateOf(0) }
 
     AlertDialog(
         onDismissRequest = onDismissRequest,

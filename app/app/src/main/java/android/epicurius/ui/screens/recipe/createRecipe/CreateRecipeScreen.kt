@@ -53,7 +53,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -98,23 +97,23 @@ fun CreateRecipeScreen(
 ) {
     val context = LocalContext.current
 
-    var name by rememberSaveable { mutableStateOf("") }
-    var description by rememberSaveable { mutableStateOf("") }
-    var servings by rememberSaveable { mutableStateOf("") }
-    var preparationTime by rememberSaveable { mutableStateOf("") }
-    var mealType by rememberSaveable { mutableStateOf("") }
-    var cuisine by rememberSaveable { mutableStateOf("") }
-    var intolerances by rememberSaveable { mutableStateOf(listOf<String>()) }
-    var diets by rememberSaveable { mutableStateOf(listOf<String>()) }
-    var ingredients by rememberSaveable { mutableStateOf(listOf<IngredientComponent>()) }
-    var calories by rememberSaveable { mutableStateOf("") }
-    var protein by rememberSaveable { mutableStateOf("") }
-    var fat by rememberSaveable { mutableStateOf("") }
-    var carbs by rememberSaveable { mutableStateOf("") }
-    var instructions by rememberSaveable { mutableStateOf(listOf<String>()) }
-    var selectedImageBytesList by rememberSaveable { mutableStateOf<List<ByteArray>>(emptyList()) }
+    var name by remember { mutableStateOf("") }
+    var description by remember { mutableStateOf("") }
+    var servings by remember { mutableStateOf("") }
+    var preparationTime by remember { mutableStateOf("") }
+    var mealType by remember { mutableStateOf("") }
+    var cuisine by remember { mutableStateOf("") }
+    var intolerances by remember { mutableStateOf(listOf<String>()) }
+    var diets by remember { mutableStateOf(listOf<String>()) }
+    var ingredients by remember { mutableStateOf(listOf<IngredientComponent>()) }
+    var calories by remember { mutableStateOf("") }
+    var protein by remember { mutableStateOf("") }
+    var fat by remember { mutableStateOf("") }
+    var carbs by remember { mutableStateOf("") }
+    var instructions by remember { mutableStateOf(listOf<String>()) }
+    var selectedImageBytesList by remember { mutableStateOf<List<ByteArray>>(emptyList()) }
 
-    var expandNutritionalInfo by rememberSaveable { mutableStateOf(false) }
+    var expandNutritionalInfo by remember { mutableStateOf(false) }
 
     val imagePickerLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.PickMultipleVisualMedia(maxItems = 3)
