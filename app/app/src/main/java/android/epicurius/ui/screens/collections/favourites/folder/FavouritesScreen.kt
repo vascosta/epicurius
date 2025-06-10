@@ -29,7 +29,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -46,7 +45,7 @@ fun FavouritesScreen(
     onCollectionRequest: (collectionId: Int) -> Unit,
     onCollectionDelete: (collectionId: Int) -> Unit,
     onFavouritesRefresh: () -> Unit,
-    buttonsEnable: Boolean
+    enableButtons: Boolean
 ) {
     var showCreateCollectionDialog by rememberSaveable { mutableStateOf(false) }
 
@@ -56,11 +55,11 @@ fun FavouritesScreen(
                 titleText = "Favourites",
                 backButton = true,
                 onBackButton = onBackButton,
-                enableButtons = buttonsEnable,
+                enableButtons = enableButtons && favouritesState is Loaded,
                 icon = null
             )
         },
-        bottomBar = { BottomBar(buttonsEnable = buttonsEnable) },
+        bottomBar = { BottomBar(buttonsEnable = enableButtons && favouritesState is Loaded) },
         content = { paddingValues ->
             LoadStateRenderer(
                 loadState = favouritesState,
@@ -106,7 +105,7 @@ fun FavouritesScreen(
                                     collection = it,
                                     onCollectionRequest = onCollectionRequest,
                                     onCollectionDelete = onCollectionDelete,
-                                    buttonsEnable = buttonsEnable
+                                    buttonsEnable = enableButtons
                                 )
                                 Spacer(modifier = Modifier.height(10.dp))
                             }
@@ -114,9 +113,13 @@ fun FavouritesScreen(
                     }
                     if (showCreateCollectionDialog) {
                         CreateCollectionDialog(
-                            onDismiss = { showCreateCollectionDialog = false },
+                            onDismiss = {
+                                if (enableButtons) {
+                                    showCreateCollectionDialog = false
+                                }
+                            },
                             onCollectionCreate = onCollectionCreate,
-                            buttonsEnable = buttonsEnable
+                            buttonsEnable = enableButtons
                         )
                     }
                 }

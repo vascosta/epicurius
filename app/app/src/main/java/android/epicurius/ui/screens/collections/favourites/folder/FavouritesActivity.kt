@@ -39,7 +39,7 @@ class FavouritesActivity : EpicuriusActivity() {
                     viewModel.deleteFavouriteCollection(collectionId)
                 },
                 onFavouritesRefresh = { viewModel.getFavourites { navigateTo<SettingsActivity>(true) } },
-                buttonsEnable = viewModel.enableButtons,
+                enableButtons = viewModel.enableButtons,
             )
         }
     }
