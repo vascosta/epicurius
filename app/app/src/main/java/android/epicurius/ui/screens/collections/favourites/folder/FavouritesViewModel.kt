@@ -30,8 +30,6 @@ class FavouritesViewModel(
     private val cachedFavourites = MutableStateFlow<List<CollectionProfile>>(emptyList())
     val favourites = favouritesFlow.asStateFlow()
 
-    var limit by mutableIntStateOf(10)
-
     fun getFavourites(navigateTo: () -> Unit) {
         favouritesFlow.value = loading()
         viewModelScope.launch {

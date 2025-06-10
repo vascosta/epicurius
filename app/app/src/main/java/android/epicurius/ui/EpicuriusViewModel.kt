@@ -18,6 +18,7 @@ import android.epicurius.ui.screens.auth.resetPassword.ResetPasswordActivity
 import android.epicurius.ui.screens.auth.signup.SignUpActivity
 import android.widget.Toast
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
@@ -43,6 +44,8 @@ open class EpicuriusViewModel(
 
     var buttonsEnable by mutableStateOf(true)
         protected set
+
+    var limit by mutableIntStateOf(10)
 
     init {
         viewModelScope.launch {

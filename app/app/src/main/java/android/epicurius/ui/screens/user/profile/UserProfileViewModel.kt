@@ -61,8 +61,6 @@ class UserProfileViewModel(
 
     var followEnable by mutableStateOf(true)
 
-    var limit by mutableIntStateOf(10)
-
     fun getUserProfile(name: String) {
         userProfileFlow.value = loading()
         viewModelScope.launch {
@@ -130,8 +128,8 @@ class UserProfileViewModel(
 
     fun addRecipeToKitchenBookCollection(collectionId: Int, recipeId: Int) {
         disableFollow()
+        val addRecipeInfo = AddRecipeToCollectionInputModel(recipeId)
         viewModelScope.launch {
-            val addRecipeInfo = AddRecipeToCollectionInputModel(recipeId)
             handleAddRecipeToKitchenBookCollection(collectionId, addRecipeInfo)
         }
     }

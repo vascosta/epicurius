@@ -30,8 +30,6 @@ class FeedViewModel(
     var skip by mutableIntStateOf(0)
         private set
 
-    var limit by mutableIntStateOf(10)
-
     fun getUserFeed() {
         userFeedFlow.value = loading()
         viewModelScope.launch {
@@ -55,13 +53,12 @@ class FeedViewModel(
             }
             result.isSuccess -> {
                 userFeedFlow.value = apiSuccess(result.getValueOrThrow().feed)
-                increaseSkip()
             }
         }
     }
 
-    private fun increaseSkip() {
-        skip += 10
+    private fun increaseSkip(increaseValue: Int) {
+        skip += increaseValue
     }
 
     private fun resetSkip() {
