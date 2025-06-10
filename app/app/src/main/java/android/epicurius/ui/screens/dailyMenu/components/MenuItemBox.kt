@@ -78,7 +78,7 @@ fun MenuItemBoxPreview() {
             mealType = MealType.BREAKFAST,
             preparationTime = 20,
             servings = 2,
-            picture = "".toByteArray(),
+            picture = "",
             isInCollection = true
         ),
         apiSuccess(emptyList()),

@@ -1,5 +1,7 @@
 package android.epicurius.domain.recipe
 
+import java.util.Base64
+
 data class RecipeInfo(
     val id: Int,
     val name: String,
@@ -10,6 +12,10 @@ data class RecipeInfo(
     val preparationTime: Int,
     val servings: Int,
     val calories: Int? = null,
-    val picture: ByteArray,
+    val picture: String,
     val isInCollection: Boolean
-)
+) {
+    val pictureBytes: ByteArray
+        get() = Base64.getDecoder().decode(picture)
+
+}

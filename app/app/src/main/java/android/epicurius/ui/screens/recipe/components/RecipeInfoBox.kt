@@ -53,7 +53,7 @@ fun RecipeInfoBox(
                 onCollectionsRequest = onCollectionsRequest,
                 enableButtons = enableButtons
             )
-            RecipeImage(recipeInfo.picture)
+            RecipeImage(recipeInfo.pictureBytes)
             RecipeDetails(
                 preparationTime = recipeInfo.preparationTime,
                 servings = recipeInfo.servings,
@@ -87,7 +87,7 @@ fun RecipeInfoPreview() {
                 0x00.toByte(), 0x04.toByte(), 0x00.toByte(), 0x01.toByte(), 0xE2.toByte(), 0x26.toByte(), 0x05.toByte(), 0x9B.toByte(),
                 0x00.toByte(), 0x00.toByte(), 0x00.toByte(), 0x00.toByte(), 0x49.toByte(), 0x45.toByte(), 0x4E.toByte(), 0x44.toByte(),
                 0xAE.toByte(), 0x42.toByte(), 0x60.toByte(), 0x82.toByte()
-            ),
+            ).toString(),
             isInCollection = true
         ),
         null,
