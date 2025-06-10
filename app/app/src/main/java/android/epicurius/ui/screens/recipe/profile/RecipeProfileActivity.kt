@@ -13,10 +13,12 @@ import android.epicurius.ui.EpicuriusActivity
 import android.epicurius.ui.EpicuriusViewModel
 import android.epicurius.ui.navigation.navigateTo
 import android.epicurius.ui.screens.recipe.ingredients.ConfirmIngredientsActivity
+import android.epicurius.ui.screens.recipe.profile.utils.generateTestImageByteArray
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import java.time.LocalDate
+import java.util.Base64
 
 class RecipeProfileActivity : EpicuriusActivity() {
     override val viewModel: EpicuriusViewModel by getViewModel<EpicuriusViewModel>()
@@ -60,7 +62,7 @@ class RecipeProfileActivity : EpicuriusActivity() {
                             "5" to "Serve quente com xarope de ácer ou frutas."
                         )
                     ),
-                    pictures = listOf(),
+                    pictures = listOf(Base64.getEncoder().encodeToString(generateTestImageByteArray(R.drawable.test_tomato))),
                     isInCollection = false
                 ),
                 rating = 4.0,

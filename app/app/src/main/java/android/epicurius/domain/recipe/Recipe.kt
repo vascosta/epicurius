@@ -27,7 +27,6 @@ data class Recipe(
     val pictures: List<String>,
     val isInCollection: Boolean
 ) {
-    val picturesBytes by lazy {
-        pictures.map { Base64.getDecoder().decode(it) }
-    }
+    val picturesBytes: List<ByteArray>
+        get() = pictures.map { Base64.getDecoder().decode(it) }
 }
