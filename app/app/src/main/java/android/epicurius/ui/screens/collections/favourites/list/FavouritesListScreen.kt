@@ -32,6 +32,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -50,12 +51,12 @@ fun FavouritesListScreen(
     onRecipeDelete: (collectionId: Int, recipeId: Int) -> Unit,
     onRecipeRequest: (recipeId: Int) -> Unit,
     onFavouriteCollectionRefresh: () -> Unit,
-    buttonsEnable: Boolean
+    enableButtons: Boolean
 ) {
     var favouritesListName = getFavouritesListName(favouritesListNameState)
 
-    var showEditCollectionDialog by remember { mutableStateOf(false) }
-    var showDeleteCollectionDialog by remember { mutableStateOf(false) }
+    var showEditCollectionDialog by rememberSaveable { mutableStateOf(false) }
+    var showDeleteCollectionDialog by rememberSaveable { mutableStateOf(false) }
 
     LaunchedEffect(favouritesListNameState) {
         if (favouritesListNameState is Loaded) {
@@ -68,11 +69,13 @@ fun FavouritesListScreen(
                 titleText = favouritesListName,
                 backButton = true,
                 onBackButton = onBackButton,
-                enableButtons = buttonsEnable,
+                enableButtons = enableButtons && favouritesListNameState is Loaded && recipesState is Loaded,
                 icon = null
             )
                  },
-        bottomBar = { BottomBar(buttonsEnable = buttonsEnable) },
+        bottomBar = { BottomBar(
+            buttonsEnable = enableButtons && favouritesListNameState is Loaded && recipesState is Loaded
+        ) },
         content = { paddingValues ->
             LoadStateRenderer(
                 loadState = recipesState,
@@ -93,11 +96,11 @@ fun FavouritesListScreen(
                         ) {
                             TextButton(
                                 onClick = { showEditCollectionDialog = true },
-                                enabled = buttonsEnable
+                                enabled = enableButtons
                             ) { Text("Edit Collection") }
                             TextButton(
                                 onClick = { showDeleteCollectionDialog = true },
-                                enabled = buttonsEnable
+                                enabled = enableButtons
                             ) { Text("Delete Collection", color = Color.Red) }
                         }
 
@@ -120,29 +123,37 @@ fun FavouritesListScreen(
                                         onRecipeRequest = onRecipeRequest,
                                         onCollectionsRequest = {},
                                         onCollectionsClear = {},
-                                        enableButtons = buttonsEnable
+                                        enableButtons = enableButtons
                                     )
                                     Spacer(modifier = Modifier.height(10.dp))
                                 }
                             }
                         }
                     }
-                    if (showEditCollectionDialog && buttonsEnable) {
+                    if (showEditCollectionDialog) {
                         EditCollectionDialog(
                             collectionName = favouritesListName,
                             collectionId = collectionId,
-                            onDismiss = { showEditCollectionDialog = false },
+                            onDismiss = {
+                                if (enableButtons) {
+                                    showEditCollectionDialog = false
+                                }
+                            },
                             onEditCollection = onCollectionEdit,
-                            buttonsEnable = buttonsEnable
+                            enableButtons = enableButtons
                         )
                     }
-                    if (showDeleteCollectionDialog && buttonsEnable) {
+                    if (showDeleteCollectionDialog) {
                         DeleteCollectionDialog(
                             collectionName = favouritesListName,
                             collectionId = collectionId,
                             onCollectionDelete = onCollectionDelete,
-                            onDismissRequest = { showDeleteCollectionDialog = false },
-                            buttonsEnable = buttonsEnable
+                            onDismissRequest = {
+                                if (enableButtons) {
+                                    showDeleteCollectionDialog = false
+                                }
+                            },
+                            buttonsEnable = enableButtons
                         )
                     }
                 }
@@ -178,6 +189,6 @@ fun FavouritesListScreenPreview() {
         onRecipeDelete = {_, _ ->},
         onRecipeRequest = {},
         onFavouriteCollectionRefresh = {},
-        buttonsEnable = true
+        enableButtons = true
     )
 }

@@ -14,6 +14,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -24,22 +25,26 @@ fun EditCollectionDialog(
     collectionId: Int,
     onDismiss: () -> Unit,
     onEditCollection: (collectionId: Int, collectionName: String) -> Unit,
-    buttonsEnable: Boolean
+    enableButtons: Boolean
 ) {
-    var newCollectionName by remember { mutableStateOf(collectionName) }
+    var newCollectionName by rememberSaveable { mutableStateOf(collectionName) }
+    var showLoadingSpinner by rememberSaveable { mutableStateOf(!enableButtons) }
 
     AlertDialog(
         onDismissRequest = { onDismiss() },
         confirmButton = {
             TextButton(
                 onClick = { onDismiss() },
-                enabled = buttonsEnable
+                enabled = enableButtons
             ) { Text("Cancel") }
             TextButton(
-                onClick = { onEditCollection(collectionId, newCollectionName) },
-                enabled = buttonsEnable
+                onClick = {
+                    onEditCollection(collectionId, newCollectionName)
+                    showLoadingSpinner = true
+                },
+                enabled = enableButtons
             ) {
-                if (buttonsEnable) { Text("Edit") }
+                if (!showLoadingSpinner || enableButtons) { Text("Edit") }
                 else { LoadingSpinner(Modifier.size(30.dp)) }
             }
         },
@@ -52,7 +57,7 @@ fun EditCollectionDialog(
                     value = newCollectionName,
                     onValueChange = { newCollectionName = it },
                     modifier = Modifier.fillMaxWidth(),
-                    enabled = buttonsEnable,
+                    enabled = enableButtons,
                     label = "Collection Name"
                 )
             }

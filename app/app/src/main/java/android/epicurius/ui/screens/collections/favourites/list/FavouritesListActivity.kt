@@ -54,7 +54,7 @@ class FavouritesListActivity : EpicuriusActivity() {
                     val collectionId = intent.getIntExtra(Intents.COLLECTION_ID, -1)
                     viewModel.getFavouriteCollection(collectionId) { navigateTo<FavouritesActivity>() }
                 },
-                buttonsEnable = viewModel.enableButtons
+                enableButtons = viewModel.enableButtons
             )
         }
     }
