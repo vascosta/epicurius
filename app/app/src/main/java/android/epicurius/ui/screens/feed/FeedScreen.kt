@@ -95,7 +95,7 @@ fun FeedScreen(
                                 collectionId = null,
                                 recipeInfo = recipe,
                                 collectionsState = collectionsState,
-                                onAddRecipeToCollection = onAddRecipeToCollection,
+                                onAddRecipeToCollections = {_, _ ->},
                                 onRemoveRecipeFromCollection = onRemoveRecipeFromCollection,
                                 onRecipeRequest = onRecipeRequest,
                                 enableButtons = buttonsEnable
