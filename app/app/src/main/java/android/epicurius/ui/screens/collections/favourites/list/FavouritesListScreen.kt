@@ -119,6 +119,7 @@ fun FavouritesListScreen(
                                         onRemoveRecipeFromCollection = onRecipeDelete,
                                         onRecipeRequest = onRecipeRequest,
                                         onCollectionsRequest = {},
+                                        onCollectionsClear = {},
                                         enableButtons = buttonsEnable
                                     )
                                     Spacer(modifier = Modifier.height(10.dp))
