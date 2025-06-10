@@ -6,7 +6,6 @@ import android.epicurius.domain.collection.Collection
 import android.epicurius.domain.collection.CollectionProfile
 import android.epicurius.domain.collection.MAX_COLLECTION_NAME_LENGTH
 import android.epicurius.domain.collection.MIN_COLLECTION_NAME_LENGTH
-import android.epicurius.domain.user.USERNAME_LENGTH_MSG
 import android.epicurius.services.EpicuriusService
 import android.epicurius.services.api.collection.models.input.AddRecipeToCollectionInputModel
 import android.epicurius.storage.Session
@@ -27,41 +26,83 @@ open class CollectionsViewModel(
 
     fun getCollections(
         recipeId: Int,
-        recipeInCollection: Boolean,
-        collectionsFlow: MutableStateFlow<LoadState<List<CollectionProfile>>>,
-        cachedCollectionsFlow: MutableStateFlow<List<CollectionProfile>>
+        collectionsToAddRecipeFlow: MutableStateFlow<LoadState<List<CollectionProfile>>>,
+        collectionsToRemoveRecipeFlow: MutableStateFlow<LoadState<List<CollectionProfile>>>,
+        lastFetchedCollectionIdFlow: MutableStateFlow<Int?>
     ) {
         disableButtons()
-        collectionsFlow.value = loading()
+        collectionsToAddRecipeFlow.value = loading()
+        collectionsToRemoveRecipeFlow.value = loading()
         viewModelScope.launch {
-            fetchCollections(recipeId, recipeInCollection, collectionsFlow, cachedCollectionsFlow)
+            fetchCollections(
+                recipeId,
+                collectionsToAddRecipeFlow,
+                collectionsToRemoveRecipeFlow,
+                lastFetchedCollectionIdFlow
+            )
         }
     }
 
-    fun addRecipeToCollection(collectionId: Int, recipeId: Int) {
+    fun addRecipeToCollections(
+        collectionsAvailableToAdd: List<CollectionProfile>,
+        collectionsAvailableToRemove: List<CollectionProfile>,
+        collectionsToAdd: List<CollectionProfile>,
+        recipeId: Int,
+        collectionsToAddRecipeFlow: MutableStateFlow<LoadState<List<CollectionProfile>>>,
+        collectionsToRemoveRecipeFlow: MutableStateFlow<LoadState<List<CollectionProfile>>>
+    ) {
         disableButtons()
+        if (collectionsAvailableToAdd.isEmpty()) {
+            enableButtons()
+            return
+        }
         val addRecipeInfo = AddRecipeToCollectionInputModel(recipeId)
         viewModelScope.launch {
-            handleAddRecipeToFavouriteCollection(collectionId, addRecipeInfo)
+            handleAddRecipeToFavouriteCollection(
+                collectionsAvailableToAdd,
+                collectionsAvailableToRemove,
+                collectionsToAdd,
+                addRecipeInfo,
+                collectionsToAddRecipeFlow,
+                collectionsToRemoveRecipeFlow
+            )
         }
     }
 
-    fun removeRecipeFromCollection(collectionId: Int, recipeId: Int) {
+    fun removeRecipeFromCollection(
+        collectionsAvailableToAdd: List<CollectionProfile>,
+        collectionsAvailableToRemove: List<CollectionProfile>,
+        collectionsToRemove: List<CollectionProfile>,
+        recipeId: Int,
+        collectionsToAddRecipeFlow: MutableStateFlow<LoadState<List<CollectionProfile>>>,
+        collectionsToRemoveRecipeFlow: MutableStateFlow<LoadState<List<CollectionProfile>>>,
+    ) {
         disableButtons()
+        if (collectionsAvailableToRemove.isEmpty()) {
+            enableButtons()
+            return
+        }
         viewModelScope.launch {
-            handleRemoveRecipeFromFavouriteCollection(collectionId, recipeId)
+            handleRemoveRecipeFromFavouriteCollection(
+                collectionsAvailableToAdd,
+                collectionsAvailableToRemove,
+                collectionsToRemove,
+                recipeId,
+                collectionsToAddRecipeFlow,
+                collectionsToRemoveRecipeFlow
+            )
         }
     }
 
     private suspend fun fetchCollections(
         recipeId: Int,
-        recipeInCollection: Boolean,
-        collectionsFlow: MutableStateFlow<LoadState<List<CollectionProfile>>>,
-        cachedCollectionsFlow: MutableStateFlow<List<CollectionProfile>>
+        collectionsToAddRecipeFlow: MutableStateFlow<LoadState<List<CollectionProfile>>>,
+        collectionsToRemoveRecipeFlow: MutableStateFlow<LoadState<List<CollectionProfile>>>,
+        lastFetchedCollectionIdFlow: MutableStateFlow<Int?>
     ) {
         val result = request {
             val token = session.getToken()
-            val lastCollectionId = cachedCollectionsFlow.value.lastOrNull()?.id
+            val lastCollectionId = lastFetchedCollectionIdFlow.value
             service.collectionService.getCollections(
                 token,
                 CollectionType.FAVOURITE,
@@ -76,20 +117,19 @@ open class CollectionsViewModel(
                         fetchCollection(collection.id)
                     }
 
-                val updatedCollections = if (recipeInCollection) { // collections to remove the recipe
-                    fetchedCollections.filter { collection ->
-                        val recipesIds = collection.recipes.map { it.id }
-                        recipesIds.contains(recipeId)
-                    }.map { it.toCollectionProfile() }
-                }
-                else { // collections to add the recipe
-                    fetchedCollections.filter { collection ->
-                        val recipesIds = collection.recipes.map { it.id }
-                        !recipesIds.contains(recipeId)
-                    }.map { it.toCollectionProfile() }
-                }
-                cachedCollectionsFlow.value = updatedCollections
-                collectionsFlow.value = apiSuccess(updatedCollections)
+                val collectionsToAddRecipe = fetchedCollections.filter { collection ->
+                    val recipesIds = collection.recipes.map { it.id }
+                    !recipesIds.contains(recipeId)
+                }.map { it.toCollectionProfile() }
+
+                val collectionsToRemoveRecipe = fetchedCollections.filter { collection ->
+                    val recipesIds = collection.recipes.map { it.id }
+                    recipesIds.contains(recipeId)
+                }.map { it.toCollectionProfile() }
+
+                lastFetchedCollectionIdFlow.value = fetchedCollections.last().id
+                collectionsToAddRecipeFlow.value = apiSuccess(collectionsToAddRecipe)
+                collectionsToRemoveRecipeFlow.value = apiSuccess(collectionsToRemoveRecipe)
             }
         }
         enableButtons()
@@ -109,35 +149,77 @@ open class CollectionsViewModel(
     }
 
     private suspend fun handleAddRecipeToFavouriteCollection(
-        collectionId: Int,
+        collectionsAvailableToAdd: List<CollectionProfile>,
+        collectionsAvailableToRemove: List<CollectionProfile>,
+        collectionsToAdd: List<CollectionProfile>,
         addRecipeInfo: AddRecipeToCollectionInputModel,
+        collectionsToAddRecipeFlow: MutableStateFlow<LoadState<List<CollectionProfile>>>,
+        collectionsToRemoveRecipeFlow: MutableStateFlow<LoadState<List<CollectionProfile>>>
     ) {
-        val result = request {
-            val token = session.getToken()
-            service.collectionService.addRecipeToCollection(token, collectionId, addRecipeInfo)
-        }
-        when {
-            result.isFailure -> {
-                enableButtons()
+        val collectionsIds = mutableListOf<Int?>()
+        for (collection in collectionsToAdd) {
+            val result = request {
+                val token = session.getToken()
+                service.collectionService.addRecipeToCollection(token, collection.id, addRecipeInfo)
             }
+            when {
+                result.isFailure -> {
+                    showToast("Error while adding the recipe to ${collection.name} collection")
+                    collectionsIds.add(null)
+                }
+                result.isSuccess -> collectionsIds.add(collection.id)
+            }
+
         }
+        val collectionsIdsAdded = collectionsIds.filterNotNull()
+
+        collectionsToAddRecipeFlow.value = apiSuccess(
+            collectionsAvailableToAdd.filter { !collectionsIdsAdded.contains(it.id) }
+        )
+
+        collectionsToRemoveRecipeFlow.value = apiSuccess(
+            collectionsAvailableToRemove +
+                    collectionsAvailableToAdd.filter { collectionsIdsAdded.contains(it.id) }
+        )
+        enableButtons()
     }
 
     private suspend fun handleRemoveRecipeFromFavouriteCollection(
-        collectionId: Int,
-        recipeId: Int
+        collectionsAvailableToAdd: List<CollectionProfile>,
+        collectionsAvailableToRemove: List<CollectionProfile>,
+        collectionsToAdd: List<CollectionProfile>,
+        recipeId: Int,
+        collectionsToAddRecipeFlow: MutableStateFlow<LoadState<List<CollectionProfile>>>,
+        collectionsToRemoveRecipeFlow: MutableStateFlow<LoadState<List<CollectionProfile>>>
     ) {
-        val result = request {
-            val token = session.getToken()
-            service.collectionService.removeRecipeFromCollection(token, collectionId, recipeId)
-        }
-        when {
-            result.isFailure -> {
-                enableButtons()
+        val collectionsIds = mutableListOf<Int?>()
+        for (collection in collectionsToAdd) {
+            val result = request {
+                val token = session.getToken()
+                service.collectionService.removeRecipeFromCollection(token, collection.id, recipeId)
             }
-        }
-    }
+            when {
+                result.isFailure -> {
+                    showToast("Error while removing the recipe from ${collection.name} collection")
+                    collectionsIds.add(null)
+                }
+                result.isSuccess -> collectionsIds.add(collection.id)
+            }
 
+        }
+        val collectionsIdsRemoved = collectionsIds.filterNotNull()
+
+        collectionsToRemoveRecipeFlow.value = apiSuccess(
+            collectionsAvailableToRemove.filter { !collectionsIdsRemoved.contains(it.id)  }
+        )
+
+        collectionsToAddRecipeFlow.value = apiSuccess(
+            collectionsAvailableToAdd +
+                    collectionsAvailableToRemove.filter { collectionsIdsRemoved.contains(it.id)  }
+        )
+
+        enableButtons()
+    }
 
     fun validateCollectionName(name: String): Boolean = validateName(name)
 
