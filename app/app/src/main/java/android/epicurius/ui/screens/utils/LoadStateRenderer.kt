@@ -35,10 +35,6 @@ fun <T> LoadStateRenderer(
                 loadState.value.isFailure -> RenderFailure(swipeToRefresh)
             }
         }
-        is Cached -> when {
-            loadState.value.isSuccess -> RenderSuccess(loadState.getOrThrow(), swipeToRefresh, content)
-        }
-
     }
 }
 

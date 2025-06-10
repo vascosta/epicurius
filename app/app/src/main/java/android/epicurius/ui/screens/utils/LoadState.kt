@@ -25,11 +25,7 @@ data class Loading<T>(val cachedValue: CachedResult<T>?): LoadState<T>()
  */
 data class Loaded<T>(val value: APIResult<T>) : LoadState<T>()
 
-/**
- * The cached state, i.e. the state when the result was retrieved from local storage.
- * @param value the locally stored result.
- */
-data class Cached<T>(val value: CachedResult<T>) : LoadState<T>()
+typealias Cached<T> = Loaded<T>
 
 /**
  * Returns a new [LoadState] in the idle state.
@@ -49,19 +45,19 @@ fun <T> loaded(value: APIResult<T>): Loaded<T> = Loaded(value)
 /**
  * Returns a new [LoadState] in the cached state with the provided value.
  */
-fun <T> cached(value: CachedResult<T>): Cached<T> = Cached(value)
+fun <T> cached(value: APIResult<T>): Cached<T> = Cached(value)
 
 /**
  * Returns a new [LoadState] in the loaded state with a successful result.
  */
 fun <T> apiSuccess(value: T, token: String? = null): Loaded<T> = loaded(APIResult.success(value, token))
 
+fun <T> cache(value: T, token: String? = null): Cached<T> = cached(CachedResult.cached(value, token))
+
 /**
  * Returns a new [LoadState] in the loaded state with a failed result.
  */
 fun <T> apiFailure(problem: Problem): Loaded<T> = loaded(APIResult.failure(problem))
-
-fun <T> cache(value: T, token: String? = null): Cached<T> = cached(CachedResult.cached(value, token))
 
 /**
  * Returns the result of the load operation, if one is available
