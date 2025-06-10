@@ -59,7 +59,7 @@ fun SearchScreen(
         )
     ) },
     onCamera: () -> Unit = {},
-    onUpload: (Uri) -> Unit = {},
+    onUpload: (ByteArray) -> Unit = {},
     onConfirm: (List<String>) -> Unit = { _ -> }
 ) {
     val tabs = listOf("Recipe", "Users")
@@ -86,15 +86,20 @@ fun SearchScreen(
 
     var userSearchResults by remember { mutableStateOf<List<SearchUser>>(emptyList()) }
 
-    var selectedImageUri by remember { mutableStateOf<Uri?>(null) }
+    var selectedImageBytes by remember { mutableStateOf<ByteArray?>(null) }
     val context = LocalContext.current
 
     val imagePickerLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.PickVisualMedia()
     ) { uri ->
         if (uri != null) {
-            selectedImageUri = uri
-            onUpload(uri)
+            val inputStream = context.contentResolver.openInputStream(uri)
+            val bytes = inputStream?.readBytes()
+            inputStream?.close()
+            if (bytes != null) {
+                selectedImageBytes = bytes
+                onUpload(bytes)
+            }
         } else {
             Toast.makeText(context, "No image selected", Toast.LENGTH_SHORT).show()
         }
@@ -216,7 +221,7 @@ fun SearchScreen(
                     }
                 }
 
-                if (showConfirmIngredientsDialog && selectedImageUri != null) {
+                if (showConfirmIngredientsDialog && selectedImageBytes != null) {
                     ConfirmIngredientsDialog(
                         ingredients = listOf(),
                         onConfirm = onConfirm,

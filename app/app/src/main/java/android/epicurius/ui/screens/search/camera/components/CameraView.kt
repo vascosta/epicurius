@@ -25,7 +25,10 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.compose.LocalLifecycleOwner
 
 @Composable
-fun CameraView(onTakePicture: (List<String>) -> Unit = {}) {
+fun CameraView(
+    onIdentifyIngredients: () -> List<String>,
+    onConfirmIngredients: (List<String>) -> Unit = {}
+) {
     val context = LocalContext.current
     val lifecycleOwner = LocalLifecycleOwner.current
     val imageCapture = remember { mutableStateOf<ImageCapture?>(null) }
@@ -35,6 +38,7 @@ fun CameraView(onTakePicture: (List<String>) -> Unit = {}) {
     }
 
     var showDialog by remember { mutableStateOf(false) }
+    var ingredientsList by remember { mutableStateOf(listOf<String>()) }
 
     Column(modifier = Modifier.fillMaxSize()) {
         AndroidView(
@@ -82,6 +86,7 @@ fun CameraView(onTakePicture: (List<String>) -> Unit = {}) {
                     imageCapture = imageCapture.value,
                     context = context
                 )
+                ingredientsList = onIdentifyIngredients()
                 showDialog = true
             },
             modifier = Modifier
@@ -94,8 +99,8 @@ fun CameraView(onTakePicture: (List<String>) -> Unit = {}) {
 
     if (showDialog) {
         ConfirmIngredientsDialog(
-            ingredients = listOf(),
-            onConfirm = onTakePicture,
+            ingredients = ingredientsList,
+            onConfirm = onConfirmIngredients,
             onDismiss = { showDialog = false }
         )
     }
