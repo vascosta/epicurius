@@ -1,13 +1,14 @@
 package android.epicurius.ui.screens.dailyMenu
 
+import android.epicurius.domain.collection.CollectionProfile
 import android.epicurius.ui.EpicuriusActivity
 import android.epicurius.ui.navigation.Intents
 import android.epicurius.ui.screens.feed.FeedActivity
 import android.epicurius.ui.screens.recipe.profile.RecipeProfileActivity
-import android.epicurius.ui.screens.user.profile.UserProfileActivity
 import android.epicurius.ui.screens.utils.Idle
 import android.epicurius.ui.screens.utils.idle
 import android.epicurius.ui.navigation.navigateTo
+import android.epicurius.ui.screens.collections.components.CollectionsStateBundle
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.compose.runtime.collectAsState
@@ -27,28 +28,54 @@ class DailyMenuActivity : EpicuriusActivity() {
         }
         setContent {
             val menuState = viewModel.dailyMenu.collectAsState(idle())
-            val collectionsState = viewModel.collections.collectAsState(idle())
+            val collectionsToAddRecipeState = viewModel.collectionsToAddRecipe.collectAsState(idle())
+            val collectionsToRemoveRecipeState = viewModel.collectionsToRemoveRecipe.collectAsState(idle())
             DailyMenuScreen(
                 menuState = menuState.value,
-                collectionsState = collectionsState.value,
+                collectionsStateBundle = CollectionsStateBundle(
+                    collectionsToAddRecipeState.value,
+                    collectionsToRemoveRecipeState.value
+                ),
                 onBackButton = { navigateTo<FeedActivity>(true) },
-                onAddRecipeToCollection = { collectionId: Int, recipeId: Int ->
-                    viewModel.addRecipeToCollection(collectionId, recipeId)
+                onAddRecipeToCollections = {
+                    collectionsAvailableToAdd: List<CollectionProfile>,
+                    collectionsAvailableToRemove: List<CollectionProfile>,
+                    collectionsToAdd: List<CollectionProfile>,
+                    recipeId: Int ->
+                    viewModel.addRecipeToCollections(
+                        collectionsAvailableToAdd,
+                        collectionsAvailableToRemove,
+                        collectionsToAdd,
+                        recipeId,
+                        viewModel.collectionsToAddRecipeFlow,
+                        viewModel.collectionsToRemoveRecipeFlow,
+                    )
                 },
-                onRemoveRecipeFromCollection = { collectionId: Int, recipeId: Int ->
-                    viewModel.removeRecipeFromCollection(collectionId, recipeId)
+                onRemoveRecipeFromCollections = {
+                    collectionsAvailableToAdd: List<CollectionProfile>,
+                    collectionsAvailableToRemove: List<CollectionProfile>,
+                    collectionsToRemove: List<CollectionProfile>,
+                    recipeId: Int ->
+                    viewModel.removeRecipeFromCollection(
+                        collectionsAvailableToAdd,
+                        collectionsAvailableToRemove,
+                        collectionsToRemove,
+                        recipeId,
+                        viewModel.collectionsToAddRecipeFlow,
+                        viewModel.collectionsToRemoveRecipeFlow,
+                    )
                 },
                 onRecipeRequest = ::navigateToRecipeProfileActivity,
-                onCollectionsRequest = { recipeId: Int, recipeInCollection: Boolean ->
+                onCollectionsRequest = { recipeId: Int ->
                     viewModel.getCollections(
                         recipeId,
-                        recipeInCollection,
-                        viewModel.collectionsFlow,
-                        viewModel.cachedCollectionsFlow
+                        viewModel.collectionsToAddRecipeFlow,
+                        viewModel.collectionsToRemoveRecipeFlow,
+                        viewModel.lastFetchedCollectionIdFlow
                     )
                 },
                 onDailyMenuRefresh = { viewModel.getDailyMenu { navigateTo<FeedActivity>(true) } },
-                buttonsEnable = viewModel.buttonsEnable
+                enableButtons = viewModel.enableButtons
             )
         }
     }
