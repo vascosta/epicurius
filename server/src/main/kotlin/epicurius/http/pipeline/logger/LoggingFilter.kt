@@ -24,10 +24,5 @@ class LoggingFilter : Filter {
 
         logger.info("Incoming Request: method={}, uri={}", request.method, fullPath)
         chain.doFilter(request, response)
-        logger.info(
-            "Outgoing Response: status={}, content-type={}",
-            response.status,
-            response.contentType
-        )
     }
 }
