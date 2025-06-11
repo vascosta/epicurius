@@ -35,7 +35,7 @@ fun CollectionProfileBox(
     collection: CollectionProfile,
     onCollectionRequest: (collectionId: Int) -> Unit,
     onCollectionDelete: (collectionId: Int) -> Unit,
-    buttonsEnable: Boolean
+    enableButtons: Boolean
 ) {
     var showDeleteDialog by remember { mutableStateOf(false) }
 
@@ -73,8 +73,8 @@ fun CollectionProfileBox(
                 collectionName = collection.name,
                 collectionId = collection.id,
                 onCollectionDelete = onCollectionDelete,
-                onDismissRequest = { showDeleteDialog = false },
-                buttonsEnable = buttonsEnable
+                onDismissRequest = { if (enableButtons) showDeleteDialog = false },
+                buttonsEnable = enableButtons
             )
         }
     }

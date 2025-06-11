@@ -21,22 +21,23 @@ import androidx.compose.ui.unit.dp
 fun CreateCollectionDialog(
     onDismiss: () -> Unit,
     onCollectionCreate: (collectionName: String) -> Unit,
-    buttonsEnable: Boolean
+    enableButtons: Boolean
 ) {
-    var collectionName by rememberSaveable { mutableStateOf("") }
+    var collectionName by remember { mutableStateOf("") }
+    var showLoadingSpinner by remember { mutableStateOf(!enableButtons) }
 
     AlertDialog(
         onDismissRequest = { onDismiss() },
         confirmButton = {
             TextButton(
                 onClick = { onDismiss() },
-                enabled = buttonsEnable
+                enabled = enableButtons
             ) { Text("Cancel") }
             TextButton(
                 onClick = { onCollectionCreate(collectionName) },
-                enabled = buttonsEnable
+                enabled = enableButtons
             ) {
-                if (buttonsEnable) { Text("Create") }
+                if (!showLoadingSpinner || enableButtons) { Text("Create") }
                 else { LoadingSpinner(Modifier.size(30.dp)) }
             }
         },
@@ -48,7 +49,7 @@ fun CreateCollectionDialog(
                     value = collectionName,
                     onValueChange = { collectionName = it },
                     modifier = Modifier.fillMaxWidth(),
-                    enabled = buttonsEnable,
+                    enabled = enableButtons,
                     label = "Collection Name"
                 )
             }

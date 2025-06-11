@@ -50,7 +50,6 @@ fun CollectionsListDialogButton(
                             .filter { it.id in selectedCollectionsIds },
                         recipeId
                     )
-                    showLoadingSpinner = true
                 }
                 else {
                     onRemoveRecipeFromCollections(
@@ -60,8 +59,8 @@ fun CollectionsListDialogButton(
                             .filter { it.id in selectedCollectionsIds },
                         recipeId
                     )
-                    showLoadingSpinner = true
                 }
+                showLoadingSpinner = true
             }
         },
         enabled = enabled
