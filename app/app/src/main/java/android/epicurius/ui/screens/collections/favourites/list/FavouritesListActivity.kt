@@ -39,7 +39,7 @@ class FavouritesListActivity : EpicuriusActivity() {
                 collectionId = intent.getIntExtra(Intents.COLLECTION_ID, -1),
                 favouritesListNameState = favouritesListName.value,
                 recipesState = recipes.value,
-                onBackButton = { navigateTo<FavouritesActivity>(true) },
+                onBackButton = { navigateTo<FavouritesActivity>() },
                 onCollectionEdit = { collectionId: Int, collectionName: String ->
                     viewModel.updateFavouriteCollection(collectionId, collectionName) { navigateTo<FavouritesActivity>() }
                 },

@@ -253,7 +253,7 @@ fun UserProfileScreen(
                                                         collection = collection,
                                                         onCollectionRequest = onCollectionRequest,
                                                         onCollectionDelete = { _ -> },
-                                                        buttonsEnable = true
+                                                        enableButtons = true
                                                     )
                                                 }
                                             }
