@@ -29,7 +29,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -47,7 +47,7 @@ fun FavouritesScreen(
     onFavouritesRefresh: () -> Unit,
     enableButtons: Boolean
 ) {
-    var showCreateCollectionDialog by rememberSaveable { mutableStateOf(false) }
+    var showCreateCollectionDialog by remember { mutableStateOf(!enableButtons) }
 
     Scaffold(
         topBar = {
@@ -88,38 +88,34 @@ fun FavouritesScreen(
                                     }
                                 }
                             }
-                        }
-                        if (favourites.isEmpty()) {
-                            Text(
-                                text = "You have no collections yet.",
-                                modifier = Modifier.padding(16.dp),
-                                color = Color.Gray
-                            )
-                            Text(
-                                text = "Create your first collection by clicking the '+' button above.",
-                                color = Color(0xFF4E0D8D)
-                            )
-                        } else {
-                            favourites.forEach {
-                                CollectionProfileBox(
-                                    collection = it,
-                                    onCollectionRequest = onCollectionRequest,
-                                    onCollectionDelete = onCollectionDelete,
-                                    buttonsEnable = enableButtons
+                            if (favourites.isEmpty()) {
+                                Text(
+                                    text = "You have no collections yet.",
+                                    modifier = Modifier.padding(16.dp),
+                                    color = Color.Gray
                                 )
-                                Spacer(modifier = Modifier.height(10.dp))
+                                Text(
+                                    text = "Create your first collection by clicking the '+' button above.",
+                                    color = Color(0xFF4E0D8D)
+                                )
+                            } else {
+                                favourites.forEach {
+                                    CollectionProfileBox(
+                                        collection = it,
+                                        onCollectionRequest = onCollectionRequest,
+                                        onCollectionDelete = onCollectionDelete,
+                                        enableButtons = enableButtons
+                                    )
+                                    Spacer(modifier = Modifier.height(10.dp))
+                                }
                             }
                         }
                     }
                     if (showCreateCollectionDialog) {
                         CreateCollectionDialog(
-                            onDismiss = {
-                                if (enableButtons) {
-                                    showCreateCollectionDialog = false
-                                }
-                            },
+                            onDismiss = { if (enableButtons) showCreateCollectionDialog = false },
                             onCollectionCreate = onCollectionCreate,
-                            buttonsEnable = enableButtons
+                            enableButtons = enableButtons
                         )
                     }
                 }
