@@ -44,6 +44,7 @@ create table if not exists dbo.recipe(
     name varchar(50) not null,
     author_id int not null,
     date date not null,
+    description varchar(200) not null,
     servings int not null check ( servings > 0),
     preparation_time int not null check ( preparation_time > 0 ), -- in minutes, e.g. if value is 30, it means 30 minutes
     meal_type int not null check ( meal_type between 0 and 12), -- breakfast, lunch, dinner, snack, etc
@@ -68,7 +69,7 @@ create table if not exists dbo.recipe_rating(
     foreign key (user_id) references dbo.user(id) on delete cascade
 );
 
-create table if not exists dbo.ingredient(
+create table if not exists dbo.recipe_ingredient(
     recipe_id int not null,
     name varchar(20) not null,
     quantity double precision not null,
@@ -76,6 +77,14 @@ create table if not exists dbo.ingredient(
     primary key (recipe_id, name),
     foreign key (recipe_id) references dbo.recipe(id) on delete cascade
 );
+
+create table if not exists dbo.recipe_instruction(
+    recipe_id int not null,
+    step_number int not null,
+    description varchar(200) not null,
+    primary key (recipe_id, step_number),
+    foreign key (recipe_id) references dbo.recipe(id) on delete cascade
+    );
 
 create table if not exists dbo.collection(
     id serial primary key,
