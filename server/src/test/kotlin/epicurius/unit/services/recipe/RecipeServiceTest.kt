@@ -71,7 +71,6 @@ open class RecipeServiceTest : ServiceTest() {
             )
         )
         val jdbiCreateRecipeInfo = createRecipeInputInfo.toJdbiCreateRecipeModel(AUTHOR_ID, recipePicturesNames)
-        val firestoreRecipeInfo = createRecipeInputInfo.toFirestoreRecipeModel(RECIPE_ID)
 
         val jdbiRecipeModel = JdbiRecipeModel(
             RECIPE_ID,
@@ -80,6 +79,7 @@ open class RecipeServiceTest : ServiceTest() {
             authorUsername,
             0.0,
             jdbiCreateRecipeInfo.date,
+            createRecipeInputInfo.description,
             createRecipeInputInfo.servings,
             createRecipeInputInfo.preparationTime,
             createRecipeInputInfo.cuisine,
@@ -91,6 +91,7 @@ open class RecipeServiceTest : ServiceTest() {
             createRecipeInputInfo.protein,
             createRecipeInputInfo.fat,
             createRecipeInputInfo.carbs,
+            createRecipeInputInfo.instructions,
             recipePicturesNames
         )
     }

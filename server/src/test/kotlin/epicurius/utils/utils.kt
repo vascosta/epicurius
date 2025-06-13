@@ -19,8 +19,6 @@ import epicurius.domain.user.AuthenticatedUser
 import epicurius.domain.user.User
 import epicurius.domain.user.UserDomain.Companion.MAX_PASSWORD_LENGTH
 import epicurius.domain.user.UserDomain.Companion.MAX_USERNAME_LENGTH
-import epicurius.repository.firestore.manager.FirestoreManager
-import epicurius.repository.firestore.recipe.models.FirestoreRecipeModel
 import epicurius.repository.jdbi.recipe.models.JdbiCreateRecipeModel
 import epicurius.repository.jdbi.user.models.JdbiUpdateUserModel
 import epicurius.repository.transaction.TransactionManager
@@ -48,10 +46,11 @@ fun createTestUser(tm: TransactionManager, privacy: Boolean = false): Authentica
     return AuthenticatedUser(user, token)
 }
 
-fun createTestRecipe(tm: TransactionManager, fs: FirestoreManager, user: User): Recipe {
+fun createTestRecipe(tm: TransactionManager, user: User): Recipe {
     val jdbiRecipeInfo = JdbiCreateRecipeModel(
         generateRandomRecipeName(),
         authorId = user.id,
+        description = generateRandomRecipeDescription(),
         servings = 1,
         preparationTime = 1,
         cuisine = Cuisine.MEDITERRANEAN.ordinal,
@@ -59,18 +58,11 @@ fun createTestRecipe(tm: TransactionManager, fs: FirestoreManager, user: User): 
         intolerances = listOf(Intolerance.EGG, Intolerance.GLUTEN, Intolerance.DAIRY).map { it.ordinal },
         diets = listOf(Diet.OVO_VEGETARIAN, Diet.LACTO_VEGETARIAN).map { it.ordinal },
         ingredients = generateRandomRecipeIngredients(),
+        instructions = generateRandomRecipeInstructions(),
         picturesNames = listOf("test-picture.jpeg")
     )
 
     val recipeId = tm.run { it.recipeRepository.createRecipe(jdbiRecipeInfo) }
-
-    val firestoreRecipeInfo = FirestoreRecipeModel(
-        recipeId,
-        generateRandomRecipeDescription(),
-        generateRandomRecipeInstructions()
-    )
-
-    fs.recipeRepository.createRecipe(firestoreRecipeInfo)
 
     return Recipe(
         recipeId,
@@ -78,7 +70,7 @@ fun createTestRecipe(tm: TransactionManager, fs: FirestoreManager, user: User): 
         user.name,
         0.0,
         jdbiRecipeInfo.date,
-        firestoreRecipeInfo.description,
+        jdbiRecipeInfo.description,
         jdbiRecipeInfo.servings,
         jdbiRecipeInfo.preparationTime,
         Cuisine.fromInt(jdbiRecipeInfo.cuisine),
@@ -90,7 +82,7 @@ fun createTestRecipe(tm: TransactionManager, fs: FirestoreManager, user: User): 
         jdbiRecipeInfo.protein,
         jdbiRecipeInfo.fat,
         jdbiRecipeInfo.carbs,
-        firestoreRecipeInfo.instructions,
+        jdbiRecipeInfo.instructions,
         listOf(ByteArray(1)),
         false
     )

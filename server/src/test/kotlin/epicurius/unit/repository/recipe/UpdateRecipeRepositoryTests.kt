@@ -4,13 +4,11 @@ import epicurius.domain.Diet
 import epicurius.domain.Intolerance
 import epicurius.domain.recipe.Cuisine
 import epicurius.domain.recipe.MealType
-import epicurius.repository.firestore.recipe.models.FirestoreUpdateRecipeModel
 import epicurius.repository.jdbi.recipe.models.JdbiUpdateRecipeModel
 import epicurius.utils.generateRandomRecipeDescription
 import epicurius.utils.generateRandomRecipeIngredients
 import epicurius.utils.generateRandomRecipeInstructions
 import epicurius.utils.generateRandomRecipeName
-import kotlinx.coroutines.runBlocking
 import java.util.UUID.randomUUID
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -23,6 +21,7 @@ class UpdateRecipeRepositoryTests : RecipeRepositoryTest() {
         val jdbiUpdateRecipeInfo = JdbiUpdateRecipeModel(
             testRecipe.id,
             generateRandomRecipeName(),
+            generateRandomRecipeDescription(),
             1,
             1,
             Cuisine.ASIAN.ordinal,
@@ -34,6 +33,7 @@ class UpdateRecipeRepositoryTests : RecipeRepositoryTest() {
             9,
             0,
             4,
+            generateRandomRecipeInstructions(),
             listOf(randomUUID().toString())
         )
 
@@ -43,6 +43,7 @@ class UpdateRecipeRepositoryTests : RecipeRepositoryTest() {
         // then the recipe is updated successfully
         assertEquals(jdbiUpdateRecipeInfo.name, updatedJdbiRecipe.name)
         assertEquals(testAuthor.user.name, updatedJdbiRecipe.authorUsername)
+        assertEquals(jdbiUpdateRecipeInfo.description, updatedJdbiRecipe.description)
         assertEquals(jdbiUpdateRecipeInfo.servings, updatedJdbiRecipe.servings)
         assertEquals(jdbiUpdateRecipeInfo.preparationTime, updatedJdbiRecipe.preparationTime)
         assertEquals(jdbiUpdateRecipeInfo.cuisine, updatedJdbiRecipe.cuisine.ordinal)
@@ -54,19 +55,7 @@ class UpdateRecipeRepositoryTests : RecipeRepositoryTest() {
         assertEquals(jdbiUpdateRecipeInfo.protein, updatedJdbiRecipe.protein)
         assertEquals(jdbiUpdateRecipeInfo.fat, updatedJdbiRecipe.fat)
         assertEquals(jdbiUpdateRecipeInfo.carbs, updatedJdbiRecipe.carbs)
+        assertEquals(jdbiUpdateRecipeInfo.instructions, updatedJdbiRecipe.instructions)
         assertEquals(jdbiUpdateRecipeInfo.picturesNames, updatedJdbiRecipe.picturesNames)
-
-        // when updating the recipe in Firestore
-        val firestoreRecipeInfo = FirestoreUpdateRecipeModel(
-            testRecipe.id,
-            generateRandomRecipeDescription(),
-            generateRandomRecipeInstructions()
-        )
-
-        val updatedFirestoreRecipe = runBlocking { updateFirestoreRecipe(firestoreRecipeInfo) }
-
-        // then the recipe is updated successfully
-        assertEquals(firestoreRecipeInfo.description, updatedFirestoreRecipe.description)
-        assertEquals(firestoreRecipeInfo.instructions, updatedFirestoreRecipe.instructions)
     }
 }

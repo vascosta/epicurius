@@ -21,7 +21,6 @@ class DeleteRecipeServiceTests : RecipeServiceTest() {
 
         // then the recipe is deleted successfully
         verify(jdbiRecipeRepositoryMock).deleteRecipe(RECIPE_ID)
-        verify(firestoreRecipeRepositoryMock).deleteRecipe(RECIPE_ID)
     }
 
     @Test

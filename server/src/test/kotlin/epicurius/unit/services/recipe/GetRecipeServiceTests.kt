@@ -19,7 +19,6 @@ class GetRecipeServiceTests : RecipeServiceTest() {
         // mock
         whenever(jdbiRecipeRepositoryMock.getRecipeById(RECIPE_ID)).thenReturn(jdbiRecipeModel)
         whenever(jdbiUserRepositoryMock.checkUserVisibility(authorUsername, AUTHOR_ID)).thenReturn(true)
-        whenever(runBlocking { firestoreRecipeRepositoryMock.getRecipeById(RECIPE_ID) }).thenReturn(firestoreRecipeInfo)
         whenever(pictureRepositoryMock.getPicture(testPicture.name, RECIPES_FOLDER)).thenReturn(testPicture.bytes)
         whenever(
             jdbiCollectionRepositoryMock.checkIfRecipeInAnyUserCollection(AUTHOR_ID, jdbiRecipeModel.id)
@@ -56,7 +55,6 @@ class GetRecipeServiceTests : RecipeServiceTest() {
         // mock
         whenever(jdbiRecipeRepositoryMock.getRecipeById(RECIPE_ID)).thenReturn(jdbiRecipeModel)
         whenever(jdbiUserRepositoryMock.checkUserVisibility(authorUsername, userId)).thenReturn(true)
-        whenever(runBlocking { firestoreRecipeRepositoryMock.getRecipeById(RECIPE_ID) }).thenReturn(firestoreRecipeInfo)
         whenever(pictureRepositoryMock.getPicture(testPicture.name, RECIPES_FOLDER)).thenReturn(testPicture.bytes)
         whenever(
             jdbiCollectionRepositoryMock.checkIfRecipeInAnyUserCollection(AUTHOR_ID, jdbiRecipeModel.id)

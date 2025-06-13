@@ -19,8 +19,6 @@ import epicurius.repository.cloudFunction.CloudFunctionRepository
 import epicurius.repository.cloudFunction.manager.CloudFunctionManager
 import epicurius.repository.cloudStorage.manager.CloudStorageManager
 import epicurius.repository.cloudStorage.picture.PictureRepository
-import epicurius.repository.firestore.manager.FirestoreManager
-import epicurius.repository.firestore.recipe.FirestoreRecipeRepository
 import epicurius.repository.jdbi.collection.JdbiCollectionRepository
 import epicurius.repository.jdbi.feed.JdbiFeedRepository
 import epicurius.repository.jdbi.fridge.JdbiFridgeRepository
@@ -70,7 +68,6 @@ open class EpicuriusUnitTest : EpicuriusTest() {
             jdbiRateRecipeRepositoryMock,
             jdbiMealPlannerRepositoryMock,
             jdbiCollectionRepositoryMock,
-            firestoreRecipeRepositoryMock,
             pictureRepositoryMock,
             spoonacularRepositoryMock,
             cloudFunctionRepositoryMock,
@@ -111,15 +108,11 @@ open class EpicuriusUnitTest : EpicuriusTest() {
         val jdbiFeedRepositoryMock: JdbiFeedRepository = mock()
         val jdbiCollectionRepositoryMock: JdbiCollectionRepository = mock()
 
-        val firestoreRecipeRepositoryMock: FirestoreRecipeRepository = mock()
         val pictureRepositoryMock: PictureRepository = mock()
         val spoonacularRepositoryMock: SpoonacularRepository = mock()
         val cloudFunctionRepositoryMock: CloudFunctionRepository = mock()
 
         private val transactionManagerMock: JdbiTransactionManager = mock()
-        private val firestoreManagerMock: FirestoreManager = mock<FirestoreManager>().apply {
-            whenever(recipeRepository).thenReturn(firestoreRecipeRepositoryMock)
-        }
         private val cloudStorageManagerMock = mock<CloudStorageManager>().apply {
             whenever(pictureRepository).thenReturn(pictureRepositoryMock)
         }
@@ -140,7 +133,7 @@ open class EpicuriusUnitTest : EpicuriusTest() {
         val feedService = FeedService(transactionManagerMock, cloudStorageManagerMock)
         val fridgeService = FridgeService(transactionManagerMock, spoonacularStorageManagerMock, fridgeDomainMock)
         val recipeService = RecipeService(
-            transactionManagerMock, firestoreManagerMock, cloudStorageManagerMock, spoonacularStorageManagerMock, pictureDomainMock
+            transactionManagerMock, cloudStorageManagerMock, spoonacularStorageManagerMock, pictureDomainMock
         )
         val rateRecipeService = RateRecipeService(transactionManagerMock)
         val ingredientsService = IngredientsService(

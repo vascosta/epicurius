@@ -10,7 +10,6 @@ import epicurius.domain.recipe.Ingredient
 import epicurius.domain.recipe.IngredientUnit
 import epicurius.domain.recipe.MealType
 import epicurius.http.controllers.recipe.models.input.UpdateRecipeInputModel
-import epicurius.repository.firestore.recipe.models.FirestoreRecipeModel
 import epicurius.repository.jdbi.recipe.models.JdbiRecipeModel
 import epicurius.utils.generateRandomRecipeDescription
 import epicurius.utils.generateRandomRecipeIngredients
@@ -55,6 +54,7 @@ class UpdateRecipeServiceTests : RecipeServiceTest() {
             authorUsername,
             0.0,
             jdbiCreateRecipeInfo.date,
+            jdbiUpdateRecipeInfo.description!!,
             1,
             1,
             Cuisine.ASIAN,
@@ -66,12 +66,8 @@ class UpdateRecipeServiceTests : RecipeServiceTest() {
             1,
             1,
             1,
+            updateRecipeInputInfo.instructions!!,
             recipePicturesNames,
-        )
-        val mockFirestoreRecipeModel = FirestoreRecipeModel(
-            RECIPE_ID,
-            updateRecipeInputInfo.description!!,
-            updateRecipeInputInfo.instructions!!
         )
         updateRecipeInputInfo.ingredients?.forEach { ingredient ->
             whenever(
@@ -82,7 +78,6 @@ class UpdateRecipeServiceTests : RecipeServiceTest() {
         }
         whenever(jdbiRecipeRepositoryMock.getRecipeById(RECIPE_ID)).thenReturn(mockJdbiRecipeModel)
         whenever(jdbiRecipeRepositoryMock.updateRecipe(jdbiUpdateRecipeInfo)).thenReturn(mockJdbiRecipeModel)
-        whenever(runBlocking { firestoreRecipeRepositoryMock.updateRecipe(firestoreUpdateRecipeInfo) }).thenReturn(mockFirestoreRecipeModel)
 
         // when updating the recipe
         val updatedRecipe = runBlocking { updateRecipe(AUTHOR_ID, RECIPE_ID, updateRecipeInputInfo) }

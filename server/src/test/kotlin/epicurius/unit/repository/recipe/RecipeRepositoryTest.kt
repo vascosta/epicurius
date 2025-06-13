@@ -5,11 +5,10 @@ import epicurius.domain.Intolerance
 import epicurius.domain.recipe.Cuisine
 import epicurius.domain.recipe.Ingredient
 import epicurius.domain.recipe.IngredientUnit
+import epicurius.domain.recipe.Instructions
 import epicurius.domain.recipe.MealType
 import epicurius.domain.recipe.SearchRecipesModel
 import epicurius.domain.user.FollowingStatus
-import epicurius.repository.firestore.recipe.models.FirestoreRecipeModel
-import epicurius.repository.firestore.recipe.models.FirestoreUpdateRecipeModel
 import epicurius.repository.jdbi.recipe.models.JdbiCreateRecipeModel
 import epicurius.repository.jdbi.recipe.models.JdbiUpdateRecipeModel
 import epicurius.unit.repository.RepositoryTest
@@ -27,6 +26,7 @@ open class RecipeRepositoryTest : RepositoryTest() {
         val jdbiRecipeInfo1 = JdbiCreateRecipeModel(
             name = "Spaghetti Bolognese",
             authorId = testAuthor.user.id,
+            description = "Spaghetti Bologne",
             servings = 4,
             preparationTime = 30,
             cuisine = Cuisine.ITALIAN.ordinal,
@@ -43,12 +43,22 @@ open class RecipeRepositoryTest : RepositoryTest() {
             protein = 25,
             fat = 15,
             carbs = 80,
+            instructions = Instructions(
+                mapOf(
+                    "1" to "Cook spaghetti according to package instructions.",
+                    "2" to "In a pan, cook ground beef until browned.",
+                    "3" to "Add chopped onion and cook until translucent.",
+                    "4" to "Stir in tomato sauce and simmer for 10 minutes.",
+                    "5" to "Serve sauce over spaghetti."
+                )
+            ),
             picturesNames = listOf("")
         )
 
         val jdbiRecipeInfo2 = JdbiCreateRecipeModel(
             name = "Buffalo Cauliflower Wings",
             authorId = testAuthor.user.id,
+            description = "Spicy and crispy cauliflower wings",
             servings = 4,
             preparationTime = 30,
             cuisine = Cuisine.ASIAN.ordinal,
@@ -65,12 +75,21 @@ open class RecipeRepositoryTest : RepositoryTest() {
             protein = 5,
             fat = 10,
             carbs = 30,
+            instructions = Instructions(
+                mapOf(
+                    "1" to "Preheat oven to 200°C (400°F).",
+                    "2" to "Cut cauliflower into bite-sized pieces.",
+                    "3" to "Mix flour and spices, then coat cauliflower pieces.",
+                    "4" to "Bake for 20 minutes, then toss in buffalo sauce and bake for another 10 minutes."
+                )
+            ),
             picturesNames = listOf("")
         )
 
         val jdbiRecipeInfo3 = JdbiCreateRecipeModel(
             name = "Burrito",
             authorId = testAuthor.user.id,
+            description = "A delicious burrito with beans, rice, and guacamole",
             servings = 2,
             preparationTime = 20,
             cuisine = Cuisine.MEXICAN.ordinal,
@@ -87,12 +106,21 @@ open class RecipeRepositoryTest : RepositoryTest() {
             protein = 10,
             fat = 15,
             carbs = 40,
+            instructions = Instructions(
+                mapOf(
+                    "1" to "Warm the tortilla in a pan.",
+                    "2" to "Spread beans and rice on the tortilla.",
+                    "3" to "Add guacamole on top.",
+                    "4" to "Roll the tortilla tightly and serve."
+                )
+            ),
             picturesNames = listOf("")
         )
 
         val jdbiRecipeInfo4 = JdbiCreateRecipeModel(
             name = "Chicken Curry",
             authorId = testUserPrivate.user.id,
+            description = "A spicy and creamy chicken curry",
             servings = 4,
             preparationTime = 45,
             cuisine = Cuisine.INDIAN.ordinal,
@@ -109,12 +137,21 @@ open class RecipeRepositoryTest : RepositoryTest() {
             protein = 40,
             fat = 25,
             carbs = 60,
+            instructions = Instructions(
+                mapOf(
+                    "1" to "Heat oil in a pan and add chicken pieces.",
+                    "2" to "Cook until browned, then add curry powder.",
+                    "3" to "Pour in coconut milk and simmer for 30 minutes.",
+                    "4" to "Serve with cooked rice."
+                )
+            ),
             picturesNames = listOf("")
         )
 
         val jdbiRecipeInfo5 = JdbiCreateRecipeModel(
             name = "Vegetable Stir Fry",
             authorId = testUserPublic.user.id,
+            description = "A quick and healthy vegetable stir fry",
             servings = 4,
             preparationTime = 20,
             cuisine = Cuisine.CHINESE.ordinal,
@@ -131,18 +168,20 @@ open class RecipeRepositoryTest : RepositoryTest() {
             protein = 5,
             fat = 5,
             carbs = 20,
+            instructions = Instructions(
+                mapOf(
+                    "1" to "Heat oil in a wok.",
+                    "2" to "Add chopped vegetables and stir fry for 5 minutes.",
+                    "3" to "Pour in soy sauce and cook for another 2 minutes.",
+                    "4" to "Serve hot."
+                )
+            ),
             picturesNames = listOf("")
         )
 
         fun jdbiCreateRecipe(recipeInfo: JdbiCreateRecipeModel) = tm.run { it.recipeRepository.createRecipe(recipeInfo) }
 
-        fun firestoreCreateRecipe(recipeInfo: FirestoreRecipeModel) {
-            fs.recipeRepository.createRecipe(recipeInfo)
-        }
-
         fun getJdbiRecipeById(recipeId: Int) = tm.run { it.recipeRepository.getRecipeById(recipeId) }
-
-        suspend fun getFirestoreRecipeById(recipeId: Int) = fs.recipeRepository.getRecipeById(recipeId)
 
         fun getUserRecipes(userId: Int, lastRecipeId: Int?, limit: Int) =
             tm.run { it.recipeRepository.getUserRecipes(userId, lastRecipeId, limit) }
@@ -170,10 +209,6 @@ open class RecipeRepositoryTest : RepositoryTest() {
         fun updateJdbiRecipe(recipeInfo: JdbiUpdateRecipeModel) =
             tm.run { it.recipeRepository.updateRecipe(recipeInfo) }
 
-        suspend fun updateFirestoreRecipe(recipeInfo: FirestoreUpdateRecipeModel) =
-            fs.recipeRepository.updateRecipe(recipeInfo)
-
         fun deleteJdbiRecipe(recipeId: Int) = tm.run { it.recipeRepository.deleteRecipe(recipeId) }
-        fun deleteFirestoreRecipe(recipeId: Int) = fs.recipeRepository.deleteRecipe(recipeId)
     }
 }

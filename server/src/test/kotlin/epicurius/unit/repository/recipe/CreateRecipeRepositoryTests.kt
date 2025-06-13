@@ -7,7 +7,6 @@ import epicurius.domain.recipe.Ingredient
 import epicurius.domain.recipe.IngredientUnit
 import epicurius.domain.recipe.Instructions
 import epicurius.domain.recipe.MealType
-import epicurius.repository.firestore.recipe.models.FirestoreRecipeModel
 import epicurius.repository.jdbi.recipe.models.JdbiCreateRecipeModel
 import epicurius.utils.createTestRecipe
 import kotlinx.coroutines.runBlocking
@@ -24,6 +23,7 @@ class CreateRecipeRepositoryTests : RecipeRepositoryTest() {
         val jdbiCreateRecipeInfo = JdbiCreateRecipeModel(
             name = "Pastel de nata",
             authorId = testAuthor.user.id,
+            description = "Pastel de nata",
             servings = 4,
             preparationTime = 30,
             cuisine = Cuisine.MEDITERRANEAN.ordinal,
@@ -37,6 +37,15 @@ class CreateRecipeRepositoryTests : RecipeRepositoryTest() {
                 Ingredient("Milk", 500.0, IngredientUnit.ML),
                 Ingredient("Butter", 50.0, IngredientUnit.G)
             ),
+            instructions = Instructions(
+                mapOf(
+                    "1" to "Preheat the oven to 200°C.",
+                    "2" to "In a bowl, mix the eggs, sugar, flour, and milk.",
+                    "3" to "Pour the mixture into pastry shells.",
+                    "4" to "Bake for 20 minutes or until golden brown.",
+                    "5" to "Let cool before serving."
+                )
+            ),
             picturesNames = listOf("")
         )
 
@@ -49,6 +58,7 @@ class CreateRecipeRepositoryTests : RecipeRepositoryTest() {
         assertEquals(jdbiCreateRecipeInfo.name, jdbiRecipeById.name)
         assertEquals(jdbiCreateRecipeInfo.authorId, jdbiRecipeById.authorId)
         assertEquals(testAuthor.user.name, jdbiRecipeById.authorUsername)
+        assertEquals(jdbiCreateRecipeInfo.description, jdbiRecipeById.description
         assertEquals(jdbiCreateRecipeInfo.servings, jdbiRecipeById.servings)
         assertEquals(jdbiCreateRecipeInfo.preparationTime, jdbiRecipeById.preparationTime)
         assertEquals(jdbiCreateRecipeInfo.cuisine, jdbiRecipeById.cuisine.ordinal)
@@ -60,45 +70,20 @@ class CreateRecipeRepositoryTests : RecipeRepositoryTest() {
         assertEquals(jdbiCreateRecipeInfo.protein, jdbiRecipeById.protein)
         assertEquals(jdbiCreateRecipeInfo.fat, jdbiRecipeById.fat)
         assertEquals(jdbiCreateRecipeInfo.carbs, jdbiRecipeById.carbs)
+        assertEquals(jdbiCreateRecipeInfo.instructions, jdbiRecipeById.instructions)
         assertEquals(jdbiCreateRecipeInfo.picturesNames, jdbiRecipeById.picturesNames)
-
-        // when creating the recipe in Firestore
-        val firestoreRecipeInfo = FirestoreRecipeModel(
-            recipeId,
-            "A delicious Portuguese dessert",
-            Instructions(
-                mapOf(
-                    "1" to "Preheat the oven to 200°C.",
-                    "2" to "In a bowl, mix the eggs, sugar, flour, and milk.",
-                    "3" to "Pour the mixture into pastry shells.",
-                    "4" to "Bake for 20 minutes or until golden brown.",
-                    "5" to "Let cool before serving."
-                )
-            )
-        )
-
-        firestoreCreateRecipe(firestoreRecipeInfo)
-
-        // then the recipe is created successfully
-        val firestoreRecipe = runBlocking { getFirestoreRecipeById(recipeId) }
-        assertNotNull(firestoreRecipe)
-        assertEquals(firestoreRecipeInfo.description, firestoreRecipe.description)
-        assertEquals(firestoreRecipeInfo.instructions, firestoreRecipe.instructions)
     }
 
     @Test
     fun `Should create a recipe and then delete it successfully`() {
         // given a recipe
-        val recipe = createTestRecipe(tm, fs, testAuthor.user)
+        val recipe = createTestRecipe(tm, testAuthor.user)
 
         // when deleting the recipe
         deleteJdbiRecipe(recipe.id)
-        deleteFirestoreRecipe(recipe.id)
 
         // then the recipe is deleted successfully
         val jdbiRecipe = getJdbiRecipeById(recipe.id)
-        val firestoreRecipe = runBlocking { getFirestoreRecipeById(recipe.id) }
         assertNull(jdbiRecipe)
-        assertNull(firestoreRecipe)
     }
 }
