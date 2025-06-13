@@ -5,6 +5,7 @@ import android.epicurius.domain.Intolerance
 import android.epicurius.domain.user.UserInfo
 import android.epicurius.ui.navigation.BottomBar
 import android.epicurius.ui.navigation.TopBar
+import android.epicurius.ui.screens.user.settings.components.DeleteAccountDialog
 import android.epicurius.ui.screens.user.settings.components.SettingsButton
 import android.epicurius.ui.screens.user.settings.components.SettingsDialog
 import androidx.compose.foundation.background
@@ -46,12 +47,14 @@ fun SettingsScreen(
     onDeleteAccount: () -> Unit,
     buttonsEnable: Boolean
 ) {
-    var showDialog by remember { mutableStateOf(false) }
+    var showSettingsDialog by remember { mutableStateOf(false) }
     var dialogTitle by remember { mutableStateOf("") }
+
+    var showDeleteAccountDialog by remember { mutableStateOf(false) }
 
     val showDialogFor = { title: String ->
         dialogTitle = title
-        showDialog = true
+        showSettingsDialog = true
     }
 
     val settingOptions = listOf(
@@ -102,7 +105,7 @@ fun SettingsScreen(
                 ) {
                     SettingsButton(
                         text = "Delete account",
-                        onClick = onDeleteAccount,
+                        onClick = { showDeleteAccountDialog = true },
                         enabled = buttonsEnable
                     )
                     SettingsButton(
@@ -112,13 +115,22 @@ fun SettingsScreen(
                     )
                 }
 
-                if (showDialog) {
+                if (showSettingsDialog) {
                     SettingsDialog(
                         title = dialogTitle,
                         user = user,
-                        onDismissRequest = { showDialog = false },
+                        onDismissRequest = { showSettingsDialog = false },
                         onConfirm = onUserUpdate,
                         buttonsEnable = buttonsEnable
+                    )
+                }
+                if (showDeleteAccountDialog) {
+                    DeleteAccountDialog(
+                        onDismissRequest = { showDeleteAccountDialog = false },
+                        onDeleteConfirmed = {
+                            onDeleteAccount()
+                            showDeleteAccountDialog = false
+                        }
                     )
                 }
             }
