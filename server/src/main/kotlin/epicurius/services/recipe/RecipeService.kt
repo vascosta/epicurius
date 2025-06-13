@@ -16,7 +16,6 @@ import epicurius.http.controllers.recipe.models.input.CreateRecipeInputModel
 import epicurius.http.controllers.recipe.models.input.SearchRecipesInputModel
 import epicurius.http.controllers.recipe.models.input.UpdateRecipeInputModel
 import epicurius.repository.cloudStorage.manager.CloudStorageManager
-import epicurius.repository.firestore.manager.FirestoreManager
 import epicurius.repository.jdbi.recipe.models.JdbiRecipeModel
 import epicurius.repository.jdbi.recipe.models.JdbiUpdateRecipeModel
 import epicurius.repository.spoonacular.manager.SpoonacularManager
@@ -29,7 +28,6 @@ import org.springframework.web.multipart.MultipartFile
 @Service
 class RecipeService(
     private val tm: TransactionManager,
-    private val fs: FirestoreManager,
     private val cs: CloudStorageManager,
     private val sm: SpoonacularManager,
     private val pictureDomain: PictureDomain
@@ -46,8 +44,6 @@ class RecipeService(
             val jdbiCreateRecipeModel = recipeInfo.toJdbiCreateRecipeModel(authorId, picturesNames)
 
             val recipeId = tm.run { it.recipeRepository.createRecipe(jdbiCreateRecipeModel) }
-
-            fs.recipeRepository.createRecipe(recipeInfo.toFirestoreRecipeModel(recipeId))
 
             picturesNames.forEachIndexed { index, pictureName ->
                 cs.pictureRepository.updatePicture(
@@ -87,7 +83,6 @@ class RecipeService(
 
         checkRecipeAccessibility(jdbiRecipe.authorUsername, userId)
 
-        val firestoreRecipe = fs.recipeRepository.getRecipeById(recipeId) ?: throw RecipeNotFound()
         val recipePictures = jdbiRecipe.picturesNames.map {
             cs.pictureRepository.getPicture(it, RECIPES_FOLDER)
         }
@@ -95,7 +90,7 @@ class RecipeService(
             it.collectionRepository.checkIfRecipeInAnyUserCollection(userId, jdbiRecipe.id)
         }
 
-        return jdbiRecipe.toRecipe(firestoreRecipe.description, firestoreRecipe.instructions, recipePictures, isInCollection)
+        return jdbiRecipe.toRecipe(recipePictures, isInCollection)
     }
 
     suspend fun getUserRecipes(userId: Int, lastRecipeId: Int?, limit: Int): List<RecipeInfo> {
@@ -136,14 +131,13 @@ class RecipeService(
         checkIfUserIsAuthor(userId, jdbiRecipeModel.authorId)
 
         val jdbiRecipe = tm.run { it.recipeRepository.updateRecipe(recipeInfo.toJdbiUpdateRecipeModel(recipeId, null)) }
-        val firestoreRecipe = fs.recipeRepository.updateRecipe(recipeInfo.toFirestoreUpdateRecipeModel(recipeId))
 
         return UpdateRecipeModel(
             recipeId,
             jdbiRecipe.name,
             jdbiRecipe.authorUsername,
             jdbiRecipe.date,
-            firestoreRecipe.description,
+            jdbiRecipe.description,
             jdbiRecipe.servings,
             jdbiRecipe.preparationTime,
             jdbiRecipe.cuisine,
@@ -155,7 +149,7 @@ class RecipeService(
             jdbiRecipe.protein,
             jdbiRecipe.fat,
             jdbiRecipe.carbs,
-            firestoreRecipe.instructions
+            jdbiRecipe.instructions,
         )
     }
 
@@ -209,7 +203,6 @@ class RecipeService(
         val recipe = checkIfRecipeExists(recipeId) ?: throw RecipeNotFound()
         checkIfUserIsAuthor(userId, recipe.authorId)
         tm.run { it.recipeRepository.deleteRecipe(recipeId) }
-        fs.recipeRepository.deleteRecipe(recipeId)
     }
 
     private suspend fun validateIngredients(ingredients: List<Ingredient>) {

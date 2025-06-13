@@ -16,7 +16,6 @@ import epicurius.domain.recipe.MealType
 import epicurius.domain.recipe.RECIPE_DESCRIPTION_LENGTH_MSG
 import epicurius.domain.recipe.RECIPE_NAME_LENGTH_MSG
 import epicurius.domain.user.UserDomain
-import epicurius.repository.firestore.recipe.models.FirestoreRecipeModel
 import epicurius.repository.jdbi.recipe.models.JdbiCreateRecipeModel
 import jakarta.validation.constraints.Positive
 import jakarta.validation.constraints.Size
@@ -75,6 +74,7 @@ data class CreateRecipeInputModel(
         return JdbiCreateRecipeModel(
             name = name,
             authorId = authorId,
+            description = description,
             servings = servings,
             preparationTime = preparationTime,
             cuisine = cuisine.ordinal,
@@ -86,9 +86,8 @@ data class CreateRecipeInputModel(
             protein = protein,
             fat = fat,
             carbs = carbs,
+            instructions = instructions,
             picturesNames = picturesNames
         )
     }
-
-    fun toFirestoreRecipeModel(recipeId: Int) = FirestoreRecipeModel(recipeId, description, instructions)
 }

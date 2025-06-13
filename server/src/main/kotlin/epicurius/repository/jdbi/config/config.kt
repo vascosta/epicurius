@@ -3,6 +3,7 @@ package epicurius.repository.jdbi.config
 import epicurius.domain.fridge.Product
 import epicurius.domain.fridge.ProductInfo
 import epicurius.domain.recipe.Ingredient
+import epicurius.domain.recipe.Step
 import epicurius.domain.user.User
 import epicurius.repository.jdbi.collection.models.JdbiCollectionModel
 import epicurius.repository.jdbi.collection.models.JdbiCollectionProfileModel
@@ -14,6 +15,7 @@ import epicurius.repository.jdbi.mappers.mealPlanner.JdbiDailyMealPlannerRowMapp
 import epicurius.repository.jdbi.mappers.mealPlanner.ProductInfoMapper
 import epicurius.repository.jdbi.mappers.mealPlanner.ProductMapper
 import epicurius.repository.jdbi.mappers.recipe.IngredientMapper
+import epicurius.repository.jdbi.mappers.recipe.InstructionsStepMapper
 import epicurius.repository.jdbi.mappers.recipe.JdbiRecipeInfoMapper
 import epicurius.repository.jdbi.mappers.recipe.JdbiRecipeModelMapper
 import epicurius.repository.jdbi.mappers.user.UserMapper
@@ -36,12 +38,14 @@ fun Jdbi.configureWithAppRequirements(): Jdbi {
     registerRowMapper(ProductInfo::class.java, ProductInfoMapper())
     registerRowMapper(JdbiRecipeInfo::class.java, JdbiRecipeInfoMapper())
     registerRowMapper(Ingredient::class.java, IngredientMapper())
+    registerRowMapper(Step::class.java, InstructionsStepMapper())
     registerRowMapper(
         JdbiRecipeModel::class.java,
         JdbiRecipeModelMapper(
             IntoleranceListMapper(),
             DietListMapper(),
-            IngredientMapper()
+            IngredientMapper(),
+            InstructionsStepMapper()
         )
     )
     registerRowMapper(JdbiDailyMealPlannerRow::class.java, JdbiDailyMealPlannerRowMapper(JdbiRecipeInfoMapper()))

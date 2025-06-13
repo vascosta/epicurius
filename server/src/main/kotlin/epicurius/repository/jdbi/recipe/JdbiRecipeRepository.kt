@@ -3,6 +3,7 @@ package epicurius.repository.jdbi.recipe
 import epicurius.domain.Diet
 import epicurius.domain.Intolerance
 import epicurius.domain.recipe.Ingredient
+import epicurius.domain.recipe.Instructions
 import epicurius.domain.recipe.MealType
 import epicurius.domain.recipe.SearchRecipesModel
 import epicurius.repository.jdbi.recipe.contract.RecipeRepository
@@ -52,7 +53,7 @@ class JdbiRecipeRepository(private val handle: Handle) : RecipeRepository {
         recipeInfo.ingredients.forEach { ingredient ->
             handle.createUpdate(
                 """
-                    INSERT INTO dbo.ingredient (recipe_id, name, quantity, unit)
+                    INSERT INTO dbo.recipe_ingredient (recipe_id, name, quantity, unit)
                     VALUES (:recipeId, :name, :quantity, :unit)
                 """
             )
@@ -63,6 +64,19 @@ class JdbiRecipeRepository(private val handle: Handle) : RecipeRepository {
                 .execute()
         }
 
+        recipeInfo.instructions.steps.forEach { stepNumber, description ->
+            handle.createUpdate(
+                """
+                    INSERT INTO dbo.recipe_instruction (recipe_id, step_number, description)
+                    VALUES (:recipeId, :stepNumber, :description)
+                """
+            )
+                .bind("recipeId", recipeId)
+                .bind("stepNumber", stepNumber)
+                .bind("description", description)
+                .execute()
+        }
+
         return recipeId
     }
 
@@ -70,14 +84,16 @@ class JdbiRecipeRepository(private val handle: Handle) : RecipeRepository {
         handle.createQuery(
             """
                 SELECT 
-                    r.id, r.name, r.author_id, r.date, r.servings, r.preparation_time, 
+                    r.id, r.name, r.author_id, r.date, r.description, r.servings, r.preparation_time, 
                     r.cuisine, r.meal_type, r.intolerances, r.diets, r.calories, 
                     r.protein, r.fat, r.carbs, r.pictures_names, 
                     i.name AS ingredient_name, i.quantity, i.unit, 
+                    ins.step_number, ins.description AS step_description,
                     u.name AS author_username,
                     COALESCE(rr.average_rating, 0) AS average_rating
                 FROM dbo.Recipe r
-                JOIN dbo.Ingredient i ON r.id = i.recipe_id
+                JOIN dbo.recipe_ingredient i ON r.id = i.recipe_id
+                JOIN dbo.recipe_instruction ins ON r.id = ins.recipe_id
                 JOIN dbo.User u ON r.author_id = u.id
                 LEFT JOIN (
                     SELECT recipe_id, ROUND(AVG(rating), 2) AS average_rating
@@ -192,7 +208,7 @@ class JdbiRecipeRepository(private val handle: Handle) : RecipeRepository {
                     r.preparation_time, 
                     r.servings, 
                     r.pictures_names
-                FROM available_recipes r JOIN dbo.Ingredient i ON r.id = i.recipe_id
+                FROM available_recipes r JOIN dbo.recipe_Ingredient i ON r.id = i.recipe_id
                 LEFT JOIN (
                     SELECT recipe_id, ROUND(AVG(rating), 2) AS average_rating
                     FROM dbo.recipe_rating
@@ -232,8 +248,11 @@ class JdbiRecipeRepository(private val handle: Handle) : RecipeRepository {
 
     override fun updateRecipe(recipeInfo: JdbiUpdateRecipeModel): JdbiRecipeModel {
         if (recipeInfo.ingredients != null) {
-            removeIngredients(recipeInfo.id)
-            addIngredients(recipeInfo.id, recipeInfo.ingredients)
+            updateIngredients(recipeInfo.id, recipeInfo.ingredients)
+        }
+
+        if (recipeInfo.instructions != null) {
+            updateInstructions(recipeInfo.id, recipeInfo.instructions)
         }
 
         return handle.createQuery(
@@ -260,9 +279,12 @@ class JdbiRecipeRepository(private val handle: Handle) : RecipeRepository {
                 rr.average_rating, 
                 i.quantity, 
                 i.unit, 
+                ins.step_number,
+                ins.description as step_description,
                 u.name as author_username
                 FROM updated_recipe ur
-                JOIN dbo.Ingredient i ON i.recipe_id = ur.id
+                JOIN dbo.recipe_Ingredient i ON i.recipe_id = ur.id
+                JOIN dbo.recipe_instruction ins ON ins.recipe_id = ur.id
                 JOIN dbo.user u ON u.id = ur.author_id
                 LEFT JOIN (
                     SELECT recipe_id, ROUND(AVG(rating), 2) AS average_rating
@@ -343,11 +365,20 @@ class JdbiRecipeRepository(private val handle: Handle) : RecipeRepository {
         ingredientsList.forEachIndexed { idx, ingredient -> params["i$idx"] = ingredient.lowercase() }
     }
 
-    private fun addIngredients(recipeId: Int, ingredients: List<Ingredient>) {
+    private fun updateIngredients(recipeId: Int, ingredients: List<Ingredient>) {
+        handle.createUpdate(
+            """
+                DELETE FROM dbo.recipe_Ingredient
+                WHERE recipe_id = :recipeId
+            """
+        )
+            .bind("recipeId", recipeId)
+            .execute()
+
         ingredients.forEach { ingredient ->
             handle.createUpdate(
                 """
-                    INSERT INTO dbo.Ingredient (recipe_id, name, quantity, unit)
+                    INSERT INTO dbo.recipe_Ingredient (recipe_id, name, quantity, unit)
                     VALUES (:recipeId, :name, :quantity, :unit)
                 """
             )
@@ -359,14 +390,27 @@ class JdbiRecipeRepository(private val handle: Handle) : RecipeRepository {
         }
     }
 
-    private fun removeIngredients(recipeId: Int) {
+    private fun updateInstructions(recipeId: Int, instructions: Instructions) {
         handle.createUpdate(
             """
-                DELETE FROM dbo.Ingredient
+                DELETE FROM dbo.recipe_instruction
                 WHERE recipe_id = :recipeId
             """
         )
             .bind("recipeId", recipeId)
             .execute()
+
+        instructions.steps.forEach { (stepNumber, description) ->
+            handle.createUpdate(
+                """
+                    INSERT INTO dbo.recipe_instruction (recipe_id, step_number, description)
+                    VALUES (:recipeId, :stepNumber, :description)
+                """
+            )
+                .bind("recipeId", recipeId)
+                .bind("stepNumber", stepNumber)
+                .bind("description", description)
+                .execute()
+        }
     }
 }

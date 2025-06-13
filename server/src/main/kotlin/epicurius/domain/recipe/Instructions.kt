@@ -13,3 +13,5 @@ data class Instructions(val steps: Map<String, String>) {
         }
     }
 }
+
+typealias Step = Pair<String, String>

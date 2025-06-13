@@ -9,15 +9,15 @@ import org.jdbi.v3.core.Jdbi
 import org.postgresql.ds.PGSimpleDataSource
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import java.io.ByteArrayInputStream
 
 @Configuration
 class DatabaseConfigurer {
 
     private val cloudStorageBucketName = "epicurius-bucket"
-    private val firestoreDatabaseId = "epicurius-database"
-    private val googleCredentialsFileName = "epicurius-credentials.json"
 
     private val postgresDbUrl: String = System.getenv("DATABASE_URL")
+    private val googleCredentials: String = System.getenv("GOOGLE_CREDENTIALS")
 
     @Bean
     fun jdbi(): Jdbi {
@@ -30,23 +30,12 @@ class DatabaseConfigurer {
 
     @Bean
     fun googleCloudStorage(): CloudStorage {
-        val googleCredentials = this::class.java.classLoader.getResourceAsStream(googleCredentialsFileName)
+        val googleCredentialsStream = ByteArrayInputStream(googleCredentials.toByteArray())
 
         val options = StorageOptions.newBuilder()
-            .setCredentials(GoogleCredentials.fromStream(googleCredentials))
+            .setCredentials(GoogleCredentials.fromStream(googleCredentialsStream))
             .build()
 
         return CloudStorage(options.service, cloudStorageBucketName)
-    }
-
-    @Bean
-    fun firestore(): Firestore {
-        val googleCredentials = this::class.java.classLoader.getResourceAsStream(googleCredentialsFileName)
-
-        return FirestoreOptions.newBuilder()
-            .setCredentials(GoogleCredentials.fromStream(googleCredentials))
-            .setDatabaseId(firestoreDatabaseId)
-            .build()
-            .service
     }
 }

@@ -4,7 +4,9 @@ import epicurius.domain.Diet
 import epicurius.domain.Intolerance
 import epicurius.domain.recipe.Cuisine
 import epicurius.domain.recipe.Ingredient
+import epicurius.domain.recipe.Instructions
 import epicurius.domain.recipe.MealType
+import epicurius.domain.recipe.Step
 import epicurius.repository.jdbi.recipe.models.JdbiRecipeModel
 import epicurius.repository.jdbi.utils.getArray
 import org.jdbi.v3.core.mapper.ColumnMapper
@@ -15,7 +17,8 @@ import java.sql.ResultSet
 class JdbiRecipeModelMapper(
     private val intoleranceSetMapper: ColumnMapper<List<Intolerance>>,
     private val dietSetMapper: ColumnMapper<List<Diet>>,
-    private val ingredientMapper: RowMapper<Ingredient>
+    private val ingredientMapper: RowMapper<Ingredient>,
+    private val instructionMapper: RowMapper<Step>
 ) : RowMapper<JdbiRecipeModel> {
 
     override fun map(rs: ResultSet, ctx: StatementContext): JdbiRecipeModel {
@@ -33,6 +36,7 @@ class JdbiRecipeModelMapper(
             authorUsername = rs.getString("author_username"),
             rating = rs.getDouble("average_rating"),
             date = rs.getDate("date").toLocalDate(),
+            description = rs.getString("description"),
             servings = rs.getInt("servings"),
             preparationTime = rs.getInt("preparation_time"),
             cuisine = cuisine,
@@ -44,6 +48,7 @@ class JdbiRecipeModelMapper(
             protein = rs.getObject("protein", Integer::class.java)?.toInt(),
             fat = rs.getObject("fat", Integer::class.java)?.toInt(),
             carbs = rs.getObject("carbs", Integer::class.java)?.toInt(),
+            instructions = Instructions(emptyMap()),
             picturesNames = picturesNames
         )
 
@@ -52,6 +57,12 @@ class JdbiRecipeModelMapper(
             ingredients.add(ingredientMapper.map(rs, ctx))
         } while (rs.next())
 
-        return recipe.copy(ingredients = ingredients)
+        val instructionsSteps = mutableMapOf<String, String>()
+        do {
+            val step = instructionMapper.map(rs, ctx)
+            instructionsSteps[step.first] = step.second // Assuming step.first is the step number and step.second is the description
+        } while (rs.next())
+
+        return recipe.copy(ingredients = ingredients, instructions = Instructions(instructionsSteps))
     }
 }
