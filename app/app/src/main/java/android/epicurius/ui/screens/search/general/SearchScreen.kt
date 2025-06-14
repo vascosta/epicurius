@@ -55,11 +55,17 @@ fun SearchScreen(
             id = 1,
             name = "testuser",
             profilePicture = null,
+        ),
+        SearchUser(
+            id = 2,
+            name = "anotheruser",
+            profilePicture = null,
         )
     ) },
     onCamera: () -> Unit = {},
     onUpload: (ByteArray) -> Unit = {},
-    onConfirm: (List<String>) -> Unit = { _ -> }
+    onConfirm: (List<String>) -> Unit = { _ -> },
+    enableButtons: Boolean
 ) {
     val tabs = listOf("Recipe", "Users")
     var selectedTabIndex by remember { mutableIntStateOf(0) }
@@ -114,7 +120,14 @@ fun SearchScreen(
     var showConfirmIngredientsDialog by remember { mutableStateOf(false) }
 
     Scaffold(
-        topBar = { TopBar("Search", backButton = true, onBackButton = onBackButton, enableButtons = true) },
+        topBar = {
+            TopBar(
+                titleText = "Search",
+                backButton = true,
+                onBackButton = onBackButton,
+                enableButtons = enableButtons
+            )
+        },
         bottomBar = { BottomBar(buttonsEnable = true) },
         content = { paddingValues ->
             Column(
@@ -127,10 +140,15 @@ fun SearchScreen(
             ) {
                 SearchTextField(
                     text = searchQuery,
-                    onSearchQueryChange = { searchQuery = it },
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(8.dp)
+                        .padding(8.dp),
+                    onSearchQueryChange = { searchQuery = it },
+                    onIconClick = {
+                        if (selectedTabIndex == 0) onRecipeSearch(searchQuery)
+                        else userSearchResults = onUserSearch(searchQuery)
+                    },
+                    enableButtons = enableButtons
                 )
 
                 TabComponent(tabs, selectedTabIndex, { selectedTabIndex = it })
@@ -140,13 +158,6 @@ fun SearchScreen(
                         FiltersIcon(onClick = { showFiltersDialog = true })
                     }
                     Spacer(modifier = Modifier.height(100.dp))
-                    Button(
-                        onClick = { onRecipeSearch(searchQuery) },
-                        modifier = Modifier
-                            .padding(16.dp)
-                            .fillMaxWidth()
-                    ) { Text("Search") }
-                    Text("or")
                     SearchPhotoComponent(
                         onCamera,
                         onUpload = {
@@ -168,13 +179,6 @@ fun SearchScreen(
                         modifier = Modifier.fillMaxWidth()
                     )
                 } else {
-                    Button(
-                        onClick = { userSearchResults = onUserSearch(searchQuery) },
-                        modifier = Modifier
-                            .padding(16.dp)
-                            .fillMaxWidth()
-                    ) { Text("Search") }
-
                     userSearchResults.forEach { user -> UserBox(user) }
                 }
 
@@ -236,5 +240,5 @@ fun SearchScreen(
 @Preview
 @Composable
 fun SearchUserScreenPreview() {
-    SearchScreen()
+    SearchScreen(enableButtons = true)
 }
