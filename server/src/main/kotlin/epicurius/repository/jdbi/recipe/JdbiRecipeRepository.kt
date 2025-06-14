@@ -54,7 +54,7 @@ class JdbiRecipeRepository(private val handle: Handle) : RecipeRepository {
         recipeInfo.ingredients.forEach { ingredient ->
             handle.createUpdate(
                 """
-                    INSERT INTO dbo.recipe_ingredient (recipe_id, name, quantity, unit)
+                    INSERT INTO dbo.ingredient (recipe_id, name, quantity, unit)
                     VALUES (:recipeId, :name, :quantity, :unit)
                 """
             )
@@ -68,7 +68,7 @@ class JdbiRecipeRepository(private val handle: Handle) : RecipeRepository {
         recipeInfo.instructions.steps.forEach { stepNumber, description ->
             handle.createUpdate(
                 """
-                    INSERT INTO dbo.recipe_instruction (recipe_id, step_number, description)
+                    INSERT INTO dbo.instruction (recipe_id, step_number, description)
                     VALUES (:recipeId, :stepNumber, :description)
                 """
             )
@@ -93,8 +93,8 @@ class JdbiRecipeRepository(private val handle: Handle) : RecipeRepository {
                     u.name AS author_username,
                     COALESCE(rr.average_rating, 0) AS average_rating
                 FROM dbo.Recipe r
-                JOIN dbo.recipe_ingredient i ON r.id = i.recipe_id
-                JOIN dbo.recipe_instruction ins ON r.id = ins.recipe_id
+                JOIN dbo.ingredient i ON r.id = i.recipe_id
+                JOIN dbo.instruction ins ON r.id = ins.recipe_id
                 JOIN dbo.User u ON r.author_id = u.id
                 LEFT JOIN (
                     SELECT recipe_id, ROUND(AVG(rating), 2) AS average_rating
@@ -209,7 +209,7 @@ class JdbiRecipeRepository(private val handle: Handle) : RecipeRepository {
                     r.preparation_time, 
                     r.servings, 
                     r.pictures_names
-                FROM available_recipes r JOIN dbo.recipe_Ingredient i ON r.id = i.recipe_id
+                FROM available_recipes r JOIN dbo.ingredient i ON r.id = i.recipe_id
                 LEFT JOIN (
                     SELECT recipe_id, ROUND(AVG(rating), 2) AS average_rating
                     FROM dbo.recipe_rating
@@ -285,8 +285,8 @@ class JdbiRecipeRepository(private val handle: Handle) : RecipeRepository {
                 ins.description as step_description,
                 u.name as author_username
                 FROM updated_recipe ur
-                JOIN dbo.recipe_Ingredient i ON i.recipe_id = ur.id
-                JOIN dbo.recipe_instruction ins ON ins.recipe_id = ur.id
+                JOIN dbo.ingredient i ON i.recipe_id = ur.id
+                JOIN dbo.instruction ins ON ins.recipe_id = ur.id
                 JOIN dbo.user u ON u.id = ur.author_id
                 LEFT JOIN (
                     SELECT recipe_id, ROUND(AVG(rating), 2) AS average_rating
@@ -371,7 +371,7 @@ class JdbiRecipeRepository(private val handle: Handle) : RecipeRepository {
     private fun updateIngredients(recipeId: Int, ingredients: List<Ingredient>) {
         handle.createUpdate(
             """
-                DELETE FROM dbo.recipe_Ingredient
+                DELETE FROM dbo.ingredient
                 WHERE recipe_id = :recipeId
             """
         )
@@ -381,7 +381,7 @@ class JdbiRecipeRepository(private val handle: Handle) : RecipeRepository {
         ingredients.forEach { ingredient ->
             handle.createUpdate(
                 """
-                    INSERT INTO dbo.recipe_Ingredient (recipe_id, name, quantity, unit)
+                    INSERT INTO dbo.ingredient (recipe_id, name, quantity, unit)
                     VALUES (:recipeId, :name, :quantity, :unit)
                 """
             )
@@ -396,7 +396,7 @@ class JdbiRecipeRepository(private val handle: Handle) : RecipeRepository {
     private fun updateInstructions(recipeId: Int, instructions: Instructions) {
         handle.createUpdate(
             """
-                DELETE FROM dbo.recipe_instruction
+                DELETE FROM dbo.instruction
                 WHERE recipe_id = :recipeId
             """
         )
@@ -406,7 +406,7 @@ class JdbiRecipeRepository(private val handle: Handle) : RecipeRepository {
         instructions.steps.forEach { (stepNumber, description) ->
             handle.createUpdate(
                 """
-                    INSERT INTO dbo.recipe_instruction (recipe_id, step_number, description)
+                    INSERT INTO dbo.instruction (recipe_id, step_number, description)
                     VALUES (:recipeId, :stepNumber, :description)
                 """
             )

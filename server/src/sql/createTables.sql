@@ -69,7 +69,7 @@ create table if not exists dbo.recipe_rating(
     foreign key (user_id) references dbo.user(id) on delete cascade
 );
 
-create table if not exists dbo.recipe_ingredient(
+create table if not exists dbo.ingredient(
     recipe_id int not null,
     name varchar(20) not null,
     quantity double precision not null,
@@ -78,7 +78,7 @@ create table if not exists dbo.recipe_ingredient(
     foreign key (recipe_id) references dbo.recipe(id) on delete cascade
 );
 
-create table if not exists dbo.recipe_instruction(
+create table if not exists dbo.instruction(
     recipe_id int not null,
     step_number int not null,
     description varchar(200) not null,
