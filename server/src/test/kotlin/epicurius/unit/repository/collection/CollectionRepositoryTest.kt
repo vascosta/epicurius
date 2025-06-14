@@ -11,7 +11,7 @@ open class CollectionRepositoryTest : RepositoryTest() {
     companion object {
         val testOwner = createTestUser(tm)
         val testCollectionId = createTestCollection(tm, testOwner.user.id, CollectionType.KITCHEN_BOOK)
-        val testRecipe = createTestRecipe(tm, fs, testOwner.user)
+        val testRecipe = createTestRecipe(tm, testOwner.user)
 
         fun createCollection(ownerId: Int, collectionName: String, collectionType: CollectionType) =
             tm.run { it.collectionRepository.createCollection(ownerId, collectionName, collectionType) }

@@ -22,7 +22,7 @@ class RemoveRecipeFromCollectionIntegrationTests : CollectionIntegrationTest() {
 
     private val testUser = createTestUser(tm)
     private val testCollectionId = createTestCollection(tm, testUser.user.id, CollectionType.FAVOURITE)
-    private val testRecipe = createTestRecipe(tm, fs, testUser.user)
+    private val testRecipe = createTestRecipe(tm, testUser.user)
 
     @Test
     fun `Should remove a recipe from a collection successfully with code 200`() {
@@ -106,7 +106,7 @@ class RemoveRecipeFromCollectionIntegrationTests : CollectionIntegrationTest() {
     @Test
     fun `Should fail with code 409 when removing a recipe that is not in the collection`() {
         // given a collection id and a recipe id that is not in the collection
-        val recipeNotInCollectionId = createTestRecipe(tm, fs, testUser.user).id
+        val recipeNotInCollectionId = createTestRecipe(tm, testUser.user).id
 
         // when removing the recipe from the collection
         val error = delete<Problem>(

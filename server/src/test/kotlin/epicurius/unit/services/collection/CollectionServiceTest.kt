@@ -10,7 +10,9 @@ import epicurius.repository.jdbi.recipe.models.JdbiRecipeInfo
 import epicurius.repository.jdbi.recipe.models.JdbiRecipeModel
 import epicurius.unit.services.ServiceTest
 import epicurius.utils.generateEmail
+import epicurius.utils.generateRandomRecipeDescription
 import epicurius.utils.generateRandomRecipeIngredients
+import epicurius.utils.generateRandomRecipeInstructions
 import epicurius.utils.generateRandomRecipeName
 import epicurius.utils.generateRandomUsername
 import java.time.LocalDate
@@ -68,6 +70,7 @@ open class CollectionServiceTest : ServiceTest() {
             testPublicUsername,
             0.0,
             LocalDate.now(),
+            generateRandomRecipeDescription(),
             1,
             1,
             Cuisine.MEDITERRANEAN,
@@ -75,6 +78,7 @@ open class CollectionServiceTest : ServiceTest() {
             emptyList(),
             emptyList(),
             generateRandomRecipeIngredients(),
+            instructions = generateRandomRecipeInstructions(),
             picturesNames = listOf("")
         )
 

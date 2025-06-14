@@ -24,8 +24,8 @@ class AddRecipeToCollectionIntegrationTests : CollectionIntegrationTest() {
     private val testUser = createTestUser(tm)
     private val privateTestUser = createTestUser(tm, true)
     private val testFavouritesCollectionId = createTestCollection(tm, testUser.user.id, CollectionType.FAVOURITE)
-    private val testRecipe = createTestRecipe(tm, fs, testUser.user)
-    private val privateTestRecipe = createTestRecipe(tm, fs, privateTestUser.user)
+    private val testRecipe = createTestRecipe(tm, testUser.user)
+    private val privateTestRecipe = createTestRecipe(tm, privateTestUser.user)
 
     @Test
     fun `Should add a recipe to a collection successfully wit code 200`() {
@@ -135,7 +135,7 @@ class AddRecipeToCollectionIntegrationTests : CollectionIntegrationTest() {
     @Test
     fun `Should fail with code 409 when adding a recipe that is already in the collection`() {
         // given a collection id (testFavouritesCollectionId) and a recipe
-        val recipe = createTestRecipe(tm, fs, testUser.user)
+        val recipe = createTestRecipe(tm, testUser.user)
         addRecipeToCollection(testUser.token, testFavouritesCollectionId, recipe.id)
 
         // when adding the recipe again to the collection
