@@ -15,8 +15,8 @@ open class MealPlannerRepositoryTest : RepositoryTest() {
 
         private val testAuthor = createTestUser(tm)
 
-        val testRecipe = createTestRecipe(tm, fs, testAuthor.user)
-        val testRecipe2 = createTestRecipe(tm, fs, testAuthor.user)
+        val testRecipe = createTestRecipe(tm, testAuthor.user)
+        val testRecipe2 = createTestRecipe(tm, testAuthor.user)
 
         val now: LocalDate = LocalDate.now()
         val today: LocalDate = now.with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY))

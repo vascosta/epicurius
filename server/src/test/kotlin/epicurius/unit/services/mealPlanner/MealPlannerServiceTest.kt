@@ -68,6 +68,7 @@ open class MealPlannerServiceTest : ServiceTest() {
             AUTHOR_USERNAME,
             0.0,
             today.minusDays(1),
+            createRecipeInputInfo.description,
             createRecipeInputInfo.servings,
             createRecipeInputInfo.preparationTime,
             createRecipeInputInfo.cuisine,
@@ -79,6 +80,7 @@ open class MealPlannerServiceTest : ServiceTest() {
             createRecipeInputInfo.protein,
             createRecipeInputInfo.fat,
             createRecipeInputInfo.carbs,
+            createRecipeInputInfo.instructions,
             recipePicturesNames
         )
 
