@@ -22,7 +22,7 @@ class FeedIntegrationTest : EpicuriusIntegrationTest() {
     fun setup() {
         testUser = createTestUser(tm)
         testAuthorUser = createTestUser(tm)
-        testRecipe = createTestRecipe(tm, fs, testAuthorUser.user)
+        testRecipe = createTestRecipe(tm, testAuthorUser.user)
     }
 
     fun getFeed(token: String, lastRecipeId: Int?, limit: Int = 10) =

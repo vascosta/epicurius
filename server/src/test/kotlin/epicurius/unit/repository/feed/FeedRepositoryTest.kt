@@ -15,8 +15,8 @@ open class FeedRepositoryTest : RepositoryTest() {
 
         val userFollows = createTestUser(tm)
         val userFollowed = createTestUser(tm)
-        val recipe1 = createTestRecipe(tm, fs, userFollowed.user)
-        val recipe2 = createTestRecipe(tm, fs, userFollowed.user)
+        val recipe1 = createTestRecipe(tm, userFollowed.user)
+        val recipe2 = createTestRecipe(tm, userFollowed.user)
 
         fun getFeed(
             userId: Int,
