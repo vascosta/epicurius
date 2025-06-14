@@ -17,7 +17,7 @@ open class RateRecipeRepositoryTest : RepositoryTest() {
     fun setup() {
         testUserPublic = createTestUser(tm).user
         testUserPrivate = createTestUser(tm, true).user
-        testRecipe = createTestRecipe(tm, fs, testUserPublic)
+        testRecipe = createTestRecipe(tm, testUserPublic)
     }
 
     companion object {

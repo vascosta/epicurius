@@ -7,6 +7,8 @@ import epicurius.domain.recipe.IngredientUnit
 import epicurius.domain.recipe.MealType
 import epicurius.repository.jdbi.recipe.models.JdbiRecipeModel
 import epicurius.unit.services.ServiceTest
+import epicurius.utils.generateRandomRecipeDescription
+import epicurius.utils.generateRandomRecipeInstructions
 import java.time.LocalDate
 
 open class RateRecipeServiceTest : ServiceTest() {
@@ -25,6 +27,7 @@ open class RateRecipeServiceTest : ServiceTest() {
             authorUsername = AUTHOR_USERNAME,
             0.0,
             date = LocalDate.now(),
+            description = generateRandomRecipeDescription(),
             servings = 4,
             preparationTime = 30,
             cuisine = Cuisine.FRENCH,
@@ -38,6 +41,7 @@ open class RateRecipeServiceTest : ServiceTest() {
                     unit = IngredientUnit.G
                 )
             ),
+            instructions = generateRandomRecipeInstructions(),
             picturesNames = emptyList()
         )
 

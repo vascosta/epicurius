@@ -28,10 +28,10 @@ class RateRecipeIntegrationTest : EpicuriusIntegrationTest() {
     fun setup() {
         testUser = createTestUser(tm)
         authorTestUser = createTestUser(tm)
-        testRecipe = createTestRecipe(tm, fs, authorTestUser.user)
+        testRecipe = createTestRecipe(tm, authorTestUser.user)
 
         val privateUser = createTestUser(tm, true)
-        testPrivateRecipe = createTestRecipe(tm, fs, privateUser.user)
+        testPrivateRecipe = createTestRecipe(tm, privateUser.user)
     }
 
     fun getRecipeRate(token: String, recipeId: Int) =
