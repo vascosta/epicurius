@@ -16,7 +16,6 @@ import epicurius.domain.recipe.MealType
 import epicurius.domain.recipe.RECIPE_DESCRIPTION_LENGTH_MSG
 import epicurius.domain.recipe.RECIPE_NAME_LENGTH_MSG
 import epicurius.domain.user.UserDomain
-import epicurius.repository.firestore.recipe.models.FirestoreUpdateRecipeModel
 import epicurius.repository.jdbi.recipe.models.JdbiUpdateRecipeModel
 import jakarta.validation.constraints.Positive
 import jakarta.validation.constraints.Size
@@ -74,6 +73,7 @@ data class UpdateRecipeInputModel(
         JdbiUpdateRecipeModel(
             recipeId,
             name,
+            description,
             servings,
             preparationTime,
             cuisine?.ordinal,
@@ -85,8 +85,7 @@ data class UpdateRecipeInputModel(
             protein,
             fat,
             carbs,
+            instructions,
             pictureNames
         )
-
-    fun toFirestoreUpdateRecipeModel(recipeId: Int) = FirestoreUpdateRecipeModel(recipeId, description, instructions)
 }

@@ -24,9 +24,9 @@ class JdbiRecipeModelMapper(
     override fun map(rs: ResultSet, ctx: StatementContext): JdbiRecipeModel {
         val cuisine = Cuisine.Companion.fromInt(rs.getInt("cuisine"))
         val mealType = MealType.Companion.fromInt(rs.getInt("meal_type"))
-        val intolerances = intoleranceSetMapper.map(rs, 9, ctx)
-        val diets = dietSetMapper.map(rs, 10, ctx)
-        val dbPicturesArray = rs.getArray(15)
+        val intolerances = intoleranceSetMapper.map(rs, 10, ctx)
+        val diets = dietSetMapper.map(rs, 11, ctx)
+        val dbPicturesArray = rs.getArray(16)
         val picturesNames = getArray<String>(dbPicturesArray).toList()
 
         val recipe = JdbiRecipeModel(
@@ -52,17 +52,17 @@ class JdbiRecipeModelMapper(
             picturesNames = picturesNames
         )
 
-        val ingredients = mutableListOf<Ingredient>()
-        do {
-            ingredients.add(ingredientMapper.map(rs, ctx))
-        } while (rs.next())
-
+        val ingredients = mutableSetOf<Ingredient>()
         val instructionsSteps = mutableMapOf<String, String>()
         do {
+            val ingredient = ingredientMapper.map(rs, ctx)
+            ingredients.add(ingredient)
+
             val step = instructionMapper.map(rs, ctx)
-            instructionsSteps[step.first] = step.second // Assuming step.first is the step number and step.second is the description
+            instructionsSteps[step.first] = step.second  // Assuming step.first is the step number and step.second is the description
+
         } while (rs.next())
 
-        return recipe.copy(ingredients = ingredients, instructions = Instructions(instructionsSteps))
+        return recipe.copy(ingredients = ingredients.toList(), instructions = Instructions(instructionsSteps))
     }
 }

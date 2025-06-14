@@ -21,12 +21,12 @@ class JdbiRecipeRepository(private val handle: Handle) : RecipeRepository {
         val recipeId = handle.createUpdate(
             """
                 INSERT INTO dbo.Recipe (
-                    name, author_id, date, servings, 
+                    name, author_id, date, servings, description, 
                     preparation_time, meal_type, cuisine, 
                     intolerances, diets, calories, protein, fat, carbs, pictures_names
                 )
                 VALUES (
-                :name, :authorId, :date, :servings, 
+                :name, :authorId, :date, :servings, :description,
                 :preparationTime, :mealType, :cuisine, :intolerances, :diets, :calories, :protein, :fat, :carbs, :pictureNames
                 )
                 RETURNING id
@@ -35,6 +35,7 @@ class JdbiRecipeRepository(private val handle: Handle) : RecipeRepository {
             .bind("name", recipeInfo.name)
             .bind("authorId", recipeInfo.authorId)
             .bind("date", recipeInfo.date)
+            .bind("description", recipeInfo.description)
             .bind("servings", recipeInfo.servings)
             .bind("preparationTime", recipeInfo.preparationTime)
             .bind("mealType", recipeInfo.mealType)
@@ -72,7 +73,7 @@ class JdbiRecipeRepository(private val handle: Handle) : RecipeRepository {
                 """
             )
                 .bind("recipeId", recipeId)
-                .bind("stepNumber", stepNumber)
+                .bind("stepNumber", stepNumber.toInt())
                 .bind("description", description)
                 .execute()
         }
@@ -260,6 +261,7 @@ class JdbiRecipeRepository(private val handle: Handle) : RecipeRepository {
                 WITH updated_recipe AS (
                     UPDATE dbo.Recipe
                     SET name = COALESCE(:name, name),
+                        description = COALESCE(:description, description),
                         servings = COALESCE(:servings, servings),
                         preparation_time = COALESCE(:preparationTime, preparation_time),
                         cuisine = COALESCE(:cuisine, cuisine),
@@ -295,6 +297,7 @@ class JdbiRecipeRepository(private val handle: Handle) : RecipeRepository {
         )
             .bind("id", recipeInfo.id)
             .bind("name", recipeInfo.name)
+            .bind("description", recipeInfo.description)
             .bind("servings", recipeInfo.servings)
             .bind("preparationTime", recipeInfo.preparationTime)
             .bind("cuisine", recipeInfo.cuisine)
@@ -408,7 +411,7 @@ class JdbiRecipeRepository(private val handle: Handle) : RecipeRepository {
                 """
             )
                 .bind("recipeId", recipeId)
-                .bind("stepNumber", stepNumber)
+                .bind("stepNumber", stepNumber.toInt())
                 .bind("description", description)
                 .execute()
         }

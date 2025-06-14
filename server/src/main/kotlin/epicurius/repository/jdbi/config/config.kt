@@ -38,7 +38,7 @@ fun Jdbi.configureWithAppRequirements(): Jdbi {
     registerRowMapper(ProductInfo::class.java, ProductInfoMapper())
     registerRowMapper(JdbiRecipeInfo::class.java, JdbiRecipeInfoMapper())
     registerRowMapper(Ingredient::class.java, IngredientMapper())
-    registerRowMapper(Step::class.java, InstructionsStepMapper())
+    registerRowMapper(Pair::class.java, InstructionsStepMapper())
     registerRowMapper(
         JdbiRecipeModel::class.java,
         JdbiRecipeModelMapper(
