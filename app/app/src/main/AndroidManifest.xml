@@ -29,7 +29,7 @@
             android:name=".ui.screens.auth.login.LoginActivity"
             android:exported="false"
             android:label="@string/title_activity_login_screen"
-            android:screenOrientation="fullSensor"
+            android:screenOrientation="portrait"
             android:theme="@style/Theme.App" />
         <activity
             android:name=".ui.screens.auth.resetPassword.ResetPasswordActivity"
@@ -122,15 +122,27 @@
             android:screenOrientation="portrait"
             android:theme="@style/Theme.App" />
         <activity
-            android:name=".ui.screens.user.profile.UserProfileActivity"
-            android:exported="false"
-            android:label="User Profile"
-            android:screenOrientation="portrait"
-            android:theme="@style/Theme.App" />
-        <activity
             android:name=".ui.screens.user.follow.FollowActivity"
             android:exported="false"
             android:label="Follow"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.App" />
+        <activity
+            android:name=".ui.screens.user.preferences.lists.PreferencesActivity"
+            android:exported="false"
+            android:label="Preferences"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.App" />
+        <activity
+            android:name=".ui.screens.user.preferences.skipable.KnowMoreActivity"
+            android:exported="false"
+            android:label="Know More"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.App" />
+        <activity
+            android:name=".ui.screens.user.profile.UserProfileActivity"
+            android:exported="false"
+            android:label="User Profile"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.App" />
         <activity
