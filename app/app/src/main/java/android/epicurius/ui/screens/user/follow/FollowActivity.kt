@@ -2,6 +2,7 @@ package android.epicurius.ui.screens.user.follow
 
 import android.epicurius.domain.user.FollowUser
 import android.epicurius.domain.user.FollowingUser
+import android.epicurius.domain.user.SearchUser
 import android.epicurius.domain.user.UserProfile
 import android.epicurius.ui.navigation.Intents
 import android.epicurius.ui.screens.user.profile.UserProfileActivity
@@ -18,7 +19,6 @@ class FollowActivity : ComponentActivity() {
             MaterialTheme {
                 FollowScreen(
                     selectedTab = intent.getIntExtra(Intents.FOLLOW_TAB, 0),
-                    onBackButton = { navigateTo<UserProfileActivity>(true) },
                     userProfile = UserProfile(
                             name = "John Doe",
                             country = "USA",
@@ -40,7 +40,16 @@ class FollowActivity : ComponentActivity() {
                             name = "Alice Johnson",
                             profilePicture = null
                         )
-                    )
+                    ),
+                    onBackButton = { navigateTo<UserProfileActivity>(true) },
+                    onUserSearch = { listOf<SearchUser>(
+                        SearchUser(
+                            id = 1,
+                            name = "testuser",
+                            profilePicture = null,
+                        )
+                    ) },
+                    enableButtons = true
                 )
             }
         }

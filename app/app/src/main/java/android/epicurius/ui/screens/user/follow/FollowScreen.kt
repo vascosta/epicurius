@@ -2,18 +2,22 @@ package android.epicurius.ui.screens.user.follow
 
 import android.epicurius.domain.user.FollowUser
 import android.epicurius.domain.user.FollowingUser
+import android.epicurius.domain.user.SearchUser
 import android.epicurius.domain.user.UserProfile
 import android.epicurius.ui.navigation.BottomBar
 import android.epicurius.ui.screens.user.components.UserBox
 import android.epicurius.ui.screens.user.follow.components.FollowTopBar
+import android.epicurius.ui.screens.utils.SearchTextField
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -25,12 +29,27 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun FollowScreen(
     selectedTab: Int,
-    onBackButton: () -> Unit = {},
     userProfile: UserProfile,
     followers: List<FollowUser>,
-    following: List<FollowingUser>
+    following: List<FollowingUser>,
+    onBackButton: () -> Unit,
+    onUserSearch: (String) -> List<SearchUser> = { listOf<SearchUser>(
+        SearchUser(
+            id = 1,
+            name = "testuser",
+            profilePicture = null,
+        ),
+        SearchUser(
+            id = 2,
+            name = "anotheruser",
+            profilePicture = null,
+        ))
+    },
+    enableButtons: Boolean
 ) {
     var selectedTabIndex by remember { mutableIntStateOf(selectedTab) }
+    var searchQuery by remember { mutableStateOf("") }
+    var userSearchResults by remember { mutableStateOf<List<SearchUser>>(emptyList()) }
 
     Scaffold(
         topBar = {
@@ -42,7 +61,7 @@ fun FollowScreen(
                 onBackButton = onBackButton,
             )
         },
-        bottomBar = { BottomBar(buttonsEnable = true) },
+        bottomBar = { BottomBar(buttonsEnable = enableButtons) },
         content = { paddingValues ->
             Column(
                 modifier = Modifier
@@ -52,8 +71,20 @@ fun FollowScreen(
                     .background(Color.White),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                val usersToShow = if (selectedTabIndex == 0) followers else following
+                SearchTextField(
+                    text = searchQuery,
+                    modifier = Modifier.fillMaxWidth().padding(bottom = 20.dp),
+                    onSearchQueryChange = { searchQuery = it },
+                    onIconClick = { userSearchResults = onUserSearch(searchQuery) },
+                    enableButtons = enableButtons
+                )
 
+                val usersToShow =
+                    if (userSearchResults.isNotEmpty() && searchQuery.isNotEmpty()) {
+                        userSearchResults
+                    } else {
+                        if (selectedTabIndex == 0) followers else following
+                    }
                 usersToShow.forEach { user -> UserBox(user = user) }
             }
         },
@@ -90,5 +121,5 @@ fun FollowPreview() {
         )
     )
 
-    FollowScreen(0, {}, userProfile, followers, following)
+    FollowScreen(0, userProfile, followers, following, {}, enableButtons = true)
 }

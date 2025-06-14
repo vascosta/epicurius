@@ -5,6 +5,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -44,14 +45,26 @@ fun MixedText(boldString: String, normalString: String) {
 @Composable
 fun SearchTextField(
     text: String,
+    modifier: Modifier = Modifier,
     onSearchQueryChange: (String) -> Unit,
-    modifier: Modifier = Modifier
+    onIconClick: () -> Unit,
+    enableButtons: Boolean
 ) {
     OutlinedTextField(
         value = text,
         onValueChange = onSearchQueryChange,
         placeholder = { Text("Search") },
-        leadingIcon = { Icon(Icons.Default.Search, contentDescription = "Search icon") },
+        trailingIcon = {
+            IconButton(
+                onClick = { onIconClick() },
+                enabled = enableButtons
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Search,
+                    contentDescription = "Search icon",
+                )
+            }
+        },
         singleLine = true,
         modifier = modifier
     )
