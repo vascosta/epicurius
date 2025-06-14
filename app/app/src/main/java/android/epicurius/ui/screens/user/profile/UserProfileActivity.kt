@@ -97,8 +97,8 @@ class UserProfileActivity : EpicuriusActivity() {
                     )),
                     onBackButton = { finish() },
                     onSettingsButton = { navigateTo<SettingsActivity>() },
-                    onFollowersButton = { navigateTo<FollowActivity>() },
-                    onFollowingButton = { navigateTo<FollowActivity>() },
+                    onFollowersButton = { navigateToFollowActivity(0) },
+                    onFollowingButton = { navigateToFollowActivity(1) },
                     onFollowRequest = {  },
                     onCollectionRequest = { collectionId ->
                         viewModel.getKitchenBookCollectionRecipes(collectionId)
@@ -115,6 +115,13 @@ class UserProfileActivity : EpicuriusActivity() {
             }
         }
     }
+
+    fun navigateToFollowActivity(selectedTab: Int) {
+        navigateTo<FollowActivity> { intent ->
+            intent.putExtra(Intents.FOLLOW_TAB, selectedTab)
+        }
+    }
+
     private fun navigateToKitchenBookActivity(collectionId: Int) {
 /*        navigateTo<KitchenBookActivity> { intent ->
             intent.putExtra(Intents.COLLECTION_ID, collectionId)

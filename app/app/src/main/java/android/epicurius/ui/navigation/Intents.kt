@@ -4,4 +4,5 @@ object Intents {
     const val COLLECTION_ID = "CollectionIdIntent"
     const val RECIPE_ID = "RecipeIdIntent"
     const val USERNAME = "UsernameIntent"
+    const val FOLLOW_TAB = "FollowTabIntent"
 }
