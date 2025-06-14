@@ -12,7 +12,7 @@ class GetUserRecipesRepositoryTests : RecipeRepositoryTest() {
     fun `Should retrieve the user's recipes successfully`() {
         // given a user with recipes
         val user = createTestUser(tm)
-        val userRecipe = createTestRecipe(tm, fs, user.user)
+        val userRecipe = createTestRecipe(tm, user.user)
         val limit = 1
 
         // when retrieving the user's recipes

@@ -58,7 +58,7 @@ class CreateRecipeRepositoryTests : RecipeRepositoryTest() {
         assertEquals(jdbiCreateRecipeInfo.name, jdbiRecipeById.name)
         assertEquals(jdbiCreateRecipeInfo.authorId, jdbiRecipeById.authorId)
         assertEquals(testAuthor.user.name, jdbiRecipeById.authorUsername)
-        assertEquals(jdbiCreateRecipeInfo.description, jdbiRecipeById.description
+        assertEquals(jdbiCreateRecipeInfo.description, jdbiRecipeById.description)
         assertEquals(jdbiCreateRecipeInfo.servings, jdbiRecipeById.servings)
         assertEquals(jdbiCreateRecipeInfo.preparationTime, jdbiRecipeById.preparationTime)
         assertEquals(jdbiCreateRecipeInfo.cuisine, jdbiRecipeById.cuisine.ordinal)

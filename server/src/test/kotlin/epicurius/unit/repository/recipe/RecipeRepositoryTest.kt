@@ -21,7 +21,7 @@ open class RecipeRepositoryTest : RepositoryTest() {
         val testUserPublic = createTestUser(tm)
         val testUserPrivate = createTestUser(tm, true)
         val testAuthor = createTestUser(tm)
-        val testRecipe = createTestRecipe(tm, fs, testAuthor.user)
+        val testRecipe = createTestRecipe(tm, testAuthor.user)
 
         val jdbiRecipeInfo1 = JdbiCreateRecipeModel(
             name = "Spaghetti Bolognese",

@@ -94,8 +94,7 @@ class GetRecipeServiceTests : RecipeServiceTest() {
 
         // when retrieving the recipe
         // then the recipe is not retrieved and throws RecipeNotFound exception
-        assertFailsWith<RecipeNotFound> { runBlocking { getRecipe(nonExistingRecipeId, AUTHOR_ID) } } // jdbi
-        assertFailsWith<RecipeNotFound> { runBlocking { getRecipe(nonExistingRecipeId, AUTHOR_ID) } } // firestore
+        assertFailsWith<RecipeNotFound> { runBlocking { getRecipe(nonExistingRecipeId, AUTHOR_ID) } }
     }
 
     @Test

@@ -44,7 +44,6 @@ class UpdateRecipeServiceTests : RecipeServiceTest() {
     fun `Should update a recipe successfully`() {
         // given information to update a recipe
         val jdbiUpdateRecipeInfo = updateRecipeInputInfo.toJdbiUpdateRecipeModel(RECIPE_ID, null)
-        val firestoreUpdateRecipeInfo = updateRecipeInputInfo.toFirestoreUpdateRecipeModel(RECIPE_ID)
 
         // mock
         val mockJdbiRecipeModel = JdbiRecipeModel(
