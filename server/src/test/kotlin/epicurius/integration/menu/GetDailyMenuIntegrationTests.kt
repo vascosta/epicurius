@@ -12,7 +12,7 @@ import kotlin.test.assertTrue
 class GetDailyMenuIntegrationTests : MenuIntegrationTest() {
 
     private val testUser = createTestUser(tm)
-    private val testRecipe = createTestRecipe(tm, fs, testUser.user) // dessert recipe
+    private val testRecipe = createTestRecipe(tm, testUser.user) // dessert recipe
 
     @Test
     fun `Should retrieve the daily menu for a given user with code 200`() {
