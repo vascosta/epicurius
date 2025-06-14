@@ -1,9 +1,0 @@
-services:
-  epicurius-service:
-    build:
-      context: .
-      dockerfile: ./dockerfiles/Dockerfile-spring
-    environment:
-      DATABASE_URL: "jdbc:postgresql://dpg-d0vnh80gjchc739vfoq0-a.frankfurt-postgres.render.com/epicurius_postgres_database?user=epicurius_postgres_database_user&password=Ylxw7SiOjb6NSo7Bc8yTzlpNVeoUZDIv"
-    ports:
-      - 8080:8080

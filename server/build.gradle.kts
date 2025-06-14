@@ -72,18 +72,3 @@ tasks.register<Copy>("copyJarToDemo") {
     into(outputDir)
     rename { "epicurius-server.jar" }
 }
-
-tasks.register<Copy>("extractUberJar") {
-    dependsOn("assemble")
-
-    val jarFile = layout.buildDirectory.file("libs/${rootProject.name}-$version.jar")
-    val outputDir = layout.buildDirectory.dir("dependency")
-
-    from(jarFile.map { zipTree(it) })
-    into(outputDir)
-}
-
-tasks.register<Exec>("dockerComposeUp") {
-    dependsOn("extractUberJar")
-    commandLine("docker", "compose", "up", "--build", "-d")
-}
