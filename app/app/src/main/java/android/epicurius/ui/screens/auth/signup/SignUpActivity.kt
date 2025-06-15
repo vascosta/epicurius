@@ -4,6 +4,7 @@ import android.epicurius.ui.EpicuriusActivity
 import android.epicurius.ui.screens.auth.login.LoginActivity
 import android.epicurius.ui.screens.feed.FeedActivity
 import android.epicurius.ui.navigation.navigateTo
+import android.epicurius.ui.screens.user.preferences.skipable.KnowMoreActivity
 import android.os.Bundle
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.compose.setContent
@@ -30,7 +31,7 @@ class SignUpActivity : EpicuriusActivity() {
                         confirmPassword: String,
                         country: String ->
                             viewModel.signUp(name, email, password, confirmPassword, country) {
-                                navigateTo<FeedActivity>() // TODO: change to activity to change intolerances and diets
+                                navigateTo<KnowMoreActivity>(finishCurrent = true)
                         }
                     },
                     onLogin = { navigateTo<LoginActivity>() },
