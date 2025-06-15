@@ -1,4 +1,4 @@
-package android.epicurius.ui.screens.connection
+package android.epicurius.ui.screens.serverOffline
 
 import android.epicurius.ui.navigation.BottomBar
 import android.epicurius.ui.navigation.TopBar
@@ -21,7 +21,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 @Composable
-fun ConnectionTimeoutScreen() {
+fun ServerOfflineScreen() {
     Scaffold(
         topBar = {
             TopBar(
@@ -64,6 +64,6 @@ fun ConnectionTimeoutScreen() {
 
 @Preview
 @Composable
-fun ConnectionTimeoutPreview() {
-    ConnectionTimeoutScreen()
+fun ServerOfflineScreenPreview() {
+    ServerOfflineScreen()
 }

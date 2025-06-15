@@ -15,6 +15,7 @@ import android.epicurius.ui.screens.auth.login.LoginActivity
 import android.epicurius.ui.navigation.navigateTo
 import android.epicurius.ui.screens.auth.resetPassword.ResetPasswordActivity
 import android.epicurius.ui.screens.auth.signup.SignUpActivity
+import android.epicurius.ui.screens.serverOffline.ServerOfflineActivity
 import android.widget.Toast
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -79,15 +80,13 @@ open class EpicuriusViewModel(
             if (e is UserNotLoggedInException) {
                 onSessionExpired()
             }
-            if (e is ConnectException) {
-                showToast(context.getString(R.string.could_not_connect_to_server_msg))
+            if (e is ConnectException || e is InvalidResponseException || e is SocketTimeoutException) {
                 disableButtons()
+                context.navigateTo<ServerOfflineActivity>()
             }
             else {
                 val message = when (e) {
-                    is SocketTimeoutException,
                     is UnknownHostException,
-                    is InvalidResponseException -> context.getString(R.string.could_not_connect_to_server_msg)
                     is CancellationException -> null
                     else -> context.getString(R.string.something_went_wrong_msg)
                 }

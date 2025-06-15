@@ -1,14 +1,14 @@
-package android.epicurius.ui.screens.connection
+package android.epicurius.ui.screens.serverOffline
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 
-class ConnectionTimeoutActivity : ComponentActivity() {
+class ServerOfflineActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            ConnectionTimeoutScreen()
+            ServerOfflineScreen()
         }
     }
 }

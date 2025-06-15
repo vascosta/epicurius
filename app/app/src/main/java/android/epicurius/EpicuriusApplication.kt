@@ -13,7 +13,6 @@ import com.google.gson.JsonDeserializer
 import okhttp3.OkHttpClient
 import java.time.LocalDate
 import java.util.Base64
-import java.util.concurrent.TimeUnit
 
 
 class EpicuriusApplication : Application(), Dependencies {
@@ -24,15 +23,7 @@ class EpicuriusApplication : Application(), Dependencies {
         })
         .create()
 
-    private val httpService = HttpService(
-        BASE_URL,
-        OkHttpClient.Builder()
-            .callTimeout(20, TimeUnit.SECONDS)
-            .readTimeout(20, TimeUnit.SECONDS)
-            .writeTimeout(20, TimeUnit.SECONDS)
-            .build(),
-        gson
-    )
+    private val httpService = HttpService(BASE_URL, OkHttpClient(), gson)
 
     override val service = EpicuriusService(httpService)
     override val session by lazy {

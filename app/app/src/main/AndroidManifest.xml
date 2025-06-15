@@ -152,6 +152,12 @@
             android:screenOrientation="portrait"
             android:theme="@style/Theme.App" />
         <activity
+            android:name=".ui.screens.serverOffline.ServerOfflineActivity"
+            android:exported="false"
+            android:label="ConnectionTimeout"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.App" />
+        <activity
             android:name=".ui.screens.feed.FeedActivity"
             android:exported="true"
             android:label="Feed"
