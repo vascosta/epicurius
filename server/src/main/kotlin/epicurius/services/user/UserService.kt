@@ -5,8 +5,10 @@ import epicurius.domain.exceptions.FollowRequestNotFound
 import epicurius.domain.exceptions.IncorrectPassword
 import epicurius.domain.exceptions.InvalidCountry
 import epicurius.domain.exceptions.InvalidFollowRequestType
+import epicurius.domain.exceptions.InvalidSelfAcceptFollowRequest
 import epicurius.domain.exceptions.InvalidSelfCancelFollowRequest
 import epicurius.domain.exceptions.InvalidSelfFollow
+import epicurius.domain.exceptions.InvalidSelfRejectFollowRequest
 import epicurius.domain.exceptions.InvalidSelfUnfollow
 import epicurius.domain.exceptions.InvalidToken
 import epicurius.domain.exceptions.PictureNotFound
@@ -171,9 +173,8 @@ class UserService(
     fun followRequest(userId: Int, username: String, usernameToRequest: String, type: FollowRequestType) {
         when (type) {
             FollowRequestType.CANCEL -> cancelFollowRequest(userId, username, usernameToRequest)
-            // "accept" -> acceptFollowRequest(authenticatedUser.user.id, username)
-            // "reject" -> rejectFollowRequest(authenticatedUser.user.id, username)
-            else -> throw InvalidFollowRequestType()
+            FollowRequestType.ACCEPT -> acceptFollowRequest(userId, username, usernameToRequest)
+            FollowRequestType.REJECT -> rejectFollowRequest(userId, username, usernameToRequest)
         }
     }
 
@@ -218,6 +219,24 @@ class UserService(
         if (!checkIfUserAlreadySentFollowRequest(userToCancelFollow.id, userId)) throw FollowRequestNotFound(usernameToCancelFollow)
         tm.run {
             it.userRepository.cancelFollowRequest(userToCancelFollow.id, userId)
+        }
+    }
+
+    private fun acceptFollowRequest(userId: Int, username: String, usernameToAcceptFollow: String) {
+        if (checkSelf(username, usernameToAcceptFollow)) throw InvalidSelfAcceptFollowRequest()
+        val userToAcceptFollow = checkIfUserExists(name = usernameToAcceptFollow) ?: throw UserNotFound(usernameToAcceptFollow)
+        if (!checkIfUserAlreadySentFollowRequest(userId, userToAcceptFollow.id)) throw FollowRequestNotFound(username)
+        tm.run {
+            it.userRepository.acceptFollowRequest(userId, userToAcceptFollow.id)
+        }
+    }
+
+    private fun rejectFollowRequest(userId: Int, username: String, usernameToRejectFollow: String) {
+        if (checkSelf(username, usernameToRejectFollow)) throw InvalidSelfRejectFollowRequest()
+        val userToRejectFollow = checkIfUserExists(name = usernameToRejectFollow) ?: throw UserNotFound(usernameToRejectFollow)
+        if (!checkIfUserAlreadySentFollowRequest(userId, userToRejectFollow.id)) throw FollowRequestNotFound(username)
+        tm.run {
+            it.userRepository.rejectFollowRequest(userId, userToRejectFollow.id)
         }
     }
 
