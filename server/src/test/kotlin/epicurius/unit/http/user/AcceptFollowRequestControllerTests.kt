@@ -11,7 +11,7 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 
-class AcceptFollowRequestControllerTests: UserControllerTest() {
+class AcceptFollowRequestControllerTests : UserControllerTest() {
 
     @Test
     fun `Should accept a follow request successfully`() {

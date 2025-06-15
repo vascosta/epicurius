@@ -34,20 +34,20 @@ class CreateRecipeServiceTests : RecipeServiceTest() {
             jdbiRecipeRepositoryMock.createRecipe(
                 argThat { model ->
                     model.name == createRecipeInputInfo.name &&
-                    model.authorId == AUTHOR_ID &&
-                    model.description == createRecipeInputInfo.description &&
-                    model.servings == createRecipeInputInfo.servings &&
-                    model.preparationTime == createRecipeInputInfo.preparationTime &&
-                    model.cuisine == createRecipeInputInfo.cuisine.ordinal &&
-                    model.mealType == createRecipeInputInfo.mealType.ordinal &&
-                    model.intolerances == createRecipeInputInfo.intolerances.map { it.ordinal } &&
-                    model.diets == createRecipeInputInfo.diets.map { it.ordinal } &&
-                    model.ingredients == createRecipeInputInfo.ingredients &&
-                    model.calories == createRecipeInputInfo.calories &&
-                    model.protein == createRecipeInputInfo.protein &&
-                    model.fat == createRecipeInputInfo.fat &&
-                    model.carbs == createRecipeInputInfo.carbs &&
-                    model.picturesNames == recipePicturesNames
+                        model.authorId == AUTHOR_ID &&
+                        model.description == createRecipeInputInfo.description &&
+                        model.servings == createRecipeInputInfo.servings &&
+                        model.preparationTime == createRecipeInputInfo.preparationTime &&
+                        model.cuisine == createRecipeInputInfo.cuisine.ordinal &&
+                        model.mealType == createRecipeInputInfo.mealType.ordinal &&
+                        model.intolerances == createRecipeInputInfo.intolerances.map { it.ordinal } &&
+                        model.diets == createRecipeInputInfo.diets.map { it.ordinal } &&
+                        model.ingredients == createRecipeInputInfo.ingredients &&
+                        model.calories == createRecipeInputInfo.calories &&
+                        model.protein == createRecipeInputInfo.protein &&
+                        model.fat == createRecipeInputInfo.fat &&
+                        model.carbs == createRecipeInputInfo.carbs &&
+                        model.picturesNames == recipePicturesNames
                 }
             )
         ).thenReturn(RECIPE_ID)

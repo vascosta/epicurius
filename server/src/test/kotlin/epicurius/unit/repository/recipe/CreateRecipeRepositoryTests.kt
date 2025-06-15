@@ -9,7 +9,6 @@ import epicurius.domain.recipe.Instructions
 import epicurius.domain.recipe.MealType
 import epicurius.repository.jdbi.recipe.models.JdbiCreateRecipeModel
 import epicurius.utils.createTestRecipe
-import kotlinx.coroutines.runBlocking
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull

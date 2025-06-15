@@ -59,8 +59,7 @@ class JdbiRecipeModelMapper(
             ingredients.add(ingredient)
 
             val step = instructionMapper.map(rs, ctx)
-            instructionsSteps[step.first] = step.second  // Assuming step.first is the step number and step.second is the description
-
+            instructionsSteps[step.first] = step.second // Assuming step.first is the step number and step.second is the description
         } while (rs.next())
 
         return recipe.copy(ingredients = ingredients.toList(), instructions = Instructions(instructionsSteps))

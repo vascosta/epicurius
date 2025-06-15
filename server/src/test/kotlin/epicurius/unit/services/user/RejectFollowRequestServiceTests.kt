@@ -1,7 +1,6 @@
 package epicurius.unit.services.user
 
 import epicurius.domain.exceptions.FollowRequestNotFound
-import epicurius.domain.exceptions.InvalidSelfAcceptFollowRequest
 import epicurius.domain.exceptions.InvalidSelfRejectFollowRequest
 import epicurius.domain.exceptions.UserNotFound
 import org.mockito.kotlin.verify

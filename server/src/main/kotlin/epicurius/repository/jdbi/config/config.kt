@@ -3,7 +3,6 @@ package epicurius.repository.jdbi.config
 import epicurius.domain.fridge.Product
 import epicurius.domain.fridge.ProductInfo
 import epicurius.domain.recipe.Ingredient
-import epicurius.domain.recipe.Step
 import epicurius.domain.user.User
 import epicurius.repository.jdbi.collection.models.JdbiCollectionModel
 import epicurius.repository.jdbi.collection.models.JdbiCollectionProfileModel

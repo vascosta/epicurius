@@ -1,8 +1,6 @@
 package epicurius.config
 
 import com.google.auth.oauth2.GoogleCredentials
-import com.google.cloud.firestore.Firestore
-import com.google.cloud.firestore.FirestoreOptions
 import com.google.cloud.storage.StorageOptions
 import epicurius.repository.jdbi.config.configureWithAppRequirements
 import org.jdbi.v3.core.Jdbi
