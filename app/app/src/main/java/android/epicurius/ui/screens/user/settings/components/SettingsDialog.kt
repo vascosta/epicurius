@@ -33,19 +33,19 @@ fun SettingsDialog(
     user: UserInfo,
     onDismissRequest: () -> Unit,
     onConfirm: (
-        username: String?,
+        name: String?,
         email: String?,
         country: String?,
         password: String?,
         confirmPassword: String?,
         privacy: Boolean?,
-        intolerances: List<Intolerance>?,
-        diets: List<Diet>?
+        intolerances: Set<Intolerance>?,
+        diets: Set<Diet>?
     ) -> Unit,
-    buttonsEnable: Boolean
+    enableButtons: Boolean
 ) {
-    var username by remember { mutableStateOf("") }
-    var email by remember { mutableStateOf("") }
+    var username by remember { mutableStateOf(user.name) }
+    var email by remember { mutableStateOf(user.email) }
     var password by remember { mutableStateOf("") }
     var confirmPassword by remember { mutableStateOf("") }
     var privacy by remember { mutableStateOf(user.privacy) }
@@ -65,30 +65,30 @@ fun SettingsDialog(
                         TextField(
                             value = username,
                             onValueChange = { username = it },
-                            label = "New $txt",
-                            enabled = buttonsEnable
+                            enabled = enableButtons,
+                            label = "New $txt"
                         )
                     }
                     "email" -> {
                         TextField(
                             value = email,
                             onValueChange = { email = it },
+                            enabled = enableButtons,
                             label = "New $txt",
-                            enabled = buttonsEnable
                         )
                     }
                     "password" -> {
                         PasswordTextField(
                             value = password,
                             onValueChange = { password = it },
-                            label = "New $txt",
-                            enabled = buttonsEnable
+                            enabled = enableButtons,
+                            label = "New $txt"
                         )
                         PasswordTextField(
                             value = confirmPassword,
                             onValueChange = { confirmPassword = it },
-                            label = "Confirm new $txt",
-                            enabled = buttonsEnable
+                            enabled = enableButtons,
+                            label = "Confirm new $txt"
                         )
                     }
                     "country" -> {
@@ -98,7 +98,7 @@ fun SettingsDialog(
                             value = country,
                             onValueChange = { country = it },
                             modifier = Modifier.padding(5.dp),
-                            enabled = buttonsEnable,
+                            enabled = enableButtons,
                             label = "Country"
                         )
                     }
@@ -123,7 +123,7 @@ fun SettingsDialog(
                             modifier = Modifier
                                 .padding(vertical = 5.dp)
                                 .align(Alignment.CenterHorizontally),
-                            enabled = buttonsEnable,
+                            enabled = enableButtons,
                             label = "Intolerances",
                         )
                     }
@@ -135,7 +135,7 @@ fun SettingsDialog(
                             modifier = Modifier
                                 .padding(vertical = 5.dp)
                                 .align(Alignment.CenterHorizontally),
-                            enabled = buttonsEnable,
+                            enabled = enableButtons,
                             label = "Diets",
                         )
                     }
@@ -158,23 +158,23 @@ fun SettingsDialog(
                             Intolerance.valueOf(
                                 it.uppercase().replace(Regex("[\\s-]"), "_")
                             )
-                        },
+                        }.toSet(),
                         if (diets.isEmpty()) null
                         else diets.map {
                             Diet.valueOf(
                                 it.uppercase().replace(Regex("[\\s-]"), "_")
                             )
-                        }
+                        }.toSet()
                     )
                     onDismissRequest()
                 },
-                enabled = buttonsEnable
+                enabled = enableButtons
             ) { Text("Confirm") }
         },
         dismissButton = {
             TextButton(
                 onClick = { onDismissRequest() },
-                enabled = buttonsEnable
+                enabled = enableButtons
             ) { Text("Cancel") }
         }
     )
