@@ -1,26 +1,41 @@
 package android.epicurius.ui.screens.recipe.ingredients.components
 
-import android.epicurius.domain.recipe.Ingredient
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 
 @Composable
 fun SubstituteIngredientsAlertDialog(
-    ingredient: Ingredient,
+    substitutes: List<String>,
     onDismiss: () -> Unit
 ) {
     AlertDialog(
-        onDismissRequest = onDismiss,
+        onDismissRequest = { onDismiss() },
         title = { Text("Substitute Ingredients") },
         text = {
-            val substitutes = listOf(ingredient.name) // Replace with actual substitute logic
-            substitutes.forEach {
-                Text(text = "• $it", modifier = Modifier.padding(start = 10.dp, bottom = 10.dp))
+            Column {
+                if (substitutes. isNotEmpty()) {
+                    substitutes.forEach {
+                        Text(
+                            text = "• $it",
+                            modifier = Modifier.padding(start = 10.dp, bottom = 10.dp)
+                        )
+                    }
+                } else {
+                    Text(
+                        text = "No substitutes available for this ingredient",
+                        modifier = Modifier.padding(horizontal = 10.dp),
+                        fontStyle = FontStyle.Italic,
+                        textAlign = TextAlign.Center
+                    )
+                }
             }
         },
         confirmButton = { Button(onClick = onDismiss) { Text("Close") } }

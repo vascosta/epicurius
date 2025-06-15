@@ -4,23 +4,32 @@ import android.epicurius.domain.recipe.Ingredient
 import android.epicurius.domain.recipe.IngredientUnit
 import android.epicurius.ui.navigation.BottomBar
 import android.epicurius.ui.navigation.TopBar
+import android.epicurius.ui.screens.recipe.ingredients.components.InfoDialog
 import android.epicurius.ui.screens.recipe.ingredients.components.IngredientTable
 import android.epicurius.ui.screens.recipe.ingredients.components.SubstituteIngredientsAlertDialog
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.Button
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -31,18 +40,29 @@ import androidx.compose.ui.unit.sp
 
 @Composable
 fun ConfirmIngredientsScreen(
-    onBackButton: () -> Unit,
     recipeName: String,
-    ingredientsList: List<Ingredient>
+    ingredientsList: List<Ingredient>,
+    onBackButton: () -> Unit,
+    onSubstituteIngredients: (String) -> List<String>,
+    onConfirmIngredients: () -> Unit
 ) {
     val checkboxStates = remember { mutableStateListOf<Boolean>().apply {
         repeat(ingredientsList.size) { add(false) }
     }}
-    val showDialog = remember { mutableStateOf(false) }
-    val selectedIngredient = remember { mutableStateOf<Ingredient?>(null) }
+    var showSubstituteIngredientsDialog by remember { mutableStateOf(false) }
+    var substituteIngredientsList by remember { mutableStateOf<List<String>>(emptyList()) }
+    var selectedIngredient by remember { mutableStateOf<Ingredient?>(null) }
+    var showInfoDialog by remember { mutableStateOf(false) }
 
     Scaffold(
-        topBar = { TopBar(recipeName, backButton = true, onBackButton = onBackButton, enableButtons = true) },
+        topBar = {
+            TopBar(
+                titleText = recipeName,
+                backButton = true,
+                onBackButton = onBackButton,
+                enableButtons = true
+            )
+        },
         bottomBar = { BottomBar(buttonsEnable = true) },
         content = { paddingValues ->
             Column(
@@ -53,12 +73,28 @@ fun ConfirmIngredientsScreen(
                     .background(Color.White)
                     .verticalScroll(rememberScrollState())
             ) {
-                Text(
-                    text = "Ingredients:",
-                    fontSize = 24.sp,
-                    fontWeight = FontWeight.Bold,
-                    modifier = Modifier.padding(bottom = 16.dp)
-                )
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Text(
+                        text = "Ingredients:",
+                        fontSize = 24.sp,
+                        fontWeight = FontWeight.Bold,
+                        modifier = Modifier.padding(bottom = 16.dp)
+                    )
+                    IconButton(
+                        onClick = { showInfoDialog = true }
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Info,
+                            contentDescription = "Info Icon",
+                        )
+                    }
+                }
+
+                if (showInfoDialog) { InfoDialog { showInfoDialog = false } }
 
                 Row(modifier = Modifier.padding(vertical = 4.dp, horizontal = 10.dp)) {
                     Text("Name", modifier = Modifier.weight(0.4f), fontWeight = FontWeight.Bold)
@@ -74,16 +110,17 @@ fun ConfirmIngredientsScreen(
                         checkboxStates[index] = isChecked
                     },
                     onNameClick = { ingredient ->
-                        selectedIngredient.value = ingredient
-                        showDialog.value = true
+                        selectedIngredient = ingredient
+                        showSubstituteIngredientsDialog = true
+                        substituteIngredientsList = onSubstituteIngredients(ingredient.name)
                     }
                 )
 
-                if (showDialog.value && selectedIngredient.value != null) {
-                    selectedIngredient.value?.let { observedIngredient ->
+                if (showSubstituteIngredientsDialog && selectedIngredient!= null) {
+                    selectedIngredient?.let { observedIngredient ->
                         SubstituteIngredientsAlertDialog(
-                            ingredient = observedIngredient,
-                            onDismiss = { showDialog.value = false }
+                            substitutes = substituteIngredientsList,
+                            onDismiss = { showSubstituteIngredientsDialog = false }
                         )
                     }
                 }
@@ -91,7 +128,7 @@ fun ConfirmIngredientsScreen(
                 Spacer(modifier = Modifier.weight(1f))
 
                 Button(
-                    onClick = {  },
+                    onClick = { onConfirmIngredients() },
                     modifier = Modifier
                         .align(Alignment.CenterHorizontally)
                         .padding(top = 16.dp, bottom = 16.dp),
@@ -114,5 +151,14 @@ fun ConfirmIngredientsActivityPreview() {
         Ingredient("Sugar", 1.5, IngredientUnit.COFFEE_CUP),
         Ingredient("Eggs", 3.0, IngredientUnit.X)
     )
-    ConfirmIngredientsScreen({}, recipeName, ingredientsList = ingredients)
+    val substituteIngredients = { ingredientName: String ->
+        listOf("Substitute for $ingredientName", "Another substitute for $ingredientName")
+    }
+    ConfirmIngredientsScreen(
+        recipeName = recipeName,
+        ingredientsList = ingredients,
+        onBackButton = {},
+        onSubstituteIngredients = { ingredientName -> substituteIngredients(ingredientName) },
+        onConfirmIngredients = {}
+    )
 }
