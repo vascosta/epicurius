@@ -4,6 +4,7 @@ import android.epicurius.domain.Diet
 import android.epicurius.domain.Intolerance
 import android.epicurius.ui.navigation.TopBar
 import android.epicurius.ui.screens.user.preferences.lists.components.PreferencesCheckboxList
+import android.epicurius.ui.screens.utils.LoadingSpinner
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.fadeIn
@@ -15,14 +16,17 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
@@ -38,6 +42,7 @@ fun PreferencesScreen(
     onDone: () -> Unit,
     enableButtons: Boolean,
 ) {
+    var showLoadingSpinner by rememberSaveable { mutableStateOf(!enableButtons) }
     var showFirst by rememberSaveable { mutableStateOf(true) }
     var intolerancesCheckboxStates by rememberSaveable {
         mutableStateOf(List(Intolerance.entries.size) { false })
@@ -48,6 +53,9 @@ fun PreferencesScreen(
     var intolerances by rememberSaveable { mutableStateOf(setOf<Intolerance>()) }
     var diets by rememberSaveable { mutableStateOf(setOf<Diet>()) }
 
+    LaunchedEffect(enableButtons) {
+        showLoadingSpinner = !showLoadingSpinner
+    }
     Scaffold(
         topBar = {
             TopBar(
@@ -60,16 +68,21 @@ fun PreferencesScreen(
             if (showFirst) {
                 TextButton(
                     onClick = {
-                        if (intolerances.isNotEmpty()) { onSetIntolerances(intolerances) }
+                        if (intolerances.isNotEmpty()) {
+                            onSetIntolerances(intolerances)
+                        }
                         showFirst = !showFirst
-                    }
-                ) { Text("Next") }
+                    },
+                    enabled = enableButtons
+                ) { if (!showLoadingSpinner) { Text("Next") }
+                else { LoadingSpinner(Modifier.size(25.dp)) } }
             } else {
                 TextButton(
                     onClick = {
                         if (diets.isNotEmpty()) { onSetDiets(diets) }
                         onDone()
-                    }
+                    },
+                    enabled = enableButtons
                 ) { Text("Done") }
             }
         },

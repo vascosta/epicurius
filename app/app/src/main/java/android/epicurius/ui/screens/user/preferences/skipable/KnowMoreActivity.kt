@@ -12,8 +12,8 @@ class KnowMoreActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             KnowMoreScreen(
-                onSkip = { navigateTo<FeedActivity>() },
-                onNext = { navigateTo<PreferencesActivity>() },
+                onSkip = { navigateTo<FeedActivity>(finishCurrent = true) },
+                onNext = { navigateTo<PreferencesActivity>(finishCurrent = true) },
                 enableButtons = true
             )
         }

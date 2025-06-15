@@ -66,9 +66,7 @@ fun KnowMoreScreen(
                     TextButton(
                         onClick = { onNext() },
                         enabled = enableButtons
-                    ) {
-                        Text("Next")
-                    }
+                    ) { Text("Next") }
                 }
             }
         },
