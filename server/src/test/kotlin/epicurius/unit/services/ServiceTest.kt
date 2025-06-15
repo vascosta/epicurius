@@ -74,8 +74,14 @@ open class ServiceTest : EpicuriusUnitTest() {
 
         fun deleteUser(userId: Int) = userService.deleteUser(userId)
 
-        fun cancelFollowRequest(userId: Int, username: String, usernameToRequest: String) =
-            userService.followRequest(userId, username, usernameToRequest, FollowRequestType.CANCEL)
+        fun cancelFollowRequest(userId: Int, username: String, usernameToCancel: String) =
+            userService.followRequest(userId, username, usernameToCancel, FollowRequestType.CANCEL)
+
+        fun acceptFollowRequest(userId: Int, username: String, usernameToAccept: String) =
+            userService.followRequest(userId, username, usernameToAccept, FollowRequestType.ACCEPT)
+
+        fun rejectFollowRequest(userId: Int, username: String, usernameToReject: String) =
+            userService.followRequest(userId, username, usernameToReject, FollowRequestType.REJECT)
 
         // FEED
         fun getFeed(
