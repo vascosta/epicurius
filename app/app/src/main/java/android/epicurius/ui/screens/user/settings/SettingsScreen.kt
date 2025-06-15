@@ -51,18 +51,15 @@ fun SettingsScreen(
     enableButtons: Boolean
 ) {
     var showSettingsDialog by remember { mutableStateOf(false) }
-    var dialogTitle by remember { mutableStateOf("") }
-
     var showDeleteAccountDialog by remember { mutableStateOf(false) }
-
+    var dialogTitle by remember { mutableStateOf("") }
     val showDialogFor = { title: String ->
         dialogTitle = title
         showSettingsDialog = true
     }
-
     val settingOptions = listOf(
         "Favourites" to { onFavouritesRequest() },
-        "Change username" to { showDialogFor("Change Username") },
+        "Change name" to { showDialogFor("Change Name") },
         "Change email" to { showDialogFor("Change Email") },
         "Change password" to { showDialogFor("Change Password") },
         "Change country" to { showDialogFor("Change Country") },
@@ -94,11 +91,11 @@ fun SettingsScreen(
                             .background(Color.White)
                     ) {
                         Spacer(modifier = Modifier.fillMaxHeight(0.02f))
-                        settingOptions.forEach { (label, action) ->
+                        settingOptions.forEach { (label, onClick) ->
                             SettingsButton(
-                                text = label,
-                                onClick = action,
+                                onClick = onClick,
                                 enabled = enableButtons,
+                                text = label
                             )
                         }
                         Spacer(modifier = Modifier.weight(1f))
@@ -108,20 +105,20 @@ fun SettingsScreen(
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             SettingsButton(
-                                text = "Delete account",
                                 onClick = { showDeleteAccountDialog = true },
-                                enabled = enableButtons
+                                enabled = enableButtons,
+                                text = "Delete account",
                             )
                             SettingsButton(
-                                text = "Logout",
                                 onClick = onLogout,
-                                enabled = enableButtons
+                                enabled = enableButtons,
+                                text = "Logout",
                             )
                         }
                         if (showSettingsDialog) {
                             SettingsDialog(
                                 title = dialogTitle,
-                                user = userInfo,
+                                userInfo = userInfo,
                                 onDismissRequest = { showSettingsDialog = false },
                                 onConfirm = onUserUpdate,
                                 enableButtons = enableButtons

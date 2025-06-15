@@ -30,7 +30,7 @@ import java.util.Locale
 @Composable
 fun SettingsDialog(
     title: String,
-    user: UserInfo,
+    userInfo: UserInfo,
     onDismissRequest: () -> Unit,
     onConfirm: (
         name: String?,
@@ -44,27 +44,59 @@ fun SettingsDialog(
     ) -> Unit,
     enableButtons: Boolean
 ) {
-    var username by remember { mutableStateOf(user.name) }
-    var email by remember { mutableStateOf(user.email) }
+    var name by remember { mutableStateOf(userInfo.name) }
+    var email by remember { mutableStateOf(userInfo.email) }
     var password by remember { mutableStateOf("") }
     var confirmPassword by remember { mutableStateOf("") }
-    var privacy by remember { mutableStateOf(user.privacy) }
-    var country by remember { mutableStateOf(user.country) }
-    var intolerances by remember { mutableStateOf(user.intolerances.map { it.displayName }) }
-    var diets by remember { mutableStateOf(user.diets.map { it.displayName }) }
+    var privacy by remember { mutableStateOf(userInfo.privacy) }
+    var country by remember { mutableStateOf(userInfo.country) }
+    var intolerances by remember { mutableStateOf(userInfo.intolerances.map { it.displayName }) }
+    var diets by remember { mutableStateOf(userInfo.diets.map { it.displayName }) }
 
     val txt = title.removePrefix("Change ").lowercase()
 
     AlertDialog(
-        onDismissRequest = { onDismissRequest() },
+        onDismissRequest = { if (enableButtons) onDismissRequest() },
+        confirmButton = {
+            TextButton(
+                onClick = {
+                    onConfirm(
+                        name.takeIf { name != "" && name != userInfo.name },
+                        email.takeIf { email != "" && email != userInfo.email },
+                        country.takeIf { country != userInfo.country },
+                        password.takeIf { password != "" },
+                        confirmPassword.takeIf { confirmPassword != "" },
+                        privacy.takeIf { privacy != userInfo.privacy },
+                        intolerances.map {
+                            Intolerance.valueOf(
+                                it.uppercase().replace(Regex("[\\s-]"), "_")
+                            )
+                        }.takeIf { it != userInfo.intolerances }?.toSet(),
+                        diets.map {
+                            Diet.valueOf(
+                                it.uppercase().replace(Regex("[\\s-]"), "_")
+                            )
+                        }.takeIf { it != userInfo.diets}?.toSet()
+                    )
+                    onDismissRequest()
+                },
+                enabled = enableButtons
+            ) { Text("Confirm") }
+        },
+        dismissButton = {
+            TextButton(
+                onClick = { onDismissRequest() },
+                enabled = enableButtons
+            ) { Text("Cancel") }
+        },
         title = { Text(title) },
         text = {
             Column {
                 when (txt) {
-                    "username" -> {
+                    "name" -> {
                         TextField(
-                            value = username,
-                            onValueChange = { username = it },
+                            value = name,
+                            onValueChange = { name = it },
                             enabled = enableButtons,
                             label = "New $txt"
                         )
@@ -142,40 +174,6 @@ fun SettingsDialog(
                     else -> { Text("Unknown setting") }
                 }
             }
-        },
-        confirmButton = {
-            TextButton(
-                onClick = {
-                    onConfirm(
-                        username.takeIf { username != "" },
-                        email.takeIf { email != "" },
-                        country.takeIf { country != user.country },
-                        password.takeIf { password != "" },
-                        confirmPassword.takeIf { confirmPassword != "" },
-                        privacy.takeIf { privacy != user.privacy },
-                        if (intolerances.isEmpty()) null
-                        else intolerances.map {
-                            Intolerance.valueOf(
-                                it.uppercase().replace(Regex("[\\s-]"), "_")
-                            )
-                        }.toSet(),
-                        if (diets.isEmpty()) null
-                        else diets.map {
-                            Diet.valueOf(
-                                it.uppercase().replace(Regex("[\\s-]"), "_")
-                            )
-                        }.toSet()
-                    )
-                    onDismissRequest()
-                },
-                enabled = enableButtons
-            ) { Text("Confirm") }
-        },
-        dismissButton = {
-            TextButton(
-                onClick = { onDismissRequest() },
-                enabled = enableButtons
-            ) { Text("Cancel") }
         }
     )
 }
