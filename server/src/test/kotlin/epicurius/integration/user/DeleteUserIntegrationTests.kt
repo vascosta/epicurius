@@ -14,7 +14,7 @@ class DeleteUserIntegrationTests : UserIntegrationTest() {
         // when deleting the user
         val cookieHeader = deleteUser(user.token)
 
-        // then the user is deleted successfully
+        // then the user is deleted successfully with code 204
         assertTrue(cookieHeader.isEmpty())
     }
 }

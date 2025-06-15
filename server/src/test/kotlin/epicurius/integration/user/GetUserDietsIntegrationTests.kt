@@ -15,7 +15,7 @@ class GetUserDietsIntegrationTests : UserIntegrationTest() {
         // when retrieving the user's diets
         val body = getUserDiets(user.token)
 
-        // then the user's diets are retrieved successfully
+        // then the user's diets are retrieved successfully with code 200
         assertNotNull(body)
         assertEquals(user.user.diets, body.diets)
     }

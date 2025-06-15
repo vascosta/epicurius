@@ -15,7 +15,7 @@ class GetUserIntolerancesIntegrationTests : UserIntegrationTest() {
         // when retrieving the user's intolerances
         val body = getUserIntolerances(user.token)
 
-        // then the user's intolerances are retrieved successfully
+        // then the user's intolerances are retrieved successfully with code 200
         assertNotNull(body)
         assertEquals(user.user.intolerances, body.intolerances)
     }

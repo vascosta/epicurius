@@ -15,7 +15,7 @@ class GetUserFollowRequestsIntegrationTests : UserIntegrationTest() {
         // when retrieving the follow requests of the user
         val body = getUserFollowRequests(user.token)
 
-        // then the follow requests are retrieved successfully
+        // then the follow requests are retrieved successfully with code 200
         assertNotNull(body)
         assertTrue(body.users.isEmpty())
     }

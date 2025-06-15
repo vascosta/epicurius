@@ -23,7 +23,7 @@ class FollowIntegrationTests : UserIntegrationTest() {
         // given two users (publicTestUser and privateTestUser)
 
         // when following a public user
-        // then the user is followed successfully
+        // then the user is followed successfully with code 204
         follow(privateTestUser.token, publicTestUser.user.name)
     }
 

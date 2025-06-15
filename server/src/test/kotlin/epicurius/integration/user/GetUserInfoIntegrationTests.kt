@@ -15,7 +15,7 @@ class GetUserInfoIntegrationTests : UserIntegrationTest() {
         // when retrieving the user info
         val body = getUserInfo(user.token)
 
-        // then the user info is retrieved successfully
+        // then the user info is retrieved successfully with code 200
         assertNotNull(body)
         assertEquals(user.user.toUserInfo(), body.userInfo)
     }

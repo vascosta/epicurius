@@ -23,7 +23,7 @@ class GetUserProfileIntegrationTests : UserIntegrationTest() {
         // when retrieving the user profile
         val body = getUserProfile(testUser.token, testUser.user.name)
 
-        // then the user profile is retrieved successfully
+        // then the user profile is retrieved successfully with code 200
         assertNotNull(body)
         assertEquals(testUser.user.name, body.userProfile.name)
         assertEquals(testUser.user.country, body.userProfile.country)
@@ -41,7 +41,7 @@ class GetUserProfileIntegrationTests : UserIntegrationTest() {
         // when retrieving the other user profile
         val body = getUserProfile(testUser.token, testUser2.user.name)
 
-        // then the user profile is retrieved successfully
+        // then the user profile is retrieved successfully with code 200
         assertNotNull(body)
         assertEquals(testUser2.user.name, body.userProfile.name)
         assertEquals(testUser2.user.country, body.userProfile.country)

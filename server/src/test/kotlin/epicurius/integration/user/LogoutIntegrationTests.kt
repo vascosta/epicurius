@@ -14,7 +14,7 @@ class LogoutIntegrationTests : UserIntegrationTest() {
         // when logging out
         val cookieHeader = logout(user.token)
 
-        // then the user is logged out successfully
+        // then the user is logged out successfully with code 204
         assertTrue(cookieHeader.isEmpty())
     }
 }

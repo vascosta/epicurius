@@ -24,7 +24,7 @@ class UnfollowIntegrationTests : UserIntegrationTest() {
         tm.run { it.userRepository.follow(testUser.user.id, testUser2.user.id, FollowingStatus.ACCEPTED.ordinal) }
 
         // when unfollowing a user
-        // then the user is unfollowed successfully
+        // then the user is unfollowed successfully with code 204
         unfollow(testUser.token, testUser2.user.name)
     }
 

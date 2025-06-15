@@ -15,7 +15,7 @@ class GetUserFollowingIntegrationTests : UserIntegrationTest() {
         // when retrieving the following of the user
         val body = getUserFollowing(user.token, null, 10)
 
-        // then the following are retrieved successfully
+        // then the following are retrieved successfully with code 200
         assertNotNull(body)
         assertTrue(body.users.isEmpty())
     }

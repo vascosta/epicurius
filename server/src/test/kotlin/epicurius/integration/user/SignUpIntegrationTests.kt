@@ -28,7 +28,7 @@ class SignUpIntegrationTests : UserIntegrationTest() {
         // when creating a user
         val cookieHeader = signUp(username, email, "PT", password)
 
-        // then the user is created successfully
+        // then the user is created successfully with code 201
         assertTrue(cookieHeader.isNotEmpty())
     }
 

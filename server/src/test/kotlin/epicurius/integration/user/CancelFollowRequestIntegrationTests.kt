@@ -24,7 +24,7 @@ class CancelFollowRequestIntegrationTests : UserIntegrationTest() {
         tm.run { it.userRepository.follow(publicTestUser.user.id, privateTestUser.user.id, FollowingStatus.PENDING.ordinal) }
 
         // when canceling the follow request
-        // then the follow request is canceled successfully
+        // then the follow request is canceled successfully with code 204
         cancelFollowRequest(publicTestUser.token, privateTestUser.user.name)
     }
 

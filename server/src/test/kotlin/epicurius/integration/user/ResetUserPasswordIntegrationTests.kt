@@ -22,7 +22,7 @@ class ResetUserPasswordIntegrationTests : UserIntegrationTest() {
         // given a user (testUser) and a new password (testPassword)
 
         // when resetting the password
-        // then the password was reset successfully
+        // then the password was reset successfully with code 204
         resetUserPassword(testUser.user.email, testPassword)
     }
 

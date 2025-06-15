@@ -31,7 +31,7 @@ class LoginIntegrationTests : UserIntegrationTest() {
         // when logging in by name
         val cookieHeader = login(username, password = password)
 
-        // then the user is logged in successfully
+        // then the user is logged in successfully with code 204
         assertTrue(cookieHeader.isNotEmpty())
     }
 
@@ -45,7 +45,7 @@ class LoginIntegrationTests : UserIntegrationTest() {
         // when logging in by email
         val cookieHeader = login(email = email, password = password)
 
-        // then the user is logged in successfully
+        // then the user is logged in successfully with code 204
         assertTrue(cookieHeader.isNotEmpty())
     }
 

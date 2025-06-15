@@ -15,7 +15,7 @@ class GetUserFollowersIntegrationTests : UserIntegrationTest() {
         // when retrieving the followers of the user
         val body = getUserFollowers(user.token, null, 10)
 
-        // then the followers are retrieved successfully
+        // then the followers are retrieved successfully with code 200
         assertNotNull(body)
         assertTrue(body.users.isEmpty())
     }
