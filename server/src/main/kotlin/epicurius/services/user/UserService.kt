@@ -4,7 +4,6 @@ import epicurius.domain.exceptions.FollowRequestAlreadyBeenSent
 import epicurius.domain.exceptions.FollowRequestNotFound
 import epicurius.domain.exceptions.IncorrectPassword
 import epicurius.domain.exceptions.InvalidCountry
-import epicurius.domain.exceptions.InvalidFollowRequestType
 import epicurius.domain.exceptions.InvalidSelfAcceptFollowRequest
 import epicurius.domain.exceptions.InvalidSelfCancelFollowRequest
 import epicurius.domain.exceptions.InvalidSelfFollow

@@ -124,6 +124,16 @@ open class HttpTest : EpicuriusUnitTest() {
         ) =
             userController.followRequest(authenticatedUser, username, FollowRequestType.CANCEL)
 
+        fun acceptFollowRequest(
+            authenticatedUser: AuthenticatedUser,
+            username: String,
+        ) = userController.followRequest(authenticatedUser, username, FollowRequestType.ACCEPT)
+
+        fun rejectFollowRequest(
+            authenticatedUser: AuthenticatedUser,
+            username: String,
+        ) = userController.followRequest(authenticatedUser, username, FollowRequestType.REJECT)
+
         fun unfollow(
             authenticatedUser: AuthenticatedUser,
             username: String,
