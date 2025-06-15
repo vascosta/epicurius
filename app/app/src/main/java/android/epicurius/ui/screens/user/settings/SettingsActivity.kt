@@ -23,7 +23,7 @@ class SettingsActivity : EpicuriusActivity() {
         super.onCreate(savedInstanceState)
         lifecycleScope.launch {
             viewModel.userInfo.collectLatest { state ->
-                if (state is Idle) viewModel.session.getUserInfo()
+                if (state is Idle) viewModel.getUserInfo()
             }
         }
         setContent {
@@ -49,7 +49,7 @@ class SettingsActivity : EpicuriusActivity() {
                         )
                     },
                     onLogout = { viewModel.logout() },
-                    onDeleteAccount = {  },
+                    onDeleteAccount = { viewModel.deleteAccount() },
                     enableButtons = viewModel.enableButtons
                 )
             }

@@ -4,13 +4,13 @@ import android.content.Context
 import android.epicurius.domain.Diet
 import android.epicurius.domain.Intolerance
 import android.epicurius.domain.user.UserInfo
-import android.epicurius.domain.user.UserProfile
 import android.epicurius.services.EpicuriusService
 import android.epicurius.services.api.user.models.input.UpdateUserInputModel
 import android.epicurius.storage.Session
 import android.epicurius.ui.screens.user.UserViewModel
 import android.epicurius.ui.screens.utils.LoadState
 import android.epicurius.ui.screens.utils.apiSuccess
+import android.epicurius.ui.screens.utils.cache
 import android.epicurius.ui.screens.utils.idle
 import android.epicurius.ui.screens.utils.loading
 import androidx.lifecycle.viewModelScope
@@ -27,6 +27,12 @@ class SettingsViewModel(
     private val userInfoFlow = MutableStateFlow<LoadState<UserInfo>>(idle())
     val userInfo = userInfoFlow.asStateFlow()
 
+    fun getUserInfo() {
+        disableButtons()
+        userInfoFlow.value = loading()
+        viewModelScope.launch { getCachedUserInfo() }
+    }
+
     fun updateUser(
         name: String?,
         email: String?,
@@ -37,43 +43,39 @@ class SettingsViewModel(
         intolerances: Set<Intolerance>?,
         diets: Set<Diet>?
     ) {
-        userInfoFlow.value = loading()
         disableButtons()
+        if (
+            (name == null && email == null && country == null && password == null &&
+            confirmPassword == null && privacy == null && intolerances == null && diets == null)
+        ) {
+            enableButtons()
+            showToast("give new information before updating")
+            return
+        }
         if (!validateUpdateUserInfo(name, email, password, confirmPassword)) {
             enableButtons()
             return
         }
+        userInfoFlow.value = loading()
         val updateUserInfo = UpdateUserInputModel(name, email, country, password, privacy, intolerances, diets)
-        viewModelScope.launch {
-            handleUpdateUser(updateUserInfo)
-        }
+        viewModelScope.launch { handleUpdateUser(updateUserInfo) }
 
     }
 
     fun deleteAccount() {
-
+        disableButtons()
+        viewModelScope.launch { handleDeleteAccount() }
     }
 
     fun logout() {
         disableButtons()
-        viewModelScope.launch {
-            handleLogout()
-        }
+        viewModelScope.launch { handleLogout() }
     }
 
-    private suspend fun handleLogout() {
-        val result = request {
-            val token = session.getToken()
-            service.authService.logout(token)
-        }
-        when {
-            result.isFailure -> {
-                enableButtons()
-            }
-            result.isSuccess -> {
-                onSessionExpired(false)
-            }
-        }
+    private suspend fun getCachedUserInfo() {
+        val userInfo = session.getUserInfo()
+        userInfoFlow.value = cache(userInfo)
+        enableButtons()
     }
 
     private suspend fun handleUpdateUser(updateUserInfo: UpdateUserInputModel) {
@@ -82,6 +84,7 @@ class SettingsViewModel(
             service.userService.updateUser(token, updateUserInfo)
         }
         when {
+            result.isFailure -> getCachedUserInfo()
             result.isSuccess -> {
                 val oldUserInfo = session.getUserInfo()
                 val newUserInfo = oldUserInfo.copy(
@@ -95,9 +98,35 @@ class SettingsViewModel(
                 )
                 session.updateUserInfo(newUserInfo)
                 userInfoFlow.value = apiSuccess(newUserInfo)
+                showToast("user information updated successfully")
             }
         }
         enableButtons()
+    }
+
+    private suspend fun handleDeleteAccount() {
+        val result = request {
+            val token = session.getToken()
+            service.userService.deleteUser(token)
+        }
+        when {
+            result.isFailure -> enableButtons()
+            result.isSuccess -> {
+                showToast("account deleted successfully")
+                onSessionExpired(false)
+            }
+        }
+    }
+
+    private suspend fun handleLogout() {
+        val result = request {
+            val token = session.getToken()
+            service.authService.logout(token)
+        }
+        when {
+            result.isFailure -> enableButtons()
+            result.isSuccess -> onSessionExpired(false)
+        }
     }
 
     private fun validateUpdateUserInfo(
