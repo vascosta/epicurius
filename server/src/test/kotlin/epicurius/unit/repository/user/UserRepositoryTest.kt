@@ -66,6 +66,12 @@ open class UserRepositoryTest : RepositoryTest() {
         fun cancelFollowRequest(userId: Int, userIdToCancelFollowRequest: Int) =
             tm.run { it.userRepository.cancelFollowRequest(userId, userIdToCancelFollowRequest) }
 
+        fun acceptFollowRequest(userId: Int, userIdToAcceptFollowRequest: Int) =
+            tm.run { it.userRepository.acceptFollowRequest(userId, userIdToAcceptFollowRequest) }
+
+        fun rejectFollowRequest(userId: Int, userIdToRejectFollowRequest: Int) =
+            tm.run { it.userRepository.rejectFollowRequest(userId, userIdToRejectFollowRequest) }
+
         fun checkIfUserIsLoggedIn(userId: Int) =
             tm.run { it.userRepository.checkIfUserIsLoggedIn(userId) }
 
