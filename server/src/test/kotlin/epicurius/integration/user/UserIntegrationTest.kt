@@ -218,6 +218,24 @@ class UserIntegrationTest : EpicuriusIntegrationTest() {
         )
     }
 
+    fun acceptFollowRequest(token: String, username: String) {
+        patch<Unit>(
+            client,
+            api(Uris.User.USER_FOLLOW_REQUEST.replace("{name}", username) + "?type=${FollowRequestType.ACCEPT}"),
+            body = "",
+            token = token
+        )
+    }
+
+    fun rejectFollowRequest(token: String, username: String) {
+        patch<Unit>(
+            client,
+            api(Uris.User.USER_FOLLOW_REQUEST.replace("{name}", username) + "?type=${FollowRequestType.REJECT}"),
+            body = "",
+            token = token
+        )
+    }
+
     fun deleteUser(token: String): String {
         val result = delete<Unit>(
             client,
