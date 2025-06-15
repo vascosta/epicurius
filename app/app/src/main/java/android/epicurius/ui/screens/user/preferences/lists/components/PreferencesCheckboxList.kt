@@ -30,7 +30,6 @@ fun <T> PreferencesCheckboxList(
         modifier = Modifier.padding(bottom = 8.dp),
         style = MaterialTheme.typography.bodyMedium
     )
-
     items.forEachIndexed { idx, item ->
         Row(
             verticalAlignment = Alignment.CenterVertically
