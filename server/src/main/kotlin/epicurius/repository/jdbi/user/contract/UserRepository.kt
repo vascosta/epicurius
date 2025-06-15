@@ -28,6 +28,8 @@ interface UserRepository {
     fun follow(userId: Int, userIdToFollow: Int, status: Int)
     fun unfollow(userId: Int, userIdToUnfollow: Int)
     fun cancelFollowRequest(userId: Int, followerId: Int)
+    fun acceptFollowRequest(userId: Int, followerId: Int)
+    fun rejectFollowRequest(userId: Int, followerId: Int)
 
     fun deleteUser(userId: Int)
 

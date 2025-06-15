@@ -264,6 +264,32 @@ class JdbiUserRepository(private val handle: Handle) : UserRepository {
             .execute()
     }
 
+    override fun acceptFollowRequest(userId: Int, followerId: Int) {
+        handle.createUpdate(
+            """
+                UPDATE dbo.followers
+                SET status = :status
+                WHERE user_id = :user_id AND follower_id = :follower_id
+            """
+        )
+            .bind("user_id", userId)
+            .bind("follower_id", followerId)
+            .bind("status", FollowingStatus.ACCEPTED.ordinal)
+            .execute()
+    }
+
+    override fun rejectFollowRequest(userId: Int, followerId: Int) {
+        handle.createUpdate(
+            """
+                DELETE FROM dbo.followers
+                WHERE user_id = :user_id AND follower_id = :follower_id
+            """
+        )
+            .bind("user_id", userId)
+            .bind("follower_id", followerId)
+            .execute()
+    }
+
     override fun deleteUser(userId: Int) {
         handle.createUpdate(
             """
