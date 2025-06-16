@@ -28,7 +28,7 @@
         <activity
             android:name=".ui.screens.auth.login.LoginActivity"
             android:exported="false"
-            android:label="@string/title_activity_login_screen"
+            android:label="Login"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.App" />
         <activity

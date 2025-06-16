@@ -1,8 +1,7 @@
 <resources>
     <string name="app_name">app</string>
-    <string name="title_activity_login_screen">LoginScreen</string>
 
-    <string name="session_expired_msg">Session expired, please login again</string>
-    <string name="something_went_wrong_msg">Something went wrong</string>
-    <string name="could_not_connect_to_server_msg">Could not connect to server</string>
+    <string name="session_expired_msg">session expired, please login again</string>
+    <string name="something_went_wrong_msg">something went wrong</string>
+    <string name="could_not_connect_to_server_msg">could not connect to server</string>
 </resources>

@@ -29,7 +29,7 @@ import androidx.compose.ui.unit.dp
 fun ResetPasswordScreen(
     onBackButton: () -> Unit,
     onResetPassword: (email: String, password: String, confirmPassword: String) -> Unit,
-    buttonsEnable: Boolean
+    enableButtons: Boolean
 ) {
     var email by remember { mutableStateOf("") }
     var newPassword by remember { mutableStateOf("") }
@@ -41,7 +41,7 @@ fun ResetPasswordScreen(
                 titleText = "Reset Password",
                 backButton = true,
                 onBackButton = onBackButton,
-                buttonsEnable,
+                enableButtons,
                 icon = null
             )
          },
@@ -58,27 +58,27 @@ fun ResetPasswordScreen(
                 TextField(
                     value = email,
                     onValueChange = { email = it },
-                    enabled = buttonsEnable,
+                    enabled = enableButtons,
                     label = "Email"
                 )
                 PasswordTextField(
                     value = newPassword,
                     onValueChange = { newPassword = it },
-                    enabled = buttonsEnable,
+                    enabled = enableButtons,
                     label = "New Password"
                 )
                 PasswordTextField(
                     value = confirmPassword,
                     onValueChange = { confirmPassword = it },
-                    enabled = buttonsEnable,
+                    enabled = enableButtons,
                     label = "Confirm New Password"
                 )
                 Spacer(Modifier.size(10.dp))
                 Button(
                     onClick = { onResetPassword(email, newPassword, confirmPassword) },
-                    enabled = buttonsEnable
+                    enabled = enableButtons
                 ) {
-                    if (buttonsEnable) { Text("Reset Password") }
+                    if (enableButtons) { Text("Reset Password") }
                     else { LoadingSpinner(Modifier.size(30.dp)) }
                 }
             }

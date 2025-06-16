@@ -17,7 +17,7 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -31,17 +31,17 @@ fun LoginScreen(
     onSignUp: () -> Unit,
     onLogin: (name: String?, email: String?, password: String) -> Unit,
     onForgotPassword: () -> Unit,
-    buttonsEnable: Boolean,
+    enableButtons: Boolean,
 ) {
-    var username by rememberSaveable { mutableStateOf("") }
-    var email by rememberSaveable { mutableStateOf("") }
-    var password by rememberSaveable { mutableStateOf("") }
+    var name by remember { mutableStateOf("") }
+    var email by remember { mutableStateOf("") }
+    var password by remember { mutableStateOf("") }
 
     Scaffold(
         topBar = {
             TopBar(
                 titleText = "Login",
-                enableButtons = buttonsEnable,
+                enableButtons = enableButtons,
                 icon = null
             )
         },
@@ -55,46 +55,44 @@ fun LoginScreen(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 TextField(
-                    value = username,
-                    onValueChange = { username = it },
-                    enabled = buttonsEnable,
-                    label = "Username"
+                    value = name,
+                    onValueChange = { name = it },
+                    enabled = enableButtons,
+                    label = "Name"
                 )
                 TextField(
                     value = email,
                     onValueChange = { email = it },
-                    enabled = buttonsEnable,
+                    enabled = enableButtons,
                     label = "Email"
                 )
                 PasswordTextField(
                     value = password,
                     onValueChange = { password = it },
-                    enabled = buttonsEnable,
+                    enabled = enableButtons,
                     label = "Password"
                 )
                 Row {
                     AuthButton(
                         onClick = { onSignUp() },
-                        enabled = buttonsEnable,
+                        enabled = enableButtons,
                         text = "SignUp"
                     )
                     AuthButton(
                         onClick = {
                             onLogin(
-                                if (username.isBlank()) { null }
-                                else { username },
-                                if (email.isBlank()) { null }
-                                else { email },
+                                if (name.isBlank()) null else name,
+                                if (email.isBlank()) null else email,
                                 password
                             )
                         },
-                        enabled = buttonsEnable,
+                        enabled = enableButtons,
                         text = "Login",
                     )
                 }
                 TextButton(
                     onClick = { onForgotPassword() },
-                    enabled = buttonsEnable
+                    enabled = enableButtons
                 ) { Text("Forgot your password?") }
             }
         }

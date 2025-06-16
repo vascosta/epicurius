@@ -17,7 +17,7 @@ class ResetPasswordActivity : EpicuriusActivity() {
                 onResetPassword = { email: String, password: String, confirmPassword: String ->
                     viewModel.resetPassword(email, password, confirmPassword)
                 },
-                buttonsEnable = viewModel.enableButtons
+                enableButtons = viewModel.enableButtons
             )
         }
     }

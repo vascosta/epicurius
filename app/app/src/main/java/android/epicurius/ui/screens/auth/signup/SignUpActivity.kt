@@ -2,7 +2,6 @@ package android.epicurius.ui.screens.auth.signup
 
 import android.epicurius.ui.EpicuriusActivity
 import android.epicurius.ui.screens.auth.login.LoginActivity
-import android.epicurius.ui.screens.feed.FeedActivity
 import android.epicurius.ui.navigation.navigateTo
 import android.epicurius.ui.screens.user.preferences.skipable.KnowMoreActivity
 import android.os.Bundle
@@ -23,7 +22,6 @@ class SignUpActivity : EpicuriusActivity() {
         setContent {
             MaterialTheme {
                 SignUpScreen(
-                    buttonsEnable = viewModel.enableButtons,
                     onSignUp = {
                         name: String,
                         email: String,
@@ -35,6 +33,7 @@ class SignUpActivity : EpicuriusActivity() {
                         }
                     },
                     onLogin = { navigateTo<LoginActivity>() },
+                    enableButtons = viewModel.enableButtons
                 )
             }
         }

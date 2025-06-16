@@ -5,9 +5,6 @@ import android.epicurius.services.EpicuriusService
 import android.epicurius.services.api.auth.models.input.LoginInputModel
 import android.epicurius.storage.Session
 import android.epicurius.ui.screens.user.UserViewModel
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 

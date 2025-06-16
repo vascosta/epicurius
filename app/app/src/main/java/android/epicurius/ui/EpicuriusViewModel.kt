@@ -105,7 +105,7 @@ open class EpicuriusViewModel(
             showToast(context.getString(R.string.session_expired_msg))
         }
         viewModelScope.launch { session.delete(context) }
-        context.navigateTo<LoginActivity>()
+        context.navigateTo<LoginActivity>(finishCurrent = true)
     }
 
     fun enableButtons() {

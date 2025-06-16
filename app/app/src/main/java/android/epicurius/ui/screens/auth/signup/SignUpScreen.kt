@@ -28,7 +28,6 @@ import java.util.Locale
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun SignUpScreen(
-    buttonsEnable: Boolean,
     onSignUp: (
         name: String,
         email: String,
@@ -36,9 +35,10 @@ fun SignUpScreen(
         confirmPassword: String,
         country: String
     ) -> Unit,
-    onLogin: () -> Unit
+    onLogin: () -> Unit,
+    enableButtons: Boolean
 ) {
-    var username by remember { mutableStateOf("") }
+    var name by remember { mutableStateOf("") }
     var email by remember{ mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var confirmPassword by remember { mutableStateOf("") }
@@ -48,7 +48,7 @@ fun SignUpScreen(
         topBar = {
             TopBar(
                 titleText = "SignUp",
-                enableButtons = buttonsEnable,
+                enableButtons = enableButtons,
                 icon = null
             )
         },
@@ -61,27 +61,27 @@ fun SignUpScreen(
                 verticalArrangement = Arrangement.Center
             ) {
                 TextField(
-                    value = username,
-                    onValueChange = { username = it },
-                    enabled = buttonsEnable,
-                    label = "Username"
+                    value = name,
+                    onValueChange = { name = it },
+                    enabled = enableButtons,
+                    label = "Name"
                 )
                 TextField(
                     value = email,
                     onValueChange = { email = it },
-                    enabled = buttonsEnable,
+                    enabled = enableButtons,
                     label = "Email"
                 )
                 PasswordTextField(
                     value = password,
                     onValueChange = { password = it },
-                    enabled = buttonsEnable,
+                    enabled = enableButtons,
                     label = "Password"
                 )
                 PasswordTextField(
                     value = confirmPassword,
                     onValueChange = { confirmPassword = it },
-                    enabled = buttonsEnable,
+                    enabled = enableButtons,
                     label = "Confirm Password",
                 )
                 val countryCodes = remember { Locale.getISOCountries().sorted() }
@@ -91,26 +91,26 @@ fun SignUpScreen(
                     onValueChange = { country = it },
                     label = "Country",
                     modifier = Modifier.padding(5.dp),
-                    enabled = buttonsEnable
+                    enabled = enableButtons
                 )
                 Row {
                     AuthButton(
                         text = "Login",
                         onClick = { onLogin() },
-                        enabled = buttonsEnable
+                        enabled = enableButtons
                     )
                     AuthButton(
                         text = "SignUp",
                         onClick = {
                             onSignUp(
-                                username,
+                                name,
                                 email,
                                 password,
                                 confirmPassword,
                                 country
                             )
                         },
-                        enabled = buttonsEnable
+                        enabled = enableButtons
                     )
                 }
             }
@@ -123,5 +123,5 @@ fun SignUpScreen(
 @Preview
 @Composable
 fun SignUpPreview() {
-    SignUpScreen(true, {_, _, _, _, _ -> }, {})
+    SignUpScreen({_, _, _, _, _ -> }, {}, true)
 }
