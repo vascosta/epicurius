@@ -47,8 +47,7 @@ class RemoveMealTimeFromDailyMealPlannerIntegrationTests : MealPlannerIntegratio
             api(
                 Uris.MealPlanner.CLEAN_MEAL_TIME
                     .replace("{date}", date.toString())
-                    .replace("{mealTime}", MealTime.BREAKFAST.toString()
-                )
+                    .replace("{mealTime}", MealTime.BREAKFAST.toString())
             ),
             token = testUser.token,
             responseStatus = HttpStatus.NOT_FOUND
