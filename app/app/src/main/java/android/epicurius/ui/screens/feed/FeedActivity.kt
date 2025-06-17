@@ -13,6 +13,7 @@ import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.compose.runtime.collectAsState
 import androidx.lifecycle.lifecycleScope
+import epicurius.domain.collection.CollectionType
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
@@ -61,7 +62,8 @@ class FeedActivity : EpicuriusActivity() {
                     )
                 },
                 onRecipeRequest = ::navigateToRecipeProfileActivity,
-                onCollectionsRequest = { recipeId: Int -> viewModel.getCollections(recipeId) },
+                onCollectionsRequest = { recipeId: Int -> viewModel.getCollections(recipeId,
+                    CollectionType.FAVOURITE) },
                 onDailyMenuRequest = { navigateTo<DailyMenuActivity>(true) },
                 onCollectionsClear = { viewModel.clearCollections() },
                 onUserFeedRefresh = { viewModel.refreshUserFeed() },

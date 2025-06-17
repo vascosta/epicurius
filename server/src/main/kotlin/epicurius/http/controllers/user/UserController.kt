@@ -58,15 +58,15 @@ class UserController(val userService: UserService) {
     ): ResponseEntity<*> {
         return if (name == authenticatedUser.user.name) {
             val userProfilePicture = userService.getProfilePicture(authenticatedUser.user.profilePictureName)
-            val followers = userService.getFollowersCount(authenticatedUser.user.id)
-            val following = userService.getFollowingCount(authenticatedUser.user.id)
+            val followersCount = userService.getFollowersCount(authenticatedUser.user.id)
+            val followingCount = userService.getFollowingCount(authenticatedUser.user.id)
             val userProfile = UserProfile(
                 authenticatedUser.user.name,
                 authenticatedUser.user.country,
                 authenticatedUser.user.privacy,
                 userProfilePicture,
-                followers,
-                following,
+                followersCount,
+                followingCount,
             )
             okHttpResponse(GetUserProfileOutputModel(userProfile))
         } else {
