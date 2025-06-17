@@ -74,7 +74,7 @@ fun CollectionProfileBox(
                 collectionId = collection.id,
                 onCollectionDelete = onCollectionDelete,
                 onDismissRequest = { if (enableButtons) showDeleteDialog = false },
-                buttonsEnable = enableButtons
+                enableButtons = enableButtons
             )
         }
     }
