@@ -329,9 +329,9 @@ fun UserProfilePreview() {
     )
 
     UserProfileScreen(
-        isAnotherUserProfile = false,
+        isAnotherUserProfile = true,
         isFollower = false,
-        userProfileVisibility = false,
+        userProfileVisibility = true,
         apiSuccess(userRecipes),
         null,
         apiSuccess(kitchenBookCollections),

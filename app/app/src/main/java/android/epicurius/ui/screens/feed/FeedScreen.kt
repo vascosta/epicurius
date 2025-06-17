@@ -5,9 +5,11 @@ import android.epicurius.domain.collection.CollectionProfile
 import android.epicurius.domain.recipe.Cuisine
 import android.epicurius.domain.recipe.MealType
 import android.epicurius.domain.recipe.RecipeInfo
+import android.epicurius.domain.user.SearchUser
 import android.epicurius.ui.navigation.BottomBar
 import android.epicurius.ui.navigation.TopBar
 import android.epicurius.ui.screens.collections.components.CollectionsStateBundle
+import android.epicurius.ui.screens.feed.components.FollowRequestDialog
 import android.epicurius.ui.screens.recipe.components.RecipeInfoBox
 import android.epicurius.ui.screens.utils.LoadState
 import android.epicurius.ui.screens.utils.LoadStateRenderer
@@ -26,7 +28,11 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AddAlert
+import androidx.compose.material.icons.filled.Mail
 import androidx.compose.material3.Button
+import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -41,6 +47,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 
@@ -65,10 +72,14 @@ fun FeedScreen(
     onDailyMenuRequest: () -> Unit,
     onCollectionsClear: () -> Unit,
     onUserFeedRefresh: () -> Unit,
+    onFollowRequests: () -> List<SearchUser>,
+    onAcceptFollowRequest: (userId: Int) -> Unit,
+    onRejectFollowRequest: (userId: Int) -> Unit,
     enableButtons: Boolean
 ) {
     var showLoadingSpinnerOnLoadMore by remember { mutableStateOf(!enableButtons) }
     var enableLoadMoreButton by remember { mutableStateOf(!enableButtons) }
+    var showFollowRequestsDialog by remember { mutableStateOf(false) }
 
     LaunchedEffect(userFeedState) {
         if (userFeedState is Loaded) {
@@ -81,7 +92,8 @@ fun FeedScreen(
             TopBar(
                 titleText = "For you to cook",
                 enableButtons = enableButtons
-        ) },
+            )
+        },
         bottomBar = { BottomBar(buttonsEnable = enableButtons) },
         content = { paddingValues ->
             Column(
@@ -93,10 +105,22 @@ fun FeedScreen(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Row(
-                    modifier = Modifier.fillMaxWidth().height(45.dp),
-                    horizontalArrangement = Arrangement.End,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(45.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
+                    IconButton(
+                        onClick = { showFollowRequestsDialog = true },
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Mail,
+                            contentDescription = "Notifications",
+                            modifier = Modifier.size(30.dp),
+                            tint = Color(0xFFAC88DC)
+                        )
+                    }
                     IconButton(
                         onClick = onDailyMenuRequest
                     ) {
@@ -132,6 +156,7 @@ fun FeedScreen(
                             Text(
                                 text = "No recipes for you to cook, how about following new users?",
                                 modifier = Modifier.padding(10.dp),
+                                textAlign = TextAlign.Center,
                                 color = Color.Gray
                             )
                         }
@@ -143,13 +168,24 @@ fun FeedScreen(
                         showLoadingSpinnerOnLoadMore = true
                         enableLoadMoreButton = false
                     },
-                    modifier = Modifier.fillMaxWidth().padding(10.dp),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(10.dp),
                     enabled = enableLoadMoreButton
                 ) {
                     if (!showLoadingSpinnerOnLoadMore) {
                         Text("Load More")
                     }
                     else { LoadingSpinner(Modifier.size(30.dp)) }
+                }
+
+                if (showFollowRequestsDialog) {
+                    FollowRequestDialog(
+                        onDismiss = { showFollowRequestsDialog = false },
+                        onFollowRequests = onFollowRequests,
+                        onAccept = onAcceptFollowRequest,
+                        onReject = onRejectFollowRequest
+                    )
                 }
             }
         },
@@ -195,6 +231,13 @@ fun FeedPreview() {
         {},
         {},
         {},
+        {},
+        {},
+        { listOf(
+            SearchUser(1, "TesteUser12345678901", null),
+            SearchUser(2, "AnotherUser1234567890", null),
+            SearchUser(4, "ShortUser", null),
+        ) },
         {},
         {},
         true

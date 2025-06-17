@@ -1,6 +1,7 @@
 package android.epicurius.ui.screens.feed
 
 import android.epicurius.domain.collection.CollectionProfile
+import android.epicurius.domain.user.SearchUser
 import android.epicurius.ui.EpicuriusActivity
 import android.epicurius.ui.navigation.Intents
 import android.epicurius.ui.navigation.navigateTo
@@ -67,6 +68,9 @@ class FeedActivity : EpicuriusActivity() {
                 onDailyMenuRequest = { navigateTo<DailyMenuActivity>(true) },
                 onCollectionsClear = { viewModel.clearCollections() },
                 onUserFeedRefresh = { viewModel.refreshUserFeed() },
+                onFollowRequests = { listOf(SearchUser(1, "Test User", null)) },
+                onAcceptFollowRequest = {  },
+                onRejectFollowRequest = {  },
                 enableButtons = viewModel.enableButtons
             )
         }
