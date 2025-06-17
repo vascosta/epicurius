@@ -78,8 +78,8 @@ fun ResetPasswordScreen(
                     onClick = { onResetPassword(email, newPassword, confirmPassword) },
                     enabled = enableButtons
                 ) {
-                    if (enableButtons) { Text("Reset Password") }
-                    else { LoadingSpinner(Modifier.size(30.dp)) }
+                    if (enableButtons) Text("Reset Password")
+                    else LoadingSpinner(Modifier.size(30.dp))
                 }
             }
         },

@@ -20,21 +20,21 @@ fun AuthButton(
     enabled: Boolean,
     text: String
 ) {
-    var showLoadingSpinner by remember { mutableStateOf(false) }
+    var showLoadingSpinnerOnButton by remember { mutableStateOf(false) }
 
     LaunchedEffect(enabled) {
-        if (enabled) showLoadingSpinner = false
+        if (enabled) showLoadingSpinnerOnButton = false
     }
 
     Button(
         onClick = {
             onClick()
-            showLoadingSpinner = true
+            showLoadingSpinnerOnButton = true
         },
         modifier = Modifier.padding(10.dp),
         enabled = enabled
     ) {
-        if (!showLoadingSpinner) { Text(text) }
+        if (!showLoadingSpinnerOnButton) { Text(text) }
         else { LoadingSpinner(Modifier.size(25.dp)) }
     }
 }
