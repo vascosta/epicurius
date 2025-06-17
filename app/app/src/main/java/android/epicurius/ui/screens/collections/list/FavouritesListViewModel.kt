@@ -1,4 +1,4 @@
-package android.epicurius.ui.screens.collections.favourites.list
+package android.epicurius.ui.screens.collections.list
 
 import android.content.Context
 import android.epicurius.domain.recipe.RecipeInfo

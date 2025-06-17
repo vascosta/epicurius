@@ -1,4 +1,4 @@
-package android.epicurius.ui.screens.collections.favourites.list
+package android.epicurius.ui.screens.collections.list
 
 import android.epicurius.domain.recipe.Cuisine
 import android.epicurius.domain.recipe.MealType
@@ -31,7 +31,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -153,7 +152,7 @@ fun FavouritesListScreen(
                                     showDeleteCollectionDialog = false
                                 }
                             },
-                            buttonsEnable = enableButtons
+                            enableButtons = enableButtons
                         )
                     }
                 }

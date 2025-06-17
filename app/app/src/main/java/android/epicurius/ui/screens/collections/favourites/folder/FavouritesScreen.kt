@@ -8,9 +8,9 @@ import android.epicurius.ui.screens.collections.favourites.folder.components.Cre
 import android.epicurius.ui.screens.utils.LoadState
 import android.epicurius.ui.screens.utils.LoadStateRenderer
 import android.epicurius.ui.screens.utils.Loaded
+import android.epicurius.ui.screens.utils.LoadingSpinner
 import android.epicurius.ui.screens.utils.apiSuccess
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -18,15 +18,18 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -47,8 +50,12 @@ fun FavouritesScreen(
     onFavouritesRefresh: () -> Unit,
     enableButtons: Boolean
 ) {
-    var showCreateCollectionDialog by remember { mutableStateOf(!enableButtons) }
+    var showCreateCollectionDialog by remember { mutableStateOf(false) }
+    var showLoadingSpinnerOnLoadMoreButton by remember { mutableStateOf(false) }
 
+    LaunchedEffect(enableButtons) {
+        if (enableButtons) showLoadingSpinnerOnLoadMoreButton = false
+    }
     Scaffold(
         topBar = {
             TopBar(
@@ -61,65 +68,74 @@ fun FavouritesScreen(
         },
         bottomBar = { BottomBar(buttonsEnable = enableButtons && favouritesState is Loaded) },
         content = { paddingValues ->
-            LoadStateRenderer(
-                loadState = favouritesState,
-                swipeToRefresh = onFavouritesRefresh,
-                content = { favourites ->
-                    Column(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(paddingValues)
-                            .padding(10.dp)
-                            .background(Color.White)
-                            .verticalScroll(rememberScrollState()),
-                        horizontalAlignment = Alignment.CenterHorizontally
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(paddingValues)
+                    .padding(10.dp)
+                    .background(Color.White)
+                    .verticalScroll(rememberScrollState()),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Row {
+                    Spacer(Modifier.fillMaxWidth().weight(0.9f))
+                    IconButton(
+                        onClick = { showCreateCollectionDialog = true },
+                        enabled = enableButtons
                     ) {
-                        if (favouritesState is Loaded) {
-                            Box(Modifier.fillMaxWidth()) {
-                                Row {
-                                    Spacer(Modifier.weight(0.9f))
-                                    IconButton(
-                                        onClick = { showCreateCollectionDialog = true }
-                                    ) {
-                                        Icon(
-                                            imageVector = Icons.Default.Add,
-                                            contentDescription = "Create Collection"
-                                        )
-                                    }
-                                }
-                            }
-                            if (favourites.isEmpty()) {
-                                Text(
-                                    text = "You have no collections yet.",
-                                    modifier = Modifier.padding(16.dp),
-                                    color = Color.Gray
-                                )
-                                Text(
-                                    text = "Create your first collection by clicking the '+' button above.",
-                                    color = Color(0xFF4E0D8D)
-                                )
-                            } else {
-                                favourites.forEach {
-                                    CollectionProfileBox(
-                                        collection = it,
-                                        onCollectionRequest = onCollectionRequest,
-                                        onCollectionDelete = onCollectionDelete,
-                                        enableButtons = enableButtons
-                                    )
-                                    Spacer(modifier = Modifier.height(10.dp))
-                                }
-                            }
-                        }
-                    }
-                    if (showCreateCollectionDialog) {
-                        CreateCollectionDialog(
-                            onDismiss = { if (enableButtons) showCreateCollectionDialog = false },
-                            onCollectionCreate = onCollectionCreate,
-                            enableButtons = enableButtons
+                        Icon(
+                            imageVector = Icons.Default.Add,
+                            contentDescription = "Create Collection"
                         )
                     }
                 }
-            )
+                LoadStateRenderer(
+                    loadState = favouritesState,
+                    swipeToRefresh = onFavouritesRefresh,
+                    content = { favourites ->
+                        if (favourites.isNotEmpty()) {
+                            favourites.forEach {
+                                CollectionProfileBox(
+                                    collection = it,
+                                    onCollectionRequest = onCollectionRequest,
+                                    onCollectionDelete = onCollectionDelete,
+                                    enableButtons = enableButtons
+                                )
+                                Spacer(modifier = Modifier.height(10.dp))
+                            }
+                        }
+                        else if (favouritesState is Loaded) {
+                            Text(
+                                text = "You have no collections yet.",
+                                modifier = Modifier.padding(16.dp),
+                                color = Color.Gray
+                            )
+                            Text(
+                                text = "Create your first collection by clicking the '+' button above.",
+                                color = Color(0xFF4E0D8D)
+                            )
+                        }
+                    }
+                )
+                Button(
+                    onClick = {
+                        onFavouritesRefresh()
+                        showLoadingSpinnerOnLoadMoreButton = true
+                    },
+                    modifier = Modifier.fillMaxWidth().padding(10.dp),
+                    enabled = enableButtons
+                ) {
+                    if (!showLoadingSpinnerOnLoadMoreButton) Text("Load More")
+                    else LoadingSpinner(Modifier.size(30.dp))
+                }
+                if (showCreateCollectionDialog) {
+                    CreateCollectionDialog(
+                        onDismiss = { if (enableButtons) showCreateCollectionDialog = false },
+                        onCollectionCreate = onCollectionCreate,
+                        enableButtons = enableButtons
+                    )
+                }
+            }
         },
         containerColor = Color.White
     )

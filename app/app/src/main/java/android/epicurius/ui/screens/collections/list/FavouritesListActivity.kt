@@ -1,4 +1,4 @@
-package android.epicurius.ui.screens.collections.favourites.list
+package android.epicurius.ui.screens.collections.list
 
 import android.epicurius.ui.EpicuriusActivity
 import android.epicurius.ui.navigation.Intents
