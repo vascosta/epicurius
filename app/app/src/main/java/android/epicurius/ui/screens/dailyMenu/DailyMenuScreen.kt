@@ -6,7 +6,7 @@ import android.epicurius.domain.recipe.MealType
 import android.epicurius.domain.recipe.RecipeInfo
 import android.epicurius.ui.navigation.BottomBar
 import android.epicurius.ui.navigation.TopBar
-import android.epicurius.ui.screens.collections.components.CollectionsStateBundle
+import android.epicurius.ui.screens.collections.list.components.CollectionsStateBundle
 import android.epicurius.ui.screens.dailyMenu.components.MenuItemBox
 import android.epicurius.ui.screens.utils.LoadState
 import android.epicurius.ui.screens.utils.LoadStateRenderer

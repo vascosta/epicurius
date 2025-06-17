@@ -1,4 +1,4 @@
-package android.epicurius.ui.screens.collections.favourites.folder.components
+package android.epicurius.ui.screens.collections.components
 
 import android.epicurius.domain.collection.CollectionProfile
 import androidx.compose.foundation.background

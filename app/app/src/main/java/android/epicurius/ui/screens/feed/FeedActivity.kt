@@ -5,7 +5,7 @@ import android.epicurius.domain.user.SearchUser
 import android.epicurius.ui.EpicuriusActivity
 import android.epicurius.ui.navigation.Intents
 import android.epicurius.ui.navigation.navigateTo
-import android.epicurius.ui.screens.collections.components.CollectionsStateBundle
+import android.epicurius.ui.screens.collections.list.components.CollectionsStateBundle
 import android.epicurius.ui.screens.dailyMenu.DailyMenuActivity
 import android.epicurius.ui.screens.recipe.profile.RecipeProfileActivity
 import android.epicurius.ui.screens.utils.Idle

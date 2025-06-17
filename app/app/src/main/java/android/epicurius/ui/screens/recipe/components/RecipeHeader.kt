@@ -2,9 +2,8 @@ package android.epicurius.ui.screens.recipe.components
 
 import android.epicurius.R
 import android.epicurius.domain.collection.CollectionProfile
-import android.epicurius.ui.screens.collections.components.CollectionsListDialog
-import android.epicurius.ui.screens.collections.components.CollectionsStateBundle
-import android.epicurius.ui.screens.utils.LoadState
+import android.epicurius.ui.screens.collections.list.components.CollectionsListDialog
+import android.epicurius.ui.screens.collections.list.components.CollectionsStateBundle
 import android.epicurius.ui.screens.utils.LoadingSpinner
 import android.epicurius.ui.screens.utils.MixedText
 import androidx.compose.foundation.Image

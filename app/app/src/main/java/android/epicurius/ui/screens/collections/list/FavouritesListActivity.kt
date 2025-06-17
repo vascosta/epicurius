@@ -2,7 +2,7 @@ package android.epicurius.ui.screens.collections.list
 
 import android.epicurius.ui.EpicuriusActivity
 import android.epicurius.ui.navigation.Intents
-import android.epicurius.ui.screens.collections.favourites.folder.FavouritesActivity
+import android.epicurius.ui.screens.collections.favourites.FavouritesActivity
 import android.epicurius.ui.screens.recipe.profile.RecipeProfileActivity
 import android.epicurius.ui.screens.utils.Idle
 import android.epicurius.ui.screens.utils.idle

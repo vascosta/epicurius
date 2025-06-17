@@ -12,7 +12,7 @@ import android.epicurius.domain.recipe.MealType
 import android.epicurius.domain.recipe.Recipe
 import android.epicurius.ui.navigation.BottomBar
 import android.epicurius.ui.navigation.TopBar
-import android.epicurius.ui.screens.collections.components.CollectionsListDialog
+import android.epicurius.ui.screens.collections.list.components.CollectionsListDialog
 import android.epicurius.ui.screens.recipe.profile.components.ConfirmDeleteRecipeDialog
 import android.epicurius.ui.screens.recipe.profile.components.EditRatingDialog
 import android.epicurius.ui.screens.recipe.profile.components.EditRecipeDialog

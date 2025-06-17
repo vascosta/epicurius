@@ -1,4 +1,4 @@
-package android.epicurius.ui.screens.collections.components
+package android.epicurius.ui.screens.collections.list.components
 
 import android.epicurius.domain.collection.CollectionProfile
 import android.epicurius.ui.screens.utils.LoadState

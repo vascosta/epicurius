@@ -1,4 +1,4 @@
-package android.epicurius.ui.screens.collections.favourites.folder.components
+package android.epicurius.ui.screens.collections.components
 
 import android.epicurius.ui.screens.utils.LoadingSpinner
 import androidx.compose.foundation.layout.size

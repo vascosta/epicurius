@@ -5,9 +5,9 @@ import android.epicurius.domain.recipe.MealType
 import android.epicurius.domain.recipe.RecipeInfo
 import android.epicurius.ui.navigation.BottomBar
 import android.epicurius.ui.navigation.TopBar
-import android.epicurius.ui.screens.collections.favourites.folder.components.DeleteCollectionDialog
-import android.epicurius.ui.screens.collections.favourites.folder.components.EditCollectionDialog
-import android.epicurius.ui.screens.collections.favourites.folder.components.getFavouritesListName
+import android.epicurius.ui.screens.collections.components.DeleteCollectionDialog
+import android.epicurius.ui.screens.collections.components.EditCollectionDialog
+import android.epicurius.ui.screens.collections.favourites.components.getFavouritesListName
 import android.epicurius.ui.screens.recipe.components.RecipeInfoBox
 import android.epicurius.ui.screens.utils.LoadState
 import android.epicurius.ui.screens.utils.LoadStateRenderer

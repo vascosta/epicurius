@@ -1,4 +1,4 @@
-package android.epicurius.ui.screens.collections.favourites.folder
+package android.epicurius.ui.screens.collections.favourites
 
 import android.content.Context
 import android.epicurius.services.EpicuriusService

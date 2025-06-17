@@ -1,4 +1,4 @@
-package android.epicurius.ui.screens.collections.favourites.folder.components
+package android.epicurius.ui.screens.collections.favourites.components
 
 import android.epicurius.ui.screens.utils.Idle
 import android.epicurius.ui.screens.utils.LoadState

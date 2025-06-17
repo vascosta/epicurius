@@ -50,7 +50,7 @@
             android:screenOrientation="portrait"
             android:theme="@style/Theme.App" />
         <activity
-            android:name=".ui.screens.collections.favourites.folder.FavouritesActivity"
+            android:name=".ui.screens.collections.favourites.FavouritesActivity"
             android:exported="false"
             android:label="Favourites Folder"
             android:screenOrientation="portrait"

@@ -1,12 +1,12 @@
-package android.epicurius.ui.screens.collections.favourites.folder
+package android.epicurius.ui.screens.collections.favourites
 
 import android.epicurius.ui.EpicuriusActivity
 import android.epicurius.ui.navigation.Intents
+import android.epicurius.ui.navigation.navigateTo
 import android.epicurius.ui.screens.collections.list.FavouritesListActivity
 import android.epicurius.ui.screens.user.settings.SettingsActivity
 import android.epicurius.ui.screens.utils.Idle
 import android.epicurius.ui.screens.utils.idle
-import android.epicurius.ui.navigation.navigateTo
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.compose.runtime.collectAsState
@@ -31,8 +31,8 @@ class FavouritesActivity : EpicuriusActivity() {
                 favouritesState = favouritesState.value,
                 onBackButton = { navigateTo<SettingsActivity>(true) },
                 onCollectionCreate = { collectionName: String ->
-                    viewModel.createFavouriteCollection(collectionName) {
-                        collectionId -> navigateToFavouritesListActivity(collectionId)
+                    viewModel.createFavouriteCollection(collectionName) { collectionId ->
+                        navigateToFavouritesListActivity(collectionId)
                     }
                 },
                 onCollectionRequest = ::navigateToFavouritesListActivity,
@@ -51,4 +51,3 @@ class FavouritesActivity : EpicuriusActivity() {
         }
     }
 }
-

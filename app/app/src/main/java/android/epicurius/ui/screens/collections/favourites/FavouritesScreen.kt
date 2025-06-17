@@ -1,10 +1,10 @@
-package android.epicurius.ui.screens.collections.favourites.folder
+package android.epicurius.ui.screens.collections.favourites
 
 import android.epicurius.domain.collection.CollectionProfile
 import android.epicurius.ui.navigation.BottomBar
 import android.epicurius.ui.navigation.TopBar
-import android.epicurius.ui.screens.collections.favourites.folder.components.CollectionProfileBox
-import android.epicurius.ui.screens.collections.favourites.folder.components.CreateCollectionDialog
+import android.epicurius.ui.screens.collections.components.CollectionProfileBox
+import android.epicurius.ui.screens.collections.components.CreateCollectionDialog
 import android.epicurius.ui.screens.utils.LoadState
 import android.epicurius.ui.screens.utils.LoadStateRenderer
 import android.epicurius.ui.screens.utils.Loaded

@@ -7,7 +7,7 @@ import android.epicurius.domain.recipe.RecipeInfo
 import android.epicurius.domain.user.UserProfile
 import android.epicurius.ui.navigation.BottomBar
 import android.epicurius.ui.navigation.TopBar
-import android.epicurius.ui.screens.collections.favourites.folder.components.CollectionProfileBox
+import android.epicurius.ui.screens.collections.components.CollectionProfileBox
 import android.epicurius.ui.screens.recipe.components.RecipeInfoBox
 import android.epicurius.ui.screens.user.components.FollowBox
 import android.epicurius.ui.screens.user.components.ProfileTabBar

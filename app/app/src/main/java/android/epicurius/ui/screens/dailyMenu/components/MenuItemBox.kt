@@ -4,7 +4,7 @@ import android.epicurius.domain.collection.CollectionProfile
 import android.epicurius.domain.recipe.Cuisine
 import android.epicurius.domain.recipe.MealType
 import android.epicurius.domain.recipe.RecipeInfo
-import android.epicurius.ui.screens.collections.components.CollectionsStateBundle
+import android.epicurius.ui.screens.collections.list.components.CollectionsStateBundle
 import android.epicurius.ui.screens.recipe.components.RecipeInfoBox
 import android.epicurius.ui.screens.utils.apiSuccess
 import androidx.compose.foundation.layout.Box

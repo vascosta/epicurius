@@ -4,8 +4,7 @@ import android.epicurius.domain.collection.CollectionProfile
 import android.epicurius.domain.recipe.Cuisine
 import android.epicurius.domain.recipe.MealType
 import android.epicurius.domain.recipe.RecipeInfo
-import android.epicurius.ui.screens.collections.components.CollectionsStateBundle
-import android.epicurius.ui.screens.utils.LoadState
+import android.epicurius.ui.screens.collections.list.components.CollectionsStateBundle
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable

@@ -8,7 +8,7 @@ import android.epicurius.ui.screens.recipe.profile.RecipeProfileActivity
 import android.epicurius.ui.screens.utils.Idle
 import android.epicurius.ui.screens.utils.idle
 import android.epicurius.ui.navigation.navigateTo
-import android.epicurius.ui.screens.collections.components.CollectionsStateBundle
+import android.epicurius.ui.screens.collections.list.components.CollectionsStateBundle
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.compose.runtime.collectAsState

@@ -1,4 +1,4 @@
-package android.epicurius.ui.screens.collections.components
+package android.epicurius.ui.screens.collections.list.components
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer

@@ -4,7 +4,7 @@ import android.epicurius.domain.Diet
 import android.epicurius.domain.Intolerance
 import android.epicurius.ui.EpicuriusActivity
 import android.epicurius.ui.navigation.navigateTo
-import android.epicurius.ui.screens.collections.favourites.folder.FavouritesActivity
+import android.epicurius.ui.screens.collections.favourites.FavouritesActivity
 import android.epicurius.ui.screens.user.profile.UserProfileActivity
 import android.epicurius.ui.screens.utils.Idle
 import android.epicurius.ui.screens.utils.idle

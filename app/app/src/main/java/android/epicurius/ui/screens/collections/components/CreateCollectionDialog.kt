@@ -1,35 +1,35 @@
-package android.epicurius.ui.screens.collections.favourites.folder.components
+package android.epicurius.ui.screens.collections.components
 
 import android.epicurius.ui.screens.utils.LoadingSpinner
 import android.epicurius.ui.screens.utils.TextField
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun EditCollectionDialog(
-    collectionName: String,
-    collectionId: Int,
+fun CreateCollectionDialog(
     onDismiss: () -> Unit,
-    onEditCollection: (collectionId: Int, collectionName: String) -> Unit,
+    onCollectionCreate: (collectionName: String) -> Unit,
     enableButtons: Boolean
 ) {
-    var newCollectionName by rememberSaveable { mutableStateOf(collectionName) }
-    var showLoadingSpinner by rememberSaveable { mutableStateOf(!enableButtons) }
+    var collectionName by remember { mutableStateOf("") }
+    var showLoadingSpinnerOnCreateButton by remember { mutableStateOf(false) }
 
+
+    LaunchedEffect(enableButtons) {
+        if (enableButtons) showLoadingSpinnerOnCreateButton = false
+    }
     AlertDialog(
         onDismissRequest = { onDismiss() },
         confirmButton = {
@@ -39,23 +39,22 @@ fun EditCollectionDialog(
             ) { Text("Cancel") }
             TextButton(
                 onClick = {
-                    onEditCollection(collectionId, newCollectionName)
-                    showLoadingSpinner = true
+                    onCollectionCreate(collectionName)
+                    showLoadingSpinnerOnCreateButton = true
                 },
                 enabled = enableButtons
             ) {
-                if (!showLoadingSpinner || enableButtons) { Text("Edit") }
+                if (!showLoadingSpinnerOnCreateButton) { Text("Create") }
                 else { LoadingSpinner(Modifier.size(30.dp)) }
             }
         },
-        title = { Text("Edit Collection") },
+        title = { Text("Create Collection") },
         text = {
             Column {
-                Text("Edit your collection name:")
-                Spacer(Modifier.width(10.dp))
+                Text("Enter the name of the new collection:")
                 TextField(
-                    value = newCollectionName,
-                    onValueChange = { newCollectionName = it },
+                    value = collectionName,
+                    onValueChange = { collectionName = it },
                     modifier = Modifier.fillMaxWidth(),
                     enabled = enableButtons,
                     label = "Collection Name"
