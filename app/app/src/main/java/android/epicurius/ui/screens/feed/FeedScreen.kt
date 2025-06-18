@@ -28,7 +28,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AddAlert
 import androidx.compose.material.icons.filled.Mail
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
@@ -53,6 +52,7 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun FeedScreen(
     userFeedState: LoadState<List<RecipeInfo>>,
+    followRequestsState: LoadState<List<SearchUser>>,
     collectionsStateBundle: CollectionsStateBundle,
     onAddRecipeToCollections: (
         collectionsAvailableToAdd: List<CollectionProfile>,
@@ -66,25 +66,22 @@ fun FeedScreen(
         collectionsToRemove: List<CollectionProfile>,
         recipeId: Int
     ) -> Unit,
+    onCollectionsClear: () -> Unit,
+    onAcceptFollowRequest: (name: String) -> Unit,
+    onRejectFollowRequest: (name: String) -> Unit,
     onRecipeRequest: (recipeId: Int) -> Unit,
     onCollectionsRequest: (recipeId: Int) -> Unit,
+    onFollowRequests: () -> Unit,
+    onUserProfileRequest: (name: String) -> Unit,
     onDailyMenuRequest: () -> Unit,
-    onCollectionsClear: () -> Unit,
-    onUserFeedRefresh: () -> Unit,
-    onFollowRequests: () -> List<SearchUser>,
-    onAcceptFollowRequest: (userId: Int) -> Unit,
-    onRejectFollowRequest: (userId: Int) -> Unit,
+    onLoadMoreUserFeed: () -> Unit,
     enableButtons: Boolean
 ) {
-    var showLoadingSpinnerOnLoadMore by remember { mutableStateOf(!enableButtons) }
-    var enableLoadMoreButton by remember { mutableStateOf(!enableButtons) }
     var showFollowRequestsDialog by remember { mutableStateOf(false) }
+    var showLoadingSpinnerOnLoadMoreButton by remember { mutableStateOf(false) }
 
-    LaunchedEffect(userFeedState) {
-        if (userFeedState is Loaded) {
-            enableLoadMoreButton = true
-            showLoadingSpinnerOnLoadMore = false
-        }
+    LaunchedEffect(enableButtons) {
+        if (enableButtons) showLoadingSpinnerOnLoadMoreButton = false
     }
     Scaffold(
         topBar = {
@@ -112,6 +109,7 @@ fun FeedScreen(
                 ) {
                     IconButton(
                         onClick = { showFollowRequestsDialog = true },
+                        enabled = enableButtons
                     ) {
                         Icon(
                             imageVector = Icons.Default.Mail,
@@ -121,7 +119,8 @@ fun FeedScreen(
                         )
                     }
                     IconButton(
-                        onClick = onDailyMenuRequest
+                        onClick = onDailyMenuRequest,
+                        enabled = enableButtons
                     ) {
                         Image(
                             painter = painterResource(R.drawable.menu),
@@ -133,7 +132,6 @@ fun FeedScreen(
                 }
                 LoadStateRenderer(
                     loadState = userFeedState,
-                    swipeToRefresh = onUserFeedRefresh,
                     content = { userFeed ->
                         if (userFeed.isNotEmpty()) {
                             userFeed.forEach { recipe ->
@@ -163,27 +161,26 @@ fun FeedScreen(
                 )
                 Button(
                     onClick = {
-                        onUserFeedRefresh()
-                        showLoadingSpinnerOnLoadMore = true
-                        enableLoadMoreButton = false
+                        onLoadMoreUserFeed()
+                        showLoadingSpinnerOnLoadMoreButton = true
                     },
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(10.dp),
-                    enabled = enableLoadMoreButton
+                    enabled = enableButtons
                 ) {
-                    if (!showLoadingSpinnerOnLoadMore) {
-                        Text("Load More")
-                    }
-                    else { LoadingSpinner(Modifier.size(30.dp)) }
+                    if (!showLoadingSpinnerOnLoadMoreButton) Text("Load More")
+                    else LoadingSpinner(Modifier.size(30.dp))
                 }
-
                 if (showFollowRequestsDialog) {
                     FollowRequestDialog(
-                        onDismiss = { showFollowRequestsDialog = false },
+                        onDismiss = { if (enableButtons) showFollowRequestsDialog = false },
+                        followRequestsState = followRequestsState,
+                        onAcceptFollowRequest = onAcceptFollowRequest,
+                        onRejectFollowRequest = onRejectFollowRequest,
                         onFollowRequests = onFollowRequests,
-                        onAccept = onAcceptFollowRequest,
-                        onReject = onRejectFollowRequest
+                        onUserProfileRequest = onUserProfileRequest,
+                        enableButtons = enableButtons
                     )
                 }
             }
@@ -224,6 +221,7 @@ fun FeedPreview() {
 
     FeedScreen(
         apiSuccess(recipeList),
+        apiSuccess(emptyList()),
         CollectionsStateBundle(apiSuccess(emptyList()), apiSuccess(emptyList())),
         { _, _, _, _ -> },
         { _, _, _, _ -> },
@@ -237,6 +235,7 @@ fun FeedPreview() {
             SearchUser(2, "AnotherUser1234567890", null),
             SearchUser(4, "ShortUser", null),
         ) },
+        {},
         {},
         {},
         true

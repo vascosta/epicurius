@@ -1,4 +1,4 @@
-package android.epicurius.ui.screens.user.components
+package android.epicurius.ui.screens.feed.components
 
 import android.epicurius.R
 import androidx.compose.foundation.layout.Row
@@ -10,21 +10,23 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun FollowRequestButtons(
-    userId: Int,
-    onAccept: (Int) -> Unit,
-    onReject: (Int) -> Unit
+    onAccept: () -> Unit,
+    onReject: () -> Unit,
+    enableButtons: Boolean
 ) {
     Row {
         FollowRequestIconButton(
             iconResId = R.drawable.accept,
             contentDescription = "Accept Follow Request",
-            onClick = { onAccept(userId) }
+            onClick = onAccept,
+            enabled = enableButtons
         )
         Spacer(modifier = Modifier.size(10.dp))
         FollowRequestIconButton(
             iconResId = R.drawable.reject,
             contentDescription = "Reject Follow Request",
-            onClick = { onReject(userId) }
+            onClick = onReject,
+            enabled = enableButtons
         )
     }
 }

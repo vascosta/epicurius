@@ -1,7 +1,6 @@
 package android.epicurius.ui.screens.feed.components
 
 import android.epicurius.domain.user.SearchUser
-import android.epicurius.ui.screens.user.components.FollowRequestButtons
 import android.epicurius.ui.screens.user.components.UserProfilePicture
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -9,7 +8,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -27,8 +25,10 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun FollowRequestBox(
     user: SearchUser,
-    onAccept: (userId: Int) -> Unit,
-    onReject: (userId: Int) -> Unit
+    onAcceptFollowRequest: (name: String) -> Unit,
+    onRejectFollowRequest: (name: String) -> Unit,
+    onUserProfileRequest: (name: String) -> Unit,
+    enableButtons: Boolean
 ) {
     Box(
         modifier = Modifier
@@ -49,7 +49,8 @@ fun FollowRequestBox(
             UserProfilePicture(
                 profilePicture = user.profilePicture,
                 iconSize = 40,
-                onClick = {}
+                onUserProfileRequest = { onUserProfileRequest(user.name) },
+                enabled = enableButtons
             )
             Spacer(modifier = Modifier.height(8.dp))
             Text(
@@ -58,9 +59,9 @@ fun FollowRequestBox(
             )
             Spacer(modifier = Modifier.height(8.dp))
             FollowRequestButtons(
-                userId = user.id,
-                onAccept = onAccept,
-                onReject = onReject
+                onAccept = { onAcceptFollowRequest(user.name) },
+                onReject = { onRejectFollowRequest(user.name) },
+                enableButtons = enableButtons
             )
         }
     }
@@ -76,7 +77,9 @@ fun FollowRequestBoxPreview() {
     )
     FollowRequestBox(
         user = dummyUser,
-        onAccept = {},
-        onReject = {}
+        onAcceptFollowRequest = {},
+        onRejectFollowRequest = {},
+        onUserProfileRequest = {},
+        true
     )
 }

@@ -23,14 +23,18 @@ import androidx.compose.ui.unit.dp
 fun UserProfilePicture(
     profilePicture: ByteArray?,
     iconSize: Int,
-    onClick: () -> Unit
+    onUserProfileRequest: () -> Unit,
+    enabled: Boolean
 ) {
     Box(
         modifier = Modifier
             .size(iconSize.dp)
             .clip(CircleShape)
             .background(Color.LightGray)
-            .clickable { onClick() },
+            .clickable(
+                enabled = enabled,
+                onClick = onUserProfileRequest
+            ),
         contentAlignment = Alignment.Center
     ) {
         if (profilePicture == null) {
@@ -53,5 +57,5 @@ fun UserProfilePicture(
 @Preview
 @Composable
 fun UserProfilePicturePreview() {
-    UserProfilePicture(null, 120, {})
+    UserProfilePicture(null, 120, {}, true)
 }

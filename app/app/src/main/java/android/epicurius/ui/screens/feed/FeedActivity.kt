@@ -30,10 +30,12 @@ class FeedActivity : EpicuriusActivity() {
         }
         setContent {
             val userFeedState = viewModel.userFeed.collectAsState(idle())
+            val userFollowRequests = viewModel.userFollowRequests.collectAsState(idle())
             val collectionsToAddRecipeState = viewModel.collectionsToAddRecipe.collectAsState(idle())
             val collectionsToRemoveRecipeState = viewModel.collectionsToRemoveRecipe.collectAsState(idle())
             FeedScreen(
                 userFeedState = userFeedState.value,
+                followRequestsState = userFollowRequests.value,
                 collectionsStateBundle = CollectionsStateBundle(
                     collectionsToAddRecipeState.value,
                     collectionsToRemoveRecipeState.value
@@ -62,15 +64,21 @@ class FeedActivity : EpicuriusActivity() {
                         recipeId
                     )
                 },
-                onRecipeRequest = ::navigateToRecipeProfileActivity,
-                onCollectionsRequest = { recipeId: Int -> viewModel.getCollections(recipeId,
-                    CollectionType.FAVOURITE) },
-                onDailyMenuRequest = { navigateTo<DailyMenuActivity>(true) },
                 onCollectionsClear = { viewModel.clearCollections() },
-                onUserFeedRefresh = { viewModel.refreshUserFeed() },
-                onFollowRequests = { listOf(SearchUser(1, "Test User", null)) },
-                onAcceptFollowRequest = {  },
-                onRejectFollowRequest = {  },
+                onAcceptFollowRequest = { name: String ->
+                    viewModel.acceptFollowRequest(name)
+                },
+                onRejectFollowRequest = { name: String ->
+                    viewModel.rejectFollowRequest(name)
+                },
+                onRecipeRequest = ::navigateToRecipeProfileActivity,
+                onCollectionsRequest = { recipeId: Int ->
+                    viewModel.getCollections(recipeId, CollectionType.FAVOURITE)
+                },
+                onFollowRequests = { viewModel.getUserFollowRequests() },
+                onUserProfileRequest = ::navigateToUserProfileActivity,
+                onDailyMenuRequest = { navigateTo<DailyMenuActivity>(true) },
+                onLoadMoreUserFeed = { viewModel.getUserFeed() },
                 enableButtons = viewModel.enableButtons
             )
         }
@@ -79,6 +87,12 @@ class FeedActivity : EpicuriusActivity() {
     private fun navigateToRecipeProfileActivity(recipeId: Int) {
         navigateTo<RecipeProfileActivity> { intent ->
             intent.putExtra(Intents.RECIPE_ID, recipeId)
+        }
+    }
+
+    private fun navigateToUserProfileActivity(name: String) {
+        navigateTo<RecipeProfileActivity> { intent ->
+            intent.putExtra(Intents.USERNAME, name)
         }
     }
 }
