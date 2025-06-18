@@ -45,7 +45,6 @@ fun DailyMenuScreen(
     onRecipeRequest: (recipeId: Int) -> Unit,
     onCollectionsRequest: (recipeId: Int) -> Unit,
     onCollectionsClear: () -> Unit,
-    onDailyMenuRefresh: () -> Unit,
     enableButtons: Boolean
 ) {
     Scaffold(
@@ -59,7 +58,6 @@ fun DailyMenuScreen(
         content = { paddingValues ->
             LoadStateRenderer(
                 loadState = menuState,
-                swipeToRefresh = onDailyMenuRefresh,
                 content = { menu ->
                     Column(
                         modifier = Modifier

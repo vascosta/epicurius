@@ -47,7 +47,7 @@ fun FavouritesScreen(
     onCollectionCreate: (collectionName: String) -> Unit,
     onCollectionRequest: (collectionId: Int) -> Unit,
     onCollectionDelete: (collectionId: Int) -> Unit,
-    onFavouritesRefresh: () -> Unit,
+    onLoadMoreFavourites: () -> Unit,
     enableButtons: Boolean
 ) {
     var showCreateCollectionDialog by remember { mutableStateOf(false) }
@@ -91,7 +91,6 @@ fun FavouritesScreen(
                 }
                 LoadStateRenderer(
                     loadState = favouritesState,
-                    swipeToRefresh = onFavouritesRefresh,
                     content = { favourites ->
                         if (favourites.isNotEmpty()) {
                             favourites.forEach {
@@ -119,7 +118,7 @@ fun FavouritesScreen(
                 )
                 Button(
                     onClick = {
-                        onFavouritesRefresh()
+                        onLoadMoreFavourites()
                         showLoadingSpinnerOnLoadMoreButton = true
                     },
                     modifier = Modifier.fillMaxWidth().padding(10.dp),

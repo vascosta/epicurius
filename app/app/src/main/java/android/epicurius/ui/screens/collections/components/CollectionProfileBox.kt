@@ -51,7 +51,10 @@ fun CollectionProfileBox(
         Row(
             modifier = Modifier
                 .fillMaxSize()
-                .clickable(onClick = { onCollectionRequest(collection.id) }),
+                .clickable(
+                    enabled = enableButtons,
+                    onClick = { onCollectionRequest(collection.id) }
+                ),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {

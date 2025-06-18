@@ -82,7 +82,6 @@ fun SettingsScreen(
         content = { paddingValues ->
             LoadStateRenderer(
                 loadState = userInfoState,
-                swipeToRefresh = {},
                 content = { userInfo ->
                     Column(
                         modifier = Modifier
