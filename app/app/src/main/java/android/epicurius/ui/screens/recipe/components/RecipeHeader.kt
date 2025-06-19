@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -53,14 +54,16 @@ fun RecipeHeader(
         collectionId: Int,
         recipeId: Int
     ) -> Unit,
-    onCollectionsRequest: (recipeId: Int) -> Unit,
     onCollectionsClear: () -> Unit,
+    onCollectionsRequest: (recipeId: Int) -> Unit,
     enableButtons: Boolean
 ) {
     var showCollectionsDialog by remember { mutableStateOf(false) }
-    var showLoadingSpinner by remember { mutableStateOf(!enableButtons) }
-    var enableStarIcon by remember { mutableStateOf(isInCollection) }
+    var showLoadingSpinnerOnStarIcon by remember { mutableStateOf(false) }
 
+    LaunchedEffect(enableButtons) {
+        if (enableButtons) showLoadingSpinnerOnStarIcon = false
+    }
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -87,19 +90,17 @@ fun RecipeHeader(
                 onClick = {
                     if (collectionId != null) {
                         onRemoveRecipeFromCollection(collectionId, recipeId)
-                        showLoadingSpinner = true
+                        showLoadingSpinnerOnStarIcon = true
                     }
                     else { showCollectionsDialog = true }
                 },
                 modifier = Modifier.size(24.dp),
                 enabled = enableButtons
             ) {
-                if (!showLoadingSpinner || enableButtons) {
-                    val painter = if (enableStarIcon) {
-                        painterResource(R.drawable.star)
-                    } else {
-                        painterResource(R.drawable.white_star)
-                    }
+                if (!showLoadingSpinnerOnStarIcon) {
+                    val painter =
+                        if (isInCollection) painterResource(R.drawable.star)
+                        else painterResource(R.drawable.white_star)
                     Image(
                         painter = painter,
                         contentDescription = "Favorites",
@@ -111,13 +112,14 @@ fun RecipeHeader(
                 if (showCollectionsDialog) {
                     CollectionsListDialog(
                         recipeId = recipeId,
-                        isInCollection = enableStarIcon,
+                        isInCollection = isInCollection,
                         collectionsStateBundle = collectionsStateBundle,
                         onDismissRequest = {
-                            showCollectionsDialog = false
-                            onCollectionsClear()
+                            if (enableButtons) {
+                                showCollectionsDialog = false
+                                onCollectionsClear()
+                            }
                         },
-                        onCollectionChange = { enableStarIcon = !enableStarIcon }, // CHANGE IN FUTURE
                         onAddRecipeToCollections = onAddRecipeToCollections,
                         onRemoveRecipeFromCollections = onRemoveRecipeFromCollections,
                         onCollectionsRequest = onCollectionsRequest,

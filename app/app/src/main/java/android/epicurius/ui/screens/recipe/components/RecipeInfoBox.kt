@@ -41,9 +41,9 @@ fun RecipeInfoBox(
         collectionId: Int,
         recipeId: Int
     ) -> Unit,
+    onCollectionsClear: () -> Unit,
     onRecipeRequest: (recipeId: Int) -> Unit,
     onCollectionsRequest: (recipeId: Int) -> Unit,
-    onCollectionsClear: () -> Unit,
     enableButtons: Boolean
 ) {
     Box(
@@ -69,8 +69,8 @@ fun RecipeInfoBox(
                 onAddRecipeToCollections = onAddRecipeToCollections,
                 onRemoveRecipeFromCollections = onRemoveRecipeFromCollections,
                 onRemoveRecipeFromCollection = onRemoveRecipeFromCollection,
-                onCollectionsRequest = onCollectionsRequest,
                 onCollectionsClear = onCollectionsClear,
+                onCollectionsRequest = onCollectionsRequest,
                 enableButtons = enableButtons
             )
             RecipeImage(recipeInfo.pictureBytes)

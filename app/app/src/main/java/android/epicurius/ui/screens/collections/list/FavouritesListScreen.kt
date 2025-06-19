@@ -78,7 +78,6 @@ fun FavouritesListScreen(
         content = { paddingValues ->
             LoadStateRenderer(
                 loadState = recipesState,
-                swipeToRefresh = onFavouriteCollectionRefresh,
                 content = { recipes ->
                     Column(
                         modifier = Modifier

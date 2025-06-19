@@ -205,7 +205,6 @@ fun RecipeProfileScreen(
                                 isInCollection = enableStarIcon,
                                 collectionsStateBundle = null,
                                 onDismissRequest = { showCollectionsDialog = false },
-                                onCollectionChange = { enableStarIcon = !enableStarIcon },
                                 onAddRecipeToCollections = {_, _, _, _ ->},
                                 onRemoveRecipeFromCollections = {_, _, _, _ ->},
                                 onCollectionsRequest = {},

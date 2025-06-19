@@ -36,7 +36,6 @@ fun CollectionsListDialog(
     isInCollection: Boolean,
     collectionsStateBundle: CollectionsStateBundle?,
     onDismissRequest: () -> Unit,
-    onCollectionChange: () -> Unit,
     onAddRecipeToCollections: (
         collectionsAvailableToAdd: List<CollectionProfile>,
         collectionsAvailableToRemove: List<CollectionProfile>,
@@ -53,13 +52,16 @@ fun CollectionsListDialog(
     enableButtons: Boolean
 ) {
     if (collectionsStateBundle != null) {
-        var showLoadingSpinnerButtons by remember { mutableStateOf(!enableButtons) }
-        var showLoadingSpinnerOnLoadMore by remember { mutableStateOf(!enableButtons) }
+        var showLoadingSpinnerOnLoadMoreButton by remember { mutableStateOf(false) }
+
         var selectedTabIndex by remember { mutableIntStateOf(0) }.apply {
             if (!isInCollection) { 0 } else { 1 }
         }
         var selectedCollectionsIds = remember { mutableStateListOf<Int>() }
 
+        LaunchedEffect(enableButtons) {
+            if (enableButtons) showLoadingSpinnerOnLoadMoreButton = false
+        }
         LaunchedEffect(selectedTabIndex) {
             selectedCollectionsIds.clear()
             if (
@@ -81,16 +83,12 @@ fun CollectionsListDialog(
                 Button(
                     onClick = {
                         onCollectionsRequest(recipeId)
-                        showLoadingSpinnerOnLoadMore = true
+                        showLoadingSpinnerOnLoadMoreButton = true
                     },
                     enabled = enableButtons
                 ) {
-                    if (!showLoadingSpinnerOnLoadMore || enableButtons) {
-                        Text("Load More")
-                    }
-                    else {
-                        LoadingSpinner(Modifier.size(30.dp))
-                    }
+                    if (!showLoadingSpinnerOnLoadMoreButton) Text("Load More")
+                    else LoadingSpinner(Modifier.size(30.dp))
                 }
                 CollectionsListDialogButton(
                     recipeId = recipeId,
@@ -131,34 +129,26 @@ fun CollectionsListDialog(
                                             Checkbox(
                                                 checked = selectedCollectionsIds.contains(collection.id),
                                                 onCheckedChange = { isChecked ->
-                                                    if (isChecked) {
+                                                    if (isChecked)
                                                         selectedCollectionsIds.add(collection.id)
-                                                    }
-                                                    else {
+                                                    else
                                                         selectedCollectionsIds.remove(collection.id)
-                                                    }
                                                 },
                                                 enabled = enableButtons
                                             )
-                                            if (!showLoadingSpinnerButtons || enableButtons) {
-                                                Text(
-                                                    text = collection.name,
-                                                    modifier = Modifier.weight(1f)
-                                                )
-                                            }
-                                            else {
-                                                LoadingSpinner(Modifier.size(30.dp))
-                                            }
+                                            Text(
+                                                text = collection.name,
+                                                modifier = Modifier.weight(1f)
+                                            )
                                         }
                                     }
                                 }
-                                else if (collectionsStateBundle.collectionsToAddRecipeState is Loaded) {
+                                else if (collectionsStateBundle.collectionsToAddRecipeState is Loaded)
                                     Text(
                                         text = "No collections available to add the recipe",
                                         modifier = Modifier.padding(10.dp),
                                         color = Color.Gray
                                     )
-                                }
                             }
                         )
                     }
@@ -176,35 +166,26 @@ fun CollectionsListDialog(
                                             Checkbox(
                                                 checked = selectedCollectionsIds.contains(collection.id),
                                                 onCheckedChange = { isChecked ->
-                                                    if (isChecked) {
+                                                    if (isChecked)
                                                         selectedCollectionsIds.add(collection.id)
-                                                    }
-                                                    else {
+                                                    else
                                                         selectedCollectionsIds.remove(collection.id)
-                                                    }
-
                                                 },
                                                 enabled = enableButtons
                                             )
-                                            if (!showLoadingSpinnerButtons || enableButtons) {
-                                                Text(
-                                                    text = collection.name,
-                                                    modifier = Modifier.weight(1f)
-                                                )
-                                            }
-                                            else {
-                                                LoadingSpinner(Modifier.size(30.dp))
-                                            }
+                                            Text(
+                                                text = collection.name,
+                                                modifier = Modifier.weight(1f)
+                                            )
                                         }
                                     }
                                 }
-                                else if (collectionsStateBundle.collectionsToAddRecipeState is Loaded) {
+                                else if (collectionsStateBundle.collectionsToAddRecipeState is Loaded)
                                     Text(
                                         text = "No collections available to remove the recipe",
                                         modifier = Modifier.padding(10.dp),
                                         color = Color.Gray
                                     )
-                                }
                             }
                         )
                     }

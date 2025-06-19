@@ -42,9 +42,9 @@ fun DailyMenuScreen(
         collectionsToRemove: List<CollectionProfile>,
         recipeId: Int
     ) -> Unit,
+    onCollectionsClear: () -> Unit,
     onRecipeRequest: (recipeId: Int) -> Unit,
     onCollectionsRequest: (recipeId: Int) -> Unit,
-    onCollectionsClear: () -> Unit,
     enableButtons: Boolean
 ) {
     Scaffold(
@@ -74,9 +74,9 @@ fun DailyMenuScreen(
                             collectionsStateBundle = collectionsStateBundle,
                             onAddRecipeToCollections = onAddRecipeToCollections,
                             onRemoveRecipeFromCollections = onRemoveRecipeFromCollections,
+                            onCollectionsClear = onCollectionsClear,
                             onRecipeRequest = onRecipeRequest,
                             onCollectionsRequest = onCollectionsRequest,
-                            onCollectionsClear = onCollectionsClear,
                             enableButtons = enableButtons
                         )
                         MenuItemBox(
@@ -85,9 +85,9 @@ fun DailyMenuScreen(
                             collectionsStateBundle = collectionsStateBundle,
                             onAddRecipeToCollections = onAddRecipeToCollections,
                             onRemoveRecipeFromCollections = onRemoveRecipeFromCollections,
+                            onCollectionsClear = onCollectionsClear,
                             onRecipeRequest = onRecipeRequest,
                             onCollectionsRequest = onCollectionsRequest,
-                            onCollectionsClear = onCollectionsClear,
                             enableButtons = enableButtons
                         )
                         MenuItemBox(
@@ -96,9 +96,9 @@ fun DailyMenuScreen(
                             collectionsStateBundle = collectionsStateBundle,
                             onAddRecipeToCollections = onAddRecipeToCollections,
                             onRemoveRecipeFromCollections = onRemoveRecipeFromCollections,
+                            onCollectionsClear = onCollectionsClear,
                             onRecipeRequest = onRecipeRequest,
                             onCollectionsRequest = onCollectionsRequest,
-                            onCollectionsClear = onCollectionsClear,
                             enableButtons = enableButtons
                         )
                         MenuItemBox(
@@ -107,9 +107,9 @@ fun DailyMenuScreen(
                             collectionsStateBundle = collectionsStateBundle,
                             onAddRecipeToCollections = onAddRecipeToCollections,
                             onRemoveRecipeFromCollections = onRemoveRecipeFromCollections,
+                            onCollectionsClear = onCollectionsClear,
                             onRecipeRequest = onRecipeRequest,
                             onCollectionsRequest = onCollectionsRequest,
-                            onCollectionsClear = onCollectionsClear,
                             enableButtons = enableButtons
                         )
                         MenuItemBox(
@@ -118,9 +118,9 @@ fun DailyMenuScreen(
                             collectionsStateBundle = collectionsStateBundle,
                             onAddRecipeToCollections = onAddRecipeToCollections,
                             onRemoveRecipeFromCollections = onRemoveRecipeFromCollections,
+                            onCollectionsClear = onCollectionsClear,
                             onRecipeRequest = onRecipeRequest,
                             onCollectionsRequest = onCollectionsRequest,
-                            onCollectionsClear = onCollectionsClear,
                             enableButtons = enableButtons
                         )
                     }
@@ -166,7 +166,6 @@ fun DailyMenuPreview() {
         {},
         { _, _, _, _ -> },
         { _, _, _, _ -> },
-        {},
         {},
         {},
         {},

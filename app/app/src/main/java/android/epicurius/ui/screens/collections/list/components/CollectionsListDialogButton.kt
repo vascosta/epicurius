@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -34,8 +35,11 @@ fun CollectionsListDialogButton(
     ) -> Unit,
     enabled: Boolean,
 ) {
-    var showLoadingSpinner by remember { mutableStateOf(!enabled) }
+    var showLoadingSpinnerOnButton by remember { mutableStateOf(false) }
 
+    LaunchedEffect(enabled) {
+        if (enabled) showLoadingSpinnerOnButton = false
+    }
     Button(
         onClick = {
             if (
@@ -60,17 +64,15 @@ fun CollectionsListDialogButton(
                         recipeId
                     )
                 }
-                showLoadingSpinner = true
+                showLoadingSpinnerOnButton = true
             }
         },
         enabled = enabled
     ) {
-        if (!showLoadingSpinner || enabled) {
-            if (selectedTabIndex == 0) { Text("Add") }
-            else { Text("Remove") }
+        if (!showLoadingSpinnerOnButton) {
+            if (selectedTabIndex == 0) Text("Add")
+            else Text("Remove")
         }
-        else {
-            LoadingSpinner(Modifier.size(30.dp))
-        }
+        else LoadingSpinner(Modifier.size(30.dp))
     }
 }
