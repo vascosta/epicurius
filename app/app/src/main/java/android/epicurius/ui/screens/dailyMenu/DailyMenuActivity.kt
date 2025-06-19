@@ -24,7 +24,7 @@ class DailyMenuActivity : EpicuriusActivity() {
         super.onCreate(savedInstanceState)
         lifecycleScope.launch {
             viewModel.dailyMenu.collectLatest { state ->
-                if (state is Idle) viewModel.getDailyMenu { navigateTo<FeedActivity>(true) }
+                if (state is Idle) viewModel.getDailyMenu()
             }
         }
         setContent {
@@ -62,13 +62,10 @@ class DailyMenuActivity : EpicuriusActivity() {
                         recipeId
                     )
                 },
+                onCollectionsClear = { viewModel.clearCollections() },
                 onRecipeRequest = ::navigateToRecipeProfileActivity,
                 onCollectionsRequest = { recipeId: Int ->
                     viewModel.getCollections(recipeId, CollectionType.FAVOURITE)
-                },
-                onCollectionsClear = { viewModel.clearCollections() },
-                onDailyMenuRefresh = {
-                    viewModel.refreshDailyMenu { navigateTo<FeedActivity>(true) }
                 },
                 enableButtons = viewModel.enableButtons
             )

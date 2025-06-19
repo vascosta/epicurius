@@ -27,7 +27,8 @@ class DailyMenuViewModel(
     private val dailyMenuFlow = MutableStateFlow<LoadState<Map<String, RecipeInfo?>>>(idle())
     val dailyMenu = dailyMenuFlow.asStateFlow()
 
-    fun getDailyMenu(navigateTo: () -> Unit) {
+    fun getDailyMenu() {
+        disableButtons()
         dailyMenuFlow.value = loading()
         viewModelScope.launch {
             val storedDailyMenu = session.getDailyMenu()
@@ -36,36 +37,27 @@ class DailyMenuViewModel(
             if (storedDailyMenu != null) {
                 if (today == LocalDate.parse(storedDailyMenu.date)) {
                     dailyMenuFlow.value = cache(storedDailyMenu.menu)
+                    enableButtons()
                 }
-                else {
-                    fetchDailyMenu(navigateTo)
-                }
+                else
+                    fetchDailyMenu()
             }
-            else {
-                fetchDailyMenu(navigateTo)
-            }
+            else fetchDailyMenu()
         }
     }
 
-    fun refreshDailyMenu(navigateTo: () -> Unit) {
-        clearCollections()
-        getDailyMenu(navigateTo)
-    }
-
-    private suspend fun fetchDailyMenu(navigateTo: () -> Unit) {
+    private suspend fun fetchDailyMenu() {
         val result = request {
             val token = session.getToken()
             service.dailyMenuService.getDailyMenu(token)
         }
         when {
-            result.isFailure -> {
-                navigateTo()
-            }
             result.isSuccess -> {
                 val dailyMenu = result.getValueOrThrow().menu
                 dailyMenuFlow.value = apiSuccess(dailyMenu)
                 session.updateDailyMenu(DailyMenu(LocalDate.now().toString(), dailyMenu))
             }
         }
+        enableButtons()
     }
 }
