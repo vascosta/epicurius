@@ -84,7 +84,8 @@ fun UserProfileScreen(
     userProfileState: LoadState<UserProfile>,
     //userRecipesState: LoadState<List<RecipeInfo>>,
     //userKitchenBookState: LoadState<List<CollectionProfile>>
-    //kitchenBookCollectionRecipesState: LoadState<List<RecipeInfo>>
+    //kitchenBookCollectionRecipesState: LoadState<List<RecipeInfo>>,
+    enableButtons: Boolean
 ) {
     var selectedTabIndex by remember { mutableIntStateOf(0) }
 
@@ -127,7 +128,6 @@ fun UserProfileScreen(
         content = { paddingValues ->
             LoadStateRenderer(
                 loadState = userProfileState,
-                swipeToRefresh = onUserProfileRefresh,
                 content = { userProfile ->
                     Column(modifier = Modifier
                         .fillMaxSize()
@@ -148,7 +148,8 @@ fun UserProfileScreen(
                                 } else if (!isAnotherUserProfile){
                                     galleryPermissionState.launchPermissionRequest()
                                 }
-                            }
+                            },
+                            enabled = enableButtons
                         )
                         Spacer(modifier = Modifier.fillMaxHeight(0.02f))
                         Text(text = userProfile.name, fontWeight = FontWeight.Bold)
@@ -345,6 +346,7 @@ fun UserProfilePreview() {
         {},
         {},
         {},
-        apiSuccess(userProfile)
+        apiSuccess(userProfile),
+        true
     )
 }

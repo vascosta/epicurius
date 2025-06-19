@@ -22,7 +22,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun UserBox(user: SearchUser) {
+fun UserBox(
+    user: SearchUser,
+    onUserProfileRequest: (name: String) -> Unit,
+    enableButtons: Boolean
+) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -39,7 +43,8 @@ fun UserBox(user: SearchUser) {
             UserProfilePicture(
                 profilePicture = user.profilePicture,
                 iconSize = 60,
-                onClick = {}
+                onClick = { onUserProfileRequest(user.name) },
+                enabled = enableButtons
             )
             Spacer(modifier = Modifier.width(70.dp))
             Text(user.name)
@@ -56,5 +61,5 @@ fun UserBoxPreview() {
         profilePicture = null
     )
 
-    UserBox(userProfile)
+    UserBox(userProfile, {}, true)
 }

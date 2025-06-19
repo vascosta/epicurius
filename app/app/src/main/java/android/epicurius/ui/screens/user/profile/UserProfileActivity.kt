@@ -111,6 +111,7 @@ class UserProfileActivity : EpicuriusActivity() {
                     onUserKitchenBookLoadMore = { viewModel.getUserKitchenBook() },
                     onUserPictureChange = {},
                     userProfileState = userProfile.value,
+                    enableButtons = viewModel.enableButtons
                 )
             }
         }

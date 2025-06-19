@@ -23,7 +23,7 @@ import androidx.compose.ui.unit.dp
 fun UserProfilePicture(
     profilePicture: ByteArray?,
     iconSize: Int,
-    onUserProfileRequest: () -> Unit,
+    onClick: () -> Unit,
     enabled: Boolean
 ) {
     Box(
@@ -33,7 +33,7 @@ fun UserProfilePicture(
             .background(Color.LightGray)
             .clickable(
                 enabled = enabled,
-                onClick = onUserProfileRequest
+                onClick = onClick
             ),
         contentAlignment = Alignment.Center
     ) {

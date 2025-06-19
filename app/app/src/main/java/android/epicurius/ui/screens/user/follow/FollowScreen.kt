@@ -85,7 +85,11 @@ fun FollowScreen(
                     } else {
                         if (selectedTabIndex == 0) followers else following
                     }
-                usersToShow.forEach { user -> UserBox(user = user) }
+                usersToShow.forEach { user -> UserBox(
+                    user = user,
+                    onUserProfileRequest = TODO(),
+                    enableButtons = TODO()
+                ) }
             }
         },
         containerColor = Color.White

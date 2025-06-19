@@ -7,8 +7,10 @@ import android.epicurius.ui.screens.user.components.UserBox
 import android.epicurius.ui.screens.utils.Idle
 import android.epicurius.ui.screens.utils.LoadState
 import android.epicurius.ui.screens.utils.LoadStateRenderer
+import android.epicurius.ui.screens.utils.Loaded
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AlertDialog
@@ -20,6 +22,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
 
 @Composable
 fun FollowRequestDialog(
@@ -52,15 +55,23 @@ fun FollowRequestDialog(
                 LoadStateRenderer(
                     loadState = followRequestsState,
                     content = { followRequest ->
-                        followRequest.forEach { user ->
-                            FollowRequestBox(
-                                user = user,
-                                onAcceptFollowRequest = { onAcceptFollowRequest(user.name) },
-                                onRejectFollowRequest = { onRejectFollowRequest(user.name) },
-                                onUserProfileRequest = { onUserProfileRequest(user.name) },
-                                enableButtons = enableButtons
-                            )
+                        if (followRequest.isNotEmpty()) {
+                            followRequest.forEach { user ->
+                                FollowRequestBox(
+                                    user = user,
+                                    onAcceptFollowRequest = { onAcceptFollowRequest(user.name) },
+                                    onRejectFollowRequest = { onRejectFollowRequest(user.name) },
+                                    onUserProfileRequest = { onUserProfileRequest(user.name) },
+                                    enableButtons = enableButtons
+                                )
+                            }
                         }
+                        else if (followRequestsState is Loaded)
+                            Text(
+                                text = "No follow requests found",
+                                modifier = Modifier.padding(10.dp),
+                                color = Color.Gray
+                            )
                     }
                 )
             }
