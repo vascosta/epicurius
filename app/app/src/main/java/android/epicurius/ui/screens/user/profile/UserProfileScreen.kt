@@ -8,10 +8,12 @@ import android.epicurius.domain.user.UserProfile
 import android.epicurius.ui.navigation.BottomBar
 import android.epicurius.ui.navigation.TopBar
 import android.epicurius.ui.screens.collections.components.CollectionProfileBox
+import android.epicurius.ui.screens.collections.components.CreateCollectionDialog
 import android.epicurius.ui.screens.recipe.components.RecipeInfoBox
 import android.epicurius.ui.screens.user.components.FollowBox
 import android.epicurius.ui.screens.user.components.ProfileTabBar
 import android.epicurius.ui.screens.user.components.UserProfilePicture
+import android.epicurius.ui.screens.user.profile.utils.getFlagEmoji
 import android.epicurius.ui.screens.utils.LoadState
 import android.epicurius.ui.screens.utils.LoadStateRenderer
 import android.epicurius.ui.screens.utils.apiSuccess
@@ -22,6 +24,7 @@ import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -33,10 +36,13 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -53,6 +59,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
@@ -75,6 +82,7 @@ fun UserProfileScreen(
     //onFollow: (String) -> Unit,
     //onUnfollow: (String) -> Unit,
     onCollectionRequest: (Int) -> Unit,
+    onCollectionCreate: (collectionName: String) -> Unit,
     //onRecipeRequest: (Int) -> Unit,
     //onAddRecipeToCollectionRequest: (Int, Int) -> Unit,
     onUserProfileRefresh: () -> Unit,
@@ -114,6 +122,8 @@ fun UserProfileScreen(
         rememberPermissionState(android.Manifest.permission.READ_EXTERNAL_STORAGE)
     }
 
+    var showCreateCollectionDialog by remember { mutableStateOf(false) }
+
     Scaffold(
         topBar = {
             TopBar(
@@ -129,13 +139,23 @@ fun UserProfileScreen(
             LoadStateRenderer(
                 loadState = userProfileState,
                 content = { userProfile ->
-                    Column(modifier = Modifier
-                        .fillMaxSize()
-                        .padding(paddingValues)
-                        .padding(16.dp)
-                        .background(Color.White),
+                    Column(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(paddingValues)
+                            .padding(16.dp)
+                            .background(Color.White),
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .align(Alignment.End),
+                            contentAlignment = Alignment.CenterEnd
+                        ){
+                            val flagEmoji = getFlagEmoji(userProfile.country)
+                            Text(text = flagEmoji, fontSize = 24.sp)
+                        }
                         Spacer(modifier = Modifier.fillMaxHeight(0.02f))
                         UserProfilePicture(
                             profilePicture = selectedImageBytes ?: userProfile.profilePicture,
@@ -232,6 +252,18 @@ fun UserProfileScreen(
                                     }
                                 )
                             } else if (selectedTabIndex == 1 && kitchenBookCollectionsState != null) {
+                                Row {
+                                    Spacer(Modifier.fillMaxWidth().weight(0.9f))
+                                    IconButton(
+                                        onClick = { showCreateCollectionDialog = true },
+                                        enabled = enableButtons
+                                    ) {
+                                        Icon(
+                                            imageVector = Icons.Default.Add,
+                                            contentDescription = "Create Collection"
+                                        )
+                                    }
+                                }
                                 LoadStateRenderer(
                                     loadState = kitchenBookCollectionsState,
                                     content = { collections ->
@@ -261,6 +293,16 @@ fun UserProfileScreen(
                                         }
                                     }
                                 )
+
+                                if (showCreateCollectionDialog) {
+                                    CreateCollectionDialog(
+                                        onDismiss = {
+                                            if (enableButtons) showCreateCollectionDialog = false
+                                        },
+                                        onCollectionCreate = onCollectionCreate,
+                                        enableButtons = enableButtons
+                                    )
+                                }
                             }
                         } else {
                             HorizontalDivider(
@@ -288,7 +330,7 @@ fun UserProfileScreen(
 fun UserProfilePreview() {
     val userProfile = UserProfile(
         name = "John Doe",
-        country = "USA",
+        country = "US",
         privacy = false,
         profilePicture = null,
         followersCount = 100,
@@ -319,6 +361,18 @@ fun UserProfilePreview() {
             servings = 2,
             picture = "",
             isInCollection = false,
+        ),
+        RecipeInfo(
+            id = 3,
+            name = "Vegetable Stir Fry",
+            authorUsername = "John Doe",
+            rating = 4.5,
+            cuisine = Cuisine.CHINESE,
+            mealType = MealType.SIDE_DISH,
+            preparationTime = 20,
+            servings = 3,
+            picture = "",
+            isInCollection = false,
         )
     )
 
@@ -336,6 +390,7 @@ fun UserProfilePreview() {
         apiSuccess(userRecipes),
         null,
         apiSuccess(kitchenBookCollections),
+        {},
         {},
         {},
         {},

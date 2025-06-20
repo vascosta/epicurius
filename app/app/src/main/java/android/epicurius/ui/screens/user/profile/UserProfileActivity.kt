@@ -103,6 +103,7 @@ class UserProfileActivity : EpicuriusActivity() {
                     onCollectionRequest = { collectionId ->
                         viewModel.getKitchenBookCollectionRecipes(collectionId)
                     },
+                    onCollectionCreate = { },
                     onUserProfileRefresh = {
                         val userProfileName = intent.getStringExtra(Intents.USERNAME) ?: error("Missing USERNAME in intent")
                         viewModel.getUserProfile(userProfileName)
