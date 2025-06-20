@@ -1,8 +1,10 @@
 package android.epicurius.ui.screens.auth.signup
 
 import android.epicurius.ui.EpicuriusActivity
+import android.epicurius.ui.navigation.Intents
 import android.epicurius.ui.screens.auth.login.LoginActivity
 import android.epicurius.ui.navigation.navigateTo
+import android.epicurius.ui.screens.collections.list.FavouritesListActivity
 import android.epicurius.ui.screens.user.preferences.skipable.KnowMoreActivity
 import android.os.Bundle
 import androidx.activity.OnBackPressedCallback
@@ -32,10 +34,15 @@ class SignUpActivity : EpicuriusActivity() {
                                 navigateTo<KnowMoreActivity>(finishCurrent = true)
                         }
                     },
-                    onLogin = { navigateTo<LoginActivity>() },
+                    onLogin = ::navigateToLoginActivity,
                     enableButtons = viewModel.enableButtons
                 )
             }
         }
+    }
+
+    private fun navigateToLoginActivity() {
+        viewModel.disableButtons()
+        navigateTo<LoginActivity>()
     }
 }

@@ -23,7 +23,7 @@ class LoginActivity : EpicuriusActivity() {
         setContent {
             MaterialTheme {
                 LoginScreen(
-                    onSignUp = { navigateTo<SignUpActivity>() },
+                    onSignUp = ::navigateToSignUpActivity,
                     onLogin = { name: String?, email: String?, password: String ->
                         viewModel.login(name, email, password) {
                             navigateTo<FeedActivity>()
@@ -34,5 +34,10 @@ class LoginActivity : EpicuriusActivity() {
                 )
             }
         }
+    }
+
+    private fun navigateToSignUpActivity() {
+        viewModel.disableButtons()
+        navigateTo<SignUpActivity>()
     }
 }

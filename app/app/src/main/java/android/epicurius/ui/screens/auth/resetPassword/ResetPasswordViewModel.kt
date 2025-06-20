@@ -1,6 +1,8 @@
 package android.epicurius.ui.screens.auth.resetPassword
 
 import android.content.Context
+import android.epicurius.domain.user.validateEmail
+import android.epicurius.domain.user.validatePassword
 import android.epicurius.services.EpicuriusService
 import android.epicurius.services.api.user.models.input.ResetPasswordInputModel
 import android.epicurius.storage.Session
@@ -55,7 +57,9 @@ class ResetPasswordViewModel(
                 showToast("passwords must be equal")
                 false
             }
-            !validateEmail(email) || !validatePassword(password) || !validatePassword(confirmPassword) -> false
+            !validateEmail(email, ::showToast)
+                    || !validatePassword(password, ::showToast)
+                    || !validatePassword(confirmPassword, ::showToast) -> false
             else -> true
         }
 }

@@ -1,6 +1,9 @@
 package android.epicurius.ui.screens.auth.signup
 
 import android.content.Context
+import android.epicurius.domain.user.validateName
+import android.epicurius.domain.user.validateEmail
+import android.epicurius.domain.user.validatePassword
 import android.epicurius.services.EpicuriusService
 import android.epicurius.services.api.auth.models.input.SignUpInputModel
 import android.epicurius.storage.Session
@@ -63,7 +66,9 @@ class SignUpViewModel(
                 showToast("passwords must be equal")
                 false
             }
-            !validateName(name) || !validateEmail(email) || !validatePassword(password) -> false
+            !validateName(name, ::showToast)
+                    || !validateEmail(email, ::showToast)
+                    || !validatePassword(password, ::showToast) -> false
             else -> true
         }
 }

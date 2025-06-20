@@ -1,6 +1,9 @@
 package android.epicurius.ui.screens.auth.login
 
 import android.content.Context
+import android.epicurius.domain.user.validateName
+import android.epicurius.domain.user.validateEmail
+import android.epicurius.domain.user.validatePassword
 import android.epicurius.services.EpicuriusService
 import android.epicurius.services.api.auth.models.input.LoginInputModel
 import android.epicurius.storage.Session
@@ -53,9 +56,9 @@ class LoginViewModel(
         password: String
     ): Boolean  {
         return when {
-            name != null && !validateName(name) -> false
-            email != null && !validateEmail(email) -> false
-            !validatePassword(password) -> false
+            name != null && !validateName(name, ::showToast) -> false
+            email != null && !validateEmail(email, ::showToast) -> false
+            !validatePassword(password, ::showToast) -> false
             else -> true
         }
     }

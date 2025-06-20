@@ -4,6 +4,9 @@ import android.content.Context
 import android.epicurius.domain.Diet
 import android.epicurius.domain.Intolerance
 import android.epicurius.domain.user.UserInfo
+import android.epicurius.domain.user.validateEmail
+import android.epicurius.domain.user.validateName
+import android.epicurius.domain.user.validatePassword
 import android.epicurius.services.EpicuriusService
 import android.epicurius.services.api.user.models.input.UpdateUserInputModel
 import android.epicurius.storage.Session
@@ -140,9 +143,9 @@ class SettingsViewModel(
                 showToast("passwords must be equal")
                 false
             }
-            name != null && !validateName(name) -> false
-            email != null && !validateEmail(email) -> false
-            password != null && !validatePassword(password) -> false
+            name != null && !validateName(name, ::showToast) -> false
+            email != null && !validateEmail(email, ::showToast) -> false
+            password != null && !validatePassword(password, ::showToast) -> false
             else -> true
         }
 }
