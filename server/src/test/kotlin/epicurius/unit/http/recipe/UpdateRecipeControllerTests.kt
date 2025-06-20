@@ -116,7 +116,7 @@ class UpdateRecipeControllerTests : RecipeControllerTest() {
     }
 
     @Test
-    fun `Should throw InvalidIngredient exception when updating a recipe with an invalid ingredients`() {
+    fun `Should throw InvalidIngredient exception when updating a recipe with an invalid ingredient`() {
         // given an invalid ingredient
         val invalidIngredient = Ingredient("invalid", 1.0, IngredientUnit.G)
 

@@ -19,10 +19,7 @@ class CreateMealPlannerIntegrationTests : MealPlannerIntegrationTest() {
         val today = LocalDate.now()
 
         // when creating a daily meal planner for today
-        createDailyMealPlanner(testUser.token, today, 2000)
-
-        // and getting the daily meal planner
-        val response = getDailyMealPlanner(testUser.token, today)
+        val response = createDailyMealPlanner(testUser.token, today, 2000)
 
         // then the daily meal planner should be created successfully
         assertNotNull(response)

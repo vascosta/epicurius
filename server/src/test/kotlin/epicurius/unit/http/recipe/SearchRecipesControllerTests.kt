@@ -50,7 +50,7 @@ class SearchRecipesControllerTests : RecipeControllerTest() {
     private val limit = 10
 
     @Test
-    fun `Should search for recipes by name`() {
+    fun `Should search for recipes by name successfully`() {
         // given a search form with name
         val searchRecipesInputInfoWithName = SearchRecipesInputModel(name = "Pastel")
 
@@ -76,7 +76,7 @@ class SearchRecipesControllerTests : RecipeControllerTest() {
     }
 
     @Test
-    fun `Should search for a recipe according to user's intolerances`() {
+    fun `Should search for a recipe according to user's intolerances successfully`() {
         // given a search form with intolerances that match the recipe
         val sameIntolerances = SearchRecipesInputModel(intolerances = listOf(Intolerance.GLUTEN))
 
@@ -205,7 +205,7 @@ class SearchRecipesControllerTests : RecipeControllerTest() {
     }
 
     @Test
-    fun `Should search for recipes of public users`() {
+    fun `Should search for recipes of public users successfully`() {
         // given a search form with name
 
         // mock
@@ -245,7 +245,7 @@ class SearchRecipesControllerTests : RecipeControllerTest() {
     }
 
     @Test
-    fun `Should search for recipes from private users when not followed`() {
+    fun `Should search for recipes from private users when not followed successfully`() {
         // given a search form with name
 
         // mock
@@ -285,7 +285,7 @@ class SearchRecipesControllerTests : RecipeControllerTest() {
     }
 
     @Test
-    fun `Should search for recipes from private users when followed`() {
+    fun `Should search for recipes from private users when followed successfully`() {
         // given a search form with name
 
         // mock
