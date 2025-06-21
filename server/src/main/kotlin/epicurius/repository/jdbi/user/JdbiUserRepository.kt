@@ -81,6 +81,7 @@ class JdbiUserRepository(private val handle: Handle) : UserRepository {
                 WHERE LOWER(name) LIKE LOWER(:partialUsername) 
                     AND id <> :userId
                     AND (:lastUserId IS NULL OR id < :lastUserId)
+                ORDER BY id DESC
                 LIMIT :limit
             """
         )
@@ -100,6 +101,7 @@ class JdbiUserRepository(private val handle: Handle) : UserRepository {
                 WHERE f.user_id = :user_id 
                     AND f.status = :status
                     AND (:lastFollowerId IS NULL OR f.follower_id < :lastFollowerId)
+                ORDER BY u.id DESC
                 LIMIT :limit
             """
         )
@@ -130,7 +132,10 @@ class JdbiUserRepository(private val handle: Handle) : UserRepository {
                 SELECT u.id, u.name, u.profile_picture_name
                 FROM dbo.user u
                 JOIN dbo.followers f ON u.id = f.user_id
-                WHERE f.follower_id = :user_id AND f.status = :status
+                WHERE f.follower_id = :user_id 
+                    AND f.status = :status
+                    AND (:lastFollowingId IS NULL OR f.user_id < :lastFollowingId)
+                ORDER BY u.id DESC
                 LIMIT :limit
             """
         )
