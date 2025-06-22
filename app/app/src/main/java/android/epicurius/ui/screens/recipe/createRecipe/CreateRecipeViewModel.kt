@@ -99,12 +99,8 @@ class CreateRecipeViewModel(
             service.recipeService.createRecipe(token, createRecipeInfo, recipePictures)
         }
         when {
-            result.isFailure -> {
-                enableButtons()
-            }
-            result.isSuccess -> {
-                navigateTo(result.getValueOrThrow().recipe.id)
-            }
+            result.isFailure -> enableButtons()
+            result.isSuccess -> navigateTo(result.getValueOrThrow().recipe.id)
         }
     }
 

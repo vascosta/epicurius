@@ -48,7 +48,6 @@ fun ServerOfflineScreen() {
                     color = Color.Black,
                     fontSize = 24.sp,
                 )
-
                 Text(
                     text = "In the meantime try to think about new recipes to share!",
                     modifier = Modifier.padding(bottom = 8.dp),

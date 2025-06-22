@@ -36,12 +36,8 @@ class FavouritesViewModel(
             service.collectionService.createCollection(token, createCollectionInfo)
         }
         when {
-            result.isFailure -> {
-                enableButtons()
-            }
-            result.isSuccess -> {
-                navigateTo(result.getValueOrThrow().collection.id)
-            }
+            result.isFailure -> enableButtons()
+            result.isSuccess -> navigateTo(result.getValueOrThrow().collection.id)
         }
     }
 }

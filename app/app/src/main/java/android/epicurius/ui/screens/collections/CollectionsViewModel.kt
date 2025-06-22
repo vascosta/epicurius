@@ -50,9 +50,7 @@ open class CollectionsViewModel(
             collectionsToRemoveRecipeFlow.value = loading(CachedResult(cacheCollectionsToRemoveRecipe.value))
         }
         else collectionsFlow.value = loading(CachedResult(cacheCollections.value))
-        viewModelScope.launch {
-            fetchCollections(recipeId, collectionType)
-        }
+        viewModelScope.launch { fetchCollections(recipeId, collectionType) }
     }
 
     fun addRecipeToCollections(
@@ -100,9 +98,7 @@ open class CollectionsViewModel(
 
     fun deleteCollection(id: Int) {
         disableButtons()
-        viewModelScope.launch {
-            handleDeleteCollection(id)
-        }
+        viewModelScope.launch { handleDeleteCollection(id) }
     }
 
     fun clearCollections() {
@@ -125,6 +121,7 @@ open class CollectionsViewModel(
             )
         }
         when {
+            result.isFailure -> handleCachedCollections(recipeId)
             result.isSuccess -> {
                 val fetchedCollections =
                     result.getValueOrThrow().collections.mapNotNull { collection ->
@@ -159,16 +156,18 @@ open class CollectionsViewModel(
                     }
                     lastFetchedCollectionIdFlow.value = fetchedCollections.last().id
                 }
-                else {
-                    if (recipeId == null) collectionsFlow.value = cache(cacheCollections.value)
-                    else {
-                        collectionsToAddRecipeFlow.value = cache(cacheCollectionsToAddRecipe.value)
-                        collectionsToRemoveRecipeFlow.value = cache(cacheCollectionsToRemoveRecipe.value)
-                    }
-                }
+                else handleCachedCollections(recipeId)
             }
         }
         enableButtons()
+    }
+
+    private fun handleCachedCollections(recipeId: Int?) {
+        if (recipeId == null) collectionsFlow.value = cache(cacheCollections.value)
+        else {
+            collectionsToAddRecipeFlow.value = cache(cacheCollectionsToAddRecipe.value)
+            collectionsToRemoveRecipeFlow.value = cache(cacheCollectionsToRemoveRecipe.value)
+        }
     }
 
     private suspend fun fetchCollection(id: Int): Collection? {
@@ -177,9 +176,7 @@ open class CollectionsViewModel(
             service.collectionService.getCollection(token, id)
         }
         when {
-            result.isSuccess -> {
-                return result.getValueOrThrow().collection
-            }
+            result.isSuccess -> return result.getValueOrThrow().collection
         }
         return null
     }
@@ -197,10 +194,7 @@ open class CollectionsViewModel(
                 service.collectionService.addRecipeToCollection(token, collection.id, addRecipeInfo)
             }
             when {
-                result.isFailure -> {
-                    showToast("Error while adding the recipe to ${collection.name} collection")
-                    collectionsIds.add(null)
-                }
+                result.isFailure -> collectionsIds.add(null)
                 result.isSuccess -> collectionsIds.add(collection.id)
             }
         }
@@ -230,10 +224,7 @@ open class CollectionsViewModel(
                 service.collectionService.removeRecipeFromCollection(token, collection.id, recipeId)
             }
             when {
-                result.isFailure -> {
-                    showToast("Error while removing the recipe from ${collection.name} collection")
-                    collectionsIds.add(null)
-                }
+                result.isFailure -> collectionsIds.add(null)
                 result.isSuccess -> collectionsIds.add(collection.id)
             }
         }
@@ -256,6 +247,7 @@ open class CollectionsViewModel(
             service.collectionService.deleteCollection(token, id)
         }
         when {
+            result.isFailure -> collectionsFlow.value = cache(cacheCollections.value)
             result.isSuccess -> {
                 val updatedCollections = cacheCollections.value.filter { it.id != id }
                 collectionsFlow.value = apiSuccess(updatedCollections)
