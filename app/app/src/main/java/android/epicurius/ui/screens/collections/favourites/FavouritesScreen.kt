@@ -51,11 +51,7 @@ fun FavouritesScreen(
     enableButtons: Boolean
 ) {
     var showCreateCollectionDialog by remember { mutableStateOf(false) }
-    var showLoadingSpinnerOnLoadMoreButton by remember { mutableStateOf(false) }
 
-    LaunchedEffect(enableButtons) {
-        if (enableButtons) showLoadingSpinnerOnLoadMoreButton = false
-    }
     Scaffold(
         topBar = {
             TopBar(
@@ -103,16 +99,10 @@ fun FavouritesScreen(
                                 Spacer(modifier = Modifier.height(10.dp))
                             }
                             Button(
-                                onClick = {
-                                    onLoadMoreFavourites()
-                                    showLoadingSpinnerOnLoadMoreButton = true
-                                },
+                                onClick = { onLoadMoreFavourites() },
                                 modifier = Modifier.fillMaxWidth().padding(10.dp),
                                 enabled = enableButtons
-                            ) {
-                                if (!showLoadingSpinnerOnLoadMoreButton) Text("Load More")
-                                else LoadingSpinner(Modifier.size(30.dp))
-                            }
+                            ) { Text("Load More") }
                         }
                         else if (favouritesState is Loaded) {
                             Text(

@@ -52,44 +52,27 @@ fun CollectionsListDialog(
     enableButtons: Boolean
 ) {
     if (collectionsStateBundle != null) {
-        var showLoadingSpinnerOnLoadMoreButton by remember { mutableStateOf(false) }
-
         var selectedTabIndex by remember { mutableIntStateOf(0) }.apply {
-            if (!isInCollection) { 0 } else { 1 }
+            if (!isInCollection) 0 else 1
         }
         var selectedCollectionsIds = remember { mutableStateListOf<Int>() }
 
-        LaunchedEffect(enableButtons) {
-            if (enableButtons) showLoadingSpinnerOnLoadMoreButton = false
-        }
         LaunchedEffect(selectedTabIndex) {
             selectedCollectionsIds.clear()
             if (
                 collectionsStateBundle.collectionsToAddRecipeState is Idle ||
                 collectionsStateBundle.collectionsToRemoveRecipeState is Idle
                 )
-            {
                 onCollectionsRequest(recipeId)
-            }
         }
         AlertDialog(
             onDismissRequest = {
                 if (collectionsStateBundle.collectionsToAddRecipeState is Loaded ||
-                    collectionsStateBundle.collectionsToRemoveRecipeState is Loaded) {
+                    collectionsStateBundle.collectionsToRemoveRecipeState is Loaded
+                    )
                     onDismissRequest()
-                }
             },
             confirmButton = {
-                Button(
-                    onClick = {
-                        onCollectionsRequest(recipeId)
-                        showLoadingSpinnerOnLoadMoreButton = true
-                    },
-                    enabled = enableButtons
-                ) {
-                    if (!showLoadingSpinnerOnLoadMoreButton) Text("Load More")
-                    else LoadingSpinner(Modifier.size(30.dp))
-                }
                 CollectionsListDialogButton(
                     recipeId = recipeId,
                     collectionsStateBundle = collectionsStateBundle,
@@ -142,6 +125,10 @@ fun CollectionsListDialog(
                                             )
                                         }
                                     }
+                                    Button(
+                                        onClick = { onCollectionsRequest(recipeId) },
+                                        enabled = enableButtons
+                                    ) { Text("Load More") }
                                 }
                                 else if (collectionsStateBundle.collectionsToAddRecipeState is Loaded)
                                     Text(
@@ -179,6 +166,10 @@ fun CollectionsListDialog(
                                             )
                                         }
                                     }
+                                    Button(
+                                        onClick = { onCollectionsRequest(recipeId) },
+                                        enabled = enableButtons
+                                    ) { Text("Load More") }
                                 }
                                 else if (collectionsStateBundle.collectionsToAddRecipeState is Loaded)
                                     Text(

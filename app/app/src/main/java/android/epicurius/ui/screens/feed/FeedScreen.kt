@@ -78,11 +78,7 @@ fun FeedScreen(
     enableButtons: Boolean
 ) {
     var showFollowRequestsDialog by remember { mutableStateOf(false) }
-    var showLoadingSpinnerOnLoadMoreButton by remember { mutableStateOf(false) }
 
-    LaunchedEffect(enableButtons) {
-        if (enableButtons) showLoadingSpinnerOnLoadMoreButton = false
-    }
     Scaffold(
         topBar = {
             TopBar(
@@ -150,18 +146,12 @@ fun FeedScreen(
                                 )
                             }
                             Button(
-                                onClick = {
-                                    onLoadMoreUserFeed()
-                                    showLoadingSpinnerOnLoadMoreButton = true
-                                },
+                                onClick = { onLoadMoreUserFeed() },
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .padding(10.dp),
                                 enabled = enableButtons
-                            ) {
-                                if (!showLoadingSpinnerOnLoadMoreButton) Text("Load More")
-                                else LoadingSpinner(Modifier.size(30.dp))
-                            }
+                            ) { Text("Load More") }
                         } else if (userFeedState is Loaded) {
                             Text(
                                 text = "No recipes for you to cook, how about following new users?",
