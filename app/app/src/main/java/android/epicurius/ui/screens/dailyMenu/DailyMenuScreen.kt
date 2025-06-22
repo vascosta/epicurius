@@ -10,6 +10,7 @@ import android.epicurius.ui.screens.collections.list.components.CollectionsState
 import android.epicurius.ui.screens.dailyMenu.components.MenuItemBox
 import android.epicurius.ui.screens.utils.LoadState
 import android.epicurius.ui.screens.utils.LoadStateRenderer
+import android.epicurius.ui.screens.utils.Loaded
 import android.epicurius.ui.screens.utils.apiSuccess
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
@@ -54,7 +55,7 @@ fun DailyMenuScreen(
             enableButtons = enableButtons,
             onBackButton = onBackButton
         ) },
-        bottomBar = { BottomBar(buttonsEnable = enableButtons) },
+        bottomBar = { BottomBar(buttonsEnable = enableButtons && menuState is Loaded) },
         content = { paddingValues ->
             LoadStateRenderer(
                 loadState = menuState,

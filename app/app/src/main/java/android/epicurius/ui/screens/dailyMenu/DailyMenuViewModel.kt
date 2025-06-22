@@ -39,8 +39,7 @@ class DailyMenuViewModel(
                     dailyMenuFlow.value = cache(storedDailyMenu.menu)
                     enableButtons()
                 }
-                else
-                    fetchDailyMenu()
+                else fetchDailyMenu()
             }
             else fetchDailyMenu()
         }
