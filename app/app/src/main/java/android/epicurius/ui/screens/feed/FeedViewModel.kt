@@ -5,6 +5,7 @@ import android.epicurius.domain.recipe.RecipeInfo
 import android.epicurius.domain.user.FollowRequestType
 import android.epicurius.domain.user.SearchUser
 import android.epicurius.services.EpicuriusService
+import android.epicurius.services.http.utils.APIResult.Companion.cached
 import android.epicurius.services.http.utils.CachedResult
 import android.epicurius.storage.Session
 import android.epicurius.ui.screens.collections.CollectionsViewModel
@@ -38,31 +39,23 @@ class FeedViewModel(
     fun getUserFeed() {
         disableButtons()
         userFeedFlow.value = loading(CachedResult(cacheUserFeed.value))
-        viewModelScope.launch {
-            fetchUserFeed()
-        }
+        viewModelScope.launch { fetchUserFeed() }
     }
 
     fun getUserFollowRequests() {
         disableButtons()
         userFollowRequestsFlow.value = loading(CachedResult(cacheUserFollowRequests.value))
-        viewModelScope.launch {
-            fetchUserFollowRequests()
-        }
+        viewModelScope.launch { fetchUserFollowRequests() }
     }
 
     fun acceptFollowRequest(name: String) {
         disableButtons()
-        viewModelScope.launch {
-            handleFollowRequest(name, FollowRequestType.ACCEPT)
-        }
+        viewModelScope.launch { handleFollowRequest(name, FollowRequestType.ACCEPT) }
     }
 
     fun rejectFollowRequest(name: String) {
         disableButtons()
-        viewModelScope.launch {
-            handleFollowRequest(name, FollowRequestType.REJECT)
-        }
+        viewModelScope.launch { handleFollowRequest(name, FollowRequestType.REJECT) }
     }
 
     private suspend fun fetchUserFeed() {
@@ -72,6 +65,7 @@ class FeedViewModel(
             service.userService.getUserFeed(token, lastRecipeId, limit)
         }
         when {
+            result.isFailure -> handleCachedUserFeed()
             result.isSuccess -> {
                 val fetchedFeed = result.getValueOrThrow().feed
                 if (fetchedFeed.isNotEmpty()) {
@@ -80,13 +74,13 @@ class FeedViewModel(
                     cacheUserFeedFlow.value = updatedFeed
                     lastFetchedRecipeIdFlow.value = fetchedFeed.last().id
                 }
-                else {
-                    userFeedFlow.value = cache(cacheUserFeed.value)
-                }
+                else handleCachedUserFeed()
             }
         }
         enableButtons()
     }
+
+    private fun handleCachedUserFeed() { userFeedFlow.value = cache(cacheUserFeed.value) }
 
     private suspend fun fetchUserFollowRequests() {
         val result = request {
@@ -94,6 +88,7 @@ class FeedViewModel(
             service.userService.getUserFollowRequests(token)
         }
         when {
+            result.isFailure -> userFollowRequestsFlow.value = cache(cacheUserFollowRequests.value)
             result.isSuccess -> {
                 val fetchedUserFollowRequests = result.getValueOrThrow().users
                 val updatedUserFollowRequests = cacheUserFollowRequests.value + fetchedUserFollowRequests

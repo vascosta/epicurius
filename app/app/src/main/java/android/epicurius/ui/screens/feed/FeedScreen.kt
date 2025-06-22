@@ -90,7 +90,7 @@ fun FeedScreen(
                 enableButtons = enableButtons
             )
         },
-        bottomBar = { BottomBar(buttonsEnable = enableButtons) },
+        bottomBar = { BottomBar(buttonsEnable = enableButtons && userFeedState is Loaded) },
         content = { paddingValues ->
             Column(
                 modifier = Modifier
@@ -149,6 +149,19 @@ fun FeedScreen(
                                     enableButtons = enableButtons
                                 )
                             }
+                            Button(
+                                onClick = {
+                                    onLoadMoreUserFeed()
+                                    showLoadingSpinnerOnLoadMoreButton = true
+                                },
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(10.dp),
+                                enabled = enableButtons
+                            ) {
+                                if (!showLoadingSpinnerOnLoadMoreButton) Text("Load More")
+                                else LoadingSpinner(Modifier.size(30.dp))
+                            }
                         } else if (userFeedState is Loaded) {
                             Text(
                                 text = "No recipes for you to cook, how about following new users?",
@@ -159,19 +172,6 @@ fun FeedScreen(
                         }
                     }
                 )
-                Button(
-                    onClick = {
-                        onLoadMoreUserFeed()
-                        showLoadingSpinnerOnLoadMoreButton = true
-                    },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(10.dp),
-                    enabled = enableButtons
-                ) {
-                    if (!showLoadingSpinnerOnLoadMoreButton) Text("Load More")
-                    else LoadingSpinner(Modifier.size(30.dp))
-                }
                 if (showFollowRequestsDialog) {
                     FollowRequestDialog(
                         onDismiss = { if (enableButtons) showFollowRequestsDialog = false },
