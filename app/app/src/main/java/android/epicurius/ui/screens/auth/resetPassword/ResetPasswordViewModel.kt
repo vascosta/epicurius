@@ -27,9 +27,7 @@ class ResetPasswordViewModel(
             return
         }
         val resetPasswordInfo = ResetPasswordInputModel(email, password)
-        viewModelScope.launch {
-            handleResetPassword(resetPasswordInfo)
-        }
+        viewModelScope.launch { handleResetPassword(resetPasswordInfo) }
     }
 
     private suspend fun handleResetPassword(resetPasswordInfo: ResetPasswordInputModel) {
@@ -37,9 +35,7 @@ class ResetPasswordViewModel(
             service.userService.resetUserPassword(resetPasswordInfo)
         }
         when {
-            result.isFailure -> {
-                enableButtons()
-            }
+            result.isFailure -> enableButtons()
             result.isSuccess -> {
                 showToast("password was reset successfully")
                 onSessionExpired(false)

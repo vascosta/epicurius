@@ -1,16 +1,13 @@
 package android.epicurius.ui.screens.auth.signup
 
 import android.content.Context
-import android.epicurius.domain.user.validateName
 import android.epicurius.domain.user.validateEmail
+import android.epicurius.domain.user.validateName
 import android.epicurius.domain.user.validatePassword
 import android.epicurius.services.EpicuriusService
 import android.epicurius.services.api.auth.models.input.SignUpInputModel
 import android.epicurius.storage.Session
 import android.epicurius.ui.screens.user.UserViewModel
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 
@@ -34,9 +31,7 @@ class SignUpViewModel(
             return
         }
         val signUpInfo = SignUpInputModel(name, email, password, country)
-        viewModelScope.launch {
-            handleSignUp(signUpInfo, navigateTo)
-        }
+        viewModelScope.launch { handleSignUp(signUpInfo, navigateTo) }
     }
 
     private suspend fun handleSignUp(signUpInfo: SignUpInputModel, navigateTo: () -> Unit) {
@@ -44,9 +39,7 @@ class SignUpViewModel(
             service.authService.signUp(signUpInfo)
         }
         when {
-            result.isFailure -> {
-                enableButtons()
-            }
+            result.isFailure -> enableButtons()
             result.isSuccess -> {
                 val token = result.getTokenOrThrow()
                 saveUserInfo(token)

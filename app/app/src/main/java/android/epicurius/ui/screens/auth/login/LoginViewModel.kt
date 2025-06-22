@@ -29,9 +29,7 @@ class LoginViewModel(
             return
         }
         val loginInfo = LoginInputModel(name, email, password)
-        viewModelScope.launch {
-            handleLogin(loginInfo, navigateTo)
-        }
+        viewModelScope.launch { handleLogin(loginInfo, navigateTo) }
     }
 
     private suspend fun handleLogin(loginInfo: LoginInputModel, navigateTo: () -> Unit) {
@@ -39,9 +37,7 @@ class LoginViewModel(
             service.authService.login(loginInfo)
         }
         when {
-            result.isFailure -> {
-                enableButtons()
-            }
+            result.isFailure -> enableButtons()
             result.isSuccess -> {
                 val token = result.getTokenOrThrow()
                 saveUserInfo(token)
