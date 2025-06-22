@@ -10,6 +10,7 @@ import android.epicurius.ui.screens.user.settings.components.SettingsButton
 import android.epicurius.ui.screens.user.settings.components.SettingsDialog
 import android.epicurius.ui.screens.utils.LoadState
 import android.epicurius.ui.screens.utils.LoadStateRenderer
+import android.epicurius.ui.screens.utils.Loaded
 import android.epicurius.ui.screens.utils.apiSuccess
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -78,7 +79,7 @@ fun SettingsScreen(
                 icon = null
             )
         },
-        bottomBar = { BottomBar(buttonsEnable = enableButtons) },
+        bottomBar = { BottomBar(buttonsEnable = enableButtons && userInfoState is Loaded) },
         content = { paddingValues ->
             LoadStateRenderer(
                 loadState = userInfoState,
