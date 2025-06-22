@@ -1,6 +1,7 @@
 package android.epicurius.ui.screens.search.general
 
 import android.epicurius.ui.EpicuriusActivity
+import android.epicurius.ui.navigation.Intents
 import android.epicurius.ui.navigation.navigateTo
 import android.epicurius.ui.screens.recipe.profile.RecipeProfileActivity
 import android.epicurius.ui.screens.search.camera.CameraActivity
@@ -24,8 +25,15 @@ class SearchActivity : EpicuriusActivity() {
                 onSearchUsersClear = { viewModel.clearSearchUsers() },
                 onCamera = { navigateTo<CameraActivity>() },
                 onLoadMoreSearchedUsers = { name: String -> viewModel.searchUsers(name) },
+                onUserProfileRequest = ::navigateToUserProfileActivity,
                 enableButtons = viewModel.enableButtons,
             )
+        }
+    }
+
+    private fun navigateToUserProfileActivity(name: String) {
+        navigateTo<RecipeProfileActivity> { intent ->
+            intent.putExtra(Intents.USERNAME, name)
         }
     }
 }

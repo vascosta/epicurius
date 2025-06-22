@@ -61,6 +61,7 @@ fun SearchScreen(
     onCamera: () -> Unit = {},
     onIdentifyIngredientsInPicture: (ByteArray) -> Unit = {},
     onConfirm: (List<String>) -> Unit = { _ -> },
+    onUserProfileRequest: (name: String) -> Unit,
     onLoadMoreSearchedUsers: (name: String) -> Unit,
     enableButtons: Boolean
 ) {
@@ -189,7 +190,7 @@ fun SearchScreen(
                             usersResult.forEach { user ->
                                 UserBox(
                                     user,
-                                    onUserProfileRequest = {},
+                                    onUserProfileRequest = onUserProfileRequest,
                                     enableButtons = enableButtons
                                 )
                             }
@@ -265,6 +266,7 @@ fun SearchUserScreenPreview() {
         onSearchUsers = {},
         onSearchUsersClear = {},
         onLoadMoreSearchedUsers = {},
+        onUserProfileRequest = {},
         enableButtons = true
     )
 }
