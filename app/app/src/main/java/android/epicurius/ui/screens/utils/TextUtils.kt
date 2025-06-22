@@ -46,7 +46,7 @@ fun MixedText(boldString: String, normalString: String) {
 fun SearchTextField(
     text: String,
     modifier: Modifier = Modifier,
-    onSearchQueryChange: (String) -> Unit,
+    onSearchQueryChange: (query: String) -> Unit,
     onIconClick: () -> Unit,
     enableButtons: Boolean
 ) {

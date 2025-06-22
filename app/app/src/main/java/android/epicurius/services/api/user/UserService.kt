@@ -10,6 +10,7 @@ import android.epicurius.services.api.user.models.output.GetUserFollowersOutputM
 import android.epicurius.services.api.user.models.output.GetUserFollowingOutputModel
 import android.epicurius.services.api.user.models.output.GetUserOutputModel
 import android.epicurius.services.api.user.models.output.GetUserProfileOutputModel
+import android.epicurius.services.api.user.models.output.SearchUsersOutputModel
 import android.epicurius.services.api.user.models.output.UpdateUserOutputModel
 import android.epicurius.services.api.user.models.output.UpdateUserProfilePictureOutputModel
 import android.epicurius.services.http.HttpService
@@ -41,11 +42,11 @@ class UserService(private val httpService: HttpService) {
         partialUsername: String,
         lastUserId: Int?,
         limit: Int,
-    ): APIResult<GetUserProfileOutputModel> =
-        httpService.get<GetUserProfileOutputModel>(
+    ): APIResult<SearchUsersOutputModel> =
+        httpService.get<SearchUsersOutputModel>(
             Uris.User.USERS,
             queryParams = mapOf(
-                "name" to partialUsername,
+                "partialUsername" to partialUsername,
                 "lastUserId" to lastUserId,
                 "limit" to limit,
             ),

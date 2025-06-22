@@ -295,9 +295,7 @@ fun CreateRecipeScreen(
                             imagePickerLauncher.launch(
                                 PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
                             )
-                        } else {
-                            galleryPermissionState.launchPermissionRequest()
-                        }
+                        } else galleryPermissionState.launchPermissionRequest()
                     },
                     modifier = Modifier.padding(top = 10.dp),
                     enabled = buttonsEnable
@@ -365,8 +363,8 @@ fun CreateRecipeScreen(
                     !preparationTime.isEmpty() && !servings.isEmpty() && !cuisine.isEmpty() &&
                     !mealType.isEmpty() && !ingredients.isEmpty() && !instructions.isEmpty()
                 ) {
-                    if (buttonsEnable) { Text("Create") }
-                    else { LoadingSpinner(Modifier.size(30.dp)) }
+                    if (buttonsEnable) Text("Create")
+                    else LoadingSpinner(Modifier.size(30.dp))
                 }
             }
         }

@@ -1,5 +1,6 @@
 package android.epicurius.ui.screens.search.general
 
+import android.Manifest
 import android.epicurius.domain.user.SearchUser
 import android.epicurius.ui.navigation.BottomBar
 import android.epicurius.ui.navigation.TopBar
@@ -8,8 +9,12 @@ import android.epicurius.ui.screens.search.components.FilterDialog
 import android.epicurius.ui.screens.search.components.FiltersIcon
 import android.epicurius.ui.screens.search.components.SearchPhotoComponent
 import android.epicurius.ui.screens.user.components.UserBox
+import android.epicurius.ui.screens.utils.LoadState
+import android.epicurius.ui.screens.utils.LoadStateRenderer
+import android.epicurius.ui.screens.utils.Loading
 import android.epicurius.ui.screens.utils.SearchTextField
 import android.epicurius.ui.screens.utils.TabComponent
+import android.epicurius.ui.screens.utils.apiSuccess
 import android.os.Build
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -48,28 +53,23 @@ import com.google.accompanist.permissions.shouldShowRationale
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun SearchScreen(
+    usersResultState: LoadState<List<SearchUser>>,
     onBackButton: () -> Unit = {},
-    onRecipeSearch: (String) -> Unit = {},
-    onUserSearch: (String) -> List<SearchUser> = { listOf<SearchUser>(
-        SearchUser(
-            id = 1,
-            name = "testuser",
-            profilePicture = null,
-        ),
-        SearchUser(
-            id = 2,
-            name = "anotheruser",
-            profilePicture = null,
-        )
-    ) },
+    onRecipeSearch: (searchQuery: String) -> Unit = {},
+    onSearchUsers: (name: String) -> Unit,
+    onSearchUsersClear: () -> Unit,
     onCamera: () -> Unit = {},
-    onUpload: (ByteArray) -> Unit = {},
+    onIdentifyIngredientsInPicture: (ByteArray) -> Unit = {},
     onConfirm: (List<String>) -> Unit = { _ -> },
+    onLoadMoreSearchedUsers: (name: String) -> Unit,
     enableButtons: Boolean
 ) {
+    val context = LocalContext.current
+
     val tabs = listOf("Recipe", "Users")
     var selectedTabIndex by remember { mutableIntStateOf(0) }
     var searchQuery by remember { mutableStateOf("") }
+    var searchUsersQuery by remember { mutableStateOf("") }
 
     var showFiltersDialog by remember { mutableStateOf(false) }
 
@@ -77,22 +77,18 @@ fun SearchScreen(
     var cuisine by remember { mutableStateOf(listOf<String>()) }
     var intolerances by remember { mutableStateOf(listOf<String>()) }
     var diets by remember { mutableStateOf(listOf<String>()) }
-
     var preparationTime by remember { mutableStateOf("") }
     var serving by remember { mutableStateOf("") }
     var minCalories by remember { mutableStateOf("") }
     var maxCalories by remember { mutableStateOf("") }
-    var minCarbs by remember { mutableStateOf("") }
-    var maxCarbs by remember { mutableStateOf("") }
-    var minFat by remember { mutableStateOf("") }
-    var maxFat by remember { mutableStateOf("") }
     var minProtein by remember { mutableStateOf("") }
     var maxProtein by remember { mutableStateOf("") }
-
-    var userSearchResults by remember { mutableStateOf<List<SearchUser>>(emptyList()) }
+    var minFat by remember { mutableStateOf("") }
+    var maxFat by remember { mutableStateOf("") }
+    var minCarbs by remember { mutableStateOf("") }
+    var maxCarbs by remember { mutableStateOf("") }
 
     var selectedImageBytes by remember { mutableStateOf<ByteArray?>(null) }
-    val context = LocalContext.current
 
     val imagePickerLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.PickVisualMedia()
@@ -103,7 +99,7 @@ fun SearchScreen(
             inputStream?.close()
             if (bytes != null) {
                 selectedImageBytes = bytes
-                onUpload(bytes)
+                onIdentifyIngredientsInPicture(bytes)
             }
         } else {
             Toast.makeText(context, "No image selected", Toast.LENGTH_SHORT).show()
@@ -111,11 +107,11 @@ fun SearchScreen(
     }
 
     var showGalleryAccessDialog by remember { mutableStateOf(false) }
-    val galleryPermissionState = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-        rememberPermissionState(android.Manifest.permission.READ_MEDIA_IMAGES)
-    } else {
-        rememberPermissionState(android.Manifest.permission.READ_EXTERNAL_STORAGE)
-    }
+    val galleryPermissionState =
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
+            rememberPermissionState(Manifest.permission.READ_MEDIA_IMAGES)
+        else
+            rememberPermissionState(Manifest.permission.READ_EXTERNAL_STORAGE)
 
     var showConfirmIngredientsDialog by remember { mutableStateOf(false) }
 
@@ -128,7 +124,7 @@ fun SearchScreen(
                 enableButtons = enableButtons
             )
         },
-        bottomBar = { BottomBar(buttonsEnable = true) },
+        bottomBar = { BottomBar(buttonsEnable = enableButtons && usersResultState !is Loading) },
         content = { paddingValues ->
             Column(
                 modifier = Modifier
@@ -146,12 +142,20 @@ fun SearchScreen(
                     onSearchQueryChange = { searchQuery = it },
                     onIconClick = {
                         if (selectedTabIndex == 0) onRecipeSearch(searchQuery)
-                        else userSearchResults = onUserSearch(searchQuery)
+                        else {
+                            onSearchUsersClear()
+                            onSearchUsers(searchQuery)
+                            searchUsersQuery = searchQuery
+                        }
                     },
                     enableButtons = enableButtons
                 )
 
-                TabComponent(tabs, selectedTabIndex, { selectedTabIndex = it })
+                TabComponent(
+                    tabs = tabs,
+                    selectedTabIndex = selectedTabIndex,
+                    onTabSelected = { selectedTabIndex = it }
+                )
 
                 if (selectedTabIndex == 0) {
                     Row(modifier = Modifier.fillMaxWidth()) {
@@ -173,13 +177,31 @@ fun SearchScreen(
                                 galleryPermissionState.status.shouldShowRationale -> {
                                     showGalleryAccessDialog = true
                                 }
-                                else -> { showGalleryAccessDialog = true }
+                                else -> showGalleryAccessDialog = true
                             }
                         },
                         modifier = Modifier.fillMaxWidth()
                     )
                 } else {
-                    userSearchResults.forEach { user -> UserBox(user) }
+                    LoadStateRenderer(
+                        loadState = usersResultState,
+                        content = { usersResult ->
+                            usersResult.forEach { user ->
+                                UserBox(
+                                    user,
+                                    onUserProfileRequest = {},
+                                    enableButtons = enableButtons
+                                )
+                            }
+                            Button(
+                                onClick = { onLoadMoreSearchedUsers(searchUsersQuery) },
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(10.dp),
+                                enabled = enableButtons
+                            ) { Text("Load More") }
+                        }
+                    )
                 }
 
                 if (showFiltersDialog) {
@@ -217,13 +239,11 @@ fun SearchScreen(
                         true
                     )
                 }
-
                 if (showGalleryAccessDialog) {
                     LaunchedEffect(Unit) {
                         galleryPermissionState.launchPermissionRequest()
                     }
                 }
-
                 if (showConfirmIngredientsDialog && selectedImageBytes != null) {
                     ConfirmIngredientsDialog(
                         ingredients = listOf(),
@@ -240,5 +260,11 @@ fun SearchScreen(
 @Preview
 @Composable
 fun SearchUserScreenPreview() {
-    SearchScreen(enableButtons = true)
+    SearchScreen(
+        usersResultState = apiSuccess(emptyList()),
+        onSearchUsers = {},
+        onSearchUsersClear = {},
+        onLoadMoreSearchedUsers = {},
+        enableButtons = true
+    )
 }

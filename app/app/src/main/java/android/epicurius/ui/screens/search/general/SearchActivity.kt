@@ -1,30 +1,30 @@
 package android.epicurius.ui.screens.search.general
 
-import android.epicurius.domain.user.SearchUser
-import android.epicurius.ui.screens.search.camera.CameraActivity
+import android.epicurius.ui.EpicuriusActivity
 import android.epicurius.ui.navigation.navigateTo
 import android.epicurius.ui.screens.recipe.profile.RecipeProfileActivity
+import android.epicurius.ui.screens.search.camera.CameraActivity
+import android.epicurius.ui.screens.utils.idle
 import android.os.Bundle
-import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.runtime.collectAsState
 
-class SearchActivity : ComponentActivity() {
+class SearchActivity : EpicuriusActivity() {
+    override val viewModel: SearchViewModel by getViewModel<SearchViewModel>()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
+            val usersResultState = viewModel.searchedUsers.collectAsState(idle())
             SearchScreen(
-                onBackButton = {  },
+                usersResultState = usersResultState.value,
+                onBackButton = { finish() },
                 onRecipeSearch = { navigateTo<RecipeProfileActivity>() },
-                onUserSearch = { listOf<SearchUser>(
-                    SearchUser(
-                        id = 1,
-                        name = "testuser",
-                        profilePicture = null,
-                    )
-                ) },
+                onSearchUsers = { name: String -> viewModel.searchUsers(name) },
+                onSearchUsersClear = { viewModel.clearSearchUsers() },
                 onCamera = { navigateTo<CameraActivity>() },
-                onUpload = {},
-                enableButtons = true,
+                onLoadMoreSearchedUsers = { name: String -> viewModel.searchUsers(name) },
+                enableButtons = viewModel.enableButtons,
             )
         }
     }
