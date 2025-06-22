@@ -12,4 +12,11 @@ enum class Diet(val displayName: String) {
     PRIMAL("Primal"),
     LOW_FODMAP("Low FODMAP"),
     WHOLE30("Whole30");
+
+    companion object {
+        fun fromDisplayName(displayName: String): Diet {
+            return Diet.entries.find { it.displayName.equals(displayName, ignoreCase = true) }
+                ?: throw IllegalArgumentException("Diet with display name '$displayName' not found")
+        }
+    }
 }

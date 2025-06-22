@@ -13,4 +13,11 @@ enum class Intolerance(val displayName: String) {
     SULFITE("Sulfite"),
     TREE_NUT("Tree Nut"),
     WHEAT("Wheat");
+
+    companion object {
+        fun fromDisplayName(displayName: String): Intolerance {
+            return Intolerance.entries.find { it.displayName.equals(displayName, ignoreCase = true) }
+                ?: throw IllegalArgumentException("Intolerance with display name '$displayName' not found")
+        }
+    }
 }

@@ -18,7 +18,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 
 @Composable
-fun FilterDialog(
+fun FiltersDialog(
     onDismiss: () -> Unit,
     onCancel: () -> Unit,
     mealType: List<String>,

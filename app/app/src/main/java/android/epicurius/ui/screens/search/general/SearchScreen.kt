@@ -5,7 +5,7 @@ import android.epicurius.domain.user.SearchUser
 import android.epicurius.ui.navigation.BottomBar
 import android.epicurius.ui.navigation.TopBar
 import android.epicurius.ui.screens.search.components.ConfirmIngredientsDialog
-import android.epicurius.ui.screens.search.components.FilterDialog
+import android.epicurius.ui.screens.search.components.FiltersDialog
 import android.epicurius.ui.screens.search.components.FiltersIcon
 import android.epicurius.ui.screens.search.components.SearchPhotoComponent
 import android.epicurius.ui.screens.user.components.UserBox
@@ -206,7 +206,7 @@ fun SearchScreen(
                 }
 
                 if (showFiltersDialog) {
-                    FilterDialog(
+                    FiltersDialog(
                         onDismiss = { showFiltersDialog = false },
                         onCancel = { showFiltersDialog = false },
                         mealType = mealType,
