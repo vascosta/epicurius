@@ -24,7 +24,6 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun BottomBar(
-    onFeedRefresh: () -> Unit = {},
     buttonsEnable: Boolean
 ) {
     val context = LocalContext.current
@@ -48,10 +47,8 @@ fun BottomBar(
         ) {
             BottomBarButton(
                 onClick = {
-                    if (currentActivityClass != FeedActivity::class.java) {
+                    if (currentActivityClass != FeedActivity::class.java)
                         context.startActivity(Intent(context, FeedActivity::class.java))
-                    }
-                    else { onFeedRefresh }
                 },
                 enabled = buttonsEnable,
                 imageId = R.drawable.home,
