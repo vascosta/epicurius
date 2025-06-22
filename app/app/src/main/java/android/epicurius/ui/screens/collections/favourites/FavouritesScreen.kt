@@ -102,6 +102,17 @@ fun FavouritesScreen(
                                 )
                                 Spacer(modifier = Modifier.height(10.dp))
                             }
+                            Button(
+                                onClick = {
+                                    onLoadMoreFavourites()
+                                    showLoadingSpinnerOnLoadMoreButton = true
+                                },
+                                modifier = Modifier.fillMaxWidth().padding(10.dp),
+                                enabled = enableButtons
+                            ) {
+                                if (!showLoadingSpinnerOnLoadMoreButton) Text("Load More")
+                                else LoadingSpinner(Modifier.size(30.dp))
+                            }
                         }
                         else if (favouritesState is Loaded) {
                             Text(
@@ -116,17 +127,6 @@ fun FavouritesScreen(
                         }
                     }
                 )
-                Button(
-                    onClick = {
-                        onLoadMoreFavourites()
-                        showLoadingSpinnerOnLoadMoreButton = true
-                    },
-                    modifier = Modifier.fillMaxWidth().padding(10.dp),
-                    enabled = enableButtons
-                ) {
-                    if (!showLoadingSpinnerOnLoadMoreButton) Text("Load More")
-                    else LoadingSpinner(Modifier.size(30.dp))
-                }
                 if (showCreateCollectionDialog) {
                     CreateCollectionDialog(
                         onDismiss = { if (enableButtons) showCreateCollectionDialog = false },
