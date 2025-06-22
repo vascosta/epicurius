@@ -1,5 +1,6 @@
 package android.epicurius.ui.screens.mealPlanner.daily.components
 
+import android.epicurius.ui.screens.utils.NumberTextField
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
@@ -20,46 +21,43 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun CaloriesUpdateDialog(
-    visible: Boolean,
     initialValue: String,
     onDismiss: () -> Unit,
     onConfirm: (Int) -> Unit
 ) {
     var textFieldValue by remember { mutableStateOf(initialValue) }
 
-    if (visible) {
-        AlertDialog(
-            onDismissRequest = onDismiss,
-            confirmButton = {
-                TextButton(onClick = {
+    AlertDialog(
+        onDismissRequest = { onDismiss() },
+        confirmButton = {
+            TextButton(
+                onClick = {
                     val newCalories = textFieldValue.toIntOrNull()
                     if (newCalories != null) {
                         onConfirm(newCalories)
                     }
                     onDismiss()
-                }) {
-                    Text("Confirm")
                 }
-            },
-            dismissButton = {
-                TextButton(onClick = onDismiss) {
-                    Text("Cancel")
-                }
-            },
-            title = { Text("Update Calories") },
-            text = {
-                Column {
-                    Text("Insert new maximum calories for the day:", fontWeight = FontWeight.Bold)
-                    Spacer(modifier = Modifier.height(8.dp))
-                    TextField(
-                        value = textFieldValue,
-                        onValueChange = { textFieldValue = it },
-                        placeholder = { Text("e.g.: 2200") },
-                        singleLine = true,
-                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
-                    )
-                }
+            ) { Text("Confirm") }
+        },
+        dismissButton = {
+            TextButton(onClick = { onDismiss() }) {
+                Text("Cancel")
             }
-        )
-    }
+        },
+        title = { Text("Update Calories") },
+        text = {
+            Column {
+                Text("Insert new maximum calories for the day:", fontWeight = FontWeight.Bold)
+                Spacer(modifier = Modifier.height(8.dp))
+                NumberTextField(
+                    value = textFieldValue,
+                    onValueChange = { textFieldValue = it },
+                    enabled = true,
+                    placeholder = "e.g.: 2200",
+                )
+            }
+        }
+    )
 }
+

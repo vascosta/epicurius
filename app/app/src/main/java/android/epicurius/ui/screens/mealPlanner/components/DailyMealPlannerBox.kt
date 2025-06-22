@@ -6,6 +6,8 @@ import android.epicurius.ui.screens.recipe.components.RecipeInfoBox
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
@@ -22,10 +24,21 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import java.time.LocalDate
 
 @Composable
-fun DailyMealPlannerBox(mealTime: MealTime, recipe: RecipeInfo?) {
-    Box(modifier = Modifier.padding(10.dp).background(Color.White)) {
+fun DailyMealPlannerBox(
+    mealTime: MealTime,
+    recipe: RecipeInfo?,
+    dailyMealPlannerDate: LocalDate,
+    onAddRecipe: () -> Unit,
+    onDeleteRecipe: (date: LocalDate, mealTime: MealTime) -> Unit
+) {
+    Box(
+        modifier = Modifier
+            .padding(horizontal = 5.dp)
+            .background(Color.White)
+    ) {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
             Text(
                 text = mealTime.displayName,
@@ -36,9 +49,20 @@ fun DailyMealPlannerBox(mealTime: MealTime, recipe: RecipeInfo?) {
                 color = Color.Black
             )
             if (recipe != null) {
-                RecipeInfoBox(null, recipe, TODO(), TODO(), TODO(), TODO(), TODO(), TODO(), TODO(), TODO())
+                RecipeInfoBox(
+                    collectionId = null,
+                    recipeInfo = recipe,
+                    collectionsStateBundle = null,
+                    onAddRecipeToCollections = { _, _, _, _ -> },
+                    onRemoveRecipeFromCollections = { _, _, _, _ -> },
+                    onRemoveRecipeFromCollection = { _, _ -> },
+                    onCollectionsClear = {  },
+                    onRecipeRequest = {  },
+                    onCollectionsRequest = {  },
+                    enableButtons = true,
+                )
                 IconButton(
-                    onClick = {  },
+                    onClick = { onDeleteRecipe(dailyMealPlannerDate, mealTime) },
                     modifier = Modifier
                         .size(24.dp)
                         .align(Alignment.End)
@@ -56,14 +80,20 @@ fun DailyMealPlannerBox(mealTime: MealTime, recipe: RecipeInfo?) {
                         text = "${mealTime.displayName} not planned",
                         color = Color.Gray
                     )
-                    TextButton(
-                        onClick = { }
+                    if (dailyMealPlannerDate == LocalDate.now() ||
+                        dailyMealPlannerDate.isAfter(LocalDate.now())
                     ) {
-                        Text(
-                            text = "Add Recipe",
-                            color = Color(0xFF4E0D8D),
-                            fontWeight = FontWeight.Bold
-                        )
+                        TextButton(
+                            onClick = { onAddRecipe() }
+                        ) {
+                            Text(
+                                text = "Add Recipe",
+                                color = Color(0xFF4E0D8D),
+                                fontWeight = FontWeight.Bold
+                            )
+                        }
+                    } else {
+                        Spacer(Modifier.height(15.dp))
                     }
                 }
             }

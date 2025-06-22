@@ -14,9 +14,12 @@ class WeeklyActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             WeeklyScreen(
-                onBackButton = { navigateTo<CalendarActivity>() },
                 week = getWeek(LocalDate.now()),
-                mealPlanner = MealPlanner(planner = emptyList())
+                mealPlanner = MealPlanner(planner = emptyList()),
+                onBackButton = { navigateTo<CalendarActivity>() },
+                onCaloriesUpdate = {  },
+                onAddRecipe = {  },
+                onDeleteRecipe = { _, _ -> }
             )
         }
     }

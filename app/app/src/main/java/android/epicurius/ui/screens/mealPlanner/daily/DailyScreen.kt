@@ -39,10 +39,12 @@ import java.time.LocalDate
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DailyScreen(
-    onBackButton: () -> Unit = {},
-    onCaloriesUpdate: (Int) -> Unit = {},
     date: LocalDate,
-    dailyMealPlanner: DailyMealPlanner?
+    dailyMealPlanner: DailyMealPlanner?,
+    onBackButton: () -> Unit,
+    onCaloriesUpdate: (Int) -> Unit,
+    onAddRecipe: () -> Unit,
+    onDeleteRecipe: (date: LocalDate, mealtime: MealTime) -> Unit
 ) {
     var showDialog by remember { mutableStateOf(false) }
 
@@ -73,7 +75,11 @@ fun DailyScreen(
                         .fillMaxWidth()
                         .wrapContentSize(Alignment.Center)
                         .padding(bottom = 16.dp)
-                        .clickable { showDialog = true }
+                        .clickable(
+                            onClick = { showDialog = true },
+                            enabled = date == LocalDate.now() ||
+                                    date.isAfter(LocalDate.now())
+                        )
                 ) {
                     MixedText(
                         boldString = "Max Calories: ",
@@ -81,17 +87,23 @@ fun DailyScreen(
                     )
                 }
 
-                CaloriesUpdateDialog(
-                    visible = showDialog,
-                    initialValue = dailyMealPlanner?.maxCalories?.toString() ?: "",
-                    onDismiss = { showDialog = false },
-                    onConfirm = {
-                        onCaloriesUpdate(it)
-                        showDialog = false
-                    }
-                )
+                if (showDialog) {
+                    CaloriesUpdateDialog(
+                        initialValue = dailyMealPlanner?.maxCalories?.toString() ?: "",
+                        onDismiss = { showDialog = false },
+                        onConfirm = {
+                            onCaloriesUpdate(it)
+                            showDialog = false
+                        }
+                    )
+                }
 
-                MealPlannerComponent(dailyMealPlanner)
+                MealPlannerComponent(
+                    dailyPlanner = dailyMealPlanner,
+                    date = date,
+                    onAddRecipe = onAddRecipe,
+                    onDeleteRecipe = onDeleteRecipe
+                )
             }
         },
         containerColor = Color.White
@@ -178,8 +190,11 @@ fun DailyScreenPreview() {
     )
 
     DailyScreen(
-        onBackButton = {},
         date = LocalDate.now(),
-        dailyMealPlanner = mealPlanner.planner.first()
+        dailyMealPlanner = mealPlanner.planner.first(),
+        onBackButton = {},
+        onCaloriesUpdate = {},
+        onAddRecipe = {},
+        onDeleteRecipe = { _, _ -> }
     )
 }

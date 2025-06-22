@@ -17,7 +17,6 @@ class DailyActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             DailyScreen(
-                onBackButton = { navigateTo<CalendarActivity>() },
                 date = LocalDate.now(),
                 dailyMealPlanner = DailyMealPlanner(
                     date = LocalDate.now(),
@@ -36,7 +35,11 @@ class DailyActivity : ComponentActivity() {
                             isInCollection = false
                         )
                     )
-                )
+                ),
+                onBackButton = { navigateTo<CalendarActivity>() },
+                onCaloriesUpdate = {  },
+                onAddRecipe = { },
+                onDeleteRecipe = { _, _ -> }
             )
         }
     }
