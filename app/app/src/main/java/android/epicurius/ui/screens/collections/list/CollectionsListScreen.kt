@@ -84,7 +84,7 @@ fun CollectionsListScreen(
                         modifier = Modifier
                             .fillMaxSize()
                             .padding(paddingValues)
-                            .padding(10.dp)
+                            .padding(16.dp)
                             .background(Color.White)
                             .verticalScroll(rememberScrollState()),
                         horizontalAlignment = Alignment.CenterHorizontally

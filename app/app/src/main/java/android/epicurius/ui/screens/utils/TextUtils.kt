@@ -1,6 +1,7 @@
 package android.epicurius.ui.screens.utils
 
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
@@ -28,7 +29,7 @@ fun TextField(
     OutlinedTextField(
         value = value,
         onValueChange = onValueChange,
-        modifier = modifier,
+        modifier = modifier.fillMaxWidth(),
         enabled = enabled,
         label = { Text(label) },
         singleLine = true,
@@ -82,7 +83,7 @@ fun FormTextField(
     TextField(
         value = value,
         onValueChange = onValueChange,
-        modifier = modifier,
+        modifier = modifier.fillMaxWidth(),
         enabled = enabled,
         label = { Text(parameterName) },
         maxLines = 1,
@@ -101,12 +102,11 @@ fun NumberLineTextField(
     onValueChange: (String) -> Unit,
     modifier: Modifier = Modifier,
     enabled: Boolean
-
 ) {
     TextField(
         value = value,
         onValueChange = onValueChange,
-        modifier = modifier,
+        modifier = modifier.fillMaxWidth(),
         enabled = enabled,
         label = { Text(parameterName) },
         singleLine = true,
@@ -133,7 +133,7 @@ fun NumberTextField(
     OutlinedTextField(
         value = value,
         onValueChange = onValueChange,
-        modifier = modifier,
+        modifier = modifier.fillMaxWidth(),
         enabled = enabled,
         label = label?.let { { Text(it) } },
         placeholder = placeholder?.let { { Text(it) } },

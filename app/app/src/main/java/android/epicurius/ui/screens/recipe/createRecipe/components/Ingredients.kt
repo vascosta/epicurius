@@ -4,6 +4,7 @@ import android.epicurius.domain.recipe.IngredientUnit
 import android.epicurius.ui.screens.recipe.createRecipe.IngredientComponent
 import android.epicurius.ui.screens.utils.DropdownMenuComponent
 import android.epicurius.ui.screens.utils.NumberLineTextField
+import android.epicurius.ui.screens.utils.TextField
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -74,7 +75,7 @@ fun IngredientsComponent(
                     modifier = Modifier.fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    OutlinedTextField(
+                    TextField(
                         value = ingredient.name,
                         onValueChange = { newName ->
                             val updatedList = ingredients.toMutableList()
@@ -85,7 +86,7 @@ fun IngredientsComponent(
                             .weight(1f)
                             .padding(end = 8.dp),
                         enabled = enabled,
-                        label = { Text("Ingredient") }
+                        label = "Ingredient"
                     )
                     DeleteFieldButton(
                         onClick = {

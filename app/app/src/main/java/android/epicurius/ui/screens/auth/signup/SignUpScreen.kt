@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
@@ -25,7 +26,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import java.util.Locale
 
-@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun SignUpScreen(
     onSignUp: (
@@ -52,10 +52,12 @@ fun SignUpScreen(
                 icon = null
             )
         },
-        content = {
+        content = { paddingValues ->
             Column(
                 modifier = Modifier
                     .fillMaxSize()
+                    .padding(paddingValues)
+                    .padding(40.dp)
                     .background(Color.Companion.White),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center
@@ -90,7 +92,6 @@ fun SignUpScreen(
                     value = country,
                     onValueChange = { country = it },
                     label = "Country",
-                    modifier = Modifier.padding(5.dp),
                     enabled = enableButtons
                 )
                 Row {
@@ -114,7 +115,8 @@ fun SignUpScreen(
                     )
                 }
             }
-        }
+        },
+        containerColor = Color.White
     )
 }
 

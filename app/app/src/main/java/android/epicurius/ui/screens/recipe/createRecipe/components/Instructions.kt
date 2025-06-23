@@ -1,5 +1,6 @@
 package android.epicurius.ui.screens.recipe.createRecipe.components
 
+import android.epicurius.ui.screens.utils.TextField
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -33,7 +34,7 @@ fun InstructionsComponent(
                 modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                OutlinedTextField(
+                TextField(
                     value = step,
                     onValueChange = { newStep ->
                         val updatedSteps = steps.toMutableList()
@@ -44,7 +45,7 @@ fun InstructionsComponent(
                         .weight(1f)
                         .padding(end = 8.dp),
                     enabled = enabled,
-                    label = { Text("Step ${index + 1}") }
+                    label = "Step ${index + 1}"
                 )
                 DeleteFieldButton(
                     onClick = {

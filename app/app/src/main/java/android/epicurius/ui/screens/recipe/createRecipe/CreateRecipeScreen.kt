@@ -157,7 +157,7 @@ fun CreateRecipeScreen(
                     .fillMaxSize()
                     .verticalScroll(rememberScrollState())
                     .padding(paddingValues)
-                    .padding(16.dp)
+                    .padding(20.dp)
                     .clip(RoundedCornerShape(20.dp))
                     .border(1.dp, Color.Black, RoundedCornerShape(20.dp)),
                 horizontalAlignment = Alignment.CenterHorizontally
@@ -171,26 +171,28 @@ fun CreateRecipeScreen(
                     parameterName = "Name",
                     value = name,
                     onValueChange = { name = it },
-                    modifier = Modifier.height(56.dp),
+                    modifier = Modifier.padding(horizontal = 30.dp),
                     enabled = buttonsEnable
                 )
                 FormTextField(
                     parameterName = "Description",
                     value = description,
                     onValueChange = { description = it },
-                    modifier = Modifier.height(56.dp),
+                    modifier = Modifier.padding(horizontal = 30.dp),
                     enabled = buttonsEnable
                 )
                 NumberLineTextField(
                     parameterName = "Duration (min)",
                     value = preparationTime,
                     onValueChange = { preparationTime = it },
+                    modifier = Modifier.padding(horizontal = 30.dp),
                     enabled = buttonsEnable
                 )
                 NumberLineTextField(
                     parameterName = "Serving (px)",
                     value = servings,
                     onValueChange = { servings = it },
+                    modifier = Modifier.padding(horizontal = 30.dp),
                     enabled = buttonsEnable
                 )
                 DropdownMenuComponent(
@@ -198,7 +200,7 @@ fun CreateRecipeScreen(
                     value = mealType,
                     onValueChange = { mealType = it },
                     modifier = Modifier
-                        .padding(vertical = 5.dp)
+                        .padding(vertical = 5.dp, horizontal = 30.dp)
                         .align(Alignment.CenterHorizontally),
                     enabled = buttonsEnable,
                     label = "Meal Type",
@@ -208,7 +210,7 @@ fun CreateRecipeScreen(
                     value = cuisine,
                     onValueChange = { cuisine = it },
                     modifier = Modifier
-                        .padding(vertical = 5.dp)
+                        .padding(vertical = 5.dp, horizontal = 30.dp)
                         .align(Alignment.CenterHorizontally),
                     enabled = buttonsEnable,
                     label = "Cuisine",
@@ -218,7 +220,7 @@ fun CreateRecipeScreen(
                     values = intolerances,
                     onValuesChange = { intolerances = it },
                     modifier = Modifier
-                        .padding(vertical = 5.dp)
+                        .padding(vertical = 5.dp, horizontal = 30.dp)
                         .align(Alignment.CenterHorizontally),
                     enabled = buttonsEnable,
                     label = "Intolerances"
@@ -228,7 +230,7 @@ fun CreateRecipeScreen(
                     values = diets,
                     onValuesChange = { diets = it },
                     modifier = Modifier
-                        .padding(vertical = 5.dp)
+                        .padding(vertical = 5.dp, horizontal = 30.dp)
                         .align(Alignment.CenterHorizontally),
                     enabled = buttonsEnable,
                     label = "Diets"
@@ -253,24 +255,28 @@ fun CreateRecipeScreen(
                         NumberTextField(
                             value = calories,
                             onValueChange = { calories = it },
+                            modifier = Modifier.padding(horizontal = 30.dp),
                             enabled = buttonsEnable,
                             label = "Calories (kcal)"
                         )
                         NumberTextField(
                             value = protein,
                             onValueChange = { protein = it },
+                            modifier = Modifier.padding(horizontal = 30.dp),
                             enabled = buttonsEnable,
                             label = "Protein (g)"
                         )
                         NumberTextField(
                             value = fat,
                             onValueChange = { fat = it },
+                            modifier = Modifier.padding(horizontal = 30.dp),
                             enabled = buttonsEnable,
                             label = "Fat (g)"
                         )
                         NumberTextField(
                             value = carbs,
                             onValueChange = { carbs = it },
+                            modifier = Modifier.padding(horizontal = 30.dp),
                             enabled = buttonsEnable,
                             label = "Carbohydrates (g)"
                         )

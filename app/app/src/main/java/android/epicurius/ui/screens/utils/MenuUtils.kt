@@ -2,6 +2,7 @@ package android.epicurius.ui.screens.utils
 
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -40,12 +41,14 @@ fun DropdownMenuComponent(
     ExposedDropdownMenuBox(
         expanded = expanded,
         onExpandedChange = { expanded = !expanded },
-        modifier = modifier,
+        modifier = modifier.fillMaxWidth(),
     ) {
         OutlinedTextField(
             value = value,
             onValueChange = onValueChange,
-            modifier = Modifier.menuAnchor(MenuAnchorType.PrimaryNotEditable, enabled = true),
+            modifier = Modifier
+                .menuAnchor(MenuAnchorType.PrimaryNotEditable, enabled = true)
+                .fillMaxWidth(),
             enabled = enabled,
             readOnly = true,
             label = { Text(label) },
@@ -85,15 +88,14 @@ fun MultiSelectDropdownMenuComponent(
     ExposedDropdownMenuBox(
         expanded = expanded,
         onExpandedChange = { expanded = !expanded },
-        modifier = modifier
+        modifier = modifier.fillMaxWidth()
     ) {
         OutlinedTextField(
             value = values.joinToString(),
             onValueChange = {},
             modifier = Modifier
                 .menuAnchor(MenuAnchorType.PrimaryNotEditable, enabled = true)
-                .width(280.dp)
-                .height(60.dp),
+                .fillMaxWidth(),
             enabled = enabled,
             readOnly = true,
             label = { Text(label) },
