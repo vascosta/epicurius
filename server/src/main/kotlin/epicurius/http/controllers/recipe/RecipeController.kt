@@ -68,6 +68,7 @@ class RecipeController(private val recipeService: RecipeService) {
         @RequestParam ingredients: List<String>?,
         @RequestParam intolerances: List<Intolerance>?,
         @RequestParam diets: List<Diet>?,
+        @RequestParam servings: Int?,
         @RequestParam minCalories: Int?,
         @RequestParam maxCalories: Int?,
         @RequestParam minCarbs: Int?,

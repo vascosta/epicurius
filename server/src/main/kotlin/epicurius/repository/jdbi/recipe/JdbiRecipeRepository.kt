@@ -214,8 +214,7 @@ class JdbiRecipeRepository(private val handle: Handle) : RecipeRepository {
                     SELECT recipe_id, ROUND(AVG(rating), 2) AS average_rating
                     FROM dbo.recipe_rating
                     GROUP BY recipe_id
-                ) rr ON r.id = rr.recipe_id
-                WHERE r.author_id <> :id
+                ) rr ON r.id = rr.recipe_id              
             """
         )
 
