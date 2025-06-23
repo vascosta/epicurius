@@ -108,13 +108,9 @@ open class EpicuriusViewModel(
         context.navigateTo<LoginActivity>(finishCurrent = true)
     }
 
-    fun enableButtons() {
-        enableButtons = true
-    }
+    fun enableButtons() { enableButtons = true }
 
-    fun disableButtons() {
-        enableButtons = false
-    }
+    fun disableButtons() { enableButtons = false }
 
     companion object {
         val unauthorizedMessages = listOf(

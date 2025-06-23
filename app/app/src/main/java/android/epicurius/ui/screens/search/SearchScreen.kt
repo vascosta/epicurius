@@ -1,9 +1,10 @@
-package android.epicurius.ui.screens.search.general
+package android.epicurius.ui.screens.search
 
 import android.Manifest
 import android.epicurius.domain.Diet
 import android.epicurius.domain.Intolerance
 import android.epicurius.domain.recipe.Cuisine
+import android.epicurius.domain.recipe.Ingredient
 import android.epicurius.domain.recipe.MealType
 import android.epicurius.domain.recipe.RecipeInfo
 import android.epicurius.domain.user.SearchUser
@@ -15,9 +16,10 @@ import android.epicurius.ui.screens.search.components.FiltersDialog
 import android.epicurius.ui.screens.search.components.FiltersIcon
 import android.epicurius.ui.screens.search.components.SearchPhotoComponent
 import android.epicurius.ui.screens.user.components.UserBox
+import android.epicurius.ui.screens.utils.Idle
 import android.epicurius.ui.screens.utils.LoadState
 import android.epicurius.ui.screens.utils.LoadStateRenderer
-import android.epicurius.ui.screens.utils.Loading
+import android.epicurius.ui.screens.utils.Loaded
 import android.epicurius.ui.screens.utils.SearchTextField
 import android.epicurius.ui.screens.utils.TabComponent
 import android.epicurius.ui.screens.utils.apiSuccess
@@ -50,6 +52,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
@@ -60,15 +63,16 @@ import com.google.accompanist.permissions.shouldShowRationale
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun SearchScreen(
+    recipesResultState: LoadState<List<RecipeInfo>>,
     usersResultState: LoadState<List<SearchUser>>,
     onBackButton: () -> Unit,
-    onRecipeSearch: (
+    onSearchRecipes: (
         name: String?,
-        mealType: List<MealType>?,
         cuisine: List<Cuisine>?,
+        mealType: List<MealType>?,
+        ingredients: List<Ingredient>?,
         intolerances: List<Intolerance>?,
         diets: List<Diet>?,
-        preparationTime: Int?,
         servings: Int?,
         minCalories: Int?,
         maxCalories: Int?,
@@ -77,40 +81,46 @@ fun SearchScreen(
         minFat: Int?,
         maxFat: Int?,
         minProtein: Int?,
-        maxProtein: Int?
-    ) -> List<RecipeInfo>,
+        maxProtein: Int?,
+        minTime: Int?,
+        maxTime: Int?
+    ) -> Unit,
     onSearchUsers: (name: String) -> Unit,
+    onSearchRecipesClear: () -> Unit,
     onSearchUsersClear: () -> Unit,
     onCamera: () -> Unit,
     onIdentifyIngredientsInPicture: (ByteArray) -> Unit,
     onConfirm: (List<String>) -> Unit,
     onUserProfileRequest: (name: String) -> Unit,
-    onLoadMoreSearchedUsers: (name: String) -> Unit,
+    onRecipeProfileRequest: (recipeId: Int) -> Unit,
     enableButtons: Boolean
 ) {
     val context = LocalContext.current
 
     val tabs = listOf("Recipe", "Users")
     var selectedTabIndex by remember { mutableIntStateOf(0) }
-    var searchQuery by remember { mutableStateOf("") }
-    var searchUsersQuery by remember { mutableStateOf("") }
 
     var showFiltersDialog by remember { mutableStateOf(false) }
 
-    var mealType by remember { mutableStateOf(listOf<String>()) }
+    var searchQuery by remember { mutableStateOf("") }
+    var searchRecipesQuery by remember { mutableStateOf("") }
+    var searchUsersQuery by remember { mutableStateOf("") }
+
     var cuisine by remember { mutableStateOf(listOf<String>()) }
+    var mealType by remember { mutableStateOf(listOf<String>()) }
     var intolerances by remember { mutableStateOf(listOf<String>()) }
     var diets by remember { mutableStateOf(listOf<String>()) }
-    var preparationTime by remember { mutableStateOf("") }
     var serving by remember { mutableStateOf("") }
     var minCalories by remember { mutableStateOf("") }
     var maxCalories by remember { mutableStateOf("") }
-    var minProtein by remember { mutableStateOf("") }
-    var maxProtein by remember { mutableStateOf("") }
-    var minFat by remember { mutableStateOf("") }
-    var maxFat by remember { mutableStateOf("") }
     var minCarbs by remember { mutableStateOf("") }
     var maxCarbs by remember { mutableStateOf("") }
+    var minFat by remember { mutableStateOf("") }
+    var maxFat by remember { mutableStateOf("") }
+    var minProtein by remember { mutableStateOf("") }
+    var maxProtein by remember { mutableStateOf("") }
+    var minTime by remember { mutableStateOf("") }
+    var maxTime by remember { mutableStateOf("") }
 
     var selectedImageBytes by remember { mutableStateOf<ByteArray?>(null) }
 
@@ -139,8 +149,6 @@ fun SearchScreen(
 
     var showConfirmIngredientsDialog by remember { mutableStateOf(false) }
 
-    var recipeSearchResults by remember { mutableStateOf<List<RecipeInfo>>(emptyList()) }
-
     Scaffold(
         topBar = {
             TopBar(
@@ -150,7 +158,7 @@ fun SearchScreen(
                 enableButtons = enableButtons
             )
         },
-        bottomBar = { BottomBar(buttonsEnable = enableButtons && usersResultState !is Loading) },
+        bottomBar = { BottomBar(buttonsEnable = enableButtons) },
         content = { paddingValues ->
             Column(
                 modifier = Modifier
@@ -168,13 +176,20 @@ fun SearchScreen(
                     onSearchQueryChange = { searchQuery = it },
                     onIconClick = {
                         if (selectedTabIndex == 0) {
-                            recipeSearchResults = onRecipeSearch(
+                            val cuisineList = cuisine.map { Cuisine.valueOf(it) }
+                            val mealTypeList = mealType.map { MealType.valueOf(it) }
+                            // ingredients
+                            val intolerancesList = intolerances.map { Intolerance.fromDisplayName(it) }
+                            val dietsList = diets.map { Diet.fromDisplayName(it) }
+
+                            onSearchRecipesClear()
+                            onSearchRecipes(
                                 searchQuery,
-                                mealType.map { MealType.valueOf(it) },
-                                cuisine.map { Cuisine.valueOf(it) },
-                                intolerances.map { Intolerance.fromDisplayName(it) },
-                                diets.map { Diet.fromDisplayName(it) },
-                                preparationTime.toIntOrNull(),
+                                if (cuisineList.isEmpty()) null else cuisineList,
+                                if (mealTypeList.isEmpty()) null else mealTypeList,
+                                null, // change to ingredients
+                                if (intolerancesList.isEmpty()) null else intolerancesList,
+                                if (dietsList.isEmpty()) null else dietsList,
                                 serving.toIntOrNull(),
                                 minCalories.toIntOrNull(),
                                 maxCalories.toIntOrNull(),
@@ -183,8 +198,11 @@ fun SearchScreen(
                                 minFat.toIntOrNull(),
                                 maxFat.toIntOrNull(),
                                 minProtein.toIntOrNull(),
-                                maxProtein.toIntOrNull()
+                                maxProtein.toIntOrNull(),
+                                minTime.toIntOrNull(),
+                                maxTime.toIntOrNull()
                             )
+                            searchRecipesQuery = searchQuery
                         }
                         else {
                             onSearchUsersClear()
@@ -202,10 +220,30 @@ fun SearchScreen(
                 )
 
                 if (selectedTabIndex == 0) {
-                    Row(modifier = Modifier.fillMaxWidth()) {
-                        FiltersIcon(onClick = { showFiltersDialog = true })
-                    }
-                    if (recipeSearchResults.isEmpty()) {
+                    Button(
+                        onClick = {
+                            onSearchRecipesClear()
+                            // clear filters and ingredients
+                        },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(10.dp),
+                        enabled = enableButtons
+                    ) { Text("Clear") }
+                    if (recipesResultState is Idle) {
+                        Row(modifier = Modifier.fillMaxWidth()) {
+                            FiltersIcon(onClick = { showFiltersDialog = true })
+                            Button(
+                                onClick = {
+                                    onSearchRecipesClear()
+                                    // clear filters and ingredients
+                                },
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(10.dp),
+                                enabled = enableButtons
+                            ) { Text("Clear") }
+                        }
                         Spacer(modifier = Modifier.height(100.dp))
                         SearchPhotoComponent(
                             onCamera,
@@ -227,59 +265,127 @@ fun SearchScreen(
                             },
                             modifier = Modifier.fillMaxWidth()
                         )
-                    } else {
-                        recipeSearchResults.forEach { recipe ->
-                            RecipeInfoBox(
-                                collectionId = null,
-                                recipeInfo = recipe,
-                                collectionsStateBundle = null,
-                                onAddRecipeToCollections = { _, _, _, _ -> },
-                                onRemoveRecipeFromCollections = { _, _, _, _ -> },
-                                onRemoveRecipeFromCollection = { _, _ -> },
-                                onCollectionsClear = {},
-                                onRecipeRequest = { onUserProfileRequest(recipe.authorUsername) },
-                                onCollectionsRequest = {},
-                                enableButtons = enableButtons
-                            )
-                            Spacer(Modifier.height(10.dp))
-                        }
                     }
-                } else {
                     LoadStateRenderer(
-                        loadState = usersResultState,
-                        content = { usersResult ->
-                            usersResult.forEach { user ->
-                                UserBox(
-                                    user,
-                                    onUserProfileRequest = onUserProfileRequest,
-                                    enableButtons = enableButtons
-                                )
-                            }
+                        loadState = recipesResultState,
+                        content = { recipesResult ->
                             Button(
-                                onClick = { onLoadMoreSearchedUsers(searchUsersQuery) },
+                                onClick = {
+                                    onSearchRecipesClear()
+                                    // clear filters and ingredients
+                                },
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .padding(10.dp),
                                 enabled = enableButtons
-                            ) { Text("Load More") }
+                            ) { Text("Clear") }
+                            if (recipesResult.isNotEmpty()) {
+                                recipesResult.forEach { recipe ->
+                                    RecipeInfoBox(
+                                        collectionId = null,
+                                        recipeInfo = recipe,
+                                        collectionsStateBundle = null,
+                                        onAddRecipeToCollections = { _, _, _, _ -> },
+                                        onRemoveRecipeFromCollections = { _, _, _, _ -> },
+                                        onRemoveRecipeFromCollection = { _, _ -> },
+                                        onCollectionsClear = {},
+                                        onRecipeRequest = onRecipeProfileRequest,
+                                        onCollectionsRequest = {},
+                                        enableButtons = enableButtons
+                                    )
+                                    Spacer(Modifier.height(10.dp))
+                                }
+                                Button(
+                                    onClick = {
+                                        val cuisineList = cuisine.map { Cuisine.valueOf(it) }
+                                        val mealTypeList = mealType.map { MealType.valueOf(it) }
+                                        // ingredients
+                                        val intolerancesList = intolerances.map { Intolerance.fromDisplayName(it) }
+                                        val dietsList = diets.map { Diet.fromDisplayName(it) }
+
+                                        onSearchRecipes(
+                                            searchRecipesQuery,
+                                            if (cuisineList.isEmpty()) null else cuisineList,
+                                            if (mealTypeList.isEmpty()) null else mealTypeList,
+                                            null, // change to ingredients
+                                            if (intolerancesList.isEmpty()) null else intolerancesList,
+                                            if (dietsList.isEmpty()) null else dietsList,
+                                            serving.toIntOrNull(),
+                                            minCalories.toIntOrNull(),
+                                            maxCalories.toIntOrNull(),
+                                            minCarbs.toIntOrNull(),
+                                            maxCarbs.toIntOrNull(),
+                                            minFat.toIntOrNull(),
+                                            maxFat.toIntOrNull(),
+                                            minProtein.toIntOrNull(),
+                                            maxProtein.toIntOrNull(),
+                                            minTime.toIntOrNull(),
+                                            maxTime.toIntOrNull()
+                                        )
+                                    },
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(10.dp),
+                                    enabled = enableButtons
+                                ) { Text("Load More") }
+                            }
+                            else if (recipesResultState is Loaded) {
+                                Text(
+                                    text = "No recipes found.",
+                                    modifier = Modifier.padding(10.dp),
+                                    textAlign = TextAlign.Center,
+                                    color = Color.Gray
+                                )
+                            }
+                        }
+                    )
+                } else {
+                    LoadStateRenderer(
+                        loadState = usersResultState,
+                        content = { usersResult ->
+                            if (usersResult.isNotEmpty()) {
+                                usersResult.forEach { user ->
+                                    UserBox(
+                                        user,
+                                        onUserProfileRequest = onUserProfileRequest,
+                                        enableButtons = enableButtons
+                                    )
+                                }
+                                Button(
+                                    onClick = { onSearchUsers(searchUsersQuery) },
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(10.dp),
+                                    enabled = enableButtons
+                                ) { Text("Load More") }
+                            }
+                            else if (usersResultState is Loaded) {
+                                Text(
+                                    text = "No users found.",
+                                    modifier = Modifier.padding(10.dp),
+                                    textAlign = TextAlign.Center,
+                                    color = Color.Gray
+                                )
+                            }
                         }
                     )
                 }
-
                 if (showFiltersDialog) {
                     FiltersDialog(
                         onDismiss = { showFiltersDialog = false },
-                        onCancel = { showFiltersDialog = false },
-                        mealType = mealType,
-                        onMealTypeChange = { mealType = it },
+                        onCancel = {
+                            showFiltersDialog = false
+                            mealType = emptyList()
+                            // clear filters
+                        },
                         cuisine = cuisine,
                         onCuisineChange = { cuisine = it },
+                        mealType = mealType,
+                        onMealTypeChange = { mealType = it },
                         intolerances = intolerances,
                         onIntolerancesChange = { intolerances = it },
                         diets = diets,
                         onDietsChange = { diets = it },
-                        preparationTime = preparationTime,
-                        onPreparationTimeChange = { preparationTime = isValidForNumberTextField(it) },
                         servings = serving,
                         onServingsChange = { serving = isValidForNumberTextField(it) },
                         minCalories = minCalories,
@@ -298,7 +404,11 @@ fun SearchScreen(
                         onMinProteinChange = { minProtein = isValidForNumberTextField(it) },
                         maxProtein = maxProtein,
                         onMaxProteinChange = { maxProtein = isValidForNumberTextField(it) },
-                        true
+                        minTime = minTime,
+                        onMinTimeChange = { minTime = isValidForNumberTextField(it) },
+                        maxTime = maxTime,
+                        onMaxTimeChange = { maxTime = isValidForNumberTextField(it) },
+                        enableButtons
                     )
                 }
                 if (showGalleryAccessDialog) {
@@ -317,6 +427,27 @@ fun SearchScreen(
         },
         containerColor = Color.White
     )
+}
+
+private fun clearFilters(
+    cuisine: List<Cuisine>?,
+    mealType: List<MealType>?,
+    ingredients: List<Ingredient>?,
+    intolerances: List<Intolerance>?,
+    diets: List<Diet>?,
+    servings: Int?,
+    minCalories: Int?,
+    maxCalories: Int?,
+    minCarbs: Int?,
+    maxCarbs: Int?,
+    minFat: Int?,
+    maxFat: Int?,
+    minProtein: Int?,
+    maxProtein: Int?,
+    minTime: Int?,
+    maxTime: Int?
+) {
+
 }
 
 @Preview
@@ -350,16 +481,18 @@ fun SearchScreenPreview() {
     )
 
     SearchScreen(
+        recipesResultState = apiSuccess(recipeList),
         usersResultState = apiSuccess(emptyList()),
         onBackButton = {},
-        onRecipeSearch = { _, _, _,_,_,_, _, _, _, _, _, _, _, _, _ -> recipeList },
+        onSearchRecipes = { _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _ -> },
         onSearchUsers = {},
+        onSearchRecipesClear = {},
         onSearchUsersClear = {},
         onCamera = {},
         onIdentifyIngredientsInPicture = {},
         onConfirm = { _ -> },
-        onLoadMoreSearchedUsers = {},
         onUserProfileRequest = {},
+        onRecipeProfileRequest = {},
         enableButtons = true
     )
 }

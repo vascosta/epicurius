@@ -21,16 +21,14 @@ import androidx.compose.ui.Modifier
 fun FiltersDialog(
     onDismiss: () -> Unit,
     onCancel: () -> Unit,
-    mealType: List<String>,
-    onMealTypeChange: (List<String>) -> Unit,
     cuisine: List<String>,
     onCuisineChange: (List<String>) -> Unit,
+    mealType: List<String>,
+    onMealTypeChange: (List<String>) -> Unit,
     intolerances: List<String>,
     onIntolerancesChange: (List<String>) -> Unit,
     diets: List<String>,
     onDietsChange: (List<String>) -> Unit,
-    preparationTime: String,
-    onPreparationTimeChange: (String) -> Unit,
     servings: String,
     onServingsChange: (String) -> Unit,
     minCalories: String,
@@ -49,7 +47,11 @@ fun FiltersDialog(
     onMinProteinChange: (String) -> Unit,
     maxProtein: String,
     onMaxProteinChange: (String) -> Unit,
-    buttonsEnable: Boolean
+    minTime: String,
+    onMinTimeChange: (String) -> Unit,
+    maxTime: String,
+    onMaxTimeChange: (String) -> Unit,
+    enableButtons: Boolean
 ) {
     AlertDialog(
         onDismissRequest = onDismiss,
@@ -63,49 +65,41 @@ fun FiltersDialog(
                 Text("Cancel")
             }
         },
-        title = {
-            Text("Filters")
-        },
+        title = { Text("Filters") },
         text = {
             Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
-                MultiSelectDropdownMenuComponent(
-                    options = MealType.entries.map { it.displayName },
-                    values = mealType,
-                    onValuesChange = onMealTypeChange,
-                    enabled = buttonsEnable,
-                    label = "Meal Type"
-                )
                 MultiSelectDropdownMenuComponent(
                     options = Cuisine.entries.map { it.displayName },
                     values = cuisine,
                     onValuesChange = onCuisineChange,
-                    enabled = buttonsEnable,
+                    enabled = enableButtons,
                     label = "Cuisine"
+                )
+                MultiSelectDropdownMenuComponent(
+                    options = MealType.entries.map { it.displayName },
+                    values = mealType,
+                    onValuesChange = onMealTypeChange,
+                    enabled = enableButtons,
+                    label = "Meal Type"
                 )
                 MultiSelectDropdownMenuComponent(
                     options = Intolerance.entries.map { it.displayName },
                     values = intolerances,
                     onValuesChange = onIntolerancesChange,
-                    enabled = buttonsEnable,
+                    enabled = enableButtons,
                     label = "Intolerances"
                 )
                 MultiSelectDropdownMenuComponent(
                     options = Diet.entries.map { it.displayName },
                     values = diets,
                     onValuesChange = onDietsChange,
-                    enabled = buttonsEnable,
+                    enabled = enableButtons,
                     label = "Diets"
-                )
-                NumberTextField(
-                    value = preparationTime,
-                    onValueChange = onPreparationTimeChange,
-                    enabled = buttonsEnable,
-                    label = "Preparation Time"
                 )
                 NumberTextField(
                     value = servings,
                     onValueChange = onServingsChange,
-                    enabled = buttonsEnable,
+                    enabled = enableButtons,
                     label = "Servings"
                 )
                 Row(modifier = Modifier.fillMaxWidth()) {
@@ -113,14 +107,14 @@ fun FiltersDialog(
                         value = minCalories,
                         onValueChange = onMinCaloriesChange,
                         modifier = Modifier.fillMaxWidth(0.5f),
-                        enabled = buttonsEnable,
+                        enabled = enableButtons,
                         label = "Min Calories",
                     )
                     NumberTextField(
                         value = maxCalories,
                         onValueChange = onMaxCaloriesChange,
                         modifier = Modifier.fillMaxWidth(),
-                        enabled = buttonsEnable,
+                        enabled = enableButtons,
                         label = "Max Calories"
                     )
                 }
@@ -129,14 +123,14 @@ fun FiltersDialog(
                         value = minCarbs,
                         onValueChange = onMinCarbsChange,
                         modifier = Modifier.fillMaxWidth(0.5f),
-                        enabled = buttonsEnable,
+                        enabled = enableButtons,
                         label = "Min Carbs"
                     )
                     NumberTextField(
                         value = maxCarbs,
                         onValueChange = onMaxCarbsChange,
                         modifier = Modifier.fillMaxWidth(),
-                        enabled = buttonsEnable,
+                        enabled = enableButtons,
                         label = "Max Carbs"
                     )
                 }
@@ -145,32 +139,47 @@ fun FiltersDialog(
                         value = minFat,
                         modifier = Modifier.fillMaxWidth(0.5f),
                         onValueChange = onMinFatChange,
-                        enabled = buttonsEnable,
+                        enabled = enableButtons,
                         label = "Min Fat"
                     )
                     NumberTextField(
                         value = maxFat,
                         onValueChange = onMaxFatChange,
                         modifier = Modifier.fillMaxWidth(),
-                        enabled = buttonsEnable,
+                        enabled = enableButtons,
                         label = "Max Fat"
                     )
                 }
-
                 Row(modifier = Modifier.fillMaxWidth()) {
                     NumberTextField(
                         value = minProtein,
                         onValueChange = onMinProteinChange,
                         modifier = Modifier.fillMaxWidth(0.5f),
-                        enabled = buttonsEnable,
+                        enabled = enableButtons,
                         label = "Min Protein"
                     )
                     NumberTextField(
                         value = maxProtein,
                         onValueChange = onMaxProteinChange,
                         modifier = Modifier.fillMaxWidth(),
-                        enabled = buttonsEnable,
+                        enabled = enableButtons,
                         label = "Max Protein"
+                    )
+                }
+                Row(modifier = Modifier.fillMaxWidth()) {
+                    NumberTextField(
+                        value = minTime,
+                        onValueChange = onMinTimeChange,
+                        modifier = Modifier.fillMaxWidth(0.5f),
+                        enabled = enableButtons,
+                        label = "Min Time",
+                    )
+                    NumberTextField(
+                        value = maxTime,
+                        onValueChange = onMaxTimeChange,
+                        modifier = Modifier.fillMaxWidth(),
+                        enabled = enableButtons,
+                        label = "Max Time"
                     )
                 }
             }
