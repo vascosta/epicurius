@@ -1,5 +1,8 @@
 package android.epicurius.ui.screens.search.general
 
+import android.epicurius.domain.recipe.Cuisine
+import android.epicurius.domain.recipe.MealType
+import android.epicurius.domain.recipe.RecipeInfo
 import android.epicurius.ui.EpicuriusActivity
 import android.epicurius.ui.navigation.Intents
 import android.epicurius.ui.navigation.navigateTo
@@ -20,10 +23,39 @@ class SearchActivity : EpicuriusActivity() {
             SearchScreen(
                 usersResultState = usersResultState.value,
                 onBackButton = { finish() },
-                onRecipeSearch = { navigateTo<RecipeProfileActivity>() },
+                onRecipeSearch = { _, _, _,_,_,_, _, _, _, _, _, _, _, _, _ ->
+                    listOf(
+                        RecipeInfo(
+                            id = 1,
+                            name = "Spaghetti Carbonara",
+                            authorUsername = "ChefBear",
+                            rating = 4.5,
+                            cuisine = Cuisine.ITALIAN,
+                            mealType = MealType.MAIN_COURSE,
+                            preparationTime = 30,
+                            servings = 4,
+                            picture = "",
+                            isInCollection = true
+                        ),
+                        RecipeInfo(
+                            id = 2,
+                            name = "Caesar Salad",
+                            authorUsername = "ChefBear",
+                            rating = 4.3,
+                            cuisine = Cuisine.ITALIAN,
+                            mealType = MealType.SALAD,
+                            preparationTime = 15,
+                            servings = 2,
+                            picture = "",
+                            isInCollection = false
+                        )
+                    )
+                },
                 onSearchUsers = { name: String -> viewModel.searchUsers(name) },
                 onSearchUsersClear = { viewModel.clearSearchUsers() },
                 onCamera = { navigateTo<CameraActivity>() },
+                onIdentifyIngredientsInPicture = {},
+                onConfirm = {},
                 onLoadMoreSearchedUsers = { name: String -> viewModel.searchUsers(name) },
                 onUserProfileRequest = ::navigateToUserProfileActivity,
                 enableButtons = viewModel.enableButtons,

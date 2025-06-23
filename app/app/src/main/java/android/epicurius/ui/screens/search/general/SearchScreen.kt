@@ -1,9 +1,15 @@
 package android.epicurius.ui.screens.search.general
 
 import android.Manifest
+import android.epicurius.domain.Diet
+import android.epicurius.domain.Intolerance
+import android.epicurius.domain.recipe.Cuisine
+import android.epicurius.domain.recipe.MealType
+import android.epicurius.domain.recipe.RecipeInfo
 import android.epicurius.domain.user.SearchUser
 import android.epicurius.ui.navigation.BottomBar
 import android.epicurius.ui.navigation.TopBar
+import android.epicurius.ui.screens.recipe.components.RecipeInfoBox
 import android.epicurius.ui.screens.search.components.ConfirmIngredientsDialog
 import android.epicurius.ui.screens.search.components.FiltersDialog
 import android.epicurius.ui.screens.search.components.FiltersIcon
@@ -54,13 +60,29 @@ import com.google.accompanist.permissions.shouldShowRationale
 @Composable
 fun SearchScreen(
     usersResultState: LoadState<List<SearchUser>>,
-    onBackButton: () -> Unit = {},
-    onRecipeSearch: (searchQuery: String) -> Unit = {},
+    onBackButton: () -> Unit,
+    onRecipeSearch: (
+        name: String?,
+        mealType: List<MealType>?,
+        cuisine: List<Cuisine>?,
+        intolerances: List<Intolerance>?,
+        diets: List<Diet>?,
+        preparationTime: Int?,
+        servings: Int?,
+        minCalories: Int?,
+        maxCalories: Int?,
+        minCarbs: Int?,
+        maxCarbs: Int?,
+        minFat: Int?,
+        maxFat: Int?,
+        minProtein: Int?,
+        maxProtein: Int?
+    ) -> List<RecipeInfo>,
     onSearchUsers: (name: String) -> Unit,
     onSearchUsersClear: () -> Unit,
-    onCamera: () -> Unit = {},
-    onIdentifyIngredientsInPicture: (ByteArray) -> Unit = {},
-    onConfirm: (List<String>) -> Unit = { _ -> },
+    onCamera: () -> Unit,
+    onIdentifyIngredientsInPicture: (ByteArray) -> Unit,
+    onConfirm: (List<String>) -> Unit,
     onUserProfileRequest: (name: String) -> Unit,
     onLoadMoreSearchedUsers: (name: String) -> Unit,
     enableButtons: Boolean
@@ -116,6 +138,8 @@ fun SearchScreen(
 
     var showConfirmIngredientsDialog by remember { mutableStateOf(false) }
 
+    var recipeSearchResults by remember { mutableStateOf<List<RecipeInfo>>(emptyList()) }
+
     Scaffold(
         topBar = {
             TopBar(
@@ -142,7 +166,25 @@ fun SearchScreen(
                         .padding(8.dp),
                     onSearchQueryChange = { searchQuery = it },
                     onIconClick = {
-                        if (selectedTabIndex == 0) onRecipeSearch(searchQuery)
+                        if (selectedTabIndex == 0) {
+                            recipeSearchResults = onRecipeSearch(
+                                searchQuery,
+                                mealType.map { MealType.valueOf(it) },
+                                cuisine.map { Cuisine.valueOf(it) },
+                                intolerances.map { Intolerance.fromDisplayName(it) },
+                                diets.map { Diet.fromDisplayName(it) },
+                                preparationTime.toIntOrNull(),
+                                serving.toIntOrNull(),
+                                minCalories.toIntOrNull(),
+                                maxCalories.toIntOrNull(),
+                                minCarbs.toIntOrNull(),
+                                maxCarbs.toIntOrNull(),
+                                minFat.toIntOrNull(),
+                                maxFat.toIntOrNull(),
+                                minProtein.toIntOrNull(),
+                                maxProtein.toIntOrNull()
+                            )
+                        }
                         else {
                             onSearchUsersClear()
                             onSearchUsers(searchQuery)
@@ -162,27 +204,45 @@ fun SearchScreen(
                     Row(modifier = Modifier.fillMaxWidth()) {
                         FiltersIcon(onClick = { showFiltersDialog = true })
                     }
-                    Spacer(modifier = Modifier.height(100.dp))
-                    SearchPhotoComponent(
-                        onCamera,
-                        onUpload = {
-                            when {
-                                galleryPermissionState.status.isGranted -> {
-                                    imagePickerLauncher.launch(
-                                        PickVisualMediaRequest(
-                                            ActivityResultContracts.PickVisualMedia.ImageOnly
+                    if (recipeSearchResults.isEmpty()) {
+                        Spacer(modifier = Modifier.height(100.dp))
+                        SearchPhotoComponent(
+                            onCamera,
+                            onUpload = {
+                                when {
+                                    galleryPermissionState.status.isGranted -> {
+                                        imagePickerLauncher.launch(
+                                            PickVisualMediaRequest(
+                                                ActivityResultContracts.PickVisualMedia.ImageOnly
+                                            )
                                         )
-                                    )
-                                    showConfirmIngredientsDialog = true
+                                        showConfirmIngredientsDialog = true
+                                    }
+                                    galleryPermissionState.status.shouldShowRationale -> {
+                                        showGalleryAccessDialog = true
+                                    }
+                                    else -> showGalleryAccessDialog = true
                                 }
-                                galleryPermissionState.status.shouldShowRationale -> {
-                                    showGalleryAccessDialog = true
-                                }
-                                else -> showGalleryAccessDialog = true
-                            }
-                        },
-                        modifier = Modifier.fillMaxWidth()
-                    )
+                            },
+                            modifier = Modifier.fillMaxWidth()
+                        )
+                    } else {
+                        recipeSearchResults.forEach { recipe ->
+                            RecipeInfoBox(
+                                collectionId = null,
+                                recipeInfo = recipe,
+                                collectionsStateBundle = null,
+                                onAddRecipeToCollections = { _, _, _, _ -> },
+                                onRemoveRecipeFromCollections = { _, _, _, _ -> },
+                                onRemoveRecipeFromCollection = { _, _ -> },
+                                onCollectionsClear = {},
+                                onRecipeRequest = { onUserProfileRequest(recipe.authorUsername) },
+                                onCollectionsRequest = {},
+                                enableButtons = enableButtons
+                            )
+                            Spacer(Modifier.height(10.dp))
+                        }
+                    }
                 } else {
                     LoadStateRenderer(
                         loadState = usersResultState,
@@ -260,11 +320,43 @@ fun SearchScreen(
 
 @Preview
 @Composable
-fun SearchUserScreenPreview() {
+fun SearchScreenPreview() {
+    val recipeList = listOf(
+        RecipeInfo(
+            id = 1,
+            name = "Spaghetti Carbonara",
+            authorUsername = "ChefBear",
+            rating = 4.5,
+            cuisine = Cuisine.ITALIAN,
+            mealType = MealType.MAIN_COURSE,
+            preparationTime = 30,
+            servings = 4,
+            picture = "",
+            isInCollection = true
+        ),
+        RecipeInfo(
+            id = 2,
+            name = "Caesar Salad",
+            authorUsername = "ChefBear",
+            rating = 4.3,
+            cuisine = Cuisine.ITALIAN,
+            mealType = MealType.SALAD,
+            preparationTime = 15,
+            servings = 2,
+            picture = "",
+            isInCollection = false
+        )
+    )
+
     SearchScreen(
         usersResultState = apiSuccess(emptyList()),
+        onBackButton = {},
+        onRecipeSearch = { _, _, _,_,_,_, _, _, _, _, _, _, _, _, _ -> recipeList },
         onSearchUsers = {},
         onSearchUsersClear = {},
+        onCamera = {},
+        onIdentifyIngredientsInPicture = {},
+        onConfirm = { _ -> },
         onLoadMoreSearchedUsers = {},
         onUserProfileRequest = {},
         enableButtons = true
