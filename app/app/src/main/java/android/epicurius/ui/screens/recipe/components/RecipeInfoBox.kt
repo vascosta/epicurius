@@ -1,6 +1,7 @@
 package android.epicurius.ui.screens.recipe.components
 
 import android.epicurius.domain.collection.CollectionProfile
+import android.epicurius.domain.mealPlanner.MealTime
 import android.epicurius.domain.recipe.Cuisine
 import android.epicurius.domain.recipe.MealType
 import android.epicurius.domain.recipe.RecipeInfo
@@ -19,31 +20,40 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import java.time.LocalDate
 
 @Composable
 fun RecipeInfoBox(
     collectionId: Int?,
     recipeInfo: RecipeInfo,
-    collectionsStateBundle: CollectionsStateBundle?,
+    date: LocalDate = LocalDate.now(),
+    mealTime: MealTime = MealTime.BREAKFAST,
+    isMealPlannerSearch: Boolean = false,
+    collectionsStateBundle: CollectionsStateBundle? = null,
     onAddRecipeToCollections: (
         collectionsAvailableToAdd: List<CollectionProfile>,
         collectionsAvailableToRemove: List<CollectionProfile>,
         collectionsToAdd: List<CollectionProfile>,
         recipeId: Int
-    ) -> Unit,
+    ) -> Unit = { _, _, _, _ -> },
     onRemoveRecipeFromCollections: (
         collectionsAvailableToAdd: List<CollectionProfile>,
         collectionsAvailableToRemove: List<CollectionProfile>,
         collectionsToRemove: List<CollectionProfile>,
         recipeId: Int
-    ) -> Unit,
+    ) -> Unit = { _, _, _, _ -> },
     onRemoveRecipeFromCollection: (
         collectionId: Int,
         recipeId: Int
-    ) -> Unit,
-    onCollectionsClear: () -> Unit,
-    onRecipeRequest: (recipeId: Int) -> Unit,
-    onCollectionsRequest: (recipeId: Int) -> Unit,
+    ) -> Unit = { _, _ -> },
+    onCollectionsClear: () -> Unit = {},
+    onRecipeRequest: (recipeId: Int) -> Unit = {},
+    onCollectionsRequest: (recipeId: Int) -> Unit = {},
+    onCalendarClick: (
+        date: LocalDate,
+        recipeId: Int,
+        mealTime: MealTime
+    ) -> Unit = { _, _, _ -> },
     enableButtons: Boolean
 ) {
     Box(
@@ -64,13 +74,17 @@ fun RecipeInfoBox(
                 recipeId = recipeInfo.id,
                 name = recipeInfo.name,
                 author = recipeInfo.authorUsername,
+                date = date,
+                mealTime = mealTime,
                 isInCollection = recipeInfo.isInCollection,
+                isMealPlannerSearch = isMealPlannerSearch,
                 collectionsStateBundle = collectionsStateBundle,
                 onAddRecipeToCollections = onAddRecipeToCollections,
                 onRemoveRecipeFromCollections = onRemoveRecipeFromCollections,
                 onRemoveRecipeFromCollection = onRemoveRecipeFromCollection,
                 onCollectionsClear = onCollectionsClear,
                 onCollectionsRequest = onCollectionsRequest,
+                onCalendarClick = onCalendarClick,
                 enableButtons = enableButtons
             )
             RecipeImage(recipeInfo.pictureBytes)
@@ -97,19 +111,12 @@ fun RecipeInfoPreview() {
             mealType = MealType.SIDE_DISH,
             preparationTime = 30,
             servings = 4,
-            picture = byteArrayOf(
-                0x89.toByte(), 0x50.toByte(), 0x4E.toByte(), 0x47.toByte(), 0x0D.toByte(), 0x0A.toByte(), 0x1A.toByte(), 0x0A.toByte(),
-                0x00.toByte(), 0x00.toByte(), 0x00.toByte(), 0x0D.toByte(), 0x49.toByte(), 0x48.toByte(), 0x44.toByte(), 0x52.toByte(),
-                0x00.toByte(), 0x00.toByte(), 0x00.toByte(), 0x01.toByte(), 0x00.toByte(), 0x00.toByte(), 0x00.toByte(), 0x01.toByte(),
-                0x08.toByte(), 0x02.toByte(), 0x00.toByte(), 0x00.toByte(), 0x00.toByte(), 0x90.toByte(), 0x77.toByte(), 0x53.toByte(),
-                0xDE.toByte(), 0x00.toByte(), 0x00.toByte(), 0x00.toByte(), 0x0A.toByte(), 0x49.toByte(), 0x44.toByte(), 0x41.toByte(),
-                0x54.toByte(), 0x08.toByte(), 0xD7.toByte(), 0x63.toByte(), 0xF8.toByte(), 0xCF.toByte(), 0xC0.toByte(), 0x00.toByte(),
-                0x00.toByte(), 0x04.toByte(), 0x00.toByte(), 0x01.toByte(), 0xE2.toByte(), 0x26.toByte(), 0x05.toByte(), 0x9B.toByte(),
-                0x00.toByte(), 0x00.toByte(), 0x00.toByte(), 0x00.toByte(), 0x49.toByte(), 0x45.toByte(), 0x4E.toByte(), 0x44.toByte(),
-                0xAE.toByte(), 0x42.toByte(), 0x60.toByte(), 0x82.toByte()
-            ).toString(),
+            picture = "",
             isInCollection = true
         ),
+        date = LocalDate.now(),
+        mealTime = MealTime.BREAKFAST,
+        isMealPlannerSearch = false,
         null,
         {_, _, _, _ ->},
         {_, _, _, _ ->},
@@ -117,6 +124,6 @@ fun RecipeInfoPreview() {
         {},
         {},
         {},
-        true
+        enableButtons = true
     )
 }

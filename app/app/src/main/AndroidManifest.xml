@@ -80,6 +80,12 @@
             android:screenOrientation="portrait"
             android:theme="@style/Theme.App" />
         <activity
+            android:name=".ui.screens.mealPlanner.search.MealPlannerSearchActivity"
+            android:exported="false"
+            android:label="Meal Planner Search"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.App" />
+        <activity
             android:name=".ui.screens.mealPlanner.weekly.WeeklyActivity"
             android:exported="false"
             android:label="Meal Planner Weekly"

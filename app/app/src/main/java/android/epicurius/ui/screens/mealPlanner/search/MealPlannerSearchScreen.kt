@@ -2,6 +2,7 @@ package android.epicurius.ui.screens.mealPlanner.search
 
 import android.epicurius.domain.Diet
 import android.epicurius.domain.Intolerance
+import android.epicurius.domain.mealPlanner.MealTime
 import android.epicurius.domain.recipe.Cuisine
 import android.epicurius.domain.recipe.MealType
 import android.epicurius.domain.recipe.RecipeInfo
@@ -33,10 +34,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import java.time.LocalDate
 
 @Composable
-fun SearchScreen(
+fun MealPlannerSearchScreen(
     userInfo: UserInfo,
+    date: LocalDate,
+    mealTime: MealTime,
     onBackButton: () -> Unit,
     onRecipeSearch: (
         name: String?,
@@ -55,6 +59,11 @@ fun SearchScreen(
         minProtein: Int?,
         maxProtein: Int?
     ) -> List<RecipeInfo>,
+    onAddRecipeToMealPlanner: (
+        date: LocalDate,
+        recipeId: Int,
+        mealTime: MealTime
+    ) -> Unit,
     enableButtons: Boolean
 ) {
     var searchQuery by remember { mutableStateOf("") }
@@ -138,13 +147,10 @@ fun SearchScreen(
                         RecipeInfoBox(
                             collectionId = null,
                             recipeInfo = recipe,
-                            collectionsStateBundle = null,
-                            onAddRecipeToCollections = { _, _, _, _ -> },
-                            onRemoveRecipeFromCollections = { _, _, _, _ -> },
-                            onRemoveRecipeFromCollection = { _, _ -> },
-                            onCollectionsClear = {  },
-                            onRecipeRequest = {  },
-                            onCollectionsRequest = {  },
+                            date = date,
+                            mealTime = mealTime,
+                            isMealPlannerSearch = true,
+                            onCalendarClick = onAddRecipeToMealPlanner,
                             enableButtons = enableButtons,
                         )
                         Spacer(Modifier.height(10.dp))
@@ -196,7 +202,7 @@ fun SearchScreen(
 
 @Preview
 @Composable
-fun SearchScreenPreview() {
+fun MealPlannerSearchScreenPreview() {
     val userInfo = UserInfo(
         name = "Chef",
         email = "chef@example.com",
@@ -234,12 +240,13 @@ fun SearchScreenPreview() {
         )
     )
 
-    SearchScreen(
+    MealPlannerSearchScreen(
         userInfo = userInfo,
+        date = LocalDate.now(),
+        mealTime = MealTime.LUNCH,
         onBackButton = {  },
-        onRecipeSearch = {
-            _, _, _,_,_,_, _, _, _, _, _, _, _, _, _ -> recipeList
-        },
+        onRecipeSearch = { _, _, _,_,_,_, _, _, _, _, _, _, _, _, _ -> recipeList },
+        onAddRecipeToMealPlanner = { _, _, _ -> },
         enableButtons = true
     )
 }

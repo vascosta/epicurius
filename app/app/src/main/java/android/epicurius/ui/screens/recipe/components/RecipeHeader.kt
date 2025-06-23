@@ -2,6 +2,7 @@ package android.epicurius.ui.screens.recipe.components
 
 import android.epicurius.R
 import android.epicurius.domain.collection.CollectionProfile
+import android.epicurius.domain.mealPlanner.MealTime
 import android.epicurius.ui.screens.collections.list.components.CollectionsListDialog
 import android.epicurius.ui.screens.collections.list.components.CollectionsStateBundle
 import android.epicurius.ui.screens.utils.LoadingSpinner
@@ -27,8 +28,10 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import java.time.LocalDate
 
 @Composable
 fun RecipeHeader(
@@ -36,7 +39,10 @@ fun RecipeHeader(
     recipeId: Int,
     name: String,
     author: String,
+    date: LocalDate,
+    mealTime: MealTime,
     isInCollection: Boolean,
+    isMealPlannerSearch: Boolean = false,
     collectionsStateBundle: CollectionsStateBundle?,
     onAddRecipeToCollections: (
         collectionsAvailableToAdd: List<CollectionProfile>,
@@ -56,6 +62,11 @@ fun RecipeHeader(
     ) -> Unit,
     onCollectionsClear: () -> Unit,
     onCollectionsRequest: (recipeId: Int) -> Unit,
+    onCalendarClick: (
+        date: LocalDate,
+        recipeId: Int,
+        mealTime: MealTime
+    ) -> Unit = { _, _, _ -> },
     enableButtons: Boolean
 ) {
     var showCollectionsDialog by remember { mutableStateOf(false) }
@@ -88,19 +99,28 @@ fun RecipeHeader(
             MixedText(boldString = "by ", normalString = author)
             IconButton(
                 onClick = {
-                    if (collectionId != null) {
-                        onRemoveRecipeFromCollection(collectionId, recipeId)
-                        showLoadingSpinnerOnStarIcon = true
+                    if (isMealPlannerSearch) {
+                        onCalendarClick(date, recipeId, mealTime)
+                    } else {
+                        if (collectionId != null) {
+                            onRemoveRecipeFromCollection(collectionId, recipeId)
+                            showLoadingSpinnerOnStarIcon = true
+                        } else {
+                            showCollectionsDialog = true
+                        }
                     }
-                    else { showCollectionsDialog = true }
                 },
                 modifier = Modifier.size(24.dp),
                 enabled = enableButtons
             ) {
                 if (!showLoadingSpinnerOnStarIcon) {
                     val painter =
-                        if (isInCollection) painterResource(R.drawable.star)
-                        else painterResource(R.drawable.white_star)
+                        if (isMealPlannerSearch) {
+                            painterResource(R.drawable.calendar)
+                        } else {
+                            if (isInCollection) painterResource(R.drawable.star)
+                            else painterResource(R.drawable.white_star)
+                        }
                     Image(
                         painter = painter,
                         contentDescription = "Favorites",
@@ -129,4 +149,26 @@ fun RecipeHeader(
             }
         }
     }
+}
+
+@Preview
+@Composable
+fun RecipeHeaderPreview() {
+    RecipeHeader(
+        collectionId = null,
+        recipeId = 1,
+        name = "Delicious Recipe Name",
+        author = "ChefBear",
+        date = LocalDate.now(),
+        mealTime = MealTime.LUNCH,
+        isInCollection = true,
+        collectionsStateBundle = null,
+        onAddRecipeToCollections = { _, _, _, _ -> },
+        onRemoveRecipeFromCollections = { _, _, _, _ -> },
+        onRemoveRecipeFromCollection = { _, _ -> },
+        onCollectionsClear = {},
+        onCollectionsRequest = {},
+        onCalendarClick = { _, _, _ -> },
+        enableButtons = true
+    )
 }
