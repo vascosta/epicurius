@@ -7,7 +7,7 @@ import android.epicurius.ui.navigation.BottomBar
 import android.epicurius.ui.navigation.TopBar
 import android.epicurius.ui.screens.collections.components.DeleteCollectionDialog
 import android.epicurius.ui.screens.collections.components.EditCollectionDialog
-import android.epicurius.ui.screens.collections.favourites.components.getFavouritesListName
+import android.epicurius.ui.screens.collections.favourites.components.getCollectionsListName
 import android.epicurius.ui.screens.recipe.components.RecipeInfoBox
 import android.epicurius.ui.screens.utils.LoadState
 import android.epicurius.ui.screens.utils.LoadStateRenderer
@@ -40,9 +40,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun FavouritesListScreen(
+fun CollectionsListScreen(
+    isAuthor: Boolean,
     collectionId: Int,
-    favouritesListNameState: LoadState<String>,
+    collectionListNameState: LoadState<String>,
     recipesState: LoadState<List<RecipeInfo>>,
     onBackButton: () -> Unit,
     onCollectionEdit: (collectionId: Int, collectionName: String) -> Unit,
@@ -52,28 +53,28 @@ fun FavouritesListScreen(
     onFavouriteCollectionRefresh: () -> Unit,
     enableButtons: Boolean
 ) {
-    var favouritesListName = getFavouritesListName(favouritesListNameState)
+    var collectionListName = getCollectionsListName(collectionListNameState)
 
     var showEditCollectionDialog by rememberSaveable { mutableStateOf(false) }
     var showDeleteCollectionDialog by rememberSaveable { mutableStateOf(false) }
 
-    LaunchedEffect(favouritesListNameState) {
-        if (favouritesListNameState is Loaded) {
+    LaunchedEffect(collectionListNameState) {
+        if (collectionListNameState is Loaded) {
             showEditCollectionDialog = false
         }
     }
     Scaffold(
         topBar = {
             TopBar(
-                titleText = favouritesListName,
+                titleText = collectionListName,
                 backButton = true,
                 onBackButton = onBackButton,
-                enableButtons = enableButtons && favouritesListNameState is Loaded && recipesState is Loaded,
+                enableButtons = enableButtons && collectionListNameState is Loaded && recipesState is Loaded,
                 icon = null
             )
-                 },
+        },
         bottomBar = { BottomBar(
-            buttonsEnable = enableButtons && favouritesListNameState is Loaded && recipesState is Loaded
+            buttonsEnable = enableButtons && collectionListNameState is Loaded && recipesState is Loaded
         ) },
         content = { paddingValues ->
             LoadStateRenderer(
@@ -88,23 +89,28 @@ fun FavouritesListScreen(
                             .verticalScroll(rememberScrollState()),
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceBetween
-                        ) {
-                            TextButton(
-                                onClick = { showEditCollectionDialog = true },
-                                enabled = enableButtons
-                            ) { Text("Edit Collection") }
-                            TextButton(
-                                onClick = { showDeleteCollectionDialog = true },
-                                enabled = enableButtons
-                            ) { Text("Delete Collection", color = Color.Red) }
+                        if (isAuthor) {
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.SpaceBetween
+                            ) {
+                                TextButton(
+                                    onClick = { showEditCollectionDialog = true },
+                                    enabled = enableButtons
+                                ) { Text("Edit Collection") }
+                                TextButton(
+                                    onClick = { showDeleteCollectionDialog = true },
+                                    enabled = enableButtons
+                                ) { Text("Delete Collection", color = Color.Red) }
+                            }
                         }
 
                         if (recipes.isEmpty()) {
+                            val txt =
+                                if (isAuthor) { "You have no recipes in this collection." }
+                                else { "This collection has no recipes." }
                             Text(
-                                text = "You have no recipes in this collection.",
+                                text = txt,
                                 modifier = Modifier.padding(16.dp),
                                 color = Color.Gray
                             )
@@ -130,7 +136,7 @@ fun FavouritesListScreen(
                     }
                     if (showEditCollectionDialog) {
                         EditCollectionDialog(
-                            collectionName = favouritesListName,
+                            collectionName = collectionListName,
                             collectionId = collectionId,
                             onDismiss = {
                                 if (enableButtons) {
@@ -143,7 +149,7 @@ fun FavouritesListScreen(
                     }
                     if (showDeleteCollectionDialog) {
                         DeleteCollectionDialog(
-                            collectionName = favouritesListName,
+                            collectionName = collectionListName,
                             collectionId = collectionId,
                             onCollectionDelete = onCollectionDelete,
                             onDismissRequest = {
@@ -164,7 +170,8 @@ fun FavouritesListScreen(
 @Preview
 @Composable
 fun FavouritesListScreenPreview() {
-    FavouritesListScreen(
+    CollectionsListScreen(
+        isAuthor = false,
         collectionId = 1,
         recipesState = apiSuccess(listOf(
             RecipeInfo(
@@ -180,7 +187,7 @@ fun FavouritesListScreenPreview() {
                 isInCollection = true
             )
         )),
-        favouritesListNameState = apiSuccess("My Favourite Recipes"),
+        collectionListNameState = apiSuccess("My Favourite Recipes"),
         onBackButton = {},
         onCollectionEdit = {_, _ ->},
         onCollectionDelete = {},

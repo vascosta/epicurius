@@ -9,16 +9,13 @@ import android.epicurius.ui.screens.utils.LoadState
 import android.epicurius.ui.screens.utils.apiSuccess
 import android.epicurius.ui.screens.utils.idle
 import android.epicurius.ui.screens.utils.loading
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.viewModelScope
 import epicurius.http.controllers.collection.models.input.UpdateCollectionInputModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
-class FavouritesListViewModel(
+class CollectionsListViewModel(
     service: EpicuriusService,
     session: Session,
     context: Context

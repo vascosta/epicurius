@@ -3,7 +3,7 @@ package android.epicurius.ui.screens.collections.favourites
 import android.epicurius.ui.EpicuriusActivity
 import android.epicurius.ui.navigation.Intents
 import android.epicurius.ui.navigation.navigateTo
-import android.epicurius.ui.screens.collections.list.FavouritesListActivity
+import android.epicurius.ui.screens.collections.list.CollectionsListActivity
 import android.epicurius.ui.screens.user.settings.SettingsActivity
 import android.epicurius.ui.screens.utils.Idle
 import android.epicurius.ui.screens.utils.idle
@@ -46,7 +46,7 @@ class FavouritesActivity : EpicuriusActivity() {
     }
 
     private fun navigateToFavouritesListActivity(collectionId: Int) {
-        navigateTo<FavouritesListActivity> { intent ->
+        navigateTo<CollectionsListActivity> { intent ->
             intent.putExtra(Intents.COLLECTION_ID, collectionId)
         }
     }

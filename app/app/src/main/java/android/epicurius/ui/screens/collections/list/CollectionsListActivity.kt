@@ -15,8 +15,8 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 
-class FavouritesListActivity : EpicuriusActivity() {
-    override val viewModel: FavouritesListViewModel by getViewModel<FavouritesListViewModel>()
+class CollectionsListActivity : EpicuriusActivity() {
+    override val viewModel: CollectionsListViewModel by getViewModel<CollectionsListViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,9 +35,10 @@ class FavouritesListActivity : EpicuriusActivity() {
         setContent {
             val recipes = viewModel.recipes.collectAsState(idle())
             val favouritesListName = viewModel.favouritesListName.collectAsState(idle())
-            FavouritesListScreen(
+            CollectionsListScreen(
+                isAuthor = true,
                 collectionId = intent.getIntExtra(Intents.COLLECTION_ID, -1),
-                favouritesListNameState = favouritesListName.value,
+                collectionListNameState = favouritesListName.value,
                 recipesState = recipes.value,
                 onBackButton = { navigateTo<FavouritesActivity>() },
                 onCollectionEdit = { collectionId: Int, collectionName: String ->
