@@ -19,6 +19,7 @@ import android.epicurius.ui.screens.utils.LoadingSpinner
 import android.epicurius.ui.screens.utils.MultiSelectDropdownMenuComponent
 import android.epicurius.ui.screens.utils.NumberLineTextField
 import android.epicurius.ui.screens.utils.NumberTextField
+import android.epicurius.ui.screens.utils.isValidForNumberTextField
 import android.os.Build
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -184,14 +185,14 @@ fun CreateRecipeScreen(
                 NumberLineTextField(
                     parameterName = "Duration (min)",
                     value = preparationTime,
-                    onValueChange = { preparationTime = it },
+                    onValueChange = { preparationTime = isValidForNumberTextField(it) },
                     modifier = Modifier.padding(horizontal = 30.dp),
                     enabled = buttonsEnable
                 )
                 NumberLineTextField(
                     parameterName = "Serving (px)",
                     value = servings,
-                    onValueChange = { servings = it },
+                    onValueChange = { servings = isValidForNumberTextField(it) },
                     modifier = Modifier.padding(horizontal = 30.dp),
                     enabled = buttonsEnable
                 )
@@ -254,28 +255,28 @@ fun CreateRecipeScreen(
                     Column(modifier = Modifier.padding(top = 8.dp)) {
                         NumberTextField(
                             value = calories,
-                            onValueChange = { calories = it },
+                            onValueChange = { calories = isValidForNumberTextField(it) },
                             modifier = Modifier.padding(horizontal = 30.dp),
                             enabled = buttonsEnable,
                             label = "Calories (kcal)"
                         )
                         NumberTextField(
                             value = protein,
-                            onValueChange = { protein = it },
+                            onValueChange = { protein = isValidForNumberTextField(it) },
                             modifier = Modifier.padding(horizontal = 30.dp),
                             enabled = buttonsEnable,
                             label = "Protein (g)"
                         )
                         NumberTextField(
                             value = fat,
-                            onValueChange = { fat = it },
+                            onValueChange = { fat = isValidForNumberTextField(it) },
                             modifier = Modifier.padding(horizontal = 30.dp),
                             enabled = buttonsEnable,
                             label = "Fat (g)"
                         )
                         NumberTextField(
                             value = carbs,
-                            onValueChange = { carbs = it },
+                            onValueChange = { carbs = isValidForNumberTextField(it) },
                             modifier = Modifier.padding(horizontal = 30.dp),
                             enabled = buttonsEnable,
                             label = "Carbohydrates (g)"

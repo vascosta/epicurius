@@ -2,6 +2,7 @@ package android.epicurius.ui.screens.fridge.components
 
 import android.epicurius.ui.screens.utils.DateField
 import android.epicurius.ui.screens.utils.NumberTextField
+import android.epicurius.ui.screens.utils.isValidForNumberTextField
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
@@ -37,7 +38,7 @@ fun UpdateProductDialog(
                     value = quantity?.toString() ?: "",
                     enabled = openDate == null,
                     label = "New quantity",
-                    onValueChange = { quantity = it.toIntOrNull() }
+                    onValueChange = { quantity = isValidForNumberTextField(it).toIntOrNull() }
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 DateField(
@@ -51,7 +52,7 @@ fun UpdateProductDialog(
                     label = "Duration (days)",
                     enabled = openDate != null && expirationDate == null && quantity == null,
                     onValueChange = { newValue ->
-                        duration = newValue.toIntOrNull()?.let { Period.ofDays(it) }
+                        duration = isValidForNumberTextField(newValue).toIntOrNull()?.let { Period.ofDays(it) }
                     }
                 )
                 Spacer(modifier = Modifier.height(8.dp))

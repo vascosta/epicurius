@@ -1,6 +1,7 @@
 package android.epicurius.ui.screens.mealPlanner.daily.components
 
 import android.epicurius.ui.screens.utils.NumberTextField
+import android.epicurius.ui.screens.utils.isValidForNumberTextField
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
@@ -52,7 +53,7 @@ fun CaloriesUpdateDialog(
                 Spacer(modifier = Modifier.height(8.dp))
                 NumberTextField(
                     value = textFieldValue,
-                    onValueChange = { textFieldValue = it },
+                    onValueChange = { textFieldValue = isValidForNumberTextField(it) },
                     enabled = true,
                     placeholder = "e.g.: 2200",
                 )

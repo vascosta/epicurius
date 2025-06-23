@@ -14,7 +14,6 @@ import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.Placeholder
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 
@@ -142,4 +141,9 @@ fun NumberTextField(
             keyboardType = KeyboardType.Number
         )
     )
+}
+
+fun isValidForNumberTextField(value: String): String {
+    val regex = Regex("^\\d*\\.?\\d*\$")
+    return if (value.isEmpty() || regex.matches(value)) value else value.dropLast(1)
 }

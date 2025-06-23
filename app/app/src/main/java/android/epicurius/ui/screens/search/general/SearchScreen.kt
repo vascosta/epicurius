@@ -21,6 +21,7 @@ import android.epicurius.ui.screens.utils.Loading
 import android.epicurius.ui.screens.utils.SearchTextField
 import android.epicurius.ui.screens.utils.TabComponent
 import android.epicurius.ui.screens.utils.apiSuccess
+import android.epicurius.ui.screens.utils.isValidForNumberTextField
 import android.os.Build
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -278,25 +279,25 @@ fun SearchScreen(
                         diets = diets,
                         onDietsChange = { diets = it },
                         preparationTime = preparationTime,
-                        onPreparationTimeChange = { preparationTime = it },
+                        onPreparationTimeChange = { preparationTime = isValidForNumberTextField(it) },
                         servings = serving,
-                        onServingsChange = { serving = it },
+                        onServingsChange = { serving = isValidForNumberTextField(it) },
                         minCalories = minCalories,
-                        onMinCaloriesChange = { minCalories = it },
+                        onMinCaloriesChange = { minCalories = isValidForNumberTextField(it) },
                         maxCalories = maxCalories,
-                        onMaxCaloriesChange = { maxCalories = it },
+                        onMaxCaloriesChange = { maxCalories = isValidForNumberTextField(it) },
                         minCarbs = minCarbs,
-                        onMinCarbsChange = { minCarbs = it },
+                        onMinCarbsChange = { minCarbs = isValidForNumberTextField(it) },
                         maxCarbs = maxCarbs,
-                        onMaxCarbsChange = { maxCarbs = it },
+                        onMaxCarbsChange = { maxCarbs = isValidForNumberTextField(it) },
                         minFat = minFat,
-                        onMinFatChange = { minFat = it },
+                        onMinFatChange = { minFat = isValidForNumberTextField(it) },
                         maxFat = maxFat,
-                        onMaxFatChange = { maxFat = it },
+                        onMaxFatChange = { maxFat = isValidForNumberTextField(it) },
                         minProtein = minProtein,
-                        onMinProteinChange = { minProtein = it },
+                        onMinProteinChange = { minProtein = isValidForNumberTextField(it) },
                         maxProtein = maxProtein,
-                        onMaxProteinChange = { maxProtein = it },
+                        onMaxProteinChange = { maxProtein = isValidForNumberTextField(it) },
                         true
                     )
                 }
