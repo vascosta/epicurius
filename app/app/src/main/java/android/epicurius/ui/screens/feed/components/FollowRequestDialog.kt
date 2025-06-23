@@ -1,14 +1,10 @@
 package android.epicurius.ui.screens.feed.components
 
-import android.epicurius.domain.collection.CollectionProfile
-import android.epicurius.domain.user.FollowUser
 import android.epicurius.domain.user.SearchUser
-import android.epicurius.ui.screens.user.components.UserBox
 import android.epicurius.ui.screens.utils.Idle
 import android.epicurius.ui.screens.utils.LoadState
 import android.epicurius.ui.screens.utils.LoadStateRenderer
 import android.epicurius.ui.screens.utils.Loaded
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState

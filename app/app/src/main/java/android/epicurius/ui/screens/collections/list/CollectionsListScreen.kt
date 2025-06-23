@@ -7,7 +7,7 @@ import android.epicurius.ui.navigation.BottomBar
 import android.epicurius.ui.navigation.TopBar
 import android.epicurius.ui.screens.collections.components.DeleteCollectionDialog
 import android.epicurius.ui.screens.collections.components.EditCollectionDialog
-import android.epicurius.ui.screens.collections.favourites.components.getCollectionsListName
+import android.epicurius.ui.screens.collections.list.components.getCollectionsListName
 import android.epicurius.ui.screens.recipe.components.RecipeInfoBox
 import android.epicurius.ui.screens.utils.LoadState
 import android.epicurius.ui.screens.utils.LoadStateRenderer
@@ -107,8 +107,8 @@ fun CollectionsListScreen(
 
                         if (recipes.isEmpty()) {
                             val txt =
-                                if (isAuthor) { "You have no recipes in this collection." }
-                                else { "This collection has no recipes." }
+                                if (isAuthor) "You have no recipes in this collection."
+                                else "This collection has no recipes."
                             Text(
                                 text = txt,
                                 modifier = Modifier.padding(16.dp),

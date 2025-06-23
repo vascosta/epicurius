@@ -1,11 +1,9 @@
 package android.epicurius.ui.screens.collections.components
 
-import android.epicurius.ui.screens.utils.LoadingSpinner
 import android.epicurius.ui.screens.utils.TextField
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Text
@@ -27,7 +25,6 @@ fun EditCollectionDialog(
     enableButtons: Boolean
 ) {
     var newCollectionName by rememberSaveable { mutableStateOf(collectionName) }
-    var showLoadingSpinner by rememberSaveable { mutableStateOf(!enableButtons) }
 
     AlertDialog(
         onDismissRequest = { onDismiss() },
@@ -37,15 +34,9 @@ fun EditCollectionDialog(
                 enabled = enableButtons
             ) { Text("Cancel") }
             TextButton(
-                onClick = {
-                    onEditCollection(collectionId, newCollectionName)
-                    showLoadingSpinner = true
-                },
+                onClick = { onEditCollection(collectionId, newCollectionName) },
                 enabled = enableButtons
-            ) {
-                if (!showLoadingSpinner || enableButtons) { Text("Edit") }
-                else { LoadingSpinner(Modifier.size(30.dp)) }
-            }
+            ) { Text("Edit") }
         },
         title = { Text("Edit Collection") },
         text = {

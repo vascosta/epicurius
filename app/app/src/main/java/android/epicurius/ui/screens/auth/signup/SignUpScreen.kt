@@ -1,6 +1,5 @@
 package android.epicurius.ui.screens.auth.signup
 
-import android.annotation.SuppressLint
 import android.epicurius.ui.navigation.TopBar
 import android.epicurius.ui.screens.auth.components.AuthButton
 import android.epicurius.ui.screens.auth.components.PasswordTextField
@@ -11,7 +10,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable

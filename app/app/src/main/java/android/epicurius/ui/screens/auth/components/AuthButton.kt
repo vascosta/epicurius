@@ -1,16 +1,9 @@
 package android.epicurius.ui.screens.auth.components
 
-import android.epicurius.ui.screens.utils.LoadingSpinner
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 
@@ -20,21 +13,9 @@ fun AuthButton(
     enabled: Boolean,
     text: String
 ) {
-    var showLoadingSpinnerOnButton by remember { mutableStateOf(false) }
-
-    LaunchedEffect(enabled) {
-        if (enabled) showLoadingSpinnerOnButton = false
-    }
-
     Button(
-        onClick = {
-            onClick()
-            showLoadingSpinnerOnButton = true
-        },
+        onClick = { onClick() },
         modifier = Modifier.padding(10.dp),
         enabled = enabled
-    ) {
-        if (!showLoadingSpinnerOnButton) { Text(text) }
-        else { LoadingSpinner(Modifier.size(25.dp)) }
-    }
+    ) { Text(text) }
 }

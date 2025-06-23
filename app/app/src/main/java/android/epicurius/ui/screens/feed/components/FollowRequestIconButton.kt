@@ -6,11 +6,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
@@ -23,16 +18,8 @@ fun FollowRequestIconButton(
     onClick: () -> Unit,
     enabled: Boolean
 ) {
-    var showLoadingSpinnerOnButton by remember { mutableStateOf(false) }
-
-    LaunchedEffect(enabled) {
-        if (enabled) showLoadingSpinnerOnButton = false
-    }
     IconButton(
-        onClick = {
-            onClick()
-            showLoadingSpinnerOnButton = true
-        },
+        onClick = { onClick() },
         modifier = Modifier
             .size(24.dp)
             .border(
