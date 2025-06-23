@@ -144,6 +144,6 @@ fun NumberTextField(
 }
 
 fun isValidForNumberTextField(value: String): String {
-    val regex = Regex("^\\d*\\.?\\d*\$")
+    val regex = Regex("^\\d*\\.?\\d*\$") // apenas alterar o mutable state se estiver bem caso contrario nao fazer nada
     return if (value.isEmpty() || regex.matches(value)) value else value.dropLast(1)
 }

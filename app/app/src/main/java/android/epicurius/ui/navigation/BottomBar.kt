@@ -6,7 +6,7 @@ import android.epicurius.ui.screens.feed.FeedActivity
 import android.epicurius.ui.screens.fridge.FridgeActivity
 import android.epicurius.ui.screens.mealPlanner.calendar.CalendarActivity
 import android.epicurius.ui.screens.recipe.createRecipe.CreateRecipeActivity
-import android.epicurius.ui.screens.search.general.SearchActivity
+import android.epicurius.ui.screens.search.SearchActivity
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth

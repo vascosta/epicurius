@@ -80,7 +80,6 @@ fun MealPlannerSearchScreen(
         mutableStateOf<List<String>>(userInfo.diets.map { it.displayName })
     }
 
-    var preparationTime by remember { mutableStateOf("") }
     var serving by remember { mutableStateOf("") }
     var minCalories by remember { mutableStateOf("") }
     var maxCalories by remember { mutableStateOf("") }
@@ -90,6 +89,8 @@ fun MealPlannerSearchScreen(
     var maxFat by remember { mutableStateOf("") }
     var minProtein by remember { mutableStateOf("") }
     var maxProtein by remember { mutableStateOf("") }
+    var minTime by remember { mutableStateOf("") }
+    var maxTime by remember { mutableStateOf("") }
 
     var recipeResults by remember { mutableStateOf<List<RecipeInfo>>(emptyList()) }
 
@@ -125,7 +126,7 @@ fun MealPlannerSearchScreen(
                             cuisine.map { Cuisine.valueOf(it) },
                             intolerances.map { Intolerance.fromDisplayName(it) },
                             diets.map { Diet.fromDisplayName(it) },
-                            preparationTime.toIntOrNull(),
+                            null,
                             serving.toIntOrNull(),
                             minCalories.toIntOrNull(),
                             maxCalories.toIntOrNull(),
@@ -172,8 +173,6 @@ fun MealPlannerSearchScreen(
                         onIntolerancesChange = { intolerances = it },
                         diets = diets,
                         onDietsChange = { diets = it },
-                        preparationTime = preparationTime,
-                        onPreparationTimeChange = { preparationTime = isValidForNumberTextField(it) },
                         servings = serving,
                         onServingsChange = { serving = isValidForNumberTextField(it) },
                         minCalories = minCalories,
@@ -192,7 +191,11 @@ fun MealPlannerSearchScreen(
                         onMinProteinChange = { minProtein = isValidForNumberTextField(it) },
                         maxProtein = maxProtein,
                         onMaxProteinChange = { maxProtein = isValidForNumberTextField(it) },
-                        true
+                        minTime = minTime,
+                        onMinTimeChange = { minTime = isValidForNumberTextField(it) },
+                        maxTime = maxTime,
+                        onMaxTimeChange = { maxTime = isValidForNumberTextField(it) },
+                        enableButtons = enableButtons
                     )
                 }
             }
