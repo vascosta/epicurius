@@ -1,13 +1,18 @@
 package android.epicurius.ui.screens.search.camera
 
+import android.Manifest
+import android.epicurius.ui.navigation.BottomBar
 import android.epicurius.ui.navigation.TopBar
 import android.epicurius.ui.screens.search.camera.components.CameraView
+import android.epicurius.ui.screens.utils.LoadState
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
@@ -16,34 +21,45 @@ import com.google.accompanist.permissions.shouldShowRationale
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun CameraScreen(
+    ingredientsState: LoadState<List<String>>,
     onBackButton: () -> Unit,
-    onIdentifyIngredients: () -> List<String>,
-    onConfirmIngredients: (List<String>) -> Unit
+    onIdentifyIngredients: (ByteArray) -> Unit,
+    onIngredientsClear: () -> Unit,
+    onConfirmIngredients: (List<String>) -> Unit,
+    enableButtons: Boolean
 ) {
-    val cameraPermissionState = rememberPermissionState(android.Manifest.permission.CAMERA)
+    val cameraPermissionState = rememberPermissionState(Manifest.permission.CAMERA)
 
     Scaffold(
-        topBar = { TopBar("Camera", backButton = true, onBackButton, icon = null, enableButtons = true) }
-    ) { innerPadding ->
-        Box(modifier = Modifier.padding(innerPadding)) {
-            when {
-                cameraPermissionState.status.isGranted -> {
-                    CameraView(
-                        onIdentifyIngredients = onIdentifyIngredients,
-                        onConfirmIngredients = onConfirmIngredients
-                    )
-                }
-                cameraPermissionState.status.shouldShowRationale -> {
-                    LaunchedEffect(Unit) {
-                        cameraPermissionState.launchPermissionRequest()
+        topBar = {
+            TopBar(
+                titleText = "Camera",
+                backButton = true,
+                onBackButton = onBackButton,
+                enableButtons = enableButtons
+            )
+        },
+        bottomBar = { BottomBar(buttonsEnable = enableButtons) },
+        content = { paddingValues ->
+            Box(modifier = Modifier.padding(paddingValues)) {
+                when {
+                    cameraPermissionState.status.isGranted -> {
+                        CameraView(
+                            ingredientsState = ingredientsState,
+                            onIdentifyIngredients = onIdentifyIngredients,
+                            onIngredientsClear = onIngredientsClear,
+                            onConfirmIngredients = onConfirmIngredients,
+                        )
                     }
-                }
-                else -> {
-                    LaunchedEffect(Unit) {
-                        cameraPermissionState.launchPermissionRequest()
+
+                    else -> {
+                        LaunchedEffect(Unit) {
+                            cameraPermissionState.launchPermissionRequest()
+                        }
                     }
                 }
             }
-        }
-    }
+        },
+        containerColor = Color.White
+    )
 }

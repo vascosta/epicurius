@@ -9,39 +9,13 @@ import androidx.camera.core.ImageCaptureException
 import androidx.core.content.ContextCompat
 import java.io.File
 
-// Save the photo to a specific directory in the cache
-fun takePhoto(
-    imageCapture: ImageCapture?,
-    context: Context
-) {
-    val outputDirectory = File(context.cacheDir, "photos").also { it.mkdirs() }
-
-    val file = File(
-        outputDirectory,
-        "${System.currentTimeMillis()}.jpg"
-    )
-
-    val outputOptions = ImageCapture.OutputFileOptions.Builder(file).build()
-
-    imageCapture?.takePicture(
-        outputOptions,
-        ContextCompat.getMainExecutor(context),
-        object : ImageCapture.OnImageSavedCallback {
-            override fun onError(exc: ImageCaptureException) {
-                Toast.makeText(context, "Error taking picture: ${exc.message}", Toast.LENGTH_SHORT).show()
-            }
-
-            override fun onImageSaved(output: ImageCapture.OutputFileResults) {
-                Toast.makeText(context, "Picture saved: ${file.absolutePath}", Toast.LENGTH_SHORT).show()
-            }
-        }
-    )
-}
-
 fun takePhotoToGallery(
     imageCapture: ImageCapture?,
-    context: Context
+    context: Context,
+    onIdentifyIngredients: (ByteArray) -> Unit
 ) {
+    if (imageCapture == null) return
+
     val contentValues = ContentValues().apply {
         put(MediaStore.MediaColumns.DISPLAY_NAME, "${System.currentTimeMillis()}")
         put(MediaStore.MediaColumns.MIME_TYPE, "image/jpeg")
@@ -56,16 +30,34 @@ fun takePhotoToGallery(
         contentValues
     ).build()
 
-    imageCapture?.takePicture(
+    imageCapture.takePicture(
         outputOptions,
         ContextCompat.getMainExecutor(context),
         object : ImageCapture.OnImageSavedCallback {
             override fun onError(exc: ImageCaptureException) {
-                Toast.makeText(context, "Error taking picture: ${exc.message}", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, "Error taking picture", Toast.LENGTH_SHORT).show()
             }
 
             override fun onImageSaved(output: ImageCapture.OutputFileResults) {
-                Toast.makeText(context, "Picture saved on gallery!", Toast.LENGTH_SHORT).show()
+                val savedUri = output.savedUri
+                if (savedUri != null) {
+                    try {
+                        val inputStream = contentResolver.openInputStream(savedUri)
+                        val byteArray = inputStream?.readBytes()
+                        inputStream?.close()
+
+                        if (byteArray != null) {
+                            onIdentifyIngredients(byteArray)
+                        } else {
+                            Toast.makeText(context, "Error reading image bytes", Toast.LENGTH_SHORT).show()
+                        }
+
+                        Toast.makeText(context, "Image saved to gallery", Toast.LENGTH_SHORT).show()
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                        Toast.makeText(context, "Error on saving image to gallery", Toast.LENGTH_SHORT).show()
+                    }
+                }
             }
         }
     )

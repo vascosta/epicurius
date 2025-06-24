@@ -10,8 +10,8 @@ import android.epicurius.ui.EpicuriusActivity
 import android.epicurius.ui.navigation.Intents
 import android.epicurius.ui.navigation.navigateTo
 import android.epicurius.ui.screens.recipe.profile.RecipeProfileActivity
-import android.epicurius.ui.screens.search.camera.CameraActivity
 import android.epicurius.ui.screens.user.profile.UserProfileActivity
+import android.epicurius.ui.screens.utils.apiSuccess
 import android.epicurius.ui.screens.utils.idle
 import android.os.Bundle
 import androidx.activity.compose.setContent
@@ -28,12 +28,13 @@ class SearchActivity : EpicuriusActivity() {
             SearchScreen(
                 recipesResultState = recipesResultState.value,
                 usersResultState = usersResultState.value,
+                ingredientsState = apiSuccess(emptyList()),
                 onBackButton = { finish() },
                 onSearchRecipes = {
                     name: String?,
                     cuisine: List<Cuisine>?,
                     mealType: List<MealType>?,
-                    ingredients: List<Ingredient>?,
+                    ingredients: List<String>?,
                     intolerances: List<Intolerance>?,
                     diets: List<Diet>?,
                     servings: Int?,
@@ -70,9 +71,8 @@ class SearchActivity : EpicuriusActivity() {
                 onSearchUsers = { name: String -> viewModel.searchUsers(name) },
                 onSearchRecipesClear = { viewModel.clearSearchRecipes() },
                 onSearchUsersClear = { viewModel.clearSearchUsers() },
-                onCamera = { navigateTo<CameraActivity>() },
+                onIngredientsClear = {  },
                 onIdentifyIngredientsInPicture = {},
-                onConfirm = {},
                 onUserProfileRequest = ::navigateToUserProfileActivity,
                 onRecipeProfileRequest = ::navigateToRecipeProfileActivity,
                 enableButtons = viewModel.enableButtons,

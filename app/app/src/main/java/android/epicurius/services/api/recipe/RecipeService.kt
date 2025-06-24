@@ -71,7 +71,7 @@ class RecipeService(private val httpService: HttpService) {
         name: String?,
         cuisine: List<Cuisine>?,
         mealType: List<MealType>?,
-        ingredients: List<Ingredient>?,
+        ingredients: List<String>?,
         intolerances: List<Intolerance>?,
         diets: List<Diet>?,
         servings: Int?,

@@ -25,6 +25,8 @@ fun FiltersDialog(
     onCuisineChange: (List<String>) -> Unit,
     mealType: List<String>,
     onMealTypeChange: (List<String>) -> Unit,
+    ingredients: List<String>,
+    onIngredientsChange: (List<String>) -> Unit,
     intolerances: List<String>,
     onIntolerancesChange: (List<String>) -> Unit,
     diets: List<String>,
@@ -82,6 +84,7 @@ fun FiltersDialog(
                     enabled = enableButtons,
                     label = "Meal Type"
                 )
+                // add ingredients field (create recipe)
                 MultiSelectDropdownMenuComponent(
                     options = Intolerance.entries.map { it.displayName },
                     values = intolerances,

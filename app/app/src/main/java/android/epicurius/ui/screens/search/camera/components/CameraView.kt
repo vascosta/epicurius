@@ -1,6 +1,7 @@
 package android.epicurius.ui.screens.search.camera.components
 
 import android.epicurius.ui.screens.search.components.ConfirmIngredientsDialog
+import android.epicurius.ui.screens.utils.LoadState
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.ImageCapture
 import androidx.camera.core.Preview
@@ -26,8 +27,10 @@ import androidx.lifecycle.compose.LocalLifecycleOwner
 
 @Composable
 fun CameraView(
-    onIdentifyIngredients: () -> List<String>,
-    onConfirmIngredients: (List<String>) -> Unit = {}
+    ingredientsState: LoadState<List<String>>,
+    onIdentifyIngredients: (ByteArray) -> Unit,
+    onIngredientsClear: () -> Unit,
+    onConfirmIngredients: (List<String>) -> Unit
 ) {
     val context = LocalContext.current
     val lifecycleOwner = LocalLifecycleOwner.current
@@ -38,7 +41,6 @@ fun CameraView(
     }
 
     var showDialog by remember { mutableStateOf(false) }
-    var ingredientsList by remember { mutableStateOf(listOf<String>()) }
 
     Column(modifier = Modifier.fillMaxSize()) {
         AndroidView(
@@ -84,10 +86,12 @@ fun CameraView(
             onClick = {
                 takePhotoToGallery(
                     imageCapture = imageCapture.value,
-                    context = context
+                    context = context,
+                    onIdentifyIngredients = { bytes ->
+                        onIdentifyIngredients(bytes)
+                        showDialog = true
+                    }
                 )
-                ingredientsList = onIdentifyIngredients()
-                showDialog = true
             },
             modifier = Modifier
                 .fillMaxWidth()
@@ -99,9 +103,12 @@ fun CameraView(
 
     if (showDialog) {
         ConfirmIngredientsDialog(
-            ingredients = ingredientsList,
+            ingredientsState = ingredientsState,
+            onIngredientsClear = {
+                showDialog = false
+                onIngredientsClear()
+            },
             onConfirm = onConfirmIngredients,
-            onDismiss = { showDialog = false }
         )
     }
 }

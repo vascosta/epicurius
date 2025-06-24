@@ -53,7 +53,7 @@ class SearchViewModel(
         name: String?,
         cuisine: List<Cuisine>?,
         mealType: List<MealType>?,
-        ingredients: List<Ingredient>?,
+        ingredients: List<String>?,
         intolerances: List<Intolerance>?,
         diets: List<Diet>?,
         servings: Int?,
@@ -73,7 +73,6 @@ class SearchViewModel(
         if (
             !validateSearchRecipesInfo(
                 name,
-                ingredients,
                 minCalories,
                 maxCalories,
                 minCarbs,
@@ -139,7 +138,7 @@ class SearchViewModel(
         name: String?,
         cuisine: List<Cuisine>?,
         mealType: List<MealType>?,
-        ingredients: List<Ingredient>?,
+        ingredients: List<String>?,
         intolerances: List<Intolerance>?,
         diets: List<Diet>?,
         servings: Int?,
@@ -227,7 +226,6 @@ class SearchViewModel(
 
     private fun validateSearchRecipesInfo(
         name: String?,
-        ingredients: List<Ingredient>?,
         minCalories: Int?,
         maxCalories: Int?,
         minCarbs: Int?,
@@ -241,7 +239,6 @@ class SearchViewModel(
     ): Boolean =
         when {
             name != null && !validateName(name, ::showToast) -> false
-            ingredients != null && !validateIngredients(ingredients, ::showToast) -> false
             minCalories != null && !validateCalories(minCalories, ::showToast) -> false
             maxCalories != null && !validateCalories(maxCalories, ::showToast) -> false
             minCalories != null && maxCalories != null && minCalories > maxCalories -> {
