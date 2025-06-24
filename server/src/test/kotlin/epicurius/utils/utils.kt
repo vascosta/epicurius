@@ -83,8 +83,7 @@ fun createTestRecipe(tm: TransactionManager, user: User): Recipe {
         jdbiRecipeInfo.fat,
         jdbiRecipeInfo.carbs,
         jdbiRecipeInfo.instructions,
-        listOf(ByteArray(1)),
-        false
+        listOf(ByteArray(1))
     )
 }
 

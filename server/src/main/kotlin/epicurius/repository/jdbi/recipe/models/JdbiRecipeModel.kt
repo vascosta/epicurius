@@ -32,8 +32,7 @@ data class JdbiRecipeModel(
     val picturesNames: List<String>
 ) {
     fun toRecipe(
-        pictures: List<ByteArray>,
-        isInCollection: Boolean
+        pictures: List<ByteArray>
     ): Recipe = Recipe(
         id = id,
         name = name,
@@ -53,7 +52,6 @@ data class JdbiRecipeModel(
         protein = protein,
         fat = fat,
         carbs = carbs,
-        pictures = pictures,
-        isInCollection = isInCollection
+        pictures = pictures
     )
 }

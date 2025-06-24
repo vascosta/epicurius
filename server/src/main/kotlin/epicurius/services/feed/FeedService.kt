@@ -24,12 +24,8 @@ class FeedService(private val tm: TransactionManager, private val cs: CloudStora
         }
 
         return recipes.map { jdbiRecipeInfo ->
-            val isInCollection = tm.run {
-                it.collectionRepository.checkIfRecipeInAnyUserCollection(userId, jdbiRecipeInfo.id)
-            }
             jdbiRecipeInfo.toRecipeInfo(
                 cs.pictureRepository.getPicture(jdbiRecipeInfo.picturesNames.first(), RECIPES_FOLDER),
-                isInCollection
             )
         }
     }

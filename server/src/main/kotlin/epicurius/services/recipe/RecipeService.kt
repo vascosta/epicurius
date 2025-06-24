@@ -72,8 +72,7 @@ class RecipeService(
                 recipeInfo.fat,
                 recipeInfo.carbs,
                 recipeInfo.instructions,
-                pictures.map { it.bytes },
-                false // the recipe is not in any user's collection initially
+                pictures.map { it.bytes }
             )
         }
     }
@@ -86,23 +85,16 @@ class RecipeService(
         val recipePictures = jdbiRecipe.picturesNames.map {
             cs.pictureRepository.getPicture(it, RECIPES_FOLDER)
         }
-        val isInCollection = tm.run {
-            it.collectionRepository.checkIfRecipeInAnyUserCollection(userId, jdbiRecipe.id)
-        }
 
-        return jdbiRecipe.toRecipe(recipePictures, isInCollection)
+        return jdbiRecipe.toRecipe(recipePictures)
     }
 
     suspend fun getUserRecipes(userId: Int, lastRecipeId: Int?, limit: Int): List<RecipeInfo> {
         val recipes = tm.run { it.recipeRepository.getUserRecipes(userId, lastRecipeId, limit) }
 
         return recipes.map { jdbiRecipeInfo ->
-            val isInCollection = tm.run {
-                it.collectionRepository.checkIfRecipeInAnyUserCollection(userId, jdbiRecipeInfo.id)
-            }
             jdbiRecipeInfo.toRecipeInfo(
                 cs.pictureRepository.getPicture(jdbiRecipeInfo.picturesNames.first(), RECIPES_FOLDER),
-                isInCollection
             )
         }
     }
@@ -112,12 +104,8 @@ class RecipeService(
         val recipes = tm.run { it.recipeRepository.searchRecipes(userId, fillForm, lastRecipeId, limit) }
 
         return recipes.map { jdbiRecipeInfo ->
-            val isInCollection = tm.run {
-                it.collectionRepository.checkIfRecipeInAnyUserCollection(userId, jdbiRecipeInfo.id)
-            }
             jdbiRecipeInfo.toRecipeInfo(
                 cs.pictureRepository.getPicture(jdbiRecipeInfo.picturesNames.first(), RECIPES_FOLDER),
-                isInCollection
             )
         }
     }

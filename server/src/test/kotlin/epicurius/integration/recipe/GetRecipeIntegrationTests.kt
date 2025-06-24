@@ -43,7 +43,6 @@ class GetRecipeIntegrationTests : RecipeIntegrationTest() {
         assertEquals(testRecipe.carbs, response.recipe.carbs)
         assertEquals(testRecipe.instructions, response.recipe.instructions)
         assertEquals(1, response.recipe.pictures.size)
-        assertEquals(false, response.recipe.isInCollection)
     }
 
     @Test
@@ -73,7 +72,6 @@ class GetRecipeIntegrationTests : RecipeIntegrationTest() {
         assertEquals(testPrivateRecipe.carbs, response.recipe.carbs)
         assertEquals(testPrivateRecipe.instructions, response.recipe.instructions)
         assertEquals(1, response.recipe.pictures.size)
-        assertEquals(false, response.recipe.isInCollection)
     }
 
     @Test
@@ -101,7 +99,6 @@ class GetRecipeIntegrationTests : RecipeIntegrationTest() {
         assertEquals(testRecipe.carbs, response.recipe.carbs)
         assertEquals(testRecipe.instructions, response.recipe.instructions)
         assertEquals(1, response.recipe.pictures.size)
-        assertEquals(false, response.recipe.isInCollection)
     }
 
     @Test

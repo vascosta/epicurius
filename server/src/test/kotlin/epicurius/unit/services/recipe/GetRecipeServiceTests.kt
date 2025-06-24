@@ -20,9 +20,6 @@ class GetRecipeServiceTests : RecipeServiceTest() {
         whenever(jdbiRecipeRepositoryMock.getRecipeById(RECIPE_ID)).thenReturn(jdbiRecipeModel)
         whenever(jdbiUserRepositoryMock.checkUserVisibility(authorUsername, AUTHOR_ID)).thenReturn(true)
         whenever(pictureRepositoryMock.getPicture(testPicture.name, RECIPES_FOLDER)).thenReturn(testPicture.bytes)
-        whenever(
-            jdbiCollectionRepositoryMock.checkIfRecipeInAnyUserCollection(AUTHOR_ID, jdbiRecipeModel.id)
-        ).thenReturn(false)
 
         // when retrieving the recipe
         val recipe = runBlocking { getRecipe(RECIPE_ID, AUTHOR_ID) }
@@ -56,9 +53,6 @@ class GetRecipeServiceTests : RecipeServiceTest() {
         whenever(jdbiRecipeRepositoryMock.getRecipeById(RECIPE_ID)).thenReturn(jdbiRecipeModel)
         whenever(jdbiUserRepositoryMock.checkUserVisibility(authorUsername, userId)).thenReturn(true)
         whenever(pictureRepositoryMock.getPicture(testPicture.name, RECIPES_FOLDER)).thenReturn(testPicture.bytes)
-        whenever(
-            jdbiCollectionRepositoryMock.checkIfRecipeInAnyUserCollection(AUTHOR_ID, jdbiRecipeModel.id)
-        ).thenReturn(false)
 
         // when retrieving the recipe
         val recipe = runBlocking { getRecipe(RECIPE_ID, userId) }

@@ -163,29 +163,6 @@ class JdbiCollectionRepository(private val handle: Handle) : CollectionRepositor
             .one() == 1
     }
 
-    override fun checkIfRecipeInAnyUserCollection(userId: Int, recipeId: Int): Boolean {
-        return handle.createQuery(
-            """
-                SELECT COUNT(*)
-                FROM dbo.collection c
-                JOIN dbo.collection_recipe cr ON c.id = cr.collection_id
-                JOIN dbo.recipe r ON cr.recipe_id = r.id
-                WHERE c.owner_id = :userId 
-                    AND cr.recipe_id = :recipeId
-                    AND (
-                        (r.author_id = :userId AND c.type = :kitchenBookType) OR
-                        (r.author_id <> :userId AND c.type = :favouriteType)
-                    )
-            """
-        )
-            .bind("userId", userId)
-            .bind("recipeId", recipeId)
-            .bind("kitchenBookType", CollectionType.KITCHEN_BOOK.ordinal)
-            .bind("favouriteType", CollectionType.FAVOURITE.ordinal)
-            .mapTo<Int>()
-            .one() == 1
-    }
-
     private fun applyGetJdbiCollectionModelByIdQuery(query: StringBuilder, collection: String? = "dbo.collection") {
         query.append(
             """

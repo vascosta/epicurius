@@ -39,13 +39,13 @@ class MealPlannerService(
     fun getWeeklyMealPlanner(userId: Int): MealPlanner {
         val jdbiPlanner = tm.run { it.mealPlannerRepository.getWeeklyMealPlanner(userId) }
         if (jdbiPlanner.planner.isEmpty()) return MealPlanner(emptyList())
-        val planner = jdbiPlanner.planner.toDailyMealPlannerList(tm, cs, userId)
+        val planner = jdbiPlanner.planner.toDailyMealPlannerList(cs)
         return MealPlanner(planner)
     }
 
     fun getDailyMealPlanner(userId: Int, date: LocalDate): DailyMealPlanner {
         val jdbiDailyPlanner = checkIfDailyMealPlannerExists(userId, date) ?: throw DailyMealPlannerNotFound()
-        return jdbiDailyPlanner.toDailyMealPlanner(tm, cs, userId)
+        return jdbiDailyPlanner.toDailyMealPlanner(cs)
     }
 
     fun addRecipeToDailyMealPlanner(userId: Int, date: LocalDate, info: AddMealPlannerInputModel): DailyMealPlanner {
@@ -59,7 +59,7 @@ class MealPlannerService(
         val jdbiPlanner = tm.run {
             it.mealPlannerRepository.addRecipeToDailyMealPlanner(userId, date, info.recipeId, info.mealTime)
         }
-        return jdbiPlanner.toDailyMealPlanner(tm, cs, userId)
+        return jdbiPlanner.toDailyMealPlanner(cs)
     }
 
     fun updateDailyMealPlanner(userId: Int, date: LocalDate, info: UpdateMealPlannerInputModel): DailyMealPlanner {
@@ -73,7 +73,7 @@ class MealPlannerService(
         val jdbiDailyPlanner = tm.run {
             it.mealPlannerRepository.updateDailyMealPlanner(userId, date, info.recipeId, info.mealTime)
         }
-        return jdbiDailyPlanner.toDailyMealPlanner(tm, cs, userId)
+        return jdbiDailyPlanner.toDailyMealPlanner(cs)
     }
 
     fun updateDailyCalories(userId: Int, date: LocalDate, maxCalories: Int?): DailyMealPlanner {
@@ -83,7 +83,7 @@ class MealPlannerService(
             it.mealPlannerRepository.updateDailyCalories(userId, date, maxCalories)
         }
 
-        return jdbiDailyPlanner.toDailyMealPlanner(tm, cs, userId)
+        return jdbiDailyPlanner.toDailyMealPlanner(cs)
     }
 
     fun removeMealTimeFromDailyMealPlanner(userId: Int, date: LocalDate, mealTime: MealTime): DailyMealPlanner {
@@ -95,7 +95,7 @@ class MealPlannerService(
             it.mealPlannerRepository.removeMealTimeFromDailyMealPlanner(userId, date, mealTime)
         }
 
-        return jdbiDailyPlanner.toDailyMealPlanner(tm, cs, userId)
+        return jdbiDailyPlanner.toDailyMealPlanner(cs)
     }
 
     fun deleteDailyMealPlanner(userId: Int, date: LocalDate): MealPlanner {
@@ -104,7 +104,7 @@ class MealPlannerService(
         val jdbiPlanner = tm.run {
             it.mealPlannerRepository.deleteDailyMealPlanner(userId, date)
         }
-        val planner = jdbiPlanner.planner.toDailyMealPlannerList(tm, cs, userId)
+        val planner = jdbiPlanner.planner.toDailyMealPlannerList(cs)
         return MealPlanner(planner)
     }
 

@@ -9,6 +9,5 @@ data class RecipeInfo(
     val mealType: MealType,
     val preparationTime: Int,
     val servings: Int,
-    val picture: ByteArray,
-    val isInCollection: Boolean,
+    val picture: ByteArray
 )

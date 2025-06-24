@@ -87,8 +87,7 @@ open class RecipeControllerTest : HttpTest() {
                     "5" to "Let cool before serving."
                 )
             ),
-            recipePictures.map { it.bytes },
-            false
+            recipePictures.map { it.bytes }
         )
     }
 }

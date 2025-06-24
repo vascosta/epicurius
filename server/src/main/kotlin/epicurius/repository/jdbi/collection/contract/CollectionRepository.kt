@@ -26,5 +26,4 @@ interface CollectionRepository {
 
     fun checkIfUserIsCollectionOwner(collectionId: Int, userId: Int): Boolean
     fun checkIfRecipeInCollection(collectionId: Int, recipeId: Int): Boolean
-    fun checkIfRecipeInAnyUserCollection(userId: Int, recipeId: Int): Boolean
 }

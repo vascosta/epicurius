@@ -33,8 +33,7 @@ open class FeedServiceTest : ServiceTest() {
             mealType = MealType.MAIN_COURSE,
             preparationTime = 30,
             servings = 4,
-            picture = ByteArray(0),
-            isInCollection = false
+            picture = ByteArray(0)
         )
 
         val jdbiRecipeInfo2 = JdbiRecipeInfo(
@@ -58,8 +57,7 @@ open class FeedServiceTest : ServiceTest() {
             mealType = MealType.APPETIZER,
             preparationTime = 20,
             servings = 2,
-            picture = ByteArray(0),
-            isInCollection = false
+            picture = ByteArray(0)
         )
     }
 }

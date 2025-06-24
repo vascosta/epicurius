@@ -15,7 +15,6 @@ class GetWeeklyMealPlannerServiceTests : MealPlannerServiceTest() {
 
         // mock
         whenever(jdbiMealPlannerRepositoryMock.getWeeklyMealPlanner(USER_ID)).thenReturn(jdbiMealPlanner)
-        whenever(jdbiCollectionRepositoryMock.checkIfRecipeInAnyUserCollection(USER_ID, jdbiRecipeInfo.id)).thenReturn(false)
         whenever(pictureRepositoryMock.getPicture(testPicture.name, RECIPES_FOLDER)).thenReturn(testPicture.bytes)
 
         // when the user gets the weekly meal planner

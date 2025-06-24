@@ -28,17 +28,4 @@ class ChecksCollectionRepositoryTests : CollectionRepositoryTest() {
         // then the recipe is not in the collection
         assertFalse(isInCollection)
     }
-
-    @Test
-    fun `Should check if a recipe is in any user collection successfully`() {
-        // given a user id and a recipe id
-        val recipe = createTestRecipe(tm, testOwner.user)
-        tm.run { it.collectionRepository.addRecipeToCollection(testCollectionId, recipe.id) }
-
-        // when checking if the recipe is in the collection
-        val isInCollection = checkIfRecipeInAnyUserCollection(testOwner.user.id, recipe.id)
-
-        // then the recipe is not in the collection
-        assertTrue(isInCollection)
-    }
 }

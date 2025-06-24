@@ -23,6 +23,5 @@ data class Recipe(
     val fat: Int?,
     val carbs: Int?,
     val instructions: Instructions,
-    val pictures: List<ByteArray>,
-    val isInCollection: Boolean
+    val pictures: List<ByteArray>
 )

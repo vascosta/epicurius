@@ -46,8 +46,5 @@ open class CollectionRepositoryTest : RepositoryTest() {
 
         fun checkIfRecipeInCollection(collectionId: Int, recipeId: Int) =
             tm.run { it.collectionRepository.checkIfRecipeInCollection(collectionId, recipeId) }
-
-        fun checkIfRecipeInAnyUserCollection(userId: Int, recipeId: Int) =
-            tm.run { it.collectionRepository.checkIfRecipeInAnyUserCollection(userId, recipeId) }
     }
 }

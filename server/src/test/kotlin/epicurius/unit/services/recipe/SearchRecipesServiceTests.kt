@@ -82,9 +82,6 @@ class SearchRecipesServiceTests : RecipeServiceTest() {
             )
         ).thenReturn(listOf(recipeInfo))
         whenever(pictureRepositoryMock.getPicture(testPicture.name, RECIPES_FOLDER)).thenReturn(testPicture.bytes)
-        whenever(
-            jdbiCollectionRepositoryMock.checkIfRecipeInAnyUserCollection(AUTHOR_ID, recipeInfo.id)
-        ).thenReturn(false)
 
         // when searching for the recipe by name
         val results = searchRecipes(USER_ID, recipeInput, null, limit)
@@ -131,9 +128,6 @@ class SearchRecipesServiceTests : RecipeServiceTest() {
             )
         ).thenReturn(listOf(recipeInfo))
         whenever(pictureRepositoryMock.getPicture(testPicture.name, RECIPES_FOLDER)).thenReturn(testPicture.bytes)
-        whenever(
-            jdbiCollectionRepositoryMock.checkIfRecipeInAnyUserCollection(AUTHOR_ID, recipeInfo.id)
-        ).thenReturn(false)
 
         // when searching for the recipe according to user's intolerance
         val resultsWithoutIntolerance = searchRecipes(
@@ -166,9 +160,6 @@ class SearchRecipesServiceTests : RecipeServiceTest() {
             )
         ).thenReturn(listOf(recipeInfo))
         whenever(pictureRepositoryMock.getPicture(testPicture.name, RECIPES_FOLDER)).thenReturn(testPicture.bytes)
-        whenever(
-            jdbiCollectionRepositoryMock.checkIfRecipeInAnyUserCollection(AUTHOR_ID, recipeInfo.id)
-        ).thenReturn(false)
 
         // when searching for the recipe
         val results = searchRecipes(USER_ID, searchRecipesInputInfoWithoutIngredients, null, limit)
@@ -197,9 +188,6 @@ class SearchRecipesServiceTests : RecipeServiceTest() {
             )
         ).thenReturn(listOf(recipeInfo))
         whenever(pictureRepositoryMock.getPicture(testPicture.name, RECIPES_FOLDER)).thenReturn(testPicture.bytes)
-        whenever(
-            jdbiCollectionRepositoryMock.checkIfRecipeInAnyUserCollection(AUTHOR_ID, recipeInfo.id)
-        ).thenReturn(false)
 
         // when searching for the recipe
         val results = searchRecipes(USER_ID, searchRecipesInputInfoWithIngredients, null, limit)
@@ -228,9 +216,6 @@ class SearchRecipesServiceTests : RecipeServiceTest() {
             )
         ).thenReturn(listOf(recipeInfo))
         whenever(pictureRepositoryMock.getPicture(testPicture.name, RECIPES_FOLDER)).thenReturn(testPicture.bytes)
-        whenever(
-            jdbiCollectionRepositoryMock.checkIfRecipeInAnyUserCollection(AUTHOR_ID, recipeInfo.id)
-        ).thenReturn(false)
 
         // when searching for the recipe
         val results = searchRecipes(USER_ID, searchRecipesInputInfoWithIngredients, null, limit)
@@ -282,9 +267,6 @@ class SearchRecipesServiceTests : RecipeServiceTest() {
             )
         ).thenReturn(listOf(recipeInfo))
         whenever(pictureRepositoryMock.getPicture(testPicture.name, RECIPES_FOLDER)).thenReturn(testPicture.bytes)
-        whenever(
-            jdbiCollectionRepositoryMock.checkIfRecipeInAnyUserCollection(AUTHOR_ID, recipeInfo.id)
-        ).thenReturn(false)
 
         // when searching for the recipe with USER_ID, an user that follows the private user, the recipe's author
         val results = searchRecipes(USER_ID, searchRecipesInputInfoWithIngredients, null, limit)

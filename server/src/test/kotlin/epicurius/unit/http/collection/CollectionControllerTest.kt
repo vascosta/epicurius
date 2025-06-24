@@ -63,8 +63,7 @@ open class CollectionControllerTest : HttpTest() {
             MealType.SOUP,
             1,
             1,
-            byteArrayOf(),
-            false
+            byteArrayOf()
         )
     }
 }

@@ -15,8 +15,8 @@ data class JdbiRecipeInfo(
     val servings: Int,
     val picturesNames: List<String>
 ) {
-    fun toRecipeInfo(picture: ByteArray, isInCollection: Boolean): RecipeInfo =
+    fun toRecipeInfo(picture: ByteArray): RecipeInfo =
         RecipeInfo(
-            id, name, authorUsername, rating, cuisine, mealType, preparationTime, servings, picture, isInCollection
+            id, name, authorUsername, rating, cuisine, mealType, preparationTime, servings, picture
         )
 }

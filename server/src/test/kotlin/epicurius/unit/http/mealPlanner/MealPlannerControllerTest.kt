@@ -58,8 +58,7 @@ open class MealPlannerControllerTest : HttpTest() {
             mealType = MealType.MAIN_COURSE,
             preparationTime = 40,
             servings = 4,
-            picture = recipePictures.first().bytes,
-            isInCollection = false
+            picture = recipePictures.first().bytes
         )
 
         val recipeInfo2 = RecipeInfo(
@@ -71,8 +70,7 @@ open class MealPlannerControllerTest : HttpTest() {
             mealType = MealType.SIDE_DISH,
             preparationTime = 40,
             servings = 4,
-            picture = recipePictures.first().bytes,
-            isInCollection = false
+            picture = recipePictures.first().bytes
         )
 
         val dailyMealPlannerToday = DailyMealPlanner(

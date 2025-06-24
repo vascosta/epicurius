@@ -35,7 +35,6 @@ class GetFeedServiceTest : FeedServiceTest() {
 
         // mock
         whenever(jdbiFeedRepositoryMock.getFeed(info)).thenReturn(listOf(jdbiRecipeInfo))
-        whenever(jdbiCollectionRepositoryMock.checkIfRecipeInAnyUserCollection(USER_ID, jdbiRecipeInfo.id)).thenReturn(false)
         whenever(
             pictureRepositoryMock.getPicture(jdbiRecipeInfo.picturesNames.first(), RECIPES_FOLDER)
         ).thenReturn(ByteArray(0))
@@ -60,8 +59,6 @@ class GetFeedServiceTest : FeedServiceTest() {
 
         // mock
         whenever(jdbiFeedRepositoryMock.getFeed(info)).thenReturn(listOf(jdbiRecipeInfo2, jdbiRecipeInfo))
-        whenever(jdbiCollectionRepositoryMock.checkIfRecipeInAnyUserCollection(USER_ID, jdbiRecipeInfo2.id)).thenReturn(false)
-        whenever(jdbiCollectionRepositoryMock.checkIfRecipeInAnyUserCollection(USER_ID, jdbiRecipeInfo.id)).thenReturn(false)
         whenever(
             pictureRepositoryMock.getPicture(jdbiRecipeInfo2.picturesNames.first(), RECIPES_FOLDER)
         ).thenReturn(ByteArray(0))
@@ -111,7 +108,6 @@ class GetFeedServiceTest : FeedServiceTest() {
 
         // mock
         whenever(jdbiFeedRepositoryMock.getFeed(info)).thenReturn(listOf(jdbiRecipeInfo))
-        whenever(jdbiCollectionRepositoryMock.checkIfRecipeInAnyUserCollection(USER_ID, jdbiRecipeInfo.id)).thenReturn(false)
         whenever(
             pictureRepositoryMock.getPicture(jdbiRecipeInfo.picturesNames.first(), RECIPES_FOLDER)
         ).thenReturn(ByteArray(0))

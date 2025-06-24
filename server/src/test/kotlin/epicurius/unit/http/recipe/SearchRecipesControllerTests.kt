@@ -43,8 +43,7 @@ class SearchRecipesControllerTests : RecipeControllerTest() {
         testRecipe.mealType,
         testRecipe.preparationTime,
         testRecipe.servings,
-        testRecipe.pictures.first(),
-        false
+        testRecipe.pictures.first()
     )
 
     private val limit = 10
@@ -145,6 +144,7 @@ class SearchRecipesControllerTests : RecipeControllerTest() {
             searchRecipesInputInfoWithoutIngredients.ingredients,
             searchRecipesInputInfoWithoutIngredients.intolerances,
             searchRecipesInputInfoWithoutIngredients.diets,
+            null, // change
             searchRecipesInputInfoWithoutIngredients.minCalories,
             searchRecipesInputInfoWithoutIngredients.maxCalories,
             searchRecipesInputInfoWithoutIngredients.minCarbs,
@@ -184,6 +184,7 @@ class SearchRecipesControllerTests : RecipeControllerTest() {
             searchRecipesInputInfo.ingredients,
             searchRecipesInputInfo.intolerances,
             searchRecipesInputInfo.diets,
+            null, // change
             searchRecipesInputInfo.minCalories,
             searchRecipesInputInfo.maxCalories,
             searchRecipesInputInfo.minCarbs,
@@ -223,6 +224,7 @@ class SearchRecipesControllerTests : RecipeControllerTest() {
             searchRecipesInputInfo.ingredients,
             searchRecipesInputInfo.intolerances,
             searchRecipesInputInfo.diets,
+            null, // change
             searchRecipesInputInfo.minCalories,
             searchRecipesInputInfo.maxCalories,
             searchRecipesInputInfo.minCarbs,
@@ -263,6 +265,7 @@ class SearchRecipesControllerTests : RecipeControllerTest() {
             searchRecipesInputInfo.ingredients,
             searchRecipesInputInfo.intolerances,
             searchRecipesInputInfo.diets,
+            null, // change
             searchRecipesInputInfo.minCalories,
             searchRecipesInputInfo.maxCalories,
             searchRecipesInputInfo.minCarbs,
@@ -303,6 +306,7 @@ class SearchRecipesControllerTests : RecipeControllerTest() {
             searchRecipesInputInfo.ingredients,
             searchRecipesInputInfo.intolerances,
             searchRecipesInputInfo.diets,
+            null, // change
             searchRecipesInputInfo.minCalories,
             searchRecipesInputInfo.maxCalories,
             searchRecipesInputInfo.minCarbs,

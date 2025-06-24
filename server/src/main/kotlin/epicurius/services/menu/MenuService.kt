@@ -37,10 +37,7 @@ class MenuService(private val tm: TransactionManager, private val cs: CloudStora
         return if (recipeFromPublicUsers.isNotEmpty()) {
             val jdbiRecipeModel = recipeFromPublicUsers.first()
             val recipePicture = cs.pictureRepository.getPicture(jdbiRecipeModel.picturesNames.first(), RECIPES_FOLDER)
-            val isInCollection = tm.run {
-                it.collectionRepository.checkIfRecipeInAnyUserCollection(userId, jdbiRecipeModel.id)
-            }
-            jdbiRecipeModel.toRecipeInfo(recipePicture, isInCollection)
+            jdbiRecipeModel.toRecipeInfo(recipePicture)
         } else {
             null
         }
@@ -55,26 +52,17 @@ class MenuService(private val tm: TransactionManager, private val cs: CloudStora
             2 -> {
                 val jdbiLunchRecipeModel = mainCourseFromPublicUsers[0]
                 val lunchPicture = cs.pictureRepository.getPicture(jdbiLunchRecipeModel.picturesNames.first(), RECIPES_FOLDER)
-                val isLunchInCollection = tm.run {
-                    it.collectionRepository.checkIfRecipeInAnyUserCollection(userId, jdbiLunchRecipeModel.id)
-                }
                 val jdbiDinnerRecipeModel = mainCourseFromPublicUsers[1]
                 val dinnerPicture = cs.pictureRepository.getPicture(jdbiDinnerRecipeModel.picturesNames.first(), RECIPES_FOLDER)
-                val isDinnerInCollection = tm.run {
-                    it.collectionRepository.checkIfRecipeInAnyUserCollection(userId, jdbiDinnerRecipeModel.id)
-                }
                 listOf(
-                    jdbiLunchRecipeModel.toRecipeInfo(lunchPicture, isLunchInCollection),
-                    jdbiDinnerRecipeModel.toRecipeInfo(dinnerPicture, isDinnerInCollection)
+                    jdbiLunchRecipeModel.toRecipeInfo(lunchPicture),
+                    jdbiDinnerRecipeModel.toRecipeInfo(dinnerPicture)
                 )
             }
             1 -> {
                 val lunchRecipeModel = mainCourseFromPublicUsers.first() // lunch has priority over dinner
                 val lunchPicture = cs.pictureRepository.getPicture(lunchRecipeModel.picturesNames.first(), RECIPES_FOLDER)
-                val isInCollection = tm.run {
-                    it.collectionRepository.checkIfRecipeInAnyUserCollection(userId, lunchRecipeModel.id)
-                }
-                listOf(lunchRecipeModel.toRecipeInfo(lunchPicture, isInCollection), null)
+                listOf(lunchRecipeModel.toRecipeInfo(lunchPicture), null)
             }
             else -> { listOf(null, null) }
         }
