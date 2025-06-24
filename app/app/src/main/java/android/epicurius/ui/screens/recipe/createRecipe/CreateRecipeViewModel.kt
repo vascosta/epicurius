@@ -3,7 +3,6 @@ package android.epicurius.ui.screens.recipe.createRecipe
 import android.content.Context
 import android.epicurius.domain.Diet
 import android.epicurius.domain.Intolerance
-import android.epicurius.domain.Picture
 import android.epicurius.domain.recipe.Cuisine
 import android.epicurius.domain.recipe.Ingredient
 import android.epicurius.domain.recipe.Instructions
@@ -47,7 +46,7 @@ class CreateRecipeViewModel(
         fat: Int?,
         carbs: Int?,
         instructions: Instructions,
-        pictures: List<Picture>,
+        picturesBytes: List<ByteArray>,
         navigateTo: (recipeId: Int) -> Unit
     ) {
         disableButtons()
@@ -64,7 +63,7 @@ class CreateRecipeViewModel(
                 carbs,
                 instructions
             ) ||
-            !validatePictures(pictures, ::showToast)
+            !validatePictures(picturesBytes, ::showToast)
         ) {
             enableButtons()
             return
@@ -86,17 +85,17 @@ class CreateRecipeViewModel(
             instructions
         )
         viewModelScope.launch {
-            handleCreateRecipe(createRecipeInfo, pictures, navigateTo)
+            handleCreateRecipe(createRecipeInfo, picturesBytes, navigateTo)
         }
     }
 
     private suspend fun handleCreateRecipe(
         createRecipeInfo: CreateRecipeInputModel,
-        recipePictures: List<Picture>,
+        recipePicturesBytes: List<ByteArray>,
         navigateTo: (recipeId: Int) -> Unit) {
         val result = request {
             val token = session.getToken()
-            service.recipeService.createRecipe(token, createRecipeInfo, recipePictures)
+            service.recipeService.createRecipe(token, createRecipeInfo, recipePicturesBytes)
         }
         when {
             result.isFailure -> enableButtons()

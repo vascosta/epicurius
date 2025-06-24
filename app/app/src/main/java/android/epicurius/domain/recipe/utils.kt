@@ -1,7 +1,5 @@
 package android.epicurius.domain.recipe
 
-import android.epicurius.domain.Picture
-
 const val MIN_RECIPE_NAME_LENGTH = 3
 const val MAX_RECIPE_NAME_LENGTH = 50
 const val RECIPE_NAME_LENGTH_MSG = "recipe name must be between $MIN_RECIPE_NAME_LENGTH and $MAX_RECIPE_NAME_LENGTH characters"
@@ -142,10 +140,10 @@ fun validateInstructions(
 }
 
 fun validatePictures(
-    pictures: List<Picture>,
+    picturesBytes: List<ByteArray>,
     showErrorMessage: (message: String) -> Unit
 ): Boolean {
-    if (pictures.size !in MIN_NUMBER_OF_RECIPE_PICTURES..MAX_NUMBER_OF_RECIPE_PICTURES) {
+    if (picturesBytes.size !in MIN_NUMBER_OF_RECIPE_PICTURES..MAX_NUMBER_OF_RECIPE_PICTURES) {
         showErrorMessage(RECIPE_PICTURES_MSG)
         return false
     }

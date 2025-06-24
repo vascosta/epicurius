@@ -116,15 +116,9 @@
             android:screenOrientation="portrait"
             android:theme="@style/Theme.App" />
         <activity
-            android:name=".ui.screens.search.general.SearchActivity"
+            android:name=".ui.screens.search.SearchActivity"
             android:exported="false"
             android:label="Search"
-            android:screenOrientation="portrait"
-            android:theme="@style/Theme.App" />
-        <activity
-            android:name=".ui.screens.search.camera.CameraActivity"
-            android:exported="true"
-            android:label="Camera"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.App" />
         <activity
@@ -160,7 +154,7 @@
         <activity
             android:name=".ui.screens.serverOffline.ServerOfflineActivity"
             android:exported="false"
-            android:label="ConnectionTimeout"
+            android:label="ServerOffline"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.App" />
         <activity

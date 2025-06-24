@@ -92,7 +92,7 @@ fun CreateRecipeScreen(
         fat: Int?,
         carbs: Int?,
         instructions: Instructions,
-        pictures: List<Picture>
+        picturesBytes: List<ByteArray>
     ) -> Unit,
     buttonsEnable: Boolean
 ) {
@@ -360,9 +360,7 @@ fun CreateRecipeScreen(
                             fat.toIntOrNull(),
                             carbs.toIntOrNull(),
                             Instructions(instructionsSteps),
-                            selectedImageBytesList.map { imageByteArray ->
-                                Picture("picture", imageByteArray)
-                            }
+                            selectedImageBytesList
                         )
                     },
                     modifier = Modifier.padding(10.dp),

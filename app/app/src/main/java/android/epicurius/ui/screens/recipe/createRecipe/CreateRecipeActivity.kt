@@ -23,21 +23,21 @@ class CreateRecipeActivity : EpicuriusActivity() {
             CreateRecipeScreen(
                 onBackButton = { finish() },
                 onCreateRecipe = {
-                        name: String,
-                        description: String,
-                        servings: Int,
-                        preparationTime: Int,
-                        cuisine: Cuisine,
-                        mealType: MealType,
-                        intolerances: Set<Intolerance>,
-                        diets: Set<Diet>,
-                        ingredients: List<Ingredient>,
-                        calories: Int?,
-                        protein: Int?,
-                        fat: Int?,
-                        carbs: Int?,
-                        instructions: Instructions,
-                    pictures: List<Picture>
+                    name: String,
+                    description: String,
+                    servings: Int,
+                    preparationTime: Int,
+                    cuisine: Cuisine,
+                    mealType: MealType,
+                    intolerances: Set<Intolerance>,
+                    diets: Set<Diet>,
+                    ingredients: List<Ingredient>,
+                    calories: Int?,
+                    protein: Int?,
+                    fat: Int?,
+                    carbs: Int?,
+                    instructions: Instructions,
+                    picturesBytes: List<ByteArray>
                     ->
                     viewModel.createRecipe(
                         name,
@@ -54,7 +54,7 @@ class CreateRecipeActivity : EpicuriusActivity() {
                         fat,
                         carbs,
                         instructions,
-                        pictures,
+                        picturesBytes,
                         ::navigateToRecipeProfileActivity
                     )
                 },
