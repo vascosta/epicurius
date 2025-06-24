@@ -185,14 +185,14 @@ fun CreateRecipeScreen(
                 NumberLineTextField(
                     parameterName = "Duration (min)",
                     value = preparationTime,
-                    onValueChange = { preparationTime = isValidForNumberTextField(it) },
+                    onValueChange = { if (isValidForNumberTextField(it)) preparationTime = it },
                     modifier = Modifier.padding(horizontal = 30.dp),
                     enabled = buttonsEnable
                 )
                 NumberLineTextField(
                     parameterName = "Serving (px)",
                     value = servings,
-                    onValueChange = { servings = isValidForNumberTextField(it) },
+                    onValueChange = { if (isValidForNumberTextField(it)) servings = it },
                     modifier = Modifier.padding(horizontal = 30.dp),
                     enabled = buttonsEnable
                 )
@@ -255,28 +255,28 @@ fun CreateRecipeScreen(
                     Column(modifier = Modifier.padding(top = 8.dp)) {
                         NumberTextField(
                             value = calories,
-                            onValueChange = { calories = isValidForNumberTextField(it) },
+                            onValueChange = { if (isValidForNumberTextField(it)) calories = it },
                             modifier = Modifier.padding(horizontal = 30.dp),
                             enabled = buttonsEnable,
                             label = "Calories (kcal)"
                         )
                         NumberTextField(
                             value = protein,
-                            onValueChange = { protein = isValidForNumberTextField(it) },
+                            onValueChange = { if (isValidForNumberTextField(it)) protein = it },
                             modifier = Modifier.padding(horizontal = 30.dp),
                             enabled = buttonsEnable,
                             label = "Protein (g)"
                         )
                         NumberTextField(
                             value = fat,
-                            onValueChange = { fat = isValidForNumberTextField(it) },
+                            onValueChange = { if (isValidForNumberTextField(it)) fat = it },
                             modifier = Modifier.padding(horizontal = 30.dp),
                             enabled = buttonsEnable,
                             label = "Fat (g)"
                         )
                         NumberTextField(
                             value = carbs,
-                            onValueChange = { carbs = isValidForNumberTextField(it) },
+                            onValueChange = { if (isValidForNumberTextField(it)) carbs = it },
                             modifier = Modifier.padding(horizontal = 30.dp),
                             enabled = buttonsEnable,
                             label = "Carbohydrates (g)"

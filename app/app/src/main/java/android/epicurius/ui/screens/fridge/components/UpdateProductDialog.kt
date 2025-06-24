@@ -38,7 +38,9 @@ fun UpdateProductDialog(
                     value = quantity?.toString() ?: "",
                     enabled = openDate == null,
                     label = "New quantity",
-                    onValueChange = { quantity = isValidForNumberTextField(it).toIntOrNull() }
+                    onValueChange = {
+                        if (isValidForNumberTextField(it)) quantity = it.toIntOrNull()
+                    }
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 DateField(
@@ -52,7 +54,8 @@ fun UpdateProductDialog(
                     label = "Duration (days)",
                     enabled = openDate != null && expirationDate == null && quantity == null,
                     onValueChange = { newValue ->
-                        duration = isValidForNumberTextField(newValue).toIntOrNull()?.let { Period.ofDays(it) }
+                        if (isValidForNumberTextField(newValue))
+                            duration = newValue.toIntOrNull()?.let { Period.ofDays(it) }
                     }
                 )
                 Spacer(modifier = Modifier.height(8.dp))

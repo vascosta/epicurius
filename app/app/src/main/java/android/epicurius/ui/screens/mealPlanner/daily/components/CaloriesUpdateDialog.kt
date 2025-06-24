@@ -53,7 +53,7 @@ fun CaloriesUpdateDialog(
                 Spacer(modifier = Modifier.height(8.dp))
                 NumberTextField(
                     value = textFieldValue,
-                    onValueChange = { textFieldValue = isValidForNumberTextField(it) },
+                    onValueChange = { if (isValidForNumberTextField(it)) textFieldValue = it },
                     enabled = true,
                     placeholder = "e.g.: 2200",
                 )
