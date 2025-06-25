@@ -2,23 +2,22 @@ package android.epicurius.ui.screens.search
 
 import android.epicurius.domain.Diet
 import android.epicurius.domain.Intolerance
-import android.epicurius.domain.Picture
+import android.epicurius.domain.collection.CollectionProfile
 import android.epicurius.domain.recipe.Cuisine
-import android.epicurius.domain.recipe.Ingredient
 import android.epicurius.domain.recipe.MealType
-import android.epicurius.domain.recipe.RecipeInfo
 import android.epicurius.ui.EpicuriusActivity
 import android.epicurius.ui.navigation.Intents
 import android.epicurius.ui.navigation.navigateTo
+import android.epicurius.ui.screens.collections.recipeCollections.components.RecipeCollectionsStateBundle
 import android.epicurius.ui.screens.recipe.profile.RecipeProfileActivity
 import android.epicurius.ui.screens.user.profile.UserProfileActivity
 import android.epicurius.ui.screens.utils.Idle
-import android.epicurius.ui.screens.utils.apiSuccess
 import android.epicurius.ui.screens.utils.idle
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.compose.runtime.collectAsState
 import androidx.lifecycle.lifecycleScope
+import epicurius.domain.collection.CollectionType
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
@@ -37,11 +36,17 @@ class SearchActivity : EpicuriusActivity() {
             val usersResultState = viewModel.searchedUsers.collectAsState(idle())
             val ingredientsState = viewModel.ingredients.collectAsState(idle())
             val userInfoState = viewModel.userInfo.collectAsState(idle())
+            val collectionsToAddRecipeState = viewModel.collectionsToAddRecipe.collectAsState(idle())
+            val collectionsToRemoveRecipeState = viewModel.collectionsToRemoveRecipe.collectAsState(idle())
             SearchScreen(
                 recipesResultState = recipesResultState.value,
                 usersResultState = usersResultState.value,
                 ingredientsState = ingredientsState.value,
                 userInfoState = userInfoState.value,
+                recipeCollectionsStateBundle = RecipeCollectionsStateBundle(
+                    collectionsToAddRecipeState.value,
+                    collectionsToRemoveRecipeState.value
+                ),
                 onBackButton = { finish() },
                 onSearchRecipes = {
                     name: String?,
@@ -85,11 +90,33 @@ class SearchActivity : EpicuriusActivity() {
                 onIdentifyIngredientsInPicture = { pictureBytes: ByteArray ->
                     viewModel.identifyIngredientsInPicture(pictureBytes)
                 },
+                onAddRecipeToCollections = {
+                        recipeId: Int,
+                        collectionsToAdd: List<CollectionProfile>
+                    ->
+                    viewModel.addRecipeToCollections(
+                        recipeId,
+                        collectionsToAdd
+                    )
+                },
+                onRemoveRecipeFromCollections = {
+                        recipeId: Int,
+                        collectionsToRemove: List<CollectionProfile>,
+                    ->
+                    viewModel.removeRecipeFromCollections(
+                        recipeId,
+                        collectionsToRemove
+                    )
+                },
                 onSearchRecipesClear = { viewModel.clearSearchRecipes() },
                 onSearchUsersClear = { viewModel.clearSearchUsers() },
                 onIngredientsClear = { viewModel.clearIngredients() },
+                onRecipeCollectionsClear = { viewModel.clearRecipeCollections() },
                 onUserProfileRequest = ::navigateToUserProfileActivity,
                 onRecipeProfileRequest = ::navigateToRecipeProfileActivity,
+                onRecipeCollectionsRequest = { recipeId: Int ->
+                    viewModel.getRecipeCollections(recipeId, CollectionType.FAVOURITE)
+                },
                 enableButtons = viewModel.enableButtons,
             )
         }

@@ -237,13 +237,11 @@ fun UserProfileScreen(
                                                     RecipeInfoBox(
                                                         collectionId = null,
                                                         recipeInfo = recipe,
-                                                        collectionsStateBundle = null,
-                                                        onAddRecipeToCollections = {_, _, _, _ ->},
-                                                        onRemoveRecipeFromCollections = {_, _, _, _ ->},
+                                                        recipeCollectionsStateBundle = null,
                                                         onRemoveRecipeFromCollection = {_, _ ->},
                                                         onRecipeRequest = { _ -> },
-                                                        onCollectionsRequest = {},
-                                                        onCollectionsClear = {},
+                                                        onRecipeCollectionsRequest = {},
+                                                        onRecipeCollectionsClear = {},
                                                         enableButtons = true
                                                     )
                                                 }
@@ -296,10 +294,10 @@ fun UserProfileScreen(
 
                                 if (showCreateCollectionDialog) {
                                     CreateCollectionDialog(
+                                        onCollectionCreate = onCollectionCreate,
                                         onDismiss = {
                                             if (enableButtons) showCreateCollectionDialog = false
                                         },
-                                        onCollectionCreate = onCollectionCreate,
                                         enableButtons = enableButtons
                                     )
                                 }

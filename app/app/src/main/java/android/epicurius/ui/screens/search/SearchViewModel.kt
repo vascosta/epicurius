@@ -18,7 +18,7 @@ import android.epicurius.domain.user.UserInfo
 import android.epicurius.services.EpicuriusService
 import android.epicurius.services.http.utils.CachedResult
 import android.epicurius.storage.Session
-import android.epicurius.ui.EpicuriusViewModel
+import android.epicurius.ui.screens.collections.recipeCollections.RecipeCollectionsViewModel
 import android.epicurius.ui.screens.utils.LoadState
 import android.epicurius.ui.screens.utils.apiSuccess
 import android.epicurius.ui.screens.utils.cache
@@ -33,7 +33,7 @@ class SearchViewModel(
     service: EpicuriusService,
     session: Session,
     context: Context
-): EpicuriusViewModel(service, session, context) {
+): RecipeCollectionsViewModel(service, session, context) {
 
     private val searchedRecipesFlow = MutableStateFlow<LoadState<List<RecipeInfo>>>(idle())
     private val cacheSearchedRecipesFlow = MutableStateFlow<List<RecipeInfo>>(emptyList())

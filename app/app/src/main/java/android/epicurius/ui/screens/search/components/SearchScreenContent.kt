@@ -3,6 +3,7 @@ package android.epicurius.ui.screens.search.components
 import android.Manifest
 import android.epicurius.domain.Diet
 import android.epicurius.domain.Intolerance
+import android.epicurius.domain.collection.CollectionProfile
 import android.epicurius.domain.recipe.Cuisine
 import android.epicurius.domain.recipe.MealType
 import android.epicurius.domain.recipe.RecipeInfo
@@ -10,6 +11,7 @@ import android.epicurius.domain.user.SearchUser
 import android.epicurius.domain.user.UserInfo
 import android.epicurius.ui.navigation.BottomBar
 import android.epicurius.ui.navigation.TopBar
+import android.epicurius.ui.screens.collections.recipeCollections.components.RecipeCollectionsStateBundle
 import android.epicurius.ui.screens.recipe.components.RecipeInfoBox
 import android.epicurius.ui.screens.user.components.UserBox
 import android.epicurius.ui.screens.utils.Idle
@@ -57,12 +59,13 @@ import com.google.accompanist.permissions.rememberPermissionState
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun SearchScreenContent(
+    ingredientsList: List<String>,
     recipesResultState: LoadState<List<RecipeInfo>>,
     usersResultState: LoadState<List<SearchUser>>,
     ingredientsState: LoadState<List<String>>,
     userInfoState: LoadState<UserInfo>,
-    ingredientsList: List<String>,
-    onBackButton: () -> Unit,
+    recipeCollectionsStateBundle: RecipeCollectionsStateBundle,
+    onBackButton: () -> Unit = {},
     onSearchRecipes: (
         name: String?,
         cuisine: List<Cuisine>?,
@@ -81,16 +84,26 @@ fun SearchScreenContent(
         maxProtein: Int?,
         minTime: Int?,
         maxTime: Int?
-    ) -> Unit,
-    onSearchUsers: (name: String) -> Unit,
-    onCamera: () -> Unit,
-    onIdentifyIngredientsInPicture: (pictureBytes: ByteArray) -> Unit,
-    onConfirmIngredients: (List<String>) -> Unit,
-    onSearchRecipesClear: () -> Unit,
-    onSearchUsersClear: () -> Unit,
-    onIngredientsClear: () -> Unit,
-    onUserProfileRequest: (name: String) -> Unit,
-    onRecipeProfileRequest: (recipeId: Int) -> Unit,
+    ) -> Unit = { _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _ -> },
+    onSearchUsers: (name: String) -> Unit = {},
+    onCamera: () -> Unit = {},
+    onIdentifyIngredientsInPicture: (pictureBytes: ByteArray) -> Unit = {},
+    onConfirmIngredients: (List<String>) -> Unit = {},
+    onAddRecipeToCollections: (
+        recipeId: Int,
+        collectionsToAdd: List<CollectionProfile>
+    ) -> Unit = { _, _ -> },
+    onRemoveRecipeFromCollections: (
+        recipeId: Int,
+        collectionsToRemove: List<CollectionProfile>
+    ) -> Unit = { _, _ -> },
+    onSearchRecipesClear: () -> Unit = {},
+    onSearchUsersClear: () -> Unit = {},
+    onIngredientsClear: () -> Unit = {},
+    onRecipeCollectionsClear: () -> Unit = {},
+    onUserProfileRequest: (name: String) -> Unit = {},
+    onRecipeProfileRequest: (recipeId: Int) -> Unit = {},
+    onRecipeCollectionsRequest: (recipeId: Int) -> Unit = {},
     enableButtons: Boolean
 ) {
     val context = LocalContext.current
@@ -313,15 +326,13 @@ fun SearchScreenContent(
                             if (recipesResult.isNotEmpty()) {
                                 recipesResult.forEach { recipe ->
                                     RecipeInfoBox(
-                                        collectionId = null,
                                         recipeInfo = recipe,
-                                        collectionsStateBundle = null,
-                                        onAddRecipeToCollections = { _, _, _, _ -> },
-                                        onRemoveRecipeFromCollections = { _, _, _, _ -> },
-                                        onRemoveRecipeFromCollection = { _, _ -> },
-                                        onCollectionsClear = {},
+                                        recipeCollectionsStateBundle = recipeCollectionsStateBundle,
+                                        onAddRecipeToCollections = onAddRecipeToCollections,
+                                        onRemoveRecipeFromCollections = onRemoveRecipeFromCollections,
+                                        onRecipeCollectionsClear = onRecipeCollectionsClear,
+                                        onRecipeCollectionsRequest = onRecipeCollectionsRequest,
                                         onRecipeRequest = onRecipeProfileRequest,
-                                        onCollectionsRequest = {},
                                         enableButtons = enableButtons
                                     )
                                     Spacer(Modifier.height(10.dp))
@@ -469,7 +480,7 @@ fun SearchScreenContent(
                         ingredientsState = ingredientsState,
                         onIngredientsClear = onIngredientsClear,
                         onConfirmIngredients = onConfirmIngredients,
-                        onCloseDialog = { showConfirmIngredientsDialog = false },
+                        onCloseDialog = { if (enableButtons) showConfirmIngredientsDialog = false },
                         enableButtons = enableButtons
                     )
                 }

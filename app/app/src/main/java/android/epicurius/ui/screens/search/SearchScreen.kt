@@ -2,12 +2,13 @@ package android.epicurius.ui.screens.search
 
 import android.epicurius.domain.Diet
 import android.epicurius.domain.Intolerance
-import android.epicurius.domain.Picture
+import android.epicurius.domain.collection.CollectionProfile
 import android.epicurius.domain.recipe.Cuisine
 import android.epicurius.domain.recipe.MealType
 import android.epicurius.domain.recipe.RecipeInfo
 import android.epicurius.domain.user.SearchUser
 import android.epicurius.domain.user.UserInfo
+import android.epicurius.ui.screens.collections.recipeCollections.components.RecipeCollectionsStateBundle
 import android.epicurius.ui.screens.search.camera.CameraScreen
 import android.epicurius.ui.screens.search.components.SearchScreenContent
 import android.epicurius.ui.screens.utils.Idle
@@ -28,7 +29,8 @@ fun SearchScreen(
     usersResultState: LoadState<List<SearchUser>>,
     ingredientsState: LoadState<List<String>>,
     userInfoState: LoadState<UserInfo>,
-    onBackButton: () -> Unit,
+    recipeCollectionsStateBundle: RecipeCollectionsStateBundle,
+    onBackButton: () -> Unit = {},
     onSearchRecipes: (
         name: String?,
         cuisine: List<Cuisine>?,
@@ -47,14 +49,24 @@ fun SearchScreen(
         maxProtein: Int?,
         minTime: Int?,
         maxTime: Int?
-    ) -> Unit,
-    onSearchUsers: (name: String) -> Unit,
-    onIdentifyIngredientsInPicture: (pictureBytes: ByteArray) -> Unit,
-    onSearchRecipesClear: () -> Unit,
-    onSearchUsersClear: () -> Unit,
-    onIngredientsClear: () -> Unit,
-    onUserProfileRequest: (name: String) -> Unit,
-    onRecipeProfileRequest: (recipeId: Int) -> Unit,
+    ) -> Unit = { _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _ -> },
+    onSearchUsers: (name: String) -> Unit = {},
+    onIdentifyIngredientsInPicture: (pictureBytes: ByteArray) -> Unit = {},
+    onAddRecipeToCollections: (
+        recipeId: Int,
+        collectionsToAdd: List<CollectionProfile>
+    ) -> Unit = { _, _ -> },
+    onRemoveRecipeFromCollections: (
+        recipeId: Int,
+        collectionsToRemove: List<CollectionProfile>
+    ) -> Unit = { _, _ -> },
+    onSearchRecipesClear: () -> Unit = {},
+    onSearchUsersClear: () -> Unit = {},
+    onIngredientsClear: () -> Unit = {},
+    onRecipeCollectionsClear: () -> Unit = {},
+    onUserProfileRequest: (name: String) -> Unit = {},
+    onRecipeProfileRequest: (recipeId: Int) -> Unit = {},
+    onRecipeCollectionsRequest: (recipeId: Int) -> Unit = {},
     enableButtons: Boolean
 ) {
     var showCameraScreen by remember { mutableStateOf(false) }
@@ -82,6 +94,7 @@ fun SearchScreen(
             usersResultState = usersResultState,
             ingredientsState = ingredientsState,
             userInfoState = userInfoState,
+            recipeCollectionsStateBundle = recipeCollectionsStateBundle,
             ingredientsList = ingredients,
             onBackButton = onBackButton,
             onSearchRecipes = onSearchRecipes,
@@ -89,14 +102,18 @@ fun SearchScreen(
             onIdentifyIngredientsInPicture = onIdentifyIngredientsInPicture,
             onConfirmIngredients = { ingredientsList -> ingredients += ingredientsList },
             onCamera = { showCameraScreen = true },
+            onAddRecipeToCollections = onAddRecipeToCollections,
+            onRemoveRecipeFromCollections = onRemoveRecipeFromCollections,
             onSearchRecipesClear = onSearchRecipesClear,
             onSearchUsersClear = onSearchUsersClear,
             onIngredientsClear = {
                 ingredients = emptyList()
                 onIngredientsClear()
             },
+            onRecipeCollectionsClear = onRecipeCollectionsClear,
             onUserProfileRequest = onUserProfileRequest,
             onRecipeProfileRequest = onRecipeProfileRequest,
+            onRecipeCollectionsRequest = onRecipeCollectionsRequest,
             enableButtons = enableButtons
         )
     }
@@ -105,31 +122,6 @@ fun SearchScreen(
 @Preview
 @Composable
 fun SearchScreenPreview() {
-    val recipeList = listOf(
-        RecipeInfo(
-            id = 1,
-            name = "Spaghetti Carbonara",
-            authorUsername = "ChefBear",
-            rating = 4.5,
-            cuisine = Cuisine.ITALIAN,
-            mealType = MealType.MAIN_COURSE,
-            preparationTime = 30,
-            servings = 4,
-            picture = ""
-        ),
-        RecipeInfo(
-            id = 2,
-            name = "Caesar Salad",
-            authorUsername = "ChefBear",
-            rating = 4.3,
-            cuisine = Cuisine.ITALIAN,
-            mealType = MealType.SALAD,
-            preparationTime = 15,
-            servings = 2,
-            picture = ""
-        )
-    )
-
     SearchScreen(
         recipesResultState = Idle,
         usersResultState = apiSuccess(emptyList()),
@@ -145,15 +137,10 @@ fun SearchScreenPreview() {
             )
         ),
         ingredientsState = Idle,
-        onBackButton = {},
-        onSearchRecipes = { _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _ -> },
-        onSearchUsers = {},
-        onSearchRecipesClear = {},
-        onSearchUsersClear = {},
-        onIngredientsClear = {},
-        onIdentifyIngredientsInPicture = {},
-        onUserProfileRequest = {},
-        onRecipeProfileRequest = {},
+        recipeCollectionsStateBundle = RecipeCollectionsStateBundle(
+            collectionsToAddRecipeState = apiSuccess(emptyList()),
+            collectionsToRemoveRecipeState = apiSuccess(emptyList())
+        ),
         enableButtons = true,
     )
 }
