@@ -202,7 +202,6 @@ fun RecipeProfileScreen(
                         if (showCollectionsDialog) {
                             CollectionsListDialog(
                                 recipeId = recipe.id,
-                                isInCollection = enableStarIcon,
                                 collectionsStateBundle = null,
                                 onDismissRequest = { showCollectionsDialog = false },
                                 onAddRecipeToCollections = {_, _, _, _ ->},

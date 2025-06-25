@@ -12,8 +12,7 @@ data class RecipeInfo(
     val preparationTime: Int,
     val servings: Int,
     val calories: Int? = null,
-    val picture: String,
-    val isInCollection: Boolean
+    val picture: String
 ) {
     val pictureBytes: ByteArray
         get() = Base64.getDecoder().decode(picture)

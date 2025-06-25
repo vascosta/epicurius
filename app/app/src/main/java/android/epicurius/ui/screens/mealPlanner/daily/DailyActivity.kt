@@ -32,8 +32,7 @@ class DailyActivity : ComponentActivity() {
                             mealType = MealType.SNACK,
                             preparationTime = 5,
                             servings = 1,
-                            picture = "",
-                            isInCollection = false
+                            picture = ""
                         )
                     )
                 ),

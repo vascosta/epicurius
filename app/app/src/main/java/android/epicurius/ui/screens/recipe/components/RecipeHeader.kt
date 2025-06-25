@@ -41,7 +41,6 @@ fun RecipeHeader(
     author: String,
     date: LocalDate,
     mealTime: MealTime,
-    isInCollection: Boolean,
     isMealPlannerSearch: Boolean = false,
     collectionsStateBundle: CollectionsStateBundle?,
     onAddRecipeToCollections: (
@@ -118,7 +117,7 @@ fun RecipeHeader(
                         if (isMealPlannerSearch) {
                             painterResource(R.drawable.calendar)
                         } else {
-                            if (isInCollection) painterResource(R.drawable.star)
+                            if (collectionId != null) painterResource(R.drawable.star)
                             else painterResource(R.drawable.white_star)
                         }
                     Image(
@@ -132,7 +131,6 @@ fun RecipeHeader(
                 if (showCollectionsDialog) {
                     CollectionsListDialog(
                         recipeId = recipeId,
-                        isInCollection = isInCollection,
                         collectionsStateBundle = collectionsStateBundle,
                         onDismissRequest = {
                             if (enableButtons) {
@@ -161,7 +159,6 @@ fun RecipeHeaderPreview() {
         author = "ChefBear",
         date = LocalDate.now(),
         mealTime = MealTime.LUNCH,
-        isInCollection = true,
         collectionsStateBundle = null,
         onAddRecipeToCollections = { _, _, _, _ -> },
         onRemoveRecipeFromCollections = { _, _, _, _ -> },

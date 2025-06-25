@@ -4,10 +4,10 @@ import android.Manifest
 import android.epicurius.domain.Diet
 import android.epicurius.domain.Intolerance
 import android.epicurius.domain.recipe.Cuisine
-import android.epicurius.domain.recipe.Ingredient
 import android.epicurius.domain.recipe.MealType
 import android.epicurius.domain.recipe.RecipeInfo
 import android.epicurius.domain.user.SearchUser
+import android.epicurius.domain.user.UserInfo
 import android.epicurius.ui.navigation.BottomBar
 import android.epicurius.ui.navigation.TopBar
 import android.epicurius.ui.screens.recipe.components.RecipeInfoBox
@@ -25,7 +25,6 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -61,6 +60,7 @@ fun SearchScreenContent(
     recipesResultState: LoadState<List<RecipeInfo>>,
     usersResultState: LoadState<List<SearchUser>>,
     ingredientsState: LoadState<List<String>>,
+    userInfoState: LoadState<UserInfo>,
     ingredientsList: List<String>,
     onBackButton: () -> Unit,
     onSearchRecipes: (
@@ -84,18 +84,21 @@ fun SearchScreenContent(
     ) -> Unit,
     onSearchUsers: (name: String) -> Unit,
     onCamera: () -> Unit,
+    onIdentifyIngredientsInPicture: (pictureBytes: ByteArray) -> Unit,
+    onConfirmIngredients: (List<String>) -> Unit,
     onSearchRecipesClear: () -> Unit,
     onSearchUsersClear: () -> Unit,
     onIngredientsClear: () -> Unit,
-    onIdentifyIngredientsInPicture: (ByteArray) -> Unit,
     onUserProfileRequest: (name: String) -> Unit,
     onRecipeProfileRequest: (recipeId: Int) -> Unit,
-    onConfirmIngredients: (List<String>) -> Unit,
     enableButtons: Boolean
 ) {
+    val context = LocalContext.current
+
     val tabs = listOf("Recipe", "Users")
     var selectedTabIndex by remember { mutableIntStateOf(0) }
 
+    var showConfirmIngredientsDialog by remember { mutableStateOf(false) }
     var showFiltersDialog by remember { mutableStateOf(false) }
 
     var searchQuery by remember { mutableStateOf("") }
@@ -119,8 +122,6 @@ fun SearchScreenContent(
     var minTime by remember { mutableStateOf("") }
     var maxTime by remember { mutableStateOf("") }
 
-    val context = LocalContext.current
-
     var selectedImageBytes by remember { mutableStateOf<ByteArray?>(null) }
 
     val imagePickerLauncher = rememberLauncherForActivityResult(
@@ -133,6 +134,7 @@ fun SearchScreenContent(
             if (bytes != null) {
                 selectedImageBytes = bytes
                 onIdentifyIngredientsInPicture(bytes)
+                showConfirmIngredientsDialog = true
             }
         } else {
             Toast.makeText(context, "No image selected", Toast.LENGTH_SHORT).show()
@@ -146,8 +148,16 @@ fun SearchScreenContent(
         else
             rememberPermissionState(Manifest.permission.READ_EXTERNAL_STORAGE)
 
-    var showConfirmIngredientsDialog by remember { mutableStateOf(false) }
-
+    LaunchedEffect(ingredientsList) {
+        ingredients += ingredientsList
+    }
+    LaunchedEffect(userInfoState) {
+        if (userInfoState is Loaded) {
+            val userInfo = userInfoState.value.getValueOrThrow()
+            intolerances = userInfo.intolerances.map { it.displayName }
+            diets = userInfo.diets.map { it.displayName }
+        }
+    }
     Scaffold(
         topBar = {
             TopBar(
@@ -224,7 +234,25 @@ fun SearchScreenContent(
                             TextButton(
                                 onClick = {
                                     onSearchRecipesClear()
-                                    // clear filters and ingredients
+                                    onIngredientsClear()
+                                    clearFilters(
+                                        onCuisineChange = { cuisine = it },
+                                        onMealTypeChange = { mealType = it },
+                                        onIngredientsChange = { ingredients = it },
+                                        onIntolerancesChange = { intolerances = it },
+                                        onDietsChange = { diets = it },
+                                        onServingsChange = { serving = it },
+                                        onMinCaloriesChange = { minCalories = it },
+                                        onMaxCaloriesChange = { maxCalories = it },
+                                        onMinCarbsChange = { minCarbs = it },
+                                        onMaxCarbsChange = { maxCarbs = it },
+                                        onMinFatChange = { minFat = it },
+                                        onMaxFatChange = { maxFat = it },
+                                        onMinProteinChange = { minProtein = it },
+                                        onMaxProteinChange = { maxProtein = it },
+                                        onMinTimeChange = { minTime = it },
+                                        onMaxTimeChange = { maxTime = it }
+                                    )
                                 },
                                 modifier = Modifier
                                     .fillMaxWidth()
@@ -243,7 +271,6 @@ fun SearchScreenContent(
                                                 ActivityResultContracts.PickVisualMedia.ImageOnly
                                             )
                                         )
-                                        showConfirmIngredientsDialog = true
                                     }
 
                                     else -> showGalleryAccessDialog = true
@@ -258,7 +285,25 @@ fun SearchScreenContent(
                             TextButton(
                                 onClick = {
                                     onSearchRecipesClear()
-                                    // clear filters and ingredients
+                                    onIngredientsClear()
+                                    clearFilters(
+                                        onCuisineChange = { cuisine = it },
+                                        onMealTypeChange = { mealType = it },
+                                        onIngredientsChange = { ingredients = it },
+                                        onIntolerancesChange = { intolerances = it },
+                                        onDietsChange = { diets = it },
+                                        onServingsChange = { serving = it },
+                                        onMinCaloriesChange = { minCalories = it },
+                                        onMaxCaloriesChange = { maxCalories = it },
+                                        onMinCarbsChange = { minCarbs = it },
+                                        onMaxCarbsChange = { maxCarbs = it },
+                                        onMinFatChange = { minFat = it },
+                                        onMaxFatChange = { maxFat = it },
+                                        onMinProteinChange = { minProtein = it },
+                                        onMaxProteinChange = { maxProtein = it },
+                                        onMinTimeChange = { minTime = it },
+                                        onMaxTimeChange = { maxTime = it }
+                                    )
                                 },
                                 modifier = Modifier
                                     .fillMaxWidth()
@@ -293,7 +338,7 @@ fun SearchScreenContent(
                                             searchRecipesQuery,
                                             if (cuisineList.isEmpty()) null else cuisineList,
                                             if (mealTypeList.isEmpty()) null else mealTypeList,
-                                            ingredients + ingredientsList,
+                                            ingredients,
                                             if (intolerancesList.isEmpty()) null else intolerancesList,
                                             if (dietsList.isEmpty()) null else dietsList,
                                             serving.toIntOrNull(),
@@ -359,8 +404,25 @@ fun SearchScreenContent(
                         onDismiss = { showFiltersDialog = false },
                         onCancel = {
                             showFiltersDialog = false
-                            mealType = emptyList()
-                            // clear filters
+                            onIngredientsClear()
+                            clearFilters(
+                                onCuisineChange = { cuisine = it },
+                                onMealTypeChange = { mealType = it },
+                                onIngredientsChange = { ingredients = ingredientsList },
+                                onIntolerancesChange = { intolerances = it },
+                                onDietsChange = { diets = it },
+                                onServingsChange = { serving = it },
+                                onMinCaloriesChange = { minCalories = it },
+                                onMaxCaloriesChange = { maxCalories = it },
+                                onMinCarbsChange = { minCarbs = it },
+                                onMaxCarbsChange = { maxCarbs = it },
+                                onMinFatChange = { minFat = it },
+                                onMaxFatChange = { maxFat = it },
+                                onMinProteinChange = { minProtein = it },
+                                onMaxProteinChange = { maxProtein = it },
+                                onMinTimeChange = { minTime = it },
+                                onMaxTimeChange = { maxTime = it }
+                            )
                         },
                         cuisine = cuisine,
                         onCuisineChange = { cuisine = it },
@@ -402,14 +464,13 @@ fun SearchScreenContent(
                         galleryPermissionState.launchPermissionRequest()
                     }
                 }
-                if (showConfirmIngredientsDialog && selectedImageBytes != null) {
+                if (showConfirmIngredientsDialog) {
                     ConfirmIngredientsDialog(
                         ingredientsState = ingredientsState,
-                        onIngredientsClear = {
-                            showConfirmIngredientsDialog = false
-                            onIngredientsClear()
-                        },
-                        onConfirm = onConfirmIngredients,
+                        onIngredientsClear = onIngredientsClear,
+                        onConfirmIngredients = onConfirmIngredients,
+                        onCloseDialog = { showConfirmIngredientsDialog = false },
+                        enableButtons = enableButtons
                     )
                 }
             }

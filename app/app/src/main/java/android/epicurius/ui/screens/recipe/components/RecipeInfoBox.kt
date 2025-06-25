@@ -76,7 +76,6 @@ fun RecipeInfoBox(
                 author = recipeInfo.authorUsername,
                 date = date,
                 mealTime = mealTime,
-                isInCollection = recipeInfo.isInCollection,
                 isMealPlannerSearch = isMealPlannerSearch,
                 collectionsStateBundle = collectionsStateBundle,
                 onAddRecipeToCollections = onAddRecipeToCollections,
@@ -111,8 +110,7 @@ fun RecipeInfoPreview() {
             mealType = MealType.SIDE_DISH,
             preparationTime = 30,
             servings = 4,
-            picture = "",
-            isInCollection = true
+            picture = ""
         ),
         date = LocalDate.now(),
         mealTime = MealTime.BREAKFAST,

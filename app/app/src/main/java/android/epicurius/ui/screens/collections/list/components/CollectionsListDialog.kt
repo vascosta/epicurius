@@ -33,7 +33,6 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun CollectionsListDialog(
     recipeId: Int,
-    isInCollection: Boolean,
     collectionsStateBundle: CollectionsStateBundle?,
     onDismissRequest: () -> Unit,
     onAddRecipeToCollections: (
@@ -52,9 +51,7 @@ fun CollectionsListDialog(
     enableButtons: Boolean
 ) {
     if (collectionsStateBundle != null) {
-        var selectedTabIndex by remember { mutableIntStateOf(0) }.apply {
-            if (!isInCollection) 0 else 1
-        }
+        var selectedTabIndex by remember { mutableIntStateOf(0) }
         var selectedCollectionsIds = remember { mutableStateListOf<Int>() }
 
         LaunchedEffect(selectedTabIndex) {

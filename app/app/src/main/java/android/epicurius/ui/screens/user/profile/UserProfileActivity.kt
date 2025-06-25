@@ -74,8 +74,7 @@ class UserProfileActivity : EpicuriusActivity() {
                             mealType = MealType.MAIN_COURSE,
                             preparationTime = 45,
                             servings = 4,
-                            picture = "",
-                            isInCollection = false,
+                            picture = ""
                         ),
                         RecipeInfo(
                             id = 2,
@@ -86,8 +85,7 @@ class UserProfileActivity : EpicuriusActivity() {
                             mealType = MealType.MAIN_COURSE,
                             preparationTime = 30,
                             servings = 2,
-                            picture = "",
-                            isInCollection = false,
+                            picture = ""
                         )
                     )),
                     recipeCollectionsState = null,

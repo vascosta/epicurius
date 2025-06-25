@@ -229,8 +229,7 @@ fun MealPlannerSearchScreenPreview() {
             mealType = MealType.MAIN_COURSE,
             preparationTime = 30,
             servings = 4,
-            picture = "",
-            isInCollection = true
+            picture = ""
         ),
         RecipeInfo(
             id = 2,
@@ -241,8 +240,7 @@ fun MealPlannerSearchScreenPreview() {
             mealType = MealType.SALAD,
             preparationTime = 15,
             servings = 2,
-            picture = "",
-            isInCollection = false
+            picture = ""
         )
     )
 

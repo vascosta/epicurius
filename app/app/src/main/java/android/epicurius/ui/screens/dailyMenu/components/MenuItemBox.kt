@@ -91,8 +91,7 @@ fun MenuItemBoxPreview() {
             mealType = MealType.BREAKFAST,
             preparationTime = 20,
             servings = 2,
-            picture = "",
-            isInCollection = true
+            picture = ""
         ),
         CollectionsStateBundle(apiSuccess(emptyList()), apiSuccess(emptyList())),
         {_, _, _, _ ->},

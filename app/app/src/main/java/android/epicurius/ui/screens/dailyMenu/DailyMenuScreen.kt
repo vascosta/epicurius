@@ -145,8 +145,7 @@ fun DailyMenuPreview() {
             mealType = MealType.BREAKFAST,
             preparationTime = 20,
             servings = 2,
-            picture = "",
-            isInCollection = false
+            picture = ""
         ),
         "Lunch" to RecipeInfo(
             id = 2,
@@ -157,8 +156,7 @@ fun DailyMenuPreview() {
             mealType = MealType.MAIN_COURSE,
             preparationTime = 15,
             servings = 1,
-            picture = "",
-            isInCollection = true
+            picture = ""
         )
     )
     DailyMenuScreen(

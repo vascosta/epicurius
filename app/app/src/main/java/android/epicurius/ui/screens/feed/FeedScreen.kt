@@ -192,8 +192,7 @@ fun FeedPreview() {
             mealType = MealType.MAIN_COURSE,
             preparationTime = 30,
             servings = 4,
-            picture = "",
-            isInCollection = true
+            picture = ""
         ),
         RecipeInfo(
             id = 2,
@@ -204,8 +203,7 @@ fun FeedPreview() {
             mealType = MealType.MAIN_COURSE,
             preparationTime = 45,
             servings = 4,
-            picture = "",
-            isInCollection = false
+            picture = ""
         )
     )
 

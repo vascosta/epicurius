@@ -347,8 +347,7 @@ fun UserProfilePreview() {
             mealType = MealType.MAIN_COURSE,
             preparationTime = 45,
             servings = 4,
-            picture = "",
-            isInCollection = false,
+            picture = ""
         ),
         RecipeInfo(
             id = 2,
@@ -359,8 +358,7 @@ fun UserProfilePreview() {
             mealType = MealType.MAIN_COURSE,
             preparationTime = 30,
             servings = 2,
-            picture = "",
-            isInCollection = false,
+            picture = ""
         ),
         RecipeInfo(
             id = 3,
@@ -371,8 +369,7 @@ fun UserProfilePreview() {
             mealType = MealType.SIDE_DISH,
             preparationTime = 20,
             servings = 3,
-            picture = "",
-            isInCollection = false,
+            picture = ""
         )
     )
 
