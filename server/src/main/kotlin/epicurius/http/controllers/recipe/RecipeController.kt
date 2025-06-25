@@ -79,6 +79,7 @@ class RecipeController(private val recipeService: RecipeService) {
         @RequestParam maxProtein: Int?,
         @RequestParam minTime: Int?,
         @RequestParam maxTime: Int?,
+        @RequestParam showAuthorRecipes: Boolean = false,
         @RequestParam lastRecipeId: Int?,
         @RequestParam limit: Int,
     ): ResponseEntity<*> {
@@ -89,6 +90,7 @@ class RecipeController(private val recipeService: RecipeService) {
             ingredients = ingredients?.map { it.replace("-", " ") },
             intolerances = intolerances,
             diets = diets,
+            servings = servings,
             minCalories = minCalories,
             maxCalories = maxCalories,
             minCarbs = minCarbs,
@@ -98,7 +100,8 @@ class RecipeController(private val recipeService: RecipeService) {
             minProtein = minProtein,
             maxProtein = maxProtein,
             minTime = minTime,
-            maxTime = maxTime
+            maxTime = maxTime,
+            showAuthorRecipes = showAuthorRecipes
         )
         val results = recipeService.searchRecipes(authenticatedUser.user.id, searchForm, lastRecipeId, limit)
         return okHttpResponse(SearchRecipesOutputModel(results))

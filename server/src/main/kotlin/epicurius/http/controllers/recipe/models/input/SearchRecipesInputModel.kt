@@ -30,6 +30,9 @@ data class SearchRecipesInputModel(
     val diets: List<Diet>? = null,
 
     @field:Positive(message = POSITIVE_NUMBER_MSG)
+    val servings: Int? = null,
+
+    @field:Positive(message = POSITIVE_NUMBER_MSG)
     val minCalories: Int? = null,
 
     @field:Positive(message = POSITIVE_NUMBER_MSG)
@@ -58,6 +61,8 @@ data class SearchRecipesInputModel(
 
     @field:Positive(message = POSITIVE_NUMBER_MSG)
     val maxTime: Int? = null,
+
+    val showAuthorRecipes: Boolean = false,
 ) {
     init {
         if (ingredients != null && ingredients.size > MAX_NUMBER_OF_INGREDIENTS) {
@@ -104,6 +109,7 @@ data class SearchRecipesInputModel(
             this.ingredients,
             this.intolerances?.map { it.ordinal },
             this.diets?.map { it.ordinal },
+            this.servings,
             this.minCalories,
             this.maxCalories,
             this.minCarbs,
@@ -113,7 +119,8 @@ data class SearchRecipesInputModel(
             this.minProtein,
             this.maxProtein,
             this.minTime,
-            this.maxTime
+            this.maxTime,
+            this.showAuthorRecipes,
         )
     }
 }

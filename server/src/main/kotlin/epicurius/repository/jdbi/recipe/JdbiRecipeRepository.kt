@@ -237,6 +237,7 @@ class JdbiRecipeRepository(private val handle: Handle) : RecipeRepository {
                 r.pictures_names
             """
         )
+        query.append("ORDER BY r.id DESC")
 
         addCondition(query, params, "LIMIT :limit", "limit", limit)
 
@@ -329,34 +330,39 @@ class JdbiRecipeRepository(private val handle: Handle) : RecipeRepository {
         form: SearchRecipesModel,
         lastRecipeId: Int?
     ) {
-        addCondition(
-            query,
-            params,
-            "AND lower(r.name) LIKE lower(:name)",
-            "name",
-            form.name?.let { "%$it%" }
-        )
-        addCondition(query, params, "AND r.cuisine = ANY(:cuisine)", "cuisine", form.cuisine?.toTypedArray())
-        addCondition(query, params, "AND r.meal_type = ANY(:meal)", "meal", form.mealType?.toTypedArray())
-        addCondition(
-            query,
-            params,
-            "AND NOT (r.intolerances && :intolerances)",
-            "intolerances",
-            form.intolerances?.toTypedArray()
-        )
-        addCondition(query, params, "AND r.diets @> :diets", "diets", form.diets?.toTypedArray())
-        addCondition(query, params, "AND r.calories >= :minCal", "minCal", form.minCalories)
-        addCondition(query, params, "AND r.calories <= :maxCal", "maxCal", form.maxCalories)
-        addCondition(query, params, "AND r.carbs >= :minCarb", "minCarb", form.minCarbs)
-        addCondition(query, params, "AND r.carbs <= :maxCarb", "maxCarb", form.maxCarbs)
-        addCondition(query, params, "AND r.fat >= :minFat", "minFat", form.minFat)
-        addCondition(query, params, "AND r.fat <= :maxFat", "maxFat", form.maxFat)
-        addCondition(query, params, "AND r.protein >= :minProt", "minProt", form.minProtein)
-        addCondition(query, params, "AND r.protein <= :maxProt", "maxProt", form.maxProtein)
-        addCondition(query, params, "AND r.preparation_time >= :minTime", "minTime", form.minTime)
-        addCondition(query, params, "AND r.preparation_time <= :maxTime", "maxTime", form.maxTime)
-        addCondition(query, params, "AND (:lastRecipeId IS NULL OR r.id < :lastRecipeId)", "lastRecipeId", lastRecipeId)
+        val conditions = mutableListOf<String>()
+
+        fun tryAddCondition(paramName: String, condition: String, value: Any?) {
+            if (value != null) {
+                conditions.add(condition)
+                params[paramName] = value
+            }
+        }
+
+        if (!form.showAuthorRecipes) conditions.add("r.author_id <> :id")
+
+        tryAddCondition("name", "lower(r.name) LIKE lower(:name)", form.name?.let { "%$it%" })
+        tryAddCondition("cuisine", "r.cuisine = ANY(:cuisine)", form.cuisine?.toTypedArray())
+        tryAddCondition("meal", "r.meal_type = ANY(:meal)", form.mealType?.toTypedArray())
+        tryAddCondition("intolerances", "NOT (r.intolerances && :intolerances)", form.intolerances?.toTypedArray())
+        tryAddCondition("diets", "r.diets @> :diets", form.diets?.toTypedArray())
+        tryAddCondition("servings", "r.servings = :servings", form.servings)
+        tryAddCondition("minCal", "r.calories >= :minCal", form.minCalories)
+        tryAddCondition("maxCal", "r.calories <= :maxCal", form.maxCalories)
+        tryAddCondition("minCarb", "r.carbs >= :minCarb", form.minCarbs)
+        tryAddCondition("maxCarb", "r.carbs <= :maxCarb", form.maxCarbs)
+        tryAddCondition("minFat", "r.fat >= :minFat", form.minFat)
+        tryAddCondition("maxFat", "r.fat <= :maxFat", form.maxFat)
+        tryAddCondition("minProt", "r.protein >= :minProt", form.minProtein)
+        tryAddCondition("maxProt", "r.protein <= :maxProt", form.maxProtein)
+        tryAddCondition("minTime", "r.preparation_time >= :minTime", form.minTime)
+        tryAddCondition("maxTime", "r.preparation_time <= :maxTime", form.maxTime)
+        tryAddCondition("lastRecipeId", "(:lastRecipeId IS NULL OR r.id < :lastRecipeId)", lastRecipeId)
+
+        if (conditions.isNotEmpty()) {
+            query.append(" WHERE ")
+            query.append(conditions.joinToString(" AND "))
+        }
     }
 
     private fun appendIngredients(query: StringBuilder, ingredientsList: List<String>, params: MutableMap<String, Any?>) {

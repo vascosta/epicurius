@@ -7,6 +7,7 @@ data class SearchRecipesModel(
     val ingredients: List<String>? = null,
     val intolerances: List<Int>? = null,
     val diets: List<Int>? = null,
+    val servings: Int? = null,
     val minCalories: Int? = null,
     val maxCalories: Int? = null,
     val minCarbs: Int? = null,
@@ -16,5 +17,6 @@ data class SearchRecipesModel(
     val minProtein: Int? = null,
     val maxProtein: Int? = null,
     val minTime: Int? = null,
-    val maxTime: Int? = null
+    val maxTime: Int? = null,
+    val showAuthorRecipes: Boolean = false,
 )
