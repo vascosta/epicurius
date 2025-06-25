@@ -31,7 +31,7 @@ import java.util.Locale
 fun SettingsDialog(
     title: String,
     userInfo: UserInfo,
-    onDismissRequest: () -> Unit,
+    onDismissRequest: () -> Unit = {},
     onConfirm: (
         name: String?,
         email: String?,
@@ -41,7 +41,7 @@ fun SettingsDialog(
         privacy: Boolean?,
         intolerances: Set<Intolerance>?,
         diets: Set<Diet>?
-    ) -> Unit,
+    ) -> Unit = { _, _, _, _, _, _, _, _ -> },
     enableButtons: Boolean
 ) {
     var name by remember { mutableStateOf(userInfo.name) }

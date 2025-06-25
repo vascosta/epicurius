@@ -35,8 +35,8 @@ import androidx.compose.ui.tooling.preview.Preview
 @Composable
 fun SettingsScreen(
     userInfoState: LoadState<UserInfo>,
-    onBackButton: () -> Unit,
-    onFavouritesRequest: () -> Unit,
+    onBackButton: () -> Unit = {},
+    onFavouritesRequest: () -> Unit = {},
     onUserUpdate: (
         name: String?,
         email: String?,
@@ -46,9 +46,9 @@ fun SettingsScreen(
         privacy: Boolean?,
         intolerances: Set<Intolerance>?,
         diets: Set<Diet>?
-    ) -> Unit,
-    onLogout: () -> Unit,
-    onDeleteAccount: () -> Unit,
+    ) -> Unit = { _, _, _, _, _, _, _, _ -> },
+    onLogout: () -> Unit = {},
+    onDeleteAccount: () -> Unit = {},
     enableButtons: Boolean
 ) {
     var showSettingsDialog by remember { mutableStateOf(false) }
@@ -162,11 +162,6 @@ fun SettingsPreview() {
 
     SettingsScreen(
         apiSuccess(user),
-        {},
-        {},
-        { _, _, _, _, _, _, _, _ -> },
-        {},
-        {},
-        true
+        enableButtons = true
     )
 }

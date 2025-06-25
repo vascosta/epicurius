@@ -10,7 +10,7 @@ import android.epicurius.domain.user.validatePassword
 import android.epicurius.services.EpicuriusService
 import android.epicurius.services.api.user.models.input.UpdateUserInputModel
 import android.epicurius.storage.Session
-import android.epicurius.ui.screens.user.UserViewModel
+import android.epicurius.ui.screens.auth.AuthViewModel
 import android.epicurius.ui.screens.utils.LoadState
 import android.epicurius.ui.screens.utils.apiSuccess
 import android.epicurius.ui.screens.utils.cache
@@ -25,7 +25,7 @@ class SettingsViewModel(
     service: EpicuriusService,
     session: Session,
     context: Context
-): UserViewModel(service, session, context) {
+): AuthViewModel(service, session, context) {
 
     private val userInfoFlow = MutableStateFlow<LoadState<UserInfo>>(idle())
     val userInfo = userInfoFlow.asStateFlow()

@@ -8,8 +8,8 @@ import androidx.compose.ui.graphics.Color
 
 @Composable
 fun DeleteAccountDialog(
-    onDismissRequest: () -> Unit,
-    onDeleteConfirmed: () -> Unit
+    onDismissRequest: () -> Unit = {},
+    onDeleteConfirmed: () -> Unit = {}
 ) {
     AlertDialog(
         onDismissRequest = { onDismissRequest() },

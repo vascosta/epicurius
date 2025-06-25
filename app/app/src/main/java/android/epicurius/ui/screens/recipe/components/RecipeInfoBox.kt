@@ -5,7 +5,7 @@ import android.epicurius.domain.mealPlanner.MealTime
 import android.epicurius.domain.recipe.Cuisine
 import android.epicurius.domain.recipe.MealType
 import android.epicurius.domain.recipe.RecipeInfo
-import android.epicurius.ui.screens.collections.list.components.CollectionsStateBundle
+import android.epicurius.ui.screens.collections.recipeCollections.components.RecipeCollectionsStateBundle
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -24,36 +24,31 @@ import java.time.LocalDate
 
 @Composable
 fun RecipeInfoBox(
-    collectionId: Int?,
+    collectionId: Int? = null,
     recipeInfo: RecipeInfo,
-    date: LocalDate = LocalDate.now(),
-    mealTime: MealTime = MealTime.BREAKFAST,
-    isMealPlannerSearch: Boolean = false,
-    collectionsStateBundle: CollectionsStateBundle? = null,
+    date: LocalDate? = null,
+    mealTime: MealTime? = null,
+    recipeCollectionsStateBundle: RecipeCollectionsStateBundle? = null,
     onAddRecipeToCollections: (
-        collectionsAvailableToAdd: List<CollectionProfile>,
-        collectionsAvailableToRemove: List<CollectionProfile>,
-        collectionsToAdd: List<CollectionProfile>,
-        recipeId: Int
-    ) -> Unit = { _, _, _, _ -> },
+        recipeId: Int,
+        collectionsToAdd: List<CollectionProfile>
+    ) -> Unit = { _, _ -> },
     onRemoveRecipeFromCollections: (
-        collectionsAvailableToAdd: List<CollectionProfile>,
-        collectionsAvailableToRemove: List<CollectionProfile>,
+        recipeId: Int,
         collectionsToRemove: List<CollectionProfile>,
-        recipeId: Int
-    ) -> Unit = { _, _, _, _ -> },
+    ) -> Unit = { _, _ -> },
     onRemoveRecipeFromCollection: (
         collectionId: Int,
         recipeId: Int
     ) -> Unit = { _, _ -> },
-    onCollectionsClear: () -> Unit = {},
-    onRecipeRequest: (recipeId: Int) -> Unit = {},
-    onCollectionsRequest: (recipeId: Int) -> Unit = {},
-    onCalendarClick: (
+    onAddRecipeToMealPlanner: (
         date: LocalDate,
         recipeId: Int,
         mealTime: MealTime
     ) -> Unit = { _, _, _ -> },
+    onRecipeCollectionsClear: () -> Unit = {},
+    onRecipeCollectionsRequest: (recipeId: Int) -> Unit = {},
+    onRecipeRequest: (recipeId: Int) -> Unit = {},
     enableButtons: Boolean
 ) {
     Box(
@@ -76,14 +71,13 @@ fun RecipeInfoBox(
                 author = recipeInfo.authorUsername,
                 date = date,
                 mealTime = mealTime,
-                isMealPlannerSearch = isMealPlannerSearch,
-                collectionsStateBundle = collectionsStateBundle,
+                recipeCollectionsStateBundle = recipeCollectionsStateBundle,
                 onAddRecipeToCollections = onAddRecipeToCollections,
                 onRemoveRecipeFromCollections = onRemoveRecipeFromCollections,
                 onRemoveRecipeFromCollection = onRemoveRecipeFromCollection,
-                onCollectionsClear = onCollectionsClear,
-                onCollectionsRequest = onCollectionsRequest,
-                onCalendarClick = onCalendarClick,
+                onAddRecipeToMealPlanner = onAddRecipeToMealPlanner,
+                onRecipeCollectionsRequest = onRecipeCollectionsRequest,
+                onRecipeCollectionsClear = onRecipeCollectionsClear,
                 enableButtons = enableButtons
             )
             RecipeImage(recipeInfo.pictureBytes)
@@ -114,14 +108,7 @@ fun RecipeInfoPreview() {
         ),
         date = LocalDate.now(),
         mealTime = MealTime.BREAKFAST,
-        isMealPlannerSearch = false,
         null,
-        {_, _, _, _ ->},
-        {_, _, _, _ ->},
-        {_, _ ->},
-        {},
-        {},
-        {},
         enableButtons = true
     )
 }

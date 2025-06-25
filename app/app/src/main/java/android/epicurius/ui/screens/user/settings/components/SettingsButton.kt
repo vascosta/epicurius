@@ -16,7 +16,7 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun SettingsButton(
-    onClick: () -> Unit,
+    onClick: () -> Unit = {},
     enabled: Boolean,
     text: String
 ) {

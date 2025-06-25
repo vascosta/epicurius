@@ -41,10 +41,7 @@ fun getIngredientQuantityMessage(name: Double) =
 fun getInstructionStepMessage(stepIdentifier: String) =
     "the length of the $stepIdentifier step must be between $MIN_INSTRUCTIONS_STEP_LENGTH and $MAX_INSTRUCTIONS_STEP_LENGTH characters"
 
-fun validateName(
-    name: String,
-    showErrorMessage: (message: String) -> Unit
-): Boolean {
+fun validateName(name: String, showErrorMessage: (message: String) -> Unit): Boolean {
     if (name.length !in MIN_RECIPE_NAME_LENGTH..MAX_RECIPE_NAME_LENGTH) {
         showErrorMessage(RECIPE_NAME_LENGTH_MSG)
         return false
@@ -52,10 +49,7 @@ fun validateName(
     return true
 }
 
-fun validateDescription(
-    description: String,
-    showErrorMessage: (message: String) -> Unit
-): Boolean {
+fun validateDescription(description: String, showErrorMessage: (message: String) -> Unit): Boolean {
     if (description.length > MAX_RECIPE_DESCRIPTION_LENGTH) {
         showErrorMessage(RECIPE_DESCRIPTION_LENGTH_MSG)
         return false
@@ -63,15 +57,14 @@ fun validateDescription(
     return true
 }
 
-fun validateServings(
-    servings: Int,
-    showErrorMessage: (message: String) -> Unit
-): Boolean = validateNumber(servings, "servings", showErrorMessage)
+fun validateServings(servings: Int, showErrorMessage: (message: String) -> Unit): Boolean =
+    validateNumber(servings, "servings", showErrorMessage)
 
 fun validatePreparationTime(
     preparationTime: Int,
     showErrorMessage: (message: String) -> Unit
-): Boolean = validateNumber(preparationTime, "preparation time", showErrorMessage)
+): Boolean =
+    validateNumber(preparationTime, "preparation time", showErrorMessage)
 
 fun validateIngredients(
     ingredients: List<Ingredient>,
@@ -96,25 +89,17 @@ fun validateIngredients(
     return true
 }
 
-fun validateCalories(
-    calories: Int,
-    showErrorMessage: (message: String) -> Unit
-): Boolean = validateNumber(calories, "calories", showErrorMessage)
+fun validateCalories(calories: Int, showErrorMessage: (message: String) -> Unit): Boolean =
+    validateNumber(calories, "calories", showErrorMessage)
 
-fun validateProtein(
-    protein: Int,
-    showErrorMessage: (message: String) -> Unit
-): Boolean = validateNumber(protein, "protein", showErrorMessage)
+fun validateProtein(protein: Int, showErrorMessage: (message: String) -> Unit): Boolean =
+    validateNumber(protein, "protein", showErrorMessage)
 
-fun validateFat(
-    fat: Int,
-    showErrorMessage: (message: String) -> Unit
-): Boolean = validateNumber(fat, "fat", showErrorMessage)
+fun validateFat(fat: Int, showErrorMessage: (message: String) -> Unit): Boolean =
+    validateNumber(fat, "fat", showErrorMessage)
 
-fun validateCarbs(
-    carbs: Int,
-    showErrorMessage: (message: String) -> Unit
-): Boolean = validateNumber(carbs, "carbs", showErrorMessage)
+fun validateCarbs(carbs: Int, showErrorMessage: (message: String) -> Unit): Boolean =
+    validateNumber(carbs, "carbs", showErrorMessage)
 
 fun validateInstructions(
     instructions: Instructions,
