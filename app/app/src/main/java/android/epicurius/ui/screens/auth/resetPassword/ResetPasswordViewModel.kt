@@ -6,7 +6,7 @@ import android.epicurius.domain.user.validatePassword
 import android.epicurius.services.EpicuriusService
 import android.epicurius.services.api.user.models.input.ResetPasswordInputModel
 import android.epicurius.storage.Session
-import android.epicurius.ui.screens.user.UserViewModel
+import android.epicurius.ui.EpicuriusViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 
@@ -14,7 +14,7 @@ class ResetPasswordViewModel(
     service: EpicuriusService,
     session: Session,
     context: Context
-): UserViewModel(service, session, context) {
+): EpicuriusViewModel(service, session, context) {
 
     fun resetPassword(
         email: String,

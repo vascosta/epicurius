@@ -27,7 +27,7 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun PasswordTextField(
     value: String,
-    onValueChange: (String) -> Unit,
+    onValueChange: (String) -> Unit = {},
     modifier: Modifier = Modifier,
     enabled: Boolean,
     label: String

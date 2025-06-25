@@ -7,7 +7,7 @@ import android.epicurius.domain.user.validatePassword
 import android.epicurius.services.EpicuriusService
 import android.epicurius.services.api.auth.models.input.LoginInputModel
 import android.epicurius.storage.Session
-import android.epicurius.ui.screens.user.UserViewModel
+import android.epicurius.ui.screens.auth.AuthViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 
@@ -15,13 +15,13 @@ class LoginViewModel(
     service: EpicuriusService,
     session: Session,
     context: Context
-): UserViewModel(service, session, context) {
+): AuthViewModel(service, session, context) {
 
     fun login(
         name: String?,
         email: String?,
         password: String,
-        navigateTo: () -> Unit
+        onSuccessNavigateTo: () -> Unit
     ) {
         disableButtons()
         if (!validateLoginInfo(name, email, password)) {
@@ -29,7 +29,7 @@ class LoginViewModel(
             return
         }
         val loginInfo = LoginInputModel(name, email, password)
-        viewModelScope.launch { handleLogin(loginInfo, navigateTo) }
+        viewModelScope.launch { handleLogin(loginInfo, onSuccessNavigateTo) }
     }
 
     private suspend fun handleLogin(loginInfo: LoginInputModel, navigateTo: () -> Unit) {

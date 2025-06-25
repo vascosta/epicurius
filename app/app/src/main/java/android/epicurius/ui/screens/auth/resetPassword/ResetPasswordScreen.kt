@@ -27,8 +27,8 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun ResetPasswordScreen(
-    onBackButton: () -> Unit,
-    onResetPassword: (email: String, password: String, confirmPassword: String) -> Unit,
+    onBackButton: () -> Unit = {},
+    onResetPassword: (email: String, password: String, confirmPassword: String) -> Unit = { _, _, _ -> },
     enableButtons: Boolean
 ) {
     var email by remember { mutableStateOf("") }
@@ -90,5 +90,5 @@ fun ResetPasswordScreen(
 @Preview
 @Composable
 fun ResetPasswordScreenPreview() {
-    ResetPasswordScreen({}, { _, _, _ -> }, true)
+    ResetPasswordScreen(enableButtons = true)
 }

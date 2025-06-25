@@ -1,6 +1,5 @@
 package android.epicurius.ui.screens.auth.login
 
-import android.annotation.SuppressLint
 import android.epicurius.ui.navigation.TopBar
 import android.epicurius.ui.screens.auth.components.AuthButton
 import android.epicurius.ui.screens.auth.components.PasswordTextField
@@ -10,7 +9,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -28,9 +26,9 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun LoginScreen(
-    onSignUp: () -> Unit,
-    onLogin: (name: String?, email: String?, password: String) -> Unit,
-    onForgotPassword: () -> Unit,
+    onSignUp: () -> Unit = {},
+    onLogin: (name: String?, email: String?, password: String) -> Unit = { _, _, _ -> },
+    onForgotPassword: () -> Unit = {},
     enableButtons: Boolean,
 ) {
     var name by remember { mutableStateOf("") }
@@ -104,5 +102,5 @@ fun LoginScreen(
 @Preview
 @Composable
 fun LoginPreview() {
-   LoginScreen({}, {_, _, _ -> }, {}, true)
+   LoginScreen(enableButtons = true)
 }

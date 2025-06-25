@@ -20,7 +20,7 @@ import androidx.compose.ui.text.input.KeyboardType
 @Composable
 fun TextField(
     value: String,
-    onValueChange: (String) -> Unit,
+    onValueChange: (String) -> Unit = {},
     modifier: Modifier = Modifier,
     enabled: Boolean,
     label: String,

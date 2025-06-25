@@ -32,8 +32,8 @@ fun SignUpScreen(
         password: String,
         confirmPassword: String,
         country: String
-    ) -> Unit,
-    onLogin: () -> Unit,
+    ) -> Unit = { _, _, _, _, _ -> },
+    onLogin: () -> Unit = {},
     enableButtons: Boolean
 ) {
     var name by remember { mutableStateOf("") }
@@ -123,5 +123,5 @@ fun SignUpScreen(
 @Preview
 @Composable
 fun SignUpPreview() {
-    SignUpScreen({_, _, _, _, _ -> }, {}, true)
+    SignUpScreen(enableButtons = true)
 }

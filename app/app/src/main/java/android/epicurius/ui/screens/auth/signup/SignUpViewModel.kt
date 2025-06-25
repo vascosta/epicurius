@@ -7,7 +7,7 @@ import android.epicurius.domain.user.validatePassword
 import android.epicurius.services.EpicuriusService
 import android.epicurius.services.api.auth.models.input.SignUpInputModel
 import android.epicurius.storage.Session
-import android.epicurius.ui.screens.user.UserViewModel
+import android.epicurius.ui.screens.auth.AuthViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 
@@ -15,7 +15,7 @@ class SignUpViewModel(
     service: EpicuriusService,
     session: Session,
     context: Context
-): UserViewModel(service, session, context) {
+): AuthViewModel(service, session, context) {
 
     fun signUp(
         name: String,
