@@ -6,7 +6,7 @@ import android.epicurius.domain.recipe.MealType
 import android.epicurius.domain.recipe.RecipeInfo
 import android.epicurius.ui.navigation.BottomBar
 import android.epicurius.ui.navigation.TopBar
-import android.epicurius.ui.screens.collections.list.components.CollectionsStateBundle
+import android.epicurius.ui.screens.collections.recipeCollections.components.RecipeCollectionsStateBundle
 import android.epicurius.ui.screens.dailyMenu.components.MenuItemBox
 import android.epicurius.ui.screens.utils.LoadState
 import android.epicurius.ui.screens.utils.LoadStateRenderer
@@ -29,23 +29,19 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun DailyMenuScreen(
     menuState: LoadState<Map<String, RecipeInfo?>>,
-    collectionsStateBundle: CollectionsStateBundle,
-    onBackButton: () -> Unit,
+    recipeCollectionsStateBundle: RecipeCollectionsStateBundle,
+    onBackButton: () -> Unit = {},
     onAddRecipeToCollections: (
-        collectionsAvailableToAdd: List<CollectionProfile>,
-        collectionsAvailableToRemove: List<CollectionProfile>,
-        collectionsToAdd: List<CollectionProfile>,
-        recipeId: Int
-    ) -> Unit,
+        recipeId: Int,
+        collectionsToAdd: List<CollectionProfile>
+    ) -> Unit = { _, _ -> },
     onRemoveRecipeFromCollections: (
-        collectionsAvailableToAdd: List<CollectionProfile>,
-        collectionsAvailableToRemove: List<CollectionProfile>,
-        collectionsToRemove: List<CollectionProfile>,
-        recipeId: Int
-    ) -> Unit,
-    onCollectionsClear: () -> Unit,
-    onRecipeRequest: (recipeId: Int) -> Unit,
-    onCollectionsRequest: (recipeId: Int) -> Unit,
+        recipeId: Int,
+        collectionsToRemove: List<CollectionProfile>
+    ) -> Unit = { _, _ -> },
+    onRecipeCollectionsClear: () -> Unit = {},
+    onRecipeCollectionsRequest: (recipeId: Int) -> Unit = {},
+    onRecipeRequest: (recipeId: Int) -> Unit = {},
     enableButtons: Boolean
 ) {
     Scaffold(
@@ -72,56 +68,56 @@ fun DailyMenuScreen(
                         MenuItemBox(
                             title = "Breakfast",
                             recipe = menu["breakfast"],
-                            collectionsStateBundle = collectionsStateBundle,
+                            recipeCollectionsStateBundle = recipeCollectionsStateBundle,
                             onAddRecipeToCollections = onAddRecipeToCollections,
                             onRemoveRecipeFromCollections = onRemoveRecipeFromCollections,
-                            onCollectionsClear = onCollectionsClear,
+                            onCollectionsClear = onRecipeCollectionsClear,
+                            onRecipeCollectionsRequest = onRecipeCollectionsRequest,
                             onRecipeRequest = onRecipeRequest,
-                            onCollectionsRequest = onCollectionsRequest,
                             enableButtons = enableButtons
                         )
                         MenuItemBox(
                             title = "Soup",
                             recipe = menu["soup"],
-                            collectionsStateBundle = collectionsStateBundle,
+                            recipeCollectionsStateBundle = recipeCollectionsStateBundle,
                             onAddRecipeToCollections = onAddRecipeToCollections,
                             onRemoveRecipeFromCollections = onRemoveRecipeFromCollections,
-                            onCollectionsClear = onCollectionsClear,
+                            onCollectionsClear = onRecipeCollectionsClear,
+                            onRecipeCollectionsRequest = onRecipeCollectionsRequest,
                             onRecipeRequest = onRecipeRequest,
-                            onCollectionsRequest = onCollectionsRequest,
                             enableButtons = enableButtons
                         )
                         MenuItemBox(
                             title = "Lunch",
                             recipe = menu["lunch"],
-                            collectionsStateBundle = collectionsStateBundle,
+                            recipeCollectionsStateBundle = recipeCollectionsStateBundle,
                             onAddRecipeToCollections = onAddRecipeToCollections,
                             onRemoveRecipeFromCollections = onRemoveRecipeFromCollections,
-                            onCollectionsClear = onCollectionsClear,
+                            onCollectionsClear = onRecipeCollectionsClear,
+                            onRecipeCollectionsRequest = onRecipeCollectionsRequest,
                             onRecipeRequest = onRecipeRequest,
-                            onCollectionsRequest = onCollectionsRequest,
                             enableButtons = enableButtons
                         )
                         MenuItemBox(
                             title = "Dinner",
                             recipe = menu["dinner"],
-                            collectionsStateBundle = collectionsStateBundle,
+                            recipeCollectionsStateBundle = recipeCollectionsStateBundle,
                             onAddRecipeToCollections = onAddRecipeToCollections,
                             onRemoveRecipeFromCollections = onRemoveRecipeFromCollections,
-                            onCollectionsClear = onCollectionsClear,
+                            onCollectionsClear = onRecipeCollectionsClear,
+                            onRecipeCollectionsRequest = onRecipeCollectionsRequest,
                             onRecipeRequest = onRecipeRequest,
-                            onCollectionsRequest = onCollectionsRequest,
                             enableButtons = enableButtons
                         )
                         MenuItemBox(
                             title = "Dessert",
                             recipe = menu["dessert"],
-                            collectionsStateBundle = collectionsStateBundle,
+                            recipeCollectionsStateBundle = recipeCollectionsStateBundle,
                             onAddRecipeToCollections = onAddRecipeToCollections,
                             onRemoveRecipeFromCollections = onRemoveRecipeFromCollections,
-                            onCollectionsClear = onCollectionsClear,
+                            onCollectionsClear = onRecipeCollectionsClear,
+                            onRecipeCollectionsRequest = onRecipeCollectionsRequest,
                             onRecipeRequest = onRecipeRequest,
-                            onCollectionsRequest = onCollectionsRequest,
                             enableButtons = enableButtons
                         )
                     }
@@ -161,13 +157,7 @@ fun DailyMenuPreview() {
     )
     DailyMenuScreen(
         apiSuccess(menu),
-        CollectionsStateBundle(apiSuccess(emptyList()), apiSuccess(emptyList())),
-        {},
-        { _, _, _, _ -> },
-        { _, _, _, _ -> },
-        {},
-        {},
-        {},
-        true
+        RecipeCollectionsStateBundle(apiSuccess(emptyList()), apiSuccess(emptyList())),
+        enableButtons = true
     )
 }

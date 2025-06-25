@@ -8,7 +8,7 @@ import android.epicurius.ui.screens.recipe.profile.RecipeProfileActivity
 import android.epicurius.ui.screens.utils.Idle
 import android.epicurius.ui.screens.utils.idle
 import android.epicurius.ui.navigation.navigateTo
-import android.epicurius.ui.screens.collections.list.components.CollectionsStateBundle
+import android.epicurius.ui.screens.collections.recipeCollections.components.RecipeCollectionsStateBundle
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.compose.runtime.collectAsState
@@ -33,39 +33,33 @@ class DailyMenuActivity : EpicuriusActivity() {
             val collectionsToRemoveRecipeState = viewModel.collectionsToRemoveRecipe.collectAsState(idle())
             DailyMenuScreen(
                 menuState = menuState.value,
-                collectionsStateBundle = CollectionsStateBundle(
+                recipeCollectionsStateBundle = RecipeCollectionsStateBundle(
                     collectionsToAddRecipeState.value,
                     collectionsToRemoveRecipeState.value
                 ),
                 onBackButton = { navigateTo<FeedActivity>(true) },
                 onAddRecipeToCollections = {
-                    collectionsAvailableToAdd: List<CollectionProfile>,
-                    collectionsAvailableToRemove: List<CollectionProfile>,
-                    collectionsToAdd: List<CollectionProfile>,
-                    recipeId: Int ->
+                    recipeId: Int,
+                    collectionsToAdd: List<CollectionProfile>
+                    ->
                     viewModel.addRecipeToCollections(
-                        collectionsAvailableToAdd,
-                        collectionsAvailableToRemove,
-                        collectionsToAdd,
-                        recipeId
+                        recipeId,
+                        collectionsToAdd
                     )
                 },
                 onRemoveRecipeFromCollections = {
-                    collectionsAvailableToAdd: List<CollectionProfile>,
-                    collectionsAvailableToRemove: List<CollectionProfile>,
+                    recipeId: Int,
                     collectionsToRemove: List<CollectionProfile>,
-                    recipeId: Int ->
+                     ->
                     viewModel.removeRecipeFromCollections(
-                        collectionsAvailableToAdd,
-                        collectionsAvailableToRemove,
-                        collectionsToRemove,
-                        recipeId
+                        recipeId,
+                        collectionsToRemove
                     )
                 },
-                onCollectionsClear = { viewModel.clearCollections() },
+                onRecipeCollectionsClear = { viewModel.clearRecipeCollections() },
                 onRecipeRequest = ::navigateToRecipeProfileActivity,
-                onCollectionsRequest = { recipeId: Int ->
-                    viewModel.getCollections(recipeId, CollectionType.FAVOURITE)
+                onRecipeCollectionsRequest = { recipeId: Int ->
+                    viewModel.getRecipeCollections(recipeId, CollectionType.FAVOURITE)
                 },
                 enableButtons = viewModel.enableButtons
             )
