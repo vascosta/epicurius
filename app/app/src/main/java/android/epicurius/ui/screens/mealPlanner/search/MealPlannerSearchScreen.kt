@@ -151,8 +151,7 @@ fun MealPlannerSearchScreen(
                             recipeInfo = recipe,
                             date = date,
                             mealTime = mealTime,
-                            isMealPlannerSearch = true,
-                            onCalendarClick = onAddRecipeToMealPlanner,
+                            onAddRecipeToMealPlanner = onAddRecipeToMealPlanner,
                             enableButtons = enableButtons,
                         )
                         Spacer(Modifier.height(10.dp))

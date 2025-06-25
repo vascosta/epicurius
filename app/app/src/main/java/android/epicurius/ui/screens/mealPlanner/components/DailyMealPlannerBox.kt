@@ -50,15 +50,7 @@ fun DailyMealPlannerBox(
             )
             if (recipe != null) {
                 RecipeInfoBox(
-                    collectionId = null,
                     recipeInfo = recipe,
-                    collectionsStateBundle = null,
-                    onAddRecipeToCollections = { _, _, _, _ -> },
-                    onRemoveRecipeFromCollections = { _, _, _, _ -> },
-                    onRemoveRecipeFromCollection = { _, _ -> },
-                    onCollectionsClear = {  },
-                    onRecipeRequest = {  },
-                    onCollectionsRequest = {  },
                     enableButtons = true,
                 )
                 IconButton(
