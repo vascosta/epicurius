@@ -48,6 +48,7 @@ class FavouritesActivity : EpicuriusActivity() {
 
     private fun navigateToFavouritesListActivity(collectionId: Int) {
         navigateTo<CollectionActivity> { intent ->
+            intent.putExtra(Intents.SOURCE_ACTIVITY, FavouritesActivity::class.java.name)
             intent.putExtra(Intents.COLLECTION_ID, collectionId)
             intent.putExtra(Intents.IS_COLLECTION_OWNER, true)
         }

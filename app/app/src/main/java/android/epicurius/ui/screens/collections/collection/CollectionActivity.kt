@@ -3,7 +3,9 @@ package android.epicurius.ui.screens.collections.collection
 import android.epicurius.ui.EpicuriusActivity
 import android.epicurius.ui.navigation.Intents
 import android.epicurius.ui.navigation.navigateTo
+import android.epicurius.ui.screens.collections.favourites.FavouritesActivity
 import android.epicurius.ui.screens.recipe.profile.RecipeProfileActivity
+import android.epicurius.ui.screens.user.profile.UserProfileActivity
 import android.epicurius.ui.screens.utils.Idle
 import android.epicurius.ui.screens.utils.idle
 import android.os.Bundle
@@ -27,7 +29,7 @@ class CollectionActivity : EpicuriusActivity() {
                 .collectLatest { (collectionRecipes, collectionNameState) ->
                     val collectionId = intent.getIntExtra(Intents.COLLECTION_ID, -1)
                     if (collectionRecipes is Idle || collectionNameState is Idle) {
-                        viewModel.getCollection(collectionId) { finish() }
+                        viewModel.getCollection(collectionId) { navigateBack() }
                     }
                 }
         }
@@ -39,14 +41,14 @@ class CollectionActivity : EpicuriusActivity() {
                 collectionId = intent.getIntExtra(Intents.COLLECTION_ID, -1),
                 collectionNameState = collectionNameState.value,
                 collectionRecipesState = collectionRecipesState.value,
-                onBackButton = { finish() },
+                onBackButton = { navigateBack() },
                 onCollectionEdit = { collectionId: Int, collectionName: String ->
                     viewModel.updateCollection(collectionId, collectionName)
-                    { finish() }
+                    { navigateBack() }
                 },
                 onCollectionDelete = { collectionId: Int ->
                     viewModel.deleteCollection(collectionId)
-                    { finish() }
+                    { navigateBack() }
                 },
                 onRecipeDelete = { collectionId: Int, recipeId: Int ->
                     viewModel.removeRecipeFromCollection(collectionId, recipeId)
@@ -54,6 +56,19 @@ class CollectionActivity : EpicuriusActivity() {
                 onRecipeRequest = ::navigateToRecipeProfileActivity,
                 enableButtons = viewModel.enableButtons
             )
+        }
+    }
+
+    private fun navigateBack() {
+        val sourceActivity = intent.getStringExtra(Intents.SOURCE_ACTIVITY)
+        if (sourceActivity == FavouritesActivity::class.java.name) {
+            navigateTo<FavouritesActivity>()
+        }
+        else if (sourceActivity == UserProfileActivity::class.java.name) {
+            navigateTo<UserProfileActivity>()
+        }
+        else {
+            finish()
         }
     }
 

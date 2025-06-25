@@ -29,7 +29,10 @@ fun CreateCollectionDialog(
                 enabled = enableButtons
             ) { Text("Cancel") }
             TextButton(
-                onClick = { onCollectionCreate(collectionName) },
+                onClick = {
+                    onCollectionCreate(collectionName)
+                    onDismiss()
+                },
                 enabled = enableButtons
             ) {
                 Text("Create")

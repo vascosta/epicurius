@@ -19,7 +19,10 @@ fun DeleteCollectionDialog(
         onDismissRequest = { onDismissRequest() },
         confirmButton = {
             TextButton(
-                onClick = { onCollectionDelete(collectionId) },
+                onClick = {
+                    onCollectionDelete(collectionId)
+                    onDismissRequest()
+                },
                 enabled = enableButtons
             ) { Text("Delete", color = Color.Red) }
         },
