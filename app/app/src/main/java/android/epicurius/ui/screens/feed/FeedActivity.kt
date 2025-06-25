@@ -1,11 +1,10 @@
 package android.epicurius.ui.screens.feed
 
 import android.epicurius.domain.collection.CollectionProfile
-import android.epicurius.domain.user.SearchUser
 import android.epicurius.ui.EpicuriusActivity
 import android.epicurius.ui.navigation.Intents
 import android.epicurius.ui.navigation.navigateTo
-import android.epicurius.ui.screens.collections.list.components.CollectionsStateBundle
+import android.epicurius.ui.screens.collections.recipeCollections.components.RecipeCollectionsStateBundle
 import android.epicurius.ui.screens.dailyMenu.DailyMenuActivity
 import android.epicurius.ui.screens.recipe.profile.RecipeProfileActivity
 import android.epicurius.ui.screens.utils.Idle
@@ -36,48 +35,38 @@ class FeedActivity : EpicuriusActivity() {
             FeedScreen(
                 userFeedState = userFeedState.value,
                 followRequestsState = userFollowRequests.value,
-                collectionsStateBundle = CollectionsStateBundle(
+                recipeCollectionsStateBundle = RecipeCollectionsStateBundle(
                     collectionsToAddRecipeState.value,
                     collectionsToRemoveRecipeState.value
                 ),
                 onAddRecipeToCollections = {
-                        collectionsAvailableToAdd: List<CollectionProfile>,
-                        collectionsAvailableToRemove: List<CollectionProfile>,
-                        collectionsToAdd: List<CollectionProfile>,
-                        recipeId: Int ->
+                    recipeId: Int,
+                    collectionsToAdd: List<CollectionProfile>
+                    ->
                     viewModel.addRecipeToCollections(
-                        collectionsAvailableToAdd,
-                        collectionsAvailableToRemove,
-                        collectionsToAdd,
-                        recipeId
+                        recipeId,
+                        collectionsToAdd
                     )
                 },
                 onRemoveRecipeFromCollections = {
-                        collectionsAvailableToAdd: List<CollectionProfile>,
-                        collectionsAvailableToRemove: List<CollectionProfile>,
-                        collectionsToRemove: List<CollectionProfile>,
-                        recipeId: Int ->
+                    recipeId: Int,
+                    collectionsToRemove: List<CollectionProfile>
+                    ->
                     viewModel.removeRecipeFromCollections(
-                        collectionsAvailableToAdd,
-                        collectionsAvailableToRemove,
-                        collectionsToRemove,
-                        recipeId
+                        recipeId,
+                        collectionsToRemove
                     )
                 },
-                onCollectionsClear = { viewModel.clearCollections() },
-                onAcceptFollowRequest = { name: String ->
-                    viewModel.acceptFollowRequest(name)
-                },
-                onRejectFollowRequest = { name: String ->
-                    viewModel.rejectFollowRequest(name)
-                },
-                onRecipeRequest = ::navigateToRecipeProfileActivity,
+                onCollectionsClear = { viewModel.clearRecipeCollections() },
+                onAcceptFollowRequest = { name: String -> viewModel.acceptFollowRequest(name) },
+                onRejectFollowRequest = { name: String -> viewModel.rejectFollowRequest(name) },
                 onCollectionsRequest = { recipeId: Int ->
-                    viewModel.getCollections(recipeId, CollectionType.FAVOURITE)
+                    viewModel.getRecipeCollections(recipeId, CollectionType.FAVOURITE)
                 },
                 onFollowRequests = { viewModel.getUserFollowRequests() },
+                onRecipeRequest = ::navigateToRecipeProfileActivity,
                 onUserProfileRequest = ::navigateToUserProfileActivity,
-                onDailyMenuRequest = { navigateTo<DailyMenuActivity>(true) },
+                onDailyMenuRequest = { navigateTo<DailyMenuActivity>(useStack = true) },
                 onLoadMoreUserFeed = { viewModel.getUserFeed() },
                 enableButtons = viewModel.enableButtons
             )

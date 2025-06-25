@@ -22,12 +22,12 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun FollowRequestDialog(
-    onDismiss: () -> Unit,
     followRequestsState: LoadState<List<SearchUser>>,
-    onAcceptFollowRequest: (name: String) -> Unit,
-    onRejectFollowRequest: (name: String) -> Unit,
-    onUserProfileRequest: (name: String) -> Unit,
-    onFollowRequests: () -> Unit,
+    onAcceptFollowRequest: (name: String) -> Unit = {},
+    onRejectFollowRequest: (name: String) -> Unit = {},
+    onUserProfileRequest: (name: String) -> Unit = {},
+    onFollowRequests: () -> Unit = {},
+    onDismiss: () -> Unit = {},
     enableButtons: Boolean
 ) {
     LaunchedEffect(followRequestsState) {
@@ -55,9 +55,9 @@ fun FollowRequestDialog(
                             followRequest.forEach { user ->
                                 FollowRequestBox(
                                     user = user,
-                                    onAcceptFollowRequest = { onAcceptFollowRequest(user.name) },
-                                    onRejectFollowRequest = { onRejectFollowRequest(user.name) },
-                                    onUserProfileRequest = { onUserProfileRequest(user.name) },
+                                    onAcceptFollowRequest = onAcceptFollowRequest,
+                                    onRejectFollowRequest = onRejectFollowRequest,
+                                    onUserProfileRequest = onUserProfileRequest,
                                     enableButtons = enableButtons
                                 )
                             }

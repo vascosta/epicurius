@@ -10,8 +10,8 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun FollowRequestButtons(
-    onAccept: () -> Unit,
-    onReject: () -> Unit,
+    onAccept: () -> Unit = {},
+    onReject: () -> Unit = {},
     enableButtons: Boolean
 ) {
     Row {

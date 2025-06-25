@@ -9,12 +9,11 @@ import android.epicurius.domain.user.SearchUser
 import android.epicurius.ui.navigation.BottomBar
 import android.epicurius.ui.navigation.TopBar
 import android.epicurius.ui.screens.feed.components.FollowRequestDialog
-import android.epicurius.ui.screens.collections.list.components.CollectionsStateBundle
+import android.epicurius.ui.screens.collections.recipeCollections.components.RecipeCollectionsStateBundle
 import android.epicurius.ui.screens.recipe.components.RecipeInfoBox
 import android.epicurius.ui.screens.utils.LoadState
 import android.epicurius.ui.screens.utils.LoadStateRenderer
 import android.epicurius.ui.screens.utils.Loaded
-import android.epicurius.ui.screens.utils.LoadingSpinner
 import android.epicurius.ui.screens.utils.apiSuccess
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -35,7 +34,6 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -53,28 +51,24 @@ import androidx.compose.ui.unit.dp
 fun FeedScreen(
     userFeedState: LoadState<List<RecipeInfo>>,
     followRequestsState: LoadState<List<SearchUser>>,
-    collectionsStateBundle: CollectionsStateBundle,
+    recipeCollectionsStateBundle: RecipeCollectionsStateBundle,
     onAddRecipeToCollections: (
-        collectionsAvailableToAdd: List<CollectionProfile>,
-        collectionsAvailableToRemove: List<CollectionProfile>,
-        collectionsToAdd: List<CollectionProfile>,
-        recipeId: Int
-    ) -> Unit,
+        recipeId: Int,
+        collectionsToAdd: List<CollectionProfile>
+    ) -> Unit = { _, _ -> },
     onRemoveRecipeFromCollections: (
-        collectionsAvailableToAdd: List<CollectionProfile>,
-        collectionsAvailableToRemove: List<CollectionProfile>,
-        collectionsToRemove: List<CollectionProfile>,
-        recipeId: Int
-    ) -> Unit,
-    onCollectionsClear: () -> Unit,
-    onAcceptFollowRequest: (name: String) -> Unit,
-    onRejectFollowRequest: (name: String) -> Unit,
-    onRecipeRequest: (recipeId: Int) -> Unit,
-    onCollectionsRequest: (recipeId: Int) -> Unit,
-    onFollowRequests: () -> Unit,
-    onUserProfileRequest: (name: String) -> Unit,
-    onDailyMenuRequest: () -> Unit,
-    onLoadMoreUserFeed: () -> Unit,
+        recipeId: Int,
+        collectionsToRemove: List<CollectionProfile>
+    ) -> Unit = { _, _ -> },
+    onCollectionsClear: () -> Unit = {},
+    onAcceptFollowRequest: (name: String) -> Unit = {},
+    onRejectFollowRequest: (name: String) -> Unit = {},
+    onCollectionsRequest: (recipeId: Int) -> Unit = {},
+    onFollowRequests: () -> Unit = {},
+    onRecipeRequest: (recipeId: Int) -> Unit = {},
+    onUserProfileRequest: (name: String) -> Unit = {},
+    onDailyMenuRequest: () -> Unit = {},
+    onLoadMoreUserFeed: () -> Unit = {},
     enableButtons: Boolean
 ) {
     var showFollowRequestsDialog by remember { mutableStateOf(false) }
@@ -135,13 +129,13 @@ fun FeedScreen(
                                 RecipeInfoBox(
                                     collectionId = null,
                                     recipeInfo = recipe,
-                                    collectionsStateBundle = collectionsStateBundle,
+                                    recipeCollectionsStateBundle = recipeCollectionsStateBundle,
                                     onAddRecipeToCollections = onAddRecipeToCollections,
                                     onRemoveRecipeFromCollections = onRemoveRecipeFromCollections,
                                     onRecipeRequest = onRecipeRequest,
-                                    onCollectionsRequest = onCollectionsRequest,
+                                    onRecipeCollectionsRequest = onCollectionsRequest,
                                     onRemoveRecipeFromCollection = {_, _ ->},
-                                    onCollectionsClear = onCollectionsClear,
+                                    onRecipeCollectionsClear = onCollectionsClear,
                                     enableButtons = enableButtons
                                 )
                             }
@@ -164,12 +158,12 @@ fun FeedScreen(
                 )
                 if (showFollowRequestsDialog) {
                     FollowRequestDialog(
-                        onDismiss = { if (enableButtons) showFollowRequestsDialog = false },
                         followRequestsState = followRequestsState,
                         onAcceptFollowRequest = onAcceptFollowRequest,
                         onRejectFollowRequest = onRejectFollowRequest,
                         onFollowRequests = onFollowRequests,
                         onUserProfileRequest = onUserProfileRequest,
+                        onDismiss = { if (enableButtons) showFollowRequestsDialog = false },
                         enableButtons = enableButtons
                     )
                 }
@@ -210,22 +204,12 @@ fun FeedPreview() {
     FeedScreen(
         apiSuccess(recipeList),
         apiSuccess(emptyList()),
-        CollectionsStateBundle(apiSuccess(emptyList()), apiSuccess(emptyList())),
-        { _, _, _, _ -> },
-        { _, _, _, _ -> },
-        {},
-        {},
-        {},
-        {},
-        {},
-        { listOf(
+        RecipeCollectionsStateBundle(apiSuccess(emptyList()), apiSuccess(emptyList())),
+        onFollowRequests = { listOf(
             SearchUser(1, "TesteUser12345678901", null),
             SearchUser(2, "AnotherUser1234567890", null),
             SearchUser(4, "ShortUser", null),
         ) },
-        {},
-        {},
-        {},
-        true
+        enableButtons = true
     )
 }

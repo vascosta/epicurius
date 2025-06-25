@@ -25,9 +25,9 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun FollowRequestBox(
     user: SearchUser,
-    onAcceptFollowRequest: (name: String) -> Unit,
-    onRejectFollowRequest: (name: String) -> Unit,
-    onUserProfileRequest: (name: String) -> Unit,
+    onAcceptFollowRequest: (name: String) -> Unit = {},
+    onRejectFollowRequest: (name: String) -> Unit = {},
+    onUserProfileRequest: (name: String) -> Unit = {},
     enableButtons: Boolean
 ) {
     Box(
@@ -77,9 +77,6 @@ fun FollowRequestBoxPreview() {
     )
     FollowRequestBox(
         user = dummyUser,
-        onAcceptFollowRequest = {},
-        onRejectFollowRequest = {},
-        onUserProfileRequest = {},
-        true
+        enableButtons = true
     )
 }

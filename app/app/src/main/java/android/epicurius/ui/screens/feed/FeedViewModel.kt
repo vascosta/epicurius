@@ -5,10 +5,9 @@ import android.epicurius.domain.recipe.RecipeInfo
 import android.epicurius.domain.user.FollowRequestType
 import android.epicurius.domain.user.SearchUser
 import android.epicurius.services.EpicuriusService
-import android.epicurius.services.http.utils.APIResult.Companion.cached
 import android.epicurius.services.http.utils.CachedResult
 import android.epicurius.storage.Session
-import android.epicurius.ui.screens.collections.CollectionsViewModel
+import android.epicurius.ui.screens.collections.recipeCollections.RecipeCollectionsViewModel
 import android.epicurius.ui.screens.utils.LoadState
 import android.epicurius.ui.screens.utils.apiSuccess
 import android.epicurius.ui.screens.utils.cache
@@ -23,7 +22,7 @@ class FeedViewModel(
     service: EpicuriusService,
     session: Session,
     context: Context
-): CollectionsViewModel(service, session, context) {
+): RecipeCollectionsViewModel(service, session, context) {
 
     private val userFeedFlow = MutableStateFlow<LoadState<List<RecipeInfo>>>(idle())
     private val cacheUserFeedFlow = MutableStateFlow<List<RecipeInfo>>(emptyList())

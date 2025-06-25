@@ -15,7 +15,7 @@ import androidx.compose.ui.unit.dp
 fun FollowRequestIconButton(
     iconResId: Int,
     contentDescription: String,
-    onClick: () -> Unit,
+    onClick: () -> Unit = {},
     enabled: Boolean
 ) {
     IconButton(
