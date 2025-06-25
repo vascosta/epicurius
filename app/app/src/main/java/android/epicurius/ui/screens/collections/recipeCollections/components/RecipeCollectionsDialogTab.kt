@@ -1,4 +1,4 @@
-package android.epicurius.ui.screens.collections.list.components
+package android.epicurius.ui.screens.collections.recipeCollections.components
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -13,10 +13,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun CollectionsListDialogTab(
+fun RecipeCollectionsDialogTab(
     selectedTabIndex: Int,
-    onCollectionsToAdd: () -> Unit,
-    onCollectionsToRemove: () -> Unit,
+    onCollectionsToAdd: () -> Unit = {},
+    onCollectionsToRemove: () -> Unit = {},
     enabled: Boolean
 ) {
     val tabs = listOf("Collections to Add", "Collections to Remove")

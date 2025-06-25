@@ -1,4 +1,4 @@
-package android.epicurius.ui.screens.collections.list.components
+package android.epicurius.ui.screens.collections.recipeCollections.components
 
 import android.epicurius.domain.collection.CollectionProfile
 import android.epicurius.ui.screens.utils.Loaded
@@ -7,45 +7,37 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 
 @Composable
-fun CollectionsListDialogButton(
+fun RecipeCollectionsDialogButton(
     recipeId: Int,
-    collectionsStateBundle: CollectionsStateBundle,
     selectedTabIndex: Int,
     selectedCollectionsIds: List<Int>,
+    recipeCollectionsStateBundle: RecipeCollectionsStateBundle,
     onAddRecipeToCollections: (
-        collectionsAvailableToAdd: List<CollectionProfile>,
-        collectionsAvailableToRemove: List<CollectionProfile>,
         collectionsToAdd: List<CollectionProfile>,
         recipeId: Int
-    ) -> Unit,
+    ) -> Unit = { _, _ -> },
     onRemoveRecipeFromCollections: (
-        collectionsAvailableToAdd: List<CollectionProfile>,
-        collectionsAvailableToRemove: List<CollectionProfile>,
         collectionsToRemove: List<CollectionProfile>,
         recipeId: Int
-    ) -> Unit,
+    ) -> Unit = { _, _ -> },
     enabled: Boolean,
 ) {
     Button(
         onClick = {
             if (
-                collectionsStateBundle.collectionsToAddRecipeState is Loaded &&
-                collectionsStateBundle.collectionsToRemoveRecipeState is Loaded
+                recipeCollectionsStateBundle.collectionsToAddRecipeState is Loaded &&
+                recipeCollectionsStateBundle.collectionsToRemoveRecipeState is Loaded
             ) {
                 if (selectedTabIndex == 0) {
                     onAddRecipeToCollections(
-                        collectionsStateBundle.collectionsToAddRecipeState.value.getValueOrThrow(),
-                        collectionsStateBundle.collectionsToRemoveRecipeState.value.getValueOrThrow(),
-                        collectionsStateBundle.collectionsToAddRecipeState.value.getValueOrThrow()
+                        recipeCollectionsStateBundle.collectionsToAddRecipeState.value.getValueOrThrow()
                             .filter { it.id in selectedCollectionsIds },
                         recipeId
                     )
                 }
                 else {
                     onRemoveRecipeFromCollections(
-                        collectionsStateBundle.collectionsToAddRecipeState.value.getValueOrThrow(),
-                        collectionsStateBundle.collectionsToRemoveRecipeState.value.getValueOrThrow(),
-                        collectionsStateBundle.collectionsToRemoveRecipeState.value.getValueOrThrow()
+                        recipeCollectionsStateBundle.collectionsToRemoveRecipeState.value.getValueOrThrow()
                             .filter { it.id in selectedCollectionsIds },
                         recipeId
                     )

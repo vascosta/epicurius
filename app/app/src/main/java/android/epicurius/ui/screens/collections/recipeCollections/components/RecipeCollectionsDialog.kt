@@ -1,16 +1,14 @@
-package android.epicurius.ui.screens.collections.list.components
+package android.epicurius.ui.screens.collections.recipeCollections.components
 
 import android.epicurius.domain.collection.CollectionProfile
 import android.epicurius.ui.screens.utils.Idle
 import android.epicurius.ui.screens.utils.LoadStateRenderer
 import android.epicurius.ui.screens.utils.Loaded
-import android.epicurius.ui.screens.utils.LoadingSpinner
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Checkbox
@@ -21,7 +19,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -29,52 +26,47 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 
-
 @Composable
-fun CollectionsListDialog(
+fun RecipeCollectionsDialog(
     recipeId: Int,
-    collectionsStateBundle: CollectionsStateBundle?,
-    onDismissRequest: () -> Unit,
+    recipeCollectionsStateBundle: RecipeCollectionsStateBundle? = null,
     onAddRecipeToCollections: (
-        collectionsAvailableToAdd: List<CollectionProfile>,
-        collectionsAvailableToRemove: List<CollectionProfile>,
         collectionsToAdd: List<CollectionProfile>,
         recipeId: Int
-    ) -> Unit,
+    ) -> Unit = { _, _ -> },
     onRemoveRecipeFromCollections: (
-        collectionsAvailableToAdd: List<CollectionProfile>,
-        collectionsAvailableToRemove: List<CollectionProfile>,
         collectionsToRemove: List<CollectionProfile>,
         recipeId: Int
-    ) -> Unit,
-    onCollectionsRequest: (recipeId: Int) -> Unit,
+    ) -> Unit = { _, _ -> },
+    onRecipeCollectionsRequest: (recipeId: Int) -> Unit = { },
+    onDismissRequest: () -> Unit = {},
     enableButtons: Boolean
 ) {
-    if (collectionsStateBundle != null) {
+    if (recipeCollectionsStateBundle != null) {
         var selectedTabIndex by remember { mutableIntStateOf(0) }
         var selectedCollectionsIds = remember { mutableStateListOf<Int>() }
 
         LaunchedEffect(selectedTabIndex) {
             selectedCollectionsIds.clear()
             if (
-                collectionsStateBundle.collectionsToAddRecipeState is Idle ||
-                collectionsStateBundle.collectionsToRemoveRecipeState is Idle
+                recipeCollectionsStateBundle.collectionsToAddRecipeState is Idle ||
+                recipeCollectionsStateBundle.collectionsToRemoveRecipeState is Idle
                 )
-                onCollectionsRequest(recipeId)
+                onRecipeCollectionsRequest(recipeId)
         }
         AlertDialog(
             onDismissRequest = {
-                if (collectionsStateBundle.collectionsToAddRecipeState is Loaded ||
-                    collectionsStateBundle.collectionsToRemoveRecipeState is Loaded
+                if (recipeCollectionsStateBundle.collectionsToAddRecipeState is Loaded ||
+                    recipeCollectionsStateBundle.collectionsToRemoveRecipeState is Loaded
                     )
                     onDismissRequest()
             },
             confirmButton = {
-                CollectionsListDialogButton(
+                RecipeCollectionsDialogButton(
                     recipeId = recipeId,
-                    collectionsStateBundle = collectionsStateBundle,
                     selectedTabIndex = selectedTabIndex,
                     selectedCollectionsIds = selectedCollectionsIds,
+                    recipeCollectionsStateBundle = recipeCollectionsStateBundle,
                     onAddRecipeToCollections = onAddRecipeToCollections,
                     onRemoveRecipeFromCollections = onRemoveRecipeFromCollections,
                     enabled = enableButtons,
@@ -86,10 +78,10 @@ fun CollectionsListDialog(
                     enabled = enableButtons
                 ) { Text(text = "Cancel") }
             },
-            title = { Text("Favourites") },
+            title = { Text("Collections") },
             text = {
                 Column {
-                    CollectionsListDialogTab(
+                    RecipeCollectionsDialogTab(
                         selectedTabIndex = selectedTabIndex,
                         onCollectionsToAdd = { selectedTabIndex = 0 },
                         onCollectionsToRemove = { selectedTabIndex = 1 },
@@ -98,11 +90,11 @@ fun CollectionsListDialog(
                     if (selectedTabIndex == 0) {
                         Text("Choose the collections to add the recipe")
                         LoadStateRenderer(
-                            loadState = collectionsStateBundle.collectionsToAddRecipeState,
-                            content = { collectionsList ->
+                            loadState = recipeCollectionsStateBundle.collectionsToAddRecipeState,
+                            content = { collections ->
                                 Spacer(Modifier.height(10.dp))
-                                if (collectionsList.isNotEmpty()) {
-                                    collectionsList.forEachIndexed { index, collection ->
+                                if (collections.isNotEmpty()) {
+                                    collections.forEachIndexed { index, collection ->
                                         Row(
                                             verticalAlignment = Alignment.CenterVertically
                                         ) {
@@ -123,11 +115,11 @@ fun CollectionsListDialog(
                                         }
                                     }
                                     Button(
-                                        onClick = { onCollectionsRequest(recipeId) },
+                                        onClick = { onRecipeCollectionsRequest(recipeId) },
                                         enabled = enableButtons
                                     ) { Text("Load More") }
                                 }
-                                else if (collectionsStateBundle.collectionsToAddRecipeState is Loaded)
+                                else if (recipeCollectionsStateBundle.collectionsToAddRecipeState is Loaded)
                                     Text(
                                         text = "No collections available to add the recipe",
                                         modifier = Modifier.padding(10.dp),
@@ -139,11 +131,11 @@ fun CollectionsListDialog(
                     else {
                         Text("Choose a collection to remove the recipes")
                         LoadStateRenderer(
-                            loadState = collectionsStateBundle.collectionsToRemoveRecipeState,
-                            content = { collectionsList ->
+                            loadState = recipeCollectionsStateBundle.collectionsToRemoveRecipeState,
+                            content = { collections ->
                                 Spacer(Modifier.height(10.dp))
-                                if (collectionsList.isNotEmpty()) {
-                                    collectionsList.forEachIndexed { index, collection ->
+                                if (collections.isNotEmpty()) {
+                                    collections.forEachIndexed { index, collection ->
                                         Row(
                                             verticalAlignment = Alignment.CenterVertically
                                         ) {
@@ -164,11 +156,11 @@ fun CollectionsListDialog(
                                         }
                                     }
                                     Button(
-                                        onClick = { onCollectionsRequest(recipeId) },
+                                        onClick = { onRecipeCollectionsRequest(recipeId) },
                                         enabled = enableButtons
                                     ) { Text("Load More") }
                                 }
-                                else if (collectionsStateBundle.collectionsToAddRecipeState is Loaded)
+                                else if (recipeCollectionsStateBundle.collectionsToAddRecipeState is Loaded)
                                     Text(
                                         text = "No collections available to remove the recipe",
                                         modifier = Modifier.padding(10.dp),

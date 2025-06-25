@@ -33,8 +33,8 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun CollectionProfileBox(
     collection: CollectionProfile,
-    onCollectionRequest: (collectionId: Int) -> Unit,
-    onCollectionDelete: (collectionId: Int) -> Unit,
+    onCollectionDelete: (collectionId: Int) -> Unit = {},
+    onCollectionRequest: (collectionId: Int) -> Unit = {},
     enableButtons: Boolean
 ) {
     var showDeleteDialog by remember { mutableStateOf(false) }
@@ -73,8 +73,8 @@ fun CollectionProfileBox(
         }
         if (showDeleteDialog) {
             DeleteCollectionDialog(
-                collectionName = collection.name,
                 collectionId = collection.id,
+                collectionName = collection.name,
                 onCollectionDelete = onCollectionDelete,
                 onDismissRequest = { if (enableButtons) showDeleteDialog = false },
                 enableButtons = enableButtons

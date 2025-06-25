@@ -15,8 +15,8 @@ import androidx.compose.ui.Modifier
 
 @Composable
 fun CreateCollectionDialog(
-    onDismiss: () -> Unit,
-    onCollectionCreate: (collectionName: String) -> Unit,
+    onCollectionCreate: (collectionName: String) -> Unit = {},
+    onDismiss: () -> Unit = {},
     enableButtons: Boolean
 ) {
     var collectionName by remember { mutableStateOf("") }

@@ -8,7 +8,6 @@ import android.epicurius.ui.screens.collections.components.CreateCollectionDialo
 import android.epicurius.ui.screens.utils.LoadState
 import android.epicurius.ui.screens.utils.LoadStateRenderer
 import android.epicurius.ui.screens.utils.Loaded
-import android.epicurius.ui.screens.utils.LoadingSpinner
 import android.epicurius.ui.screens.utils.apiSuccess
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
@@ -18,7 +17,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -29,7 +27,6 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -43,11 +40,11 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun FavouritesScreen(
     favouritesState: LoadState<List<CollectionProfile>>,
-    onBackButton: () -> Unit,
-    onCollectionCreate: (collectionName: String) -> Unit,
-    onCollectionRequest: (collectionId: Int) -> Unit,
-    onCollectionDelete: (collectionId: Int) -> Unit,
-    onLoadMoreFavourites: () -> Unit,
+    onBackButton: () -> Unit = {},
+    onCollectionCreate: (collectionName: String) -> Unit = {},
+    onCollectionDelete: (collectionId: Int) -> Unit = {},
+    onCollectionRequest: (collectionId: Int) -> Unit = {},
+    onLoadMoreFavourites: () -> Unit = {},
     enableButtons: Boolean
 ) {
     var showCreateCollectionDialog by remember { mutableStateOf(false) }
@@ -92,8 +89,8 @@ fun FavouritesScreen(
                             favourites.forEach {
                                 CollectionProfileBox(
                                     collection = it,
-                                    onCollectionRequest = onCollectionRequest,
                                     onCollectionDelete = onCollectionDelete,
+                                    onCollectionRequest = onCollectionRequest,
                                     enableButtons = enableButtons
                                 )
                                 Spacer(modifier = Modifier.height(10.dp))
@@ -119,8 +116,8 @@ fun FavouritesScreen(
                 )
                 if (showCreateCollectionDialog) {
                     CreateCollectionDialog(
-                        onDismiss = { if (enableButtons) showCreateCollectionDialog = false },
                         onCollectionCreate = onCollectionCreate,
+                        onDismiss = { if (enableButtons) showCreateCollectionDialog = false },
                         enableButtons = enableButtons
                     )
                 }

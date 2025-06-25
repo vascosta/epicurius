@@ -8,10 +8,10 @@ import androidx.compose.ui.graphics.Color
 
 @Composable
 fun DeleteCollectionDialog(
-    collectionName: String,
     collectionId: Int,
-    onCollectionDelete: (collectionId: Int) -> Unit,
-    onDismissRequest: () -> Unit,
+    collectionName: String,
+    onCollectionDelete: (collectionId: Int) -> Unit = {},
+    onDismissRequest: () -> Unit = {},
     enableButtons: Boolean
 ) {
 

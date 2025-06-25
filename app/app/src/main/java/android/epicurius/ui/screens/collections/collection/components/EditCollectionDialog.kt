@@ -1,4 +1,4 @@
-package android.epicurius.ui.screens.collections.components
+package android.epicurius.ui.screens.collections.collection.components
 
 import android.epicurius.ui.screens.utils.TextField
 import androidx.compose.foundation.layout.Column
@@ -18,10 +18,10 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun EditCollectionDialog(
-    collectionName: String,
     collectionId: Int,
-    onDismiss: () -> Unit,
-    onEditCollection: (collectionId: Int, collectionName: String) -> Unit,
+    collectionName: String,
+    onEditCollection: (collectionId: Int, collectionName: String) -> Unit = { _, _ -> },
+    onDismiss: () -> Unit = {},
     enableButtons: Boolean
 ) {
     var newCollectionName by rememberSaveable { mutableStateOf(collectionName) }

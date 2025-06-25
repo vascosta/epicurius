@@ -1,4 +1,4 @@
-package android.epicurius.ui.screens.collections.list
+package android.epicurius.ui.screens.collections.collection
 
 import android.epicurius.domain.recipe.Cuisine
 import android.epicurius.domain.recipe.MealType
@@ -6,8 +6,8 @@ import android.epicurius.domain.recipe.RecipeInfo
 import android.epicurius.ui.navigation.BottomBar
 import android.epicurius.ui.navigation.TopBar
 import android.epicurius.ui.screens.collections.components.DeleteCollectionDialog
-import android.epicurius.ui.screens.collections.components.EditCollectionDialog
-import android.epicurius.ui.screens.collections.list.components.getCollectionsListName
+import android.epicurius.ui.screens.collections.collection.components.EditCollectionDialog
+import android.epicurius.ui.screens.collections.collection.components.getCollectionName
 import android.epicurius.ui.screens.recipe.components.RecipeInfoBox
 import android.epicurius.ui.screens.utils.LoadState
 import android.epicurius.ui.screens.utils.LoadStateRenderer
@@ -40,26 +40,25 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun CollectionsListScreen(
-    isAuthor: Boolean,
+fun CollectionScreen(
+    isOwner: Boolean,
     collectionId: Int,
-    collectionListNameState: LoadState<String>,
-    recipesState: LoadState<List<RecipeInfo>>,
-    onBackButton: () -> Unit,
-    onCollectionEdit: (collectionId: Int, collectionName: String) -> Unit,
-    onCollectionDelete: (collectionId: Int) -> Unit,
-    onRecipeDelete: (collectionId: Int, recipeId: Int) -> Unit,
-    onRecipeRequest: (recipeId: Int) -> Unit,
-    onFavouriteCollectionRefresh: () -> Unit,
+    collectionNameState: LoadState<String>,
+    collectionRecipesState: LoadState<List<RecipeInfo>>,
+    onBackButton: () -> Unit = {},
+    onCollectionEdit: (collectionId: Int, collectionName: String) -> Unit = { _, _ -> },
+    onCollectionDelete: (collectionId: Int) -> Unit = {},
+    onRecipeDelete: (collectionId: Int, recipeId: Int) -> Unit = { _, _ -> },
+    onRecipeRequest: (recipeId: Int) -> Unit = {},
     enableButtons: Boolean
 ) {
-    var collectionListName = getCollectionsListName(collectionListNameState)
+    var collectionListName = getCollectionName(collectionNameState)
 
     var showEditCollectionDialog by rememberSaveable { mutableStateOf(false) }
     var showDeleteCollectionDialog by rememberSaveable { mutableStateOf(false) }
 
-    LaunchedEffect(collectionListNameState) {
-        if (collectionListNameState is Loaded) {
+    LaunchedEffect(collectionNameState) {
+        if (collectionNameState is Loaded) {
             showEditCollectionDialog = false
         }
     }
@@ -69,16 +68,18 @@ fun CollectionsListScreen(
                 titleText = collectionListName,
                 backButton = true,
                 onBackButton = onBackButton,
-                enableButtons = enableButtons && collectionListNameState is Loaded && recipesState is Loaded,
+                enableButtons = enableButtons && collectionNameState is Loaded && collectionRecipesState is Loaded,
                 icon = null
             )
         },
-        bottomBar = { BottomBar(
-            buttonsEnable = enableButtons && collectionListNameState is Loaded && recipesState is Loaded
-        ) },
+        bottomBar = {
+            BottomBar(
+                buttonsEnable = enableButtons && collectionNameState is Loaded && collectionRecipesState is Loaded
+            )
+        },
         content = { paddingValues ->
             LoadStateRenderer(
-                loadState = recipesState,
+                loadState = collectionRecipesState,
                 content = { recipes ->
                     Column(
                         modifier = Modifier
@@ -89,7 +90,7 @@ fun CollectionsListScreen(
                             .verticalScroll(rememberScrollState()),
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
-                        if (isAuthor) {
+                        if (isOwner) {
                             Row(
                                 modifier = Modifier.fillMaxWidth(),
                                 horizontalArrangement = Arrangement.SpaceBetween
@@ -104,10 +105,9 @@ fun CollectionsListScreen(
                                 ) { Text("Delete Collection", color = Color.Red) }
                             }
                         }
-
                         if (recipes.isEmpty()) {
                             val txt =
-                                if (isAuthor) "You have no recipes in this collection."
+                                if (isOwner) "You have no recipes in this collection."
                                 else "This collection has no recipes."
                             Text(
                                 text = txt,
@@ -120,13 +120,10 @@ fun CollectionsListScreen(
                                     RecipeInfoBox(
                                         collectionId = collectionId,
                                         recipeInfo = it,
-                                        collectionsStateBundle = null,
-                                        onAddRecipeToCollections = {_, _, _, _ ->},
-                                        onRemoveRecipeFromCollections = {_, _, _, _ ->},
                                         onRemoveRecipeFromCollection = onRecipeDelete,
                                         onRecipeRequest = onRecipeRequest,
-                                        onCollectionsRequest = {},
-                                        onCollectionsClear = {},
+                                        onRecipeCollectionsRequest = {},
+                                        onRecipeCollectionsClear = {},
                                         enableButtons = enableButtons
                                     )
                                     Spacer(modifier = Modifier.height(10.dp))
@@ -136,27 +133,19 @@ fun CollectionsListScreen(
                     }
                     if (showEditCollectionDialog) {
                         EditCollectionDialog(
-                            collectionName = collectionListName,
                             collectionId = collectionId,
-                            onDismiss = {
-                                if (enableButtons) {
-                                    showEditCollectionDialog = false
-                                }
-                            },
+                            collectionName = collectionListName,
                             onEditCollection = onCollectionEdit,
+                            onDismiss = { if (enableButtons) showEditCollectionDialog = false },
                             enableButtons = enableButtons
                         )
                     }
                     if (showDeleteCollectionDialog) {
                         DeleteCollectionDialog(
-                            collectionName = collectionListName,
                             collectionId = collectionId,
+                            collectionName = collectionListName,
                             onCollectionDelete = onCollectionDelete,
-                            onDismissRequest = {
-                                if (enableButtons) {
-                                    showDeleteCollectionDialog = false
-                                }
-                            },
+                            onDismissRequest = { if (enableButtons) showDeleteCollectionDialog = false },
                             enableButtons = enableButtons
                         )
                     }
@@ -169,11 +158,11 @@ fun CollectionsListScreen(
 
 @Preview
 @Composable
-fun FavouritesListScreenPreview() {
-    CollectionsListScreen(
-        isAuthor = false,
+fun CollectionScreenPreview() {
+    CollectionScreen(
+        isOwner = false,
         collectionId = 1,
-        recipesState = apiSuccess(listOf(
+        collectionRecipesState = apiSuccess(listOf(
             RecipeInfo(
                 id = 1,
                 name = "Spaghetti Carbonara",
@@ -186,13 +175,7 @@ fun FavouritesListScreenPreview() {
                 picture = ""
             )
         )),
-        collectionListNameState = apiSuccess("My Favourite Recipes"),
-        onBackButton = {},
-        onCollectionEdit = {_, _ ->},
-        onCollectionDelete = {},
-        onRecipeDelete = {_, _ ->},
-        onRecipeRequest = {},
-        onFavouriteCollectionRefresh = {},
+        collectionNameState = apiSuccess("My Favourite Recipes"),
         enableButtons = true
     )
 }
