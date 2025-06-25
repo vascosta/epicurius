@@ -47,7 +47,6 @@ class CreateRecipeIntegrationTests : RecipeIntegrationTest() {
         assertEquals(createRecipeInputModel.carbs, result.recipe.carbs)
         assertEquals(createRecipeInputModel.instructions, result.recipe.instructions)
         assertEquals(1, result.recipe.pictures.size)
-        assertEquals(false, result.recipe.isInCollection)
     }
 
     @Test

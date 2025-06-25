@@ -33,7 +33,7 @@ class UpdateRecipeIntegrationTests : RecipeIntegrationTest() {
         preparationTime = 1,
         cuisine = Cuisine.ASIAN,
         mealType = MealType.SOUP,
-        intolerances = setOf(Intolerance.PEANUT),
+        intolerances = setOf(Intolerance.PEANUT, Intolerance.GLUTEN, Intolerance.DAIRY),
         diets = setOf(Diet.KETOGENIC),
         ingredients = listOf(Ingredient("Egg", 1.0, IngredientUnit.X)),
         calories = 1,

@@ -68,12 +68,14 @@ class RecipeIntegrationTest : EpicuriusIntegrationTest() {
 
     lateinit var testUser: AuthenticatedUser
     lateinit var testAuthor: AuthenticatedUser
+    lateinit var testSearchAuthor: AuthenticatedUser
     lateinit var testRecipe: Recipe
 
     @BeforeEach
     fun setup() {
         testUser = createTestUser(tm)
         testAuthor = createTestUser(tm)
+        testSearchAuthor = createTestUser(tm)
         testRecipe = createTestRecipe(tm, testAuthor.user)
     }
 
@@ -104,6 +106,7 @@ class RecipeIntegrationTest : EpicuriusIntegrationTest() {
         ingredients: List<String> = emptyList(),
         intolerances: List<Intolerance> = emptyList(),
         diets: List<Diet> = emptyList(),
+        servings: Int? = null,
         minCalories: Int? = null,
         maxCalories: Int? = null,
         minCarbs: Int? = null,
@@ -114,6 +117,7 @@ class RecipeIntegrationTest : EpicuriusIntegrationTest() {
         maxProtein: Int? = null,
         minTime: Int? = null,
         maxTime: Int? = null,
+        showAuthorRecipes: Boolean = false,
         lastRecipeId: Int? = null,
         limit: Int = 10
     ): GetUserRecipesOutputModel? {
@@ -135,6 +139,7 @@ class RecipeIntegrationTest : EpicuriusIntegrationTest() {
             params += "diets=${diets.joinToString(",")}"
         }
 
+        servings?.let { params += "servings=$it" }
         minCalories?.let { params += "minCalories=$it" }
         maxCalories?.let { params += "maxCalories=$it" }
         minCarbs?.let { params += "minCarbs=$it" }
@@ -147,6 +152,7 @@ class RecipeIntegrationTest : EpicuriusIntegrationTest() {
         maxTime?.let { params += "maxTime=$it" }
         lastRecipeId?.let { params += "lastRecipeId=$it" }
 
+        params += "showAuthorRecipes=$showAuthorRecipes"
         params += "limit=$limit"
 
         val query = params.joinToString("&")

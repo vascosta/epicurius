@@ -21,6 +21,7 @@ open class RecipeRepositoryTest : RepositoryTest() {
         val testUserPublic = createTestUser(tm)
         val testUserPrivate = createTestUser(tm, true)
         val testAuthor = createTestUser(tm)
+        val testSearchAuthor = createTestUser(tm)
         val testRecipe = createTestRecipe(tm, testAuthor.user)
 
         val jdbiRecipeInfo1 = JdbiCreateRecipeModel(
@@ -156,7 +157,7 @@ open class RecipeRepositoryTest : RepositoryTest() {
             preparationTime = 20,
             cuisine = Cuisine.CHINESE.ordinal,
             mealType = MealType.SIDE_DISH.ordinal,
-            intolerances = listOf(Intolerance.GLUTEN.ordinal),
+            intolerances = listOf(Intolerance.GLUTEN.ordinal, Intolerance.DAIRY.ordinal),
             diets = listOf(Diet.VEGAN.ordinal, Diet.PALEO.ordinal),
             ingredients = listOf(
                 Ingredient("Broccoli", 200.0, IngredientUnit.G),
@@ -174,6 +175,37 @@ open class RecipeRepositoryTest : RepositoryTest() {
                     "2" to "Add chopped vegetables and stir fry for 5 minutes.",
                     "3" to "Pour in soy sauce and cook for another 2 minutes.",
                     "4" to "Serve hot."
+                )
+            ),
+            picturesNames = listOf("")
+        )
+
+        val jdbiRecipeInfo6 = JdbiCreateRecipeModel(
+            name = "Chocolate Cake",
+            authorId = testSearchAuthor.user.id,
+            description = "A rich and moist chocolate cake",
+            servings = 8,
+            preparationTime = 60,
+            cuisine = Cuisine.FRENCH.ordinal,
+            mealType = MealType.DESSERT.ordinal,
+            intolerances = listOf(Intolerance.GLUTEN.ordinal, Intolerance.DAIRY.ordinal),
+            diets = listOf(Diet.VEGETARIAN.ordinal),
+            ingredients = listOf(
+                Ingredient("Flour", 200.0, IngredientUnit.G),
+                Ingredient("Sugar", 150.0, IngredientUnit.G),
+                Ingredient("Cocoa Powder", 50.0, IngredientUnit.G),
+                Ingredient("Eggs", 3.0, IngredientUnit.X)
+            ),
+            calories = 400,
+            protein = 6,
+            fat = 20,
+            carbs = 50,
+            instructions = Instructions(
+                mapOf(
+                    "1" to "Preheat oven to 180°C (350°F).",
+                    "2" to "Mix flour, sugar, cocoa powder, and eggs in a bowl.",
+                    "3" to "Pour batter into a greased cake pan.",
+                    "4" to "Bake for 30 minutes or until a toothpick comes out clean."
                 )
             ),
             picturesNames = listOf("")

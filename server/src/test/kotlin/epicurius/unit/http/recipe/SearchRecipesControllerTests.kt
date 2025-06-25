@@ -22,6 +22,7 @@ class SearchRecipesControllerTests : RecipeControllerTest() {
         ingredients = listOf("egg", "flour"),
         intolerances = listOf(Intolerance.EGG, Intolerance.GLUTEN),
         diets = listOf(Diet.OVO_VEGETARIAN, Diet.LACTO_VEGETARIAN),
+        servings = 4,
         minCalories = 200,
         maxCalories = 500,
         minCarbs = 20,
@@ -31,7 +32,8 @@ class SearchRecipesControllerTests : RecipeControllerTest() {
         minProtein = 5,
         maxProtein = 15,
         minTime = 20,
-        maxTime = 60
+        maxTime = 60,
+        showAuthorRecipes = true
     )
 
     private val recipeInfo = RecipeInfo(
@@ -144,7 +146,7 @@ class SearchRecipesControllerTests : RecipeControllerTest() {
             searchRecipesInputInfoWithoutIngredients.ingredients,
             searchRecipesInputInfoWithoutIngredients.intolerances,
             searchRecipesInputInfoWithoutIngredients.diets,
-            null, // change
+            searchRecipesInputInfoWithoutIngredients.servings,
             searchRecipesInputInfoWithoutIngredients.minCalories,
             searchRecipesInputInfoWithoutIngredients.maxCalories,
             searchRecipesInputInfoWithoutIngredients.minCarbs,
@@ -155,6 +157,7 @@ class SearchRecipesControllerTests : RecipeControllerTest() {
             searchRecipesInputInfoWithoutIngredients.maxProtein,
             searchRecipesInputInfoWithoutIngredients.minTime,
             searchRecipesInputInfoWithoutIngredients.maxTime,
+            searchRecipesInputInfoWithoutIngredients.showAuthorRecipes,
             null,
             limit
         )
@@ -184,7 +187,7 @@ class SearchRecipesControllerTests : RecipeControllerTest() {
             searchRecipesInputInfo.ingredients,
             searchRecipesInputInfo.intolerances,
             searchRecipesInputInfo.diets,
-            null, // change
+            searchRecipesInputInfo.servings,
             searchRecipesInputInfo.minCalories,
             searchRecipesInputInfo.maxCalories,
             searchRecipesInputInfo.minCarbs,
@@ -195,6 +198,7 @@ class SearchRecipesControllerTests : RecipeControllerTest() {
             searchRecipesInputInfo.maxProtein,
             searchRecipesInputInfo.minTime,
             searchRecipesInputInfo.maxTime,
+            searchRecipesInputInfo.showAuthorRecipes,
             null,
             limit
         )
@@ -224,7 +228,7 @@ class SearchRecipesControllerTests : RecipeControllerTest() {
             searchRecipesInputInfo.ingredients,
             searchRecipesInputInfo.intolerances,
             searchRecipesInputInfo.diets,
-            null, // change
+            searchRecipesInputInfo.servings,
             searchRecipesInputInfo.minCalories,
             searchRecipesInputInfo.maxCalories,
             searchRecipesInputInfo.minCarbs,
@@ -235,6 +239,7 @@ class SearchRecipesControllerTests : RecipeControllerTest() {
             searchRecipesInputInfo.maxProtein,
             searchRecipesInputInfo.minTime,
             searchRecipesInputInfo.maxTime,
+            searchRecipesInputInfo.showAuthorRecipes,
             null,
             limit
         )
@@ -265,7 +270,7 @@ class SearchRecipesControllerTests : RecipeControllerTest() {
             searchRecipesInputInfo.ingredients,
             searchRecipesInputInfo.intolerances,
             searchRecipesInputInfo.diets,
-            null, // change
+            searchRecipesInputInfo.servings,
             searchRecipesInputInfo.minCalories,
             searchRecipesInputInfo.maxCalories,
             searchRecipesInputInfo.minCarbs,
@@ -276,6 +281,7 @@ class SearchRecipesControllerTests : RecipeControllerTest() {
             searchRecipesInputInfo.maxProtein,
             searchRecipesInputInfo.minTime,
             searchRecipesInputInfo.maxTime,
+            searchRecipesInputInfo.showAuthorRecipes,
             null,
             limit
         )
@@ -306,7 +312,7 @@ class SearchRecipesControllerTests : RecipeControllerTest() {
             searchRecipesInputInfo.ingredients,
             searchRecipesInputInfo.intolerances,
             searchRecipesInputInfo.diets,
-            null, // change
+            searchRecipesInputInfo.servings,
             searchRecipesInputInfo.minCalories,
             searchRecipesInputInfo.maxCalories,
             searchRecipesInputInfo.minCarbs,
@@ -317,6 +323,7 @@ class SearchRecipesControllerTests : RecipeControllerTest() {
             searchRecipesInputInfo.maxProtein,
             searchRecipesInputInfo.minTime,
             searchRecipesInputInfo.maxTime,
+            searchRecipesInputInfo.showAuthorRecipes,
             null,
             limit
         )
@@ -327,5 +334,87 @@ class SearchRecipesControllerTests : RecipeControllerTest() {
         assertEquals(HttpStatus.OK, response.statusCode)
         assertEquals(1, body.recipes.size)
         assertEquals(recipeInfo, body.recipes.first())
+    }
+
+    @Test
+    fun `Should search for author's recipes according to preference successfully`() {
+        // given a search form with showAuthorRecipes set to true
+        val searchRecipesInputWithAuthorRecipes = searchRecipesInputInfo.copy(showAuthorRecipes = true)
+
+        // mock
+        whenever(
+            recipeServiceMock
+                .searchRecipes(testAuthenticatedUser.user.id, searchRecipesInputWithAuthorRecipes, null, limit)
+        ).thenReturn(listOf(recipeInfo))
+
+        // when searching for recipes with author's recipes preference
+        val response = searchRecipes(
+            testAuthenticatedUser,
+            searchRecipesInputWithAuthorRecipes.name,
+            searchRecipesInputWithAuthorRecipes.cuisine,
+            searchRecipesInputWithAuthorRecipes.mealType,
+            searchRecipesInputWithAuthorRecipes.ingredients,
+            searchRecipesInputWithAuthorRecipes.intolerances,
+            searchRecipesInputWithAuthorRecipes.diets,
+            searchRecipesInputWithAuthorRecipes.servings,
+            searchRecipesInputWithAuthorRecipes.minCalories,
+            searchRecipesInputWithAuthorRecipes.maxCalories,
+            searchRecipesInputWithAuthorRecipes.minCarbs,
+            searchRecipesInputWithAuthorRecipes.maxCarbs,
+            searchRecipesInputWithAuthorRecipes.minFat,
+            searchRecipesInputWithAuthorRecipes.maxFat,
+            searchRecipesInputWithAuthorRecipes.minProtein,
+            searchRecipesInputWithAuthorRecipes.maxProtein,
+            searchRecipesInputWithAuthorRecipes.minTime,
+            searchRecipesInputWithAuthorRecipes.maxTime,
+            searchRecipesInputWithAuthorRecipes.showAuthorRecipes,
+            null,
+            limit
+        )
+        val body = response.body as SearchRecipesOutputModel
+
+        // then a list containing the recipe should is returned successfully
+        assertEquals(HttpStatus.OK, response.statusCode)
+        assertEquals(1, body.recipes.size)
+        assertEquals(recipeInfo, body.recipes.first())
+
+        // given a search form with showAuthorRecipes set to false
+        val searchRecipesInputWithoutAuthorRecipes = searchRecipesInputInfo.copy(showAuthorRecipes = false)
+
+        // mock
+        whenever(
+            recipeServiceMock
+                .searchRecipes(testAuthenticatedUser.user.id, searchRecipesInputWithoutAuthorRecipes, null, limit)
+        ).thenReturn(emptyList())
+
+        // when searching for recipes without author's recipes preference
+        val response2 = searchRecipes(
+            testAuthenticatedUser,
+            searchRecipesInputWithoutAuthorRecipes.name,
+            searchRecipesInputWithoutAuthorRecipes.cuisine,
+            searchRecipesInputWithoutAuthorRecipes.mealType,
+            searchRecipesInputWithoutAuthorRecipes.ingredients,
+            searchRecipesInputWithoutAuthorRecipes.intolerances,
+            searchRecipesInputWithoutAuthorRecipes.diets,
+            searchRecipesInputWithoutAuthorRecipes.servings,
+            searchRecipesInputWithoutAuthorRecipes.minCalories,
+            searchRecipesInputWithoutAuthorRecipes.maxCalories,
+            searchRecipesInputWithoutAuthorRecipes.minCarbs,
+            searchRecipesInputWithoutAuthorRecipes.maxCarbs,
+            searchRecipesInputWithoutAuthorRecipes.minFat,
+            searchRecipesInputWithoutAuthorRecipes.maxFat,
+            searchRecipesInputWithoutAuthorRecipes.minProtein,
+            searchRecipesInputWithoutAuthorRecipes.maxProtein,
+            searchRecipesInputWithoutAuthorRecipes.minTime,
+            searchRecipesInputWithoutAuthorRecipes.maxTime,
+            searchRecipesInputWithoutAuthorRecipes.showAuthorRecipes,
+            null,
+            limit
+        )
+        val body2 = response2.body as SearchRecipesOutputModel
+
+        // then an empty list should be returned
+        assertEquals(HttpStatus.OK, response2.statusCode)
+        assertTrue(body2.recipes.isEmpty())
     }
 }

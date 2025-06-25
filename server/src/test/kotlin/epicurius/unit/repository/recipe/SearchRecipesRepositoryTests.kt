@@ -14,7 +14,7 @@ class SearchRecipesRepositoryTests : RecipeRepositoryTest() {
     val limit = 10
 
     @Test
-    fun `Should search a recipe by name`() {
+    fun `Should search a recipe by name successfully`() {
         // given a user and a recipe (testUserPublic, testRecipe)
 
         // when searching for the recipe by name
@@ -34,7 +34,7 @@ class SearchRecipesRepositoryTests : RecipeRepositoryTest() {
     }
 
     @Test
-    fun `Should search for a recipe according to user's intolerances`() {
+    fun `Should search for a recipe according to user's intolerances successfully`() {
         // given a user (testUserPublic) and a recipe
         jdbiCreateRecipe(jdbiRecipeInfo1)
 
@@ -63,7 +63,7 @@ class SearchRecipesRepositoryTests : RecipeRepositoryTest() {
     }
 
     @Test
-    fun `Should search for a recipe by multiple filters without ingredients`() {
+    fun `Should search for a recipe by multiple filters without ingredients successfully`() {
         // given a user (testUserPublic) and a recipe
         jdbiCreateRecipe(jdbiRecipeInfo2)
 
@@ -74,6 +74,7 @@ class SearchRecipesRepositoryTests : RecipeRepositoryTest() {
                 mealType = listOf(MealType.APPETIZER.ordinal),
                 intolerances = emptyList(),
                 diets = listOf(Diet.PALEO.ordinal),
+                servings = 4,
                 minCalories = 100,
                 maxCalories = 500,
                 minProtein = 5,
@@ -102,6 +103,7 @@ class SearchRecipesRepositoryTests : RecipeRepositoryTest() {
                 mealType = listOf(MealType.BEVERAGE.ordinal),
                 intolerances = listOf(Intolerance.SULFITE.ordinal),
                 diets = listOf(Diet.LOW_FODMAP.ordinal),
+                servings = 2,
                 minCalories = 1000,
                 maxCalories = 2000,
                 minProtein = 100,
@@ -120,7 +122,7 @@ class SearchRecipesRepositoryTests : RecipeRepositoryTest() {
     }
 
     @Test
-    fun `Should search for a recipe by multiple filters with ingredients`() {
+    fun `Should search for a recipe by multiple filters with ingredients successfully`() {
         // given a user (testUserPublic) and a recipe
         jdbiCreateRecipe(jdbiRecipeInfo3)
 
@@ -132,6 +134,7 @@ class SearchRecipesRepositoryTests : RecipeRepositoryTest() {
                 mealType = listOf(MealType.SIDE_DISH.ordinal),
                 intolerances = emptyList(),
                 diets = listOf(Diet.VEGAN.ordinal, Diet.VEGETARIAN.ordinal),
+                servings = 2,
                 ingredients = listOf("Tortilla", "Beans"),
                 minCalories = 200,
                 maxCalories = 500,
@@ -157,17 +160,18 @@ class SearchRecipesRepositoryTests : RecipeRepositoryTest() {
     }
 
     @Test
-    fun `Should search for recipes of public users`() {
+    fun `Should search for recipes of public users successfully`() {
         // given a user (testUserPublic) and a recipe
         jdbiCreateRecipe(jdbiRecipeInfo5)
 
         // given multiple filters to test that match the recipe 5
-        val filtersToTest2 =
+        val filtersToTest =
             SearchRecipesModel(
                 cuisine = listOf(Cuisine.CHINESE.ordinal),
                 mealType = listOf(MealType.SIDE_DISH.ordinal),
                 intolerances = emptyList(),
                 diets = listOf(Diet.VEGAN.ordinal, Diet.PALEO.ordinal),
+                servings = 4,
                 minCalories = 100,
                 maxCalories = 1000,
                 minProtein = 5,
@@ -179,7 +183,7 @@ class SearchRecipesRepositoryTests : RecipeRepositoryTest() {
             )
 
         // when private user searches for public user recipe
-        val recipeList = searchRecipes(testUserPrivate.user.id, filtersToTest2, null, limit)
+        val recipeList = searchRecipes(testUserPrivate.user.id, filtersToTest, null, limit)
 
         // then the recipe is found
         assertEquals(1, recipeList.size)
@@ -191,10 +195,9 @@ class SearchRecipesRepositoryTests : RecipeRepositoryTest() {
     }
 
     @Test
-    fun `Should search for recipes from private users when followed`() {
-        // given two users (testUserPublic and testUserPrivate) and a recipe from a private user and another from a public user
+    fun `Should search for recipes from private users when followed successfully`() {
+        // given two users (testUserPublic and testUserPrivate) and a recipe from a private user
         jdbiCreateRecipe(jdbiRecipeInfo4)
-        jdbiCreateRecipe(jdbiRecipeInfo5)
 
         // given multiple filters to test that match the recipe
         val filtersToTest =
@@ -203,6 +206,7 @@ class SearchRecipesRepositoryTests : RecipeRepositoryTest() {
                 mealType = listOf(MealType.MAIN_COURSE.ordinal),
                 intolerances = emptyList(),
                 diets = listOf(Diet.VEGETARIAN.ordinal),
+                servings = 4,
                 minCalories = 100,
                 maxCalories = 1000,
                 minProtein = 5,
@@ -232,5 +236,43 @@ class SearchRecipesRepositoryTests : RecipeRepositoryTest() {
         assertEquals(MealType.fromInt(jdbiRecipeInfo4.mealType), recipeList2[0].mealType)
         assertEquals(jdbiRecipeInfo4.preparationTime, recipeList2[0].preparationTime)
         assertEquals(jdbiRecipeInfo4.servings, recipeList2[0].servings)
+    }
+
+    @Test
+    fun `Should search for author's recipes according to preference successfully`() {
+        // given a user (testSearchAuthor) and a recipe
+        jdbiCreateRecipe(jdbiRecipeInfo6)
+
+        // given a search model with showAuthorRecipes set to true
+        val searchModel =
+            SearchRecipesModel(
+                name = "Chocolate Cake",
+                showAuthorRecipes = true
+            )
+
+        // when searching for recipes with the current model
+        val results = searchRecipes(testSearchAuthor.user.id, searchModel, null, limit)
+
+        // then the author's recipe is found
+        assertEquals(1, results.size)
+        assertEquals(jdbiRecipeInfo6.name, results[0].name)
+        assertEquals(Cuisine.fromInt(jdbiRecipeInfo6.cuisine), results[0].cuisine)
+        assertEquals(MealType.fromInt(jdbiRecipeInfo6.mealType), results[0].mealType)
+        assertEquals(jdbiRecipeInfo6.preparationTime, results[0].preparationTime)
+        assertEquals(jdbiRecipeInfo6.servings, results[0].servings)
+
+        // when searching for recipes with showAuthorRecipes set to false
+        val searchModelWithoutAuthorRecipes =
+            SearchRecipesModel(
+                name = "Chocolate Cake",
+                showAuthorRecipes = false
+            )
+
+        // when searching for recipes with the current model
+        val resultsWithoutAuthorRecipes =
+            searchRecipes(testSearchAuthor.user.id, searchModelWithoutAuthorRecipes, null, limit)
+
+        // then the author's recipe is not found
+        assertTrue(resultsWithoutAuthorRecipes.isEmpty())
     }
 }

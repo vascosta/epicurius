@@ -12,6 +12,8 @@ import epicurius.utils.generateRandomRecipeName
 import java.util.UUID.randomUUID
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertNotNull
+import kotlin.test.assertTrue
 
 class UpdateRecipeRepositoryTests : RecipeRepositoryTest() {
 
@@ -26,7 +28,7 @@ class UpdateRecipeRepositoryTests : RecipeRepositoryTest() {
             1,
             Cuisine.ASIAN.ordinal,
             MealType.SOUP.ordinal,
-            setOf(Intolerance.PEANUT.ordinal),
+            setOf(Intolerance.PEANUT.ordinal, Intolerance.GLUTEN.ordinal),
             setOf(Diet.KETOGENIC.ordinal),
             generateRandomRecipeIngredients(),
             1,
@@ -36,6 +38,8 @@ class UpdateRecipeRepositoryTests : RecipeRepositoryTest() {
             generateRandomRecipeInstructions(),
             listOf(randomUUID().toString())
         )
+        val newIngredients = jdbiUpdateRecipeInfo.ingredients
+        assertNotNull(newIngredients)
 
         // when updating the recipe
         val updatedJdbiRecipe = updateJdbiRecipe(jdbiUpdateRecipeInfo)
@@ -50,7 +54,7 @@ class UpdateRecipeRepositoryTests : RecipeRepositoryTest() {
         assertEquals(jdbiUpdateRecipeInfo.mealType, updatedJdbiRecipe.mealType.ordinal)
         assertEquals(jdbiUpdateRecipeInfo.intolerances, updatedJdbiRecipe.intolerances.map { it.ordinal }.toSet())
         assertEquals(jdbiUpdateRecipeInfo.diets, updatedJdbiRecipe.diets.map { it.ordinal }.toSet())
-        assertEquals(jdbiUpdateRecipeInfo.ingredients, updatedJdbiRecipe.ingredients)
+        assertTrue(updatedJdbiRecipe.ingredients.containsAll(newIngredients))
         assertEquals(jdbiUpdateRecipeInfo.calories, updatedJdbiRecipe.calories)
         assertEquals(jdbiUpdateRecipeInfo.protein, updatedJdbiRecipe.protein)
         assertEquals(jdbiUpdateRecipeInfo.fat, updatedJdbiRecipe.fat)

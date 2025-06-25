@@ -5,6 +5,7 @@ import epicurius.domain.Intolerance
 import epicurius.domain.picture.PictureDomain.Companion.RECIPES_FOLDER
 import epicurius.domain.recipe.Cuisine
 import epicurius.domain.recipe.MealType
+import epicurius.domain.recipe.RecipeInfo
 import epicurius.http.controllers.recipe.models.input.SearchRecipesInputModel
 import epicurius.repository.jdbi.recipe.models.JdbiRecipeInfo
 import epicurius.utils.generateRandomUsername
@@ -21,6 +22,7 @@ class SearchRecipesServiceTests : RecipeServiceTest() {
         mealType = listOf(MealType.DESSERT),
         intolerances = emptyList(),
         diets = listOf(Diet.OVO_VEGETARIAN, Diet.LACTO_VEGETARIAN),
+        servings = 4,
         minCalories = 200,
         maxCalories = 500,
         minCarbs = 20,
@@ -40,6 +42,7 @@ class SearchRecipesServiceTests : RecipeServiceTest() {
         ingredients = listOf("Eggs", "Sugar"),
         intolerances = emptyList(),
         diets = listOf(Diet.OVO_VEGETARIAN, Diet.LACTO_VEGETARIAN),
+        servings = 4,
         minCalories = 200,
         maxCalories = 500,
         minCarbs = 20,
@@ -67,7 +70,7 @@ class SearchRecipesServiceTests : RecipeServiceTest() {
     val limit = 10
 
     @Test
-    fun `Should search for a recipe by name`() {
+    fun `Should search for a recipe by name successfully`() {
         // given a user id (USER_ID) and a search form with only recipe name filled
         val recipeName = searchRecipesInputInfoWithoutIngredients.name
         val recipeInput = SearchRecipesInputModel(recipeName)
@@ -95,7 +98,7 @@ class SearchRecipesServiceTests : RecipeServiceTest() {
     }
 
     @Test
-    fun `Should search for a recipe according to user's intolerances`() {
+    fun `Should search for a recipe according to user's intolerances successfully`() {
         // given a user id (USER_ID) and a search form with recipe intolerance
         val recipeInput = SearchRecipesInputModel(intolerances = intoleranceList)
 
@@ -201,7 +204,7 @@ class SearchRecipesServiceTests : RecipeServiceTest() {
     }
 
     @Test
-    fun `Should search for recipes of public users`() {
+    fun `Should search for recipes of public users successfully`() {
         // given an id of a public user (USER_ID) and a search form (searchRecipesInputInfoWithIngredients)
 
         // mock
@@ -229,7 +232,7 @@ class SearchRecipesServiceTests : RecipeServiceTest() {
     }
 
     @Test
-    fun `Should search for recipes from private users when not followed`() {
+    fun `Should search for recipes from private users when not followed successfully`() {
         // given an id of a private user (AUTHOR_ID) and a search form (searchRecipesInputInfoWithIngredients)
 
         // mock
@@ -252,7 +255,7 @@ class SearchRecipesServiceTests : RecipeServiceTest() {
     }
 
     @Test
-    fun `Should search for recipes from private users when followed`() {
+    fun `Should search for recipes from private users when followed successfully`() {
         // given an id of a private user (AUTHOR_ID) and a search form (searchRecipesInputInfoWithIngredients) )
 
         // mock
@@ -277,5 +280,61 @@ class SearchRecipesServiceTests : RecipeServiceTest() {
         assertTrue(searchRecipesInputInfoWithIngredients.cuisine!!.contains(results.first().cuisine))
         assertTrue(searchRecipesInputInfoWithIngredients.mealType!!.contains(results.first().mealType))
         assertEquals(testPicture.bytes, results.first().picture)
+    }
+
+    @Test
+    fun `Should search for author's recipes according to preference successfully`() {
+        // given a user id (USER_ID)
+
+        // and a search form with recipe name and showAuthorRecipes set to true
+        val recipeName = searchRecipesInputInfoWithoutIngredients.name
+        val recipeInput =
+            SearchRecipesInputModel(
+                name = recipeName,
+                showAuthorRecipes = true
+            )
+
+        // mock
+        whenever(
+            jdbiRecipeRepositoryMock.searchRecipes(
+                USER_ID,
+                recipeInput.toSearchRecipeModel(recipeName),
+                null,
+                limit
+            )
+        ).thenReturn(listOf(recipeInfo))
+        whenever(pictureRepositoryMock.getPicture(testPicture.name, RECIPES_FOLDER)).thenReturn(testPicture.bytes)
+
+        // when searching for the recipe by name with author's preference
+        val results = searchRecipes(USER_ID, recipeInput, null, limit)
+
+        // then the author's recipe is found
+        assertEquals(1, results.size)
+        assertEquals(searchRecipesInputInfoWithoutIngredients.name, results.first().name)
+        assertTrue(searchRecipesInputInfoWithoutIngredients.cuisine!!.contains(results.first().cuisine))
+        assertTrue(searchRecipesInputInfoWithoutIngredients.mealType!!.contains(results.first().mealType))
+
+        // given a search form with recipe name and showAuthorRecipes set to false
+        val recipeInputWithoutAuthor =
+            SearchRecipesInputModel(
+                name = recipeName,
+                showAuthorRecipes = false
+            )
+
+        // mock
+        whenever(
+            jdbiRecipeRepositoryMock.searchRecipes(
+                USER_ID,
+                recipeInputWithoutAuthor.toSearchRecipeModel(recipeName),
+                null,
+                limit
+            )
+        ).thenReturn(emptyList())
+
+        // when searching for the recipe by name without author's preference
+        val resultsWithoutAuthor = searchRecipes(USER_ID, recipeInputWithoutAuthor, null, limit)
+
+        // then the author's recipe is not found
+        assertTrue(resultsWithoutAuthor.isEmpty())
     }
 }

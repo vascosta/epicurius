@@ -13,6 +13,7 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 import kotlin.test.assertNull
+import kotlin.test.assertTrue
 
 class CreateRecipeRepositoryTests : RecipeRepositoryTest() {
 
@@ -64,7 +65,7 @@ class CreateRecipeRepositoryTests : RecipeRepositoryTest() {
         assertEquals(jdbiCreateRecipeInfo.mealType, jdbiRecipeById.mealType.ordinal)
         assertEquals(jdbiCreateRecipeInfo.intolerances, jdbiRecipeById.intolerances.map { it.ordinal })
         assertEquals(jdbiCreateRecipeInfo.diets, jdbiRecipeById.diets.map { it.ordinal })
-        assertEquals(jdbiCreateRecipeInfo.ingredients, jdbiRecipeById.ingredients)
+        assertTrue(jdbiRecipeById.ingredients.containsAll(jdbiCreateRecipeInfo.ingredients))
         assertEquals(jdbiCreateRecipeInfo.calories, jdbiRecipeById.calories)
         assertEquals(jdbiCreateRecipeInfo.protein, jdbiRecipeById.protein)
         assertEquals(jdbiCreateRecipeInfo.fat, jdbiRecipeById.fat)

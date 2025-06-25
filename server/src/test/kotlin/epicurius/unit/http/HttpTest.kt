@@ -208,6 +208,7 @@ open class HttpTest : EpicuriusUnitTest() {
             maxProtein: Int? = null,
             minTime: Int? = null,
             maxTime: Int? = null,
+            showAuthorRecipes: Boolean = false,
             lastRecipeId: Int?,
             limit: Int
         ) = recipeController.searchRecipes(
@@ -229,6 +230,7 @@ open class HttpTest : EpicuriusUnitTest() {
             maxProtein,
             minTime,
             maxTime,
+            showAuthorRecipes,
             lastRecipeId,
             limit
         )

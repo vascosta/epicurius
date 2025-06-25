@@ -82,9 +82,21 @@ class SearchRecipesIntegrationTests : RecipeIntegrationTest() {
         val response = searchRecipes(
             testUser.token,
             name = "Pastel",
-            diets = listOf(Diet.LACTO_VEGETARIAN, Diet.OVO_VEGETARIAN),
             cuisine = Cuisine.MEDITERRANEAN,
             mealType = MealType.DESSERT,
+            intolerances = listOf(Intolerance.TREE_NUT),
+            diets = listOf(Diet.LACTO_VEGETARIAN, Diet.OVO_VEGETARIAN),
+            servings = 4,
+            minCalories = 100,
+            maxCalories = 400,
+            minCarbs = 4,
+            maxCarbs = 45,
+            minFat = 5,
+            maxFat = 15,
+            minProtein = 0,
+            maxProtein = 10,
+            minTime = 15,
+            maxTime = 45,
             lastRecipeId = null,
             limit = limit
         )
@@ -105,7 +117,22 @@ class SearchRecipesIntegrationTests : RecipeIntegrationTest() {
         val response = searchRecipes(
             testUser.token,
             name = "Pastel",
+            cuisine = Cuisine.MEDITERRANEAN,
+            mealType = MealType.DESSERT,
+            intolerances = listOf(Intolerance.TREE_NUT),
+            diets = listOf(Diet.LACTO_VEGETARIAN, Diet.OVO_VEGETARIAN),
             ingredients = listOf("flour", "sugar"),
+            servings = 4,
+            minCalories = 100,
+            maxCalories = 400,
+            minCarbs = 4,
+            maxCarbs = 45,
+            minFat = 5,
+            maxFat = 15,
+            minProtein = 0,
+            maxProtein = 10,
+            minTime = 15,
+            maxTime = 45,
             lastRecipeId = null,
             limit = limit
         )
@@ -124,6 +151,21 @@ class SearchRecipesIntegrationTests : RecipeIntegrationTest() {
         val response = searchRecipes(
             testUser.token,
             name = "Pastel",
+            cuisine = Cuisine.MEDITERRANEAN,
+            mealType = MealType.DESSERT,
+            intolerances = listOf(Intolerance.TREE_NUT),
+            diets = listOf(Diet.LACTO_VEGETARIAN, Diet.OVO_VEGETARIAN),
+            servings = 4,
+            minCalories = 100,
+            maxCalories = 400,
+            minCarbs = 4,
+            maxCarbs = 45,
+            minFat = 5,
+            maxFat = 15,
+            minProtein = 0,
+            maxProtein = 10,
+            minTime = 15,
+            maxTime = 45,
             lastRecipeId = null,
             limit = limit
         )
@@ -147,6 +189,21 @@ class SearchRecipesIntegrationTests : RecipeIntegrationTest() {
         val response = searchRecipes(
             testUser.token,
             name = testPrivateRecipe.name,
+            cuisine = Cuisine.MEDITERRANEAN,
+            mealType = MealType.DESSERT,
+            intolerances = listOf(Intolerance.TREE_NUT),
+            diets = listOf(Diet.LACTO_VEGETARIAN, Diet.OVO_VEGETARIAN),
+            servings = 4,
+            minCalories = 100,
+            maxCalories = 400,
+            minCarbs = 4,
+            maxCarbs = 45,
+            minFat = 5,
+            maxFat = 15,
+            minProtein = 0,
+            maxProtein = 10,
+            minTime = 15,
+            maxTime = 45,
             lastRecipeId = null,
             limit = limit
         )
@@ -171,6 +228,21 @@ class SearchRecipesIntegrationTests : RecipeIntegrationTest() {
         val response = searchRecipes(
             newUser.token,
             name = testPrivateRecipe.name.replace(" ", "-"),
+            cuisine = Cuisine.MEDITERRANEAN,
+            mealType = MealType.DESSERT,
+            intolerances = listOf(Intolerance.TREE_NUT),
+            diets = listOf(Diet.LACTO_VEGETARIAN, Diet.OVO_VEGETARIAN),
+            servings = 4,
+            minCalories = 100,
+            maxCalories = 400,
+            minCarbs = 4,
+            maxCarbs = 45,
+            minFat = 5,
+            maxFat = 15,
+            minProtein = 0,
+            maxProtein = 10,
+            minTime = 15,
+            maxTime = 45,
             lastRecipeId = null,
             limit = limit
         )
@@ -179,5 +251,76 @@ class SearchRecipesIntegrationTests : RecipeIntegrationTest() {
         assertNotNull(response)
         assertTrue(response.recipes.isNotEmpty())
         assertTrue(response.recipes.any { it.name == testPrivateRecipe.name })
+        assertTrue(response.recipes.any { it.authorUsername == testPrivateAuthor.user.name })
+    }
+
+    @Test
+    fun `Should search for the author's recipes according to preference with code 200`() {
+        // given an authenticated user and a recipe from a specific author
+        val authorRecipe = createRecipe(
+            testSearchAuthor.token,
+            body = createRecipeInputModel.copy("Author's Recipe"),
+            pictures = listOf(testPicture),
+        )?.recipe!!
+
+        // when searching for recipes with showAuthorRecipes set to true
+        val response = searchRecipes(
+            testSearchAuthor.token,
+            name = "Author's Recipe",
+            cuisine = Cuisine.MEDITERRANEAN,
+            mealType = MealType.DESSERT,
+            intolerances = listOf(Intolerance.TREE_NUT),
+            diets = listOf(Diet.LACTO_VEGETARIAN, Diet.OVO_VEGETARIAN),
+            servings = 4,
+            minCalories = 100,
+            maxCalories = 400,
+            minCarbs = 4,
+            maxCarbs = 45,
+            minFat = 5,
+            maxFat = 15,
+            minProtein = 0,
+            maxProtein = 10,
+            minTime = 15,
+            maxTime = 45,
+            showAuthorRecipes = true,
+            lastRecipeId = null,
+            limit = limit
+        )
+
+        // then the response contains the author's recipe
+        assertNotNull(response)
+        assertTrue(response.recipes.isNotEmpty())
+        assertTrue(response.recipes.any { it.name == authorRecipe.name })
+        assertTrue(response.recipes.any { it.authorUsername == testSearchAuthor.user.name })
+
+        // when searching for recipes with showAuthorRecipes set to false
+        val responseWithoutAuthorRecipes = searchRecipes(
+            testSearchAuthor.token,
+            name = "Author's Recipe",
+            cuisine = Cuisine.MEDITERRANEAN,
+            mealType = MealType.DESSERT,
+            intolerances = listOf(Intolerance.TREE_NUT),
+            diets = listOf(Diet.LACTO_VEGETARIAN, Diet.OVO_VEGETARIAN),
+            servings = 4,
+            minCalories = 100,
+            maxCalories = 400,
+            minCarbs = 4,
+            maxCarbs = 45,
+            minFat = 5,
+            maxFat = 15,
+            minProtein = 0,
+            maxProtein = 10,
+            minTime = 15,
+            maxTime = 45,
+            showAuthorRecipes = false,
+            lastRecipeId = null,
+            limit = limit
+        )
+
+        // then the response does not contain the author's recipe
+        assertNotNull(responseWithoutAuthorRecipes)
+        assertTrue(responseWithoutAuthorRecipes.recipes.isEmpty() ||
+                responseWithoutAuthorRecipes.recipes.none { it.authorUsername == testSearchAuthor.user.name }
+        )
     }
 }
