@@ -189,3 +189,39 @@ fun FiltersDialog(
         }
     )
 }
+
+fun clearFilters(
+    onCuisineChange: (List<String>) -> Unit,
+    onMealTypeChange: (List<String>) -> Unit,
+    onIngredientsChange: (List<String>) -> Unit,
+    onIntolerancesChange: (List<String>) -> Unit,
+    onDietsChange: (List<String>) -> Unit,
+    onServingsChange: (String) -> Unit,
+    onMinCaloriesChange: (String) -> Unit,
+    onMaxCaloriesChange: (String) -> Unit,
+    onMinCarbsChange: (String) -> Unit,
+    onMaxCarbsChange: (String) -> Unit,
+    onMinFatChange: (String) -> Unit,
+    onMaxFatChange: (String) -> Unit,
+    onMinProteinChange: (String) -> Unit,
+    onMaxProteinChange: (String) -> Unit,
+    onMinTimeChange: (String) -> Unit,
+    onMaxTimeChange: (String) -> Unit
+) {
+    onCuisineChange(emptyList())
+    onMealTypeChange(emptyList())
+    onIngredientsChange(emptyList())
+    onIntolerancesChange(emptyList())
+    onDietsChange(emptyList())
+    onServingsChange("")
+    onMinCaloriesChange("")
+    onMaxCaloriesChange("")
+    onMinCarbsChange("")
+    onMaxCarbsChange("")
+    onMinFatChange("")
+    onMaxFatChange("")
+    onMinProteinChange("")
+    onMaxProteinChange("")
+    onMinTimeChange("")
+    onMaxTimeChange("")
+}

@@ -4,7 +4,6 @@ import android.epicurius.domain.Diet
 import android.epicurius.domain.Intolerance
 import android.epicurius.domain.Picture
 import android.epicurius.domain.recipe.Cuisine
-import android.epicurius.domain.recipe.Ingredient
 import android.epicurius.domain.recipe.MealType
 import android.epicurius.services.api.recipe.models.input.CreateRecipeInputModel
 import android.epicurius.services.api.recipe.models.input.RateRecipeInputModel
@@ -117,14 +116,14 @@ class RecipeService(private val httpService: HttpService) {
     suspend fun createRecipe(
         token: String,
         createRecipeInfo: CreateRecipeInputModel,
-        pictures: List<Picture>
+        picturesBytes: List<ByteArray>
     ): APIResult<CreateRecipeOutputModel> =
         httpService.postMultipartWithJsonAndFiles<CreateRecipeOutputModel>(
             Uris.Recipe.RECIPES,
             "body",
             createRecipeInfo,
             "pictures",
-            pictures,
+            picturesBytes.map { Picture("picture", it) },
             token
         )
 

@@ -6,7 +6,6 @@ import android.epicurius.ui.navigation.TopBar
 import android.epicurius.ui.screens.search.camera.components.CameraView
 import android.epicurius.ui.screens.utils.LoadState
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
@@ -16,16 +15,15 @@ import androidx.compose.ui.graphics.Color
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
-import com.google.accompanist.permissions.shouldShowRationale
 
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun CameraScreen(
     ingredientsState: LoadState<List<String>>,
     onBackButton: () -> Unit,
-    onIdentifyIngredients: (ByteArray) -> Unit,
+    onIdentifyIngredients: (pictureBytes: ByteArray) -> Unit,
+    onConfirmIngredients: (ingredients: List<String>) -> Unit,
     onIngredientsClear: () -> Unit,
-    onConfirmIngredients: (List<String>) -> Unit,
     enableButtons: Boolean
 ) {
     val cameraPermissionState = rememberPermissionState(Manifest.permission.CAMERA)
@@ -47,16 +45,13 @@ fun CameraScreen(
                         CameraView(
                             ingredientsState = ingredientsState,
                             onIdentifyIngredients = onIdentifyIngredients,
-                            onIngredientsClear = onIngredientsClear,
                             onConfirmIngredients = onConfirmIngredients,
+                            onIngredientsClear = onIngredientsClear,
+                            enableButtons = enableButtons
                         )
                     }
 
-                    else -> {
-                        LaunchedEffect(Unit) {
-                            cameraPermissionState.launchPermissionRequest()
-                        }
-                    }
+                    else -> LaunchedEffect(Unit) { cameraPermissionState.launchPermissionRequest() }
                 }
             }
         },

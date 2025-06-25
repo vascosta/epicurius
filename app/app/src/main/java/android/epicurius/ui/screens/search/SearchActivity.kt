@@ -2,6 +2,7 @@ package android.epicurius.ui.screens.search
 
 import android.epicurius.domain.Diet
 import android.epicurius.domain.Intolerance
+import android.epicurius.domain.Picture
 import android.epicurius.domain.recipe.Cuisine
 import android.epicurius.domain.recipe.Ingredient
 import android.epicurius.domain.recipe.MealType
@@ -11,24 +12,36 @@ import android.epicurius.ui.navigation.Intents
 import android.epicurius.ui.navigation.navigateTo
 import android.epicurius.ui.screens.recipe.profile.RecipeProfileActivity
 import android.epicurius.ui.screens.user.profile.UserProfileActivity
+import android.epicurius.ui.screens.utils.Idle
 import android.epicurius.ui.screens.utils.apiSuccess
 import android.epicurius.ui.screens.utils.idle
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.compose.runtime.collectAsState
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
 class SearchActivity : EpicuriusActivity() {
     override val viewModel: SearchViewModel by getViewModel<SearchViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        lifecycleScope.launch {
+            viewModel.userInfo.collectLatest { state ->
+                if (state is Idle) viewModel.getUserInfo()
+            }
+        }
         setContent {
             val recipesResultState = viewModel.searchedRecipes.collectAsState(idle())
             val usersResultState = viewModel.searchedUsers.collectAsState(idle())
+            val ingredientsState = viewModel.ingredients.collectAsState(idle())
+            val userInfoState = viewModel.userInfo.collectAsState(idle())
             SearchScreen(
                 recipesResultState = recipesResultState.value,
                 usersResultState = usersResultState.value,
-                ingredientsState = apiSuccess(emptyList()),
+                ingredientsState = ingredientsState.value,
+                userInfoState = userInfoState.value,
                 onBackButton = { finish() },
                 onSearchRecipes = {
                     name: String?,
@@ -69,10 +82,12 @@ class SearchActivity : EpicuriusActivity() {
                     )
                 },
                 onSearchUsers = { name: String -> viewModel.searchUsers(name) },
+                onIdentifyIngredientsInPicture = { pictureBytes: ByteArray ->
+                    viewModel.identifyIngredientsInPicture(pictureBytes)
+                },
                 onSearchRecipesClear = { viewModel.clearSearchRecipes() },
                 onSearchUsersClear = { viewModel.clearSearchUsers() },
-                onIngredientsClear = {  },
-                onIdentifyIngredientsInPicture = {},
+                onIngredientsClear = { viewModel.clearIngredients() },
                 onUserProfileRequest = ::navigateToUserProfileActivity,
                 onRecipeProfileRequest = ::navigateToRecipeProfileActivity,
                 enableButtons = viewModel.enableButtons,

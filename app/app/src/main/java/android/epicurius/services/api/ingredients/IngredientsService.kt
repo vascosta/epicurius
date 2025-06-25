@@ -32,12 +32,12 @@ class IngredientsService(private val httpService: HttpService) {
 
     suspend fun identifyIngredientsInPicture(
         token: String,
-        picture: Picture
+        pictureBytes: ByteArray
     ): APIResult<IdentifyIngredientsInPictureOutputModel> =
         httpService.postMultipart<IdentifyIngredientsInPictureOutputModel>(
             Uris.Ingredients.INGREDIENTS,
             "picture",
-            listOf(picture),
+            listOf(Picture("picture", pictureBytes)),
             token = token
         )
 }

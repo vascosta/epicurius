@@ -29,18 +29,17 @@ import androidx.lifecycle.compose.LocalLifecycleOwner
 fun CameraView(
     ingredientsState: LoadState<List<String>>,
     onIdentifyIngredients: (ByteArray) -> Unit,
+    onConfirmIngredients: (List<String>) -> Unit,
     onIngredientsClear: () -> Unit,
-    onConfirmIngredients: (List<String>) -> Unit
+    enableButtons: Boolean,
 ) {
     val context = LocalContext.current
     val lifecycleOwner = LocalLifecycleOwner.current
     val imageCapture = remember { mutableStateOf<ImageCapture?>(null) }
 
-    val cameraProvider = remember {
-        ProcessCameraProvider.getInstance(context)
-    }
+    val cameraProvider = remember { ProcessCameraProvider.getInstance(context) }
 
-    var showDialog by remember { mutableStateOf(false) }
+    var showConfirmIngredientsDialog by remember { mutableStateOf(false) }
 
     Column(modifier = Modifier.fillMaxSize()) {
         AndroidView(
@@ -89,26 +88,23 @@ fun CameraView(
                     context = context,
                     onIdentifyIngredients = { bytes ->
                         onIdentifyIngredients(bytes)
-                        showDialog = true
+                        showConfirmIngredientsDialog = true
                     }
                 )
             },
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(16.dp)
-        ) {
-            Text("Take Picture")
-        }
+        ) { Text("Take Picture") }
     }
 
-    if (showDialog) {
+    if (showConfirmIngredientsDialog) {
         ConfirmIngredientsDialog(
             ingredientsState = ingredientsState,
-            onIngredientsClear = {
-                showDialog = false
-                onIngredientsClear()
-            },
-            onConfirm = onConfirmIngredients,
+            onConfirmIngredients = onConfirmIngredients,
+            onIngredientsClear = onIngredientsClear,
+            onCloseDialog = { showConfirmIngredientsDialog = false },
+            enableButtons = enableButtons
         )
     }
 }

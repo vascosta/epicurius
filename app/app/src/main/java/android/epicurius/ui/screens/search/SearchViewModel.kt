@@ -3,18 +3,18 @@ package android.epicurius.ui.screens.search
 import android.content.Context
 import android.epicurius.domain.Diet
 import android.epicurius.domain.Intolerance
+import android.epicurius.domain.Picture
 import android.epicurius.domain.recipe.Cuisine
-import android.epicurius.domain.recipe.Ingredient
 import android.epicurius.domain.recipe.MealType
 import android.epicurius.domain.recipe.RecipeInfo
 import android.epicurius.domain.recipe.validateCalories
 import android.epicurius.domain.recipe.validateCarbs
 import android.epicurius.domain.recipe.validateFat
-import android.epicurius.domain.recipe.validateIngredients
 import android.epicurius.domain.recipe.validateName
 import android.epicurius.domain.recipe.validatePreparationTime
 import android.epicurius.domain.recipe.validateProtein
 import android.epicurius.domain.user.SearchUser
+import android.epicurius.domain.user.UserInfo
 import android.epicurius.services.EpicuriusService
 import android.epicurius.services.http.utils.CachedResult
 import android.epicurius.storage.Session
@@ -39,15 +39,21 @@ class SearchViewModel(
     private val cacheSearchedRecipesFlow = MutableStateFlow<List<RecipeInfo>>(emptyList())
     private val lastFetchedRecipeIdFlow = MutableStateFlow<Int?>(null)
 
+    val searchedRecipes = searchedRecipesFlow.asStateFlow()
+    private val cacheSearchedRecipes = cacheSearchedRecipesFlow.asStateFlow()
+
     private val searchedUsersFlow = MutableStateFlow<LoadState<List<SearchUser>>>(idle())
     private val cacheSearchedUsersFlow = MutableStateFlow<List<SearchUser>>(emptyList())
     private val lastFetchedUserIdFlow = MutableStateFlow<Int?>(null)
 
-    val searchedRecipes = searchedRecipesFlow.asStateFlow()
-    private val cacheSearchedRecipes = cacheSearchedRecipesFlow.asStateFlow()
-
     val searchedUsers = searchedUsersFlow.asStateFlow()
     private val cacheSearchedUsers = cacheSearchedUsersFlow.asStateFlow()
+
+    private val ingredientsFlow = MutableStateFlow<LoadState<List<String>>>(idle())
+    val ingredients = ingredientsFlow.asStateFlow()
+
+    private val userInfoFlow = MutableStateFlow<LoadState<UserInfo>>(idle())
+    val userInfo = userInfoFlow.asStateFlow()
 
     fun searchRecipes(
         name: String?,
@@ -118,8 +124,16 @@ class SearchViewModel(
         viewModelScope.launch { fetchUsers(name) }
     }
 
-    fun identifyIngredientsOnPicture() {
+    fun identifyIngredientsInPicture(pictureBytes: ByteArray) {
+        disableButtons()
+        ingredientsFlow.value = loading()
+        viewModelScope.launch { handleIdentifyIngredientsOnPicture(pictureBytes) }
+    }
 
+    fun getUserInfo() {
+        disableButtons()
+        userInfoFlow.value = loading()
+        viewModelScope.launch { getCachedUserInfo() }
     }
 
     fun clearSearchRecipes() {
@@ -132,6 +146,10 @@ class SearchViewModel(
         searchedUsersFlow.value = idle()
         cacheSearchedUsersFlow.value = emptyList()
         lastFetchedUserIdFlow.value = null
+    }
+
+    fun clearIngredients() {
+        ingredientsFlow.value = idle()
     }
 
     private suspend fun fetchRecipes(
@@ -221,6 +239,30 @@ class SearchViewModel(
                 else searchedUsersFlow.value = cache(cacheSearchedUsers.value)
             }
         }
+        enableButtons()
+    }
+
+    private suspend fun handleIdentifyIngredientsOnPicture(pictureBytes: ByteArray) {
+        val result = request {
+            val token = session.getToken()
+            service.ingredientsService.identifyIngredientsInPicture(
+                token,
+                pictureBytes
+            )
+        }
+        when {
+            result.isFailure -> ingredientsFlow.value = cache(emptyList())
+            result.isSuccess -> {
+                val identifiedIngredients = result.getValueOrThrow().ingredients
+                ingredientsFlow.value = apiSuccess(identifiedIngredients)
+            }
+        }
+        enableButtons()
+    }
+
+    private suspend fun getCachedUserInfo() {
+        val userInfo = session.getUserInfo()
+        userInfoFlow.value = cache(userInfo)
         enableButtons()
     }
 

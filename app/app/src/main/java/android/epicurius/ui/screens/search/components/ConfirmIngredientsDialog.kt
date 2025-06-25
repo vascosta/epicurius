@@ -24,21 +24,34 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun ConfirmIngredientsDialog(
     ingredientsState: LoadState<List<String>>,
+    onConfirmIngredients: (ingredients: List<String>) -> Unit,
     onIngredientsClear: () -> Unit,
-    onConfirm: (List<String>) -> Unit
+    onCloseDialog: () -> Unit,
+    enableButtons: Boolean
 ) {
     var ingredientsList by remember { mutableStateOf(listOf<String>()) }
     var newIngredient by remember { mutableStateOf("") }
 
     AlertDialog(
-        onDismissRequest = { onIngredientsClear() },
+        onDismissRequest = {
+            onIngredientsClear()
+            onCloseDialog()
+        },
         confirmButton = {
-            Button(onClick = { onIngredientsClear() }) {
-                Text("Cancel")
-            }
-            Button(onClick = { onConfirm(ingredientsList) }) {
-                Text("OK")
-            }
+            Button(
+                onClick = {
+                    onIngredientsClear()
+                    onCloseDialog()
+                },
+                enabled = enableButtons
+            ) { Text("Cancel") }
+            Button(
+                onClick = {
+                    onConfirmIngredients(ingredientsList)
+                    onCloseDialog()
+                },
+                enabled = enableButtons
+            ) { Text("OK") }
         },
         title = { Text("Confirm Ingredients") },
         text = {
@@ -50,8 +63,8 @@ fun ConfirmIngredientsDialog(
                         Column {
                             ingredientsList.forEach { ingredient ->
                                 Row(
-                                    verticalAlignment = Alignment.CenterVertically,
-                                    modifier = Modifier.padding(vertical = 4.dp)
+                                    modifier = Modifier.padding(vertical = 4.dp),
+                                    verticalAlignment = Alignment.CenterVertically
                                 ) {
                                     Checkbox(
                                         checked = true,
@@ -65,36 +78,34 @@ fun ConfirmIngredientsDialog(
                                     )
                                 }
                             }
-
                             Row(
-                                verticalAlignment = Alignment.CenterVertically,
-                                modifier = Modifier.fillMaxWidth().padding(top = 8.dp)
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(top = 8.dp),
+                                verticalAlignment = Alignment.CenterVertically
                             ) {
                                 TextField(
                                     value = newIngredient,
-                                    label = "Add Ingredient",
+                                    onValueChange = { newIngredient = it },
                                     modifier = Modifier
                                         .weight(0.5f)
                                         .padding(end = 8.dp),
-                                    onValueChange = { newIngredient = it },
-                                    enabled = true
+                                    enabled = true,
+                                    label = "Add Ingredient"
                                 )
                                 Button(
                                     onClick = {
                                         if (newIngredient.isNotBlank()) {
-                                            ingredientsList = ingredientsList + newIngredient
+                                            ingredientsList += newIngredient
                                             newIngredient = ""
                                         }
                                     },
-                                    modifier = Modifier.padding(start = 8.dp)
-                                ) {
-                                    Text("Add")
-                                }
+                                    modifier = Modifier.padding(start = 8.dp),
+                                    enabled = enableButtons
+                                ) { Text("Add") }
                             }
                         }
-                    } else if (ingredientsState is Loaded) {
-                        Text("No ingredients found.")
-                    }
+                    } else if (ingredientsState is Loaded) Text("No ingredients found.")
                 }
             )
         }
