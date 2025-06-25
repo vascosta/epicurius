@@ -19,7 +19,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
-class RecipeCollectionsViewModel(
+open class RecipeCollectionsViewModel(
     service: EpicuriusService,
     session: Session,
     context: Context

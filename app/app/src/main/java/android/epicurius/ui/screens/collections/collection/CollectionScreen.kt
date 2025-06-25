@@ -122,8 +122,6 @@ fun CollectionScreen(
                                         recipeInfo = it,
                                         onRemoveRecipeFromCollection = onRecipeDelete,
                                         onRecipeRequest = onRecipeRequest,
-                                        onRecipeCollectionsRequest = {},
-                                        onRecipeCollectionsClear = {},
                                         enableButtons = enableButtons
                                     )
                                     Spacer(modifier = Modifier.height(10.dp))

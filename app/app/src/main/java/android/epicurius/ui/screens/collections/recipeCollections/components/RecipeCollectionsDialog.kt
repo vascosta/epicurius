@@ -31,12 +31,12 @@ fun RecipeCollectionsDialog(
     recipeId: Int,
     recipeCollectionsStateBundle: RecipeCollectionsStateBundle? = null,
     onAddRecipeToCollections: (
-        collectionsToAdd: List<CollectionProfile>,
-        recipeId: Int
+        recipeId: Int,
+        collectionsToAdd: List<CollectionProfile>
     ) -> Unit = { _, _ -> },
     onRemoveRecipeFromCollections: (
-        collectionsToRemove: List<CollectionProfile>,
-        recipeId: Int
+        recipeId: Int,
+        collectionsToRemove: List<CollectionProfile>
     ) -> Unit = { _, _ -> },
     onRecipeCollectionsRequest: (recipeId: Int) -> Unit = { },
     onDismissRequest: () -> Unit = {},
