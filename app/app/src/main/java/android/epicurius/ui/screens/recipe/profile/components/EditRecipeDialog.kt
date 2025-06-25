@@ -13,6 +13,7 @@ import android.epicurius.ui.screens.utils.DropdownMenuComponent
 import android.epicurius.ui.screens.utils.FormTextField
 import android.epicurius.ui.screens.utils.MultiSelectDropdownMenuComponent
 import android.epicurius.ui.screens.utils.NumberLineTextField
+import android.epicurius.ui.screens.utils.isValidForNumberTextField
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
@@ -95,13 +96,13 @@ fun EditRecipeDialog(
                 NumberLineTextField(
                     parameterName = "Duration (min)",
                     value = duration,
-                    onValueChange = { duration = it },
+                    onValueChange = { if (isValidForNumberTextField(it)) duration = it },
                     enabled = buttonsEnable
                 )
                 NumberLineTextField(
                     parameterName = "Serving (px)",
                     value = serving,
-                    onValueChange = { serving = it },
+                    onValueChange = { if (isValidForNumberTextField(it)) serving = it },
                     enabled = buttonsEnable
                 )
                 DropdownMenuComponent(

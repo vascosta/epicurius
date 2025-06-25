@@ -5,6 +5,7 @@ import android.epicurius.ui.screens.recipe.createRecipe.IngredientComponent
 import android.epicurius.ui.screens.utils.DropdownMenuComponent
 import android.epicurius.ui.screens.utils.NumberLineTextField
 import android.epicurius.ui.screens.utils.TextField
+import android.epicurius.ui.screens.utils.isValidForNumberTextField
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -50,9 +51,11 @@ fun IngredientsComponent(
                         parameterName = "Quantity",
                         value = ingredient.quantity,
                         onValueChange = { newQuantity ->
-                            val updatedList = ingredients.toMutableList()
-                            updatedList[index] = updatedList[index].copy(quantity = newQuantity)
-                            onIngredientsChange(updatedList)
+                            if (isValidForNumberTextField(newQuantity)) {
+                                val updatedList = ingredients.toMutableList()
+                                updatedList[index] = updatedList[index].copy(quantity = newQuantity)
+                                onIngredientsChange(updatedList)
+                            }
                         },
                         modifier = Modifier.weight(1f),
                         enabled = enabled
