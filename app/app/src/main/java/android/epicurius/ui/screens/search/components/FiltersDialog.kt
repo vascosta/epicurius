@@ -4,18 +4,24 @@ import android.epicurius.domain.Diet
 import android.epicurius.domain.Intolerance
 import android.epicurius.domain.recipe.Cuisine
 import android.epicurius.domain.recipe.MealType
+import android.epicurius.ui.screens.recipe.createRecipe.components.DividerComponent
 import android.epicurius.ui.screens.utils.MultiSelectDropdownMenuComponent
 import android.epicurius.ui.screens.utils.NumberTextField
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Checkbox
+import androidx.compose.material3.Divider
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 
 @Composable
 fun FiltersDialog(
@@ -53,6 +59,8 @@ fun FiltersDialog(
     onMinTimeChange: (String) -> Unit,
     maxTime: String,
     onMaxTimeChange: (String) -> Unit,
+    showAuthorRecipes: Boolean,
+    onShowAuthorRecipesChange: (Boolean) -> Unit,
     enableButtons: Boolean
 ) {
     AlertDialog(
@@ -84,7 +92,6 @@ fun FiltersDialog(
                     enabled = enableButtons,
                     label = "Meal Type"
                 )
-                // add ingredients field (create recipe)
                 MultiSelectDropdownMenuComponent(
                     options = Intolerance.entries.map { it.displayName },
                     values = intolerances,
@@ -185,6 +192,23 @@ fun FiltersDialog(
                         label = "Max Time"
                     )
                 }
+
+                DividerComponent()
+                FilterIngredientsComponent(
+                    ingredients = ingredients,
+                    onIngredientsChange = onIngredientsChange,
+                    enableButtons = enableButtons
+                )
+                DividerComponent()
+
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Checkbox(
+                        checked = showAuthorRecipes,
+                        onCheckedChange = onShowAuthorRecipesChange,
+                        enabled = enableButtons
+                    )
+                    Text("Show Author Recipes", modifier = Modifier.weight(1f))
+                }
             }
         }
     )
@@ -206,13 +230,15 @@ fun clearFilters(
     onMinProteinChange: (String) -> Unit,
     onMaxProteinChange: (String) -> Unit,
     onMinTimeChange: (String) -> Unit,
-    onMaxTimeChange: (String) -> Unit
+    onMaxTimeChange: (String) -> Unit,
+    onShowAuthorRecipesChange: (Boolean) -> Unit
 ) {
     onCuisineChange(emptyList())
     onMealTypeChange(emptyList())
     onIngredientsChange(emptyList())
     onIntolerancesChange(emptyList())
     onDietsChange(emptyList())
+    onIngredientsChange(emptyList())
     onServingsChange("")
     onMinCaloriesChange("")
     onMaxCaloriesChange("")
@@ -224,4 +250,49 @@ fun clearFilters(
     onMaxProteinChange("")
     onMinTimeChange("")
     onMaxTimeChange("")
+    onShowAuthorRecipesChange(false)
+}
+
+@Preview
+@Composable
+fun FiltersDialogPreview() {
+    FiltersDialog(
+        onDismiss = {},
+        onCancel = {},
+        cuisine = emptyList(),
+        onCuisineChange = {},
+        mealType = emptyList(),
+        onMealTypeChange = {},
+        ingredients = emptyList(),
+        onIngredientsChange = {},
+        intolerances = emptyList(),
+        onIntolerancesChange = {},
+        diets = emptyList(),
+        onDietsChange = {},
+        servings = "",
+        onServingsChange = {},
+        minCalories = "",
+        onMinCaloriesChange = {},
+        maxCalories = "",
+        onMaxCaloriesChange = {},
+        minCarbs = "",
+        onMinCarbsChange = {},
+        maxCarbs = "",
+        onMaxCarbsChange = {},
+        minFat = "",
+        onMinFatChange = {},
+        maxFat = "",
+        onMaxFatChange = {},
+        minProtein = "",
+        onMinProteinChange = {},
+        maxProtein = "",
+        onMaxProteinChange = {},
+        minTime = "",
+        onMinTimeChange = {},
+        maxTime = "",
+        onMaxTimeChange = {},
+        showAuthorRecipes = false,
+        onShowAuthorRecipesChange = {},
+        enableButtons = true
+    )
 }

@@ -134,6 +134,7 @@ fun SearchScreenContent(
     var maxProtein by remember { mutableStateOf("") }
     var minTime by remember { mutableStateOf("") }
     var maxTime by remember { mutableStateOf("") }
+    var showAuthorRecipes by remember { mutableStateOf(false) }
 
     var selectedImageBytes by remember { mutableStateOf<ByteArray?>(null) }
 
@@ -264,7 +265,8 @@ fun SearchScreenContent(
                                         onMinProteinChange = { minProtein = it },
                                         onMaxProteinChange = { maxProtein = it },
                                         onMinTimeChange = { minTime = it },
-                                        onMaxTimeChange = { maxTime = it }
+                                        onMaxTimeChange = { maxTime = it },
+                                        onShowAuthorRecipesChange = { showAuthorRecipes = it }
                                     )
                                 },
                                 modifier = Modifier
@@ -315,7 +317,8 @@ fun SearchScreenContent(
                                         onMinProteinChange = { minProtein = it },
                                         onMaxProteinChange = { maxProtein = it },
                                         onMinTimeChange = { minTime = it },
-                                        onMaxTimeChange = { maxTime = it }
+                                        onMaxTimeChange = { maxTime = it },
+                                        onShowAuthorRecipesChange = { showAuthorRecipes = it }
                                     )
                                 },
                                 modifier = Modifier
@@ -432,7 +435,8 @@ fun SearchScreenContent(
                                 onMinProteinChange = { minProtein = it },
                                 onMaxProteinChange = { maxProtein = it },
                                 onMinTimeChange = { minTime = it },
-                                onMaxTimeChange = { maxTime = it }
+                                onMaxTimeChange = { maxTime = it },
+                                onShowAuthorRecipesChange = { showAuthorRecipes = it }
                             )
                         },
                         cuisine = cuisine,
@@ -467,6 +471,8 @@ fun SearchScreenContent(
                         onMinTimeChange = { if (isValidForNumberTextField(it)) minTime = it },
                         maxTime = maxTime,
                         onMaxTimeChange = { if (isValidForNumberTextField(it)) maxTime = it },
+                        showAuthorRecipes = showAuthorRecipes,
+                        onShowAuthorRecipesChange = { showAuthorRecipes = it },
                         enableButtons
                     )
                 }

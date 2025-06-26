@@ -43,6 +43,7 @@ fun IngredientsComponent(
                     .padding(vertical = 10.dp),
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
+                val updatedList = ingredients.toMutableList()
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -52,7 +53,6 @@ fun IngredientsComponent(
                         value = ingredient.quantity,
                         onValueChange = { newQuantity ->
                             if (isValidForNumberTextField(newQuantity)) {
-                                val updatedList = ingredients.toMutableList()
                                 updatedList[index] = updatedList[index].copy(quantity = newQuantity)
                                 onIngredientsChange(updatedList)
                             }
@@ -64,7 +64,6 @@ fun IngredientsComponent(
                         options = IngredientUnit.entries.map { it.name },
                         value = ingredient.unit,
                         onValueChange = { newUnit ->
-                            val updatedList = ingredients.toMutableList()
                             updatedList[index] = updatedList[index].copy(unit = newUnit)
                             onIngredientsChange(updatedList)
                         },
@@ -80,7 +79,6 @@ fun IngredientsComponent(
                     TextField(
                         value = ingredient.name,
                         onValueChange = { newName ->
-                            val updatedList = ingredients.toMutableList()
                             updatedList[index] = updatedList[index].copy(name = newName)
                             onIngredientsChange(updatedList)
                         },
@@ -92,7 +90,6 @@ fun IngredientsComponent(
                     )
                     DeleteFieldButton(
                         onClick = {
-                            val updatedList = ingredients.toMutableList()
                             updatedList.removeAt(index)
                             onIngredientsChange(updatedList)
                         },

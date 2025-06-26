@@ -91,6 +91,7 @@ fun MealPlannerSearchScreen(
     var maxProtein by remember { mutableStateOf("") }
     var minTime by remember { mutableStateOf("") }
     var maxTime by remember { mutableStateOf("") }
+    var showAuthorRecipes by remember { mutableStateOf(false) }
 
     var recipeResults by remember { mutableStateOf<List<RecipeInfo>>(emptyList()) }
 
@@ -196,6 +197,8 @@ fun MealPlannerSearchScreen(
                         onMinTimeChange = { if (isValidForNumberTextField(it)) minTime = it },
                         maxTime = maxTime,
                         onMaxTimeChange = { if (isValidForNumberTextField(it)) maxTime = it },
+                        showAuthorRecipes = showAuthorRecipes,
+                        onShowAuthorRecipesChange = { showAuthorRecipes = it },
                         enableButtons = enableButtons
                     )
                 }
