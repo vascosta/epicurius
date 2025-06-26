@@ -9,22 +9,22 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.mockito.kotlin.whenever
 
-class UpdateRateRecipeServiceTests : RateRecipeServiceTest() {
+class UpdateUserRecipeRatingServiceTests : RateRecipeServiceTest() {
 
     @Test
-    fun `Should update recipe rate successfully`() {
+    fun `Should update user's recipe rating successfully`() {
         // given a user (USER_ID) who has rated a recipe (RECIPE_ID)
 
         // mock
         whenever(jdbiRecipeRepositoryMock.getRecipeById(RECIPE_ID)).thenReturn(jdbiRecipeModel)
         whenever(jdbiUserRepositoryMock.checkUserVisibility(AUTHOR_USERNAME, USER_ID)).thenReturn(true)
         whenever(jdbiRateRecipeRepositoryMock.checkIfUserAlreadyRated(USER_ID, RECIPE_ID)).thenReturn(true)
-        whenever(jdbiRateRecipeRepositoryMock.updateRecipeRate(RECIPE_ID, USER_ID, RATING_3)).thenReturn(RATING_3.toDouble())
+        whenever(jdbiRateRecipeRepositoryMock.updateUserRecipeRating(RECIPE_ID, USER_ID, RATING_3)).thenReturn(RATING_3.toDouble())
 
-        // when updating the recipe rate
-        val rate = updateRecipeRate(USER_ID, RECIPE_ID, RATING_3)
+        // when updating the user's recipe rating
+        val rate = updateUserRecipeRating(USER_ID, RECIPE_ID, RATING_3)
 
-        // then the recipe rate is updated successfully
+        // then the user's recipe rating is updated successfully
         assertEquals(RATING_3.toDouble(), rate)
     }
 
@@ -36,10 +36,10 @@ class UpdateRateRecipeServiceTests : RateRecipeServiceTest() {
         // mock
         whenever(jdbiRecipeRepositoryMock.getRecipeById(nonExistingRecipeId)).thenReturn(null)
 
-        // when updating the recipe rate
-        // then the recipe rate cannot be updated and throws RecipeNotFound exception
+        // when updating the user's recipe rating
+        // then the user's recipe rating cannot be updated and throws RecipeNotFound exception
         assertThrows<RecipeNotFound> {
-            updateRecipeRate(USER_ID, nonExistingRecipeId, RATING_3)
+            updateUserRecipeRating(USER_ID, nonExistingRecipeId, RATING_3)
         }
     }
 
@@ -51,10 +51,10 @@ class UpdateRateRecipeServiceTests : RateRecipeServiceTest() {
         whenever(jdbiRecipeRepositoryMock.getRecipeById(RECIPE_ID)).thenReturn(jdbiRecipeModel)
         whenever(jdbiUserRepositoryMock.checkUserVisibility(AUTHOR_USERNAME, AUTHOR_ID)).thenReturn(true)
 
-        // when updating the recipe rate
-        // then the recipe rate cannot be updated and throws AuthorCannotUpdateRating exception
+        // when updating the user's recipe rating
+        // then the user's recipe rating cannot be updated and throws AuthorCannotUpdateRating exception
         assertThrows<AuthorCannotUpdateRating> {
-            updateRecipeRate(AUTHOR_ID, RECIPE_ID, RATING_3)
+            updateUserRecipeRating(AUTHOR_ID, RECIPE_ID, RATING_3)
         }
     }
 
@@ -66,10 +66,10 @@ class UpdateRateRecipeServiceTests : RateRecipeServiceTest() {
         whenever(jdbiRecipeRepositoryMock.getRecipeById(RECIPE_ID)).thenReturn(jdbiRecipeModel)
         whenever(jdbiUserRepositoryMock.checkUserVisibility(AUTHOR_USERNAME, USER_ID)).thenReturn(false)
 
-        // when updating the recipe rate
-        // then the recipe rate cannot be updated and throws RecipeNotAccessible exception
+        // when updating the recipe rating
+        // then the user's recipe rating cannot be updated and throws RecipeNotAccessible exception
         assertThrows<RecipeNotAccessible> {
-            updateRecipeRate(USER_ID, RECIPE_ID, RATING_3)
+            updateUserRecipeRating(USER_ID, RECIPE_ID, RATING_3)
         }
     }
 
@@ -82,10 +82,10 @@ class UpdateRateRecipeServiceTests : RateRecipeServiceTest() {
         whenever(jdbiUserRepositoryMock.checkUserVisibility(AUTHOR_USERNAME, USER_ID)).thenReturn(true)
         whenever(jdbiRateRecipeRepositoryMock.checkIfUserAlreadyRated(USER_ID, RECIPE_ID)).thenReturn(false)
 
-        // when updating the recipe rate
-        // then the recipe rate cannot be updated and throws UserHasNotRated exception
+        // when updating the recipe rating
+        // then the user's recipe rating cannot be updated and throws UserHasNotRated exception
         assertThrows<UserHasNotRated> {
-            updateRecipeRate(USER_ID, RECIPE_ID, RATING_3)
+            updateUserRecipeRating(USER_ID, RECIPE_ID, RATING_3)
         }
     }
 }

@@ -12,19 +12,19 @@ import org.mockito.kotlin.whenever
 import org.springframework.http.HttpStatus
 import kotlin.test.assertEquals
 
-class DeleteRecipeRateControllerTests : RecipeControllerTest() {
+class DeleteUserRecipeRatingControllerTests : RecipeControllerTest() {
 
     @Test
-    fun `Should delete recipe rate successfully`() {
+    fun `Should delete user's recipe rating successfully`() {
         // given an authenticated user and a recipe
 
-        // when the user deletes the recipe
-        val response = deleteRecipeRate(testAuthenticatedUser, RECIPE_ID)
+        // when the user deletes the recipe rating
+        val response = deleteUserRecipeRating(testAuthenticatedUser, RECIPE_ID)
 
-        // then the recipe should be deleted successfully
+        // then the user's recipe rating should be deleted successfully
         verify(
             rateRecipeServiceMock
-        ).deleteRecipeRate(
+        ).deleteUserRecipeRate(
             testAuthenticatedUser.user.id,
             RECIPE_ID
         )
@@ -39,15 +39,15 @@ class DeleteRecipeRateControllerTests : RecipeControllerTest() {
 
         // mock
         whenever(
-            rateRecipeServiceMock.deleteRecipeRate(
+            rateRecipeServiceMock.deleteUserRecipeRate(
                 testAuthenticatedUser.user.id,
                 nonExistingRecipeId
             )
         ).thenThrow(RecipeNotFound())
 
-        // when deleting the recipe rate
-        // then the recipe rate cannot be deleted and throws RecipeNotFound exception
-        assertThrows<RecipeNotFound> { deleteRecipeRate(testAuthenticatedUser, nonExistingRecipeId) }
+        // when deleting the user's recipe rating
+        // then the user's recipe rating cannot be deleted and throws RecipeNotFound exception
+        assertThrows<RecipeNotFound> { deleteUserRecipeRating(testAuthenticatedUser, nonExistingRecipeId) }
     }
 
     @Test
@@ -56,15 +56,15 @@ class DeleteRecipeRateControllerTests : RecipeControllerTest() {
 
         // mock
         whenever(
-            rateRecipeServiceMock.deleteRecipeRate(
+            rateRecipeServiceMock.deleteUserRecipeRate(
                 testAuthenticatedUser.user.id,
                 RECIPE_ID
             )
         ).thenThrow(AuthorCannotDeleteRating())
 
-        // when deleting the recipe rate
-        // then the recipe rate cannot be deleted and throws AuthorCannotDeleteRating exception
-        assertThrows<AuthorCannotDeleteRating> { deleteRecipeRate(testAuthenticatedUser, RECIPE_ID) }
+        // when deleting the user's recipe rating
+        // then the user's recipe rating cannot be deleted and throws AuthorCannotDeleteRating exception
+        assertThrows<AuthorCannotDeleteRating> { deleteUserRecipeRating(testAuthenticatedUser, RECIPE_ID) }
     }
 
     @Test
@@ -73,15 +73,15 @@ class DeleteRecipeRateControllerTests : RecipeControllerTest() {
 
         // mock
         whenever(
-            rateRecipeServiceMock.deleteRecipeRate(
+            rateRecipeServiceMock.deleteUserRecipeRate(
                 testAuthenticatedUser.user.id,
                 RECIPE_ID
             )
         ).thenThrow(UserHasNotRated(testAuthenticatedUser.user.id, RECIPE_ID))
 
-        // when deleting the recipe rate
-        // then the recipe rate cannot be deleted and throws UserHasNotRated exception
-        assertThrows<UserHasNotRated> { deleteRecipeRate(testAuthenticatedUser, RECIPE_ID) }
+        // when deleting the user's recipe rating
+        // then the user's recipe rating cannot be deleted and throws UserHasNotRated exception
+        assertThrows<UserHasNotRated> { deleteUserRecipeRating(testAuthenticatedUser, RECIPE_ID) }
     }
 
     @Test
@@ -90,14 +90,14 @@ class DeleteRecipeRateControllerTests : RecipeControllerTest() {
 
         // mock
         whenever(
-            rateRecipeServiceMock.deleteRecipeRate(
+            rateRecipeServiceMock.deleteUserRecipeRate(
                 testAuthenticatedUser.user.id,
                 RECIPE_ID
             )
         ).thenThrow(RecipeNotAccessible())
 
-        // when deleting the recipe rate
-        // then the recipe rate cannot be deleted and throws RecipeNotAccessible exception
-        assertThrows<RecipeNotAccessible> { deleteRecipeRate(testAuthenticatedUser, RECIPE_ID) }
+        // when deleting the user's recipe rating
+        // then the user's recipe rating cannot be deleted and throws RecipeNotAccessible exception
+        assertThrows<RecipeNotAccessible> { deleteUserRecipeRating(testAuthenticatedUser, RECIPE_ID) }
     }
 }

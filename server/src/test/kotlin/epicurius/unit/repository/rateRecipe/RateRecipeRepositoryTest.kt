@@ -22,19 +22,19 @@ open class RateRecipeRepositoryTest : RepositoryTest() {
 
     companion object {
 
-        fun getRecipeRate(recipeId: Int) =
-            tm.run { it.rateRecipeRepository.getRecipeRate(recipeId) }
+        fun getRecipeRating(recipeId: Int) =
+            tm.run { it.rateRecipeRepository.getRecipeRating(recipeId) }
 
-        fun getRecipeUserRate(recipeId: Int, userId: Int) =
-            tm.run { it.rateRecipeRepository.getUserRecipeRate(recipeId, userId) }
+        fun getUserRecipeRating(recipeId: Int, userId: Int) =
+            tm.run { it.rateRecipeRepository.getUserRecipeRating(recipeId, userId) }
 
         fun rateRecipe(recipeId: Int, userId: Int, rating: Int) =
             tm.run { it.rateRecipeRepository.rateRecipe(recipeId, userId, rating) }
 
-        fun updateRecipeRate(recipeId: Int, userId: Int, rating: Int) =
-            tm.run { it.rateRecipeRepository.updateRecipeRate(recipeId, userId, rating) }
+        fun updateUserRecipeRating(recipeId: Int, userId: Int, rating: Int) =
+            tm.run { it.rateRecipeRepository.updateUserRecipeRating(recipeId, userId, rating) }
 
-        fun deleteRecipeRate(recipeId: Int, userId: Int) =
-            tm.run { it.rateRecipeRepository.deleteRecipeRate(recipeId, userId) }
+        fun deleteUserRecipeRating(recipeId: Int, userId: Int) =
+            tm.run { it.rateRecipeRepository.deleteUserRecipeRating(recipeId, userId) }
     }
 }

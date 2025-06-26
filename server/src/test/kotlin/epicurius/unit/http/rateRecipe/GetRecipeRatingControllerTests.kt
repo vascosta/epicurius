@@ -2,14 +2,14 @@ package epicurius.unit.http.rateRecipe
 
 import epicurius.domain.exceptions.RecipeNotAccessible
 import epicurius.domain.exceptions.RecipeNotFound
-import epicurius.http.controllers.rateRecipe.models.output.GetRecipeRateOutputModel
+import epicurius.http.controllers.rateRecipe.models.output.GetRecipeRatingOutputModel
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.mockito.kotlin.whenever
 import org.springframework.http.HttpStatus
 
-class GetRecipeRateControllerTests : RateRecipeControllerTest() {
+class GetRecipeRatingControllerTests : RateRecipeControllerTest() {
 
     @Test
     fun `Should get recipe rate successfully`() {
@@ -17,16 +17,16 @@ class GetRecipeRateControllerTests : RateRecipeControllerTest() {
 
         // mock
         whenever(
-            rateRecipeServiceMock.getRecipeRate(testAuthenticatedUser.user.id, RECIPE_ID)
+            rateRecipeServiceMock.getRecipeRating(testAuthenticatedUser.user.id, RECIPE_ID)
         ).thenReturn(RATING_5.toDouble())
 
-        // when the user gets the recipe rate
-        val response = getRecipeRate(testAuthenticatedUser, RECIPE_ID)
+        // when the user gets the recipe rating
+        val response = getRecipeRating(testAuthenticatedUser, RECIPE_ID)
 
-        // then the recipe rate should be returned successfully
+        // then the recipe rating should be returned successfully
         assertEquals(HttpStatus.OK, response.statusCode)
         assertEquals(
-            GetRecipeRateOutputModel(RATING_5.toDouble()),
+            GetRecipeRatingOutputModel(RATING_5.toDouble()),
             response.body
         )
     }
@@ -38,12 +38,12 @@ class GetRecipeRateControllerTests : RateRecipeControllerTest() {
 
         // mock
         whenever(
-            rateRecipeServiceMock.getRecipeRate(testAuthenticatedUser.user.id, nonExistingRecipeId)
+            rateRecipeServiceMock.getRecipeRating(testAuthenticatedUser.user.id, nonExistingRecipeId)
         ).thenThrow(RecipeNotFound())
 
-        // when getting the recipe rate
+        // when getting the recipe rating
         // then the recipe rating is not returned and throws RecipeNotFound exception
-        assertThrows<RecipeNotFound> { getRecipeRate(testAuthenticatedUser, nonExistingRecipeId) }
+        assertThrows<RecipeNotFound> { getRecipeRating(testAuthenticatedUser, nonExistingRecipeId) }
     }
 
     @Test
@@ -52,11 +52,11 @@ class GetRecipeRateControllerTests : RateRecipeControllerTest() {
 
         // mock
         whenever(
-            rateRecipeServiceMock.getRecipeRate(testAuthenticatedUser.user.id, RECIPE_ID)
+            rateRecipeServiceMock.getRecipeRating(testAuthenticatedUser.user.id, RECIPE_ID)
         ).thenThrow(RecipeNotAccessible())
 
-        // when getting the recipe rate
+        // when getting the recipe rating
         // then the recipe rating is not returned and throws RecipeNotAccessible exception
-        assertThrows<RecipeNotAccessible> { getRecipeRate(testAuthenticatedUser, RECIPE_ID) }
+        assertThrows<RecipeNotAccessible> { getRecipeRating(testAuthenticatedUser, RECIPE_ID) }
     }
 }

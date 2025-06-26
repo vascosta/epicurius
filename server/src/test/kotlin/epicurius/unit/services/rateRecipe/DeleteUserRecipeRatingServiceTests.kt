@@ -6,10 +6,10 @@ import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import kotlin.test.Test
 
-class DeleteRateRecipeServiceTests : RateRecipeServiceTest() {
+class DeleteUserRecipeRatingServiceTests : RateRecipeServiceTest() {
 
     @Test
-    fun `Should delete recipe rate successfully`() {
+    fun `Should delete user recipe rating successfully`() {
         // given a user (USER_ID) who has rated a recipe (RECIPE_ID)
 
         // mock
@@ -17,11 +17,11 @@ class DeleteRateRecipeServiceTests : RateRecipeServiceTest() {
         whenever(jdbiUserRepositoryMock.checkUserVisibility(AUTHOR_USERNAME, USER_ID)).thenReturn(true)
         whenever(jdbiRateRecipeRepositoryMock.checkIfUserAlreadyRated(USER_ID, RECIPE_ID)).thenReturn(true)
 
-        // when deleting the recipe rate
-        deleteRecipeRate(USER_ID, RECIPE_ID)
+        // when deleting the user recipe rating
+        deleteUserRecipeRating(USER_ID, RECIPE_ID)
 
-        // then the recipe rate is deleted successfully
-        verify(jdbiRateRecipeRepositoryMock).deleteRecipeRate(RECIPE_ID, USER_ID)
+        // then the user recipe rating is deleted
+        verify(jdbiRateRecipeRepositoryMock).deleteUserRecipeRating(RECIPE_ID, USER_ID)
     }
 
     @Test
@@ -32,10 +32,10 @@ class DeleteRateRecipeServiceTests : RateRecipeServiceTest() {
         // mock
         whenever(jdbiRecipeRepositoryMock.getRecipeById(nonExistingRecipeId)).thenReturn(null)
 
-        // when deleting the recipe rate
-        // then the recipe rate cannot be deleted and throws RecipeNotFound exception
+        // when deleting the user recipe rating
+        // then the user recipe rating cannot be deleted and throws RecipeNotFound exception
         assertThrows<RecipeNotFound> {
-            deleteRecipeRate(USER_ID, nonExistingRecipeId)
+            deleteUserRecipeRating(USER_ID, nonExistingRecipeId)
         }
     }
 
@@ -47,10 +47,10 @@ class DeleteRateRecipeServiceTests : RateRecipeServiceTest() {
         whenever(jdbiRecipeRepositoryMock.getRecipeById(RECIPE_ID)).thenReturn(jdbiRecipeModel)
         whenever(jdbiUserRepositoryMock.checkUserVisibility(AUTHOR_USERNAME, AUTHOR_ID)).thenReturn(true)
 
-        // when deleting the recipe rate
-        // then the recipe rate cannot be deleted and throws AuthorCannotDeleteRating exception
+        // when deleting the user recipe rating
+        // then the user recipe rating cannot be deleted and throws AuthorCannotDeleteRating exception
         assertThrows<epicurius.domain.exceptions.AuthorCannotDeleteRating> {
-            deleteRecipeRate(AUTHOR_ID, RECIPE_ID)
+            deleteUserRecipeRating(AUTHOR_ID, RECIPE_ID)
         }
     }
 
@@ -63,10 +63,10 @@ class DeleteRateRecipeServiceTests : RateRecipeServiceTest() {
         whenever(jdbiUserRepositoryMock.checkUserVisibility(AUTHOR_USERNAME, USER_ID)).thenReturn(true)
         whenever(jdbiRateRecipeRepositoryMock.checkIfUserAlreadyRated(USER_ID, RECIPE_ID)).thenReturn(false)
 
-        // when deleting the recipe rate
-        // then the recipe rate cannot be deleted and throws UserHasNotRated exception
+        // when deleting the user recipe rating
+        // then the user recipe rating cannot be deleted and throws UserHasNotRated exception
         assertThrows<epicurius.domain.exceptions.UserHasNotRated> {
-            deleteRecipeRate(USER_ID, RECIPE_ID)
+            deleteUserRecipeRating(USER_ID, RECIPE_ID)
         }
     }
 
@@ -78,10 +78,10 @@ class DeleteRateRecipeServiceTests : RateRecipeServiceTest() {
         whenever(jdbiRecipeRepositoryMock.getRecipeById(RECIPE_ID)).thenReturn(jdbiRecipeModel)
         whenever(jdbiUserRepositoryMock.checkUserVisibility(AUTHOR_USERNAME, USER_ID)).thenReturn(false)
 
-        // when deleting the recipe rate
-        // then the recipe rate cannot be deleted and throws RecipeNotAccessible exception
+        // when deleting the user recipe rating
+        // then the user recipe rating cannot be deleted and throws RecipeNotAccessible exception
         assertThrows<epicurius.domain.exceptions.RecipeNotAccessible> {
-            deleteRecipeRate(USER_ID, RECIPE_ID)
+            deleteUserRecipeRating(USER_ID, RECIPE_ID)
         }
     }
 }

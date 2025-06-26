@@ -7,7 +7,7 @@ import java.time.LocalDate
 
 class JdbiRateRecipeRepository(private val handle: Handle) : RateRecipeRepository {
 
-    override fun getRecipeRate(recipeId: Int): Double =
+    override fun getRecipeRating(recipeId: Int): Double =
         handle.createQuery(
             """
                 SELECT COALESCE(ROUND(AVG(rating), 2), 0) AS average_rating
@@ -19,7 +19,7 @@ class JdbiRateRecipeRepository(private val handle: Handle) : RateRecipeRepositor
             .mapTo<Double>()
             .one()
 
-    override fun getUserRecipeRate(recipeId: Int, userId: Int): Int =
+    override fun getUserRecipeRating(recipeId: Int, userId: Int): Int =
         handle.createQuery(
             """
                 SELECT rating
@@ -45,10 +45,10 @@ class JdbiRateRecipeRepository(private val handle: Handle) : RateRecipeRepositor
             .bind("createdAt", LocalDate.now())
             .execute()
 
-        return getRecipeRate(recipeId)
+        return getRecipeRating(recipeId)
     }
 
-    override fun updateRecipeRate(recipeId: Int, userId: Int, rating: Int): Double {
+    override fun updateUserRecipeRating(recipeId: Int, userId: Int, rating: Int): Double {
         handle.createUpdate(
             """
                 UPDATE dbo.recipe_rating
@@ -61,10 +61,10 @@ class JdbiRateRecipeRepository(private val handle: Handle) : RateRecipeRepositor
             .bind("userId", userId)
             .execute()
 
-        return getRecipeRate(recipeId)
+        return getRecipeRating(recipeId)
     }
 
-    override fun deleteRecipeRate(recipeId: Int, userId: Int) {
+    override fun deleteUserRecipeRating(recipeId: Int, userId: Int) {
         handle.createUpdate(
             """
                 DELETE FROM dbo.recipe_rating

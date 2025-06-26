@@ -7,7 +7,7 @@ import org.junit.jupiter.api.assertThrows
 import org.mockito.kotlin.whenever
 import kotlin.test.assertEquals
 
-class GetRecipeRateServiceTests : RateRecipeServiceTest() {
+class GetRecipeRatingServiceTests : RateRecipeServiceTest() {
 
     @Test
     fun `Should get recipe rating successfully`() {
@@ -16,10 +16,10 @@ class GetRecipeRateServiceTests : RateRecipeServiceTest() {
         // mock
         whenever(jdbiRecipeRepositoryMock.getRecipeById(RECIPE_ID)).thenReturn(jdbiRecipeModel)
         whenever(jdbiUserRepositoryMock.checkUserVisibility(AUTHOR_USERNAME, USER_ID)).thenReturn(true)
-        whenever(jdbiRateRecipeRepositoryMock.getRecipeRate(RECIPE_ID)).thenReturn(RATING_5.toDouble())
+        whenever(jdbiRateRecipeRepositoryMock.getRecipeRating(RECIPE_ID)).thenReturn(RATING_5.toDouble())
 
         // when getting the recipe rating
-        val rate = getRecipeRate(USER_ID, RECIPE_ID)
+        val rate = getRecipeRating(USER_ID, RECIPE_ID)
 
         // then the recipe rating is returned successfully
         assertEquals(RATING_5.toDouble(), rate)
@@ -35,7 +35,7 @@ class GetRecipeRateServiceTests : RateRecipeServiceTest() {
 
         // when getting the recipe rating
         // then the recipe rating is not returned and throws RecipeNotFound exception
-        assertThrows<RecipeNotFound> { getRecipeRate(USER_ID, nonExistingRecipeId) }
+        assertThrows<RecipeNotFound> { getRecipeRating(USER_ID, nonExistingRecipeId) }
     }
 
     @Test
@@ -49,6 +49,6 @@ class GetRecipeRateServiceTests : RateRecipeServiceTest() {
 
         // when getting the recipe rating
         // then the recipe rating is not returned and throws RecipeNotAccessible exception
-        assertThrows<RecipeNotAccessible> { getRecipeRate(USER_ID, privateRecipeId) }
+        assertThrows<RecipeNotAccessible> { getRecipeRating(USER_ID, privateRecipeId) }
     }
 }

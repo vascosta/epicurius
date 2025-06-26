@@ -262,17 +262,17 @@ open class HttpTest : EpicuriusUnitTest() {
             recipeController.deleteRecipe(authenticatedUser, id)
 
         // RATE RECIPE
-        fun getRecipeRate(
+        fun getRecipeRating(
             authenticatedUser: AuthenticatedUser,
             id: Int
         ) =
-            rateRecipeController.getRecipeRate(authenticatedUser, id)
+            rateRecipeController.getRecipeRating(authenticatedUser, id)
 
-        fun getUserRecipeRate(
+        fun getUserRecipeRating(
             authenticatedUser: AuthenticatedUser,
             id: Int
         ) =
-            rateRecipeController.getUserRecipeRate(authenticatedUser, id)
+            rateRecipeController.getUserRecipeRating(authenticatedUser, id)
 
         fun rateRecipe(
             authenticatedUser: AuthenticatedUser,
@@ -281,18 +281,18 @@ open class HttpTest : EpicuriusUnitTest() {
         ) =
             rateRecipeController.rateRecipe(authenticatedUser, id, RateRecipeInputModel(rating))
 
-        fun updateRecipeRate(
+        fun updateUserRecipeRating(
             authenticatedUser: AuthenticatedUser,
             id: Int,
             rating: Int
         ) =
-            rateRecipeController.updateRecipeRate(authenticatedUser, id, RateRecipeInputModel(rating))
+            rateRecipeController.updateUserRecipeRate(authenticatedUser, id, RateRecipeInputModel(rating))
 
-        fun deleteRecipeRate(
+        fun deleteUserRecipeRating(
             authenticatedUser: AuthenticatedUser,
             id: Int
         ) =
-            rateRecipeController.deleteRecipeRate(authenticatedUser, id)
+            rateRecipeController.deleteUserRecipeRating(authenticatedUser, id)
 
         // INGREDIENTS
         suspend fun getIngredients(

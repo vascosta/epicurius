@@ -2,10 +2,10 @@ package epicurius.integration.rateRecipe
 
 import epicurius.domain.recipe.Recipe
 import epicurius.domain.user.AuthenticatedUser
-import epicurius.http.controllers.rateRecipe.models.output.GetRecipeRateOutputModel
-import epicurius.http.controllers.rateRecipe.models.output.GetUserRecipeRateOutputModel
+import epicurius.http.controllers.rateRecipe.models.output.GetRecipeRatingOutputModel
+import epicurius.http.controllers.rateRecipe.models.output.GetUserRecipeRatingOutputModel
 import epicurius.http.controllers.rateRecipe.models.output.RateRecipeOutputModel
-import epicurius.http.controllers.rateRecipe.models.output.UpdateRecipeRateOutputModel
+import epicurius.http.controllers.rateRecipe.models.output.UpdateUserRecipeRatingOutputModel
 import epicurius.http.media.Uris
 import epicurius.integration.EpicuriusIntegrationTest
 import epicurius.integration.utils.delete
@@ -34,18 +34,18 @@ class RateRecipeIntegrationTest : EpicuriusIntegrationTest() {
         testPrivateRecipe = createTestRecipe(tm, privateUser.user)
     }
 
-    fun getRecipeRate(token: String, recipeId: Int) =
-        get<GetRecipeRateOutputModel>(
+    fun getRecipeRating(token: String, recipeId: Int) =
+        get<GetRecipeRatingOutputModel>(
             client,
             api(Uris.Recipe.RATE_RECIPE.replace("{id}", recipeId.toString())),
             responseStatus = HttpStatus.OK,
             token = token
         )
 
-    fun getUserRecipeRate(token: String, recipeId: Int) =
-        get<GetUserRecipeRateOutputModel>(
+    fun getUserRecipeRating(token: String, recipeId: Int) =
+        get<GetUserRecipeRatingOutputModel>(
             client,
-            api(Uris.Recipe.USER_RECIPE_RATE.replace("{id}", recipeId.toString())),
+            api(Uris.Recipe.USER_RECIPE_RATING.replace("{id}", recipeId.toString())),
             responseStatus = HttpStatus.OK,
             token = token
         )
@@ -59,8 +59,8 @@ class RateRecipeIntegrationTest : EpicuriusIntegrationTest() {
             token = token
         )
 
-    fun updateRecipeRate(token: String, recipeId: Int, rating: Int) =
-        patch<UpdateRecipeRateOutputModel>(
+    fun updateUserRecipeRating(token: String, recipeId: Int, rating: Int) =
+        patch<UpdateUserRecipeRatingOutputModel>(
             client,
             api(Uris.Recipe.RATE_RECIPE.replace("{id}", recipeId.toString())),
             body = mapOf("rating" to rating),
@@ -68,7 +68,7 @@ class RateRecipeIntegrationTest : EpicuriusIntegrationTest() {
             token = token
         )
 
-    fun deleteRecipeRate(token: String, recipeId: Int) =
+    fun deleteUserRecipeRating(token: String, recipeId: Int) =
         delete<Unit>(
             client,
             api(Uris.Recipe.RATE_RECIPE.replace("{id}", recipeId.toString())),

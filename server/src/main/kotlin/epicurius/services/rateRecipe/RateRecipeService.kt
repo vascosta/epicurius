@@ -14,17 +14,17 @@ import org.springframework.stereotype.Service
 @Service
 class RateRecipeService(private val tm: TransactionManager) {
 
-    fun getRecipeRate(userId: Int, recipeId: Int): Double {
+    fun getRecipeRating(userId: Int, recipeId: Int): Double {
         val recipe = checkIfRecipeExists(recipeId) ?: throw RecipeNotFound()
         checkRecipeAccessibility(recipe.authorUsername, userId)
-        return tm.run { it.rateRecipeRepository.getRecipeRate(recipeId) }
+        return tm.run { it.rateRecipeRepository.getRecipeRating(recipeId) }
     }
 
     fun getUserRecipeRate(userId: Int, recipeId: Int): Int {
         val recipe = checkIfRecipeExists(recipeId) ?: throw RecipeNotFound()
         checkRecipeAccessibility(recipe.authorUsername, userId)
         if (!checkIfUserAlreadyRated(userId, recipeId)) throw UserHasNotRated(userId, recipeId)
-        return tm.run { it.rateRecipeRepository.getUserRecipeRate(recipeId, userId) }
+        return tm.run { it.rateRecipeRepository.getUserRecipeRating(recipeId, userId) }
     }
 
     fun rateRecipe(userId: Int, recipeId: Int, rating: Int): Double {
@@ -36,22 +36,22 @@ class RateRecipeService(private val tm: TransactionManager) {
         return tm.run { it.rateRecipeRepository.rateRecipe(recipeId, userId, rating) }
     }
 
-    fun updateRecipeRate(userId: Int, recipeId: Int, rating: Int): Double {
+    fun updateUserRecipeRating(userId: Int, recipeId: Int, rating: Int): Double {
         val recipe = checkIfRecipeExists(recipeId) ?: throw RecipeNotFound()
         if (userId == recipe.authorId) throw AuthorCannotUpdateRating()
         checkRecipeAccessibility(recipe.authorUsername, userId)
         if (!checkIfUserAlreadyRated(userId, recipeId)) throw UserHasNotRated(userId, recipeId)
 
-        return tm.run { it.rateRecipeRepository.updateRecipeRate(recipeId, userId, rating) }
+        return tm.run { it.rateRecipeRepository.updateUserRecipeRating(recipeId, userId, rating) }
     }
 
-    fun deleteRecipeRate(userId: Int, recipeId: Int) {
+    fun deleteUserRecipeRate(userId: Int, recipeId: Int) {
         val recipe = checkIfRecipeExists(recipeId) ?: throw RecipeNotFound()
         if (userId == recipe.authorId) throw AuthorCannotDeleteRating()
         checkRecipeAccessibility(recipe.authorUsername, userId)
         if (!checkIfUserAlreadyRated(userId, recipeId)) throw UserHasNotRated(userId, recipeId)
 
-        tm.run { it.rateRecipeRepository.deleteRecipeRate(recipeId, userId) }
+        tm.run { it.rateRecipeRepository.deleteUserRecipeRating(recipeId, userId) }
     }
 
     private fun checkIfRecipeExists(recipeId: Int): JdbiRecipeModel? =

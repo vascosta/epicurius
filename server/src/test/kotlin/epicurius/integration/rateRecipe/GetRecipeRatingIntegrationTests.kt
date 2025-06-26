@@ -11,7 +11,7 @@ import org.springframework.http.HttpStatus
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 
-class GetRecipeRateIntegrationTests : RateRecipeIntegrationTest() {
+class GetRecipeRatingIntegrationTests : RateRecipeIntegrationTest() {
 
     companion object {
         val testUser1 = createTestUser(tm)
@@ -27,10 +27,10 @@ class GetRecipeRateIntegrationTests : RateRecipeIntegrationTest() {
         rateRecipe(testUser1.token, testRecipe.id, RATING_5)
         rateRecipe(testUser2.token, testRecipe.id, RATING_4)
 
-        // and when another user retrieves the recipe's rate
-        val response = getRecipeRate(token, testRecipe.id)
+        // and when another user retrieves the recipe's rating
+        val response = getRecipeRating(token, testRecipe.id)
 
-        // then the recipe's rate is retrieved successfully
+        // then the recipe's rating is retrieved successfully
         val avg = (RATING_5 + RATING_4) / 2.0
         assertNotNull(response)
         assertEquals(avg, response.rating)
@@ -42,7 +42,7 @@ class GetRecipeRateIntegrationTests : RateRecipeIntegrationTest() {
         val token = testUser.token
         val nonExistingRecipeId = 9999
 
-        // when the user tries to retrieve a recipe's rate
+        // when the user tries to retrieve a recipe's rating
         val error = get<Problem>(
             client,
             api(Uris.Recipe.RATE_RECIPE.replace("{id}", nonExistingRecipeId.toString())),
@@ -50,7 +50,7 @@ class GetRecipeRateIntegrationTests : RateRecipeIntegrationTest() {
             token = token
         )
 
-        // then the recipe rate cannot be retrieved and fails with code 404
+        // then the recipe rating cannot be retrieved and fails with code 404
         assertNotNull(error)
         assertEquals(RecipeNotFound().message, error.detail)
     }
@@ -60,7 +60,7 @@ class GetRecipeRateIntegrationTests : RateRecipeIntegrationTest() {
         // given a user token and a private recipe id
         val token = testUser.token
 
-        // when the user tries to retrieve a recipe's rate
+        // when the user tries to retrieve a recipe's rating
         val error = get<Problem>(
             client,
             api(Uris.Recipe.RATE_RECIPE.replace("{id}", testPrivateRecipe.id.toString())),
@@ -68,7 +68,7 @@ class GetRecipeRateIntegrationTests : RateRecipeIntegrationTest() {
             token = token
         )
 
-        // then the recipe rate cannot be retrieved and fails with code 403
+        // then the recipe rating cannot be retrieved and fails with code 403
         assertNotNull(error)
         assertEquals(RecipeNotAccessible().message, error.detail)
     }

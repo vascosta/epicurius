@@ -4,35 +4,35 @@ import epicurius.domain.exceptions.AuthorCannotUpdateRating
 import epicurius.domain.exceptions.RecipeNotAccessible
 import epicurius.domain.exceptions.RecipeNotFound
 import epicurius.domain.exceptions.UserHasNotRated
-import epicurius.http.controllers.rateRecipe.models.output.UpdateRecipeRateOutputModel
+import epicurius.http.controllers.rateRecipe.models.output.UpdateUserRecipeRatingOutputModel
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.mockito.kotlin.whenever
 import org.springframework.http.HttpStatus
 
-class UpdateRateRecipeControllerTests : RateRecipeControllerTest() {
+class UpdateUserRecipeRatingControllerTests : RateRecipeControllerTest() {
 
     @Test
-    fun `Should update rate recipe successfully`() {
+    fun `Should update user's recipe rating successfully`() {
         // given an authenticated user and a recipe
 
         // mock
         whenever(
-            rateRecipeServiceMock.updateRecipeRate(
+            rateRecipeServiceMock.updateUserRecipeRating(
                 testAuthenticatedUser.user.id,
                 RECIPE_ID,
                 RATING_3
             )
         ).thenReturn(RATING_3.toDouble())
 
-        // when the user updates the recipe with a rating of 3
-        val response = updateRecipeRate(testAuthenticatedUser, RECIPE_ID, RATING_3)
+        // when the user updates the recipe rating with a rating of 3
+        val response = updateUserRecipeRating(testAuthenticatedUser, RECIPE_ID, RATING_3)
 
-        // then the recipe should be updated successfully
+        // then the user's recipe rating should be updated successfully
         assertEquals(HttpStatus.OK, response.statusCode)
         assertEquals(
-            UpdateRecipeRateOutputModel(RATING_3.toDouble()),
+            UpdateUserRecipeRatingOutputModel(RATING_3.toDouble()),
             response.body
         )
     }
@@ -44,16 +44,16 @@ class UpdateRateRecipeControllerTests : RateRecipeControllerTest() {
 
         // mock
         whenever(
-            rateRecipeServiceMock.updateRecipeRate(
+            rateRecipeServiceMock.updateUserRecipeRating(
                 testAuthenticatedUser.user.id,
                 nonExistingRecipeId,
                 RATING_3
             )
         ).thenThrow(RecipeNotFound())
 
-        // when updating the recipe rate
-        // then the recipe rate cannot be updated and throws RecipeNotFound exception
-        assertThrows<RecipeNotFound> { updateRecipeRate(testAuthenticatedUser, nonExistingRecipeId, RATING_3) }
+        // when updating the user's recipe rating
+        // then the user's recipe rating cannot be updated and throws RecipeNotFound exception
+        assertThrows<RecipeNotFound> { updateUserRecipeRating(testAuthenticatedUser, nonExistingRecipeId, RATING_3) }
     }
 
     @Test
@@ -62,16 +62,16 @@ class UpdateRateRecipeControllerTests : RateRecipeControllerTest() {
 
         // mock
         whenever(
-            rateRecipeServiceMock.updateRecipeRate(
+            rateRecipeServiceMock.updateUserRecipeRating(
                 testAuthorAuthenticatedUser.user.id,
                 RECIPE_ID,
                 RATING_3
             )
         ).thenThrow(AuthorCannotUpdateRating())
 
-        // when updating the recipe rate
-        // then the recipe rate cannot be updated and throws AuthorCannotUpdateRating exception
-        assertThrows<AuthorCannotUpdateRating> { updateRecipeRate(testAuthorAuthenticatedUser, RECIPE_ID, RATING_3) }
+        // when updating the user's recipe rating
+        // then the user's recipe rating cannot be updated and throws AuthorCannotUpdateRating exception
+        assertThrows<AuthorCannotUpdateRating> { updateUserRecipeRating(testAuthorAuthenticatedUser, RECIPE_ID, RATING_3) }
     }
 
     @Test
@@ -80,16 +80,16 @@ class UpdateRateRecipeControllerTests : RateRecipeControllerTest() {
 
         // mock
         whenever(
-            rateRecipeServiceMock.updateRecipeRate(
+            rateRecipeServiceMock.updateUserRecipeRating(
                 testAuthenticatedUser.user.id,
                 RECIPE_ID,
                 RATING_3
             )
         ).thenThrow(RecipeNotAccessible())
 
-        // when updating the recipe rate
-        // then the recipe rate cannot be updated and throws RecipeNotAccessible exception
-        assertThrows<RecipeNotAccessible> { updateRecipeRate(testAuthenticatedUser, RECIPE_ID, RATING_3) }
+        // when updating the user's recipe rating
+        // then the user's recipe rating cannot be updated and throws RecipeNotAccessible exception
+        assertThrows<RecipeNotAccessible> { updateUserRecipeRating(testAuthenticatedUser, RECIPE_ID, RATING_3) }
     }
 
     @Test
@@ -98,15 +98,15 @@ class UpdateRateRecipeControllerTests : RateRecipeControllerTest() {
 
         // mock
         whenever(
-            rateRecipeServiceMock.updateRecipeRate(
+            rateRecipeServiceMock.updateUserRecipeRating(
                 testAuthenticatedUser.user.id,
                 RECIPE_ID,
                 RATING_3
             )
         ).thenThrow(UserHasNotRated(testAuthenticatedUser.user.id, RECIPE_ID))
 
-        // when updating the recipe rate
-        // then the recipe rate cannot be updated and throws UserHasNotRated exception
-        assertThrows<UserHasNotRated> { updateRecipeRate(testAuthenticatedUser, RECIPE_ID, RATING_3) }
+        // when updating the user's recipe rating
+        // then the user's recipe rating cannot be updated and throws UserHasNotRated exception
+        assertThrows<UserHasNotRated> { updateUserRecipeRating(testAuthenticatedUser, RECIPE_ID, RATING_3) }
     }
 }

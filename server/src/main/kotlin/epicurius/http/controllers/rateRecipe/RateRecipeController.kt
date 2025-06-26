@@ -2,10 +2,10 @@ package epicurius.http.controllers.rateRecipe
 
 import epicurius.domain.user.AuthenticatedUser
 import epicurius.http.controllers.rateRecipe.models.input.RateRecipeInputModel
-import epicurius.http.controllers.rateRecipe.models.output.GetRecipeRateOutputModel
-import epicurius.http.controllers.rateRecipe.models.output.GetUserRecipeRateOutputModel
+import epicurius.http.controllers.rateRecipe.models.output.GetRecipeRatingOutputModel
+import epicurius.http.controllers.rateRecipe.models.output.GetUserRecipeRatingOutputModel
 import epicurius.http.controllers.rateRecipe.models.output.RateRecipeOutputModel
-import epicurius.http.controllers.rateRecipe.models.output.UpdateRecipeRateOutputModel
+import epicurius.http.controllers.rateRecipe.models.output.UpdateUserRecipeRatingOutputModel
 import epicurius.http.media.Uris
 import epicurius.http.media.Uris.Recipe.rateRecipe
 import epicurius.http.media.createdHttpResponse
@@ -28,21 +28,21 @@ import org.springframework.web.bind.annotation.RestController
 class RateRecipeController(private val rateRecipeService: RateRecipeService) {
 
     @GetMapping(Uris.Recipe.RATE_RECIPE)
-    fun getRecipeRate(
+    fun getRecipeRating(
         authenticatedUser: AuthenticatedUser,
         @PathVariable id: Int,
     ): ResponseEntity<*> {
-        val rate = rateRecipeService.getRecipeRate(authenticatedUser.user.id, id)
-        return okHttpResponse(GetRecipeRateOutputModel(rate))
+        val rate = rateRecipeService.getRecipeRating(authenticatedUser.user.id, id)
+        return okHttpResponse(GetRecipeRatingOutputModel(rate))
     }
 
-    @GetMapping(Uris.Recipe.USER_RECIPE_RATE)
-    fun getUserRecipeRate(
+    @GetMapping(Uris.Recipe.USER_RECIPE_RATING)
+    fun getUserRecipeRating(
         authenticatedUser: AuthenticatedUser,
         @PathVariable id: Int
     ): ResponseEntity<*> {
         val rate = rateRecipeService.getUserRecipeRate(authenticatedUser.user.id, id)
-        return okHttpResponse(GetUserRecipeRateOutputModel(rate))
+        return okHttpResponse(GetUserRecipeRatingOutputModel(rate))
     }
 
     @PostMapping(Uris.Recipe.RATE_RECIPE)
@@ -56,21 +56,21 @@ class RateRecipeController(private val rateRecipeService: RateRecipeService) {
     }
 
     @PatchMapping(Uris.Recipe.RATE_RECIPE)
-    fun updateRecipeRate(
+    fun updateUserRecipeRate(
         authenticatedUser: AuthenticatedUser,
         @PathVariable id: Int,
         @Valid @RequestBody body: RateRecipeInputModel,
     ): ResponseEntity<*> {
-        val rate = rateRecipeService.updateRecipeRate(authenticatedUser.user.id, id, body.rating)
-        return okHttpResponse(UpdateRecipeRateOutputModel(rate))
+        val rate = rateRecipeService.updateUserRecipeRating(authenticatedUser.user.id, id, body.rating)
+        return okHttpResponse(UpdateUserRecipeRatingOutputModel(rate))
     }
 
     @DeleteMapping(Uris.Recipe.RATE_RECIPE)
-    fun deleteRecipeRate(
+    fun deleteUserRecipeRating(
         authenticatedUser: AuthenticatedUser,
         @PathVariable id: Int,
     ): ResponseEntity<*> {
-        rateRecipeService.deleteRecipeRate(authenticatedUser.user.id, id)
+        rateRecipeService.deleteUserRecipeRate(authenticatedUser.user.id, id)
         return noContentHttpResponse()
     }
 }
