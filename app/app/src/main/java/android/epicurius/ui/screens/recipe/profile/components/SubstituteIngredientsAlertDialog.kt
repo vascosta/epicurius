@@ -1,4 +1,4 @@
-package android.epicurius.ui.screens.recipe.ingredients.components
+package android.epicurius.ui.screens.recipe.profile.components
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding

@@ -1,4 +1,4 @@
-package android.epicurius.ui.screens.recipe.ingredients.components
+package android.epicurius.ui.screens.recipe.profile.components
 
 import android.epicurius.domain.recipe.Ingredient
 import android.epicurius.domain.recipe.IngredientUnit

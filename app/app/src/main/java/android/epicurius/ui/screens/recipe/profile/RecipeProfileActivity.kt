@@ -11,8 +11,6 @@ import android.epicurius.domain.recipe.MealType
 import android.epicurius.domain.recipe.Recipe
 import android.epicurius.ui.EpicuriusActivity
 import android.epicurius.ui.EpicuriusViewModel
-import android.epicurius.ui.navigation.navigateTo
-import android.epicurius.ui.screens.recipe.ingredients.ConfirmIngredientsActivity
 import android.epicurius.ui.screens.recipe.profile.utils.generateTestImageByteArray
 import android.os.Bundle
 import androidx.activity.ComponentActivity

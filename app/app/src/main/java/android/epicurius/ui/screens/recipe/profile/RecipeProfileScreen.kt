@@ -95,50 +95,49 @@ fun RecipeProfileScreen(
                         slideOutHorizontally { width -> -width } + fadeOut())
                 }
             ) { targetState ->
-                    when (targetState) {
-                        ScreenState.Profile ->
-                            RecipeProfileContent(
-                                recipe = recipe,
-                                rating = rating,
-                                images = images,
-                                isAuthor = isAuthor,
-                                userRating = userRating,
-                                collectionId = collectionId,
-                                collectionsState = collectionsState,
-                                onEditRating = onEditRating,
-                                onEditRecipe = onEditRecipe,
-                                onEditRecipeImages = onEditRecipeImages,
-                                onMakeIt = { currentScreen = ScreenState.Ingredients },
-                                onDeleteRecipe = onDeleteRecipe,
-                                onAddRecipeToCollection = onAddRecipeToCollection,
-                                onRemoveRecipeFromCollection = onRemoveRecipeFromCollection,
-                                onCollectionsRequest = onCollectionsRequest,
-                                enableButtons = enableButtons,
-                                paddingValues = paddingValues
-                            )
-                        ScreenState.Ingredients ->
-                            ConfirmIngredientsContent(
-                                ingredientsList = recipe.ingredients,
-                                onSubstituteIngredients = { ingredientName ->
-                                    listOf("Substitute for $ingredientName")
-                                },
-                                onConfirmIngredients = {
-                                    currentScreen = ScreenState.Preparation
-                                },
-                                paddingValues = paddingValues
-                            )
-                        ScreenState.Preparation ->
-                            PreparationContent(
-                                instructions = recipe.instructions,
-                                onRateRecipe = onEditRating,
-                                onSkipRating = { currentScreen = ScreenState.Profile },
-                                onCancelPreparation = {
-                                    currentScreen = ScreenState.Profile
-                                },
-                                paddingValues = paddingValues,
-                            )
-                    }
-
+                when (targetState) {
+                    ScreenState.Profile ->
+                        RecipeProfileContent(
+                            recipe = recipe,
+                            rating = rating,
+                            images = images,
+                            isAuthor = isAuthor,
+                            userRating = userRating,
+                            collectionId = collectionId,
+                            collectionsState = collectionsState,
+                            onEditRating = onEditRating,
+                            onEditRecipe = onEditRecipe,
+                            onEditRecipeImages = onEditRecipeImages,
+                            onMakeIt = { currentScreen = ScreenState.Ingredients },
+                            onDeleteRecipe = onDeleteRecipe,
+                            onAddRecipeToCollection = onAddRecipeToCollection,
+                            onRemoveRecipeFromCollection = onRemoveRecipeFromCollection,
+                            onCollectionsRequest = onCollectionsRequest,
+                            enableButtons = enableButtons,
+                            paddingValues = paddingValues
+                        )
+                    ScreenState.Ingredients ->
+                        ConfirmIngredientsContent(
+                            ingredientsList = recipe.ingredients,
+                            onSubstituteIngredients = { ingredientName ->
+                                listOf("Substitute for $ingredientName")
+                            },
+                            onConfirmIngredients = {
+                                currentScreen = ScreenState.Preparation
+                            },
+                            paddingValues = paddingValues
+                        )
+                    ScreenState.Preparation ->
+                        PreparationContent(
+                            instructions = recipe.instructions,
+                            onRateRecipe = onEditRating,
+                            onSkipRating = { currentScreen = ScreenState.Profile },
+                            onCancelPreparation = {
+                                currentScreen = ScreenState.Profile
+                            },
+                            paddingValues = paddingValues,
+                        )
+                }
             }
         },
         containerColor = Color.White
