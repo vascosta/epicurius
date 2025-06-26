@@ -19,6 +19,9 @@ import android.epicurius.ui.screens.recipe.profile.components.EditRecipeDialog
 import android.epicurius.ui.screens.recipe.profile.components.HorizontalPagerIndicator
 import android.epicurius.ui.screens.recipe.profile.components.RecipeProfileImages
 import android.epicurius.ui.screens.recipe.profile.utils.generateTestImageByteArray
+import android.epicurius.ui.screens.search.components.FavouritesIcon
+import android.epicurius.ui.screens.search.components.RecipeDescription
+import android.epicurius.ui.screens.search.components.RecipeInfoComponent
 import android.epicurius.ui.screens.utils.LoadState
 import android.epicurius.ui.screens.utils.LoadingSpinner
 import android.epicurius.ui.screens.utils.MixedText
@@ -169,45 +172,14 @@ fun RecipeProfileScreen(
                             contentScale = ContentScale.Fit
                         )
                     }
-
-                    IconButton(
-                        onClick = {
-                            if (collectionId != null) {
-                                onRemoveRecipeFromCollection(collectionId, recipe.id)
-                            }
-                            else {
-                                showCollectionsDialog = true
-                            }
-                        },
-                        modifier = Modifier.size(24.dp),
-                        enabled = enableButtons
-                    ) {
-                        if (enableButtons) {
-                            val painter = if (enableStarIcon) {
-                                painterResource(R.drawable.star)
-                            } else {
-                                painterResource(R.drawable.white_star)
-                            }
-                            Image(
-                                painter = painter,
-                                contentDescription = "Favorites",
-                                modifier = Modifier.size(20.dp),
-                                contentScale = ContentScale.Fit
-                            )
-                        }
-                        else {
-                            LoadingSpinner(Modifier.size(30.dp))
-                        }
-
-                        if (showCollectionsDialog) {
-                            RecipeCollectionsDialog(
-                                recipeId = recipe.id,
-                                onDismissRequest = { showCollectionsDialog = false },
-                                onRecipeCollectionsRequest = {},
-                                enableButtons = enableButtons
-                            )
-                        }
-                    }
+                    FavouritesIcon(
+                        recipe = recipe,
+                        collectionId = collectionId,
+                        onShowCollectionDialog = { showCollectionsDialog = true },
+                        onRemoveRecipeFromCollection = onRemoveRecipeFromCollection,
+                        enableStarIcon = enableStarIcon,
+                        enableButtons = enableButtons
+                    )
                 }
 
                 RecipeProfileImages(
@@ -248,72 +220,12 @@ fun RecipeProfileScreen(
                     }
                 }
 
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(16.dp),
-                    horizontalArrangement = Arrangement.Center,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text(
-                        text = recipe.description,
-                        fontStyle = FontStyle.Italic,
-                        textAlign = TextAlign.Center
-                    )
-                }
-
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(top = 16.dp, start = 10.dp, end = 10.dp)
-                        .border(1.dp, Color.Black, RoundedCornerShape(16.dp)),
-                    contentAlignment = Alignment.CenterStart
-                ) {
-
-                    if (isAuthor) {
-                        Button(
-                            onClick = { showEditRecipeDialog = true },
-                            modifier = Modifier
-                                .align(Alignment.TopEnd)
-                                .padding(top = 5.dp, end = 10.dp)
-                        ) {
-                            Text("Edit")
-                        }
-                    }
-
-                    Column(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(16.dp)
-                    ) {
-                        MixedText("Servings: ", "${recipe.servings} px")
-                        MixedText("Preparation Time: ", "${recipe.preparationTime} min")
-                        MixedText("Meal Type: ", recipe.mealType.displayName)
-                        MixedText("Cuisine: ", recipe.cuisine.displayName)
-                        MixedText("Intolerances: ", recipe.intolerances.joinToString(", ") { it.displayName })
-                        MixedText("Diets: ", recipe.diets.joinToString(", ") { it.displayName })
-                        MixedText("Calories: ", recipe.calories?.toString() ?: "N/A")
-                        MixedText("Protein: ", recipe.protein?.toString() ?: "N/A")
-                        MixedText("Fat: ", recipe.fat?.toString() ?: "N/A")
-                        MixedText("Carbs: ", recipe.carbs?.toString() ?: "N/A")
-
-                        val ingredients = recipe.ingredients.joinToString("\n") {
-                            val formattedQuantity = if (it.quantity % 1.0 == 0.0) {
-                                it.quantity.toInt()
-                            } else {
-                                it.quantity
-                            }
-                            val formattedUnit = it.unit.displayName
-                            "$formattedQuantity$formattedUnit ${it.name}"
-                        }
-                        Text("Ingredients:", fontWeight = FontWeight.Bold)
-                        Text(text = ingredients, modifier = Modifier.padding(start = 10.dp))
-
-                        val instructions = recipe.instructions.steps.entries.joinToString("\n") { "${it.key}: ${it.value}" }
-                        Text("Instructions:", fontWeight = FontWeight.Bold)
-                        Text(text = instructions, modifier = Modifier.padding(start = 10.dp))
-                    }
-                }
+                RecipeDescription(recipe.description)
+                RecipeInfoComponent(
+                    recipe = recipe,
+                    isAuthor = isAuthor,
+                    onEditButton = { showEditRecipeDialog = true }
+                )
 
                 Row {
                     Button(
@@ -351,6 +263,14 @@ fun RecipeProfileScreen(
                             onDeleteRecipe(it)
                             confirmRecipeDelete = false
                         }
+                    )
+                }
+                if (showCollectionsDialog) {
+                    RecipeCollectionsDialog(
+                        recipeId = recipe.id,
+                        onDismissRequest = { showCollectionsDialog = false },
+                        onRecipeCollectionsRequest = {},
+                        enableButtons = enableButtons
                     )
                 }
             }
