@@ -1,5 +1,6 @@
 package android.epicurius.ui.screens.search
 
+import android.epicurius.R
 import android.epicurius.domain.Diet
 import android.epicurius.domain.Intolerance
 import android.epicurius.domain.collection.CollectionProfile
@@ -9,6 +10,7 @@ import android.epicurius.domain.recipe.RecipeInfo
 import android.epicurius.domain.user.SearchUser
 import android.epicurius.domain.user.UserInfo
 import android.epicurius.ui.screens.collections.recipeCollections.components.RecipeCollectionsStateBundle
+import android.epicurius.ui.screens.recipe.profile.utils.generateTestImageByteArray
 import android.epicurius.ui.screens.search.camera.CameraScreen
 import android.epicurius.ui.screens.search.components.SearchScreenContent
 import android.epicurius.ui.screens.utils.Idle
@@ -21,6 +23,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.tooling.preview.Preview
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import java.util.Base64
 
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
@@ -123,7 +126,32 @@ fun SearchScreen(
 @Composable
 fun SearchScreenPreview() {
     SearchScreen(
-        recipesResultState = Idle,
+        recipesResultState = apiSuccess(
+            listOf(
+                RecipeInfo(
+                    id = 1,
+                    name = "Recipe Name",
+                    authorUsername = "ChefBear",
+                    rating = 4.3,
+                    cuisine = Cuisine.MEDITERRANEAN,
+                    mealType = MealType.SIDE_DISH,
+                    preparationTime = 30,
+                    servings = 4,
+                    picture = Base64.getEncoder().encodeToString(generateTestImageByteArray(R.drawable.test_tomato))
+                ),
+                RecipeInfo(
+                    id = 1,
+                    name = "Recipe Name",
+                    authorUsername = "ChefBear",
+                    rating = 4.3,
+                    cuisine = Cuisine.MEDITERRANEAN,
+                    mealType = MealType.SIDE_DISH,
+                    preparationTime = 30,
+                    servings = 4,
+                    picture = Base64.getEncoder().encodeToString(generateTestImageByteArray(R.drawable.test_tomato))
+                )
+            )
+        ),
         usersResultState = apiSuccess(emptyList()),
         userInfoState = apiSuccess(
             UserInfo(

@@ -1,26 +1,33 @@
 package android.epicurius.ui.screens.recipe.components
 
+import android.epicurius.R
 import android.epicurius.domain.collection.CollectionProfile
 import android.epicurius.domain.mealPlanner.MealTime
 import android.epicurius.domain.recipe.Cuisine
 import android.epicurius.domain.recipe.MealType
 import android.epicurius.domain.recipe.RecipeInfo
 import android.epicurius.ui.screens.collections.recipeCollections.components.RecipeCollectionsStateBundle
+import android.epicurius.ui.screens.recipe.createRecipe.components.DividerComponent
+import android.epicurius.ui.screens.recipe.profile.utils.generateTestImageByteArray
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import java.time.LocalDate
+import java.util.Base64
 
 @Composable
 fun RecipeInfoBox(
@@ -63,7 +70,7 @@ fun RecipeInfoBox(
                 onClick = { onRecipeRequest(recipeInfo.id) }
             )
     ) {
-        Column {
+        Column(horizontalAlignment = Alignment.CenterHorizontally) {
             RecipeHeader(
                 collectionId = collectionId,
                 recipeId = recipeInfo.id,
@@ -81,11 +88,13 @@ fun RecipeInfoBox(
                 enableButtons = enableButtons
             )
             RecipeImage(recipeInfo.pictureBytes)
+            DividerComponent()
             RecipeDetails(
                 preparationTime = recipeInfo.preparationTime,
                 servings = recipeInfo.servings,
                 rating = recipeInfo.rating
             )
+            Spacer(modifier = Modifier.height(5.dp))
         }
     }
 }
@@ -104,10 +113,10 @@ fun RecipeInfoPreview() {
             mealType = MealType.SIDE_DISH,
             preparationTime = 30,
             servings = 4,
-            picture = ""
+            picture = Base64.getEncoder().encodeToString(generateTestImageByteArray(R.drawable.test_tomato))
         ),
-        date = LocalDate.now(),
-        mealTime = MealTime.BREAKFAST,
+        date = null,
+        mealTime = null,
         null,
         enableButtons = true
     )
