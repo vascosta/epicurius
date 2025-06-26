@@ -72,7 +72,8 @@ class SearchViewModel(
         minProtein: Int?,
         maxProtein: Int?,
         minTime: Int?,
-        maxTime: Int?
+        maxTime: Int?,
+        showAuthorRecipes: Boolean
     ) {
         disableButtons()
         searchedRecipesFlow.value = loading(CachedResult(cacheSearchedRecipes.value))
@@ -113,7 +114,8 @@ class SearchViewModel(
                 minProtein,
                 maxProtein,
                 minTime,
-                maxTime
+                maxTime,
+                showAuthorRecipes
             )
         }
     }
@@ -169,7 +171,8 @@ class SearchViewModel(
         minProtein: Int?,
         maxProtein: Int?,
         minTime: Int?,
-        maxTime: Int?
+        maxTime: Int?,
+        showAuthorRecipes: Boolean
     ) {
         val result = request {
             val token = session.getToken()
@@ -193,6 +196,7 @@ class SearchViewModel(
                 maxProtein,
                 minTime,
                 maxTime,
+                showAuthorRecipes,
                 lastRecipeId,
                 limit
             )

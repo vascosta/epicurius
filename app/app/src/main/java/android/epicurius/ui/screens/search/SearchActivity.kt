@@ -65,7 +65,9 @@ class SearchActivity : EpicuriusActivity() {
                     minProtein: Int?,
                     maxProtein: Int?,
                     minTime: Int?,
-                    maxTime: Int? ->
+                    maxTime: Int?,
+                    showAuthorRecipes: Boolean
+                    ->
                     viewModel.searchRecipes(
                         name,
                         cuisine,
@@ -83,7 +85,8 @@ class SearchActivity : EpicuriusActivity() {
                         minProtein,
                         maxProtein,
                         minTime,
-                        maxTime
+                        maxTime,
+                        showAuthorRecipes
                     )
                 },
                 onSearchUsers = { name: String -> viewModel.searchUsers(name) },

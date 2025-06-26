@@ -10,7 +10,7 @@ import android.epicurius.domain.recipe.RecipeInfo
 import android.epicurius.domain.user.SearchUser
 import android.epicurius.domain.user.UserInfo
 import android.epicurius.ui.screens.collections.recipeCollections.components.RecipeCollectionsStateBundle
-import android.epicurius.ui.screens.recipe.profile.utils.generateTestImageByteArray
+import android.epicurius.ui.screens.utils.generateTestImageByteArray
 import android.epicurius.ui.screens.search.camera.CameraScreen
 import android.epicurius.ui.screens.search.components.SearchScreenContent
 import android.epicurius.ui.screens.utils.Idle
@@ -51,8 +51,9 @@ fun SearchScreen(
         minProtein: Int?,
         maxProtein: Int?,
         minTime: Int?,
-        maxTime: Int?
-    ) -> Unit = { _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _ -> },
+        maxTime: Int?,
+        showAuthorRecipes: Boolean,
+    ) -> Unit = { _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _ -> },
     onSearchUsers: (name: String) -> Unit = {},
     onIdentifyIngredientsInPicture: (pictureBytes: ByteArray) -> Unit = {},
     onAddRecipeToCollections: (

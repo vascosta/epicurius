@@ -84,6 +84,7 @@ class RecipeService(private val httpService: HttpService) {
         maxProtein: Int?,
         minTime: Int?,
         maxTime: Int?,
+        showAuthorRecipes: Boolean,
         lastRecipeId: Int?,
         limit: Int,
     ): APIResult<SearchRecipesOutputModel> =
@@ -107,6 +108,7 @@ class RecipeService(private val httpService: HttpService) {
                 "maxProtein" to maxProtein,
                 "minTime" to minTime,
                 "maxTime" to maxTime,
+                "showAuthorRecipes" to showAuthorRecipes,
                 "lastRecipeId" to lastRecipeId,
                 "limit" to limit,
             ),

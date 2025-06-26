@@ -83,8 +83,9 @@ fun SearchScreenContent(
         minProtein: Int?,
         maxProtein: Int?,
         minTime: Int?,
-        maxTime: Int?
-    ) -> Unit = { _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _ -> },
+        maxTime: Int?,
+        showAuthorRecipes: Boolean
+    ) -> Unit = { _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _ -> },
     onSearchUsers: (name: String) -> Unit = {},
     onCamera: () -> Unit = {},
     onIdentifyIngredientsInPicture: (pictureBytes: ByteArray) -> Unit = {},
@@ -223,7 +224,8 @@ fun SearchScreenContent(
                                 minProtein.toIntOrNull(),
                                 maxProtein.toIntOrNull(),
                                 minTime.toIntOrNull(),
-                                maxTime.toIntOrNull()
+                                maxTime.toIntOrNull(),
+                                showAuthorRecipes
                             )
                             searchRecipesQuery = searchQuery
                         } else {
@@ -365,7 +367,8 @@ fun SearchScreenContent(
                                             minProtein.toIntOrNull(),
                                             maxProtein.toIntOrNull(),
                                             minTime.toIntOrNull(),
-                                            maxTime.toIntOrNull()
+                                            maxTime.toIntOrNull(),
+                                            showAuthorRecipes
                                         )
                                     },
                                     modifier = Modifier
