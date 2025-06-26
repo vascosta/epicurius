@@ -12,47 +12,25 @@ import android.epicurius.domain.recipe.MealType
 import android.epicurius.domain.recipe.Recipe
 import android.epicurius.ui.navigation.BottomBar
 import android.epicurius.ui.navigation.TopBar
-import android.epicurius.ui.screens.collections.recipeCollections.components.RecipeCollectionsDialog
-import android.epicurius.ui.screens.recipe.profile.components.ConfirmDeleteRecipeDialog
-import android.epicurius.ui.screens.recipe.profile.components.EditRatingDialog
-import android.epicurius.ui.screens.recipe.profile.components.EditRecipeDialog
-import android.epicurius.ui.screens.recipe.profile.components.HorizontalPagerIndicator
-import android.epicurius.ui.screens.recipe.profile.components.RecipeProfileImages
+import android.epicurius.ui.screens.recipe.profile.components.ConfirmIngredientsContent
+import android.epicurius.ui.screens.recipe.profile.components.PreparationContent
 import android.epicurius.ui.screens.recipe.profile.utils.generateTestImageByteArray
-import android.epicurius.ui.screens.search.components.FavouritesIcon
-import android.epicurius.ui.screens.search.components.RecipeDescription
-import android.epicurius.ui.screens.search.components.RecipeInfoComponent
+import android.epicurius.ui.screens.recipe.profile.components.RecipeProfileContent
 import android.epicurius.ui.screens.utils.LoadState
-import android.epicurius.ui.screens.utils.LoadingSpinner
-import android.epicurius.ui.screens.utils.MixedText
 import android.epicurius.ui.screens.utils.apiSuccess
-import android.os.Build
-import android.widget.Toast
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.PickVisualMediaRequest
-import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.Image
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Button
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -61,21 +39,15 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontStyle
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.google.accompanist.permissions.ExperimentalPermissionsApi
-import com.google.accompanist.permissions.isGranted
-import com.google.accompanist.permissions.rememberPermissionState
 import java.time.LocalDate
 import java.util.Base64
 
-@OptIn(ExperimentalPermissionsApi::class)
+enum class ScreenState {
+    Profile, Ingredients, Preparation
+}
+
 @Composable
 fun RecipeProfileScreen(
     recipe: Recipe,
@@ -89,190 +61,84 @@ fun RecipeProfileScreen(
     onEditRating: (Int) -> Unit,
     onEditRecipe: () -> Unit,
     onEditRecipeImages: (List<ByteArray>) -> Unit,
-    onMakeIt: () -> Unit,
     onDeleteRecipe: (Int) -> Unit,
     onAddRecipeToCollection: (Int, Int) -> Unit,
     onRemoveRecipeFromCollection: (Int, Int) -> Unit,
     onCollectionsRequest: (Int, Boolean) -> Unit,
     enableButtons: Boolean,
 ) {
-    var showEditRecipeDialog by remember { mutableStateOf(false) }
-    var showEditRatingDialog by remember { mutableStateOf(false) }
-    var showCollectionsDialog by remember { mutableStateOf(false) }
-    var enableStarIcon by remember { mutableStateOf(recipe.isInCollection) }
-    var confirmRecipeDelete by remember { mutableStateOf(false) }
-
-    val pagerState = rememberPagerState(pageCount = { images.size })
-    var recipePicturesBytes by remember { mutableStateOf(recipe.picturesBytes.toList())}
-    val context = LocalContext.current
-
-    val imagePickerLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.PickVisualMedia()
-    ) { uri ->
-        if (uri != null) {
-            val inputStream = context.contentResolver.openInputStream(uri)
-            val bytes = inputStream?.readBytes()
-            inputStream?.close()
-            if (bytes != null) {
-                val currentPage = pagerState.currentPage
-                recipePicturesBytes = recipePicturesBytes.toMutableList().also {
-                    it[currentPage] = bytes
-                }
-                onEditRecipeImages(recipePicturesBytes)
-            }
-        } else {
-            Toast.makeText(context, "No image selected", Toast.LENGTH_SHORT).show()
-        }
-    }
-
-    val galleryPermissionState = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-        rememberPermissionState(android.Manifest.permission.READ_MEDIA_IMAGES)
-    } else {
-        rememberPermissionState(android.Manifest.permission.READ_EXTERNAL_STORAGE)
-    }
+    var currentScreen by remember { mutableStateOf(ScreenState.Profile) }
 
     Scaffold(
         topBar = {
             TopBar(
                 titleText = recipe.name,
                 backButton = true,
-                onBackButton = onBackButton,
+                onBackButton = when (currentScreen) {
+                    ScreenState.Profile -> onBackButton
+                    ScreenState.Ingredients -> {
+                        { currentScreen = ScreenState.Profile }
+                    }
+                    ScreenState.Preparation -> {
+                        { currentScreen = ScreenState.Ingredients }
+                    }
+                },
                 enableButtons = true
             )
         },
         bottomBar = { BottomBar(buttonsEnable = true) },
         content = { paddingValues ->
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .verticalScroll(rememberScrollState())
-                    .padding(paddingValues)
-                    .padding(16.dp)
-                    .background(Color.White),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(start = 10.dp, end = 10.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Row{
-                        Text("$rating/5")
-
-                        Spacer(Modifier.size(5.dp))
-
-                        Image(
-                            painter = painterResource(id = R.drawable.star),
-                            contentDescription = "Favorites",
-                            modifier = Modifier
-                                .padding(top = (0.5).dp)
-                                .size(15.dp),
-                            contentScale = ContentScale.Fit
-                        )
-                    }
-                    FavouritesIcon(
-                        recipe = recipe,
-                        collectionId = collectionId,
-                        onShowCollectionDialog = { showCollectionsDialog = true },
-                        onRemoveRecipeFromCollection = onRemoveRecipeFromCollection,
-                        enableStarIcon = enableStarIcon,
-                        enableButtons = enableButtons
-                    )
+            AnimatedContent(
+                targetState = currentScreen,
+                transitionSpec = {
+                    (slideInHorizontally { width -> width } + fadeIn()).togetherWith(
+                        slideOutHorizontally { width -> -width } + fadeOut())
                 }
-
-                RecipeProfileImages(
-                    images = recipePicturesBytes,
-                    pagerState = pagerState,
-                    onImageClick = {
-                        if (galleryPermissionState.status.isGranted) {
-                            imagePickerLauncher.launch(
-                                PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
+            ) { targetState ->
+                    when (targetState) {
+                        ScreenState.Profile ->
+                            RecipeProfileContent(
+                                recipe = recipe,
+                                rating = rating,
+                                images = images,
+                                isAuthor = isAuthor,
+                                userRating = userRating,
+                                collectionId = collectionId,
+                                collectionsState = collectionsState,
+                                onEditRating = onEditRating,
+                                onEditRecipe = onEditRecipe,
+                                onEditRecipeImages = onEditRecipeImages,
+                                onMakeIt = { currentScreen = ScreenState.Ingredients },
+                                onDeleteRecipe = onDeleteRecipe,
+                                onAddRecipeToCollection = onAddRecipeToCollection,
+                                onRemoveRecipeFromCollection = onRemoveRecipeFromCollection,
+                                onCollectionsRequest = onCollectionsRequest,
+                                enableButtons = enableButtons,
+                                paddingValues = paddingValues
                             )
-                        } else {
-                            galleryPermissionState.launchPermissionRequest()
-                        }
-                    },
-                    enabled = enableButtons && isAuthor
-                )
-                HorizontalPagerIndicator(images.size, pagerState)
-
-                Row(
-                    modifier = Modifier.fillMaxWidth().padding(horizontal = 10.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    if (isAuthor) {
-                        TextButton(
-                            onClick = { confirmRecipeDelete = true }
-                        ) { Text("Delete recipe", color = Color.Red) }
-                    } else {
-                        Box(Modifier.clickable { showEditRatingDialog = true }) {
-                            Row {
-                                Text("Your Rating: ", fontWeight = FontWeight.Bold)
-                                Text("$userRating")
-                            }
-                        }
+                        ScreenState.Ingredients ->
+                            ConfirmIngredientsContent(
+                                ingredientsList = recipe.ingredients,
+                                onSubstituteIngredients = { ingredientName ->
+                                    listOf("Substitute for $ingredientName")
+                                },
+                                onConfirmIngredients = {
+                                    currentScreen = ScreenState.Preparation
+                                },
+                                paddingValues = paddingValues
+                            )
+                        ScreenState.Preparation ->
+                            PreparationContent(
+                                instructions = recipe.instructions,
+                                onRateRecipe = onEditRating,
+                                onSkipRating = { currentScreen = ScreenState.Profile },
+                                onCancelPreparation = {
+                                    currentScreen = ScreenState.Profile
+                                },
+                                paddingValues = paddingValues,
+                            )
                     }
-                    Box(contentAlignment = Alignment.CenterEnd) {
-                        MixedText("by ", recipe.authorUsername)
-                    }
-                }
 
-                RecipeDescription(recipe.description)
-                RecipeInfoComponent(
-                    recipe = recipe,
-                    isAuthor = isAuthor,
-                    onEditButton = { showEditRecipeDialog = true }
-                )
-
-                Row {
-                    Button(
-                        onClick = { onMakeIt() },
-                        modifier = Modifier.padding(top = 5.dp, end = 10.dp),
-                    ) { Text("Make it!") }
-                }
-
-                if (showEditRecipeDialog) {
-                    EditRecipeDialog(
-                        recipe = recipe,
-                        onDismissRequest = { showEditRecipeDialog = false },
-                        onEditRecipe = {
-                            onEditRecipe()
-                            showEditRecipeDialog = false
-                        },
-                        enableButtons
-                    )
-                }
-                if (showEditRatingDialog) {
-                    EditRatingDialog(
-                        previousRating = userRating,
-                        onDismissRequest = { showEditRatingDialog = false },
-                        onEditRating = {
-                            onEditRating(it)
-                            showEditRatingDialog = false
-                        }
-                    )
-                }
-                if (confirmRecipeDelete) {
-                    ConfirmDeleteRecipeDialog(
-                        recipeId = recipe.id,
-                        onDismissRequest = { confirmRecipeDelete = false },
-                        onConfirmDelete = {
-                            onDeleteRecipe(it)
-                            confirmRecipeDelete = false
-                        }
-                    )
-                }
-                if (showCollectionsDialog) {
-                    RecipeCollectionsDialog(
-                        recipeId = recipe.id,
-                        onDismissRequest = { showCollectionsDialog = false },
-                        onRecipeCollectionsRequest = {},
-                        enableButtons = enableButtons
-                    )
-                }
             }
         },
         containerColor = Color.White
@@ -339,7 +205,6 @@ fun RecipeProfilePreview(){
         userRating = 4,
         collectionId = null,
         collectionsState = apiSuccess(collections),
-        {},
         {},
         {},
         {},

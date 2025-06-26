@@ -1,4 +1,4 @@
-package android.epicurius.ui.screens.search.components
+package android.epicurius.ui.screens.recipe.profile.components
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row

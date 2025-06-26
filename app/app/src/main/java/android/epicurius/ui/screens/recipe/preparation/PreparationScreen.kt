@@ -57,54 +57,6 @@ fun PreparationScreen(
                     .background(Color.White)
                     .verticalScroll(rememberScrollState())
             ) {
-                Text(
-                    text = "Preparation:",
-                    fontSize = 24.sp,
-                    fontWeight = FontWeight.Bold,
-                    modifier = Modifier.padding(bottom = 16.dp)
-                )
-
-                instructions.steps.entries.forEach { (stepNumber, instruction) ->
-                    val backgroundColor =
-                        if (stepNumber.toInt() == currentStep) Color(0xFFCDFA7D)
-                        else Color.Transparent
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .background(backgroundColor)
-                            .padding(8.dp)
-                    ) {
-                        Text("$stepNumber. $instruction")
-                    }
-                }
-
-                Spacer(modifier = Modifier.weight(1f))
-
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    Button(
-                        onClick = { if (currentStep < instructions.steps.size) currentStep++ }
-                    ) {
-                        if (currentStep >= instructions.steps.size)
-                            Text(
-                                text = "Done",
-                                modifier = Modifier.clickable{ showRateDialog = true }
-                            )
-                        else Text("Next")
-                    }
-
-                    Button(onClick = { onCancelPreparation() }) { Text("Cancel") }
-                }
-            }
-            if (showRateDialog) {
-                RateRecipeDialog(
-                    onDismissRequest = { showRateDialog = false },
-                    onSkipRating = { onSkipRating() },
-                    onRateRecipe = { rating -> onRateRecipe(rating) }
-                )
             }
         },
         containerColor = Color.White

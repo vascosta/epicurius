@@ -1,4 +1,4 @@
-package android.epicurius.ui.screens.search.components
+package android.epicurius.ui.screens.recipe.profile.components
 
 import android.epicurius.R
 import android.epicurius.domain.recipe.Recipe

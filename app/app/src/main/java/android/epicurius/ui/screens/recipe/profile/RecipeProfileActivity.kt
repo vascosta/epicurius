@@ -74,7 +74,6 @@ class RecipeProfileActivity : EpicuriusActivity() {
                 onEditRecipe = {},
                 onEditRecipeImages = {},
                 onEditRating = { },
-                onMakeIt = { navigateTo<ConfirmIngredientsActivity>() },
                 onDeleteRecipe = {},
                 onCollectionsRequest = { _, _ -> },
                 onAddRecipeToCollection = { _, _ -> },

@@ -46,14 +46,6 @@ fun ConfirmIngredientsScreen(
     onSubstituteIngredients: (String) -> List<String>,
     onConfirmIngredients: () -> Unit
 ) {
-    val checkboxStates = remember { mutableStateListOf<Boolean>().apply {
-        repeat(ingredientsList.size) { add(false) }
-    }}
-    var showSubstituteIngredientsDialog by remember { mutableStateOf(false) }
-    var substituteIngredientsList by remember { mutableStateOf<List<String>>(emptyList()) }
-    var selectedIngredient by remember { mutableStateOf<Ingredient?>(null) }
-    var showInfoDialog by remember { mutableStateOf(false) }
-
     Scaffold(
         topBar = {
             TopBar(
@@ -73,69 +65,7 @@ fun ConfirmIngredientsScreen(
                     .background(Color.White)
                     .verticalScroll(rememberScrollState())
             ) {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    Text(
-                        text = "Ingredients:",
-                        fontSize = 24.sp,
-                        fontWeight = FontWeight.Bold,
-                        modifier = Modifier.padding(bottom = 16.dp)
-                    )
-                    IconButton(
-                        onClick = { showInfoDialog = true }
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.Info,
-                            contentDescription = "Info Icon",
-                        )
-                    }
-                }
 
-                if (showInfoDialog) { InfoDialog { showInfoDialog = false } }
-
-                Row(modifier = Modifier.padding(vertical = 4.dp, horizontal = 10.dp)) {
-                    Text("Name", modifier = Modifier.weight(0.4f), fontWeight = FontWeight.Bold)
-                    Text("Qty", modifier = Modifier.weight(0.2f), fontWeight = FontWeight.Bold)
-                    Text("Unit", modifier = Modifier.weight(0.2f), fontWeight = FontWeight.Bold)
-                    Spacer(modifier = Modifier.weight(0.2f))
-                }
-
-                IngredientTable(
-                    ingredients = ingredientsList,
-                    checkboxStates = checkboxStates,
-                    onCheckedChange = { index, isChecked ->
-                        checkboxStates[index] = isChecked
-                    },
-                    onNameClick = { ingredient ->
-                        selectedIngredient = ingredient
-                        showSubstituteIngredientsDialog = true
-                        substituteIngredientsList = onSubstituteIngredients(ingredient.name)
-                    }
-                )
-
-                if (showSubstituteIngredientsDialog && selectedIngredient!= null) {
-                    selectedIngredient?.let { observedIngredient ->
-                        SubstituteIngredientsAlertDialog(
-                            substitutes = substituteIngredientsList,
-                            onDismiss = { showSubstituteIngredientsDialog = false }
-                        )
-                    }
-                }
-
-                Spacer(modifier = Modifier.weight(1f))
-
-                Button(
-                    onClick = { onConfirmIngredients() },
-                    modifier = Modifier
-                        .align(Alignment.CenterHorizontally)
-                        .padding(top = 16.dp, bottom = 16.dp),
-                    enabled = !checkboxStates.contains(false)
-                ) {
-                    Text("Confirm Ingredients")
-                }
             }
         },
         containerColor = Color.White
