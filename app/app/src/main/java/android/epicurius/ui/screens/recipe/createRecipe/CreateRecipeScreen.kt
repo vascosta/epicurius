@@ -71,7 +71,15 @@ data class IngredientComponent(
     val name: String = "",
     val quantity: String = "",
     val unit: String = ""
-)
+) {
+    fun toIngredient(): Ingredient {
+        return Ingredient(
+            name = name,
+            quantity = quantity.toDouble(),
+            unit = IngredientUnit.fromString(unit)
+        )
+    }
+}
 
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable

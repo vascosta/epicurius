@@ -64,7 +64,7 @@ class CreateRecipeActivity : EpicuriusActivity() {
     }
 
     private fun navigateToRecipeProfileActivity(recipeId: Int) {
-        navigateTo<RecipeProfileActivity> { intent ->
+        navigateTo<RecipeProfileActivity>(finishCurrent = true) { intent ->
             intent.putExtra(Intents.RECIPE_ID, recipeId)
         }
     }
