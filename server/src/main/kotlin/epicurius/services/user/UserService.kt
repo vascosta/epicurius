@@ -59,15 +59,16 @@ class UserService(
         return AuthenticatedUser(user, token)
     }
 
-    fun getUserProfile(name: String): UserProfile {
+    fun getUserProfile(authenticatedUserId: Int, name: String): UserProfile {
         val user = checkIfUserExists(name = name) ?: throw UserNotFound(name)
         val followers = getFollowersCount(user.id)
         val following = getFollowingCount(user.id)
+        val isFollowing = checkIfUserIsBeingFollowedBy(authenticatedUserId, user.id)
         return if (user.profilePictureName == null) {
-            UserProfile(user.name, user.country, user.privacy, null, followers, following)
+            UserProfile(user.name, user.country, user.privacy, null, followers, following, isFollowing)
         } else {
             val userProfilePicture = getProfilePicture(user.profilePictureName)
-            UserProfile(user.name, user.country, user.privacy, userProfilePicture, followers, following)
+            UserProfile(user.name, user.country, user.privacy, userProfilePicture, followers, following, isFollowing)
         }
     }
 

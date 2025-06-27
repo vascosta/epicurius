@@ -67,10 +67,11 @@ class UserController(val userService: UserService) {
                 userProfilePicture,
                 followersCount,
                 followingCount,
+                true
             )
             okHttpResponse(GetUserProfileOutputModel(userProfile))
         } else {
-            val userProfile = userService.getUserProfile(name)
+            val userProfile = userService.getUserProfile(authenticatedUser.user.id, name)
             okHttpResponse(GetUserProfileOutputModel(userProfile))
         }
     }
