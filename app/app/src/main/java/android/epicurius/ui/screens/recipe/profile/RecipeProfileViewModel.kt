@@ -50,8 +50,12 @@ class RecipeProfileViewModel(
 
     private val usernameFlow = MutableStateFlow<LoadState<String>>(idle())
     private val userRecipeRatingFlow = MutableStateFlow<LoadState<Int>>(idle())
+
     val username = usernameFlow.asStateFlow()
     val userRecipeRating = userRecipeRatingFlow.asStateFlow()
+
+    private val substituteIngredientsFlow = MutableStateFlow<LoadState<List<String>>>(idle())
+    val substituteIngredients = substituteIngredientsFlow.asStateFlow()
 
     fun getRecipeProfile(id: Int, onErrorNavigateTo: () -> Unit) {
         disableButtons()
@@ -80,6 +84,12 @@ class RecipeProfileViewModel(
         disableButtons()
         usernameFlow.value = loading()
         viewModelScope.launch { getCachedUsername() }
+    }
+
+    fun getSubstituteIngredients(ingredientName: String) {
+        disableButtons()
+        substituteIngredientsFlow.value = loading()
+        viewModelScope.launch { getSubstituteIngredients(ingredientName) }
     }
 
     fun updateRecipe(
@@ -189,6 +199,17 @@ class RecipeProfileViewModel(
     private suspend fun getCachedUsername() {
         val userInfo = session.getUserInfo()
         usernameFlow.value = cache(userInfo.name)
+        enableButtons()
+    }
+
+    private suspend fun fetchSubstituteIngredients(ingredientName: String) {
+        val result = request {
+            val token = session.getToken()
+            service.ingredientsService.getSubstituteIngredients(token, ingredientName)
+        }
+        when {
+            result.isSuccess -> substituteIngredientsFlow.value = apiSuccess(result.getValueOrThrow().ingredients)
+        }
         enableButtons()
     }
 

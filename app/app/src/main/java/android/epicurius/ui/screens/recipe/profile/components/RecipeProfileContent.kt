@@ -140,14 +140,14 @@ fun RecipeProfileContent(
     }
 
     LaunchedEffect(recipeState) {
-        if (recipeState is Loaded<Recipe>) {
+        if (recipeState is Loaded) {
             val recipe = recipeState.value.getValueOrThrow()
             recipePicturesSize = recipe.picturesBytes.size
             recipePicturesBytes = recipe.picturesBytes
         }
     }
     LaunchedEffect(usernameState) {
-        if (usernameState is Loaded<String> && recipeState is Loaded<Recipe>)
+        if (usernameState is Loaded && recipeState is Loaded)
             isAuthor = usernameState.value.getValueOrThrow() == recipeState.value.getValueOrThrow().authorUsername
     }
     Column(

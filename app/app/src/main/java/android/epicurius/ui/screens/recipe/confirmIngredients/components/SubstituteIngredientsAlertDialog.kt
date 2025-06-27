@@ -13,16 +13,16 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun SubstituteIngredientsAlertDialog(
-    substitutes: List<String>,
-    onDismiss: () -> Unit
+    substituteIngredients: List<String>,
+    onDismiss: () -> Unit = {}
 ) {
     AlertDialog(
         onDismissRequest = { onDismiss() },
         title = { Text("Substitute Ingredients") },
         text = {
             Column {
-                if (substitutes. isNotEmpty()) {
-                    substitutes.forEach {
+                if (substituteIngredients. isNotEmpty()) {
+                    substituteIngredients.forEach {
                         Text(
                             text = "• $it",
                             modifier = Modifier.padding(start = 10.dp, bottom = 10.dp)

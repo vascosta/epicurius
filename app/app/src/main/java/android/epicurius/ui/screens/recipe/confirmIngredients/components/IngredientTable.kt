@@ -21,15 +21,17 @@ import androidx.compose.ui.unit.sp
 fun IngredientTable(
     ingredients: List<Ingredient>,
     checkboxStates: List<Boolean>,
-    onCheckedChange: (Int, Boolean) -> Unit,
-    onNameClick: (Ingredient) -> Unit
+    onCheckedChange: (index: Int, isChecked: Boolean) -> Unit = { _, _ -> },
+    onIngredientNameClick: (Ingredient) -> Unit = {},
+    enableButtons: Boolean
 ) {
     ingredients.forEachIndexed { index, ingredient ->
         IngredientBulletPoint(
             ingredient = ingredient,
             checked = checkboxStates[index],
             onCheckedChange = { isChecked -> onCheckedChange(index, isChecked) },
-            onNameClick = { onNameClick(ingredient) }
+            onIngredientNameClick = { onIngredientNameClick(ingredient) },
+            enableButtons = enableButtons
         )
     }
 }
@@ -39,8 +41,9 @@ fun IngredientTable(
 private fun IngredientBulletPoint(
     ingredient: Ingredient,
     checked: Boolean,
-    onCheckedChange: (Boolean) -> Unit,
-    onNameClick: () -> Unit
+    onCheckedChange: (isChecked: Boolean) -> Unit = {},
+    onIngredientNameClick: () -> Unit = {},
+    enableButtons: Boolean
 ) {
     Row(
         modifier = Modifier
@@ -52,10 +55,12 @@ private fun IngredientBulletPoint(
             text = ingredient.name,
             modifier = Modifier
                 .weight(0.4f)
-                .clickable { onNameClick() },
+                .clickable(
+                    enabled = enableButtons,
+                    onClick = onIngredientNameClick
+                ),
             fontSize = 18.sp
         )
-
         Text(
             text = if (ingredient.quantity % 1.0 == 0.0)
                 ingredient.quantity.toInt().toString()
@@ -64,25 +69,26 @@ private fun IngredientBulletPoint(
             modifier = Modifier.weight(0.2f),
             fontSize = 18.sp
         )
-
         Text(
             text = if (ingredient.unit == IngredientUnit.X) "" else ingredient.unit.displayName,
             modifier = Modifier.weight(0.2f),
             fontSize = 18.sp
         )
-
         Checkbox(
             checked = checked,
             onCheckedChange = { onCheckedChange(it) },
             modifier = Modifier.weight(0.1f)
         )
-
         Icon(
             imageVector = Icons.Default.ShoppingCart,
             contentDescription = "Shopping List",
             modifier = Modifier
                 .align(Alignment.CenterVertically)
                 .weight(0.1f)
+                .clickable(
+                    enabled = enableButtons,
+                    onClick = {}
+                )
         )
     }
 }

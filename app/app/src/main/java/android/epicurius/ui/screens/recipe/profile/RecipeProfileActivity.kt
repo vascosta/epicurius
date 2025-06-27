@@ -56,6 +56,7 @@ class RecipeProfileActivity : EpicuriusActivity() {
             val userRecipeRatingState = viewModel.userRecipeRating.collectAsState(Idle)
             val collectionsToAddRecipeState = viewModel.collectionsToAddRecipe.collectAsState(idle())
             val collectionsToRemoveRecipeState = viewModel.collectionsToRemoveRecipe.collectAsState(idle())
+            val substituteIngredientsState = viewModel.substituteIngredients.collectAsState(idle())
             RecipeProfileScreen(
                 recipeState = recipeState.value,
                 recipeNameState = recipeNameState.value,
@@ -65,6 +66,7 @@ class RecipeProfileActivity : EpicuriusActivity() {
                     collectionsToAddRecipeState = collectionsToAddRecipeState.value,
                     collectionsToRemoveRecipeState = collectionsToRemoveRecipeState.value
                 ),
+                substituteIngredientsState = substituteIngredientsState.value,
                 onBackButton = { finish() },
                 onEditRecipe = {
                     name: String?,
@@ -132,6 +134,9 @@ class RecipeProfileActivity : EpicuriusActivity() {
                         recipeId,
                         collectionsToRemove
                     )
+                },
+                onSubstituteIngredients = { ingredientName: String ->
+                    viewModel.getSubstituteIngredients(ingredientName)
                 },
                 onRecipeCollectionsClear = { viewModel.clearRecipeCollections() },
                 onUserProfileRequest = ::navigateToUserProfileActivity,

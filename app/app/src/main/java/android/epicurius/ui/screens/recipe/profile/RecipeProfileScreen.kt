@@ -50,6 +50,7 @@ fun RecipeProfileScreen(
     usernameState: LoadState<String>,
     userRecipeRatingState: LoadState<Int>,
     recipeCollectionsStateBundle: RecipeCollectionsStateBundle,
+    substituteIngredientsState: LoadState<List<String>>,
     onBackButton: () -> Unit,
     onEditRecipe: (
         name: String?,
@@ -78,6 +79,7 @@ fun RecipeProfileScreen(
         recipeId: Int,
         collectionsToRemove: List<CollectionProfile>
     ) -> Unit = { _, _ -> },
+    onSubstituteIngredients: (ingredientName: String) -> Unit = {},
     onRecipeCollectionsClear: () -> Unit = {},
     onUserProfileRequest: (name: String) -> Unit = {},
     onRecipeCollectionsRequest: (recipeId: Int, collectionType: CollectionType) -> Unit = { _, _ -> },
@@ -134,13 +136,11 @@ fun RecipeProfileScreen(
                         )
                     ScreenState.Ingredients ->
                         ConfirmIngredientsContent(
-                            ingredientsList = recipeState.ingredients,
-                            onSubstituteIngredients = { ingredientName ->
-                                listOf("Substitute for $ingredientName")
-                            },
-                            onConfirmIngredients = {
-                                currentScreen = ScreenState.Preparation
-                            },
+                            recipeState = recipeState,
+                            substituteIngredientsState = substituteIngredientsState,
+                            onSubstituteIngredients = onSubstituteIngredients,
+                            onConfirmIngredients = { currentScreen = ScreenState.Preparation },
+                            enableButtons = enableButtons,
                             paddingValues = paddingValues
                         )
                     ScreenState.Preparation ->
@@ -212,9 +212,9 @@ fun RecipeProfilePreview(){
         CollectionProfile(id = 2, name = "Breakfast Recipes")
     )
     RecipeProfileScreen(
-        isAuthor = true,
         recipeState = apiSuccess(recipe),
         recipeNameState = apiSuccess(recipe.name),
+        usernameState = apiSuccess(recipe.authorUsername),
         rating = rating,
         userRating = 4,
         collectionId = null,
