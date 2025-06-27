@@ -95,7 +95,7 @@ fun SignUpScreen(
                 Row {
                     AuthButton(
                         text = "Login",
-                        onClick = { onLogin() },
+                        onClick = onLogin,
                         enabled = enableButtons
                     )
                     AuthButton(

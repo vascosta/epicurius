@@ -14,7 +14,7 @@ open class AuthViewModel(
     internal suspend fun saveUserInfo(token: String) {
         val result = request { service.userService.getUserInfo(token) }
         when {
-            result.isSuccess ->session.save(context, token, result.getValueOrThrow().userInfo, null)
+            result.isSuccess -> session.save(context, token, result.getValueOrThrow().userInfo, null)
         }
     }
 }

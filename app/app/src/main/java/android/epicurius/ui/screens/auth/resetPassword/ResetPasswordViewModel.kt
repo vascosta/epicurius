@@ -35,12 +35,12 @@ class ResetPasswordViewModel(
             service.userService.resetUserPassword(resetPasswordInfo)
         }
         when {
-            result.isFailure -> enableButtons()
             result.isSuccess -> {
                 showToast("password was reset successfully")
                 onSessionExpired(false)
             }
         }
+        enableButtons()
     }
 
     private fun validateResetPasswordInfo(

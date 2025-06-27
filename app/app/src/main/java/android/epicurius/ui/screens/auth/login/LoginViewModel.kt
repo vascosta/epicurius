@@ -32,18 +32,16 @@ class LoginViewModel(
         viewModelScope.launch { handleLogin(loginInfo, onSuccessNavigateTo) }
     }
 
-    private suspend fun handleLogin(loginInfo: LoginInputModel, navigateTo: () -> Unit) {
-        val result = request {
-            service.authService.login(loginInfo)
-        }
+    private suspend fun handleLogin(loginInfo: LoginInputModel, onSuccessNavigateTo: () -> Unit) {
+        val result = request { service.authService.login(loginInfo) }
         when {
-            result.isFailure -> enableButtons()
             result.isSuccess -> {
                 val token = result.getTokenOrThrow()
                 saveUserInfo(token)
-                navigateTo()
+                onSuccessNavigateTo()
             }
         }
+        enableButtons()
     }
 
     private fun validateLoginInfo(

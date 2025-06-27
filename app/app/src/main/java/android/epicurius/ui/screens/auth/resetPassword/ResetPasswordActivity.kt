@@ -13,7 +13,7 @@ class ResetPasswordActivity : EpicuriusActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             ResetPasswordScreen(
-                onBackButton = { navigateTo<LoginActivity>(true) },
+                onBackButton = { navigateTo<LoginActivity>(useStack = true) },
                 onResetPassword = { email: String, password: String, confirmPassword: String ->
                     viewModel.resetPassword(email, password, confirmPassword)
                 },

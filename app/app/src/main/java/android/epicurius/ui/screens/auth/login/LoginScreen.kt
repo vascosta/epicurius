@@ -73,7 +73,7 @@ fun LoginScreen(
                 )
                 Row {
                     AuthButton(
-                        onClick = { onSignUp() },
+                        onClick = onSignUp,
                         enabled = enableButtons,
                         text = "SignUp"
                     )
@@ -90,7 +90,7 @@ fun LoginScreen(
                     )
                 }
                 TextButton(
-                    onClick = { onForgotPassword() },
+                    onClick = onForgotPassword,
                     enabled = enableButtons
                 ) { Text("Forgot your password?") }
             }

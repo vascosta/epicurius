@@ -39,13 +39,13 @@ class SignUpViewModel(
             service.authService.signUp(signUpInfo)
         }
         when {
-            result.isFailure -> enableButtons()
             result.isSuccess -> {
                 val token = result.getTokenOrThrow()
                 saveUserInfo(token)
                 navigateTo()
             }
         }
+        enableButtons()
     }
 
     private fun validateSignUpInfo(
