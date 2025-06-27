@@ -37,7 +37,7 @@ class DailyMenuActivity : EpicuriusActivity() {
                     collectionsToAddRecipeState.value,
                     collectionsToRemoveRecipeState.value
                 ),
-                onBackButton = { navigateTo<FeedActivity>(true) },
+                onBackButton = { navigateTo<FeedActivity>(useStack = true) },
                 onAddRecipeToCollections = {
                     recipeId: Int,
                     collectionsToAdd: List<CollectionProfile>
@@ -56,7 +56,7 @@ class DailyMenuActivity : EpicuriusActivity() {
                         collectionsToRemove
                     )
                 },
-                onRecipeCollectionsClear = { viewModel.clearRecipeCollections() },
+                onClearRecipeCollections = { viewModel.clearRecipeCollections() },
                 onRecipeRequest = ::navigateToRecipeProfileActivity,
                 onRecipeCollectionsRequest = { recipeId: Int ->
                     viewModel.getRecipeCollections(recipeId, CollectionType.FAVOURITE)

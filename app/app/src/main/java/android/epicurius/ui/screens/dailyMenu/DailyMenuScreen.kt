@@ -39,7 +39,7 @@ fun DailyMenuScreen(
         recipeId: Int,
         collectionsToRemove: List<CollectionProfile>
     ) -> Unit = { _, _ -> },
-    onRecipeCollectionsClear: () -> Unit = {},
+    onClearRecipeCollections: () -> Unit = {},
     onRecipeCollectionsRequest: (recipeId: Int) -> Unit = {},
     onRecipeRequest: (recipeId: Int) -> Unit = {},
     enableButtons: Boolean
@@ -71,7 +71,7 @@ fun DailyMenuScreen(
                             recipeCollectionsStateBundle = recipeCollectionsStateBundle,
                             onAddRecipeToCollections = onAddRecipeToCollections,
                             onRemoveRecipeFromCollections = onRemoveRecipeFromCollections,
-                            onCollectionsClear = onRecipeCollectionsClear,
+                            onClearRecipeCollections = onClearRecipeCollections,
                             onRecipeCollectionsRequest = onRecipeCollectionsRequest,
                             onRecipeRequest = onRecipeRequest,
                             enableButtons = enableButtons
@@ -82,7 +82,7 @@ fun DailyMenuScreen(
                             recipeCollectionsStateBundle = recipeCollectionsStateBundle,
                             onAddRecipeToCollections = onAddRecipeToCollections,
                             onRemoveRecipeFromCollections = onRemoveRecipeFromCollections,
-                            onCollectionsClear = onRecipeCollectionsClear,
+                            onClearRecipeCollections = onClearRecipeCollections,
                             onRecipeCollectionsRequest = onRecipeCollectionsRequest,
                             onRecipeRequest = onRecipeRequest,
                             enableButtons = enableButtons
@@ -93,7 +93,7 @@ fun DailyMenuScreen(
                             recipeCollectionsStateBundle = recipeCollectionsStateBundle,
                             onAddRecipeToCollections = onAddRecipeToCollections,
                             onRemoveRecipeFromCollections = onRemoveRecipeFromCollections,
-                            onCollectionsClear = onRecipeCollectionsClear,
+                            onClearRecipeCollections = onClearRecipeCollections,
                             onRecipeCollectionsRequest = onRecipeCollectionsRequest,
                             onRecipeRequest = onRecipeRequest,
                             enableButtons = enableButtons
@@ -104,7 +104,7 @@ fun DailyMenuScreen(
                             recipeCollectionsStateBundle = recipeCollectionsStateBundle,
                             onAddRecipeToCollections = onAddRecipeToCollections,
                             onRemoveRecipeFromCollections = onRemoveRecipeFromCollections,
-                            onCollectionsClear = onRecipeCollectionsClear,
+                            onClearRecipeCollections = onClearRecipeCollections,
                             onRecipeCollectionsRequest = onRecipeCollectionsRequest,
                             onRecipeRequest = onRecipeRequest,
                             enableButtons = enableButtons
@@ -115,7 +115,7 @@ fun DailyMenuScreen(
                             recipeCollectionsStateBundle = recipeCollectionsStateBundle,
                             onAddRecipeToCollections = onAddRecipeToCollections,
                             onRemoveRecipeFromCollections = onRemoveRecipeFromCollections,
-                            onCollectionsClear = onRecipeCollectionsClear,
+                            onClearRecipeCollections = onClearRecipeCollections,
                             onRecipeCollectionsRequest = onRecipeCollectionsRequest,
                             onRecipeRequest = onRecipeRequest,
                             enableButtons = enableButtons

@@ -34,7 +34,7 @@ fun MenuItemBox(
         recipeId: Int,
         collectionsToRemove: List<CollectionProfile>
     ) -> Unit = { _, _ -> },
-    onCollectionsClear: () -> Unit = {},
+    onClearRecipeCollections: () -> Unit = {},
     onRecipeCollectionsRequest: (recipeId: Int) -> Unit = {},
     onRecipeRequest: (recipeId: Int) -> Unit = {},
     enableButtons: Boolean
@@ -55,7 +55,7 @@ fun MenuItemBox(
                     recipeCollectionsStateBundle = recipeCollectionsStateBundle,
                     onAddRecipeToCollections = onAddRecipeToCollections,
                     onRemoveRecipeFromCollections = onRemoveRecipeFromCollections,
-                    onRecipeCollectionsClear = onCollectionsClear,
+                    onRecipeCollectionsClear = onClearRecipeCollections,
                     onRecipeRequest = onRecipeRequest,
                     onRecipeCollectionsRequest = onRecipeCollectionsRequest,
                     enableButtons = enableButtons
