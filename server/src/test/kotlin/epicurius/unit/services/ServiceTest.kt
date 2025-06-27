@@ -28,7 +28,8 @@ open class ServiceTest : EpicuriusUnitTest() {
 
         fun getAuthenticatedUser(token: String) = userService.getAuthenticatedUser(token)
 
-        fun getUserProfile(username: String) = userService.getUserProfile(username)
+        fun getUserProfile(authenticatedUserId: Int, username: String) =
+            userService.getUserProfile(authenticatedUserId, username)
 
         fun getProfilePicture(profilePictureName: String?) = userService.getProfilePicture(profilePictureName)
 

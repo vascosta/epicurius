@@ -10,6 +10,7 @@ import kotlin.test.Test
 import kotlin.test.assertContentEquals
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
+import kotlin.test.assertTrue
 
 class GetUserProfileControllerTests : UserControllerTest() {
 
@@ -35,6 +36,7 @@ class GetUserProfileControllerTests : UserControllerTest() {
         assertContentEquals(testPicture.bytes, body.userProfile.profilePicture)
         assertEquals(0, body.userProfile.followersCount)
         assertEquals(0, body.userProfile.followingCount)
+        assertTrue(body.userProfile.isFollowing)
     }
 
     @Test
@@ -48,9 +50,10 @@ class GetUserProfileControllerTests : UserControllerTest() {
             privateTestUser.user.privacy,
             testPicture.bytes,
             0,
-            0
+            0,
+            isFollowing = true
         )
-        whenever(userServiceMock.getUserProfile(privateTestUsername)).thenReturn(mockUserProfile)
+        whenever(userServiceMock.getUserProfile(publicTestUser.user.id, privateTestUsername)).thenReturn(mockUserProfile)
 
         // when retrieving the other user profile
         val response = getUserProfile(publicTestUser, privateTestUsername)
@@ -64,6 +67,7 @@ class GetUserProfileControllerTests : UserControllerTest() {
         assertContentEquals(mockUserProfile.profilePicture, body.userProfile.profilePicture)
         assertEquals(mockUserProfile.followersCount, body.userProfile.followersCount)
         assertEquals(mockUserProfile.followingCount, body.userProfile.followingCount)
+        assertEquals(mockUserProfile.isFollowing, body.userProfile.isFollowing)
     }
 
     @Test
@@ -72,7 +76,9 @@ class GetUserProfileControllerTests : UserControllerTest() {
         val nonExistingUsername = UUID.randomUUID().toString()
 
         // mock
-        whenever(userServiceMock.getUserProfile(nonExistingUsername)).thenThrow(UserNotFound(nonExistingUsername))
+        whenever(
+            userServiceMock.getUserProfile(publicTestUser.user.id, nonExistingUsername)
+        ).thenThrow(UserNotFound(nonExistingUsername))
 
         // when getting the user profile
         // then the user profile cannot be retrieved and throws UserNotFound exception

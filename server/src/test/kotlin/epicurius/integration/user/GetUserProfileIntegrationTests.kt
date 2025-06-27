@@ -31,6 +31,7 @@ class GetUserProfileIntegrationTests : UserIntegrationTest() {
         assertContentEquals(null, body.userProfile.profilePicture)
         assertEquals(0, body.userProfile.followersCount)
         assertEquals(0, body.userProfile.followingCount)
+        assertEquals(true, body.userProfile.isFollowing)
     }
 
     @Test
@@ -49,6 +50,7 @@ class GetUserProfileIntegrationTests : UserIntegrationTest() {
         assertContentEquals(null, body.userProfile.profilePicture)
         assertEquals(0, body.userProfile.followersCount)
         assertEquals(0, body.userProfile.followingCount)
+        assertEquals(false, body.userProfile.isFollowing)
     }
 
     @Test

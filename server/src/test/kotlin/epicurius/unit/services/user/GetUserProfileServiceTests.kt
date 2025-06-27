@@ -24,7 +24,7 @@ class GetUserProfileServiceTests : UserServiceTest() {
             .thenReturn(testPicture.bytes)
 
         // when retrieving the user profile
-        val userProfile = getUserProfile(publicTestUsername)
+        val userProfile = getUserProfile(publicTestUser.id, publicTestUsername)
 
         // then the user profile is retrieved successfully
         assertEquals(publicTestUsername, userProfile.name)
@@ -33,6 +33,7 @@ class GetUserProfileServiceTests : UserServiceTest() {
         assertContentEquals(testPicture.bytes, userProfile.profilePicture)
         assertEquals(0, userProfile.followersCount)
         assertEquals(0, userProfile.followingCount)
+        assertEquals(true, userProfile.isFollowing)
     }
 
     @Test
@@ -45,6 +46,6 @@ class GetUserProfileServiceTests : UserServiceTest() {
 
         // when getting the user profile
         // then the user profile cannot be retrieved and throws UserNotFound exception
-        assertFailsWith<UserNotFound> { getUserProfile(nonExistingUsername) }
+        assertFailsWith<UserNotFound> { getUserProfile(publicTestUser.id, nonExistingUsername) }
     }
 }
