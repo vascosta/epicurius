@@ -114,6 +114,9 @@ class RecipeProfileActivity : EpicuriusActivity() {
                         rating
                     )
                 },
+                onDeleteUserRecipeRating = {
+                    viewModel.deleteUserRecipeRating(intent.getIntExtra(Intents.RECIPE_ID, -1))
+                },
                 onDeleteRecipe = {
                     viewModel.deleteRecipe(intent.getIntExtra(Intents.RECIPE_ID, -1)) { finish() }
                 },

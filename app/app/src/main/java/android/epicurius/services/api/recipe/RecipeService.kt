@@ -45,7 +45,7 @@ class RecipeService(private val httpService: HttpService) {
             token = token
         )
 
-    suspend fun getRecipeRate(
+    suspend fun getRecipeRating(
         token: String,
         id: Int
     ): APIResult<GetRecipeRateOutputModel> =
@@ -188,7 +188,7 @@ class RecipeService(private val httpService: HttpService) {
             token = token
         )
 
-    suspend fun deleteRecipeRate(
+    suspend fun deleteUserRecipeRate(
         token: String,
         id: Int,
     ): APIResult<Unit> =

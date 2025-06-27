@@ -41,7 +41,7 @@ import androidx.compose.ui.unit.sp
 
 @Composable
 fun ConfirmIngredientsContent(
-    recipeState: LoadState<Recipe>,
+    recipe: Recipe,
     substituteIngredientsState: LoadState<List<String>>,
     onSubstituteIngredients: (ingredientName: String) -> Unit = {},
     onConfirmIngredients: () -> Unit = {},
@@ -51,16 +51,11 @@ fun ConfirmIngredientsContent(
     var showInfoDialog by remember { mutableStateOf(false) }
     var showSubstituteIngredientsDialog by remember { mutableStateOf(false) }
 
-    val checkboxStates = remember { mutableStateListOf<Boolean>() }
+    val checkboxStates = remember { mutableStateListOf<Boolean>().apply {
+        repeat(recipe.ingredients.size) { add(false) }
+    } }
     var selectedIngredient by remember { mutableStateOf<Ingredient?>(null) }
 
-    LaunchedEffect(recipeState) {
-        if (recipeState is Loaded) {
-            val ingredients = recipeState.value.getValueOrThrow().ingredients
-            checkboxStates.clear()
-            repeat(ingredients.size) { checkboxStates.add(false) }
-        }
-    }
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -70,68 +65,63 @@ fun ConfirmIngredientsContent(
             .background(Color.White),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        LoadStateRenderer(
-            loadState = recipeState,
-            content = { recipe ->
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    Text(
-                        text = "Ingredients:",
-                        fontSize = 24.sp,
-                        fontWeight = FontWeight.Bold,
-                        modifier = Modifier.padding(bottom = 16.dp)
-                    )
-                    IconButton(
-                        onClick = { showInfoDialog = true },
-                        enabled = enableButtons
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.Info,
-                            contentDescription = "Info Icon",
-                        )
-                    }
-                }
-                if (showInfoDialog) InfoDialog { showInfoDialog = false }
-                Row(modifier = Modifier.padding(vertical = 4.dp, horizontal = 10.dp)) {
-                    Text("Name", modifier = Modifier.weight(0.4f), fontWeight = FontWeight.Bold)
-                    Text("Qty", modifier = Modifier.weight(0.2f), fontWeight = FontWeight.Bold)
-                    Text("Unit", modifier = Modifier.weight(0.2f), fontWeight = FontWeight.Bold)
-                    Spacer(modifier = Modifier.weight(0.2f))
-                }
-                IngredientTable(
-                    ingredients = recipe.ingredients,
-                    checkboxStates = checkboxStates,
-                    onCheckedChange = { index, isChecked ->
-                        checkboxStates[index] = isChecked
-                    },
-                    onIngredientNameClick = { ingredient ->
-                        selectedIngredient = ingredient
-                        showSubstituteIngredientsDialog = true
-                        onSubstituteIngredients(ingredient.name)
-                    },
-                    enableButtons = enableButtons
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Text(
+                text = "Ingredients:",
+                fontSize = 24.sp,
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier.padding(bottom = 16.dp)
+            )
+            IconButton(
+                onClick = { showInfoDialog = true },
+                enabled = enableButtons
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Info,
+                    contentDescription = "Info Icon",
                 )
-                if (showSubstituteIngredientsDialog && selectedIngredient != null) {
-                    LoadStateRenderer(
-                        loadState = substituteIngredientsState,
-                        content = { substituteIngredients ->
-                            SubstituteIngredientsAlertDialog(
-                                substituteIngredients = substituteIngredients,
-                                onDismiss = { showSubstituteIngredientsDialog = false }
-                            )
-                        }
+            }
+        }
+        if (showInfoDialog) InfoDialog { showInfoDialog = false }
+        Row(modifier = Modifier.padding(vertical = 4.dp, horizontal = 10.dp)) {
+            Text("Name", modifier = Modifier.weight(0.4f), fontWeight = FontWeight.Bold)
+            Text("Qty", modifier = Modifier.weight(0.2f), fontWeight = FontWeight.Bold)
+            Text("Unit", modifier = Modifier.weight(0.2f), fontWeight = FontWeight.Bold)
+            Spacer(modifier = Modifier.weight(0.2f))
+        }
+        IngredientTable(
+            ingredients = recipe.ingredients,
+            checkboxStates = checkboxStates,
+            onCheckedChange = { index, isChecked ->
+                checkboxStates[index] = isChecked
+            },
+            onIngredientNameClick = { ingredient ->
+                selectedIngredient = ingredient
+                showSubstituteIngredientsDialog = true
+                onSubstituteIngredients(ingredient.name)
+            },
+            enableButtons = enableButtons
+        )
+        if (showSubstituteIngredientsDialog && selectedIngredient != null) {
+            LoadStateRenderer(
+                loadState = substituteIngredientsState,
+                content = { substituteIngredients ->
+                    SubstituteIngredientsAlertDialog(
+                        substituteIngredients = substituteIngredients,
+                        onDismiss = { showSubstituteIngredientsDialog = false }
                     )
                 }
-                Spacer(modifier = Modifier.weight(1f))
-                Button(
-                    onClick = onConfirmIngredients,
-                    modifier = Modifier.padding(top = 16.dp, bottom = 16.dp),
-                    enabled = !checkboxStates.contains(false) && enableButtons
-                ) { Text("Confirm Ingredients") }
-            }
-        )
+            )
+        }
+        Spacer(modifier = Modifier.weight(1f))
+        Button(
+            onClick = onConfirmIngredients,
+            modifier = Modifier.padding(top = 16.dp, bottom = 16.dp),
+            enabled = !checkboxStates.contains(false) && enableButtons
+        ) { Text("Confirm Ingredients") }
     }
 }

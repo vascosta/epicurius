@@ -28,7 +28,6 @@ import androidx.compose.ui.unit.dp
 fun RateRecipeDialog(
     previousRating: Int,
     onRateRecipe: (rating: Int) -> Unit = {},
-    onDeleteUserRecipeRating: (rating: Int) -> Unit = {},
     onDismissRequest: () -> Unit = {},
     enableButtons: Boolean
 ) {
@@ -44,13 +43,6 @@ fun RateRecipeDialog(
                 },
                 enabled = selectedRating > 0 && enableButtons
             ) { Text("Rate") }
-            Button(
-                onClick = {
-                    onDeleteUserRecipeRating(selectedRating)
-                    onDismissRequest()
-                },
-                enabled = enableButtons
-            ) { Text("Delete Rate") }
         },
         dismissButton = {
             TextButton(

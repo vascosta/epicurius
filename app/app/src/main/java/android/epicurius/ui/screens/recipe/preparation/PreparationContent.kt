@@ -4,6 +4,7 @@ import android.epicurius.domain.recipe.Recipe
 import android.epicurius.ui.screens.recipe.preparation.components.RateRecipeDialog
 import android.epicurius.ui.screens.utils.LoadState
 import android.epicurius.ui.screens.utils.LoadStateRenderer
+import android.epicurius.ui.screens.utils.Loaded
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -20,6 +21,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -34,19 +36,23 @@ import androidx.compose.ui.unit.sp
 
 @Composable
 fun PreparationContent(
-    recipeState: LoadState<Recipe>,
+    recipe: Recipe,
+    usernameState: LoadState<String>,
     userRecipeRatingState: LoadState<Int?>,
-    onRateRecipe: (rating: Int) -> Unit,
-    onDeleteUserRecipeRating: (rating: Int) -> Unit = {},
-    onSkipRating: () -> Unit,
-    onCancelPreparation: () -> Unit,
+    onRateRecipe: (rating: Int) -> Unit = {},
+    onFinishPreparation: () -> Unit = {},
     enableButtons: Boolean,
     paddingValues: PaddingValues
 ) {
     var showRateDialog by remember { mutableStateOf(false) }
 
     var currentStep by remember { mutableIntStateOf(1) }
+    var isAuthor by remember { mutableStateOf(false) }
 
+    LaunchedEffect(usernameState) {
+        if (usernameState is Loaded)
+            isAuthor = usernameState.value.getValueOrThrow() == recipe.authorUsername
+    }
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -56,69 +62,65 @@ fun PreparationContent(
             .background(Color.White),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        LoadStateRenderer(
-            loadState = recipeState,
-            content = { recipe ->
-                Text(
-                    text = "Preparation:",
-                    fontSize = 24.sp,
-                    fontWeight = FontWeight.Bold,
-                    modifier = Modifier.padding(bottom = 16.dp)
-                )
-                recipe.instructions.steps.entries.forEach { (stepNumber, instruction) ->
-                    val backgroundColor =
-                        if (stepNumber.toInt() == currentStep) Color(0xFFCDFA7D)
-                        else Color.Transparent
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .background(backgroundColor)
-                            .padding(8.dp)
-                    ) {
-                        Text("$stepNumber. $instruction")
-                    }
-                }
-                Spacer(modifier = Modifier.weight(1f))
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    Button(
-                        onClick = { if (currentStep < recipe.instructions.steps.size) currentStep++ },
-                        enabled = enableButtons
-                    ) {
-                        if (currentStep >= recipe.instructions.steps.size)
-                            Text(
-                                text = "Done",
-                                modifier = Modifier.clickable { showRateDialog = true }
-                            )
-                        else Text("Next")
-                    }
-                    Button(
-                        onClick = { onCancelPreparation() },
-                        enabled = enableButtons
-                    ) { Text("Cancel") }
-                }
-                if (showRateDialog) {
-                    LoadStateRenderer(
-                        loadState = userRecipeRatingState,
-                        content = { userRecipeRating ->
-                            RateRecipeDialog(
-                                previousRating = userRecipeRating ?: 0,
-                                onRateRecipe = onRateRecipe,
-                                onDeleteUserRecipeRating = onDeleteUserRecipeRating,
-                                onDismissRequest = {
-                                    showRateDialog = false
-                                    onSkipRating()
-                                },
-                                enableButtons = enableButtons
-                            )
-                        }
-                    )
-
-                }
-            }
+        Text(
+            text = "Preparation:",
+            fontSize = 24.sp,
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier.padding(bottom = 16.dp)
         )
+        recipe.instructions.steps.entries.forEach { (stepNumber, instruction) ->
+            val backgroundColor =
+                if (stepNumber.toInt() == currentStep) Color(0xFFCDFA7D)
+                else Color.Transparent
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(backgroundColor)
+                    .padding(8.dp)
+            ) {
+                Text("$stepNumber. $instruction")
+            }
+        }
+        Spacer(modifier = Modifier.weight(1f))
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Button(
+                onClick = {
+                    if (currentStep >= recipe.instructions.steps.size) {
+                        if (!isAuthor) showRateDialog = true
+                        else onFinishPreparation()
+                    }
+                    else if (currentStep < recipe.instructions.steps.size) currentStep++
+                },
+                enabled = enableButtons
+            ) {
+                if (currentStep >= recipe.instructions.steps.size) Text("Done")
+                else Text("Next")
+            }
+            Button(
+                onClick = { onFinishPreparation() },
+                enabled = enableButtons
+            ) { Text("Cancel") }
+        }
+        if (showRateDialog) {
+            LoadStateRenderer(
+                loadState = userRecipeRatingState,
+                content = { userRecipeRating ->
+                    RateRecipeDialog(
+                        previousRating = userRecipeRating ?: 0,
+                        onRateRecipe = onRateRecipe,
+                        onDismissRequest = {
+                            showRateDialog = false
+                            onFinishPreparation()
+                        },
+                        enableButtons = enableButtons
+                    )
+                }
+            )
+
+        }
     }
 }

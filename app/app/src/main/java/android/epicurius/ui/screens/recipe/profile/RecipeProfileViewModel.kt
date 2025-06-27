@@ -166,8 +166,9 @@ class RecipeProfileViewModel(
         viewModelScope.launch { handleDeleteRecipe(recipeId, onSuccessNavigateTo) }
     }
 
-    fun deleteUserRecipeRating() {
-
+    fun deleteUserRecipeRating(id: Int) {
+        disableButtons()
+        viewModelScope.launch { handleDeleteUserRecipeRating(id) }
     }
 
     private suspend fun fetchRecipeProfile(id: Int, onErrorNavigateTo: () -> Unit) {
@@ -284,6 +285,36 @@ class RecipeProfileViewModel(
             result.isFailure -> enableButtons()
             result.isSuccess -> onSuccessNavigateTo()
         }
+    }
+
+    private suspend fun handleDeleteUserRecipeRating(id: Int) {
+        val result = request {
+            val token = session.getToken()
+            service.recipeService.deleteUserRecipeRate(token, id)
+        }
+        when {
+            result.isFailure -> enableButtons()
+            result.isSuccess -> {
+                userRecipeRatingFlow.value = apiSuccess(null)
+                val oldRecipe = recipeFlow.value.getOrThrow()
+                val updatedRecipeRating = fetchRecipeRatings(oldRecipe.id)
+                val updatedRecipe = oldRecipe.copy(
+                    rating = updatedRecipeRating
+                )
+                recipeFlow.value = apiSuccess(updatedRecipe)
+            }
+        }
+    }
+
+    private suspend fun fetchRecipeRatings(recipeId: Int): Double {
+        val result = request {
+            val token = session.getToken()
+            service.recipeService.getRecipeRating(token, recipeId)
+        }
+        when {
+            result.isSuccess -> return result.getValueOrThrow().rating
+        }
+        return 0.0
     }
 
     private fun validateUpdateRecipeInfo(

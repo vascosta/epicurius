@@ -18,6 +18,7 @@ import android.epicurius.ui.screens.recipe.preparation.PreparationContent
 import android.epicurius.ui.screens.utils.generateTestImageByteArray
 import android.epicurius.ui.screens.recipe.profile.components.RecipeProfileContent
 import android.epicurius.ui.screens.utils.LoadState
+import android.epicurius.ui.screens.utils.LoadStateRenderer
 import android.epicurius.ui.screens.utils.Loaded
 import android.epicurius.ui.screens.utils.apiSuccess
 import android.epicurius.ui.screens.utils.getNameFromLoadStateValue
@@ -27,14 +28,20 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.animation.togetherWith
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Button
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import epicurius.domain.collection.CollectionType
 import java.time.LocalDate
 import java.util.Base64
@@ -70,6 +77,7 @@ fun RecipeProfileScreen(
     ) -> Unit = { _, _, _, _, _, _, _, _, _, _, _, _, _, _ -> },
     onEditRecipePictures: (picturesBytes: List<ByteArray>) -> Unit = {},
     onEditUserRating: (rating: Int) -> Unit = {},
+    onDeleteUserRecipeRating: () -> Unit = {},
     onDeleteRecipe: () -> Unit = { },
     onAddRecipeToCollections: (
         recipeId: Int,
@@ -108,56 +116,59 @@ fun RecipeProfileScreen(
         },
         bottomBar = { BottomBar(buttonsEnable = enableButtons && recipeState is Loaded) },
         content = { paddingValues ->
-            AnimatedContent(
-                targetState = currentScreen,
-                transitionSpec = {
-                    (slideInHorizontally { width -> width } + fadeIn()).togetherWith(
-                        slideOutHorizontally { width -> -width } + fadeOut())
+            LoadStateRenderer(
+                loadState = recipeState,
+                content = { recipe ->
+                    AnimatedContent(
+                        targetState = currentScreen,
+                        transitionSpec = {
+                            (slideInHorizontally { width -> width } + fadeIn()).togetherWith(
+                                slideOutHorizontally { width -> -width } + fadeOut())
+                        }
+                    ) { targetState ->
+                        when (targetState) {
+                            ScreenState.Profile ->
+                                RecipeProfileContent(
+                                    recipe = recipe,
+                                    usernameState = usernameState,
+                                    userRecipeRatingState = userRecipeRatingState,
+                                    recipeCollectionsStateBundle = recipeCollectionsStateBundle,
+                                    onEditRecipe = onEditRecipe,
+                                    onEditRecipePictures = onEditRecipePictures,
+                                    onEditUserRating = onEditUserRating,
+                                    onDeleteRecipe = onDeleteRecipe,
+                                    onMakeRecipe = { currentScreen = ScreenState.Ingredients },
+                                    onAddRecipeToCollections = onAddRecipeToCollections,
+                                    onRemoveRecipeFromCollections = onRemoveRecipeFromCollections,
+                                    onRecipeCollectionsClear = onRecipeCollectionsClear,
+                                    onUserProfileRequest = onUserProfileRequest,
+                                    onRecipeCollectionsRequest = onRecipeCollectionsRequest,
+                                    enableButtons = enableButtons,
+                                    paddingValues = paddingValues
+                                )
+                            ScreenState.Ingredients ->
+                                ConfirmIngredientsContent(
+                                    recipe = recipe,
+                                    substituteIngredientsState = substituteIngredientsState,
+                                    onSubstituteIngredients = onSubstituteIngredients,
+                                    onConfirmIngredients = { currentScreen = ScreenState.Preparation },
+                                    enableButtons = enableButtons,
+                                    paddingValues = paddingValues
+                                )
+                            ScreenState.Preparation ->
+                                PreparationContent(
+                                    recipe = recipe,
+                                    usernameState = usernameState,
+                                    userRecipeRatingState = userRecipeRatingState,
+                                    onRateRecipe = onRateRecipe,
+                                    onFinishPreparation = { currentScreen = ScreenState.Profile },
+                                    enableButtons = enableButtons,
+                                    paddingValues = paddingValues,
+                                )
+                        }
+                    }
                 }
-            ) { targetState ->
-                when (targetState) {
-                    ScreenState.Profile ->
-                        RecipeProfileContent(
-                            recipeState = recipeState,
-                            usernameState = usernameState,
-                            userRecipeRatingState = userRecipeRatingState,
-                            recipeCollectionsStateBundle = recipeCollectionsStateBundle,
-                            onEditRecipe = onEditRecipe,
-                            onEditRecipePictures = onEditRecipePictures,
-                            onEditUserRating = onEditUserRating,
-                            onDeleteRecipe = onDeleteRecipe,
-                            onMakeRecipe = { currentScreen = ScreenState.Ingredients },
-                            onAddRecipeToCollections = onAddRecipeToCollections,
-                            onRemoveRecipeFromCollections = onRemoveRecipeFromCollections,
-                            onRecipeCollectionsClear = onRecipeCollectionsClear,
-                            onUserProfileRequest = onUserProfileRequest,
-                            onRecipeCollectionsRequest = onRecipeCollectionsRequest,
-                            enableButtons = enableButtons,
-                            paddingValues = paddingValues
-                        )
-                    ScreenState.Ingredients ->
-                        ConfirmIngredientsContent(
-                            recipeState = recipeState,
-                            substituteIngredientsState = substituteIngredientsState,
-                            onSubstituteIngredients = onSubstituteIngredients,
-                            onConfirmIngredients = { currentScreen = ScreenState.Preparation },
-                            enableButtons = enableButtons,
-                            paddingValues = paddingValues
-                        )
-                    ScreenState.Preparation ->
-                        PreparationContent(
-                            recipeState = recipeState,
-                            userRecipeRatingState = userRecipeRatingState,
-                            onRateRecipe = onRateRecipe,
-                            onSkipRating = { currentScreen = ScreenState.Profile },
-                            onCancelPreparation = {
-                                currentScreen = ScreenState.Profile
-                            },
-                            enableButtons = enableButtons,
-                            paddingValues = paddingValues,
-                        )
-                }
-            }
+            )
         },
         containerColor = Color.White
     )
@@ -213,7 +224,7 @@ fun RecipeProfilePreview(){
     RecipeProfileScreen(
         recipeState = apiSuccess(recipe),
         recipeNameState = apiSuccess(recipe.name),
-        usernameState = apiSuccess(recipe.authorUsername),
+        usernameState = apiSuccess("joaquim"),
         userRecipeRatingState = apiSuccess(rating),
         recipeCollectionsStateBundle = RecipeCollectionsStateBundle(
             collectionsToAddRecipeState = apiSuccess(emptyList()),
