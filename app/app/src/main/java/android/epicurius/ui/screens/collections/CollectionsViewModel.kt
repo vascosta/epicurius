@@ -85,7 +85,7 @@ class CollectionsViewModel(
 
     private suspend fun handleCreateCollection(
         createCollectionInfo: CreateCollectionInputModel,
-        navigateTo: (Int) -> Unit
+        onSuccessNavigateTo: (Int) -> Unit
     ) {
         val result = request {
             val token = session.getToken()
@@ -93,7 +93,7 @@ class CollectionsViewModel(
         }
         when {
             result.isFailure -> enableButtons()
-            result.isSuccess -> navigateTo(result.getValueOrThrow().collection.id)
+            result.isSuccess -> onSuccessNavigateTo(result.getValueOrThrow().collection.id)
         }
     }
 

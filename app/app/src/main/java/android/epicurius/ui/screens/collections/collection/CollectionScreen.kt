@@ -7,7 +7,7 @@ import android.epicurius.ui.navigation.BottomBar
 import android.epicurius.ui.navigation.TopBar
 import android.epicurius.ui.screens.collections.components.DeleteCollectionDialog
 import android.epicurius.ui.screens.collections.collection.components.EditCollectionDialog
-import android.epicurius.ui.screens.collections.collection.components.getCollectionName
+import android.epicurius.ui.screens.utils.getNameFromLoadStateValue
 import android.epicurius.ui.screens.recipe.components.RecipeInfoBox
 import android.epicurius.ui.screens.utils.LoadState
 import android.epicurius.ui.screens.utils.LoadStateRenderer
@@ -52,7 +52,7 @@ fun CollectionScreen(
     onRecipeRequest: (recipeId: Int) -> Unit = {},
     enableButtons: Boolean
 ) {
-    var collectionListName = getCollectionName(collectionNameState)
+    var collectionListName = getNameFromLoadStateValue(collectionNameState)
 
     var showEditCollectionDialog by rememberSaveable { mutableStateOf(false) }
     var showDeleteCollectionDialog by rememberSaveable { mutableStateOf(false) }
