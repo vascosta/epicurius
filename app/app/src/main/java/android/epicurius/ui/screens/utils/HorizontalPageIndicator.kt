@@ -1,4 +1,4 @@
-package android.epicurius.ui.screens.recipe.profile.components
+package android.epicurius.ui.screens.utils
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement

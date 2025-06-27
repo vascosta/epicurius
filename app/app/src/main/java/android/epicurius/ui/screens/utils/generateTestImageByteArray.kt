@@ -1,4 +1,4 @@
-package android.epicurius.ui.screens.recipe.profile.utils
+package android.epicurius.ui.screens.utils
 
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory

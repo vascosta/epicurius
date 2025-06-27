@@ -1,4 +1,4 @@
-package android.epicurius.ui.screens.utils
+package android.epicurius.ui.screens.fridge.components
 
 import android.app.DatePickerDialog
 import androidx.compose.foundation.clickable
