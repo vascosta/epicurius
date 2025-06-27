@@ -24,10 +24,12 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun FilterIngredientsComponent(
     ingredients: List<String>,
-    onIngredientsChange: (List<String>) -> Unit,
+    onIngredientsChange: (List<String>) -> Unit = {},
     enableButtons: Boolean
 ) {
     var expandIngredientFields by remember { mutableStateOf(false) }
+    val canAddField = ingredients.isEmpty() || ingredients.last().isNotBlank()
+    val ingredientsList = ingredients.toMutableList()
 
     Box(
         modifier = Modifier
@@ -45,9 +47,6 @@ fun FilterIngredientsComponent(
                 onIngredientsChange(ingredients.toMutableList() + "")
         }
     }
-
-    val canAddField = ingredients.isEmpty() || ingredients.last().isNotBlank()
-    val ingredientsList = ingredients.toMutableList()
     AnimatedVisibility(visible = expandIngredientFields) {
         Column(
             modifier = Modifier

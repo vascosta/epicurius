@@ -55,6 +55,7 @@ import androidx.compose.ui.unit.dp
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
+import kotlin.text.uppercase
 
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
@@ -102,8 +103,8 @@ fun SearchScreenContent(
     onSearchUsersClear: () -> Unit = {},
     onIngredientsClear: () -> Unit = {},
     onRecipeCollectionsClear: () -> Unit = {},
-    onUserProfileRequest: (name: String) -> Unit = {},
     onRecipeProfileRequest: (recipeId: Int) -> Unit = {},
+    onUserProfileRequest: (name: String) -> Unit = {},
     onRecipeCollectionsRequest: (recipeId: Int) -> Unit = {},
     enableButtons: Boolean
 ) {
@@ -200,18 +201,24 @@ fun SearchScreenContent(
                     onSearchQueryChange = { searchQuery = it },
                     onIconClick = {
                         if (selectedTabIndex == 0) {
-                            val cuisineList = cuisine.map { Cuisine.valueOf(it) }
-                            val mealTypeList = mealType.map { MealType.valueOf(it) }
+                            val cuisineList = cuisine.map { Cuisine.valueOf(it.uppercase().replace(Regex("[\\s-]"), "_")) }
+                            val mealTypeList = mealType.map { MealType.valueOf(it.uppercase().replace(Regex("[\\s-]"), "_")) }
                             val intolerancesList =
-                                intolerances.map { Intolerance.fromDisplayName(it) }
-                            val dietsList = diets.map { Diet.fromDisplayName(it) }
+                                intolerances.map {
+                                    Intolerance.valueOf(
+                                        it.uppercase().replace(Regex("[\\s-]"), "_")
+                                    )
+                                }
+                            val dietsList = diets.map { Diet.valueOf(
+                                it.uppercase().replace(Regex("[\\s-]"), "_")
+                            ) }
 
                             onSearchRecipesClear()
                             onSearchRecipes(
                                 searchQuery,
                                 if (cuisineList.isEmpty()) null else cuisineList,
                                 if (mealTypeList.isEmpty()) null else mealTypeList,
-                                ingredients,
+                                ingredients.map { it.replace(" ", "-") },
                                 if (intolerancesList.isEmpty()) null else intolerancesList,
                                 if (dietsList.isEmpty()) null else dietsList,
                                 serving.toIntOrNull(),
@@ -344,17 +351,23 @@ fun SearchScreenContent(
                                 }
                                 Button(
                                     onClick = {
-                                        val cuisineList = cuisine.map { Cuisine.valueOf(it) }
-                                        val mealTypeList = mealType.map { MealType.valueOf(it) }
+                                        val cuisineList = cuisine.map { Cuisine.valueOf(it.uppercase().replace(Regex("[\\s-]"), "_")) }
+                                        val mealTypeList = mealType.map { MealType.valueOf(it.uppercase().replace(Regex("[\\s-]"), "_")) }
                                         val intolerancesList =
-                                            intolerances.map { Intolerance.fromDisplayName(it) }
-                                        val dietsList = diets.map { Diet.fromDisplayName(it) }
+                                            intolerances.map {
+                                                Intolerance.valueOf(
+                                                    it.uppercase().replace(Regex("[\\s-]"), "_")
+                                                )
+                                            }
+                                        val dietsList = diets.map { Diet.valueOf(
+                                            it.uppercase().replace(Regex("[\\s-]"), "_")
+                                        ) }
 
                                         onSearchRecipes(
                                             searchRecipesQuery,
                                             if (cuisineList.isEmpty()) null else cuisineList,
                                             if (mealTypeList.isEmpty()) null else mealTypeList,
-                                            ingredients,
+                                            ingredients.map { it.replace(" ", "-") },
                                             if (intolerancesList.isEmpty()) null else intolerancesList,
                                             if (dietsList.isEmpty()) null else dietsList,
                                             serving.toIntOrNull(),

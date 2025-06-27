@@ -3,7 +3,6 @@ package android.epicurius.ui.screens.search
 import android.content.Context
 import android.epicurius.domain.Diet
 import android.epicurius.domain.Intolerance
-import android.epicurius.domain.Picture
 import android.epicurius.domain.recipe.Cuisine
 import android.epicurius.domain.recipe.MealType
 import android.epicurius.domain.recipe.RecipeInfo
@@ -180,11 +179,11 @@ class SearchViewModel(
             service.recipeService.searchRecipes(
                 token,
                 name,
-                cuisine,
-                mealType,
-                ingredients,
-                intolerances,
-                diets,
+                cuisine?.toSet(),
+                mealType?.toSet(),
+                ingredients?.toSet(),
+                intolerances?.toSet(),
+                diets?.toSet(),
                 servings,
                 minCalories,
                 maxCalories,

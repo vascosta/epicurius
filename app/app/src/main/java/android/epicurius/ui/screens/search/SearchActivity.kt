@@ -115,8 +115,8 @@ class SearchActivity : EpicuriusActivity() {
                 onSearchUsersClear = { viewModel.clearSearchUsers() },
                 onIngredientsClear = { viewModel.clearIngredients() },
                 onRecipeCollectionsClear = { viewModel.clearRecipeCollections() },
-                onUserProfileRequest = ::navigateToUserProfileActivity,
                 onRecipeProfileRequest = ::navigateToRecipeProfileActivity,
+                onUserProfileRequest = ::navigateToUserProfileActivity,
                 onRecipeCollectionsRequest = { recipeId: Int ->
                     viewModel.getRecipeCollections(recipeId, CollectionType.FAVOURITE)
                 },
