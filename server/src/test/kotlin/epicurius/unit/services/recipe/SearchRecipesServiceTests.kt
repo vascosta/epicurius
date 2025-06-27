@@ -5,7 +5,6 @@ import epicurius.domain.Intolerance
 import epicurius.domain.picture.PictureDomain.Companion.RECIPES_FOLDER
 import epicurius.domain.recipe.Cuisine
 import epicurius.domain.recipe.MealType
-import epicurius.domain.recipe.RecipeInfo
 import epicurius.http.controllers.recipe.models.input.SearchRecipesInputModel
 import epicurius.repository.jdbi.recipe.models.JdbiRecipeInfo
 import epicurius.utils.generateRandomUsername

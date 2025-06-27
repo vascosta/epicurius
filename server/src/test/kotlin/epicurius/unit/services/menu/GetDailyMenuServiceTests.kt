@@ -2,7 +2,6 @@ package epicurius.unit.services.menu
 
 import epicurius.domain.picture.PictureDomain.Companion.RECIPES_FOLDER
 import epicurius.domain.recipe.MealType
-import epicurius.unit.services.mealPlanner.MealPlannerServiceTest.Companion.USER_ID
 import org.mockito.kotlin.whenever
 import kotlin.test.Test
 import kotlin.test.assertEquals

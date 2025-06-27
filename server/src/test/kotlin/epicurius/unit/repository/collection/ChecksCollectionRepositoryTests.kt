@@ -1,6 +1,5 @@
 package epicurius.unit.repository.collection
 
-import epicurius.utils.createTestRecipe
 import kotlin.test.Test
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue

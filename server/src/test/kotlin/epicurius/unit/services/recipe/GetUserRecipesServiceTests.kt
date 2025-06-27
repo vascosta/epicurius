@@ -30,7 +30,6 @@ class GetUserRecipesServiceTests : RecipeServiceTest() {
             .thenReturn(listOf(jdbiRecipeInfoMock))
         whenever(pictureRepositoryMock.getPicture(testPicture.name, RECIPES_FOLDER)).thenReturn(testPicture.bytes)
 
-
         // when retrieving the user's recipes
         val recipes = runBlocking { getUserRecipes(AUTHOR_ID, null, limit) }
 
