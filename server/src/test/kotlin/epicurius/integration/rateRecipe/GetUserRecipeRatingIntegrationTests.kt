@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.springframework.http.HttpStatus
 import kotlin.test.Test
 import kotlin.test.assertNotNull
+import kotlin.test.assertNull
 
 class GetUserRecipeRatingIntegrationTests : RateRecipeIntegrationTest() {
 
@@ -67,20 +68,15 @@ class GetUserRecipeRatingIntegrationTests : RateRecipeIntegrationTest() {
     }
 
     @Test
-    fun `Should fail with code 400 when trying to retrieve a user's recipe rate that has not been rated`() {
+    fun `Should get null trying to retrieve a user's recipe rate that has not been rated`() {
         // given a user token and a recipe id
         val token = testUser.token
 
-        // when the user tries to get their recipe rating
-        val error = get<Problem>(
-            client,
-            api(Uris.Recipe.USER_RECIPE_RATING.replace("{id}", testRecipe.id.toString())),
-            responseStatus = HttpStatus.BAD_REQUEST,
-            token = token
-        )
+        // when the user gets their recipe rating
+        val response = getUserRecipeRating(token, testRecipe.id)
 
-        // then the user recipe rating cannot be retrieved and fails with code 400
-        assertNotNull(error)
-        assertEquals(UserHasNotRated(testUser.user.id, testRecipe.id).message, error.detail)
+        // then the response is successful
+        assertNotNull(response)
+        assertNull(response.rating)
     }
 }

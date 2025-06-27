@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.mockito.kotlin.whenever
 import org.springframework.http.HttpStatus
+import kotlin.test.assertNull
 
 class GetUserRecipeRatingControllerTests : RateRecipeControllerTest() {
 
@@ -18,7 +19,7 @@ class GetUserRecipeRatingControllerTests : RateRecipeControllerTest() {
 
         // mock
         whenever(
-            rateRecipeServiceMock.getUserRecipeRate(testAuthenticatedUser.user.id, RECIPE_ID)
+            rateRecipeServiceMock.getUserRecipeRating(testAuthenticatedUser.user.id, RECIPE_ID)
         ).thenReturn(RATING_3)
 
         // when getting the user's recipe rating
@@ -36,7 +37,7 @@ class GetUserRecipeRatingControllerTests : RateRecipeControllerTest() {
 
         // mock
         whenever(
-            rateRecipeServiceMock.getUserRecipeRate(testAuthenticatedUser.user.id, nonExistingRecipeId)
+            rateRecipeServiceMock.getUserRecipeRating(testAuthenticatedUser.user.id, nonExistingRecipeId)
         ).thenThrow(RecipeNotFound())
 
         // when getting the user's recipe rating
@@ -52,7 +53,7 @@ class GetUserRecipeRatingControllerTests : RateRecipeControllerTest() {
 
         // mock
         whenever(
-            rateRecipeServiceMock.getUserRecipeRate(testAuthenticatedUser.user.id, RECIPE_ID)
+            rateRecipeServiceMock.getUserRecipeRating(testAuthenticatedUser.user.id, RECIPE_ID)
         ).thenThrow(RecipeNotAccessible())
 
         // when getting the user's recipe rating
@@ -63,18 +64,20 @@ class GetUserRecipeRatingControllerTests : RateRecipeControllerTest() {
     }
 
     @Test
-    fun `Should throw UserHasNotRated exception when user hasn't rated the recipe`() {
+    fun `Should return null when user hasn't rated the recipe`() {
         // given a recipe id (RECIPE_ID) and an authenticated user that hasn't rated the recipe
 
         // mock
         whenever(
-            rateRecipeServiceMock.getUserRecipeRate(testAuthenticatedUser.user.id, RECIPE_ID)
-        ).thenThrow(UserHasNotRated(testAuthenticatedUser.user.id, RECIPE_ID))
+            rateRecipeServiceMock.getUserRecipeRating(testAuthenticatedUser.user.id, RECIPE_ID)
+        ).thenReturn(null)
 
         // when getting the user's recipe rating
-        // then the user's recipe rating is not returned and throws UserHasNotRated exception
-        assertThrows<UserHasNotRated> {
-            getUserRecipeRating(testAuthenticatedUser, RECIPE_ID)
-        }
+        val response = getUserRecipeRating(testAuthenticatedUser, RECIPE_ID)
+        val body = response.body as GetUserRecipeRatingOutputModel
+
+        // then the user's recipe rating is not returned and returns null
+        assertEquals(HttpStatus.OK, response.statusCode)
+        assertNull(body.rating)
     }
 }

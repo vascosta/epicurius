@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.mockito.kotlin.whenever
 import kotlin.test.assertEquals
+import kotlin.test.assertNull
 
 class GetUserRecipeRatingServiceTests : RateRecipeServiceTest() {
 
@@ -54,7 +55,7 @@ class GetUserRecipeRatingServiceTests : RateRecipeServiceTest() {
     }
 
     @Test
-    fun `Should throw UserHasNotRated exception when user hasn't rated the recipe`() {
+    fun `Should return null when user hasn't rated the recipe`() {
         // given a recipe id (RECIPE_ID) and a user id (USER_ID) that hasn't rated the recipe
 
         // mock
@@ -63,7 +64,7 @@ class GetUserRecipeRatingServiceTests : RateRecipeServiceTest() {
         whenever(jdbiRateRecipeRepositoryMock.checkIfUserAlreadyRated(USER_ID, RECIPE_ID)).thenReturn(false)
 
         // when getting the user's recipe rating
-        // then the user's recipe rating is not returned and throws UserHasNotRated exception
-        assertThrows<UserHasNotRated> { getUserRecipeRating(USER_ID, RECIPE_ID) }
+        // then the user's recipe rating is not returned and returns null
+        assertNull(getUserRecipeRating(USER_ID, RECIPE_ID))
     }
 }

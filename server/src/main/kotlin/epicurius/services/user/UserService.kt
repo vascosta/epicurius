@@ -63,7 +63,7 @@ class UserService(
         val user = checkIfUserExists(name = name) ?: throw UserNotFound(name)
         val followers = getFollowersCount(user.id)
         val following = getFollowingCount(user.id)
-        val isFollowing = checkIfUserIsBeingFollowedBy(authenticatedUserId, user.id)
+        val isFollowing = if (authenticatedUserId == user.id) true else checkIfUserIsBeingFollowedBy(user.id, authenticatedUserId)
         return if (user.profilePictureName == null) {
             UserProfile(user.name, user.country, user.privacy, null, followers, following, isFollowing)
         } else {

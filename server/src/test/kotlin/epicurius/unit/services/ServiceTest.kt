@@ -128,7 +128,7 @@ open class ServiceTest : EpicuriusUnitTest() {
         // RATE RECIPE
         fun getRecipeRating(userId: Int, recipeId: Int) = rateRecipeService.getRecipeRating(userId, recipeId)
 
-        fun getUserRecipeRating(userId: Int, recipeId: Int) = rateRecipeService.getUserRecipeRate(userId, recipeId)
+        fun getUserRecipeRating(userId: Int, recipeId: Int) = rateRecipeService.getUserRecipeRating(userId, recipeId)
 
         fun rateRecipe(userId: Int, recipeId: Int, rating: Int) =
             rateRecipeService.rateRecipe(userId, recipeId, rating)
@@ -137,7 +137,7 @@ open class ServiceTest : EpicuriusUnitTest() {
             rateRecipeService.updateUserRecipeRating(userId, recipeId, rating)
 
         fun deleteUserRecipeRating(userId: Int, recipeId: Int) =
-            rateRecipeService.deleteUserRecipeRate(userId, recipeId)
+            rateRecipeService.deleteUserRecipeRating(userId, recipeId)
 
         // INGREDIENTS
         suspend fun getIngredients(partial: String) = ingredientsService.getIngredients(partial)

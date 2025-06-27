@@ -24,7 +24,7 @@ class DeleteUserRecipeRatingControllerTests : RecipeControllerTest() {
         // then the user's recipe rating should be deleted successfully
         verify(
             rateRecipeServiceMock
-        ).deleteUserRecipeRate(
+        ).deleteUserRecipeRating(
             testAuthenticatedUser.user.id,
             RECIPE_ID
         )
@@ -39,7 +39,7 @@ class DeleteUserRecipeRatingControllerTests : RecipeControllerTest() {
 
         // mock
         whenever(
-            rateRecipeServiceMock.deleteUserRecipeRate(
+            rateRecipeServiceMock.deleteUserRecipeRating(
                 testAuthenticatedUser.user.id,
                 nonExistingRecipeId
             )
@@ -56,7 +56,7 @@ class DeleteUserRecipeRatingControllerTests : RecipeControllerTest() {
 
         // mock
         whenever(
-            rateRecipeServiceMock.deleteUserRecipeRate(
+            rateRecipeServiceMock.deleteUserRecipeRating(
                 testAuthenticatedUser.user.id,
                 RECIPE_ID
             )
@@ -73,7 +73,7 @@ class DeleteUserRecipeRatingControllerTests : RecipeControllerTest() {
 
         // mock
         whenever(
-            rateRecipeServiceMock.deleteUserRecipeRate(
+            rateRecipeServiceMock.deleteUserRecipeRating(
                 testAuthenticatedUser.user.id,
                 RECIPE_ID
             )
@@ -90,7 +90,7 @@ class DeleteUserRecipeRatingControllerTests : RecipeControllerTest() {
 
         // mock
         whenever(
-            rateRecipeServiceMock.deleteUserRecipeRate(
+            rateRecipeServiceMock.deleteUserRecipeRating(
                 testAuthenticatedUser.user.id,
                 RECIPE_ID
             )
