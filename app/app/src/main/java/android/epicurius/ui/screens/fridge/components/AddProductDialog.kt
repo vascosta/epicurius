@@ -1,6 +1,5 @@
 package android.epicurius.ui.screens.fridge.components
 
-import android.epicurius.ui.screens.utils.DateField
 import android.epicurius.ui.screens.utils.TextField
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.AlertDialog

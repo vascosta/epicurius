@@ -16,7 +16,7 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun InstructionsComponent(
     steps: List<String>,
-    onStepsChange: (steps: List<String>) -> Unit,
+    onStepsChange: (steps: List<String>) -> Unit = {},
     enabled: Boolean
 ) {
     Column(

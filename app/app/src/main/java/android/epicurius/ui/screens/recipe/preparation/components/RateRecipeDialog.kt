@@ -1,4 +1,4 @@
-package android.epicurius.ui.screens.recipe.profile.components
+package android.epicurius.ui.screens.recipe.preparation.components
 
 import android.epicurius.R
 import androidx.compose.foundation.Image
@@ -25,16 +25,16 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun EditRatingDialog(
-    previousRating: Int,
+fun RateRecipeDialog(
     onDismissRequest: () -> Unit,
-    onEditRating: (Int) -> Unit
+    onSkipRating: () -> Unit,
+    onRateRecipe: (Int) -> Unit
 ) {
-    var newRating by remember { mutableIntStateOf(previousRating) }
+    var selectedRating by remember { mutableIntStateOf(0) }
 
     AlertDialog(
-        onDismissRequest = { onDismissRequest() },
-        title = { Text("Edit Rating") },
+        onDismissRequest = onDismissRequest,
+        title = { Text("Rate Recipe") },
         text = {
             Column {
                 Text("Select a rating from 1 to 5:")
@@ -44,7 +44,7 @@ fun EditRatingDialog(
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     for (i in 1..5) {
-                        val isSelected = i <= newRating
+                        val isSelected = i <= selectedRating
                         Image(
                             painter = painterResource(
                                 id = if (isSelected) R.drawable.star else R.drawable.white_star
@@ -53,23 +53,24 @@ fun EditRatingDialog(
                             modifier = Modifier
                                 .padding(4.dp)
                                 .size(45.dp)
-                                .clickable { newRating = i }
+                                .clickable { selectedRating = i }
                         )
                     }
                 }
             }
         },
-        containerColor = Color.White,
         confirmButton = {
             Button(
                 onClick = {
-                    onEditRating(newRating)
+                    onRateRecipe(selectedRating)
                     onDismissRequest()
-                }
-            ) { Text("Edit") }
+                },
+                enabled = selectedRating > 0
+            ) { Text("Rate") }
         },
         dismissButton = {
-            TextButton(onClick = { onDismissRequest() }) { Text("Cancel") }
-        }
+            TextButton(onClick = { onSkipRating() }) { Text("Skip") }
+        },
+        containerColor = Color.White,
     )
 }

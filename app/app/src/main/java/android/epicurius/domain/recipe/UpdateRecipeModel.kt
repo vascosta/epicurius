@@ -24,7 +24,7 @@ data class UpdateRecipeModel(
     val carbs: Int?,
     val instructions: Instructions
 ) {
-/*    fun toRecipe(pictures: List<ByteArray>) =
+    fun toRecipe(pictures: List<String>) =
         Recipe(
             id,
             name,
@@ -45,5 +45,5 @@ data class UpdateRecipeModel(
             carbs,
             instructions,
             pictures
-        )*/
+        )
 }

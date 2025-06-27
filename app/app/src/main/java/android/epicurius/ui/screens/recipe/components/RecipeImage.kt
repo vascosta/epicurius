@@ -4,7 +4,7 @@ import android.epicurius.R
 import android.epicurius.domain.recipe.Cuisine
 import android.epicurius.domain.recipe.MealType
 import android.epicurius.domain.recipe.RecipeInfo
-import android.epicurius.ui.screens.recipe.profile.utils.generateTestImageByteArray
+import android.epicurius.ui.screens.utils.generateTestImageByteArray
 import android.graphics.BitmapFactory
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border

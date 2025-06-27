@@ -13,7 +13,7 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun AddFieldButton(
-    onClick: () -> Unit,
+    onClick: () -> Unit = {},
     modifier: Modifier = Modifier,
     enabled: Boolean,
     text: String

@@ -1,7 +1,7 @@
-package android.epicurius.ui.screens.recipe.profile.components
+package android.epicurius.ui.screens.recipe.preparation
 
 import android.epicurius.domain.recipe.Instructions
-import android.epicurius.ui.screens.recipe.components.RateRecipeDialog
+import android.epicurius.ui.screens.recipe.preparation.components.RateRecipeDialog
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement

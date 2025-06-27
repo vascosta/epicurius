@@ -139,4 +139,10 @@ fun RecipeHeaderPreview() {
         mealTime = MealTime.LUNCH,
         enableButtons = true
     )
+    RecipeHeader(
+        recipeId = 1,
+        name = "Delicious Recipe Name",
+        author = "ChefBear",
+        enableButtons = true
+    )
 }

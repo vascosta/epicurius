@@ -24,8 +24,7 @@ data class Recipe(
     val fat: Int?,
     val carbs: Int?,
     val instructions: Instructions,
-    val pictures: List<String>,
-    val isInCollection: Boolean
+    val pictures: List<String>
 ) {
     val picturesBytes: List<ByteArray>
         get() = pictures.map { Base64.getDecoder().decode(it) }

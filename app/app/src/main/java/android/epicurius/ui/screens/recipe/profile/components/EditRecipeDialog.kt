@@ -3,9 +3,10 @@ package android.epicurius.ui.screens.recipe.profile.components
 import android.epicurius.domain.Diet
 import android.epicurius.domain.Intolerance
 import android.epicurius.domain.recipe.Cuisine
+import android.epicurius.domain.recipe.Ingredient
+import android.epicurius.domain.recipe.Instructions
 import android.epicurius.domain.recipe.MealType
 import android.epicurius.domain.recipe.Recipe
-import android.epicurius.ui.screens.recipe.createRecipe.IngredientComponent
 import android.epicurius.ui.screens.recipe.createRecipe.components.DividerComponent
 import android.epicurius.ui.screens.recipe.createRecipe.components.IngredientsComponent
 import android.epicurius.ui.screens.recipe.createRecipe.components.InstructionsComponent
@@ -32,13 +33,29 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import kotlin.collections.map
 
 @Composable
 fun EditRecipeDialog(
     recipe: Recipe,
-    onDismissRequest: () -> Unit,
-    onEditRecipe: () -> Unit,
-    buttonsEnable: Boolean
+    onEditRecipe: (
+        name: String?,
+        description: String?,
+        servings: Int?,
+        preparationTime: Int?,
+        cuisine: Cuisine?,
+        mealType: MealType?,
+        intolerances: Set<Intolerance>?,
+        diets: Set<Diet>?,
+        ingredients: List<Ingredient>?,
+        calories: Int?,
+        protein: Int?,
+        fat: Int?,
+        carbs: Int?,
+        instructions: Instructions?
+    ) -> Unit = { _, _, _, _, _, _, _, _, _, _, _, _, _, _ -> },
+    onDismissRequest: () -> Unit = {},
+    enableButtons: Boolean
 ) {
     var name by remember { mutableStateOf(recipe.name) }
     var description by remember { mutableStateOf(recipe.description) }
@@ -56,21 +73,69 @@ fun EditRecipeDialog(
             recipe.diets.map { it.displayName }.toString()
         ))
     }
-    var ingredients by remember {
-        mutableStateOf(
-            recipe.ingredients.map {
-                IngredientComponent(
-                    name = it.name,
-                    quantity = it.quantity.toString(),
-                    unit = it.unit.displayName
-                )
-            }
-        )
+    var ingredients by remember { mutableStateOf(recipe.ingredients.map { it.toIngredientComponent() })
     }
-    var instructions by remember { mutableStateOf(recipe.instructions.steps.values.map { it }) }
+    var calories by remember { mutableStateOf(recipe.calories?.toString() ?: "") }
+    var protein by remember { mutableStateOf(recipe.protein?.toString() ?: "") }
+    var fat by remember { mutableStateOf(recipe.fat?.toString() ?: "") }
+    var carbs by remember { mutableStateOf(recipe.carbs?.toString() ?: "") }
+    var steps by remember { mutableStateOf(recipe.instructions.steps.values.map { it }) }
 
     AlertDialog(
-        onDismissRequest = onDismissRequest,
+        onDismissRequest = { if (enableButtons) onDismissRequest },
+        confirmButton = {
+            TextButton(
+                onClick = {
+                    val intolerancesList =
+                        intolerances.map {
+                            Intolerance.valueOf(
+                                it.uppercase().replace(Regex("[\\s-]"), "_")
+                            )
+                        }.toSet()
+                    val dietsList = diets.map { Diet.valueOf(
+                        it.uppercase().replace(Regex("[\\s-]"), "_")
+                    ) }.toSet()
+                    val ingredientsList = ingredients.map { it.toIngredient() }
+
+                    val stepsMap = steps.mapIndexed { index, step ->
+                        "Step ${index + 1}" to step
+                    }.toMap()
+
+                    onEditRecipe(
+                        if (name == recipe.name) null else name,
+                        if (description == recipe.description) null else description,
+                        if (serving == recipe.servings.toString()) null else serving.toIntOrNull(),
+                        if (duration == recipe.preparationTime.toString()) null else duration.toIntOrNull(),
+                        if (cuisine == recipe.cuisine.displayName) null
+                        else Cuisine.valueOf(cuisine.uppercase().replace(Regex("[\\s-]"), "_")),
+                        if (mealType == recipe.mealType.displayName) null
+                        else MealType.valueOf(mealType.uppercase().replace(Regex("[\\s-]"), "_")),
+                        if (intolerancesList == recipe.intolerances) null else intolerancesList,
+                        if (dietsList == recipe.diets) null else dietsList,
+                        if (ingredients == recipe.ingredients.map { it.toIngredientComponent() }) null
+                        else ingredientsList,
+                        if (calories == recipe.calories?.toString()) null
+                        else calories.toIntOrNull(),
+                        if (protein == recipe.protein?.toString()) null
+                        else protein.toIntOrNull(),
+                        if (fat == recipe.fat?.toString()) null
+                        else fat.toIntOrNull(),
+                        if (carbs == recipe.carbs?.toString()) null
+                        else carbs.toIntOrNull(),
+                        if (steps == recipe.instructions.steps.values.map { it }) null
+                        else Instructions(stepsMap)
+                    )
+                    onDismissRequest()
+                },
+                enabled = enableButtons
+            ) { Text("Confirm") }
+        },
+        dismissButton = {
+            TextButton(
+                onClick = { onDismissRequest() },
+                enabled = enableButtons
+            ) { Text("Cancel") }
+        },
         title = { Text("Edit Recipe") },
         text = {
             Column(
@@ -84,26 +149,26 @@ fun EditRecipeDialog(
                     value = name,
                     onValueChange = { name = it },
                     modifier = Modifier.height(56.dp),
-                    enabled = buttonsEnable
+                    enabled = enableButtons
                 )
                 FormTextField(
                     parameterName = "Description",
                     value = description,
                     onValueChange = { description = it },
                     modifier = Modifier.height(56.dp),
-                    enabled = buttonsEnable
+                    enabled = enableButtons
                 )
                 NumberLineTextField(
                     parameterName = "Duration (min)",
                     value = duration,
                     onValueChange = { if (isValidForNumberTextField(it)) duration = it },
-                    enabled = buttonsEnable
+                    enabled = enableButtons
                 )
                 NumberLineTextField(
                     parameterName = "Serving (px)",
                     value = serving,
                     onValueChange = { if (isValidForNumberTextField(it)) serving = it },
-                    enabled = buttonsEnable
+                    enabled = enableButtons
                 )
                 DropdownMenuComponent(
                     options = MealType.entries.map { it.displayName },
@@ -112,7 +177,7 @@ fun EditRecipeDialog(
                     modifier = Modifier
                         .padding(vertical = 5.dp)
                         .align(Alignment.CenterHorizontally),
-                    enabled = buttonsEnable,
+                    enabled = enableButtons,
                     label = "Meal Type"
                 )
                 DropdownMenuComponent(
@@ -122,7 +187,7 @@ fun EditRecipeDialog(
                     modifier = Modifier
                         .padding(vertical = 5.dp)
                         .align(Alignment.CenterHorizontally),
-                    enabled = buttonsEnable,
+                    enabled = enableButtons,
                     label = "Cuisine"
                 )
                 MultiSelectDropdownMenuComponent(
@@ -132,7 +197,7 @@ fun EditRecipeDialog(
                     modifier = Modifier
                         .padding(vertical = 5.dp)
                         .align(Alignment.CenterHorizontally),
-                    enabled = buttonsEnable,
+                    enabled = enableButtons,
                     label = "Intolerances"
                 )
                 MultiSelectDropdownMenuComponent(
@@ -142,33 +207,23 @@ fun EditRecipeDialog(
                     modifier = Modifier
                         .padding(vertical = 5.dp)
                         .align(Alignment.CenterHorizontally),
-                    enabled = buttonsEnable,
+                    enabled = enableButtons,
                     label = "Diets",
                 )
                 DividerComponent()
                 IngredientsComponent(
                     ingredients = ingredients,
                     onIngredientsChange = { ingredients = it },
-                    enabled = buttonsEnable
+                    enabled = enableButtons
                 )
                 DividerComponent()
                 InstructionsComponent(
-                    steps = instructions,
-                    onStepsChange = { instructions = it },
-                    enabled = buttonsEnable
+                    steps = steps,
+                    onStepsChange = { steps = it },
+                    enabled = enableButtons
                 )
             }
         },
         containerColor = Color.White,
-        confirmButton = {
-            TextButton(
-                onClick = { onEditRecipe() }
-            ) { Text("Confirm") }
-        },
-        dismissButton = {
-            TextButton(
-                onClick = { onDismissRequest() }
-            ) { Text("Cancel") }
-        }
     )
 }

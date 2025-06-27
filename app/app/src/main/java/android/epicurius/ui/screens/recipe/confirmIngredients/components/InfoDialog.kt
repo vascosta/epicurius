@@ -1,4 +1,4 @@
-package android.epicurius.ui.screens.recipe.profile.components
+package android.epicurius.ui.screens.recipe.confirmIngredients.components
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.AlertDialog

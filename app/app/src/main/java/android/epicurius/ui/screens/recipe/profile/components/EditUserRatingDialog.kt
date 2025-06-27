@@ -1,4 +1,4 @@
-package android.epicurius.ui.screens.recipe.components
+package android.epicurius.ui.screens.recipe.profile.components
 
 import android.epicurius.R
 import androidx.compose.foundation.Image
@@ -25,16 +25,32 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun RateRecipeDialog(
-    onDismissRequest: () -> Unit,
-    onSkipRating: () -> Unit,
-    onRateRecipe: (Int) -> Unit
+fun EditUserRatingDialog(
+    previousRating: Int,
+    onEditUserRating: (rating: Int) -> Unit = {},
+    onDismissRequest: () -> Unit = { },
+    enableButtons: Boolean
 ) {
-    var selectedRating by remember { mutableIntStateOf(0) }
+    var newRating by remember { mutableIntStateOf(previousRating) }
 
     AlertDialog(
-        onDismissRequest = onDismissRequest,
-        title = { Text("Rate Recipe") },
+        onDismissRequest = { if (enableButtons) onDismissRequest },
+        confirmButton = {
+            Button(
+                onClick = {
+                    onEditUserRating(newRating)
+                    onDismissRequest()
+                },
+                enabled = enableButtons
+            ) { Text("Edit") }
+        },
+        dismissButton = {
+            TextButton(
+                onClick = { onDismissRequest() },
+                enabled = enableButtons
+            ) { Text("Cancel") }
+        },
+        title = { Text("Edit Rating") },
         text = {
             Column {
                 Text("Select a rating from 1 to 5:")
@@ -44,7 +60,7 @@ fun RateRecipeDialog(
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     for (i in 1..5) {
-                        val isSelected = i <= selectedRating
+                        val isSelected = i <= newRating
                         Image(
                             painter = painterResource(
                                 id = if (isSelected) R.drawable.star else R.drawable.white_star
@@ -53,23 +69,11 @@ fun RateRecipeDialog(
                             modifier = Modifier
                                 .padding(4.dp)
                                 .size(45.dp)
-                                .clickable { selectedRating = i }
+                                .clickable { newRating = i }
                         )
                     }
                 }
             }
-        },
-        confirmButton = {
-            Button(
-                onClick = {
-                    onRateRecipe(selectedRating)
-                    onDismissRequest()
-                },
-                enabled = selectedRating > 0
-            ) { Text("Rate") }
-        },
-        dismissButton = {
-            TextButton(onClick = { onSkipRating() }) { Text("Skip") }
         },
         containerColor = Color.White,
     )

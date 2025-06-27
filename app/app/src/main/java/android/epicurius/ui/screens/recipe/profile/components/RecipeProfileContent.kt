@@ -2,10 +2,20 @@ package android.epicurius.ui.screens.recipe.profile.components
 
 import android.Manifest
 import android.epicurius.R
+import android.epicurius.domain.Diet
+import android.epicurius.domain.Intolerance
 import android.epicurius.domain.collection.CollectionProfile
+import android.epicurius.domain.recipe.Cuisine
+import android.epicurius.domain.recipe.Ingredient
+import android.epicurius.domain.recipe.Instructions
+import android.epicurius.domain.recipe.MealType
 import android.epicurius.domain.recipe.Recipe
 import android.epicurius.ui.screens.collections.recipeCollections.components.RecipeCollectionsDialog
+import android.epicurius.ui.screens.collections.recipeCollections.components.RecipeCollectionsStateBundle
+import android.epicurius.ui.screens.utils.HorizontalPagerIndicator
 import android.epicurius.ui.screens.utils.LoadState
+import android.epicurius.ui.screens.utils.LoadStateRenderer
+import android.epicurius.ui.screens.utils.Loaded
 import android.epicurius.ui.screens.utils.MixedText
 import android.os.Build
 import android.widget.Toast
@@ -32,7 +42,9 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -47,37 +59,62 @@ import androidx.compose.ui.unit.dp
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
+import epicurius.domain.collection.CollectionType
 
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun RecipeProfileContent(
-    recipe: Recipe,
-    rating: Double,
-    images: List<Int>,
-    isAuthor: Boolean,
-    userRating: Int = 0,
-    collectionId: Int?,
-    collectionsState: LoadState<List<CollectionProfile>>?,
-    onEditRating: (Int) -> Unit,
-    onEditRecipe: () -> Unit,
-    onEditRecipeImages: (List<ByteArray>) -> Unit,
-    onMakeIt: () -> Unit,
-    onDeleteRecipe: (Int) -> Unit,
-    onAddRecipeToCollection: (Int, Int) -> Unit,
-    onRemoveRecipeFromCollection: (Int, Int) -> Unit,
-    onCollectionsRequest: (Int, Boolean) -> Unit,
+    recipeState: LoadState<Recipe>,
+    usernameState: LoadState<String>,
+    userRecipeRatingState: LoadState<Int>,
+    recipeCollectionsStateBundle: RecipeCollectionsStateBundle,
+    onEditRecipe: (
+        name: String?,
+        description: String?,
+        servings: Int?,
+        preparationTime: Int?,
+        cuisine: Cuisine?,
+        mealType: MealType?,
+        intolerances: Set<Intolerance>?,
+        diets: Set<Diet>?,
+        ingredients: List<Ingredient>?,
+        calories: Int?,
+        protein: Int?,
+        fat: Int?,
+        carbs: Int?,
+        instructions: Instructions?
+    ) -> Unit = { _, _, _, _, _, _, _, _, _, _, _, _, _, _ -> },
+    onEditRecipePictures: (picturesBytes: List<ByteArray>) -> Unit = {},
+    onEditUserRating: (rating: Int) -> Unit = {},
+    onDeleteRecipe: () -> Unit,
+    onMakeRecipe: () -> Unit,
+    onAddRecipeToCollections: (
+        recipeId: Int,
+        collectionsToAdd: List<CollectionProfile>
+    ) -> Unit = { _, _ -> },
+    onRemoveRecipeFromCollections: (
+        recipeId: Int,
+        collectionsToRemove: List<CollectionProfile>
+    ) -> Unit = { _, _ -> },
+    onRecipeCollectionsClear: () -> Unit = {},
+    onUserProfileRequest: (name: String) -> Unit = {},
+    onRecipeCollectionsRequest: (recipeId: Int, collectionType: CollectionType) -> Unit = { _, _ -> },
     enableButtons: Boolean,
     paddingValues: PaddingValues
 ) {
+    val context = LocalContext.current
+
     var showEditRecipeDialog by remember { mutableStateOf(false) }
     var showEditRatingDialog by remember { mutableStateOf(false) }
     var showCollectionsDialog by remember { mutableStateOf(false) }
-    var enableStarIcon by remember { mutableStateOf(recipe.isInCollection) }
-    var confirmRecipeDelete by remember { mutableStateOf(false) }
+    var showConfirmDeleteRecipeDialog by remember { mutableStateOf(false) }
 
-    val pagerState = rememberPagerState(pageCount = { images.size })
-    var recipePicturesBytes by remember { mutableStateOf(recipe.picturesBytes.toList())}
-    val context = LocalContext.current
+    var isAuthor by remember { mutableStateOf(false) }
+
+    var recipePicturesSize by remember { mutableIntStateOf(0) }
+    var recipePicturesBytes by remember { mutableStateOf(emptyList<ByteArray>()) }
+
+    var pagerState = rememberPagerState(pageCount = { recipePicturesSize })
 
     val imagePickerLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.PickVisualMedia()
@@ -91,11 +128,9 @@ fun RecipeProfileContent(
                 recipePicturesBytes = recipePicturesBytes.toMutableList().also {
                     it[currentPage] = bytes
                 }
-                onEditRecipeImages(recipePicturesBytes)
+                onEditRecipePictures(recipePicturesBytes)
             }
-        } else {
-            Toast.makeText(context, "No image selected", Toast.LENGTH_SHORT).show()
-        }
+        } else Toast.makeText(context, "No image selected", Toast.LENGTH_SHORT).show()
     }
 
     val galleryPermissionState = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
@@ -104,6 +139,17 @@ fun RecipeProfileContent(
         rememberPermissionState(Manifest.permission.READ_EXTERNAL_STORAGE)
     }
 
+    LaunchedEffect(recipeState) {
+        if (recipeState is Loaded<Recipe>) {
+            val recipe = recipeState.value.getValueOrThrow()
+            recipePicturesSize = recipe.picturesBytes.size
+            recipePicturesBytes = recipe.picturesBytes
+        }
+    }
+    LaunchedEffect(usernameState) {
+        if (usernameState is Loaded<String> && recipeState is Loaded<Recipe>)
+            isAuthor = usernameState.value.getValueOrThrow() == recipeState.value.getValueOrThrow().authorUsername
+    }
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -120,117 +166,124 @@ fun RecipeProfileContent(
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Row {
-                Text("$rating/5")
-                Spacer(Modifier.size(5.dp))
-                Image(
-                    painter = painterResource(id = R.drawable.star),
-                    contentDescription = "Favorites",
-                    modifier = Modifier
-                        .padding(top = (0.5).dp)
-                        .size(15.dp),
-                    contentScale = ContentScale.Fit
-                )
-            }
-            FavouritesIcon(
-                recipe = recipe,
-                collectionId = collectionId,
-                onShowCollectionDialog = { showCollectionsDialog = true },
-                onRemoveRecipeFromCollection = onRemoveRecipeFromCollection,
-                enableStarIcon = enableStarIcon,
-                enableButtons = enableButtons
-            )
-        }
-
-        RecipeProfileImages(
-            images = recipePicturesBytes,
-            pagerState = pagerState,
-            onImageClick = {
-                if (galleryPermissionState.status.isGranted) {
-                    imagePickerLauncher.launch(
-                        PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
-                    )
-                } else {
-                    galleryPermissionState.launchPermissionRequest()
-                }
-            },
-            enabled = enableButtons && isAuthor
-        )
-        HorizontalPagerIndicator(images.size, pagerState)
-
-        Row(
-            modifier = Modifier.fillMaxWidth().padding(horizontal = 10.dp),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            if (isAuthor) {
-                TextButton(
-                    onClick = { confirmRecipeDelete = true }
-                ) { Text("Delete recipe", color = Color.Red) }
-            } else {
-                Box(Modifier.clickable { showEditRatingDialog = true }) {
+            LoadStateRenderer(
+                loadState = recipeState,
+                content = { recipe ->
                     Row {
-                        Text("Your Rating: ", fontWeight = FontWeight.Bold)
-                        Text("$userRating")
+                        Text("${recipe.rating}/5")
+                        Spacer(Modifier.size(5.dp))
+                        Image(
+                            painter = painterResource(id = R.drawable.star),
+                            contentDescription = "Favorites",
+                            modifier = Modifier
+                                .padding(top = (0.5).dp)
+                                .size(15.dp),
+                            contentScale = ContentScale.Fit
+                        )
+                    }
+                    FavouritesIcon(
+                        onShowCollectionsDialog = { showCollectionsDialog = true },
+                        enableButtons = enableButtons
+                    )
+                    RecipeProfileImages(
+                        images = recipePicturesBytes,
+                        pagerState = pagerState,
+                        onImageClick = {
+                            if (galleryPermissionState.status.isGranted) {
+                                imagePickerLauncher.launch(
+                                    PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
+                                )
+                            } else galleryPermissionState.launchPermissionRequest()
+                        },
+                        enabled = enableButtons && isAuthor
+                    )
+                    HorizontalPagerIndicator(recipe.picturesBytes.size, pagerState)
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 10.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        if (isAuthor) {
+                            TextButton(
+                                onClick = { showConfirmDeleteRecipeDialog = true }
+                            ) { Text("Delete recipe", color = Color.Red) }
+                        } else {
+                            Box(Modifier.clickable { showEditRatingDialog = true }) {
+                                LoadStateRenderer(
+                                    loadState = userRecipeRatingState,
+                                    content = { userRating ->
+                                        Row {
+                                            Text("Your Rating: ", fontWeight = FontWeight.Bold)
+                                            Text("$userRating")
+                                        }
+                                        if (showEditRatingDialog) {
+                                            EditUserRatingDialog(
+                                                previousRating = userRating,
+                                                onEditUserRating = onEditUserRating,
+                                                onDismissRequest = { showEditRatingDialog = false },
+                                                enableButtons = enableButtons
+                                            )
+                                        }
+                                    }
+                                )
+                            }
+                        }
+                        Box(contentAlignment = Alignment.CenterEnd) {
+                            Button(
+                                onClick = { onUserProfileRequest(recipe.authorUsername) },
+                                enabled = enableButtons
+                            ) { MixedText("by ", recipe.authorUsername) }
+                        }
+                    }
+                    RecipeDescription(recipe.description)
+                    RecipeInfoComponent(
+                        isAuthor = isAuthor,
+                        recipe = recipe,
+                        onEditRecipe = { showEditRecipeDialog = true }
+                    )
+                    Row {
+                        Button(
+                            onClick = { onMakeRecipe() },
+                            modifier = Modifier.padding(top = 5.dp, end = 10.dp),
+                            enabled = enableButtons
+                        ) { Text("Make it!") }
+                    }
+                    if (showEditRecipeDialog) {
+                        EditRecipeDialog(
+                            recipe = recipe,
+                            onEditRecipe = onEditRecipe,
+                            onDismissRequest = { showEditRecipeDialog = false },
+                            enableButtons = enableButtons
+                        )
+                    }
+                    if (showConfirmDeleteRecipeDialog) {
+                        ConfirmDeleteRecipeDialog(
+                            onConfirmDeleteRecipe = onDeleteRecipe,
+                            onDismissRequest = { showConfirmDeleteRecipeDialog = false },
+                            enableButtons = enableButtons
+                        )
+                    }
+                    if (showCollectionsDialog) {
+                        RecipeCollectionsDialog(
+                            recipeId = recipe.id,
+                            recipeCollectionsStateBundle = recipeCollectionsStateBundle,
+                            onAddRecipeToCollections = onAddRecipeToCollections,
+                            onRemoveRecipeFromCollections = onRemoveRecipeFromCollections,
+                            onRecipeCollectionsRequest = { recipeId ->
+                                val collectionType = if (isAuthor) CollectionType.KITCHEN_BOOK
+                                else CollectionType.FAVOURITE
+                                onRecipeCollectionsRequest(recipeId, collectionType)
+                            },
+                            onDismissRequest = {
+                                showCollectionsDialog = false
+                                onRecipeCollectionsClear()
+                            },
+                            enableButtons = enableButtons
+                        )
                     }
                 }
-            }
-            Box(contentAlignment = Alignment.CenterEnd) {
-                MixedText("by ", recipe.authorUsername)
-            }
-        }
-
-        RecipeDescription(recipe.description)
-        RecipeInfoComponent(
-            recipe = recipe,
-            isAuthor = isAuthor,
-            onEditButton = { showEditRecipeDialog = true }
-        )
-
-        Row {
-            Button(
-                onClick = { onMakeIt() },
-                modifier = Modifier.padding(top = 5.dp, end = 10.dp),
-            ) { Text("Make it!") }
-        }
-
-        if (showEditRecipeDialog) {
-            EditRecipeDialog(
-                recipe = recipe,
-                onDismissRequest = { showEditRecipeDialog = false },
-                onEditRecipe = {
-                    onEditRecipe()
-                    showEditRecipeDialog = false
-                },
-                enableButtons
-            )
-        }
-        if (showEditRatingDialog) {
-            EditRatingDialog(
-                previousRating = userRating,
-                onDismissRequest = { showEditRatingDialog = false },
-                onEditRating = {
-                    onEditRating(it)
-                    showEditRatingDialog = false
-                }
-            )
-        }
-        if (confirmRecipeDelete) {
-            ConfirmDeleteRecipeDialog(
-                recipeId = recipe.id,
-                onDismissRequest = { confirmRecipeDelete = false },
-                onConfirmDelete = {
-                    onDeleteRecipe(it)
-                    confirmRecipeDelete = false
-                }
-            )
-        }
-        if (showCollectionsDialog) {
-            RecipeCollectionsDialog(
-                recipeId = recipe.id,
-                onDismissRequest = { showCollectionsDialog = false },
-                onRecipeCollectionsRequest = {},
-                enableButtons = enableButtons
             )
         }
     }

@@ -8,23 +8,28 @@ import androidx.compose.ui.graphics.Color
 
 @Composable
 fun ConfirmDeleteRecipeDialog(
-    recipeId: Int,
-    onDismissRequest: () -> Unit,
-    onConfirmDelete: (Int) -> Unit
+    onConfirmDeleteRecipe: () -> Unit = {},
+    onDismissRequest: () -> Unit = { },
+    enableButtons: Boolean,
 ) {
     AlertDialog(
-        onDismissRequest = { onDismissRequest() },
-        title = { Text("Confirm Deletion") },
-        text = { Text("Are you sure you want to delete this recipe?") },
+        onDismissRequest = { if (enableButtons) onDismissRequest() },
         confirmButton = {
             TextButton(
-                onClick = { onConfirmDelete(recipeId) }
+                onClick = {
+                    onConfirmDeleteRecipe()
+                    onDismissRequest()
+                },
+                enabled = enableButtons
             ) { Text("Yes", color = Color.Red) }
         },
         dismissButton = {
             TextButton(
-                onClick = { onDismissRequest() }
+                onClick = { onDismissRequest() },
+                enabled = enableButtons
             ) { Text("No") }
-        }
+        },
+        title = { Text("Confirm Deletion") },
+        text = { Text("Are you sure you want to delete this recipe?") },
     )
 }

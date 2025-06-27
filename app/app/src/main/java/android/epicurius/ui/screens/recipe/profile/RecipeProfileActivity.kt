@@ -1,83 +1,151 @@
 package android.epicurius.ui.screens.recipe.profile
 
-import android.epicurius.R
 import android.epicurius.domain.Diet
 import android.epicurius.domain.Intolerance
+import android.epicurius.domain.collection.CollectionProfile
 import android.epicurius.domain.recipe.Cuisine
 import android.epicurius.domain.recipe.Ingredient
-import android.epicurius.domain.recipe.IngredientUnit
 import android.epicurius.domain.recipe.Instructions
 import android.epicurius.domain.recipe.MealType
-import android.epicurius.domain.recipe.Recipe
+import android.epicurius.domain.recipe.RecipeInfo
 import android.epicurius.ui.EpicuriusActivity
-import android.epicurius.ui.EpicuriusViewModel
-import android.epicurius.ui.screens.recipe.profile.utils.generateTestImageByteArray
+import android.epicurius.ui.navigation.Intents
+import android.epicurius.ui.navigation.navigateTo
+import android.epicurius.ui.screens.collections.recipeCollections.components.RecipeCollectionsStateBundle
+import android.epicurius.ui.screens.user.profile.UserProfileActivity
+import android.epicurius.ui.screens.utils.Idle
+import android.epicurius.ui.screens.utils.LoadState
+import android.epicurius.ui.screens.utils.idle
 import android.os.Bundle
-import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import java.time.LocalDate
-import java.util.Base64
+import androidx.compose.runtime.collectAsState
+import androidx.lifecycle.lifecycleScope
+import epicurius.domain.collection.CollectionType
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.launch
 
 class RecipeProfileActivity : EpicuriusActivity() {
-    override val viewModel: EpicuriusViewModel by getViewModel<EpicuriusViewModel>()
+    override val viewModel: RecipeProfileViewModel by getViewModel<RecipeProfileViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        lifecycleScope.launch {
+            viewModel.recipe.collectLatest { recipeState ->
+                if (recipeState is Idle) {
+                    val recipeId = intent.getIntExtra(Intents.RECIPE_ID, -1)
+                    viewModel.getRecipeProfile(recipeId) { finish() }
+                }
+            }
+        }
+        lifecycleScope.launch {
+            combine (
+                viewModel.username,
+                viewModel.userRecipeRating
+            ) { usernameState, userRatingState,  -> usernameState to userRatingState }
+            .collectLatest { (usernameState, userRatingState) ->
+                val recipeId = intent.getIntExtra(Intents.RECIPE_ID, -1)
+                if (usernameState is Idle) viewModel.getUsername()
+                if (userRatingState is Idle) viewModel.getUserRecipeRating(recipeId) { finish() }
+            }
+        }
         setContent {
+            val recipeState = viewModel.recipe.collectAsState(Idle)
+            val recipeNameState = viewModel.recipeName.collectAsState(Idle)
+            val usernameState = viewModel.username.collectAsState(Idle)
+            val userRecipeRatingState = viewModel.userRecipeRating.collectAsState(Idle)
+            val collectionsToAddRecipeState = viewModel.collectionsToAddRecipe.collectAsState(idle())
+            val collectionsToRemoveRecipeState = viewModel.collectionsToRemoveRecipe.collectAsState(idle())
             RecipeProfileScreen(
-                recipe = Recipe(
-                    id = 1,
-                    name = "Panquecas Americanas",
-                    authorUsername = "MestreAndre",
-                    rating = 4.3,
-                    date = LocalDate.of(2025, 5, 19),
-                    description = "Deliciosas panquecas fofinhas perfeitas para o pequeno-almoço.",
-                    servings = 4,
-                    preparationTime = 20,
-                    cuisine = Cuisine.AMERICAN,
-                    mealType = MealType.BREAKFAST,
-                    intolerances = listOf(Intolerance.GLUTEN),
-                    diets = listOf(Diet.VEGETARIAN),
-                    ingredients = listOf(
-                        Ingredient("Farinha de trigo", 200.0, IngredientUnit.G),
-                        Ingredient("Leite", 300.0, IngredientUnit.ML),
-                        Ingredient("Ovo", 2.0, IngredientUnit.X),
-                        Ingredient("Açúcar", 50.0, IngredientUnit.G),
-                        Ingredient("Fermento em pó", 10.0, IngredientUnit.G),
-                        Ingredient("Sal", 1.0, IngredientUnit.TSP),
-                        Ingredient("Manteiga", 30.0, IngredientUnit.G)
-                    ),
-                    calories = 350,
-                    protein = 8,
-                    fat = 10,
-                    carbs = 55,
-                    instructions = Instructions(
-                        steps = mapOf(
-                            "1" to "Numa taça, mistura a farinha, o açúcar, o fermento e o sal.",
-                            "2" to "Adiciona o leite, os ovos e a manteiga derretida. Mistura até ficar homogéneo.",
-                            "3" to "Aquece uma frigideira antiaderente e coloca uma concha da massa.",
-                            "4" to "Cozinha até formar bolhas na superfície e vira a panqueca. Cozinha o outro lado.",
-                            "5" to "Serve quente com xarope de ácer ou frutas."
-                        )
-                    ),
-                    pictures = listOf(Base64.getEncoder().encodeToString(generateTestImageByteArray(R.drawable.test_tomato))),
-                    isInCollection = false
+                recipeState = recipeState.value,
+                recipeNameState = recipeNameState.value,
+                usernameState = usernameState.value,
+                userRecipeRatingState = userRecipeRatingState.value,
+                recipeCollectionsStateBundle = RecipeCollectionsStateBundle(
+                    collectionsToAddRecipeState = collectionsToAddRecipeState.value,
+                    collectionsToRemoveRecipeState = collectionsToRemoveRecipeState.value
                 ),
-                rating = 4.0,
-                images = listOf(R.drawable.home, R.drawable.star, R.drawable.pencil),
-                isAuthor = true,
-                collectionId = null,
-                collectionsState = null,
-                onBackButton = {},
-                onEditRecipe = {},
-                onEditRecipeImages = {},
-                onEditRating = { },
-                onDeleteRecipe = {},
-                onCollectionsRequest = { _, _ -> },
-                onAddRecipeToCollection = { _, _ -> },
-                onRemoveRecipeFromCollection = { _, _ -> },
-                enableButtons = true,
+                onBackButton = { finish() },
+                onEditRecipe = {
+                    name: String?,
+                    description: String?,
+                    servings: Int?,
+                    preparationTime: Int?,
+                    cuisine: Cuisine?,
+                    mealType: MealType?,
+                    intolerances: Set<Intolerance>?,
+                    diets: Set<Diet>?,
+                    ingredients: List<Ingredient>?,
+                    calories: Int?,
+                    protein: Int?,
+                    fat: Int?,
+                    carbs: Int?,
+                    instructions: Instructions?
+                    ->
+                    viewModel.updateRecipe(
+                        intent.getIntExtra(Intents.RECIPE_ID, -1),
+                        name,
+                        description,
+                        servings,
+                        preparationTime,
+                        cuisine,
+                        mealType,
+                        intolerances,
+                        diets,
+                        ingredients,
+                        calories,
+                        protein,
+                        fat,
+                        carbs,
+                        instructions
+                    )
+                },
+                onEditRecipePictures = { picturesBytes: List<ByteArray> ->
+                    viewModel.updateRecipePictures(
+                        intent.getIntExtra(Intents.RECIPE_ID, -1),
+                        picturesBytes
+                    )
+                },
+                onEditUserRating = { rating: Int ->
+                    viewModel.updateUserRecipeRating(
+                        intent.getIntExtra(Intents.RECIPE_ID, -1),
+                        rating
+                    )
+                },
+                onDeleteRecipe = {
+                    viewModel.deleteRecipe(intent.getIntExtra(Intents.RECIPE_ID, -1)) { finish() }
+                },
+                onAddRecipeToCollections = {
+                    recipeId: Int,
+                    collectionsToAdd: List<CollectionProfile>
+                    ->
+                    viewModel.addRecipeToCollections(
+                        recipeId,
+                        collectionsToAdd
+                    )
+                },
+                onRemoveRecipeFromCollections = {
+                    recipeId: Int,
+                    collectionsToRemove: List<CollectionProfile>,
+                    ->
+                    viewModel.removeRecipeFromCollections(
+                        recipeId,
+                        collectionsToRemove
+                    )
+                },
+                onRecipeCollectionsClear = { viewModel.clearRecipeCollections() },
+                onUserProfileRequest = ::navigateToUserProfileActivity,
+                onRecipeCollectionsRequest = { recipeId: Int, collectionType: CollectionType ->
+                    viewModel.getRecipeCollections(recipeId, collectionType)
+                },
+                enableButtons = viewModel.enableButtons,
             )
+        }
+    }
+
+    private fun navigateToUserProfileActivity(name: String) {
+        navigateTo<UserProfileActivity> { intent ->
+            intent.putExtra(Intents.USERNAME, name)
         }
     }
 }

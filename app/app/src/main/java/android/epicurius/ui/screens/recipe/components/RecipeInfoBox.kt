@@ -8,7 +8,7 @@ import android.epicurius.domain.recipe.MealType
 import android.epicurius.domain.recipe.RecipeInfo
 import android.epicurius.ui.screens.collections.recipeCollections.components.RecipeCollectionsStateBundle
 import android.epicurius.ui.screens.recipe.createRecipe.components.DividerComponent
-import android.epicurius.ui.screens.recipe.profile.utils.generateTestImageByteArray
+import android.epicurius.ui.screens.utils.generateTestImageByteArray
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable

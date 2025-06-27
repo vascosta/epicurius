@@ -23,7 +23,7 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun IngredientsComponent(
     ingredients: List<IngredientComponent>,
-    onIngredientsChange: (ingredients: List<IngredientComponent>) -> Unit,
+    onIngredientsChange: (ingredients: List<IngredientComponent>) -> Unit = {},
     enabled: Boolean
 ) {
     Column(

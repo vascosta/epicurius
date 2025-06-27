@@ -10,7 +10,7 @@ import androidx.compose.ui.graphics.Color
 
 @Composable
 fun DeleteFieldButton(
-    onClick: () -> Unit,
+    onClick: () -> Unit = {},
     modifier: Modifier = Modifier,
     enabled: Boolean
 ) {

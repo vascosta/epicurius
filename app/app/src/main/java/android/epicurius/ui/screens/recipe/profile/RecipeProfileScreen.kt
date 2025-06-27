@@ -12,35 +12,30 @@ import android.epicurius.domain.recipe.MealType
 import android.epicurius.domain.recipe.Recipe
 import android.epicurius.ui.navigation.BottomBar
 import android.epicurius.ui.navigation.TopBar
-import android.epicurius.ui.screens.recipe.profile.components.ConfirmIngredientsContent
-import android.epicurius.ui.screens.recipe.profile.components.PreparationContent
-import android.epicurius.ui.screens.recipe.profile.utils.generateTestImageByteArray
+import android.epicurius.ui.screens.collections.recipeCollections.components.RecipeCollectionsStateBundle
+import android.epicurius.ui.screens.recipe.confirmIngredients.ConfirmIngredientsContent
+import android.epicurius.ui.screens.recipe.preparation.PreparationContent
+import android.epicurius.ui.screens.utils.generateTestImageByteArray
 import android.epicurius.ui.screens.recipe.profile.components.RecipeProfileContent
 import android.epicurius.ui.screens.utils.LoadState
+import android.epicurius.ui.screens.utils.Loaded
 import android.epicurius.ui.screens.utils.apiSuccess
+import android.epicurius.ui.screens.utils.getNameFromLoadStateValue
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.animation.togetherWith
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
+import epicurius.domain.collection.CollectionType
 import java.time.LocalDate
 import java.util.Base64
 
@@ -50,29 +45,51 @@ enum class ScreenState {
 
 @Composable
 fun RecipeProfileScreen(
-    recipe: Recipe,
-    rating: Double,
-    images: List<Int>,
-    isAuthor: Boolean,
-    userRating: Int = 0,
-    collectionId: Int?,
-    collectionsState: LoadState<List<CollectionProfile>>?,
+    recipeState: LoadState<Recipe>,
+    recipeNameState: LoadState<String>,
+    usernameState: LoadState<String>,
+    userRecipeRatingState: LoadState<Int>,
+    recipeCollectionsStateBundle: RecipeCollectionsStateBundle,
     onBackButton: () -> Unit,
-    onEditRating: (Int) -> Unit,
-    onEditRecipe: () -> Unit,
-    onEditRecipeImages: (List<ByteArray>) -> Unit,
-    onDeleteRecipe: (Int) -> Unit,
-    onAddRecipeToCollection: (Int, Int) -> Unit,
-    onRemoveRecipeFromCollection: (Int, Int) -> Unit,
-    onCollectionsRequest: (Int, Boolean) -> Unit,
+    onEditRecipe: (
+        name: String?,
+        description: String?,
+        servings: Int?,
+        preparationTime: Int?,
+        cuisine: Cuisine?,
+        mealType: MealType?,
+        intolerances: Set<Intolerance>?,
+        diets: Set<Diet>?,
+        ingredients: List<Ingredient>?,
+        calories: Int?,
+        protein: Int?,
+        fat: Int?,
+        carbs: Int?,
+        instructions: Instructions?
+    ) -> Unit = { _, _, _, _, _, _, _, _, _, _, _, _, _, _ -> },
+    onEditRecipePictures: (picturesBytes: List<ByteArray>) -> Unit = {},
+    onEditUserRating: (rating: Int) -> Unit = {},
+    onDeleteRecipe: () -> Unit,
+    onAddRecipeToCollections: (
+        recipeId: Int,
+        collectionsToAdd: List<CollectionProfile>
+    ) -> Unit = { _, _ -> },
+    onRemoveRecipeFromCollections: (
+        recipeId: Int,
+        collectionsToRemove: List<CollectionProfile>
+    ) -> Unit = { _, _ -> },
+    onRecipeCollectionsClear: () -> Unit = {},
+    onUserProfileRequest: (name: String) -> Unit = {},
+    onRecipeCollectionsRequest: (recipeId: Int, collectionType: CollectionType) -> Unit = { _, _ -> },
     enableButtons: Boolean,
 ) {
     var currentScreen by remember { mutableStateOf(ScreenState.Profile) }
+    var recipeName = getNameFromLoadStateValue(recipeNameState)
 
     Scaffold(
         topBar = {
             TopBar(
-                titleText = recipe.name,
+                titleText = recipeName,
                 backButton = true,
                 onBackButton = when (currentScreen) {
                     ScreenState.Profile -> onBackButton
@@ -83,10 +100,10 @@ fun RecipeProfileScreen(
                         { currentScreen = ScreenState.Ingredients }
                     }
                 },
-                enableButtons = true
+                enableButtons = enableButtons && recipeState is Loaded
             )
         },
-        bottomBar = { BottomBar(buttonsEnable = true) },
+        bottomBar = { BottomBar(buttonsEnable = enableButtons && recipeState is Loaded) },
         content = { paddingValues ->
             AnimatedContent(
                 targetState = currentScreen,
@@ -98,27 +115,26 @@ fun RecipeProfileScreen(
                 when (targetState) {
                     ScreenState.Profile ->
                         RecipeProfileContent(
-                            recipe = recipe,
-                            rating = rating,
-                            images = images,
-                            isAuthor = isAuthor,
-                            userRating = userRating,
-                            collectionId = collectionId,
-                            collectionsState = collectionsState,
-                            onEditRating = onEditRating,
+                            recipeState = recipeState,
+                            usernameState = usernameState,
+                            userRecipeRatingState = userRecipeRatingState,
+                            recipeCollectionsStateBundle = recipeCollectionsStateBundle,
                             onEditRecipe = onEditRecipe,
-                            onEditRecipeImages = onEditRecipeImages,
-                            onMakeIt = { currentScreen = ScreenState.Ingredients },
+                            onEditRecipePictures = onEditRecipePictures,
+                            onEditUserRating = onEditUserRating,
                             onDeleteRecipe = onDeleteRecipe,
-                            onAddRecipeToCollection = onAddRecipeToCollection,
-                            onRemoveRecipeFromCollection = onRemoveRecipeFromCollection,
-                            onCollectionsRequest = onCollectionsRequest,
+                            onMakeRecipe = { currentScreen = ScreenState.Ingredients },
+                            onAddRecipeToCollections = onAddRecipeToCollections,
+                            onRemoveRecipeFromCollections = onRemoveRecipeFromCollections,
+                            onRecipeCollectionsClear = onRecipeCollectionsClear,
+                            onUserProfileRequest = onUserProfileRequest,
+                            onRecipeCollectionsRequest = onRecipeCollectionsRequest,
                             enableButtons = enableButtons,
                             paddingValues = paddingValues
                         )
                     ScreenState.Ingredients ->
                         ConfirmIngredientsContent(
-                            ingredientsList = recipe.ingredients,
+                            ingredientsList = recipeState.ingredients,
                             onSubstituteIngredients = { ingredientName ->
                                 listOf("Substitute for $ingredientName")
                             },
@@ -129,7 +145,7 @@ fun RecipeProfileScreen(
                         )
                     ScreenState.Preparation ->
                         PreparationContent(
-                            instructions = recipe.instructions,
+                            instructions = recipeState.instructions,
                             onRateRecipe = onEditRating,
                             onSkipRating = { currentScreen = ScreenState.Profile },
                             onCancelPreparation = {
@@ -188,8 +204,7 @@ fun RecipeProfilePreview(){
                 "5" to "Serve quente com xarope de ácer ou frutas."
             )
         ),
-        pictures = testImages,
-        isInCollection = true
+        pictures = testImages
     )
     val rating = 4.0
     val collections = listOf(
@@ -197,21 +212,13 @@ fun RecipeProfilePreview(){
         CollectionProfile(id = 2, name = "Breakfast Recipes")
     )
     RecipeProfileScreen(
-        recipe = recipe,
-        rating = rating,
-        images = listOf(R.drawable.home, R.drawable.star, R.drawable.pencil),
         isAuthor = true,
+        recipeState = apiSuccess(recipe),
+        recipeNameState = apiSuccess(recipe.name),
+        rating = rating,
         userRating = 4,
         collectionId = null,
         collectionsState = apiSuccess(collections),
-        {},
-        {},
-        {},
-        {},
-        {},
-        { _, _ -> },
-        { _, _ -> },
-        { _, _ -> },
         enableButtons = true,
     )
 }

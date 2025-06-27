@@ -1,6 +1,9 @@
-package android.epicurius.ui.screens.recipe.profile.components
+package android.epicurius.ui.screens.recipe.confirmIngredients
 
 import android.epicurius.domain.recipe.Ingredient
+import android.epicurius.ui.screens.recipe.confirmIngredients.components.InfoDialog
+import android.epicurius.ui.screens.recipe.confirmIngredients.components.IngredientTable
+import android.epicurius.ui.screens.recipe.confirmIngredients.components.SubstituteIngredientsAlertDialog
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column

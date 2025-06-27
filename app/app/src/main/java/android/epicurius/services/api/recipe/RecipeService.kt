@@ -60,7 +60,7 @@ class RecipeService(private val httpService: HttpService) {
         id: Int
     ): APIResult<GetUserRecipeRateOutputModel> =
         httpService.get<GetUserRecipeRateOutputModel>(
-            Uris.Recipe.USER_RECIPE_RATE,
+            Uris.Recipe.USER_RECIPE_RATING,
             pathParams = mapOf("id" to id),
             token = token
         )
@@ -68,11 +68,11 @@ class RecipeService(private val httpService: HttpService) {
     suspend fun searchRecipes(
         token: String,
         name: String?,
-        cuisine: List<Cuisine>?,
-        mealType: List<MealType>?,
-        ingredients: List<String>?,
-        intolerances: List<Intolerance>?,
-        diets: List<Diet>?,
+        cuisine: Set<Cuisine>?,
+        mealType: Set<MealType>?,
+        ingredients: Set<String>?,
+        intolerances: Set<Intolerance>?,
+        diets: Set<Diet>?,
         servings: Int?,
         minCalories: Int?,
         maxCalories: Int?,
@@ -156,17 +156,17 @@ class RecipeService(private val httpService: HttpService) {
     suspend fun updateRecipePictures(
         token: String,
         id: Int,
-        pictures: List<Picture>
+        picturesBytes: List<ByteArray>
     ): APIResult<UpdateRecipePicturesOutputModel> =
         httpService.patchMultipart<UpdateRecipePicturesOutputModel>(
             Uris.Recipe.RECIPE_PICTURES,
             "pictures",
-            pictures,
+            picturesBytes.map { Picture("picture", it) },
             mapOf("id" to id),
             token = token
         )
 
-    suspend fun updateRecipeRate(
+    suspend fun updateUserRecipeRating(
         token: String,
         id: Int,
         rateRecipeInfo: RateRecipeInputModel
