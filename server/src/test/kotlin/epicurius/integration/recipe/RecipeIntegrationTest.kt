@@ -101,11 +101,11 @@ class RecipeIntegrationTest : EpicuriusIntegrationTest() {
     fun searchRecipes(
         token: String,
         name: String? = null,
-        cuisine: Cuisine? = null,
-        mealType: MealType? = null,
-        ingredients: List<String> = emptyList(),
-        intolerances: List<Intolerance> = emptyList(),
-        diets: List<Diet> = emptyList(),
+        cuisine: Set<Cuisine>? = null,
+        mealType: Set<MealType>? = null,
+        ingredients: Set<String>? = null,
+        intolerances: Set<Intolerance>? = null,
+        diets: Set<Diet>? = null,
         servings: Int? = null,
         minCalories: Int? = null,
         maxCalories: Int? = null,
@@ -124,18 +124,24 @@ class RecipeIntegrationTest : EpicuriusIntegrationTest() {
         val params = mutableListOf<String>()
 
         name?.let { params += "name=$it" }
-        cuisine?.let { params += "cuisine=$it" }
-        mealType?.let { params += "mealType=$it" }
 
-        if (ingredients.isNotEmpty()) {
+        if (cuisine != null && cuisine.isNotEmpty()) {
+            params += "cuisine=${cuisine.joinToString(",") { it.name }}"
+        }
+
+        if (mealType != null && mealType.isNotEmpty()) {
+            params += "mealType=${mealType.joinToString(",") { it.name }}"
+        }
+
+        if (ingredients != null && ingredients.isNotEmpty()) {
             params += "ingredients=${ingredients.joinToString(",")}"
         }
 
-        if (intolerances.isNotEmpty()) {
+        if (intolerances != null && intolerances.isNotEmpty()) {
             params += "intolerances=${intolerances.joinToString(",")}"
         }
 
-        if (diets.isNotEmpty()) {
+        if (diets != null && diets.isNotEmpty()) {
             params += "diets=${diets.joinToString(",")}"
         }
 
