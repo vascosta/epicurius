@@ -49,7 +49,7 @@ class RecipeProfileViewModel(
     val recipeName = recipeNameFlow.asStateFlow()
 
     private val usernameFlow = MutableStateFlow<LoadState<String>>(idle())
-    private val userRecipeRatingFlow = MutableStateFlow<LoadState<Int>>(idle())
+    private val userRecipeRatingFlow = MutableStateFlow<LoadState<Int?>>(idle())
 
     val username = usernameFlow.asStateFlow()
     val userRecipeRating = userRecipeRatingFlow.asStateFlow()
@@ -89,7 +89,7 @@ class RecipeProfileViewModel(
     fun getSubstituteIngredients(ingredientName: String) {
         disableButtons()
         substituteIngredientsFlow.value = loading()
-        viewModelScope.launch { getSubstituteIngredients(ingredientName) }
+        viewModelScope.launch { fetchSubstituteIngredients(ingredientName) }
     }
 
     fun updateRecipe(
@@ -164,6 +164,10 @@ class RecipeProfileViewModel(
     fun deleteRecipe(recipeId: Int, onSuccessNavigateTo: () -> Unit) {
         disableButtons()
         viewModelScope.launch { handleDeleteRecipe(recipeId, onSuccessNavigateTo) }
+    }
+
+    fun deleteUserRecipeRating() {
+
     }
 
     private suspend fun fetchRecipeProfile(id: Int, onErrorNavigateTo: () -> Unit) {

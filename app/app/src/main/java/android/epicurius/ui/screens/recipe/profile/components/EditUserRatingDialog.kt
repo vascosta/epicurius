@@ -28,6 +28,7 @@ import androidx.compose.ui.unit.dp
 fun EditUserRatingDialog(
     previousRating: Int,
     onEditUserRating: (rating: Int) -> Unit = {},
+    onDeleteUserRecipeRating: (rating: Int) -> Unit = {},
     onDismissRequest: () -> Unit = { },
     enableButtons: Boolean
 ) {
@@ -43,6 +44,13 @@ fun EditUserRatingDialog(
                 },
                 enabled = enableButtons
             ) { Text("Edit") }
+            Button(
+                onClick = {
+                    onDeleteUserRecipeRating(newRating)
+                    onDismissRequest()
+                },
+                enabled = enableButtons
+            ) { Text("Delete Rate") }
         },
         dismissButton = {
             TextButton(

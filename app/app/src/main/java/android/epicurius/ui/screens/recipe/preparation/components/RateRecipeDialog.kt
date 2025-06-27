@@ -26,14 +26,38 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun RateRecipeDialog(
-    onDismissRequest: () -> Unit,
-    onSkipRating: () -> Unit,
-    onRateRecipe: (Int) -> Unit
+    previousRating: Int,
+    onRateRecipe: (rating: Int) -> Unit = {},
+    onDeleteUserRecipeRating: (rating: Int) -> Unit = {},
+    onDismissRequest: () -> Unit = {},
+    enableButtons: Boolean
 ) {
-    var selectedRating by remember { mutableIntStateOf(0) }
+    var selectedRating by remember { mutableIntStateOf(previousRating) }
 
     AlertDialog(
-        onDismissRequest = onDismissRequest,
+        onDismissRequest = { if (enableButtons) onDismissRequest() },
+        confirmButton = {
+            Button(
+                onClick = {
+                    onRateRecipe(selectedRating)
+                    onDismissRequest()
+                },
+                enabled = selectedRating > 0 && enableButtons
+            ) { Text("Rate") }
+            Button(
+                onClick = {
+                    onDeleteUserRecipeRating(selectedRating)
+                    onDismissRequest()
+                },
+                enabled = enableButtons
+            ) { Text("Delete Rate") }
+        },
+        dismissButton = {
+            TextButton(
+                onClick = onDismissRequest,
+                enabled = enableButtons
+            ) { Text("Skip") }
+        },
         title = { Text("Rate Recipe") },
         text = {
             Column {
@@ -53,23 +77,14 @@ fun RateRecipeDialog(
                             modifier = Modifier
                                 .padding(4.dp)
                                 .size(45.dp)
-                                .clickable { selectedRating = i }
+                                .clickable(
+                                    enabled = enableButtons,
+                                    onClick = { selectedRating = i }
+                                )
                         )
                     }
                 }
             }
-        },
-        confirmButton = {
-            Button(
-                onClick = {
-                    onRateRecipe(selectedRating)
-                    onDismissRequest()
-                },
-                enabled = selectedRating > 0
-            ) { Text("Rate") }
-        },
-        dismissButton = {
-            TextButton(onClick = { onSkipRating() }) { Text("Skip") }
         },
         containerColor = Color.White,
     )

@@ -48,10 +48,10 @@ fun RecipeProfileScreen(
     recipeState: LoadState<Recipe>,
     recipeNameState: LoadState<String>,
     usernameState: LoadState<String>,
-    userRecipeRatingState: LoadState<Int>,
+    userRecipeRatingState: LoadState<Int?>,
     recipeCollectionsStateBundle: RecipeCollectionsStateBundle,
     substituteIngredientsState: LoadState<List<String>>,
-    onBackButton: () -> Unit,
+    onBackButton: () -> Unit = { },
     onEditRecipe: (
         name: String?,
         description: String?,
@@ -70,7 +70,7 @@ fun RecipeProfileScreen(
     ) -> Unit = { _, _, _, _, _, _, _, _, _, _, _, _, _, _ -> },
     onEditRecipePictures: (picturesBytes: List<ByteArray>) -> Unit = {},
     onEditUserRating: (rating: Int) -> Unit = {},
-    onDeleteRecipe: () -> Unit,
+    onDeleteRecipe: () -> Unit = { },
     onAddRecipeToCollections: (
         recipeId: Int,
         collectionsToAdd: List<CollectionProfile>
@@ -80,6 +80,7 @@ fun RecipeProfileScreen(
         collectionsToRemove: List<CollectionProfile>
     ) -> Unit = { _, _ -> },
     onSubstituteIngredients: (ingredientName: String) -> Unit = {},
+    onRateRecipe: (rating: Int) -> Unit = {},
     onRecipeCollectionsClear: () -> Unit = {},
     onUserProfileRequest: (name: String) -> Unit = {},
     onRecipeCollectionsRequest: (recipeId: Int, collectionType: CollectionType) -> Unit = { _, _ -> },
@@ -145,12 +146,14 @@ fun RecipeProfileScreen(
                         )
                     ScreenState.Preparation ->
                         PreparationContent(
-                            instructions = recipeState.instructions,
-                            onRateRecipe = onEditRating,
+                            recipeState = recipeState,
+                            userRecipeRatingState = userRecipeRatingState,
+                            onRateRecipe = onRateRecipe,
                             onSkipRating = { currentScreen = ScreenState.Profile },
                             onCancelPreparation = {
                                 currentScreen = ScreenState.Profile
                             },
+                            enableButtons = enableButtons,
                             paddingValues = paddingValues,
                         )
                 }
@@ -206,19 +209,17 @@ fun RecipeProfilePreview(){
         ),
         pictures = testImages
     )
-    val rating = 4.0
-    val collections = listOf(
-        CollectionProfile(id = 1, name = "Favorites"),
-        CollectionProfile(id = 2, name = "Breakfast Recipes")
-    )
+    val rating = 4
     RecipeProfileScreen(
         recipeState = apiSuccess(recipe),
         recipeNameState = apiSuccess(recipe.name),
         usernameState = apiSuccess(recipe.authorUsername),
-        rating = rating,
-        userRating = 4,
-        collectionId = null,
-        collectionsState = apiSuccess(collections),
+        userRecipeRatingState = apiSuccess(rating),
+        recipeCollectionsStateBundle = RecipeCollectionsStateBundle(
+            collectionsToAddRecipeState = apiSuccess(emptyList()),
+            collectionsToRemoveRecipeState = apiSuccess(emptyList())
+        ),
+        substituteIngredientsState = apiSuccess(emptyList()),
         enableButtons = true,
     )
 }

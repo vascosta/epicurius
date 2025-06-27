@@ -66,7 +66,7 @@ import epicurius.domain.collection.CollectionType
 fun RecipeProfileContent(
     recipeState: LoadState<Recipe>,
     usernameState: LoadState<String>,
-    userRecipeRatingState: LoadState<Int>,
+    userRecipeRatingState: LoadState<Int?>,
     recipeCollectionsStateBundle: RecipeCollectionsStateBundle,
     onEditRecipe: (
         name: String?,
@@ -86,6 +86,7 @@ fun RecipeProfileContent(
     ) -> Unit = { _, _, _, _, _, _, _, _, _, _, _, _, _, _ -> },
     onEditRecipePictures: (picturesBytes: List<ByteArray>) -> Unit = {},
     onEditUserRating: (rating: Int) -> Unit = {},
+    onDeleteUserRecipeRating: (rating: Int) -> Unit = {},
     onDeleteRecipe: () -> Unit,
     onMakeRecipe: () -> Unit,
     onAddRecipeToCollections: (
@@ -210,25 +211,32 @@ fun RecipeProfileContent(
                                 onClick = { showConfirmDeleteRecipeDialog = true }
                             ) { Text("Delete recipe", color = Color.Red) }
                         } else {
-                            Box(Modifier.clickable { showEditRatingDialog = true }) {
-                                LoadStateRenderer(
-                                    loadState = userRecipeRatingState,
-                                    content = { userRating ->
+                            LoadStateRenderer(
+                                loadState = userRecipeRatingState,
+                                content = { userRating ->
+                                    Box(
+                                        modifier =
+                                            Modifier
+                                                .clickable(
+                                                    enabled = enableButtons && userRating != null,
+                                                    onClick = { showEditRatingDialog = true }
+                                    )) {
                                         Row {
                                             Text("Your Rating: ", fontWeight = FontWeight.Bold)
                                             Text("$userRating")
                                         }
-                                        if (showEditRatingDialog) {
+                                        if (showEditRatingDialog && userRating != null) {
                                             EditUserRatingDialog(
                                                 previousRating = userRating,
                                                 onEditUserRating = onEditUserRating,
+                                                onDeleteUserRecipeRating = onDeleteUserRecipeRating,
                                                 onDismissRequest = { showEditRatingDialog = false },
                                                 enableButtons = enableButtons
                                             )
                                         }
                                     }
-                                )
-                            }
+                                }
+                            )
                         }
                         Box(contentAlignment = Alignment.CenterEnd) {
                             Button(
