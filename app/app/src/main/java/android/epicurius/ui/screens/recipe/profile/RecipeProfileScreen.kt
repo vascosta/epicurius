@@ -224,7 +224,7 @@ fun RecipeProfilePreview(){
     RecipeProfileScreen(
         recipeState = apiSuccess(recipe),
         recipeNameState = apiSuccess(recipe.name),
-        usernameState = apiSuccess("joaquim"),
+        usernameState = apiSuccess(recipe.authorUsername),
         userRecipeRatingState = apiSuccess(rating),
         recipeCollectionsStateBundle = RecipeCollectionsStateBundle(
             collectionsToAddRecipeState = apiSuccess(emptyList()),

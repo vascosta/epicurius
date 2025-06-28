@@ -21,8 +21,6 @@ import android.epicurius.ui.screens.utils.MixedText
 import android.epicurius.ui.screens.utils.apiSuccess
 import android.epicurius.ui.screens.utils.generateTestImageByteArray
 import android.os.Build
-import android.widget.Toast
-import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
@@ -42,7 +40,6 @@ import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -124,21 +121,23 @@ fun RecipeProfileContent(
 
     var pagerState = rememberPagerState(pageCount = { recipePicturesListSize })
 
-    val imagePickerLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.PickVisualMedia()
-    ) { uri ->
-        if (uri != null) {
-            val inputStream = context.contentResolver.openInputStream(uri)
-            val bytes = inputStream?.readBytes()
-            inputStream?.close()
-            if (bytes != null) {
-                val currentPage = pagerState.currentPage
-                recipePicturesBytes = recipePicturesBytes.toMutableList().also {
-                    it[currentPage] = bytes
-                }
-                onEditRecipePictures(recipePicturesBytes)
+    val imagePickerLauncherForEdit =
+        rememberImagePickerLauncher(context) { bytes ->
+            val currentPage = pagerState.currentPage
+            recipePicturesBytes = recipePicturesBytes.toMutableList().also {
+                it[currentPage] = bytes
             }
-        } else Toast.makeText(context, "No image selected", Toast.LENGTH_SHORT).show()
+            onEditRecipePictures(recipePicturesBytes)
+        }
+
+    val imagePickerLauncherForAdd =
+        rememberImagePickerLauncher(context) { bytes ->
+            val currentPage = pagerState.currentPage
+            recipePicturesBytes = recipePicturesBytes.toMutableList().also {
+                it.add(currentPage, bytes)
+                if (recipePicturesListSize < 3) recipePicturesListSize += 1
+            }
+            onEditRecipePictures(recipePicturesBytes)
     }
 
     val galleryPermissionState = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
@@ -148,8 +147,14 @@ fun RecipeProfileContent(
     }
 
     LaunchedEffect(usernameState) {
-        if (usernameState is Loaded)
+        if (usernameState is Loaded) {
             isAuthor = usernameState.value.getValueOrThrow() == recipe.authorUsername
+            recipePicturesListSize =
+                if (isAuthor) {
+                    if (recipe.pictures.size < 3) recipe.pictures.size + 1
+                    else recipe.pictures.size
+                } else recipe.pictures.size
+        }
     }
     LoadStateRenderer(
         loadState = userRecipeRatingState,
@@ -163,35 +168,65 @@ fun RecipeProfileContent(
                     .background(Color.White),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Row {
-                    Text("${recipe.rating}/5")
-                    Spacer(Modifier.size(5.dp))
-                    Image(
-                        painter = painterResource(id = R.drawable.star),
-                        contentDescription = "Favorites",
-                        modifier = Modifier
-                            .padding(top = (0.5).dp)
-                            .size(15.dp),
-                        contentScale = ContentScale.Fit
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(start = 10.dp, end = 10.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Row {
+                        Text("${recipe.rating}/5")
+                        Spacer(Modifier.size(5.dp))
+                        Image(
+                            painter = painterResource(id = R.drawable.star),
+                            contentDescription = "Favorites",
+                            modifier = Modifier
+                                .padding(top = (0.5).dp)
+                                .size(15.dp),
+                            contentScale = ContentScale.Fit
+                        )
+                    }
+                    FavouritesIcon(
+                        onShowCollectionsDialog = { showCollectionsDialog = true },
+                        enableButtons = enableButtons
                     )
                 }
-                FavouritesIcon(
-                    onShowCollectionsDialog = { showCollectionsDialog = true },
-                    enableButtons = enableButtons
-                )
                 RecipeProfileImages(
                     images = recipePicturesBytes,
                     pagerState = pagerState,
+                    isAuthor = isAuthor,
                     onImageClick = {
                         if (galleryPermissionState.status.isGranted) {
-                            imagePickerLauncher.launch(
+                            imagePickerLauncherForEdit.launch(
                                 PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
                             )
                         } else galleryPermissionState.launchPermissionRequest()
                     },
+                    onAddImage = {
+                        if (galleryPermissionState.status.isGranted) {
+                            imagePickerLauncherForAdd.launch(
+                                PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
+                            )
+                        } else galleryPermissionState.launchPermissionRequest()
+                    },
+                    onRemoveImage = { index ->
+                        if (recipePicturesBytes.size > 1) {
+                            recipePicturesBytes = recipePicturesBytes.toMutableList().also {
+                                it.removeAt(index)
+                            }
+                            if (recipePicturesBytes.size == 1) {
+                                recipePicturesListSize -= 1
+                            }
+                            onEditRecipePictures(recipePicturesBytes)
+                        }
+                    },
                     enabled = enableButtons && isAuthor
                 )
-                HorizontalPagerIndicator(recipe.picturesBytes.size, pagerState)
+                HorizontalPagerIndicator(
+                    size = recipePicturesListSize,
+                    pagerState = pagerState,
+                )
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -226,12 +261,12 @@ fun RecipeProfileContent(
                             }
                         }
                     }
-                }
-                Box(contentAlignment = Alignment.CenterEnd) {
-                    Button(
-                        onClick = { onUserProfileRequest(recipe.authorUsername) },
-                        enabled = enableButtons
-                    ) { MixedText("by ", recipe.authorUsername) }
+                    Box(contentAlignment = Alignment.CenterEnd) {
+                        TextButton(
+                            onClick = { onUserProfileRequest(recipe.authorUsername) },
+                            enabled = enableButtons
+                        ) { MixedText("by ", recipe.authorUsername) }
+                    }
                 }
                 RecipeDescription(recipe.description)
                 RecipeInfoComponent(
@@ -289,8 +324,6 @@ fun RecipeProfileContent(
 fun RecipeProfileContentPreview(){
     val testImages = listOf(
         Base64.getEncoder().encodeToString(generateTestImageByteArray(R.drawable.test_tomato)),
-        Base64.getEncoder().encodeToString(generateTestImageByteArray(R.drawable.test_tomato)),
-        Base64.getEncoder().encodeToString(generateTestImageByteArray(R.drawable.test_tomato))
     )
 
     val recipe = Recipe(
@@ -333,7 +366,7 @@ fun RecipeProfileContentPreview(){
     val rating = 4
     RecipeProfileContent(
         recipe = recipe,
-        usernameState = apiSuccess(recipe.authorUsername),
+        usernameState = apiSuccess("MestreAndre"),
         userRecipeRatingState = apiSuccess(rating),
         recipeCollectionsStateBundle = RecipeCollectionsStateBundle(
             collectionsToAddRecipeState = apiSuccess(emptyList()),
