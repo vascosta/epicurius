@@ -31,13 +31,20 @@ import java.time.Period
 @Composable
 fun ProductItemCard(
     product: Product,
-    onDelete: (Int) -> Unit,
-    onUpdateProduct: (Int?, LocalDate?, Period?, LocalDate?) -> Unit,
+    onUpdateProduct: (
+        entryNumber: Int,
+        quantity: Int?,
+        openDate: LocalDate?,
+        duration: Period?,
+        expirationDate: LocalDate?
+    ) -> Unit = { _, _, _, _, _ -> },
+    onDeleteProduct: (entryNumber: Int) -> Unit = {},
+    enableButtons: Boolean
 ) {
-    val isExpiringSoon = product.expirationDate.isBefore(LocalDate.now().plusDays(3))
-    val expired = product.expirationDate.isBefore(LocalDate.now())
+    var showUpdateProductDialog by remember { mutableStateOf(false) }
 
-    var showDialog by remember { mutableStateOf(false) }
+    val isExpiringSoon by remember { mutableStateOf(product.expirationDate.isBefore(LocalDate.now().plusDays(3))) }
+    val expired by remember { mutableStateOf(product.expirationDate.isBefore(LocalDate.now())) }
 
     Card(
         modifier = Modifier
@@ -56,7 +63,6 @@ fun ProductItemCard(
             Text(text = product.name, style = MaterialTheme.typography.titleMedium)
             Text(text = "Quantity: ${product.quantity}")
             product.openDate?.let { Text(text = "Opened date: $it") }
-
             Text(
                 text = "Expiration date: ${product.expirationDate}",
                 color = if (expired) Color.Red else Color.Unspecified,
@@ -65,21 +71,24 @@ fun ProductItemCard(
                 } else FontWeight.Normal
             )
             Row(horizontalArrangement = Arrangement.End, modifier = Modifier.fillMaxWidth()) {
-                IconButton(onClick = { showDialog = true }) {
-                    Icon(Icons.Default.Edit, contentDescription = "Update Product")
-                }
-                IconButton(onClick = { onDelete(product.entryNumber) }) {
-                    Icon(Icons.Default.Delete, contentDescription = "Delete")
-                }
+                IconButton(
+                    onClick = { showUpdateProductDialog = true },
+                    enabled = enableButtons
+                ) { Icon(Icons.Default.Edit, contentDescription = "Update Product") }
+                IconButton(
+                    onClick = { onDeleteProduct(product.entryNumber) },
+                    enabled = enableButtons
+                ) { Icon(Icons.Default.Delete, contentDescription = "Delete") }
             }
 
-            if (showDialog) {
+            if (showUpdateProductDialog) {
                 UpdateProductDialog(
-                    onDismiss = { showDialog = false },
                     onUpdateProduct = { quantity, openDate, duration, expirationDate ->
-                        onUpdateProduct(quantity, openDate, duration, expirationDate)
-                        showDialog = false
-                    }
+                        onUpdateProduct(product.entryNumber, quantity, openDate, duration, expirationDate)
+                        showUpdateProductDialog = false
+                    },
+                    onDismiss = { showUpdateProductDialog = false },
+                    enableButtons = enableButtons
                 )
             }
         }
@@ -99,7 +108,6 @@ fun PreviewProductItemCard() {
 
     ProductItemCard(
         product = sampleProduct,
-        onDelete = {},
-        onUpdateProduct = { _, _, _, _ -> }
+        enableButtons = true
     )
 }

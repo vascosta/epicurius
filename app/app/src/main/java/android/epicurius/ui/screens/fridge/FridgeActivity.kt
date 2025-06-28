@@ -1,26 +1,51 @@
 package android.epicurius.ui.screens.fridge
 
-import android.epicurius.domain.fridge.Product
-import android.epicurius.ui.navigation.navigateTo
+import android.epicurius.ui.EpicuriusActivity
+import android.epicurius.ui.screens.utils.Idle
+import android.epicurius.ui.screens.utils.idle
 import android.os.Bundle
-import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.runtime.collectAsState
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 import java.time.LocalDate
+import java.time.Period
 
-class FridgeActivity : ComponentActivity() {
+class FridgeActivity : EpicuriusActivity() {
+    override val viewModel: FridgeViewModel by getViewModel<FridgeViewModel>()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        lifecycleScope.launch {
+            viewModel.userFridge.collectLatest { state ->
+                if (state is Idle) viewModel.getUserFridge()
+            }
+        }
         setContent {
-            val sampleProducts = listOf(
-                Product("Milk", 1, 2, LocalDate.now().minusDays(1), LocalDate.now().plusDays(5)),
-                Product("Eggs", 2, 12, null, LocalDate.now().plusDays(10)),
-                Product("Meat", 3, 1, LocalDate.now().minusDays(2), LocalDate.now().minusDays(1)),
-                Product("Cheese", 4, 1, LocalDate.now().minusDays(3), LocalDate.now().plusDays(2)),
-                Product("Yogurt", 5, 4, null, LocalDate.now().plusDays(1)),
-            )
+            val userFridgeState = viewModel.userFridge.collectAsState(idle())
             FridgeScreen(
-                products = sampleProducts,
-                onBackButton = {  },
+                userFridgeState = userFridgeState.value,
+                onBackButton = { finish() },
+                onAddProduct = {
+                    name: String,
+                    quantity: Int,
+                    openDate: LocalDate?,
+                    expirationDate: LocalDate
+                    ->
+                    viewModel.addProductToFridge(name, quantity, openDate, expirationDate)
+                },
+                onUpdateProduct = {
+                    entryNumber: Int,
+                    quantity: Int?,
+                    openDate: LocalDate?,
+                    duration: Period?,
+                    expirationDate: LocalDate?
+                    ->
+                    viewModel.updateFridgeProduct(entryNumber, quantity, openDate, duration, expirationDate)
+                },
+                onDeleteProduct = { entryNumber: Int -> viewModel.removeFridgeProduct(entryNumber) },
+                enableButtons = viewModel.enableButtons
             )
         }
     }

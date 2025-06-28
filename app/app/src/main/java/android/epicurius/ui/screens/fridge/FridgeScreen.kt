@@ -5,15 +5,21 @@ import android.epicurius.ui.navigation.BottomBar
 import android.epicurius.ui.navigation.TopBar
 import android.epicurius.ui.screens.fridge.components.AddProductDialog
 import android.epicurius.ui.screens.fridge.components.ProductItemCard
+import android.epicurius.ui.screens.utils.LoadState
+import android.epicurius.ui.screens.utils.LoadStateRenderer
+import android.epicurius.ui.screens.utils.Loaded
+import android.epicurius.ui.screens.utils.apiSuccess
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -21,6 +27,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import java.time.LocalDate
@@ -28,13 +35,25 @@ import java.time.Period
 
 @Composable
 fun FridgeScreen(
-    products: List<Product>,
+    userFridgeState: LoadState<List<Product>>,
     onBackButton: () -> Unit = {},
-    onAddProduct: (String, Int, LocalDate?, LocalDate) -> Unit = { _, _, _, _ -> },
-    onUpdateProduct: (Int?, LocalDate?, Period?, LocalDate?) -> Unit = { _, _, _, _ -> },
-    onDeleteProduct: (Int) -> Unit = { _ -> }
+    onAddProduct: (
+        name: String,
+        quantity: Int,
+        openDate: LocalDate?,
+        expirationDate: LocalDate
+    ) -> Unit = { _, _, _, _ -> },
+    onUpdateProduct: (
+        entryNumber: Int,
+        quantity: Int?,
+        openDate: LocalDate?,
+        duration: Period?,
+        expirationDate: LocalDate?
+    ) -> Unit = { _, _, _, _, _ -> },
+    onDeleteProduct: (entryNumber: Int) -> Unit = {},
+    enableButtons: Boolean
 ) {
-    var showDialog by remember { mutableStateOf(false) }
+    var showAddProductDialog by remember { mutableStateOf(false) }
 
     Scaffold(
         topBar = {
@@ -42,38 +61,57 @@ fun FridgeScreen(
                 titleText = "Fridge",
                 backButton = true,
                 onBackButton = onBackButton,
-                enableButtons = true
+                enableButtons = enableButtons
             )
         },
-        bottomBar = { BottomBar(buttonsEnable = true) },
+        bottomBar = { BottomBar(buttonsEnable = enableButtons) },
         floatingActionButton = {
-            FloatingActionButton(onClick = { showDialog = true }) {
+            FloatingActionButton(
+                modifier = Modifier.clickable(enabled = enableButtons) { showAddProductDialog = true },
+                onClick = {},
+            ) {
                 Icon(Icons.Default.Add, contentDescription = "Add Product")
             }
         },
         containerColor = Color.White
     ) { paddingValues ->
-        LazyColumn(
-            modifier = Modifier
-                .padding(16.dp)
-                .background(Color.White),
-            contentPadding = paddingValues
-        ) {
-            items(products) { product ->
-                ProductItemCard(
-                    product = product,
-                    onDelete = onDeleteProduct,
-                    onUpdateProduct = onUpdateProduct
-                )
+        LoadStateRenderer(
+            loadState = userFridgeState,
+            content = { products ->
+                if (products.isNotEmpty()) {
+                    LazyColumn(
+                        modifier = Modifier
+                            .padding(16.dp)
+                            .background(Color.White),
+                        contentPadding = paddingValues
+                    ) {
+                        items(products) { product ->
+                            ProductItemCard(
+                                product = product,
+                                onUpdateProduct = onUpdateProduct,
+                                onDeleteProduct = onDeleteProduct,
+                                enableButtons = enableButtons
+                            )
+                        }
+                    }
+                } else if (userFridgeState is Loaded) {
+                    Text(
+                        text = "Your fridge is empty!",
+                        modifier = Modifier.padding(10.dp),
+                        textAlign = TextAlign.Center,
+                        color = Color.Gray
+                    )
+                }
+                if (showAddProductDialog) {
+                    AddProductDialog(
+                        onAddProduct = onAddProduct,
+                        onDismiss = { showAddProductDialog = false },
+                        enableButtons = enableButtons
+                    )
+                }
             }
-        }
-    }
-
-    if (showDialog) {
-        AddProductDialog(
-            onAddProduct = onAddProduct,
-            onDismiss = { showDialog = false }
         )
+
     }
 }
 
@@ -89,6 +127,7 @@ fun PreviewFridgeScreen() {
     )
 
     FridgeScreen(
-        products = sampleProducts
+        userFridgeState = apiSuccess(sampleProducts),
+        enableButtons = true,
     )
 }

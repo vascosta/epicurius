@@ -4,6 +4,7 @@ import android.epicurius.services.api.fridge.input.AddProductInputModel
 import android.epicurius.services.api.fridge.input.UpdateProductInputModel
 import android.epicurius.services.api.fridge.output.AddProductOutputModel
 import android.epicurius.services.api.fridge.output.GetFridgeOutputModel
+import android.epicurius.services.api.fridge.output.RemoveProductOutputModel
 import android.epicurius.services.api.fridge.output.UpdateProductOutputModel
 import android.epicurius.services.http.HttpService
 import android.epicurius.services.http.utils.APIResult
@@ -44,8 +45,8 @@ class FridgeService(private val httpService: HttpService) {
     suspend fun removeFridgeProduct(
         token: String,
         entryNumber: Int
-    ): APIResult<UpdateProductOutputModel> =
-        httpService.patch<UpdateProductOutputModel>(
+    ): APIResult<RemoveProductOutputModel> =
+        httpService.patch<RemoveProductOutputModel>(
             Uris.Fridge.PRODUCT,
             pathParams = mapOf("entryNumber" to entryNumber),
             token = token

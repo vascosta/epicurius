@@ -15,8 +15,14 @@ import java.time.LocalDate
 
 @Composable
 fun AddProductDialog(
-    onAddProduct: (String, Int, LocalDate?, LocalDate) -> Unit,
-    onDismiss: () -> Unit
+    onAddProduct: (
+        name: String,
+        quantity: Int,
+        openDate: LocalDate?,
+        expirationDate: LocalDate
+    ) -> Unit = { _, _, _, _ -> },
+    onDismiss: () -> Unit,
+    enableButtons: Boolean
 ) {
     var name by remember { mutableStateOf("") }
     var quantity by remember { mutableIntStateOf(0) }
@@ -24,48 +30,52 @@ fun AddProductDialog(
     var expirationDate by remember { mutableStateOf<LocalDate?>(null) }
 
     AlertDialog(
-        onDismissRequest = { onDismiss() },
+        onDismissRequest = { if (enableButtons) onDismiss() },
+        confirmButton = {
+            TextButton(
+                onClick = {
+                    val safeExpiration = expirationDate
+                    if (safeExpiration != null) { // other validations are on the enabled parameter
+                        onAddProduct(name, quantity, openDate, safeExpiration)
+                        onDismiss()
+                    }
+                },
+                enabled = enableButtons && name.isNotBlank() && quantity > 0 && expirationDate != null
+            ) { Text("Add") }
+        },
+        dismissButton = {
+            TextButton(
+                onClick = onDismiss,
+                enabled = enableButtons
+            ) { Text("Cancel") }
+        },
         title = { Text("Add new product") },
         text = {
             Column {
                 TextField(
                     value = name,
-                    label = "Product Name",
                     onValueChange = { name = it },
-                    enabled = true
+                    enabled = enableButtons,
+                    label = "Product Name"
                 )
                 TextField(
                     value = if (quantity == 0) "" else quantity.toString(),
-                    label = "Quantity",
                     onValueChange = { quantity = it.toIntOrNull() ?: 0 },
-                    enabled = true
+                    enabled = true,
+                    label = "Quantity"
                 )
                 DateField(
-                    label = "Opened Date",
-                    onDateSelected = { openDate = it }
+                    onSelectDate = { openDate = it },
+                    enabled = enableButtons,
+                    label = "Opened Date"
                 )
                 DateField(
-                    label = "Expiration Date",
                     initialDate = expirationDate,
-                    onDateSelected = { expirationDate = it }
+                    onSelectDate = { expirationDate = it },
+                    enabled = enableButtons,
+                    label = "Expiration Date"
                 )
             }
         },
-        confirmButton = {
-            TextButton(onClick = {
-                val safeExpiration = expirationDate
-                if (name.isNotBlank() && quantity > 0 && safeExpiration != null) {
-                    onAddProduct(name, quantity, openDate, safeExpiration)
-                    onDismiss()
-                }
-            }) {
-                Text("Add")
-            }
-        },
-        dismissButton = {
-            TextButton(onClick = { onDismiss() }) {
-                Text("Cancel")
-            }
-        }
     )
 }

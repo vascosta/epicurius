@@ -20,8 +20,14 @@ import java.time.Period
 
 @Composable
 fun UpdateProductDialog(
-    onDismiss: () -> Unit,
-    onUpdateProduct: (Int?, LocalDate?, Period?, LocalDate?) -> Unit,
+    onUpdateProduct: (
+        quantity: Int?,
+        openDate: LocalDate?,
+        duration: Period?,
+        expirationDate: LocalDate?
+    ) -> Unit = { _, _, _, _ -> },
+    onDismiss: () -> Unit = {},
+    enableButtons: Boolean
 ) {
     var quantity by remember { mutableStateOf<Int?>(null) }
     var openDate by remember { mutableStateOf<LocalDate?>(null) }
@@ -29,29 +35,47 @@ fun UpdateProductDialog(
     var expirationDate by remember { mutableStateOf<LocalDate?>(null) }
 
     AlertDialog(
-        onDismissRequest = onDismiss,
+        onDismissRequest = { if (enableButtons) onDismiss() },
+        confirmButton = {
+            TextButton(
+                onClick = {
+                    onUpdateProduct(
+                        quantity,
+                        openDate,
+                        duration,
+                        expirationDate
+                    )
+                    onDismiss()
+                },
+                enabled = enableButtons
+            ) { Text("Confirm") }
+        },
+        dismissButton = {
+            TextButton(
+                onClick = onDismiss,
+                enabled = enableButtons
+            ) { Text("Cancel") }
+        },
         title = { Text("Update Product") },
         text = {
             Column {
                 NumberTextField(
-                    value = quantity?.toString() ?: "",
-                    enabled = openDate == null,
+                    value = quantity.toString(),
+                    onValueChange = { if (isValidForNumberTextField(it)) quantity = it.toInt() },
+                    enabled = enableButtons && openDate == null,
                     label = "New quantity",
-                    onValueChange = {
-                        if (isValidForNumberTextField(it)) quantity = it.toIntOrNull()
-                    }
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 DateField(
-                    label = "Opened Date",
-                    enabled = { quantity == null && expirationDate == null },
-                    onDateSelected = { openDate = it }
+                    onSelectDate = { openDate = it },
+                    enabled = enableButtons && quantity == null && expirationDate == null,
+                    label = "Opened Date"
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 NumberTextField(
                     value = (duration?.days ?: "").toString(),
                     label = "Duration (days)",
-                    enabled = openDate != null && expirationDate == null && quantity == null,
+                    enabled = enableButtons && openDate != null && expirationDate == null && quantity == null,
                     onValueChange = { newValue ->
                         if (isValidForNumberTextField(newValue))
                             duration = newValue.toIntOrNull()?.let { Period.ofDays(it) }
@@ -59,29 +83,11 @@ fun UpdateProductDialog(
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 DateField(
-                    label = "Expiration Date",
-                    enabled = { openDate == null && duration == null },
                     initialDate = expirationDate,
-                    onDateSelected = { expirationDate = it }
+                    onSelectDate = { expirationDate = it },
+                    enabled = enableButtons && openDate == null && duration == null,
+                    label = "Expiration Date",
                 )
-            }
-        },
-        confirmButton = {
-            TextButton(onClick = {
-                onUpdateProduct(
-                    quantity,
-                    openDate,
-                    duration,
-                    expirationDate
-                )
-                onDismiss()
-            }) {
-                Text("Confirm")
-            }
-        },
-        dismissButton = {
-            TextButton(onClick = onDismiss) {
-                Text("Cancel")
             }
         }
     )

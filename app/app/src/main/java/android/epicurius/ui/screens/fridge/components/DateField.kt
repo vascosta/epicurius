@@ -21,18 +21,19 @@ import java.time.format.DateTimeFormatter
 
 @Composable
 fun DateField(
-    label: String,
-    enabled: () -> Boolean = { true },
     initialDate: LocalDate? = null,
-    onDateSelected: (LocalDate?) -> Unit
+    onSelectDate: (date: LocalDate?) -> Unit,
+    enabled: Boolean,
+    label: String
 ) {
     val context = LocalContext.current
+
     val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
 
     var selectedDate by remember { mutableStateOf(initialDate) }
     var text by remember { mutableStateOf(initialDate?.format(formatter) ?: "") }
 
-    LaunchedEffect(initialDate) {
+    LaunchedEffect(initialDate) { // check if needed
         selectedDate = initialDate
         text = initialDate?.format(formatter) ?: ""
     }
@@ -43,7 +44,7 @@ fun DateField(
             val picked = LocalDate.of(year, month, dayOfMonth)
             selectedDate = picked
             text = picked.format(formatter)
-            onDateSelected(picked)
+            onSelectDate(picked)
         },
         (selectedDate ?: LocalDate.now()).year,
         (selectedDate ?: LocalDate.now()).monthValue - 1,
@@ -53,18 +54,17 @@ fun DateField(
     OutlinedTextField(
         value = text,
         onValueChange = { },
-        enabled = enabled(),
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable(enabled = enabled) { datePickerDialog.show() },
         readOnly = true,
         label = { Text(label) },
         trailingIcon = {
             Icon(
                 imageVector = Icons.Default.DateRange,
                 contentDescription = "Pick date",
-                modifier = Modifier.clickable { datePickerDialog.show() }
+                modifier = Modifier.clickable(enabled = enabled) { datePickerDialog.show() }
             )
         },
-        modifier = Modifier
-            .fillMaxWidth()
-            .clickable(enabled = enabled()) { datePickerDialog.show() }
     )
 }

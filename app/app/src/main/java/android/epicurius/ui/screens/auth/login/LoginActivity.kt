@@ -25,7 +25,8 @@ class LoginActivity : EpicuriusActivity() {
                 LoginScreen(
                     onSignUp = { navigateTo<SignUpActivity>(useStack = true) },
                     onLogin = { name: String?, email: String?, password: String ->
-                        viewModel.login(name, email, password) { navigateTo<FeedActivity>() }
+                        viewModel.login(name, email, password)
+                        { navigateTo<FeedActivity>(finishCurrent = true) }
                     },
                     onForgotPassword = { navigateTo<ResetPasswordActivity>(useStack = true) },
                     enableButtons = viewModel.enableButtons
