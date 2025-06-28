@@ -1,5 +1,7 @@
 package android.epicurius.domain.recipe
 
+import android.epicurius.domain.utils.validateNumber
+
 const val MIN_RECIPE_NAME_LENGTH = 3
 const val MAX_RECIPE_NAME_LENGTH = 50
 const val RECIPE_NAME_LENGTH_MSG = "recipe name must be between $MIN_RECIPE_NAME_LENGTH and $MAX_RECIPE_NAME_LENGTH characters"
@@ -25,12 +27,6 @@ const val INSTRUCTIONS_STEP_NUMBER_MSG = "instructions step identifier must be a
 const val MIN_NUMBER_OF_RECIPE_PICTURES = 1
 const val MAX_NUMBER_OF_RECIPE_PICTURES = 3
 const val RECIPE_PICTURES_MSG = "the number of pictures must be at least $MIN_NUMBER_OF_RECIPE_PICTURES and at most $MAX_NUMBER_OF_RECIPE_PICTURES"
-
-const val MIN_RECIPE_RATING = 1
-const val MAX_RECIPE_RATING = 5
-const val RATING_MSG = "Rating must be between $MIN_RECIPE_RATING and $MAX_RECIPE_RATING"
-
-fun getPositiveNumberMessage(number: String) = "$number must be a positive number"
 
 fun getIngredientNameMessage(name: String) =
     "$name name must be between $MIN_INGREDIENT_NAME_LENGTH and $MAX_INGREDIENT_NAME_LENGTH characters"
@@ -130,18 +126,6 @@ fun validatePictures(
 ): Boolean {
     if (picturesBytes.size !in MIN_NUMBER_OF_RECIPE_PICTURES..MAX_NUMBER_OF_RECIPE_PICTURES) {
         showErrorMessage(RECIPE_PICTURES_MSG)
-        return false
-    }
-    return true
-}
-
-private fun validateNumber(
-    number: Int,
-    recipeParamName: String,
-    showErrorMessage: (message: String) -> Unit
-): Boolean {
-    if (number < 0) {
-        showErrorMessage(getPositiveNumberMessage(recipeParamName))
         return false
     }
     return true
