@@ -10,13 +10,18 @@ import android.epicurius.domain.recipe.Recipe
 import android.epicurius.ui.screens.recipe.createRecipe.components.DividerComponent
 import android.epicurius.ui.screens.recipe.createRecipe.components.IngredientsComponent
 import android.epicurius.ui.screens.recipe.createRecipe.components.InstructionsComponent
+import android.epicurius.ui.screens.recipe.createRecipe.components.NutritionalInfoComponent
 import android.epicurius.ui.screens.utils.DropdownMenuComponent
 import android.epicurius.ui.screens.utils.FormTextField
 import android.epicurius.ui.screens.utils.MultiSelectDropdownMenuComponent
 import android.epicurius.ui.screens.utils.NumberLineTextField
+import android.epicurius.ui.screens.utils.NumberTextField
 import android.epicurius.ui.screens.utils.isValidForNumberTextField
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
@@ -64,14 +69,10 @@ fun EditRecipeDialog(
     var mealType by remember { mutableStateOf(recipe.mealType.displayName) }
     var cuisine by remember { mutableStateOf(recipe.cuisine.displayName) }
     var intolerances by remember {
-        mutableStateOf(listOf<String>(
-            recipe.intolerances.map { it.displayName }.toString()
-        ))
+        mutableStateOf(recipe.intolerances.map { it.displayName })
     }
     var diets by remember {
-        mutableStateOf(listOf<String>(
-            recipe.diets.map { it.displayName }.toString()
-        ))
+        mutableStateOf(recipe.diets.map { it.displayName })
     }
     var ingredients by remember { mutableStateOf(recipe.ingredients.map { it.toIngredientComponent() })
     }
@@ -88,13 +89,9 @@ fun EditRecipeDialog(
                 onClick = {
                     val intolerancesList =
                         intolerances.map {
-                            Intolerance.valueOf(
-                                it.uppercase().replace(Regex("[\\s-]"), "_")
-                            )
+                            Intolerance.fromDisplayName(it)
                         }.toSet()
-                    val dietsList = diets.map { Diet.valueOf(
-                        it.uppercase().replace(Regex("[\\s-]"), "_")
-                    ) }.toSet()
+                    val dietsList = diets.map { Diet.fromDisplayName(it) }.toSet()
                     val ingredientsList = ingredients.map { it.toIngredient() }
 
                     val stepsMap = steps.mapIndexed { index, step ->
@@ -209,6 +206,17 @@ fun EditRecipeDialog(
                         .align(Alignment.CenterHorizontally),
                     enabled = enableButtons,
                     label = "Diets",
+                )
+                NutritionalInfoComponent(
+                    calories = calories,
+                    onCaloriesChange = { if (isValidForNumberTextField(it)) calories = it },
+                    protein = protein,
+                    onProteinChange = { if (isValidForNumberTextField(it)) protein = it },
+                    fat = fat,
+                    onFatChange = { if (isValidForNumberTextField(it)) fat = it },
+                    carbs = carbs,
+                    onCarbsChange = { if (isValidForNumberTextField(it)) carbs = it },
+                    enableButtons = enableButtons
                 )
                 DividerComponent()
                 IngredientsComponent(

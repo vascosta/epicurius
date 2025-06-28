@@ -13,6 +13,7 @@ import android.epicurius.ui.navigation.TopBar
 import android.epicurius.ui.screens.recipe.createRecipe.components.DividerComponent
 import android.epicurius.ui.screens.recipe.createRecipe.components.IngredientsComponent
 import android.epicurius.ui.screens.recipe.createRecipe.components.InstructionsComponent
+import android.epicurius.ui.screens.recipe.createRecipe.components.NutritionalInfoComponent
 import android.epicurius.ui.screens.utils.DropdownMenuComponent
 import android.epicurius.ui.screens.utils.FormTextField
 import android.epicurius.ui.screens.utils.LoadingSpinner
@@ -121,8 +122,6 @@ fun CreateRecipeScreen(
     var carbs by remember { mutableStateOf("") }
     var instructions by remember { mutableStateOf(listOf<String>()) }
     var selectedImageBytesList by remember { mutableStateOf<List<ByteArray>>(emptyList()) }
-
-    var expandNutritionalInfo by remember { mutableStateOf(false) }
 
     val imagePickerLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.PickMultipleVisualMedia(maxItems = 3)
@@ -244,53 +243,17 @@ fun CreateRecipeScreen(
                     enabled = buttonsEnable,
                     label = "Diets"
                 )
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .align(Alignment.Start)
-                        .padding(start = 10.dp, top = 10.dp)
-                ) {
-                    TextButton(
-                        onClick = { expandNutritionalInfo = !expandNutritionalInfo }
-                    ) {
-                        Text(
-                            if (expandNutritionalInfo) "- Hide nutritional info"
-                            else "+ Add nutritional info"
-                        )
-                    }
-                }
-                AnimatedVisibility(visible = expandNutritionalInfo) {
-                    Column(modifier = Modifier.padding(top = 8.dp)) {
-                        NumberTextField(
-                            value = calories,
-                            onValueChange = { if (isValidForNumberTextField(it)) calories = it },
-                            modifier = Modifier.padding(horizontal = 30.dp),
-                            enabled = buttonsEnable,
-                            label = "Calories (kcal)"
-                        )
-                        NumberTextField(
-                            value = protein,
-                            onValueChange = { if (isValidForNumberTextField(it)) protein = it },
-                            modifier = Modifier.padding(horizontal = 30.dp),
-                            enabled = buttonsEnable,
-                            label = "Protein (g)"
-                        )
-                        NumberTextField(
-                            value = fat,
-                            onValueChange = { if (isValidForNumberTextField(it)) fat = it },
-                            modifier = Modifier.padding(horizontal = 30.dp),
-                            enabled = buttonsEnable,
-                            label = "Fat (g)"
-                        )
-                        NumberTextField(
-                            value = carbs,
-                            onValueChange = { if (isValidForNumberTextField(it)) carbs = it },
-                            modifier = Modifier.padding(horizontal = 30.dp),
-                            enabled = buttonsEnable,
-                            label = "Carbohydrates (g)"
-                        )
-                    }
-                }
+                NutritionalInfoComponent(
+                    calories = calories,
+                    onCaloriesChange = { if (isValidForNumberTextField(it)) calories = it },
+                    protein = protein,
+                    onProteinChange = { if (isValidForNumberTextField(it)) protein = it },
+                    fat = fat,
+                    onFatChange = { if (isValidForNumberTextField(it)) fat = it },
+                    carbs = carbs,
+                    onCarbsChange = { if (isValidForNumberTextField(it)) carbs = it },
+                    enableButtons = buttonsEnable
+                )
                 DividerComponent()
                 IngredientsComponent(
                     ingredients = ingredients,
