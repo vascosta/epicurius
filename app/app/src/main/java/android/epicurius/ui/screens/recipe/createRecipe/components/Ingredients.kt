@@ -2,7 +2,7 @@ package android.epicurius.ui.screens.recipe.createRecipe.components
 
 import android.epicurius.domain.recipe.IngredientUnit
 import android.epicurius.ui.screens.recipe.createRecipe.IngredientComponent
-import android.epicurius.ui.screens.utils.DropdownMenuComponent
+import android.epicurius.ui.screens.utils.dropdownMenu.DropdownMenuComponent
 import android.epicurius.ui.screens.utils.NumberLineTextField
 import android.epicurius.ui.screens.utils.TextField
 import android.epicurius.ui.screens.utils.isValidForNumberTextField

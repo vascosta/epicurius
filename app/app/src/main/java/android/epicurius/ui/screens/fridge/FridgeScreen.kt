@@ -63,6 +63,7 @@ import java.time.Period
 fun FridgeScreen(
     userFridgeState: LoadState<List<Product>>,
     onBackButton: () -> Unit = {},
+    onSearchProduct: (partialName: String) -> List<String>,
     onAddProduct: (
         name: String,
         quantity: Int,
@@ -200,6 +201,7 @@ fun FridgeScreen(
                     }
                     if (showAddProductDialog) {
                         AddProductDialog(
+                            onSearchProduct = onSearchProduct,
                             onAddProduct = onAddProduct,
                             onDismiss = { showAddProductDialog = false },
                             enableButtons = enableButtons
@@ -223,6 +225,8 @@ fun PreviewFridgeScreen() {
     )
 
     FridgeScreen(
+        onSearchProduct = { partialName -> listOf("Milk", "Eggs", "Meat", "Cheese", "Yogurt")},
+        onBackButton = {},
         userFridgeState = apiSuccess(sampleProducts),
         enableButtons = true,
     )

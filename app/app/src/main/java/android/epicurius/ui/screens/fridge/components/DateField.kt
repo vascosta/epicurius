@@ -41,7 +41,7 @@ fun DateField(
     val datePickerDialog = DatePickerDialog(
         context,
         { _, year, month, dayOfMonth ->
-            val picked = LocalDate.of(year, month, dayOfMonth)
+            val picked = LocalDate.of(year, month + 1, dayOfMonth)
             selectedDate = picked
             text = picked.format(formatter)
             onSelectDate(picked)

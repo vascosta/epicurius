@@ -4,8 +4,8 @@ import android.epicurius.domain.Diet
 import android.epicurius.domain.Intolerance
 import android.epicurius.domain.user.UserInfo
 import android.epicurius.ui.screens.auth.components.PasswordTextField
-import android.epicurius.ui.screens.utils.DropdownMenuComponent
-import android.epicurius.ui.screens.utils.MultiSelectDropdownMenuComponent
+import android.epicurius.ui.screens.utils.dropdownMenu.DropdownMenuComponent
+import android.epicurius.ui.screens.utils.dropdownMenu.MultiSelectDropdownMenuComponent
 import android.epicurius.ui.screens.utils.TextField
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row

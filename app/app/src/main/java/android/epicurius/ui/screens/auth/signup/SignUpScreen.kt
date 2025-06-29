@@ -3,7 +3,7 @@ package android.epicurius.ui.screens.auth.signup
 import android.epicurius.ui.navigation.TopBar
 import android.epicurius.ui.screens.auth.components.AuthButton
 import android.epicurius.ui.screens.auth.components.PasswordTextField
-import android.epicurius.ui.screens.utils.DropdownMenuComponent
+import android.epicurius.ui.screens.utils.dropdownMenu.DropdownMenuComponent
 import android.epicurius.ui.screens.utils.TextField
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement

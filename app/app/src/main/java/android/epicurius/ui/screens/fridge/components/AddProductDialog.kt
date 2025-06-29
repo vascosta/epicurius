@@ -1,6 +1,7 @@
 package android.epicurius.ui.screens.fridge.components
 
 import android.epicurius.ui.screens.utils.TextField
+import android.epicurius.ui.screens.utils.dropdownMenu.SearchDropdownMenuComponent
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Text
@@ -15,6 +16,7 @@ import java.time.LocalDate
 
 @Composable
 fun AddProductDialog(
+    onSearchProduct: (partialName: String) -> List<String>,
     onAddProduct: (
         name: String,
         quantity: Int,
@@ -29,6 +31,9 @@ fun AddProductDialog(
     var openDate by remember { mutableStateOf<LocalDate?>(null) }
     var expirationDate by remember { mutableStateOf<LocalDate?>(null) }
 
+    var productList by remember { mutableStateOf(emptyList<String>()) }
+    var selectedProduct by remember { mutableStateOf(false) }
+
     AlertDialog(
         onDismissRequest = { if (enableButtons) onDismiss() },
         confirmButton = {
@@ -40,7 +45,10 @@ fun AddProductDialog(
                         onDismiss()
                     }
                 },
-                enabled = enableButtons && name.isNotBlank() && quantity > 0 && expirationDate != null
+                enabled =
+                    enableButtons &&
+                    name.isNotBlank() && quantity > 0 && expirationDate != null &&
+                    selectedProduct
             ) { Text("Add") }
         },
         dismissButton = {
@@ -52,11 +60,15 @@ fun AddProductDialog(
         title = { Text("Add new product") },
         text = {
             Column {
-                TextField(
+                SearchDropdownMenuComponent(
+                    options = productList,
                     value = name,
-                    onValueChange = { name = it },
-                    enabled = enableButtons,
-                    label = "Product Name"
+                    onValueChange = {
+                        name = it
+                        selectedProduct = productList.contains(name)
+                    },
+                    onIconClick = { productList = onSearchProduct(name) },
+                    enabled = enableButtons
                 )
                 TextField(
                     value = if (quantity == 0) "" else quantity.toString(),

@@ -10,9 +10,12 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
 import com.google.gson.GsonBuilder
 import com.google.gson.JsonDeserializer
+import com.google.gson.JsonPrimitive
+import com.google.gson.JsonSerializationContext
+import com.google.gson.JsonSerializer
 import okhttp3.OkHttpClient
+import java.lang.reflect.Type
 import java.time.LocalDate
-import java.util.Base64
 
 
 class EpicuriusApplication : Application(), Dependencies {
@@ -20,6 +23,9 @@ class EpicuriusApplication : Application(), Dependencies {
     private val gson = GsonBuilder()
         .registerTypeAdapter(LocalDate::class.java, JsonDeserializer { json, _, _ ->
             LocalDate.parse(json.asString)
+        })
+        .registerTypeAdapter(LocalDate::class.java, JsonSerializer { src: LocalDate, _: Type, _: JsonSerializationContext ->
+            JsonPrimitive(src.toString())
         })
         .create()
 
@@ -32,10 +38,6 @@ class EpicuriusApplication : Application(), Dependencies {
 
     companion object {
         private const val BASE_URL = "http://10.0.2.2:8080/api"
-
-        val byteArrayListDeserializer = JsonDeserializer { json, _, _ ->
-            json.asJsonArray.map { Base64.getDecoder().decode(it.asString) } as List<ByteArray>
-        }
     }
 }
 
