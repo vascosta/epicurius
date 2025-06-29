@@ -35,21 +35,13 @@ class UserProfileActivity : EpicuriusActivity() {
                 viewModel.userProfile,
                 viewModel.userRecipes,
                 viewModel.userKitchenBook,
-                viewModel.userFollowers,
-                viewModel.userFollowing
-            ) { userProfile, userRecipes, userKitchenBook, userFollowers, userFollowing ->
-                UserProfileStateBundle(userProfile, userRecipes, userKitchenBook, userFollowers, userFollowing)
+            ) { userProfile, userRecipes, userKitchenBook ->
+                UserProfileStateBundle(userProfile, userRecipes, userKitchenBook)
             }.collectLatest { state ->
                 val userProfileName = intent.getStringExtra(Intents.USERNAME) ?: viewModel.session.getUserName()
 
-                if (state.followers is Idle && state.following is Idle) {
-                    viewModel.getUserFollowers()
-                    viewModel.getUserFollowing()
-                }
-                if (state.followers is Loaded &&
-                    state.following is Loaded &&
-                    state.profile is Idle
-                    ) {
+
+                if (state.profile is Idle) {
                     viewModel.getUserProfile(userProfileName)
                 }
                 if (state.profile is Loaded && state.recipes is Idle) viewModel.getUserRecipes()
@@ -95,8 +87,8 @@ class UserProfileActivity : EpicuriusActivity() {
                     )),
                     onBackButton = { finish() },
                     onSettingsButton = { navigateTo<SettingsActivity>() },
-                    onFollowersButton = { navigateToFollowActivity(0) },
-                    onFollowingButton = { navigateToFollowActivity(1) },
+                    onFollowersButton = { navigateToFollowActivity(0, "Test1") },
+                    onFollowingButton = { navigateToFollowActivity(1, "Test1") },
                     onFollowRequest = {  },
                     onCollectionRequest = { collectionId ->
                         viewModel.getKitchenBookCollectionRecipes(collectionId)
@@ -116,9 +108,10 @@ class UserProfileActivity : EpicuriusActivity() {
         }
     }
 
-    fun navigateToFollowActivity(selectedTab: Int) {
+    fun navigateToFollowActivity(selectedTab: Int, username: String) {
         navigateTo<FollowActivity> { intent ->
             intent.putExtra(Intents.FOLLOW_TAB, selectedTab)
+            intent.putExtra(Intents.USERNAME, username)
         }
     }
 
@@ -132,7 +125,5 @@ class UserProfileActivity : EpicuriusActivity() {
 data class UserProfileStateBundle(
     val profile: LoadState<UserProfile>,
     val recipes: LoadState<List<RecipeInfo>>,
-    val kitchenBook: LoadState<List<CollectionProfile>>,
-    val followers: LoadState<List<FollowUser>>,
-    val following: LoadState<List<FollowingUser>>
+    val kitchenBook: LoadState<List<CollectionProfile>>
 )

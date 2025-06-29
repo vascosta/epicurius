@@ -6,6 +6,9 @@ object Intents {
     const val COLLECTION_ID = "CollectionIdIntent"
     const val IS_COLLECTION_OWNER = "IsCollectionOwnerIntent"
     const val RECIPE_ID = "RecipeIdIntent"
+
     const val USERNAME = "UsernameIntent"
     const val FOLLOW_TAB = "FollowTabIntent"
+    const val FOLLOWERS_COUNT = "FollowCountIntent"
+    const val FOLLOWING_COUNT = "FollowingCountIntent"
 }

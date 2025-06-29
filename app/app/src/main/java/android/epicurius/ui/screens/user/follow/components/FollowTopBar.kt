@@ -21,13 +21,13 @@ import androidx.compose.ui.unit.dp
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FollowTopBar(
-    following: Int,
-    followers: Int,
     selectedTabIndex: Int,
-    onTabSelected: (Int) -> Unit,
-    onBackButton: () -> Unit
+    followersCount: Int,
+    followingCount: Int,
+    onTabSelected: (tabIndex: Int) -> Unit = {},
+    onBackButton: () -> Unit = {}
 ) {
-    val tabs = listOf("$followers Followers", "$following Following")
+    val tabs = listOf("$followersCount Followers", "$followingCount Following")
 
     TopAppBar(
         title = {

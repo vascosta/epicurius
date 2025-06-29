@@ -1,9 +1,11 @@
 package android.epicurius.services.http
 
 import android.epicurius.domain.exceptions.InvalidResponseException
+import android.epicurius.services.api.fridge.output.AddProductOutputModel
 import android.epicurius.services.http.utils.APIResult
 import android.epicurius.services.http.media.Problem
 import android.epicurius.services.http.utils.authorizationHeader
+import android.epicurius.services.http.utils.fromJson
 import android.epicurius.services.http.utils.getBodyOrThrow
 import android.epicurius.services.http.utils.isApplicationJson
 import android.epicurius.services.http.utils.isFailure

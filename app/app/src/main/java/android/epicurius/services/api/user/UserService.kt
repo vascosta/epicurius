@@ -55,12 +55,16 @@ class UserService(private val httpService: HttpService) {
 
     suspend fun getUserFollowers(
         token: String,
+        username: String?,
+        partialFollowerName: String?,
         lastFollowerId: Int?,
         limit: Int,
     ): APIResult<GetUserFollowersOutputModel> =
         httpService.get<GetUserFollowersOutputModel>(
             Uris.User.USER_FOLLOWERS,
             queryParams = mapOf(
+                "username" to username,
+                "partialFollowerName" to partialFollowerName,
                 "lastFollowerId" to lastFollowerId,
                 "limit" to limit,
             ),
@@ -69,12 +73,16 @@ class UserService(private val httpService: HttpService) {
 
     suspend fun getUserFollowing(
         token: String,
+        username: String?,
+        partialFollowingName: String?,
         lastFollowingId: Int?,
         limit: Int,
     ): APIResult<GetUserFollowingOutputModel> =
         httpService.get<GetUserFollowingOutputModel>(
             Uris.User.USER_FOLLOWING,
             queryParams = mapOf(
+                "username" to username,
+                "partialFollowingName" to partialFollowingName,
                 "lastFollowingId" to lastFollowingId,
                 "limit" to limit,
             ),

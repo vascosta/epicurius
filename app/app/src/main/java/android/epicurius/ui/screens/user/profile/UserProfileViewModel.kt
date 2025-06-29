@@ -66,7 +66,6 @@ class UserProfileViewModel(
         viewModelScope.launch {
             checkIfIsAnotherUserProfile(name)
             fetchUserProfile(name)
-            checkUserVisibility(name, userProfile.value.getOrThrow()) // change
         }
     }
 
@@ -88,20 +87,6 @@ class UserProfileViewModel(
         disableFollow()
         viewModelScope.launch {
             fetchUserKitchenBookCollectionRecipes(id)
-        }
-    }
-
-    fun getUserFollowers() {
-        userFollowersFlow.value = loaded(CachedResult<List<FollowUser>>(cachedUserFollowersFlow.value))
-        viewModelScope.launch {
-            fetchUserFollowers()
-        }
-    }
-
-    fun getUserFollowing() {
-        userFollowingFlow.value = loaded(CachedResult<List<FollowUser>>(cachedUserFollowingFlow.value))
-        viewModelScope.launch {
-            fetchUserFollowing()
         }
     }
 
@@ -207,44 +192,6 @@ class UserProfileViewModel(
             }
         }
         enableFollow()
-    }
-
-    private suspend fun fetchUserFollowers() {
-        val result = request {
-            val token = session.getToken()
-            val lastFollowerId = cachedUserFollowersFlow.value.lastOrNull()?.id
-            service.userService.getUserFollowers(token, lastFollowerId, limit)
-        }
-        when {
-            result.isFailure -> {
-                userFollowersFlow.value = apiFailure(result.getProblemOrThrow())
-            }
-            result.isSuccess -> {
-                val fetchedUserFollowers = result.getValueOrThrow().users
-                val updatedUserFollowers = (cachedUserFollowersFlow.value + fetchedUserFollowers).distinctBy { it.id }
-                cachedUserFollowersFlow.value = updatedUserFollowers
-                userFollowersFlow.value = apiSuccess(updatedUserFollowers)
-            }
-        }
-    }
-
-    private suspend fun fetchUserFollowing() {
-        val result = request {
-            val token = session.getToken()
-            val lastFollowingId = cachedUserFollowersFlow.value.lastOrNull()?.id
-            service.userService.getUserFollowing(token, lastFollowingId, limit)
-        }
-        when {
-            result.isFailure -> {
-                userFollowersFlow.value = apiFailure(result.getProblemOrThrow())
-            }
-            result.isSuccess -> {
-                val fetchedUserFollowing = result.getValueOrThrow().users
-                val updatedUserFollowing = (cachedUserFollowingFlow.value + fetchedUserFollowing).distinctBy { it.id }
-                cachedUserFollowingFlow.value = updatedUserFollowing
-                userFollowingFlow.value = apiSuccess(updatedUserFollowing)
-            }
-        }
     }
 
     private suspend fun handleFollow(name: String) {

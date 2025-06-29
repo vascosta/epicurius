@@ -1,57 +1,78 @@
 package android.epicurius.ui.screens.user.follow
 
-import android.epicurius.domain.user.FollowUser
-import android.epicurius.domain.user.FollowingUser
-import android.epicurius.domain.user.SearchUser
-import android.epicurius.domain.user.UserProfile
+import android.epicurius.ui.EpicuriusActivity
 import android.epicurius.ui.navigation.Intents
-import android.epicurius.ui.screens.user.profile.UserProfileActivity
 import android.epicurius.ui.navigation.navigateTo
+import android.epicurius.ui.screens.recipe.profile.RecipeProfileActivity
+import android.epicurius.ui.screens.user.follow.components.FollowStateBundle
+import android.epicurius.ui.screens.user.profile.UserProfileActivity
+import android.epicurius.ui.screens.utils.Idle
 import android.os.Bundle
-import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.runtime.collectAsState
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.launch
 
-class FollowActivity : ComponentActivity() {
+class FollowActivity : EpicuriusActivity() {
+    override val viewModel: FollowViewModel by getViewModel<FollowViewModel>()
+
     override fun onCreate(savedInstanceState: Bundle?) {
+        lifecycleScope.launch {
+            combine(
+                viewModel.followers,
+                viewModel.following
+            ) { followersState, followingState -> followersState to followingState }
+                .collectLatest { (followersState, followingState) ->
+                    val username = intent.getStringExtra(Intents.USERNAME) ?: ""
+                    if (followersState is Idle) viewModel.getFollowers(username, null)
+                    if (followingState is Idle) viewModel.getFollowing(username, null)
+                }
+        }
         super.onCreate(savedInstanceState)
         setContent {
+            val followersState = viewModel.followers.collectAsState(Idle)
+            val followingState = viewModel.following.collectAsState(Idle)
+            val searchUsersState = viewModel.searchedUsers.collectAsState(Idle)
             MaterialTheme {
                 FollowScreen(
                     selectedTab = intent.getIntExtra(Intents.FOLLOW_TAB, 0),
-                    userProfile = UserProfile(
-                            name = "John Doe",
-                            country = "USA",
-                            privacy = false,
-                            profilePicture = null,
-                            followersCount = 100,
-                            followingCount = 50
-                    ),
-                    followers = listOf(
-                        FollowUser(
-                            id = 1,
-                            name = "Jane Smith",
-                            profilePicture = null
+                    followStateBundle = FollowStateBundle(followersState.value, followingState.value),
+                    followersCount = intent.getIntExtra(Intents.FOLLOWERS_COUNT, -1),
+                    followingCount = intent.getIntExtra(Intents.FOLLOWING_COUNT, -1),
+                    usersResultState = searchUsersState.value,
+                    onBackButton = { navigateTo<UserProfileActivity>(useStack = true, finishCurrent = true) },
+                    onSearchFollowers = { partialFollowers ->
+                        viewModel.getFollowers(
+                            intent.getStringExtra(Intents.USERNAME) ?: "",
+                            partialFollowers
                         )
-                    ),
-                    following = listOf(
-                        FollowingUser(
-                            id = 2,
-                            name = "Alice Johnson",
-                            profilePicture = null
+                    },
+                    onSearchFollowing = { partialFollowing ->
+                        viewModel.getFollowing(
+                            intent.getStringExtra(Intents.USERNAME) ?: "",
+                            partialFollowing
                         )
-                    ),
-                    onBackButton = { navigateTo<UserProfileActivity>(true) },
-                    onUserSearch = { listOf<SearchUser>(
-                        SearchUser(
-                            id = 1,
-                            name = "testuser",
-                            profilePicture = null,
-                        )
-                    ) },
-                    enableButtons = true
+                    },
+                    onSearchUsersClear = { viewModel.clearSearchUsers() },
+                    onUserProfileRequest = ::navigateToUserProfileActivity,
+                    onLoadMoreFollowers = {
+                        viewModel.getFollowers(intent.getStringExtra(Intents.USERNAME) ?: "", null)
+                    },
+                    onLoadMoreFollowing = {
+                        viewModel.getFollowing(intent.getStringExtra(Intents.USERNAME) ?: "", null)
+                    },
+                    enableButtons = viewModel.enableButtons
                 )
             }
+        }
+    }
+
+    private fun navigateToUserProfileActivity(name: String) {
+        navigateTo<UserProfileActivity> { intent ->
+            intent.putExtra(Intents.USERNAME, name)
         }
     }
 }
