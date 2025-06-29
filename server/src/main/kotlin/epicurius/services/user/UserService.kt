@@ -82,16 +82,42 @@ class UserService(
             .map { user -> SearchUser(user.id, user.name, getProfilePicture(user.profilePictureName)) }
     }
 
-    fun getFollowers(userId: Int, lastFollowerId: Int?, limit: Int) =
-        tm.run { it.userRepository.getFollowers(userId, lastFollowerId, limit) }
-            .map { user -> FollowUser(user.id, user.name, getProfilePicture(user.profilePictureName)) }
+    fun getFollowers(
+        userId: Int,
+        username: String?,
+        partialFollowerName: String?,
+        lastFollowerId: Int?,
+        limit: Int
+    ): List<FollowUser> {
+        if (username != null) {
+            val user = checkIfUserExists(name = username) ?: throw UserNotFound(username)
+            return tm.run { it.userRepository.getFollowers(user.id, partialFollowerName, lastFollowerId, limit) }
+                .map { u -> FollowUser(u.id, u.name, getProfilePicture(u.profilePictureName)) }
+
+        }
+        return tm.run { it.userRepository.getFollowers(userId, partialFollowerName, lastFollowerId, limit) }
+            .map { u -> FollowUser(u.id, u.name, getProfilePicture(u.profilePictureName)) }
+    }
 
     fun getFollowersCount(userId: Int) =
         tm.run { it.userRepository.getFollowersCount(userId) }
 
-    fun getFollowing(userId: Int, lastFollowingId: Int?, limit: Int) =
-        tm.run { it.userRepository.getFollowing(userId, lastFollowingId, limit) }
-            .map { user -> FollowingUser(user.id, user.name, getProfilePicture(user.profilePictureName)) }
+    fun getFollowing(
+        userId: Int,
+        username: String?,
+        partialFollowingName: String?,
+        lastFollowingId: Int?,
+        limit: Int
+    ): List<FollowingUser> {
+        if (username != null) {
+            val user = checkIfUserExists(name = username) ?: throw UserNotFound(username)
+            return tm.run { it.userRepository.getFollowing(user.id, partialFollowingName, lastFollowingId, limit) }
+                .map { u -> FollowingUser(u.id, u.name, getProfilePicture(u.profilePictureName)) }
+
+        }
+        return tm.run { it.userRepository.getFollowing(userId, partialFollowingName, lastFollowingId, limit) }
+            .map { u -> FollowingUser(u.id, u.name, getProfilePicture(u.profilePictureName)) }
+    }
 
     fun getFollowingCount(userId: Int) =
         tm.run { it.userRepository.getFollowingCount(userId) }

@@ -106,20 +106,36 @@ class UserController(val userService: UserService) {
     @GetMapping(Uris.User.USER_FOLLOWERS)
     fun getUserFollowers(
         authenticatedUser: AuthenticatedUser,
+        @RequestParam username: String?,
+        @RequestParam partialFollowerName: String?,
         @RequestParam lastFollowerId: Int?,
         @RequestParam limit: Int
     ): ResponseEntity<*> {
-        val followers = userService.getFollowers(authenticatedUser.user.id, lastFollowerId, limit)
+        val followers = userService.getFollowers(
+            authenticatedUser.user.id,
+            username,
+            partialFollowerName,
+            lastFollowerId,
+            limit
+        )
         return okHttpResponse(GetUserFollowersOutputModel(followers))
     }
 
     @GetMapping(Uris.User.USER_FOLLOWING)
     fun getUserFollowing(
         authenticatedUser: AuthenticatedUser,
+        @RequestParam username: String?,
+        @RequestParam partialFollowingName: String?,
         @RequestParam lastFollowingId: Int?,
         @RequestParam limit: Int
     ): ResponseEntity<*> {
-        val following = userService.getFollowing(authenticatedUser.user.id, lastFollowingId, limit)
+        val following = userService.getFollowing(
+            authenticatedUser.user.id,
+            username,
+            partialFollowingName,
+            lastFollowingId,
+            limit
+        )
         return okHttpResponse(GetUserFollowingOutputModel(following))
     }
 

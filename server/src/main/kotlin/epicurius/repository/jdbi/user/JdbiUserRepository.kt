@@ -92,13 +92,19 @@ class JdbiUserRepository(private val handle: Handle) : UserRepository {
             .mapTo<SearchUserModel>()
             .list()
 
-    override fun getFollowers(userId: Int, lastFollowerId: Int?, limit: Int): List<SearchUserModel> =
+    override fun getFollowers(
+        userId: Int,
+        partialFollowerName: String?,
+        lastFollowerId: Int?,
+        limit: Int
+    ): List<SearchUserModel> =
         handle.createQuery(
             """
                 SELECT u.id, u.name, u.profile_picture_name
                 FROM dbo.user u
                 JOIN dbo.followers f ON u.id = f.follower_id
                 WHERE f.user_id = :user_id 
+                    AND (LOWER(u.name) LIKE LOWER(:partialFollowerName) OR :partialFollowerName IS NULL)
                     AND f.status = :status
                     AND (:lastFollowerId IS NULL OR f.follower_id < :lastFollowerId)
                 ORDER BY u.id DESC
@@ -106,6 +112,7 @@ class JdbiUserRepository(private val handle: Handle) : UserRepository {
             """
         )
             .bind("user_id", userId)
+            .bind("partialFollowerName", partialFollowerName)
             .bind("status", FollowingStatus.ACCEPTED.ordinal)
             .bind("lastFollowerId", lastFollowerId)
             .bind("limit", limit)
@@ -126,13 +133,19 @@ class JdbiUserRepository(private val handle: Handle) : UserRepository {
             .mapTo<Int>()
             .one()
 
-    override fun getFollowing(userId: Int, lastFollowingId: Int?, limit: Int): List<SearchUserModel> =
+    override fun getFollowing(
+        userId: Int,
+        partialFollowingName: String?,
+        lastFollowingId: Int?,
+        limit: Int
+    ): List<SearchUserModel> =
         handle.createQuery(
             """
                 SELECT u.id, u.name, u.profile_picture_name
                 FROM dbo.user u
                 JOIN dbo.followers f ON u.id = f.user_id
                 WHERE f.follower_id = :user_id 
+                    AND (LOWER(u.name) LIKE LOWER(:partialFollowingName) OR :partialFollowingName IS NULL)
                     AND f.status = :status
                     AND (:lastFollowingId IS NULL OR f.user_id < :lastFollowingId)
                 ORDER BY u.id DESC
@@ -140,6 +153,7 @@ class JdbiUserRepository(private val handle: Handle) : UserRepository {
             """
         )
             .bind("user_id", userId)
+            .bind("partialFollowingName", partialFollowingName)
             .bind("status", FollowingStatus.ACCEPTED.ordinal)
             .bind("lastFollowingId", lastFollowingId)
             .bind("limit", limit)

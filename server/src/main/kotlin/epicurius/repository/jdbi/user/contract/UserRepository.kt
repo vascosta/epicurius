@@ -16,9 +16,9 @@ interface UserRepository {
         lastUserId: Int? = null,
         limit: Int
     ): List<SearchUserModel>
-    fun getFollowers(userId: Int, lastFollowerId: Int?, limit: Int): List<SearchUserModel>
+    fun getFollowers(userId: Int, partialFollowerName: String?, lastFollowerId: Int?, limit: Int): List<SearchUserModel>
     fun getFollowersCount(userId: Int): Int
-    fun getFollowing(userId: Int, lastFollowingId: Int?, limit: Int): List<SearchUserModel>
+    fun getFollowing(userId: Int, partialFollowingName: String?, lastFollowingId: Int?, limit: Int): List<SearchUserModel>
     fun getFollowingCount(userId: Int): Int
     fun getFollowRequests(userId: Int): List<SearchUserModel>
     fun getUserProfilePictureName(userId: Int): String?
