@@ -17,12 +17,11 @@ class GetUserProfileControllerTests : UserControllerTest() {
     @Test
     fun `Should retrieve the user profile successfully`() {
         // given a user (publicTestUser)
-        val limit = 10
 
         // mock
         whenever(userServiceMock.getProfilePicture(publicTestUser.user.profilePictureName)).thenReturn(testPicture.bytes)
-        whenever(userServiceMock.getFollowers(publicTestUser.user.id, null, limit)).thenReturn(emptyList())
-        whenever(userServiceMock.getFollowing(publicTestUser.user.id, null, limit)).thenReturn(emptyList())
+        whenever(userServiceMock.getFollowersCount(publicTestUser.user.id)).thenReturn(0)
+        whenever(userServiceMock.getFollowingCount(publicTestUser.user.id)).thenReturn(0)
 
         // when retrieving the user profile
         val response = getUserProfile(publicTestUser, publicTestUsername)

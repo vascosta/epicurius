@@ -52,7 +52,7 @@ class FollowRequestRepositoryTests : UserRepositoryTest() {
         acceptFollowRequest(privateTestUser.user.id, publicTestUser.user.id)
 
         // then the follow request is accepted successfully
-        val privateUserFollowersAfterAccept = getFollowers(privateTestUser.user.id, null, 10)
+        val privateUserFollowersAfterAccept = getFollowers(privateTestUser.user.id, null, null, 10)
         assertTrue(
             privateUserFollowersAfterAccept.contains(
                 SearchUserModel(
@@ -83,7 +83,7 @@ class FollowRequestRepositoryTests : UserRepositoryTest() {
         rejectFollowRequest(privateTestUser.user.id, publicTestUser.user.id)
 
         // then the follow request is rejected successfully
-        val privateUserFollowersAfterReject = getFollowers(privateTestUser.user.id, null, 10)
+        val privateUserFollowersAfterReject = getFollowers(privateTestUser.user.id, null, null, 10)
         assertTrue(privateUserFollowersAfterReject.isEmpty())
     }
 }

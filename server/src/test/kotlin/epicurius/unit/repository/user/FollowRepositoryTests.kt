@@ -21,9 +21,11 @@ class FollowRepositoryTests : UserRepositoryTest() {
         follow(privateTestUser.user.id, publicTestUser.user.id, FollowingStatus.ACCEPTED.ordinal)
 
         // then the user is followed successfully
-        val publicUserFollowers = getFollowers(publicTestUser.user.id, null, limit)
+        val publicUserFollowers = getFollowers(publicTestUser.user.id, null, null, limit)
+        val publicUserFollowersByName = getFollowers(publicTestUser.user.id, privateTestUser.user.name, null, limit)
         val publicUserFollowersCount = getFollowersCount(publicTestUser.user.id)
-        val privateUserFollowing = getFollowing(privateTestUser.user.id, null, limit)
+        val privateUserFollowing = getFollowing(privateTestUser.user.id, null, null, limit)
+        val privateUserFollowingByName = getFollowing(privateTestUser.user.id, publicTestUser.user.name, null, limit)
         val privateUserFollowingCount = getFollowingCount(privateTestUser.user.id)
         assertTrue(publicUserFollowers.isNotEmpty())
         assertTrue(privateUserFollowing.isNotEmpty())
@@ -41,7 +43,25 @@ class FollowRepositoryTests : UserRepositoryTest() {
             )
         )
         assertTrue(
+            publicUserFollowersByName.contains(
+                SearchUserModel(
+                    privateTestUser.user.id,
+                    privateTestUser.user.name,
+                    privateTestUser.user.profilePictureName
+                )
+            )
+        )
+        assertTrue(
             privateUserFollowing.contains(
+                SearchUserModel(
+                    publicTestUser.user.id,
+                    publicTestUser.user.name,
+                    publicTestUser.user.profilePictureName
+                )
+            )
+        )
+        assertTrue(
+            privateUserFollowingByName.contains(
                 SearchUserModel(
                     publicTestUser.user.id,
                     publicTestUser.user.name,
@@ -54,13 +74,17 @@ class FollowRepositoryTests : UserRepositoryTest() {
         unfollow(privateTestUser.user.id, publicTestUser.user.id)
 
         // then the user is unfollowed successfully
-        val publicUserFollowersAfterUnfollow = getFollowers(publicTestUser.user.id, null, limit)
+        val publicUserFollowersAfterUnfollow = getFollowers(publicTestUser.user.id, null, null, limit)
+        val publicUserFollowersAfterUnfollowByName = getFollowers(publicTestUser.user.id, privateTestUser.user.name, null, limit)
         val publicUserFollowersAfterUnfollowCount = getFollowersCount(publicTestUser.user.id)
-        val privateUserFollowingAfterUnfollow = getFollowing(privateTestUser.user.id, null, limit)
+        val privateUserFollowingAfterUnfollow = getFollowing(privateTestUser.user.id, null, null, limit)
+        val privateUserFollowingAfterUnfollowByName = getFollowing(privateTestUser.user.id, publicTestUser.user.name, null, limit)
         val privateUserFollowingAfterUnfollowCount = getFollowingCount(privateTestUser.user.id)
         assertTrue(publicUserFollowersAfterUnfollow.isEmpty())
+        assertTrue(publicUserFollowersAfterUnfollowByName.isEmpty())
         assertEquals(0, publicUserFollowersAfterUnfollowCount)
         assertTrue(privateUserFollowingAfterUnfollow.isEmpty())
+        assertTrue(privateUserFollowingAfterUnfollowByName.isEmpty())
         assertEquals(0, privateUserFollowingAfterUnfollowCount)
     }
 }

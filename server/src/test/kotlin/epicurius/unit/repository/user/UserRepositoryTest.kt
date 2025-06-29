@@ -24,13 +24,13 @@ open class UserRepositoryTest : RepositoryTest() {
         ) =
             tm.run { it.userRepository.searchUsers(userId, partialUsername, lastUserId, limit) }
 
-        fun getFollowers(userId: Int, lastFollowerId: Int?, limit: Int) =
-            tm.run { it.userRepository.getFollowers(userId, lastFollowerId, limit) }
+        fun getFollowers(userId: Int, partialFollowerName: String?, lastFollowerId: Int?, limit: Int) =
+            tm.run { it.userRepository.getFollowers(userId, partialFollowerName, lastFollowerId, limit) }
 
         fun getFollowersCount(userId: Int) = tm.run { it.userRepository.getFollowersCount(userId) }
 
-        fun getFollowing(userId: Int, lastFollowingId: Int?, limit: Int) =
-            tm.run { it.userRepository.getFollowing(userId, lastFollowingId, limit) }
+        fun getFollowing(userId: Int, partialFollowingName: String?, lastFollowingId: Int?, limit: Int) =
+            tm.run { it.userRepository.getFollowing(userId, partialFollowingName, lastFollowingId, limit) }
 
         fun getFollowingCount(userId: Int) = tm.run { it.userRepository.getFollowingCount(userId) }
 

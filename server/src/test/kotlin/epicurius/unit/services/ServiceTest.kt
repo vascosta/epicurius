@@ -43,15 +43,19 @@ open class ServiceTest : EpicuriusUnitTest() {
 
         fun getFollowers(
             userId: Int,
+            username: String?,
+            partialFollowerName: String?,
             lastFollowerId: Int?,
             limit: Int
-        ) = userService.getFollowers(userId, lastFollowerId, limit)
+        ) = userService.getFollowers(userId, username, partialFollowerName, lastFollowerId, limit)
 
         fun getFollowing(
             userId: Int,
+            username: String?,
+            partialFollowingName: String?,
             lastFollowingId: Int?,
             limit: Int
-        ) = userService.getFollowing(userId, lastFollowingId, limit)
+        ) = userService.getFollowing(userId, username, partialFollowingName, lastFollowingId, limit)
 
         fun getFollowRequests(userId: Int) = userService.getFollowRequests(userId)
 

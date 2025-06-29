@@ -70,15 +70,19 @@ open class HttpTest : EpicuriusUnitTest() {
 
         fun getUserFollowers(
             authenticatedUser: AuthenticatedUser,
+            username: String?,
+            partialFollowerName: String?,
             lastFollowerId: Int?,
             limit: Int
-        ) = userController.getUserFollowers(authenticatedUser, lastFollowerId, limit)
+        ) = userController.getUserFollowers(authenticatedUser, username, partialFollowerName, lastFollowerId, limit)
 
         fun getUserFollowing(
             authenticatedUser: AuthenticatedUser,
+            username: String?,
+            partialFollowingName: String?,
             lastFollowingId: Int?,
             limit: Int
-        ) = userController.getUserFollowing(authenticatedUser, lastFollowingId, limit)
+        ) = userController.getUserFollowing(authenticatedUser, username, partialFollowingName, lastFollowingId, limit)
 
         fun getUserFollowRequests(
             authenticatedUser: AuthenticatedUser,

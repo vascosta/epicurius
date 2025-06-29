@@ -57,11 +57,19 @@ class UserIntegrationTest : EpicuriusIntegrationTest() {
 
     fun getUserDiets(token: String) = get<GetUserDietsOutputModel>(client, api(Uris.User.USER_DIETS), token = token)
 
-    fun getUserFollowers(token: String, lastFollowerId: Int?, limit: Int) =
+    fun getUserFollowers(
+        token: String,
+        username: String?,
+        partialFollowerName: String?,
+        lastFollowerId: Int?,
+        limit: Int
+    ) =
         get<GetUserFollowersOutputModel>(
             client,
             api(Uris.User.USER_FOLLOWERS).addQueryParams(
                 mapOf(
+                    "username" to username,
+                    "partialFollowerName" to partialFollowerName,
                     "lastFollowerId" to lastFollowerId,
                     "limit" to limit
                 )
@@ -69,11 +77,19 @@ class UserIntegrationTest : EpicuriusIntegrationTest() {
             token = token
         )
 
-    fun getUserFollowing(token: String, lastFollowingId: Int?, limit: Int) =
+    fun getUserFollowing(
+        token: String,
+        username: String?,
+        partialFollowingName: String?,
+        lastFollowingId: Int?,
+        limit: Int
+    ) =
         get<GetUserFollowingOutputModel>(
             client,
             api(Uris.User.USER_FOLLOWING).addQueryParams(
                 mapOf(
+                    "username" to username,
+                    "partialFollowingName" to partialFollowingName,
                     "lastFollowingId" to lastFollowingId,
                     "limit" to limit
                 )

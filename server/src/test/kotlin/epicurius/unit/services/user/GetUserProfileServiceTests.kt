@@ -14,12 +14,11 @@ class GetUserProfileServiceTests : UserServiceTest() {
     @Test
     fun `Should retrieve the user profile successfully`() {
         // given a user (publicTestUser)
-        val limit = 10
 
         // mock
         whenever(jdbiUserRepositoryMock.getUser(publicTestUsername)).thenReturn(publicTestUser)
-        whenever(jdbiUserRepositoryMock.getFollowers(publicTestUser.id, null, limit)).thenReturn(emptyList())
-        whenever(jdbiUserRepositoryMock.getFollowing(publicTestUser.id, null, limit)).thenReturn(emptyList())
+        whenever(jdbiUserRepositoryMock.getFollowersCount(publicTestUser.id)).thenReturn(0)
+        whenever(jdbiUserRepositoryMock.getFollowingCount(publicTestUser.id)).thenReturn(0)
         whenever(pictureRepositoryMock.getPicture(publicTestUser.profilePictureName!!, PictureDomain.USERS_FOLDER))
             .thenReturn(testPicture.bytes)
 
