@@ -243,7 +243,7 @@ class ExceptionHandler {
         ).also { ex.printStackTrace() }
 
     companion object {
-        const val PROBLEMS_DOCS_URI = "" // TODO: Add the URI to the documentation
+        const val PROBLEMS_DOCS_URI = "https://github.com/vascosta/epicurius/tree/main/docs/problems/"
 
         private fun Exception.handle(
             request: HttpServletRequest,
