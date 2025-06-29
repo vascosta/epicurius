@@ -25,10 +25,10 @@ class CollectionActivity : EpicuriusActivity() {
             combine(
                 viewModel.collectionRecipes,
                 viewModel.collectionName
-            ) { collectionRecipes, collectionNameState -> collectionRecipes to collectionNameState }
-                .collectLatest { (collectionRecipes, collectionNameState) ->
+            ) { collectionRecipesState, collectionNameState -> collectionRecipesState to collectionNameState }
+                .collectLatest { (collectionRecipesState, collectionNameState) ->
                     val collectionId = intent.getIntExtra(Intents.COLLECTION_ID, -1)
-                    if (collectionRecipes is Idle || collectionNameState is Idle) {
+                    if (collectionRecipesState is Idle || collectionNameState is Idle) {
                         viewModel.getCollection(collectionId) { navigateBack() }
                     }
                 }

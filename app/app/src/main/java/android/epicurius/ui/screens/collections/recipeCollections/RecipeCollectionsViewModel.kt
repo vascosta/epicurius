@@ -25,36 +25,30 @@ open class RecipeCollectionsViewModel(
     context: Context
 ): EpicuriusViewModel(service, session, context) {
 
-    private val collectionsToAddRecipeFlow =
-        MutableStateFlow<LoadState<List<CollectionProfile>>>(idle())
-    private val cacheCollectionsToAddRecipeFlow =
-        MutableStateFlow<List<CollectionProfile>>(emptyList())
+    private val collectionsToAddRecipeFlow = MutableStateFlow<LoadState<List<CollectionProfile>>>(idle())
+    private val cacheCollectionsToAddRecipeFlow = MutableStateFlow<List<CollectionProfile>>(emptyList())
 
     val collectionsToAddRecipe = collectionsToAddRecipeFlow.asStateFlow()
-    private val cacheCollectionsToAddRecipe = cacheCollectionsToAddRecipeFlow.asStateFlow()
 
-    private val collectionsToRemoveRecipeFlow =
-        MutableStateFlow<LoadState<List<CollectionProfile>>>(idle())
-    private val cacheCollectionsToRemoveRecipeFlow =
-        MutableStateFlow<List<CollectionProfile>>(emptyList())
+    private val collectionsToRemoveRecipeFlow = MutableStateFlow<LoadState<List<CollectionProfile>>>(idle())
+    private val cacheCollectionsToRemoveRecipeFlow = MutableStateFlow<List<CollectionProfile>>(emptyList())
 
     val collectionsToRemoveRecipe = collectionsToRemoveRecipeFlow.asStateFlow()
-    private val cacheCollectionsToRemoveRecipe = cacheCollectionsToRemoveRecipeFlow.asStateFlow()
 
     private val lastFetchedCollectionIdFlow = MutableStateFlow<Int?>(null)
 
     fun getRecipeCollections(recipeId: Int, collectionType: CollectionType) {
         disableButtons()
         collectionsToAddRecipeFlow.value =
-            loading(APIResult(cacheCollectionsToAddRecipe.value))
+            loading(APIResult(cacheCollectionsToAddRecipeFlow.value))
         collectionsToRemoveRecipeFlow.value =
-            loading(APIResult(cacheCollectionsToRemoveRecipe.value))
+            loading(APIResult(cacheCollectionsToRemoveRecipeFlow.value))
         viewModelScope.launch { fetchRecipeCollections(recipeId, collectionType) }
     }
 
     fun addRecipeToCollections(recipeId: Int, collectionsToAdd: List<CollectionProfile>) {
         disableButtons()
-        if (cacheCollectionsToAddRecipe.value.isEmpty()) {
+        if (cacheCollectionsToAddRecipeFlow.value.isEmpty()) {
             enableButtons()
             return
         }
@@ -69,7 +63,7 @@ open class RecipeCollectionsViewModel(
 
     fun removeRecipeFromCollections(recipeId: Int, collectionsToRemove: List<CollectionProfile>) {
         disableButtons()
-        if (cacheCollectionsToRemoveRecipe.value.isEmpty()) {
+        if (cacheCollectionsToRemoveRecipeFlow.value.isEmpty()) {
             enableButtons()
             return
         }
@@ -119,9 +113,9 @@ open class RecipeCollectionsViewModel(
                     }.map { it.toCollectionProfile() }
 
                     val updatedCollectionsToAddRecipe =
-                        cacheCollectionsToAddRecipe.value + collectionsToAddRecipe
+                        cacheCollectionsToAddRecipeFlow.value + collectionsToAddRecipe
                     val updatedCollectionsToRemoveRecipe =
-                        cacheCollectionsToRemoveRecipe.value + collectionsToRemoveRecipe
+                        cacheCollectionsToRemoveRecipeFlow.value + collectionsToRemoveRecipe
                     collectionsToAddRecipeFlow.value = apiSuccess(updatedCollectionsToAddRecipe)
                     cacheCollectionsToAddRecipeFlow.value = updatedCollectionsToAddRecipe
                     collectionsToRemoveRecipeFlow.value =
@@ -147,8 +141,8 @@ open class RecipeCollectionsViewModel(
     }
 
     private fun handleCachedCollections() {
-        collectionsToAddRecipeFlow.value = cache(cacheCollectionsToAddRecipe.value)
-        collectionsToRemoveRecipeFlow.value = cache(cacheCollectionsToRemoveRecipe.value)
+        collectionsToAddRecipeFlow.value = cache(cacheCollectionsToAddRecipeFlow.value)
+        collectionsToRemoveRecipeFlow.value = cache(cacheCollectionsToRemoveRecipeFlow.value)
     }
 
     private suspend fun handleAddRecipeToCollections(
@@ -172,7 +166,7 @@ open class RecipeCollectionsViewModel(
         collectionsToAddRecipeFlow.value = apiSuccess(collectionsAdded)
         cacheCollectionsToAddRecipeFlow.value = collectionsAdded
 
-        val collectionsNotAdded = cacheCollectionsToRemoveRecipe.value +
+        val collectionsNotAdded = cacheCollectionsToRemoveRecipeFlow.value +
                 cacheCollectionsToAddRecipeFlow.value.filter { collectionsIdsAdded.contains(it.id) }
         collectionsToRemoveRecipeFlow.value = apiSuccess(collectionsNotAdded)
         cacheCollectionsToRemoveRecipeFlow.value = collectionsNotAdded
@@ -197,12 +191,12 @@ open class RecipeCollectionsViewModel(
         }
         val collectionsIdsRemoved = collectionsIds.filterNotNull()
 
-        val collectionsRemoved = cacheCollectionsToRemoveRecipe.value.filter { !collectionsIdsRemoved.contains(it.id) }
+        val collectionsRemoved = cacheCollectionsToRemoveRecipeFlow.value.filter { !collectionsIdsRemoved.contains(it.id) }
         collectionsToRemoveRecipeFlow.value = apiSuccess(collectionsRemoved)
         cacheCollectionsToRemoveRecipeFlow.value = collectionsRemoved
 
         val collectionsNotRemoved = cacheCollectionsToAddRecipeFlow.value +
-                cacheCollectionsToRemoveRecipe.value.filter { collectionsIdsRemoved.contains(it.id) }
+                cacheCollectionsToRemoveRecipeFlow.value.filter { collectionsIdsRemoved.contains(it.id) }
         collectionsToAddRecipeFlow.value = apiSuccess(collectionsNotRemoved)
         cacheCollectionsToAddRecipeFlow.value = collectionsNotRemoved
 

@@ -46,7 +46,6 @@ class SearchViewModel(
     private val lastFetchedUserIdFlow = MutableStateFlow<Int?>(null)
 
     val searchedUsers = searchedUsersFlow.asStateFlow()
-    private val cacheSearchedUsers = cacheSearchedUsersFlow.asStateFlow()
 
     private val ingredientsFlow = MutableStateFlow<LoadState<List<String>>>(idle())
     val ingredients = ingredientsFlow.asStateFlow()
@@ -121,7 +120,7 @@ class SearchViewModel(
 
     fun searchUsers(name: String) {
         disableButtons()
-        searchedUsersFlow.value = loading(CachedResult(cacheSearchedUsers.value))
+        searchedUsersFlow.value = loading(CachedResult(cacheSearchedUsersFlow.value))
         viewModelScope.launch { fetchUsers(name) }
     }
 
@@ -229,17 +228,17 @@ class SearchViewModel(
             )
         }
         when {
-            result.isFailure -> searchedUsersFlow.value = cache(cacheSearchedUsers.value)
+            result.isFailure -> searchedUsersFlow.value = cache(cacheSearchedUsersFlow.value)
             result.isSuccess -> {
                 val fetchedUsers = result.getValueOrThrow().users
 
                 if (fetchedUsers.isNotEmpty()) {
-                    val updatedSearchedUsers = cacheSearchedUsers.value + fetchedUsers
+                    val updatedSearchedUsers = cacheSearchedUsersFlow.value + fetchedUsers
                     searchedUsersFlow.value = apiSuccess(updatedSearchedUsers)
                     cacheSearchedUsersFlow.value = updatedSearchedUsers
                     lastFetchedUserIdFlow.value = fetchedUsers.last().id
                 }
-                else searchedUsersFlow.value = cache(cacheSearchedUsers.value)
+                else searchedUsersFlow.value = cache(cacheSearchedUsersFlow.value)
             }
         }
         enableButtons()

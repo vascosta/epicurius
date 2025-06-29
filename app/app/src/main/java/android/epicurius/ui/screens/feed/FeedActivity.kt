@@ -7,6 +7,7 @@ import android.epicurius.ui.navigation.navigateTo
 import android.epicurius.ui.screens.collections.recipeCollections.components.RecipeCollectionsStateBundle
 import android.epicurius.ui.screens.dailyMenu.DailyMenuActivity
 import android.epicurius.ui.screens.recipe.profile.RecipeProfileActivity
+import android.epicurius.ui.screens.user.profile.UserProfileActivity
 import android.epicurius.ui.screens.utils.Idle
 import android.epicurius.ui.screens.utils.idle
 import android.os.Bundle
@@ -80,7 +81,7 @@ class FeedActivity : EpicuriusActivity() {
     }
 
     private fun navigateToUserProfileActivity(name: String) {
-        navigateTo<RecipeProfileActivity> { intent ->
+        navigateTo<UserProfileActivity> { intent ->
             intent.putExtra(Intents.USERNAME, name)
         }
     }

@@ -29,13 +29,12 @@ class CollectionsViewModel(
     private val cacheCollectionsFlow = MutableStateFlow<List<CollectionProfile>>(emptyList())
 
     val collections = collectionsFlow.asStateFlow()
-    private val cacheCollections = cacheCollectionsFlow.asStateFlow()
 
     private val lastFetchedCollectionIdFlow = MutableStateFlow<Int?>(null)
 
     fun getCollections(collectionType: CollectionType) {
         disableButtons()
-        collectionsFlow.value = loading(CachedResult(cacheCollections.value))
+        collectionsFlow.value = loading(CachedResult(cacheCollectionsFlow.value))
         viewModelScope.launch { fetchCollections(collectionType) }
     }
 
@@ -68,16 +67,16 @@ class CollectionsViewModel(
             )
         }
         when {
-            result.isFailure -> collectionsFlow.value = cache(cacheCollections.value)
+            result.isFailure -> collectionsFlow.value = cache(cacheCollectionsFlow.value)
             result.isSuccess -> {
                 val fetchedCollections = result.getValueOrThrow().collections
                 if (fetchedCollections.isNotEmpty()) {
-                    val updatedCollections = cacheCollections.value + fetchedCollections
+                    val updatedCollections = cacheCollectionsFlow.value + fetchedCollections
                     collectionsFlow.value = apiSuccess(updatedCollections)
                     cacheCollectionsFlow.value = updatedCollections
                     lastFetchedCollectionIdFlow.value = fetchedCollections.last().id
                 }
-                else collectionsFlow.value = cache(cacheCollections.value)
+                else collectionsFlow.value = cache(cacheCollectionsFlow.value)
             }
         }
         enableButtons()
@@ -103,9 +102,9 @@ class CollectionsViewModel(
             service.collectionService.deleteCollection(token, id)
         }
         when {
-            result.isFailure -> collectionsFlow.value = cache(cacheCollections.value)
+            result.isFailure -> collectionsFlow.value = cache(cacheCollectionsFlow.value)
             result.isSuccess -> {
-                val updatedCollections = cacheCollections.value.filter { it.id != id }
+                val updatedCollections = cacheCollectionsFlow.value.filter { it.id != id }
                 collectionsFlow.value = apiSuccess(updatedCollections)
                 cacheCollectionsFlow.value = updatedCollections
             }

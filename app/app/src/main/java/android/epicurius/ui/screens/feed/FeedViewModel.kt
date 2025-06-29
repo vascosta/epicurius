@@ -31,19 +31,17 @@ class FeedViewModel(
     private val lastFetchedRecipeIdFlow = MutableStateFlow<Int?>(null)
 
     val userFeed = userFeedFlow.asStateFlow()
-    val cacheUserFeed = cacheUserFeedFlow.asStateFlow()
     val userFollowRequests = userFollowRequestsFlow.asStateFlow()
-    val cacheUserFollowRequests = cacheUserFollowRequestsFlow.asStateFlow()
 
     fun getUserFeed() {
         disableButtons()
-        userFeedFlow.value = loading(CachedResult(cacheUserFeed.value))
+        userFeedFlow.value = loading(CachedResult(cacheUserFeedFlow.value))
         viewModelScope.launch { fetchUserFeed() }
     }
 
     fun getUserFollowRequests() {
         disableButtons()
-        userFollowRequestsFlow.value = loading(CachedResult(cacheUserFollowRequests.value))
+        userFollowRequestsFlow.value = loading(CachedResult(cacheUserFollowRequestsFlow.value))
         viewModelScope.launch { fetchUserFollowRequests() }
     }
 
@@ -68,7 +66,7 @@ class FeedViewModel(
             result.isSuccess -> {
                 val fetchedFeed = result.getValueOrThrow().feed
                 if (fetchedFeed.isNotEmpty()) {
-                    val updatedFeed = cacheUserFeed.value + fetchedFeed
+                    val updatedFeed = cacheUserFeedFlow.value + fetchedFeed
                     userFeedFlow.value = apiSuccess(updatedFeed)
                     cacheUserFeedFlow.value = updatedFeed
                     lastFetchedRecipeIdFlow.value = fetchedFeed.last().id
@@ -79,7 +77,7 @@ class FeedViewModel(
         enableButtons()
     }
 
-    private fun handleCachedUserFeed() { userFeedFlow.value = cache(cacheUserFeed.value) }
+    private fun handleCachedUserFeed() { userFeedFlow.value = cache(cacheUserFeedFlow.value) }
 
     private suspend fun fetchUserFollowRequests() {
         val result = request {
@@ -87,10 +85,10 @@ class FeedViewModel(
             service.userService.getUserFollowRequests(token)
         }
         when {
-            result.isFailure -> userFollowRequestsFlow.value = cache(cacheUserFollowRequests.value)
+            result.isFailure -> userFollowRequestsFlow.value = cache(cacheUserFollowRequestsFlow.value)
             result.isSuccess -> {
                 val fetchedUserFollowRequests = result.getValueOrThrow().users
-                val updatedUserFollowRequests = cacheUserFollowRequests.value + fetchedUserFollowRequests
+                val updatedUserFollowRequests = cacheUserFollowRequestsFlow.value + fetchedUserFollowRequests
                 userFollowRequestsFlow.value = apiSuccess(updatedUserFollowRequests)
                 cacheUserFollowRequestsFlow.value = updatedUserFollowRequests
             }
@@ -108,7 +106,7 @@ class FeedViewModel(
         }
         when {
             result.isSuccess -> {
-                val updatedUserFollowRequests = cacheUserFollowRequests.value.filter {
+                val updatedUserFollowRequests = cacheUserFollowRequestsFlow.value.filter {
                     it.name != name
                 }
                 userFollowRequestsFlow.value = apiSuccess(updatedUserFollowRequests)
