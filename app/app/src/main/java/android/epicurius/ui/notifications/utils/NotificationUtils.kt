@@ -1,4 +1,4 @@
-package android.epicurius.ui.screens.fridge.notifications
+package android.epicurius.ui.notifications.utils
 
 import android.Manifest
 import android.app.Notification
@@ -13,7 +13,7 @@ import androidx.core.app.NotificationManagerCompat
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
-fun createNotificationChannelIfNeeded(context: Context) {
+fun createFridgeNotificationChannel(context: Context) {
     val channel = NotificationChannel(
         "fridge_channel",
         "Fridge Notifications",
@@ -44,9 +44,9 @@ fun notifyProductExpiration(context: Context, product: Product) {
 
     val notification = NotificationCompat.Builder(context, "fridge_channel")
         .setSmallIcon(R.drawable.fridge)
-        .setContentTitle("Fridge Alert")
+        .setContentTitle("Fridge Notification")
         .setContentText(contentText)
-        .setPriority(NotificationCompat.PRIORITY_HIGH)
+        .setPriority(NotificationCompat.PRIORITY_DEFAULT)
         .setDefaults(Notification.DEFAULT_ALL)
         .setAutoCancel(true)
         .build()

@@ -60,6 +60,8 @@ dependencies {
     implementation(libs.androidx.material3)
     implementation(libs.androidx.material.icons.extended)
 
+    implementation(libs.androidx.work.runtime.ktx)
+
     implementation(libs.androidx.datastore.preferences)
 
     implementation(platform(libs.okhttp.bom))

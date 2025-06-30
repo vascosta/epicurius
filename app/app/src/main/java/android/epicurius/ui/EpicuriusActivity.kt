@@ -4,6 +4,7 @@ import android.content.Context
 import android.epicurius.Dependencies
 import android.epicurius.services.EpicuriusService
 import android.epicurius.storage.Session
+import android.epicurius.ui.notifications.scheduleDailyProductCheck
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.viewModels
@@ -17,6 +18,7 @@ abstract class EpicuriusActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        scheduleDailyProductCheck(this)
     }
 
     override fun onStart() {
