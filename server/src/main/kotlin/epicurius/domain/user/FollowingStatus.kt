@@ -4,7 +4,8 @@ import epicurius.domain.Intolerance
 
 enum class FollowingStatus {
     ACCEPTED,
-    PENDING;
+    PENDING,
+    NOT_FOLLOWING;
 
     companion object {
         fun fromInt(value: Int): Intolerance {

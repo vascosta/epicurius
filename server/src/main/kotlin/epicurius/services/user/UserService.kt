@@ -68,7 +68,7 @@ class UserService(
         val followingStatus =
             if (isFollowing) FollowingStatus.ACCEPTED
             else if (sentFollowRequest) FollowingStatus.PENDING
-            else null
+            else FollowingStatus.NOT_FOLLOWING
         return if (user.profilePictureName == null) {
             UserProfile(user.name, user.country, user.privacy, null, followers, following, followingStatus)
         } else {

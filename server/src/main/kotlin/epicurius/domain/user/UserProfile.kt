@@ -7,5 +7,5 @@ data class UserProfile(
     val profilePicture: ByteArray?,
     val followersCount: Int,
     val followingCount: Int,
-    val followingStatus: FollowingStatus?
+    val followingStatus: FollowingStatus
 )
