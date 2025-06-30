@@ -2,6 +2,7 @@ package epicurius.http.controllers.user
 
 import epicurius.domain.user.AuthenticatedUser
 import epicurius.domain.user.FollowRequestType
+import epicurius.domain.user.FollowingStatus
 import epicurius.domain.user.UserProfile
 import epicurius.http.controllers.user.models.input.LoginInputModel
 import epicurius.http.controllers.user.models.input.ResetPasswordInputModel
@@ -67,7 +68,7 @@ class UserController(val userService: UserService) {
                 userProfilePicture,
                 followersCount,
                 followingCount,
-                true
+                FollowingStatus.ACCEPTED
             )
             okHttpResponse(GetUserProfileOutputModel(userProfile))
         } else {

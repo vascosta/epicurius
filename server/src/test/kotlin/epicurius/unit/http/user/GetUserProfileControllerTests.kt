@@ -1,6 +1,7 @@
 package epicurius.unit.http.user
 
 import epicurius.domain.exceptions.UserNotFound
+import epicurius.domain.user.FollowingStatus
 import epicurius.domain.user.UserProfile
 import epicurius.http.controllers.user.models.output.GetUserProfileOutputModel
 import org.mockito.kotlin.whenever
@@ -35,7 +36,7 @@ class GetUserProfileControllerTests : UserControllerTest() {
         assertContentEquals(testPicture.bytes, body.userProfile.profilePicture)
         assertEquals(0, body.userProfile.followersCount)
         assertEquals(0, body.userProfile.followingCount)
-        assertTrue(body.userProfile.isFollowing)
+        assertEquals(FollowingStatus.ACCEPTED, body.userProfile.followingStatus)
     }
 
     @Test
@@ -50,7 +51,7 @@ class GetUserProfileControllerTests : UserControllerTest() {
             testPicture.bytes,
             0,
             0,
-            isFollowing = true
+            followingStatus = FollowingStatus.ACCEPTED
         )
         whenever(userServiceMock.getUserProfile(publicTestUser.user.id, privateTestUsername)).thenReturn(mockUserProfile)
 
@@ -66,7 +67,7 @@ class GetUserProfileControllerTests : UserControllerTest() {
         assertContentEquals(mockUserProfile.profilePicture, body.userProfile.profilePicture)
         assertEquals(mockUserProfile.followersCount, body.userProfile.followersCount)
         assertEquals(mockUserProfile.followingCount, body.userProfile.followingCount)
-        assertEquals(mockUserProfile.isFollowing, body.userProfile.isFollowing)
+        assertEquals(mockUserProfile.followingStatus, body.userProfile.followingStatus)
     }
 
     @Test

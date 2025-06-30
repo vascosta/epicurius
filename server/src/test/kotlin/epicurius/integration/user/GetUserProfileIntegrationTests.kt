@@ -1,6 +1,7 @@
 package epicurius.integration.user
 
 import epicurius.domain.exceptions.UserNotFound
+import epicurius.domain.user.FollowingStatus
 import epicurius.http.media.Problem
 import epicurius.http.media.Uris
 import epicurius.integration.utils.get
@@ -31,7 +32,7 @@ class GetUserProfileIntegrationTests : UserIntegrationTest() {
         assertContentEquals(null, body.userProfile.profilePicture)
         assertEquals(0, body.userProfile.followersCount)
         assertEquals(0, body.userProfile.followingCount)
-        assertEquals(true, body.userProfile.isFollowing)
+        assertEquals(FollowingStatus.ACCEPTED, body.userProfile.followingStatus)
     }
 
     @Test
@@ -50,7 +51,7 @@ class GetUserProfileIntegrationTests : UserIntegrationTest() {
         assertContentEquals(null, body.userProfile.profilePicture)
         assertEquals(0, body.userProfile.followersCount)
         assertEquals(0, body.userProfile.followingCount)
-        assertEquals(false, body.userProfile.isFollowing)
+        assertEquals(null, body.userProfile.followingStatus)
     }
 
     @Test

@@ -2,6 +2,7 @@ package epicurius.unit.services.user
 
 import epicurius.domain.exceptions.UserNotFound
 import epicurius.domain.picture.PictureDomain
+import epicurius.domain.user.FollowingStatus
 import org.mockito.kotlin.whenever
 import java.util.UUID
 import kotlin.test.Test
@@ -32,7 +33,7 @@ class GetUserProfileServiceTests : UserServiceTest() {
         assertContentEquals(testPicture.bytes, userProfile.profilePicture)
         assertEquals(0, userProfile.followersCount)
         assertEquals(0, userProfile.followingCount)
-        assertEquals(true, userProfile.isFollowing)
+        assertEquals(FollowingStatus.ACCEPTED, userProfile.followingStatus)
     }
 
     @Test

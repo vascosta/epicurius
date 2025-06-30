@@ -64,11 +64,16 @@ class UserService(
         val followers = getFollowersCount(user.id)
         val following = getFollowingCount(user.id)
         val isFollowing = if (authenticatedUserId == user.id) true else checkIfUserIsBeingFollowedBy(user.id, authenticatedUserId)
+        val sentFollowRequest = if (authenticatedUserId == user.id) false else checkIfUserAlreadySentFollowRequest(user.id, authenticatedUserId)
+        val followingStatus =
+            if (isFollowing) FollowingStatus.ACCEPTED
+            else if (sentFollowRequest) FollowingStatus.PENDING
+            else null
         return if (user.profilePictureName == null) {
-            UserProfile(user.name, user.country, user.privacy, null, followers, following, isFollowing)
+            UserProfile(user.name, user.country, user.privacy, null, followers, following, followingStatus)
         } else {
             val userProfilePicture = getProfilePicture(user.profilePictureName)
-            UserProfile(user.name, user.country, user.privacy, userProfilePicture, followers, following, isFollowing)
+            UserProfile(user.name, user.country, user.privacy, userProfilePicture, followers, following, followingStatus)
         }
     }
 
