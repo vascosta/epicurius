@@ -333,11 +333,12 @@ open class HttpTest : EpicuriusUnitTest() {
 
         fun getCollections(
             authenticatedUser: AuthenticatedUser,
+            username: String?,
             collectionType: CollectionType,
             lastCollectionId: Int?,
             limit: Int
         ) =
-            collectionController.getCollections(authenticatedUser, collectionType, lastCollectionId, limit)
+            collectionController.getCollections(authenticatedUser, username, collectionType, lastCollectionId, limit)
 
         fun createCollection(
             authenticatedUser: AuthenticatedUser,

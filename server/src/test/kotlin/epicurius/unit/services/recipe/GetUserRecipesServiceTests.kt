@@ -92,6 +92,7 @@ class GetUserRecipesServiceTests : RecipeServiceTest() {
         val username = generateRandomUsername()
 
         // mock
+        whenever(jdbiUserRepositoryMock.getUser(username)).thenReturn(author.copy(id = USER_ID, name = username))
         whenever(jdbiUserRepositoryMock.checkUserVisibility(username, AUTHOR_ID)).thenReturn(false)
 
         // when retrieving the user's recipes

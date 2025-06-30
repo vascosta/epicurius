@@ -81,7 +81,8 @@ class RecipeService(
     suspend fun getRecipe(recipeId: Int, userId: Int): Recipe {
         val jdbiRecipe = tm.run { it.recipeRepository.getRecipeById(recipeId) } ?: throw RecipeNotFound()
 
-        checkOwnerVisibility(jdbiRecipe.authorUsername, userId)
+        if (!tm.run { it.userRepository.checkUserVisibility(jdbiRecipe.authorUsername, userId) })
+            throw RecipeNotAccessible()
 
         val recipePictures = jdbiRecipe.picturesNames.map { cs.pictureRepository.getPicture(it, RECIPES_FOLDER) }
 
@@ -91,7 +92,8 @@ class RecipeService(
     suspend fun getUserRecipes(userId: Int, username: String?, lastRecipeId: Int?, limit: Int): List<RecipeInfo> {
         if (username != null) {
             val user = tm.run { it.userRepository.getUser(username) ?: throw UserNotFound(username) }
-            checkOwnerVisibility(username, userId)
+            if (!tm.run { it.userRepository.checkUserVisibility(username, userId) })
+                throw RecipeNotAccessible()
             val recipes = tm.run { it.recipeRepository.getUserRecipes(user.id, lastRecipeId, limit) }
             return recipes.map { jdbiRecipeInfo ->
                 jdbiRecipeInfo.toRecipeInfo(
@@ -211,11 +213,6 @@ class RecipeService(
 
     private fun checkIfRecipeExists(recipeId: Int): JdbiRecipeModel? =
         tm.run { it.recipeRepository.getRecipeById(recipeId) }
-
-    private fun checkOwnerVisibility(authorUsername: String, userId: Int) {
-        if (!tm.run { it.userRepository.checkUserVisibility(authorUsername, userId) })
-            throw RecipeNotAccessible()
-    }
 
     private fun checkIfUserIsAuthor(userId: Int, authorId: Int) {
         if (userId != authorId) throw NotTheRecipeAuthor()

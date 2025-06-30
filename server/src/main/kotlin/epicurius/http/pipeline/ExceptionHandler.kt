@@ -9,6 +9,7 @@ import epicurius.domain.exceptions.AuthorCannotUpdateRating
 import epicurius.domain.exceptions.CollectionAlreadyExists
 import epicurius.domain.exceptions.CollectionNotAccessible
 import epicurius.domain.exceptions.CollectionNotFound
+import epicurius.domain.exceptions.CollectionsNotAccessible
 import epicurius.domain.exceptions.DailyMealPlannerNotFound
 import epicurius.domain.exceptions.FollowRequestAlreadyBeenSent
 import epicurius.domain.exceptions.FollowRequestNotFound
@@ -44,6 +45,7 @@ import epicurius.domain.exceptions.RecipeIsInvalidForMealTime
 import epicurius.domain.exceptions.RecipeNotAccessible
 import epicurius.domain.exceptions.RecipeNotFound
 import epicurius.domain.exceptions.RecipeNotInCollection
+import epicurius.domain.exceptions.RecipesNotAccessible
 import epicurius.domain.exceptions.UserAlreadyBeingFollowed
 import epicurius.domain.exceptions.UserAlreadyExists
 import epicurius.domain.exceptions.UserAlreadyLoggedIn
@@ -191,12 +193,14 @@ class ExceptionHandler {
     @ExceptionHandler(
         value = [
             RecipeNotAccessible::class,
+            RecipesNotAccessible::class,
             AuthorCannotRateOwnRecipe::class,
             AuthorCannotUpdateRating::class,
             AuthorCannotDeleteRating::class,
             NotTheRecipeAuthor::class,
             NotTheCollectionOwner::class,
             CollectionNotAccessible::class,
+            CollectionsNotAccessible::class,
         ]
     )
     fun handleForbidden(request: HttpServletRequest, ex: Exception): ResponseEntity<Problem> =

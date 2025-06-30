@@ -26,11 +26,18 @@ class CollectionIntegrationTest : EpicuriusIntegrationTest() {
             token = token
         )
 
-    fun getCollections(token: String, type: CollectionType, lastCollectionId: Int?, limit: Int) =
+    fun getCollections(
+        token: String,
+        username: String?,
+        type: CollectionType,
+        lastCollectionId: Int?,
+        limit: Int
+    ) =
         get<GetCollectionsOutputModel>(
             client,
             api(Uris.Collection.COLLECTIONS).addQueryParams(
                 mapOf(
+                    "username" to username,
                     "collectionType" to type,
                     "lastCollectionId" to lastCollectionId,
                     "limit" to limit

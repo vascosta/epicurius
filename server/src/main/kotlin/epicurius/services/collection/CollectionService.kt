@@ -6,6 +6,7 @@ import epicurius.domain.collection.CollectionType
 import epicurius.domain.exceptions.CollectionAlreadyExists
 import epicurius.domain.exceptions.CollectionNotAccessible
 import epicurius.domain.exceptions.CollectionNotFound
+import epicurius.domain.exceptions.CollectionsNotAccessible
 import epicurius.domain.exceptions.NotTheCollectionOwner
 import epicurius.domain.exceptions.NotTheRecipeAuthor
 import epicurius.domain.exceptions.RecipeAlreadyInCollection
@@ -57,10 +58,22 @@ class CollectionService(private val tm: TransactionManager, private val cs: Clou
 
     fun getCollections(
         userId: Int,
+        username: String?,
         collectionType: CollectionType,
         lastCollectionId: Int?,
         limit: Int
     ): List<CollectionProfile> {
+        if (username != null) {
+            val user = tm.run { it.userRepository.getUser(username) } ?: throw UserNotFound(username)
+            if (!tm.run { it.userRepository.checkUserVisibility(user.name, userId) } || collectionType == CollectionType.FAVOURITE)
+                throw CollectionsNotAccessible()
+
+            val jdbiCollectionsProfileModels = tm.run {
+                it.collectionRepository.getCollections(user.id, collectionType, lastCollectionId, limit)
+            }
+            return jdbiCollectionsProfileModels.map { it.toCollectionProfile() }
+        }
+
         val jdbiCollectionsProfileModels = tm.run {
             it.collectionRepository.getCollections(userId, collectionType, lastCollectionId, limit)
         }
@@ -93,7 +106,8 @@ class CollectionService(private val tm: TransactionManager, private val cs: Clou
 
         val jdbiRecipeModel = getJdbiRecipeModel(recipeId)
         if (jdbiCollectionModel.type == CollectionType.FAVOURITE) {
-            checkRecipeAccessibility(jdbiRecipeModel.authorUsername, userId)
+            if (!tm.run { it.userRepository.checkUserVisibility(jdbiRecipeModel.authorUsername, userId) })
+                throw RecipeNotAccessible()
         } else if (jdbiRecipeModel.authorId != userId) throw NotTheRecipeAuthor()
 
         if (checkIfRecipeInCollection(collectionId, recipeId)) throw RecipeAlreadyInCollection()
@@ -158,9 +172,4 @@ class CollectionService(private val tm: TransactionManager, private val cs: Clou
 
     private fun checkIfRecipeInCollection(collectionId: Int, recipeId: Int) =
         tm.run { it.collectionRepository.checkIfRecipeInCollection(collectionId, recipeId) }
-
-    private fun checkRecipeAccessibility(authorUsername: String, userId: Int) {
-        if (!tm.run { it.userRepository.checkUserVisibility(authorUsername, userId) })
-            throw RecipeNotAccessible()
-    }
 }

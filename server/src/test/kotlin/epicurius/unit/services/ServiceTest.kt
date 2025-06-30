@@ -164,11 +164,12 @@ open class ServiceTest : EpicuriusUnitTest() {
 
         fun getCollections(
             userId: Int,
+            username: String?,
             collectionType: CollectionType,
             lastCollectionId: Int?,
             limit: Int
         ) =
-            collectionService.getCollections(userId, collectionType, lastCollectionId, limit)
+            collectionService.getCollections(userId, username, collectionType, lastCollectionId, limit)
 
         fun updateCollection(userId: Int, collectionId: Int, updateCollectionInfo: UpdateCollectionInputModel) =
             collectionService.updateCollection(userId, collectionId, updateCollectionInfo)

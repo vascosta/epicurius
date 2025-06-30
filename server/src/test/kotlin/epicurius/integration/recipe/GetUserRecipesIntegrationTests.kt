@@ -61,8 +61,7 @@ class GetUserRecipesIntegrationTests : RecipeIntegrationTest() {
             api(Uris.User.USER_RECIPES.addQueryParams(
                 mapOf(
                     "username" to username,
-                    "lastRecipeId" to null,
-                    "limit" to limit.toString()
+                    "limit" to limit
                 )
             )),
             responseStatus = HttpStatus.NOT_FOUND,
@@ -85,8 +84,7 @@ class GetUserRecipesIntegrationTests : RecipeIntegrationTest() {
             api(Uris.User.USER_RECIPES.addQueryParams(
                 mapOf(
                     "username" to testUser.user.name,
-                    "lastRecipeId" to null,
-                    "limit" to limit.toString()
+                    "limit" to limit
                 )
             )),
             responseStatus = HttpStatus.FORBIDDEN,

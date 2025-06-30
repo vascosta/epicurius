@@ -6,6 +6,7 @@ import epicurius.domain.recipe.MIN_PICTURES
 class RecipeNotFound : RuntimeException("Recipe not found")
 class NotTheRecipeAuthor : RuntimeException("You are not the author of this recipe")
 class RecipeNotAccessible : RuntimeException("Recipe not accessible")
+class RecipesNotAccessible : RuntimeException("Recipes not accessible")
 
 class InvalidCuisineIdx : RuntimeException("Invalid cuisine idx")
 class InvalidMealTypeIdx : RuntimeException("Invalid meal type idx")

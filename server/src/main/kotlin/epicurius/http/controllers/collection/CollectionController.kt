@@ -44,11 +44,18 @@ class CollectionController(private val collectionService: CollectionService) {
     @GetMapping(Uris.Collection.COLLECTIONS)
     fun getCollections(
         authenticatedUser: AuthenticatedUser,
+        @RequestParam username: String?,
         @RequestParam collectionType: CollectionType,
         @RequestParam lastCollectionId: Int?,
         @RequestParam limit: Int
     ): ResponseEntity<*> {
-        val collections = collectionService.getCollections(authenticatedUser.user.id, collectionType, lastCollectionId, limit)
+        val collections = collectionService.getCollections(
+            authenticatedUser.user.id,
+            username,
+            collectionType,
+            lastCollectionId,
+            limit
+        )
         return okHttpResponse(GetCollectionsOutputModel(collections))
     }
 
