@@ -78,7 +78,7 @@ class UpdateRecipeIntegrationTests : RecipeIntegrationTest() {
     }
 
     @Test
-    fun `Should fail with code 401 when updating a non-existing recipe`() {
+    fun `Should fail with code 404 when updating a non-existing recipe`() {
         // given an authenticated user and a non-existing recipe ID
         val nonExistingRecipeId = 9999
 

@@ -52,10 +52,11 @@ class RecipeController(private val recipeService: RecipeService) {
     @GetMapping(Uris.User.USER_RECIPES)
     suspend fun getUserRecipes(
         authenticatedUser: AuthenticatedUser,
+        @RequestParam username: String?,
         @RequestParam lastRecipeId: Int?,
         @RequestParam limit: Int,
     ): ResponseEntity<*> {
-        val recipes = recipeService.getUserRecipes(authenticatedUser.user.id, lastRecipeId, limit)
+        val recipes = recipeService.getUserRecipes(authenticatedUser.user.id, username, lastRecipeId, limit)
         return okHttpResponse(GetUserRecipesOutputModel(recipes))
     }
 

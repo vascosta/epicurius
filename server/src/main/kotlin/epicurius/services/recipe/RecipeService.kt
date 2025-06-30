@@ -5,6 +5,7 @@ import epicurius.domain.exceptions.InvalidNumberOfRecipePictures
 import epicurius.domain.exceptions.NotTheRecipeAuthor
 import epicurius.domain.exceptions.RecipeNotAccessible
 import epicurius.domain.exceptions.RecipeNotFound
+import epicurius.domain.exceptions.UserNotFound
 import epicurius.domain.picture.PictureDomain
 import epicurius.domain.picture.PictureDomain.Companion.RECIPES_FOLDER
 import epicurius.domain.recipe.Ingredient
@@ -80,18 +81,25 @@ class RecipeService(
     suspend fun getRecipe(recipeId: Int, userId: Int): Recipe {
         val jdbiRecipe = tm.run { it.recipeRepository.getRecipeById(recipeId) } ?: throw RecipeNotFound()
 
-        checkRecipeAccessibility(jdbiRecipe.authorUsername, userId)
+        checkOwnerVisibility(jdbiRecipe.authorUsername, userId)
 
-        val recipePictures = jdbiRecipe.picturesNames.map {
-            cs.pictureRepository.getPicture(it, RECIPES_FOLDER)
-        }
+        val recipePictures = jdbiRecipe.picturesNames.map { cs.pictureRepository.getPicture(it, RECIPES_FOLDER) }
 
         return jdbiRecipe.toRecipe(recipePictures)
     }
 
-    suspend fun getUserRecipes(userId: Int, lastRecipeId: Int?, limit: Int): List<RecipeInfo> {
+    suspend fun getUserRecipes(userId: Int, username: String?, lastRecipeId: Int?, limit: Int): List<RecipeInfo> {
+        if (username != null) {
+            val user = tm.run { it.userRepository.getUser(username) ?: throw UserNotFound(username) }
+            checkOwnerVisibility(username, userId)
+            val recipes = tm.run { it.recipeRepository.getUserRecipes(user.id, lastRecipeId, limit) }
+            return recipes.map { jdbiRecipeInfo ->
+                jdbiRecipeInfo.toRecipeInfo(
+                    cs.pictureRepository.getPicture(jdbiRecipeInfo.picturesNames.first(), RECIPES_FOLDER),
+                )
+            }
+        }
         val recipes = tm.run { it.recipeRepository.getUserRecipes(userId, lastRecipeId, limit) }
-
         return recipes.map { jdbiRecipeInfo ->
             jdbiRecipeInfo.toRecipeInfo(
                 cs.pictureRepository.getPicture(jdbiRecipeInfo.picturesNames.first(), RECIPES_FOLDER),
@@ -204,7 +212,7 @@ class RecipeService(
     private fun checkIfRecipeExists(recipeId: Int): JdbiRecipeModel? =
         tm.run { it.recipeRepository.getRecipeById(recipeId) }
 
-    private fun checkRecipeAccessibility(authorUsername: String, userId: Int) {
+    private fun checkOwnerVisibility(authorUsername: String, userId: Int) {
         if (!tm.run { it.userRepository.checkUserVisibility(authorUsername, userId) })
             throw RecipeNotAccessible()
     }

@@ -19,6 +19,7 @@ import epicurius.http.controllers.recipe.models.output.UpdateRecipeOutputModel
 import epicurius.http.controllers.recipe.models.output.UpdateRecipePicturesOutputModel
 import epicurius.http.media.Uris
 import epicurius.integration.EpicuriusIntegrationTest
+import epicurius.integration.utils.addQueryParams
 import epicurius.integration.utils.delete
 import epicurius.integration.utils.get
 import epicurius.integration.utils.getBody
@@ -73,7 +74,7 @@ class RecipeIntegrationTest : EpicuriusIntegrationTest() {
 
     @BeforeEach
     fun setup() {
-        testUser = createTestUser(tm)
+        testUser = createTestUser(tm, true)
         testAuthor = createTestUser(tm)
         testSearchAuthor = createTestUser(tm)
         testRecipe = createTestRecipe(tm, testAuthor.user)
@@ -89,11 +90,18 @@ class RecipeIntegrationTest : EpicuriusIntegrationTest() {
 
     fun getUserRecipes(
         token: String,
+        username: String?,
         lastRecipeId: Int? = null,
         limit: Int = 10
     ) = get<GetUserRecipesOutputModel>(
         client,
-        api(Uris.User.USER_RECIPES + "?lastRecipeId=${lastRecipeId ?: ""}&limit=$limit"),
+        api(Uris.User.USER_RECIPES.addQueryParams(
+            mapOf(
+                "username" to username,
+                "lastRecipeId" to lastRecipeId,
+                "limit" to limit
+            )
+        )),
         responseStatus = HttpStatus.OK,
         token = token
     )
@@ -121,51 +129,32 @@ class RecipeIntegrationTest : EpicuriusIntegrationTest() {
         lastRecipeId: Int? = null,
         limit: Int = 10
     ): GetUserRecipesOutputModel? {
-        val params = mutableListOf<String>()
-
-        name?.let { params += "name=$it" }
-
-        if (cuisine != null && cuisine.isNotEmpty()) {
-            params += "cuisine=${cuisine.joinToString(",") { it.name }}"
-        }
-
-        if (mealType != null && mealType.isNotEmpty()) {
-            params += "mealType=${mealType.joinToString(",") { it.name }}"
-        }
-
-        if (ingredients != null && ingredients.isNotEmpty()) {
-            params += "ingredients=${ingredients.joinToString(",")}"
-        }
-
-        if (intolerances != null && intolerances.isNotEmpty()) {
-            params += "intolerances=${intolerances.joinToString(",")}"
-        }
-
-        if (diets != null && diets.isNotEmpty()) {
-            params += "diets=${diets.joinToString(",")}"
-        }
-
-        servings?.let { params += "servings=$it" }
-        minCalories?.let { params += "minCalories=$it" }
-        maxCalories?.let { params += "maxCalories=$it" }
-        minCarbs?.let { params += "minCarbs=$it" }
-        maxCarbs?.let { params += "maxCarbs=$it" }
-        minFat?.let { params += "minFat=$it" }
-        maxFat?.let { params += "maxFat=$it" }
-        minProtein?.let { params += "minProtein=$it" }
-        maxProtein?.let { params += "maxProtein=$it" }
-        minTime?.let { params += "minTime=$it" }
-        maxTime?.let { params += "maxTime=$it" }
-        lastRecipeId?.let { params += "lastRecipeId=$it" }
-
-        params += "showAuthorRecipes=$showAuthorRecipes"
-        params += "limit=$limit"
-
-        val query = params.joinToString("&")
-
         return get<SearchRecipesOutputModel>(
             client,
-            api(Uris.Recipe.RECIPES) + "?$query",
+            api(Uris.Recipe.RECIPES.addQueryParams(
+                mapOf(
+                    "name" to name,
+                    "cuisine" to cuisine?.joinToString(",") { it.name },
+                    "mealType" to mealType?.joinToString(",") { it.name },
+                    "ingredients" to ingredients?.joinToString(","),
+                    "intolerances" to intolerances?.joinToString(","),
+                    "diets" to diets?.joinToString(","),
+                    "servings" to servings,
+                    "minCalories" to minCalories,
+                    "maxCalories" to maxCalories,
+                    "minCarbs" to minCarbs,
+                    "maxCarbs" to maxCarbs,
+                    "minFat" to minFat,
+                    "maxFat" to maxFat,
+                    "minProtein" to minProtein,
+                    "maxProtein" to maxProtein,
+                    "minTime" to minTime,
+                    "maxTime" to maxTime,
+                    "showAuthorRecipes" to showAuthorRecipes,
+                    "lastRecipeId" to lastRecipeId,
+                    "limit" to limit
+                )
+            )),
             responseStatus = HttpStatus.OK,
             token = token
         )

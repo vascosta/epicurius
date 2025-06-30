@@ -102,7 +102,7 @@ class GetRecipeIntegrationTests : RecipeIntegrationTest() {
     }
 
     @Test
-    fun `Should fail with code 401 when retrieving a non-existing recipe`() {
+    fun `Should fail with code 404 when retrieving a non-existing recipe`() {
         // given a non-existing recipe id
         val nonExistingRecipeId = 9999
 
