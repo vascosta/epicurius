@@ -34,8 +34,10 @@ fun ConfirmIngredientsDialog(
 
     AlertDialog(
         onDismissRequest = {
-            onIngredientsClear()
-            onCloseDialog()
+            if (enableButtons) {
+                onIngredientsClear()
+                onCloseDialog()
+            }
         },
         confirmButton = {
             Button(
@@ -70,7 +72,8 @@ fun ConfirmIngredientsDialog(
                                         checked = true,
                                         onCheckedChange = {
                                             ingredientsList = ingredientsList - ingredient
-                                        }
+                                        },
+                                        enabled = enableButtons
                                     )
                                     Text(
                                         text = ingredient,
@@ -90,7 +93,7 @@ fun ConfirmIngredientsDialog(
                                     modifier = Modifier
                                         .weight(0.5f)
                                         .padding(end = 8.dp),
-                                    enabled = true,
+                                    enabled = enableButtons,
                                     label = "Add Ingredient"
                                 )
                                 Button(

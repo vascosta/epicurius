@@ -17,7 +17,7 @@ import android.epicurius.domain.user.UserInfo
 import android.epicurius.services.EpicuriusService
 import android.epicurius.services.http.utils.CachedResult
 import android.epicurius.storage.Session
-import android.epicurius.ui.screens.collections.recipeCollections.RecipeCollectionsViewModel
+import android.epicurius.ui.EpicuriusViewModel
 import android.epicurius.ui.screens.utils.LoadState
 import android.epicurius.ui.screens.utils.apiSuccess
 import android.epicurius.ui.screens.utils.cache
@@ -32,18 +32,16 @@ class SearchViewModel(
     service: EpicuriusService,
     session: Session,
     context: Context
-): RecipeCollectionsViewModel(service, session, context) {
+): EpicuriusViewModel(service, session, context) {
 
     private val searchedRecipesFlow = MutableStateFlow<LoadState<List<RecipeInfo>>>(idle())
     private val cacheSearchedRecipesFlow = MutableStateFlow<List<RecipeInfo>>(emptyList())
-    private val lastFetchedRecipeIdFlow = MutableStateFlow<Int?>(null)
 
     val searchedRecipes = searchedRecipesFlow.asStateFlow()
     private val cacheSearchedRecipes = cacheSearchedRecipesFlow.asStateFlow()
 
     private val searchedUsersFlow = MutableStateFlow<LoadState<List<SearchUser>>>(idle())
     private val cacheSearchedUsersFlow = MutableStateFlow<List<SearchUser>>(emptyList())
-    private val lastFetchedUserIdFlow = MutableStateFlow<Int?>(null)
 
     val searchedUsers = searchedUsersFlow.asStateFlow()
 
@@ -139,13 +137,11 @@ class SearchViewModel(
     fun clearSearchRecipes() {
         searchedRecipesFlow.value = idle()
         cacheSearchedRecipesFlow.value = emptyList()
-        lastFetchedRecipeIdFlow.value = null
     }
 
     fun clearSearchUsers() {
         searchedUsersFlow.value = idle()
         cacheSearchedUsersFlow.value = emptyList()
-        lastFetchedUserIdFlow.value = null
     }
 
     fun clearIngredients() {
@@ -174,7 +170,7 @@ class SearchViewModel(
     ) {
         val result = request {
             val token = session.getToken()
-            val lastRecipeId = lastFetchedRecipeIdFlow.value
+            val lastRecipeId = cacheSearchedRecipes.value.lastOrNull()?.id
             service.recipeService.searchRecipes(
                 token,
                 name,
@@ -200,7 +196,7 @@ class SearchViewModel(
             )
         }
         when {
-            result.isFailure -> searchedRecipesFlow.value = cache(cacheSearchedRecipes.value)
+            result.isFailure -> handleCachedSearchedRecipes()
             result.isSuccess -> {
                 val fetchedRecipes = result.getValueOrThrow().recipes
 
@@ -208,18 +204,21 @@ class SearchViewModel(
                     val updatedSearchedRecipes = cacheSearchedRecipes.value + fetchedRecipes
                     searchedRecipesFlow.value = apiSuccess(updatedSearchedRecipes)
                     cacheSearchedRecipesFlow.value = updatedSearchedRecipes
-                    lastFetchedRecipeIdFlow.value = fetchedRecipes.last().id
                 }
-                else searchedRecipesFlow.value = cache(cacheSearchedRecipes.value)
+                else handleCachedSearchedRecipes()
             }
         }
         enableButtons()
     }
 
+    private fun handleCachedSearchedRecipes() {
+        searchedRecipesFlow.value = cache(cacheSearchedRecipes.value)
+    }
+
     private suspend fun fetchUsers(name: String) {
         val result = request {
             val token = session.getToken()
-            val lastUserId = lastFetchedUserIdFlow.value
+            val lastUserId = cacheSearchedUsersFlow.value.lastOrNull()?.id
             service.userService.searchUsers(
                 token,
                 name,
@@ -228,7 +227,7 @@ class SearchViewModel(
             )
         }
         when {
-            result.isFailure -> searchedUsersFlow.value = cache(cacheSearchedUsersFlow.value)
+            result.isFailure -> handleCachedSearchedUsers()
             result.isSuccess -> {
                 val fetchedUsers = result.getValueOrThrow().users
 
@@ -236,12 +235,15 @@ class SearchViewModel(
                     val updatedSearchedUsers = cacheSearchedUsersFlow.value + fetchedUsers
                     searchedUsersFlow.value = apiSuccess(updatedSearchedUsers)
                     cacheSearchedUsersFlow.value = updatedSearchedUsers
-                    lastFetchedUserIdFlow.value = fetchedUsers.last().id
                 }
-                else searchedUsersFlow.value = cache(cacheSearchedUsersFlow.value)
+                else handleCachedSearchedUsers()
             }
         }
         enableButtons()
+    }
+
+    private fun handleCachedSearchedUsers() {
+        searchedUsersFlow.value = cache(cacheSearchedUsersFlow.value)
     }
 
     private suspend fun handleIdentifyIngredientsOnPicture(pictureBytes: ByteArray) {

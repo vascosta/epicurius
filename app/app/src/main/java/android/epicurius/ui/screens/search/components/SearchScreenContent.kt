@@ -253,7 +253,7 @@ fun SearchScreenContent(
                 if (selectedTabIndex == 0) {
                     if (recipesResultState is Idle) {
                         Row(modifier = Modifier.fillMaxWidth()) {
-                            FiltersIcon(onClick = { showFiltersDialog = true })
+                            FiltersIcon(onClick = { showFiltersDialog = true }, enableButtons = enableButtons)
                             TextButton(
                                 onClick = {
                                     onSearchRecipesClear()
@@ -300,7 +300,8 @@ fun SearchScreenContent(
                                     else -> showGalleryAccessDialog = true
                                 }
                             },
-                            modifier = Modifier.fillMaxWidth()
+                            modifier = Modifier.fillMaxWidth(),
+                            enableButtons = enableButtons
                         )
                     }
                     LoadStateRenderer(
@@ -502,7 +503,7 @@ fun SearchScreenContent(
                         ingredientsState = ingredientsState,
                         onIngredientsClear = onIngredientsClear,
                         onConfirmIngredients = onConfirmIngredients,
-                        onCloseDialog = { if (enableButtons) showConfirmIngredientsDialog = false },
+                        onCloseDialog = { showConfirmIngredientsDialog = false },
                         enableButtons = enableButtons
                     )
                 }

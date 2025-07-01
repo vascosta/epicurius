@@ -13,10 +13,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 @Composable
-fun FiltersIcon(onClick: () -> Unit) {
+fun FiltersIcon(onClick: () -> Unit, enableButtons: Boolean) {
     TextButton(
         onClick = onClick,
-        modifier = Modifier.padding(top = 8.dp)
+        modifier = Modifier.padding(top = 8.dp),
+        enabled = enableButtons,
     ) {
         Icon(
             imageVector = Icons.Default.DensityMedium,

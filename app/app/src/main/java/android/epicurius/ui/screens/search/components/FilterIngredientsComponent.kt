@@ -37,7 +37,8 @@ fun FilterIngredientsComponent(
             .padding(start = 10.dp, top = 10.dp)
     ) {
         TextButton(
-            onClick = { expandIngredientFields = !expandIngredientFields }
+            onClick = { expandIngredientFields = !expandIngredientFields },
+            enabled = enableButtons
         ) {
             Text(
                 if (expandIngredientFields) "- Hide Ingredients"

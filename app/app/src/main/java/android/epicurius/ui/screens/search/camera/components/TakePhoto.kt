@@ -12,7 +12,7 @@ import java.io.File
 fun takePhotoToGallery(
     imageCapture: ImageCapture?,
     context: Context,
-    onIdentifyIngredients: (ByteArray) -> Unit
+    onIdentifyIngredients: (pictureBytes: ByteArray) -> Unit
 ) {
     if (imageCapture == null) return
 

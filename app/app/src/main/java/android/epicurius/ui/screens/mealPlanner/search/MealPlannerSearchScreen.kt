@@ -148,7 +148,7 @@ fun MealPlannerSearchScreen(
                     enableButtons = enableButtons
                 )
                 Row(modifier = Modifier.fillMaxWidth()) {
-                    FiltersIcon(onClick = { showFiltersDialog = true })
+                    FiltersIcon(onClick = { showFiltersDialog = true }, enableButtons = enableButtons)
                 }
 
                 if (recipeResults.isNotEmpty()) {

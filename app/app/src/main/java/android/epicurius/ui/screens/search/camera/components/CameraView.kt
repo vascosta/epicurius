@@ -28,8 +28,8 @@ import androidx.lifecycle.compose.LocalLifecycleOwner
 @Composable
 fun CameraView(
     ingredientsState: LoadState<List<String>>,
-    onIdentifyIngredients: (ByteArray) -> Unit,
-    onConfirmIngredients: (List<String>) -> Unit,
+    onIdentifyIngredients: (pictureBytes: ByteArray) -> Unit,
+    onConfirmIngredients: (ingredients: List<String>) -> Unit,
     onIngredientsClear: () -> Unit,
     enableButtons: Boolean,
 ) {
@@ -94,7 +94,8 @@ fun CameraView(
             },
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp)
+                .padding(16.dp),
+            enabled = enableButtons
         ) { Text("Take Picture") }
     }
 
