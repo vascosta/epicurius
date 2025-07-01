@@ -245,14 +245,15 @@ The __routes__ for the __API__ are organized as follow:
 
 #### Collection
 
-| Method  | Route                                  | Description                       | Authenticated | 
-|---------|----------------------------------------|-----------------------------------|:-------------:|
-| GET     | ``/api/collections/{id}``              | Get a collection                  | Yes           |
-| POST    | ``/api/collections/{id}``              | Create a collection               | Yes           |
-| POST    | ``/api/collections/{id}/recipes``      | Add a recipe to a collection      | Yes           |
-| PATCH   | ``/api/collections/{id}``              | Update a collection               | Yes           |
+| Method  | Route                             | Description                       | Authenticated | 
+|---------|-----------------------------------|-----------------------------------|:-------------:|
+| GET     | ``/api/collections``              | Get a user's collections          | Yes           |
+| GET     | ``/api/collections/{id}``         | Get a collection                  | Yes           |
+| POST    | ``/api/collections/{id}``         | Create a collection               | Yes           |
+| POST    | ``/api/collections/{id}/recipes`` | Add a recipe to a collection      | Yes           |
+| PATCH   | ``/api/collections/{id}``         | Update a collection               | Yes           |
 | DELETE  | ``/api/collections/{id}/recipes/{id}`` | Remove a recipe from a collection | Yes           |
-| DELETE  | ``/api/collections/{id}``              | Delete a collection               | Yes           |
+| DELETE  | ``/api/collections/{id}``         | Delete a collection               | Yes           |
 
 
 #### MealPlanner
