@@ -4,6 +4,7 @@ import android.epicurius.domain.collection.CollectionProfile
 import android.epicurius.ui.EpicuriusActivity
 import android.epicurius.ui.navigation.Intents
 import android.epicurius.ui.navigation.navigateTo
+import android.epicurius.ui.screens.collections.recipeCollections.RecipeCollectionsViewModel
 import android.epicurius.ui.screens.collections.recipeCollections.components.RecipeCollectionsStateBundle
 import android.epicurius.ui.screens.dailyMenu.DailyMenuActivity
 import android.epicurius.ui.screens.recipe.profile.RecipeProfileActivity
@@ -20,6 +21,7 @@ import kotlinx.coroutines.launch
 
 class FeedActivity : EpicuriusActivity() {
     override val viewModel: FeedViewModel by getViewModel<FeedViewModel>()
+    val recipeCollectionsViewModel: RecipeCollectionsViewModel by getViewModel<RecipeCollectionsViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,8 +33,8 @@ class FeedActivity : EpicuriusActivity() {
         setContent {
             val userFeedState = viewModel.userFeed.collectAsState(idle())
             val userFollowRequests = viewModel.userFollowRequests.collectAsState(idle())
-            val collectionsToAddRecipeState = viewModel.collectionsToAddRecipe.collectAsState(idle())
-            val collectionsToRemoveRecipeState = viewModel.collectionsToRemoveRecipe.collectAsState(idle())
+            val collectionsToAddRecipeState = recipeCollectionsViewModel.collectionsToAddRecipe.collectAsState(idle())
+            val collectionsToRemoveRecipeState = recipeCollectionsViewModel.collectionsToRemoveRecipe.collectAsState(idle())
             FeedScreen(
                 userFeedState = userFeedState.value,
                 followRequestsState = userFollowRequests.value,
@@ -44,7 +46,7 @@ class FeedActivity : EpicuriusActivity() {
                     recipeId: Int,
                     collectionsToAdd: List<CollectionProfile>
                     ->
-                    viewModel.addRecipeToCollections(
+                    recipeCollectionsViewModel.addRecipeToCollections(
                         recipeId,
                         collectionsToAdd
                     )
@@ -53,16 +55,16 @@ class FeedActivity : EpicuriusActivity() {
                     recipeId: Int,
                     collectionsToRemove: List<CollectionProfile>
                     ->
-                    viewModel.removeRecipeFromCollections(
+                    recipeCollectionsViewModel.removeRecipeFromCollections(
                         recipeId,
                         collectionsToRemove
                     )
                 },
-                onCollectionsClear = { viewModel.clearRecipeCollections() },
+                onRecipeCollectionsClear = { recipeCollectionsViewModel.clearRecipeCollections() },
                 onAcceptFollowRequest = { name: String -> viewModel.acceptFollowRequest(name) },
                 onRejectFollowRequest = { name: String -> viewModel.rejectFollowRequest(name) },
-                onCollectionsRequest = { recipeId: Int ->
-                    viewModel.getRecipeCollections(recipeId, CollectionType.FAVOURITE)
+                onRecipeCollectionsRequest = { recipeId: Int ->
+                    recipeCollectionsViewModel.getRecipeCollections(recipeId, CollectionType.FAVOURITE)
                 },
                 onFollowRequests = { viewModel.getUserFollowRequests() },
                 onRecipeRequest = ::navigateToRecipeProfileActivity,

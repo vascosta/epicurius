@@ -60,10 +60,10 @@ fun FeedScreen(
         recipeId: Int,
         collectionsToRemove: List<CollectionProfile>
     ) -> Unit = { _, _ -> },
-    onCollectionsClear: () -> Unit = {},
+    onRecipeCollectionsClear: () -> Unit = {},
     onAcceptFollowRequest: (name: String) -> Unit = {},
     onRejectFollowRequest: (name: String) -> Unit = {},
-    onCollectionsRequest: (recipeId: Int) -> Unit = {},
+    onRecipeCollectionsRequest: (recipeId: Int) -> Unit = {},
     onFollowRequests: () -> Unit = {},
     onRecipeRequest: (recipeId: Int) -> Unit = {},
     onUserProfileRequest: (name: String) -> Unit = {},
@@ -133,9 +133,9 @@ fun FeedScreen(
                                     onAddRecipeToCollections = onAddRecipeToCollections,
                                     onRemoveRecipeFromCollections = onRemoveRecipeFromCollections,
                                     onRecipeRequest = onRecipeRequest,
-                                    onRecipeCollectionsRequest = onCollectionsRequest,
+                                    onRecipeCollectionsRequest = onRecipeCollectionsRequest,
                                     onRemoveRecipeFromCollection = {_, _ ->},
-                                    onRecipeCollectionsClear = onCollectionsClear,
+                                    onRecipeCollectionsClear = onRecipeCollectionsClear,
                                     enableButtons = enableButtons
                                 )
                             }
