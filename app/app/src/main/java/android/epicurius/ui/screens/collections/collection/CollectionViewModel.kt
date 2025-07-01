@@ -23,9 +23,9 @@ open class CollectionViewModel(
 ): EpicuriusViewModel(service, session, context) {
 
     private val collectionNameFlow = MutableStateFlow<LoadState<String>>(idle())
-    val collectionName = collectionNameFlow.asStateFlow()
-
     private val collectionRecipesFlow = MutableStateFlow<LoadState<List<RecipeInfo>>>(idle())
+
+    val collectionName = collectionNameFlow.asStateFlow()
     val collectionRecipes = collectionRecipesFlow.asStateFlow()
 
     fun getCollection(id: Int, onErrorNavigateTo: () -> Unit) {

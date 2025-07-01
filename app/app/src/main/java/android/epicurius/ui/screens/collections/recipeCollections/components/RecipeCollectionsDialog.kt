@@ -56,9 +56,11 @@ fun RecipeCollectionsDialog(
         }
         AlertDialog(
             onDismissRequest = {
-                if (recipeCollectionsStateBundle.collectionsToAddRecipeState is Loaded ||
+                if (
+                    (recipeCollectionsStateBundle.collectionsToAddRecipeState is Loaded ||
                     recipeCollectionsStateBundle.collectionsToRemoveRecipeState is Loaded
-                    )
+                    ) && enableButtons
+                )
                     onDismissRequest()
             },
             confirmButton = {
@@ -101,10 +103,8 @@ fun RecipeCollectionsDialog(
                                             Checkbox(
                                                 checked = selectedCollectionsIds.contains(collection.id),
                                                 onCheckedChange = { isChecked ->
-                                                    if (isChecked)
-                                                        selectedCollectionsIds.add(collection.id)
-                                                    else
-                                                        selectedCollectionsIds.remove(collection.id)
+                                                    if (isChecked) selectedCollectionsIds.add(collection.id)
+                                                    else selectedCollectionsIds.remove(collection.id)
                                                 },
                                                 enabled = enableButtons
                                             )
@@ -142,10 +142,8 @@ fun RecipeCollectionsDialog(
                                             Checkbox(
                                                 checked = selectedCollectionsIds.contains(collection.id),
                                                 onCheckedChange = { isChecked ->
-                                                    if (isChecked)
-                                                        selectedCollectionsIds.add(collection.id)
-                                                    else
-                                                        selectedCollectionsIds.remove(collection.id)
+                                                    if (isChecked) selectedCollectionsIds.add(collection.id)
+                                                    else selectedCollectionsIds.remove(collection.id)
                                                 },
                                                 enabled = enableButtons
                                             )

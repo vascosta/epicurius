@@ -58,9 +58,7 @@ fun CollectionScreen(
     var showDeleteCollectionDialog by rememberSaveable { mutableStateOf(false) }
 
     LaunchedEffect(collectionNameState) {
-        if (collectionNameState is Loaded) {
-            showEditCollectionDialog = false
-        }
+        if (collectionNameState is Loaded) showEditCollectionDialog = false
     }
     Scaffold(
         topBar = {
@@ -134,7 +132,7 @@ fun CollectionScreen(
                             collectionId = collectionId,
                             collectionName = collectionListName,
                             onEditCollection = onCollectionEdit,
-                            onDismiss = { if (enableButtons) showEditCollectionDialog = false },
+                            onDismiss = { showEditCollectionDialog = false },
                             enableButtons = enableButtons
                         )
                     }
@@ -143,7 +141,7 @@ fun CollectionScreen(
                             collectionId = collectionId,
                             collectionName = collectionListName,
                             onCollectionDelete = onCollectionDelete,
-                            onDismissRequest = { if (enableButtons) showDeleteCollectionDialog = false },
+                            onDismissRequest = { showDeleteCollectionDialog = false },
                             enableButtons = enableButtons
                         )
                     }

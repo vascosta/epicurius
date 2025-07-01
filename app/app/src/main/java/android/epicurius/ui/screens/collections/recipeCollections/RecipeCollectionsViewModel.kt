@@ -39,10 +39,8 @@ open class RecipeCollectionsViewModel(
 
     fun getRecipeCollections(recipeId: Int, collectionType: CollectionType) {
         disableButtons()
-        collectionsToAddRecipeFlow.value =
-            loading(APIResult(cacheCollectionsToAddRecipeFlow.value))
-        collectionsToRemoveRecipeFlow.value =
-            loading(APIResult(cacheCollectionsToRemoveRecipeFlow.value))
+        collectionsToAddRecipeFlow.value = loading(APIResult(cacheCollectionsToAddRecipeFlow.value))
+        collectionsToRemoveRecipeFlow.value = loading(APIResult(cacheCollectionsToRemoveRecipeFlow.value))
         viewModelScope.launch { fetchRecipeCollections(recipeId, collectionType) }
     }
 
@@ -54,10 +52,7 @@ open class RecipeCollectionsViewModel(
         }
         val addRecipeInfo = AddRecipeToCollectionInputModel(recipeId)
         viewModelScope.launch {
-            handleAddRecipeToCollections(
-                addRecipeInfo,
-                collectionsToAdd
-            )
+            handleAddRecipeToCollections(addRecipeInfo, collectionsToAdd)
         }
     }
 
@@ -68,10 +63,7 @@ open class RecipeCollectionsViewModel(
             return
         }
         viewModelScope.launch {
-            handleRemoveRecipeFromCollections(
-                recipeId,
-                collectionsToRemove
-            )
+            handleRemoveRecipeFromCollections(recipeId, collectionsToRemove)
         }
     }
 
@@ -89,6 +81,7 @@ open class RecipeCollectionsViewModel(
             val lastCollectionId = lastFetchedCollectionIdFlow.value
             service.collectionService.getCollections(
                 token,
+                null,
                 collectionType,
                 lastCollectionId,
                 limit
@@ -97,10 +90,8 @@ open class RecipeCollectionsViewModel(
         when {
             result.isFailure -> handleCachedCollections()
             result.isSuccess -> {
-                val fetchedCollections =
-                    result.getValueOrThrow().collections.mapNotNull { collection ->
-                        fetchCollection(collection.id)
-                    }
+                val fetchedCollections = result.getValueOrThrow().collections
+                    .mapNotNull { collection -> fetchCollection(collection.id) }
                 if (fetchedCollections.isNotEmpty()) {
                     val collectionsToAddRecipe = fetchedCollections.filter { collection ->
                         val recipesIds = collection.recipes.map { it.id }
@@ -112,14 +103,11 @@ open class RecipeCollectionsViewModel(
                         recipesIds.contains(recipeId)
                     }.map { it.toCollectionProfile() }
 
-                    val updatedCollectionsToAddRecipe =
-                        cacheCollectionsToAddRecipeFlow.value + collectionsToAddRecipe
-                    val updatedCollectionsToRemoveRecipe =
-                        cacheCollectionsToRemoveRecipeFlow.value + collectionsToRemoveRecipe
+                    val updatedCollectionsToAddRecipe = cacheCollectionsToAddRecipeFlow.value + collectionsToAddRecipe
+                    val updatedCollectionsToRemoveRecipe = cacheCollectionsToRemoveRecipeFlow.value + collectionsToRemoveRecipe
                     collectionsToAddRecipeFlow.value = apiSuccess(updatedCollectionsToAddRecipe)
                     cacheCollectionsToAddRecipeFlow.value = updatedCollectionsToAddRecipe
-                    collectionsToRemoveRecipeFlow.value =
-                        apiSuccess(updatedCollectionsToRemoveRecipe)
+                    collectionsToRemoveRecipeFlow.value = apiSuccess(updatedCollectionsToRemoveRecipe)
                     cacheCollectionsToRemoveRecipeFlow.value = updatedCollectionsToRemoveRecipe
                     lastFetchedCollectionIdFlow.value = fetchedCollections.last().id
                 }

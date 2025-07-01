@@ -33,7 +33,7 @@ class FavouritesActivity : EpicuriusActivity() {
                 onBackButton = { navigateTo<SettingsActivity>(useStack = true) },
                 onCollectionCreate = { collectionName: String ->
                     viewModel.createCollection(collectionName) { collectionId ->
-                        navigateToFavouritesListActivity(collectionId)
+                        navigateToFavouritesListActivity(collectionId, true)
                     }
                 },
                 onCollectionDelete = { collectionId: Int ->
@@ -46,11 +46,11 @@ class FavouritesActivity : EpicuriusActivity() {
         }
     }
 
-    private fun navigateToFavouritesListActivity(collectionId: Int) {
+    private fun navigateToFavouritesListActivity(collectionId: Int, isCollectionOwner: Boolean) {
         navigateTo<CollectionActivity> { intent ->
             intent.putExtra(Intents.SOURCE_ACTIVITY, FavouritesActivity::class.java.name)
             intent.putExtra(Intents.COLLECTION_ID, collectionId)
-            intent.putExtra(Intents.IS_COLLECTION_OWNER, true)
+            intent.putExtra(Intents.IS_COLLECTION_OWNER, isCollectionOwner)
         }
     }
 }

@@ -61,15 +61,9 @@ class CollectionActivity : EpicuriusActivity() {
 
     private fun navigateBack() {
         val sourceActivity = intent.getStringExtra(Intents.SOURCE_ACTIVITY)
-        if (sourceActivity == FavouritesActivity::class.java.name) {
-            navigateTo<FavouritesActivity>()
-        }
-        else if (sourceActivity == UserProfileActivity::class.java.name) {
-            navigateTo<UserProfileActivity>()
-        }
-        else {
-            finish()
-        }
+        if (sourceActivity == FavouritesActivity::class.java.name) navigateTo<FavouritesActivity>()
+        else if (sourceActivity == UserProfileActivity::class.java.name) navigateTo<UserProfileActivity>()
+        else finish()
     }
 
     private fun navigateToRecipeProfileActivity(recipeId: Int) {

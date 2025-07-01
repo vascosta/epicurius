@@ -43,7 +43,7 @@ fun FavouritesScreen(
     onBackButton: () -> Unit = {},
     onCollectionCreate: (collectionName: String) -> Unit = {},
     onCollectionDelete: (collectionId: Int) -> Unit = {},
-    onCollectionRequest: (collectionId: Int) -> Unit = {},
+    onCollectionRequest: (collectionId: Int, isCollectionOwner: Boolean) -> Unit = { _, _ -> },
     onLoadMoreFavourites: () -> Unit = {},
     enableButtons: Boolean
 ) {
@@ -88,6 +88,7 @@ fun FavouritesScreen(
                         if (favourites.isNotEmpty()) {
                             favourites.forEach {
                                 CollectionProfileBox(
+                                    isCollectionOwner = true,
                                     collection = it,
                                     onCollectionDelete = onCollectionDelete,
                                     onCollectionRequest = onCollectionRequest,
@@ -117,7 +118,7 @@ fun FavouritesScreen(
                 if (showCreateCollectionDialog) {
                     CreateCollectionDialog(
                         onCollectionCreate = onCollectionCreate,
-                        onDismiss = { if (enableButtons) showCreateCollectionDialog = false },
+                        onDismiss = { showCreateCollectionDialog = false },
                         enableButtons = enableButtons
                     )
                 }
@@ -137,7 +138,7 @@ fun FavouritesScreenPreview() {
     )
     val emptyCollections = emptyList<CollectionProfile>()
 
-    FavouritesScreen(apiSuccess(emptyCollections), {}, {}, {}, {}, {}, true)
+    FavouritesScreen(apiSuccess(emptyCollections), enableButtons = true)
 
-    FavouritesScreen(apiSuccess(collections), {}, {}, {}, {}, {}, true)
+    FavouritesScreen(apiSuccess(collections), enableButtons = true)
 }

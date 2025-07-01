@@ -32,9 +32,10 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun CollectionProfileBox(
+    isCollectionOwner: Boolean,
     collection: CollectionProfile,
     onCollectionDelete: (collectionId: Int) -> Unit = {},
-    onCollectionRequest: (collectionId: Int) -> Unit = {},
+    onCollectionRequest: (collectionId: Int, isCollectionOwner: Boolean) -> Unit = { _, _ -> },
     enableButtons: Boolean
 ) {
     var showDeleteDialog by remember { mutableStateOf(false) }
@@ -53,7 +54,7 @@ fun CollectionProfileBox(
                 .fillMaxSize()
                 .clickable(
                     enabled = enableButtons,
-                    onClick = { onCollectionRequest(collection.id) }
+                    onClick = { onCollectionRequest(collection.id, isCollectionOwner) }
                 ),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
@@ -76,7 +77,7 @@ fun CollectionProfileBox(
                 collectionId = collection.id,
                 collectionName = collection.name,
                 onCollectionDelete = onCollectionDelete,
-                onDismissRequest = { if (enableButtons) showDeleteDialog = false },
+                onDismissRequest = { showDeleteDialog = false },
                 enableButtons = enableButtons
             )
         }
@@ -86,5 +87,5 @@ fun CollectionProfileBox(
 @Preview
 @Composable
 fun CollectionProfileBoxPreview() {
-    CollectionProfileBox(CollectionProfile(1, "Italian Delights"), {}, {}, true)
+    CollectionProfileBox(true, CollectionProfile(1, "Italian Delights"), enableButtons =  true)
 }

@@ -30,8 +30,6 @@ class CollectionsViewModel(
 
     val collections = collectionsFlow.asStateFlow()
 
-    private val lastFetchedCollectionIdFlow = MutableStateFlow<Int?>(null)
-
     fun getCollections(collectionType: CollectionType) {
         disableButtons()
         collectionsFlow.value = loading(CachedResult(cacheCollectionsFlow.value))
@@ -58,9 +56,10 @@ class CollectionsViewModel(
     private suspend fun fetchCollections(collectionType: CollectionType) {
         val result = request {
             val token = session.getToken()
-            val lastCollectionId = lastFetchedCollectionIdFlow.value
+            val lastCollectionId = cacheCollectionsFlow.value.lastOrNull()?.id
             service.collectionService.getCollections(
                 token,
+                null,
                 collectionType,
                 lastCollectionId,
                 limit
@@ -74,7 +73,6 @@ class CollectionsViewModel(
                     val updatedCollections = cacheCollectionsFlow.value + fetchedCollections
                     collectionsFlow.value = apiSuccess(updatedCollections)
                     cacheCollectionsFlow.value = updatedCollections
-                    lastFetchedCollectionIdFlow.value = fetchedCollections.last().id
                 }
                 else collectionsFlow.value = cache(cacheCollectionsFlow.value)
             }

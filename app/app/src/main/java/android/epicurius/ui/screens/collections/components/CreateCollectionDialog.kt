@@ -22,7 +22,7 @@ fun CreateCollectionDialog(
     var collectionName by remember { mutableStateOf("") }
 
     AlertDialog(
-        onDismissRequest = { onDismiss() },
+        onDismissRequest = { if (enableButtons) onDismiss() },
         confirmButton = {
             TextButton(
                 onClick = { onDismiss() },

@@ -27,14 +27,17 @@ fun EditCollectionDialog(
     var newCollectionName by rememberSaveable { mutableStateOf(collectionName) }
 
     AlertDialog(
-        onDismissRequest = { onDismiss() },
+        onDismissRequest = { if (enableButtons) onDismiss() },
         confirmButton = {
             TextButton(
                 onClick = { onDismiss() },
                 enabled = enableButtons
             ) { Text("Cancel") }
             TextButton(
-                onClick = { onEditCollection(collectionId, newCollectionName) },
+                onClick = {
+                    onEditCollection(collectionId, newCollectionName)
+                    onDismiss()
+                },
                 enabled = enableButtons
             ) { Text("Edit") }
         },

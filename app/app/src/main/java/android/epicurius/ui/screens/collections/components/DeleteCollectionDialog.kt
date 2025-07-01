@@ -16,7 +16,7 @@ fun DeleteCollectionDialog(
 ) {
 
     AlertDialog(
-        onDismissRequest = { onDismissRequest() },
+        onDismissRequest = { if (enableButtons) onDismissRequest() },
         confirmButton = {
             TextButton(
                 onClick = {

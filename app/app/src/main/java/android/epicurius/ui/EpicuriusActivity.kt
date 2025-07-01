@@ -4,7 +4,7 @@ import android.content.Context
 import android.epicurius.Dependencies
 import android.epicurius.services.EpicuriusService
 import android.epicurius.storage.Session
-import android.epicurius.ui.notifications.scheduleDailyProductCheck
+import android.epicurius.ui.notifications.fridge.scheduleDailyProductCheck
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.viewModels
