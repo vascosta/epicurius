@@ -14,10 +14,11 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun SubstituteIngredientsAlertDialog(
     substituteIngredients: List<String>,
-    onDismiss: () -> Unit = {}
+    onDismiss: () -> Unit = {},
+    enableButtons: Boolean
 ) {
     AlertDialog(
-        onDismissRequest = { onDismiss() },
+        onDismissRequest = { if (enableButtons) onDismiss() },
         title = { Text("Substitute Ingredients") },
         text = {
             Column {

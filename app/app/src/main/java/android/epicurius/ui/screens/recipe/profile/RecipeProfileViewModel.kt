@@ -23,7 +23,7 @@ import android.epicurius.services.EpicuriusService
 import android.epicurius.services.api.recipe.models.input.RateRecipeInputModel
 import android.epicurius.services.api.recipe.models.input.UpdateRecipeInputModel
 import android.epicurius.storage.Session
-import android.epicurius.ui.screens.collections.recipeCollections.RecipeCollectionsViewModel
+import android.epicurius.ui.EpicuriusViewModel
 import android.epicurius.ui.screens.utils.LoadState
 import android.epicurius.ui.screens.utils.apiSuccess
 import android.epicurius.ui.screens.utils.cache
@@ -40,7 +40,7 @@ class RecipeProfileViewModel(
     service: EpicuriusService,
     session: Session,
     context: Context
-): RecipeCollectionsViewModel(service, session, context) {
+): EpicuriusViewModel(service, session, context) {
 
     private val recipeFlow = MutableStateFlow<LoadState<Recipe>>(idle())
     private val recipeNameFlow = MutableStateFlow<LoadState<String>>(idle())
@@ -283,7 +283,10 @@ class RecipeProfileViewModel(
         }
         when {
             result.isFailure -> enableButtons()
-            result.isSuccess -> onSuccessNavigateTo()
+            result.isSuccess -> {
+                showToast("Recipe deleted successfully")
+                onSuccessNavigateTo()
+            }
         }
     }
 

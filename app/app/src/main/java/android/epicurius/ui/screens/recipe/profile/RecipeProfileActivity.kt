@@ -11,6 +11,7 @@ import android.epicurius.domain.recipe.RecipeInfo
 import android.epicurius.ui.EpicuriusActivity
 import android.epicurius.ui.navigation.Intents
 import android.epicurius.ui.navigation.navigateTo
+import android.epicurius.ui.screens.collections.recipeCollections.RecipeCollectionsViewModel
 import android.epicurius.ui.screens.collections.recipeCollections.components.RecipeCollectionsStateBundle
 import android.epicurius.ui.screens.user.profile.UserProfileActivity
 import android.epicurius.ui.screens.utils.Idle
@@ -27,6 +28,7 @@ import kotlinx.coroutines.launch
 
 class RecipeProfileActivity : EpicuriusActivity() {
     override val viewModel: RecipeProfileViewModel by getViewModel<RecipeProfileViewModel>()
+    val recipeCollectionsViewModel: RecipeCollectionsViewModel by getViewModel<RecipeCollectionsViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -54,8 +56,8 @@ class RecipeProfileActivity : EpicuriusActivity() {
             val recipeNameState = viewModel.recipeName.collectAsState(Idle)
             val usernameState = viewModel.username.collectAsState(Idle)
             val userRecipeRatingState = viewModel.userRecipeRating.collectAsState(Idle)
-            val collectionsToAddRecipeState = viewModel.collectionsToAddRecipe.collectAsState(idle())
-            val collectionsToRemoveRecipeState = viewModel.collectionsToRemoveRecipe.collectAsState(idle())
+            val collectionsToAddRecipeState = recipeCollectionsViewModel.collectionsToAddRecipe.collectAsState(idle())
+            val collectionsToRemoveRecipeState = recipeCollectionsViewModel.collectionsToRemoveRecipe.collectAsState(idle())
             val substituteIngredientsState = viewModel.substituteIngredients.collectAsState(idle())
             RecipeProfileScreen(
                 recipeState = recipeState.value,
@@ -124,7 +126,7 @@ class RecipeProfileActivity : EpicuriusActivity() {
                     recipeId: Int,
                     collectionsToAdd: List<CollectionProfile>
                     ->
-                    viewModel.addRecipeToCollections(
+                    recipeCollectionsViewModel.addRecipeToCollections(
                         recipeId,
                         collectionsToAdd
                     )
@@ -133,7 +135,7 @@ class RecipeProfileActivity : EpicuriusActivity() {
                     recipeId: Int,
                     collectionsToRemove: List<CollectionProfile>,
                     ->
-                    viewModel.removeRecipeFromCollections(
+                    recipeCollectionsViewModel.removeRecipeFromCollections(
                         recipeId,
                         collectionsToRemove
                     )
@@ -141,10 +143,10 @@ class RecipeProfileActivity : EpicuriusActivity() {
                 onSubstituteIngredients = { ingredientName: String ->
                     viewModel.getSubstituteIngredients(ingredientName)
                 },
-                onRecipeCollectionsClear = { viewModel.clearRecipeCollections() },
+                onRecipeCollectionsClear = { recipeCollectionsViewModel.clearRecipeCollections() },
                 onUserProfileRequest = ::navigateToUserProfileActivity,
                 onRecipeCollectionsRequest = { recipeId: Int, collectionType: CollectionType ->
-                    viewModel.getRecipeCollections(recipeId, collectionType)
+                    recipeCollectionsViewModel.getRecipeCollections(recipeId, collectionType)
                 },
                 enableButtons = viewModel.enableButtons,
             )

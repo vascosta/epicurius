@@ -38,7 +38,7 @@ fun RecipeProfileImages(
     onImageClick: () -> Unit,
     onAddImage: () -> Unit,
     onRemoveImage: (Int) -> Unit,
-    enabled: Boolean
+    enableButtons: Boolean
 ) {
     HorizontalPager(
         state = pagerState,
@@ -61,12 +61,12 @@ fun RecipeProfileImages(
                         .fillMaxSize()
                         .clip(RoundedCornerShape(12.dp))
                         .clickable(
-                            enabled = enabled,
-                            onClick = { onImageClick() }
+                            enabled = enableButtons,
+                            onClick = onImageClick
                         )
                 )
 
-                if (enabled && images.size > 1) {
+                if (enableButtons && images.size > 1) {
                     IconButton(
                         onClick = { onRemoveImage(page) },
                         modifier = Modifier
@@ -88,7 +88,7 @@ fun RecipeProfileImages(
                     .fillMaxSize()
                     .clip(RoundedCornerShape(12.dp))
                     .border(2.dp, Color.Gray, RoundedCornerShape(12.dp))
-                    .clickable(enabled = enabled, onClick = onAddImage),
+                    .clickable(enabled = enableButtons, onClick = onAddImage),
                 contentAlignment = Alignment.Center
             ) {
                 Icon(

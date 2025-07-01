@@ -126,5 +126,4 @@ class CreateRecipeViewModel(
             carbs != null && !validateCarbs(carbs, ::showToast) -> false
             else -> true
         }
-
 }

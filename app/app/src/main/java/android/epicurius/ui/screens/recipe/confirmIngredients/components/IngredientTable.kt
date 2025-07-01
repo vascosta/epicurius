@@ -77,7 +77,8 @@ private fun IngredientBulletPoint(
         Checkbox(
             checked = checked,
             onCheckedChange = { onCheckedChange(it) },
-            modifier = Modifier.weight(0.1f)
+            modifier = Modifier.weight(0.1f),
+            enabled = enableButtons
         )
         Icon(
             imageVector = Icons.Default.ShoppingCart,

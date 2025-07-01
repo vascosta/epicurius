@@ -21,7 +21,8 @@ import androidx.compose.ui.unit.dp
 fun RecipeInfoComponent(
     isAuthor: Boolean,
     recipe: Recipe,
-    onEditRecipe: () -> Unit = {}
+    onEditRecipe: () -> Unit = {},
+    enableButtons: Boolean
 ) {
     Box(
         modifier = Modifier
@@ -35,10 +36,9 @@ fun RecipeInfoComponent(
                 onClick = { onEditRecipe() },
                 modifier = Modifier
                     .align(Alignment.TopEnd)
-                    .padding(top = 5.dp, end = 10.dp)
-            ) {
-                Text("Edit")
-            }
+                    .padding(top = 5.dp, end = 10.dp),
+                enabled = enableButtons
+            ) { Text("Edit") }
         }
         Column(
             modifier = Modifier

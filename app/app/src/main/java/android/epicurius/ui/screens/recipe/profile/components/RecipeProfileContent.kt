@@ -221,7 +221,7 @@ fun RecipeProfileContent(
                             onEditRecipePictures(recipePicturesBytes)
                         }
                     },
-                    enabled = enableButtons && isAuthor
+                    enableButtons = enableButtons && isAuthor
                 )
                 HorizontalPagerIndicator(
                     size = recipePicturesListSize,
@@ -272,7 +272,8 @@ fun RecipeProfileContent(
                 RecipeInfoComponent(
                     isAuthor = isAuthor,
                     recipe = recipe,
-                    onEditRecipe = { showEditRecipeDialog = true }
+                    onEditRecipe = { showEditRecipeDialog = true },
+                    enableButtons = enableButtons
                 )
                 Row {
                     Button(
