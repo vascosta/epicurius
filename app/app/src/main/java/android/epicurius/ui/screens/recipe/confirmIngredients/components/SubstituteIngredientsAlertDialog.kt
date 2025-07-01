@@ -39,6 +39,9 @@ fun SubstituteIngredientsAlertDialog(
                 }
             }
         },
-        confirmButton = { Button(onClick = onDismiss) { Text("Close") } }
+        confirmButton = {
+            Button(onClick = onDismiss,
+                enabled = enableButtons
+            ) { Text("Close") } }
     )
 }

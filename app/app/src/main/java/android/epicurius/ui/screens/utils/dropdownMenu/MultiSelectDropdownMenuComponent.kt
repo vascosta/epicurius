@@ -63,7 +63,8 @@ fun MultiSelectDropdownMenuComponent(
                         Row(verticalAlignment = Alignment.CenterVertically) {
                             Checkbox(
                                 checked = isSelected,
-                                onCheckedChange = null
+                                onCheckedChange = null,
+                                enabled = enabled
                             )
                             Spacer(Modifier.width(8.dp))
                             Text(option)
@@ -76,7 +77,8 @@ fun MultiSelectDropdownMenuComponent(
                             values + option
                         }
                         onValuesChange(newSelection)
-                    }
+                    },
+                    enabled = enabled
                 )
             }
         }

@@ -54,7 +54,8 @@ fun SearchDropdownMenuComponent(
                     onClick = {
                         onValueChange(option)
                         expanded = false
-                    }
+                    },
+                    enabled = enabled
                 )
             }
         }

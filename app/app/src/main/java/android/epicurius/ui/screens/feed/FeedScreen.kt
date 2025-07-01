@@ -163,7 +163,7 @@ fun FeedScreen(
                         onRejectFollowRequest = onRejectFollowRequest,
                         onFollowRequests = onFollowRequests,
                         onUserProfileRequest = onUserProfileRequest,
-                        onDismiss = { if (enableButtons) showFollowRequestsDialog = false },
+                        onDismiss = { showFollowRequestsDialog = false },
                         enableButtons = enableButtons
                     )
                 }

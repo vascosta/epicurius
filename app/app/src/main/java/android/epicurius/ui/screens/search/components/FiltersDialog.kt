@@ -64,10 +64,10 @@ fun FiltersDialog(
     AlertDialog(
         onDismissRequest = { if (enableButtons) onDismiss() },
         confirmButton = {
-            TextButton(onClick = onDismiss) { Text("Apply") }
+            TextButton(onClick = onDismiss, enabled = enableButtons) { Text("Apply") }
         },
         dismissButton = {
-            TextButton(onClick = onCancel) { Text("Cancel") }
+            TextButton(onClick = onCancel, enabled = enableButtons) { Text("Cancel") }
         },
         title = { Text("Filters") },
         text = {

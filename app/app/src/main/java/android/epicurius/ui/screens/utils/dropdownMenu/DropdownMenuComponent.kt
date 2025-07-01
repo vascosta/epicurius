@@ -82,7 +82,8 @@ fun DropdownMenuComponent(
                     onClick = {
                         onValueChange(option)
                         expanded = false
-                    }
+                    },
+                    enabled = enabled
                 )
             }
         }
