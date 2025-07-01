@@ -1,27 +1,22 @@
 package android.epicurius.ui.screens.user.profile
 
 import android.content.Context
-import android.epicurius.domain.Picture
 import android.epicurius.domain.collection.CollectionProfile
 import android.epicurius.domain.recipe.RecipeInfo
-import android.epicurius.domain.user.FollowUser
-import android.epicurius.domain.user.FollowingUser
+import android.epicurius.domain.user.FollowRequestType
+import android.epicurius.domain.user.FollowingStatus
 import android.epicurius.domain.user.UserProfile
 import android.epicurius.services.EpicuriusService
-import android.epicurius.services.api.collection.models.input.AddRecipeToCollectionInputModel
-import android.epicurius.services.http.utils.APIResult
 import android.epicurius.services.http.utils.CachedResult
 import android.epicurius.storage.Session
 import android.epicurius.ui.EpicuriusViewModel
 import android.epicurius.ui.screens.utils.LoadState
-import android.epicurius.ui.screens.utils.apiFailure
 import android.epicurius.ui.screens.utils.apiSuccess
+import android.epicurius.ui.screens.utils.cache
 import android.epicurius.ui.screens.utils.getOrThrow
 import android.epicurius.ui.screens.utils.idle
-import android.epicurius.ui.screens.utils.loaded
 import android.epicurius.ui.screens.utils.loading
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.viewModelScope
@@ -29,6 +24,7 @@ import epicurius.domain.collection.CollectionType
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import java.util.Base64
 
 class UserProfileViewModel(
     service: EpicuriusService,
@@ -37,31 +33,23 @@ class UserProfileViewModel(
 ): EpicuriusViewModel(service, session, context) {
 
     private val userProfileFlow = MutableStateFlow<LoadState<UserProfile>>(idle())
-    private val userRecipesFlow = MutableStateFlow<LoadState<List<RecipeInfo>>>(idle())
-    private val userKitchenBookFlow = MutableStateFlow<LoadState<List<CollectionProfile>>>(idle())
-    private val kitchenBookCollectionRecipesFlow = MutableStateFlow<LoadState<List<RecipeInfo>>>(idle())
-    private val userFollowersFlow = MutableStateFlow<LoadState<List<FollowUser>>>(idle())
-    private val userFollowingFlow = MutableStateFlow<LoadState<List<FollowingUser>>>(idle())
-
-    private val cachedUserRecipes = MutableStateFlow<List<RecipeInfo>>(emptyList())
-    private val cachedUserKitchenBookFlow = MutableStateFlow<List<CollectionProfile>>(emptyList())
-    private val cachedUserFollowersFlow = MutableStateFlow<List<FollowUser>>(emptyList())
-    private val cachedUserFollowingFlow = MutableStateFlow<List<FollowingUser>>(emptyList())
-
     val userProfile = userProfileFlow.asStateFlow()
+
+    private val userRecipesFlow = MutableStateFlow<LoadState<List<RecipeInfo>>>(idle())
+    private val cachedUserRecipesFlow = MutableStateFlow<List<RecipeInfo>>(emptyList())
+
     val userRecipes = userRecipesFlow.asStateFlow()
+
+    private val userKitchenBookFlow = MutableStateFlow<LoadState<List<CollectionProfile>>>(idle())
+    private val cachedUserKitchenBookFlow = MutableStateFlow<List<CollectionProfile>>(emptyList())
+
     val userKitchenBook = userKitchenBookFlow.asStateFlow()
-    val kitchenBookCollectionRecipes = kitchenBookCollectionRecipesFlow.asStateFlow()
-    val userFollowers = userFollowersFlow.asStateFlow()
-    val userFollowing = userFollowingFlow.asStateFlow()
 
-    var isAnotherUserProfile by mutableStateOf(true)
-
-    var userProfileVisibility by mutableStateOf(true)
-
-    var followEnable by mutableStateOf(true)
+    var isAnotherUserProfile by mutableStateOf(false)
+    var userProfileVisibility by mutableStateOf(false)
 
     fun getUserProfile(name: String) {
+        disableButtons()
         userProfileFlow.value = loading()
         viewModelScope.launch {
             checkIfIsAnotherUserProfile(name)
@@ -69,60 +57,44 @@ class UserProfileViewModel(
         }
     }
 
-    fun getUserRecipes() {
-        userRecipesFlow.value = loaded(CachedResult<List<RecipeInfo>>(cachedUserRecipes.value))
-        viewModelScope.launch {
-            fetchUserRecipes()
-        }
+    fun getUserRecipes(username: String?) {
+        userRecipesFlow.value = loading(CachedResult<List<RecipeInfo>>(cachedUserRecipesFlow.value))
+        viewModelScope.launch { fetchUserRecipes(username) }
     }
 
-    fun getUserKitchenBook() {
-        userKitchenBookFlow.value = loaded(CachedResult<List<CollectionProfile>>(cachedUserKitchenBookFlow.value))
-        viewModelScope.launch {
-            fetchUserKitchenBook()
-        }
+    fun getUserKitchenBook(username: String?) {
+        userKitchenBookFlow.value = loading(CachedResult<List<CollectionProfile>>(cachedUserKitchenBookFlow.value))
+        viewModelScope.launch { fetchUserKitchenBook(username) }
     }
 
-    fun getKitchenBookCollectionRecipes(id: Int) {
-        disableFollow()
-        viewModelScope.launch {
-            fetchUserKitchenBookCollectionRecipes(id)
-        }
+    fun updateUserProfilePicture(pictureBytes: ByteArray?) {
+        disableButtons()
+        viewModelScope.launch { handleUpdateUserProfilePicture(pictureBytes) }
     }
 
-    fun follow(name: String) {
-        disableFollow()
-        viewModelScope.launch {
-            handleFollow(name)
-        }
+    fun follow(username: String) {
+        disableButtons()
+        viewModelScope.launch { handleFollow(username) }
     }
 
-    fun unfollow(name: String) {
-        disableFollow()
-        viewModelScope.launch {
-            handleUnfollow(name)
-        }
+    fun unfollow(username: String) {
+        disableButtons()
+        viewModelScope.launch { handleUnfollow(username) }
     }
 
-    fun updateUserProfilePicture(picture: Picture) {
-        disableFollow()
-        viewModelScope.launch {
-            handleUpdateUserProfilePicture(picture)
-        }
+    fun cancelFollow(username: String) {
+        disableButtons()
+        viewModelScope.launch { handleCancelFollow(username) }
     }
 
-    fun addRecipeToKitchenBookCollection(collectionId: Int, recipeId: Int) {
-        disableFollow()
-        val addRecipeInfo = AddRecipeToCollectionInputModel(recipeId)
-        viewModelScope.launch {
-            handleAddRecipeToKitchenBookCollection(collectionId, addRecipeInfo)
-        }
+    fun clearUserRecipes() {
+        cachedUserRecipesFlow.value = emptyList()
+        userRecipesFlow.value = idle()
     }
 
-    fun refreshUserProfile(name: String) {
-        getUserProfile(name)
-        getUserRecipes()
-        getUserKitchenBook()
+    fun clearUserKitchenBook() {
+        cachedUserKitchenBookFlow.value = emptyList()
+        userKitchenBookFlow.value = idle()
     }
 
     private suspend fun fetchUserProfile(name: String) {
@@ -131,144 +103,140 @@ class UserProfileViewModel(
             service.userService.getUserProfile(token, name)
         }
         when {
-            result.isFailure -> {
-                userProfileFlow.value = apiFailure(result.getProblemOrThrow())
-            }
             result.isSuccess -> {
                 userProfileFlow.value = apiSuccess(result.getValueOrThrow().userProfile)
+                checkUserProfileVisibility()
             }
         }
     }
 
-    private suspend fun fetchUserRecipes() {
+    private suspend fun fetchUserRecipes(username: String?) {
         val result = request {
             val token = session.getToken()
-            val lastRecipeId = cachedUserRecipes.value.lastOrNull()?.id
-            service.recipeService.getUserRecipes(token, lastRecipeId, limit)
+            val lastRecipeId = cachedUserRecipesFlow.value.lastOrNull()?.id
+            service.recipeService.getUserRecipes(token, username, lastRecipeId, limit)
         }
         when {
-            result.isFailure -> {
-                userRecipesFlow.value = apiFailure(result.getProblemOrThrow())
-            }
+            result.isFailure -> handleCachedUserRecipes()
             result.isSuccess -> {
                 val fetchedUserRecipes = result.getValueOrThrow().recipes
-                val updatedUserRecipes = (cachedUserRecipes.value + fetchedUserRecipes).distinctBy { it.id }
-                cachedUserRecipes.value = updatedUserRecipes
-                userRecipesFlow.value = apiSuccess(updatedUserRecipes)
+                if (fetchedUserRecipes.isNotEmpty()) {
+                    val updatedUserRecipes = cachedUserRecipesFlow.value + fetchedUserRecipes
+                    userRecipesFlow.value = apiSuccess(updatedUserRecipes)
+                    cachedUserRecipesFlow.value = updatedUserRecipes
+                }
+                else handleCachedUserRecipes()
             }
         }
+        enableButtons()
     }
 
-    private suspend fun fetchUserKitchenBook() {
+    private fun handleCachedUserRecipes() {
+        userRecipesFlow.value = cache(cachedUserRecipesFlow.value)
+    }
+
+    private suspend fun fetchUserKitchenBook(username: String?) {
         val result = request {
             val token = session.getToken()
             val lastCollectionId = cachedUserKitchenBookFlow.value.lastOrNull()?.id
-            service.collectionService.getCollections(token, CollectionType.KITCHEN_BOOK, lastCollectionId, limit)
+            service.collectionService.getCollections(
+                token,
+                username,
+                CollectionType.KITCHEN_BOOK,
+                lastCollectionId,
+                limit
+            )
         }
         when {
-            result.isFailure -> {
-                userKitchenBookFlow.value = apiFailure(result.getProblemOrThrow())
-            }
+            result.isFailure -> handleCachedUserKitchenBook()
             result.isSuccess -> {
                 val fetchedUserKitchenBook = result.getValueOrThrow().collections
-                val updatedUserKitchenBook = (cachedUserKitchenBookFlow.value + fetchedUserKitchenBook).distinctBy { it.id }
-                cachedUserKitchenBookFlow.value = updatedUserKitchenBook
-                userKitchenBookFlow.value = apiSuccess(updatedUserKitchenBook)
+                if (fetchedUserKitchenBook.isNotEmpty()) {
+                    val updatedUserKitchenBook = cachedUserKitchenBookFlow.value + fetchedUserKitchenBook
+                    userKitchenBookFlow.value = apiSuccess(updatedUserKitchenBook)
+                    cachedUserKitchenBookFlow.value = updatedUserKitchenBook
+                }
+                else handleCachedUserKitchenBook()
             }
         }
     }
 
-    private suspend fun fetchUserKitchenBookCollectionRecipes(id: Int) {
-        val result = request {
-            val token = session.getToken()
-            service.collectionService.getCollection(token, id)
-        }
-        when {
-            result.isFailure -> {
-                kitchenBookCollectionRecipesFlow.value = apiFailure(result.getProblemOrThrow())
-            }
-            result.isSuccess -> {
-                kitchenBookCollectionRecipesFlow.value = apiSuccess(result.getValueOrThrow().collection.recipes)
-            }
-        }
-        enableFollow()
+    private fun handleCachedUserKitchenBook() {
+        userKitchenBookFlow.value = cache(cachedUserKitchenBookFlow.value)
     }
 
-    private suspend fun handleFollow(name: String) {
+    private suspend fun handleUpdateUserProfilePicture(pictureBytes: ByteArray?) {
         val result = request {
             val token = session.getToken()
-            service.userService.follow(token, name)
+            service.userService.updateUserProfilePicture(token, pictureBytes)
         }
         when {
-            result.isFailure -> {
-                showToast(result.getProblemOrThrow().detail)
-            }
-            result.isSuccess -> {
-                refreshUserProfile(name)
-            }
-        }
-    }
-
-    private suspend fun handleUnfollow(name: String) {
-        val result = request {
-            val token = session.getToken()
-            service.userService.unfollow(token, name)
-        }
-        when {
-            result.isFailure -> {
-                showToast(result.getProblemOrThrow().detail)
-            }
-            result.isSuccess -> {
-                refreshUserProfile(name)
-            }
-        }
-    }
-
-    private suspend fun handleUpdateUserProfilePicture(picture: Picture) {
-        val result = request {
-            val token = session.getToken()
-            service.userService.updateUserProfilePicture(token, picture)
-        }
-        when {
-            result.isFailure -> {
-                showToast(result.getProblemOrThrow().detail)
-            }
             result.isSuccess -> {
                 val oldUserProfile = userProfileFlow.value.getOrThrow()
-                val newProfilePictureName = result.getValueOrThrow()?.profilePictureName
-                if (newProfilePictureName != null) {
-                    userProfileFlow.value = apiSuccess(
-                        APIResult<UserProfile>(
-                            oldUserProfile.copy(profilePicture = picture.second)
-                        ).getValueOrThrow()
-                    )
-                    session.updateUserProfilePicture(context, newProfilePictureName, picture.second)
+                val newProfilePictureName = result.getValueOrNull()?.profilePictureName
+                if (newProfilePictureName != null && pictureBytes != null) {
+                    val updatedUserProfile = oldUserProfile.copy(profilePicture = Base64.getEncoder().encodeToString(pictureBytes))
+                    userProfileFlow.value = apiSuccess(updatedUserProfile)
+                    session.updateUserProfilePicture(context, newProfilePictureName, pictureBytes)
                 }
                 else {
+                    val updatedUserProfile = oldUserProfile.copy(profilePicture = null)
+                    userProfileFlow.value = apiSuccess(updatedUserProfile)
                     session.deleteProfilePicture(context)
                 }
             }
         }
-        enableFollow()
+        enableButtons()
     }
 
-    private suspend fun handleAddRecipeToKitchenBookCollection(
-        collectionId: Int,
-        addRecipeInfo: AddRecipeToCollectionInputModel
-    ) {
+    private suspend fun handleFollow(username: String) {
         val result = request {
             val token = session.getToken()
-            service.collectionService.addRecipeToCollection(token, collectionId, addRecipeInfo)
+            service.userService.follow(token, username)
         }
         when {
-            result.isFailure -> {
-                kitchenBookCollectionRecipesFlow.value = apiFailure(result.getProblemOrThrow())
-            }
             result.isSuccess -> {
-                kitchenBookCollectionRecipesFlow.value = apiSuccess(result.getValueOrThrow().collection.recipes)
+                val userProfilePrivacy = userProfileFlow.value.getOrThrow().privacy
+                if (userProfilePrivacy) showToast("Following request sent!")
+                else {
+                    handleChangeOnFollowingStatus(FollowingStatus.ACCEPTED)
+                    checkUserProfileVisibility()
+                }
             }
         }
-        enableFollow()
+        enableButtons()
+    }
+
+    private suspend fun handleUnfollow(username: String) {
+        val result = request {
+            val token = session.getToken()
+            service.userService.unfollow(token, username)
+        }
+        when {
+            result.isSuccess -> {
+                handleChangeOnFollowingStatus(FollowingStatus.NOT_FOLLOWING)
+                checkUserProfileVisibility()
+            }
+        }
+    }
+
+    private suspend fun handleCancelFollow(username: String) {
+        val result = request {
+            val token = session.getToken()
+            service.userService.followRequest(token, username, FollowRequestType.CANCEL)
+        }
+        when {
+            result.isSuccess -> {
+                handleChangeOnFollowingStatus(FollowingStatus.NOT_FOLLOWING)
+                checkUserProfileVisibility()
+            }
+        }
+    }
+
+    private fun handleChangeOnFollowingStatus(followingStatus: FollowingStatus) {
+        val oldUserProfile = userProfileFlow.value.getOrThrow()
+        val updatedUserProfile = oldUserProfile.copy(followingStatus = followingStatus)
+        userProfileFlow.value = apiSuccess(updatedUserProfile)
     }
 
     private suspend fun checkIfIsAnotherUserProfile(name: String) {
@@ -276,30 +244,16 @@ class UserProfileViewModel(
         isAnotherUserProfile = userName != name
     }
 
-    private fun checkUserVisibility(name: String, userProfile: UserProfile): Boolean {
-        if (!isAnotherUserProfile) {
-            userProfileVisibility = true
-            return true
-        }
+    // only called after user profile flow is loaded
+    private fun checkUserProfileVisibility() {
+        if (!isAnotherUserProfile) userProfileVisibility = true // own profile
+
         else {
-            if (!userProfile.privacy) {
+            if (!userProfileFlow.value.getOrThrow().privacy) userProfileVisibility = true // public profile
+            if (userProfileFlow.value.getOrThrow().followingStatus == FollowingStatus.ACCEPTED) // private profile and following
                 userProfileVisibility = true
-                return true
-            }
-            else if (userFollowers.value.getOrThrow().firstOrNull { it.name == name } != null) {
-                userProfileVisibility = true
-                return true
-            }
-            userProfileVisibility = false
-            return false
+
+            userProfileVisibility = false // private profile and not following
         }
-    }
-
-    private fun enableFollow() {
-        followEnable = true
-    }
-
-    private fun disableFollow() {
-        followEnable = false
     }
 }

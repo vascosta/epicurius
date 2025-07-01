@@ -1,4 +1,4 @@
-package android.epicurius.ui.notifications
+package android.epicurius.ui.notifications.fridge
 
 import android.content.Context
 import androidx.work.PeriodicWorkRequestBuilder

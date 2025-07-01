@@ -1,4 +1,4 @@
-package android.epicurius.ui.notifications.repository
+package android.epicurius.ui.notifications.fridge.repository
 
 import android.epicurius.domain.fridge.Product
 import android.epicurius.services.api.fridge.FridgeService

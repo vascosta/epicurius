@@ -1,16 +1,14 @@
-package android.epicurius.ui.notifications
+package android.epicurius.ui.notifications.fridge
 
 import android.Manifest
 import android.content.Context
 import android.content.pm.PackageManager
 import android.epicurius.EpicuriusApplication
-import android.epicurius.ui.notifications.repository.ProductRepository
+import android.epicurius.ui.notifications.fridge.repository.ProductRepository
 import android.epicurius.ui.notifications.utils.createFridgeNotificationChannel
 import android.epicurius.ui.notifications.utils.notifyProductExpiration
 import android.os.Build
 import androidx.core.content.ContextCompat
-import androidx.work.CoroutineWorker
-import androidx.work.WorkerParameters
 import java.time.LocalDate
 
 class ExpirationCheckWorker(

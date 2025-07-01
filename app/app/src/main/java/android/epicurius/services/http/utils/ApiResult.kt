@@ -9,7 +9,7 @@ class APIResult<out T>(private val value: Any?, private val token: String? = nul
     val isSuccess get() = value !is Failure
     val isFailure get() = value is Failure
 
-    fun getOrNull(): T? =
+    fun getValueOrNull(): T? =
         when {
             isFailure -> null
             else -> value as T

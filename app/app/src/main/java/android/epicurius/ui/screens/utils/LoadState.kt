@@ -73,7 +73,7 @@ fun <T> LoadState<T>.getOrThrow(): T = when (this) {
  * Returns the result of the load operation, if one is available.
  */
 fun <T> LoadState<T>.getOrNull(): T? = when (this) {
-    is Loaded -> value.getOrNull()
+    is Loaded -> value.getValueOrNull()
     else -> null
 }
 

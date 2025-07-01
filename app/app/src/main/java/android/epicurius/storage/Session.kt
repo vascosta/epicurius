@@ -23,7 +23,7 @@ interface Session {
         profilePicture: ByteArray?
     )
     suspend fun updateUserInfo(userInfo: UserInfo)
-    suspend fun updateUserProfilePicture(context: Context, profilePictureName: String?, profilePicture: ByteArray?)
+    suspend fun updateUserProfilePicture(context: Context, profilePictureName: String, profilePicture: ByteArray)
     suspend fun updateDailyMenu(dailyMenu: DailyMenu)
     suspend fun delete(context: Context)
     suspend fun deleteProfilePicture(context: Context)

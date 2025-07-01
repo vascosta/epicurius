@@ -28,6 +28,7 @@ class CollectionService(private val httpService: HttpService) {
 
     suspend fun getCollections(
         token: String,
+        username: String?,
         type: CollectionType,
         lastCollectionId: Int?,
         limit: Int
@@ -35,6 +36,7 @@ class CollectionService(private val httpService: HttpService) {
         httpService.get<GetCollectionsOutputModel>(
             Uris.Collection.COLLECTIONS,
             queryParams = mapOf(
+                "username" to username,
                 "collectionType" to type,
                 "lastCollectionId" to lastCollectionId,
                 "limit" to limit

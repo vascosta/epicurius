@@ -4,11 +4,13 @@ import android.epicurius.domain.collection.CollectionProfile
 import android.epicurius.domain.recipe.Cuisine
 import android.epicurius.domain.recipe.MealType
 import android.epicurius.domain.recipe.RecipeInfo
+import android.epicurius.domain.user.FollowingStatus
 import android.epicurius.domain.user.UserProfile
 import android.epicurius.ui.navigation.BottomBar
 import android.epicurius.ui.navigation.TopBar
 import android.epicurius.ui.screens.collections.components.CollectionProfileBox
 import android.epicurius.ui.screens.collections.components.CreateCollectionDialog
+import android.epicurius.ui.screens.collections.recipeCollections.components.RecipeCollectionsStateBundle
 import android.epicurius.ui.screens.recipe.components.RecipeInfoBox
 import android.epicurius.ui.screens.user.components.FollowBox
 import android.epicurius.ui.screens.user.components.ProfileTabBar
@@ -16,7 +18,9 @@ import android.epicurius.ui.screens.user.components.UserProfilePicture
 import android.epicurius.ui.screens.user.profile.utils.getFlagEmoji
 import android.epicurius.ui.screens.utils.LoadState
 import android.epicurius.ui.screens.utils.LoadStateRenderer
+import android.epicurius.ui.screens.utils.Loaded
 import android.epicurius.ui.screens.utils.apiSuccess
+import android.epicurius.ui.screens.utils.getOrThrow
 import android.os.Build
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -39,13 +43,13 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -68,37 +72,48 @@ import com.google.accompanist.permissions.rememberPermissionState
 @Composable
 fun UserProfileScreen(
     isAnotherUserProfile: Boolean,
-    isFollower: Boolean,
     userProfileVisibility: Boolean,
-    userRecipes: LoadState<List<RecipeInfo>>?,
-    recipeCollectionsState: LoadState<List<CollectionProfile>>?,
-    kitchenBookCollectionsState: LoadState<List<CollectionProfile>>?,
-    //followEnable: Boolean,
-    onBackButton: () -> Unit,
-    onSettingsButton: () -> Unit,
-    onFollowersButton: () -> Unit,
-    onFollowingButton: () -> Unit,
-    onFollowRequest: (String) -> Unit,
-    //onFollow: (String) -> Unit,
-    //onUnfollow: (String) -> Unit,
-    onCollectionRequest: (Int) -> Unit,
-    onCollectionCreate: (collectionName: String) -> Unit,
-    //onRecipeRequest: (Int) -> Unit,
-    //onAddRecipeToCollectionRequest: (Int, Int) -> Unit,
-    onUserProfileRefresh: () -> Unit,
-    onUserPictureChange: (ByteArray) -> Unit,
-    onUserRecipesLoadMore: () -> Unit,
-    onUserKitchenBookLoadMore: () -> Unit,
     userProfileState: LoadState<UserProfile>,
-    //userRecipesState: LoadState<List<RecipeInfo>>,
-    //userKitchenBookState: LoadState<List<CollectionProfile>>
-    //kitchenBookCollectionRecipesState: LoadState<List<RecipeInfo>>,
+    userRecipesState: LoadState<List<RecipeInfo>>,
+    userKitchenBookState: LoadState<List<CollectionProfile>>,
+    recipeCollectionsStateBundle: RecipeCollectionsStateBundle,
+    onBackButton: () -> Unit = {},
+    onUpdateUserProfilePicture: (picture: ByteArray?) -> Unit = {},
+    onFollow: (username: String) -> Unit = {},
+    onUnfollow: (username: String) -> Unit = {},
+    onCancelFollow: (username: String) -> Unit = {},
+    onUserKitchenBookCollectionCreate: (collectionName: String) -> Unit = {},
+    onUserKitchenBookCollectionDelete: (collectionId: Int) -> Unit = {},
+    onAddRecipeToCollections: (
+        recipeId: Int,
+        collectionsToAdd: List<CollectionProfile>
+    ) -> Unit = { _, _ -> },
+    onRemoveRecipeFromCollections: (
+        recipeId: Int,
+        collectionsToRemove: List<CollectionProfile>
+    ) -> Unit = { _, _ -> },
+    onUserRecipesClear: () -> Unit = {},
+    onUserKitchenBookClear: () -> Unit = {},
+    onRecipeCollectionsClear: () -> Unit = {},
+    onUserRecipesRequest: (username: String?) -> Unit = {},
+    onUserKitchenBookRequest: (username: String?) -> Unit = {},
+    onFollowersOrFollowingRequest: (
+        tab: Int,
+        username: String,
+        followersCount: Int,
+        followingCount: Int
+    ) -> Unit = { _, _, _, _ -> },
+    onUserKitchenBookCollectionRequest: (collectionId: Int, isCollectionOwner: Boolean) -> Unit = { _, _ -> },
+    onRecipeCollectionsRequest: (recipeId: Int) -> Unit = {},
+    onRecipeRequest: (recipeId: Int) -> Unit = {},
     enableButtons: Boolean
 ) {
-    var selectedTabIndex by remember { mutableIntStateOf(0) }
-
-    var selectedImageBytes by remember { mutableStateOf<ByteArray?>(null) }
     val context = LocalContext.current
+
+    var showCreateCollectionDialog by remember { mutableStateOf(false) }
+
+    var selectedTabIndex by remember { mutableIntStateOf(0) }
+    var selectedImageBytes by remember { mutableStateOf<ByteArray?>(null) }
 
     val imagePickerLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.PickVisualMedia()
@@ -109,7 +124,7 @@ fun UserProfileScreen(
             inputStream?.close()
             if (bytes != null) {
                 selectedImageBytes = bytes
-                onUserPictureChange(bytes)
+                onUpdateUserProfilePicture(bytes)
             }
         } else {
             Toast.makeText(context, "No image selected", Toast.LENGTH_SHORT).show()
@@ -122,8 +137,19 @@ fun UserProfileScreen(
         rememberPermissionState(android.Manifest.permission.READ_EXTERNAL_STORAGE)
     }
 
-    var showCreateCollectionDialog by remember { mutableStateOf(false) }
-
+    LaunchedEffect(userProfileVisibility) {
+        if (userProfileState is Loaded) {
+            val username = userProfileState.getOrThrow().name
+            if (userProfileVisibility) {
+                onUserRecipesRequest(username)
+                onUserKitchenBookRequest
+            }
+            else {
+                onUserRecipesClear()
+                onUserKitchenBookClear()
+            }
+        }
+    }
     Scaffold(
         topBar = {
             TopBar(
@@ -152,13 +178,13 @@ fun UserProfileScreen(
                                 .fillMaxWidth()
                                 .align(Alignment.End),
                             contentAlignment = Alignment.CenterEnd
-                        ){
+                        ) {
                             val flagEmoji = getFlagEmoji(userProfile.country)
                             Text(text = flagEmoji, fontSize = 24.sp)
                         }
                         Spacer(modifier = Modifier.fillMaxHeight(0.02f))
                         UserProfilePicture(
-                            profilePicture = selectedImageBytes ?: userProfile.profilePicture,
+                            profilePicture = selectedImageBytes ?: userProfile.profilePictureBytes,
                             iconSize = 120,
                             isUserProfile = !isAnotherUserProfile,
                             onClick = {
@@ -171,7 +197,7 @@ fun UserProfileScreen(
                                 }
                             },
                             onRemoveImage = { imageBytes ->
-                                onUserPictureChange(ByteArray(0))
+                                onUpdateUserProfilePicture(ByteArray(0))
                                 selectedImageBytes = null
                             },
                             enabled = enableButtons
@@ -179,7 +205,6 @@ fun UserProfileScreen(
                         Spacer(modifier = Modifier.fillMaxHeight(0.02f))
                         Text(text = userProfile.name, fontWeight = FontWeight.Bold)
                         Spacer(modifier = Modifier.fillMaxHeight(0.05f))
-
                         Row(
                             modifier = Modifier.fillMaxWidth(),
                             horizontalArrangement = Arrangement.Center,
@@ -187,31 +212,50 @@ fun UserProfileScreen(
                             FollowBox(
                                 name = "Followers",
                                 number = userProfile.followersCount,
-                                onClick = onFollowersButton,
+                                onClick = {
+                                    onFollowersOrFollowingRequest(
+                                        selectedTabIndex,
+                                        userProfile.name,
+                                        userProfile.followersCount,
+                                        userProfile.followingCount
+                                    )
+                                },
                                 enabled = userProfileVisibility
                             )
                             FollowBox(
                                 name = "Following",
                                 number = userProfile.followingCount,
-                                onClick = onFollowingButton,
+                                onClick = {
+                                    onFollowersOrFollowingRequest(
+                                        selectedTabIndex,
+                                        userProfile.name,
+                                        userProfile.followersCount,
+                                        userProfile.followingCount
+                                    )
+                                },
                                 enabled = userProfileVisibility
                             )
                         }
                         if (isAnotherUserProfile) {
-                            val buttonText = if (isFollower) "Unfollow" else "Follow"
-                            val buttonColor = if (isFollower) Color.Black else Color.Unspecified
-
-                            Button(
-                                onClick = { onFollowRequest(userProfile.name) },
-                                modifier = Modifier.fillMaxWidth().padding(5.dp),
-                                colors = ButtonDefaults.buttonColors(containerColor = buttonColor)
-                            ) {
-                                Text(text = buttonText)
+                            val buttonText = when (userProfile.followingStatus) {
+                                FollowingStatus.ACCEPTED -> "Unfollow"
+                                FollowingStatus.PENDING -> "Cancel Follow"
+                                FollowingStatus.NOT_FOLLOWING -> "Follow"
                             }
-                        } else {
+                            Button(
+                                onClick = {
+                                    when (userProfile.followingStatus) {
+                                        FollowingStatus.ACCEPTED -> onUnfollow(userProfile.name)
+                                        FollowingStatus.PENDING -> onCancelFollow(userProfile.name)
+                                        FollowingStatus.NOT_FOLLOWING -> onFollow(userProfile.name)
+                                    }
+                                },
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(5.dp),
+                            ) { Text(text = buttonText) }
+                        } else
                             Spacer(modifier = Modifier.fillMaxHeight(0.05f))
-                        }
-
                         if (userProfileVisibility) {
                             ProfileTabBar(
                                 selectedTabIndex = selectedTabIndex,
@@ -219,10 +263,9 @@ fun UserProfileScreen(
                                 onKitchenBookClick = { selectedTabIndex = 1 },
                             )
                             Spacer(Modifier.size(10.dp))
-
-                            if (selectedTabIndex == 0 && userRecipes != null) {
+                            if (selectedTabIndex == 0) {
                                 LoadStateRenderer(
-                                    loadState = userRecipes,
+                                    loadState = userRecipesState,
                                     content = { recipes ->
                                         Column(
                                             modifier = Modifier
@@ -230,45 +273,58 @@ fun UserProfileScreen(
                                                 .verticalScroll(rememberScrollState()),
                                             verticalArrangement = Arrangement.spacedBy(16.dp)
                                         ) {
-                                            if (recipes.isEmpty()) {
+                                            if (recipes.isNotEmpty()) {
+                                                recipes.forEach { recipe ->
+                                                    RecipeInfoBox(
+                                                        collectionId = null,
+                                                        recipeInfo = recipe,
+                                                        recipeCollectionsStateBundle = recipeCollectionsStateBundle,
+                                                        onAddRecipeToCollections = onAddRecipeToCollections,
+                                                        onRemoveRecipeFromCollections = onRemoveRecipeFromCollections,
+                                                        onRecipeCollectionsClear = onRecipeCollectionsClear,
+                                                        onRecipeCollectionsRequest = onRecipeCollectionsRequest,
+                                                        onRecipeRequest = onRecipeRequest,
+                                                        enableButtons = enableButtons
+                                                    )
+                                                }
+                                                Button(
+                                                    onClick = { onUserRecipesRequest(userProfile.name) },
+                                                    modifier = Modifier
+                                                        .fillMaxWidth()
+                                                        .padding(10.dp),
+                                                    enabled = enableButtons
+                                                ) { Text("Load More") }
+                                            }
+                                            else if (userRecipesState is Loaded) {
                                                 Text(
                                                     "User has no recipes yet.",
                                                     color = Color.Gray,
                                                     modifier = Modifier.fillMaxWidth(),
                                                     textAlign = TextAlign.Center
                                                 )
-                                            } else {
-                                                recipes.forEach { recipe ->
-                                                    RecipeInfoBox(
-                                                        collectionId = null,
-                                                        recipeInfo = recipe,
-                                                        recipeCollectionsStateBundle = null,
-                                                        onRemoveRecipeFromCollection = {_, _ ->},
-                                                        onRecipeRequest = { _ -> },
-                                                        onRecipeCollectionsRequest = {},
-                                                        onRecipeCollectionsClear = {},
-                                                        enableButtons = true
-                                                    )
-                                                }
                                             }
                                         }
                                     }
                                 )
-                            } else if (selectedTabIndex == 1 && kitchenBookCollectionsState != null) {
-                                Row {
-                                    Spacer(Modifier.fillMaxWidth().weight(0.9f))
-                                    IconButton(
-                                        onClick = { showCreateCollectionDialog = true },
-                                        enabled = enableButtons
-                                    ) {
-                                        Icon(
-                                            imageVector = Icons.Default.Add,
-                                            contentDescription = "Create Collection"
-                                        )
+                            } else if (selectedTabIndex == 1) {
+                                if (!isAnotherUserProfile) {
+                                    Row {
+                                        Spacer(Modifier
+                                            .fillMaxWidth()
+                                            .weight(0.9f))
+                                        IconButton(
+                                            onClick = { showCreateCollectionDialog = true },
+                                            enabled = enableButtons
+                                        ) {
+                                            Icon(
+                                                imageVector = Icons.Default.Add,
+                                                contentDescription = "Create Collection"
+                                            )
+                                        }
                                     }
                                 }
                                 LoadStateRenderer(
-                                    loadState = kitchenBookCollectionsState,
+                                    loadState = userKitchenBookState,
                                     content = { collections ->
                                         Column(
                                             modifier = Modifier
@@ -276,33 +332,39 @@ fun UserProfileScreen(
                                                 .verticalScroll(rememberScrollState()),
                                             verticalArrangement = Arrangement.spacedBy(16.dp)
                                         ) {
-                                            if (collections.isEmpty()) {
+                                            if (collections.isNotEmpty()) {
+                                                collections.forEach { collection ->
+                                                    CollectionProfileBox(
+                                                        isCollectionOwner = !isAnotherUserProfile,
+                                                        collection = collection,
+                                                        onCollectionDelete = onUserKitchenBookCollectionDelete,
+                                                        onCollectionRequest = onUserKitchenBookCollectionRequest,
+                                                        enableButtons = enableButtons
+                                                    )
+                                                }
+                                                Button(
+                                                    onClick = { onUserKitchenBookRequest(userProfile.name) },
+                                                    modifier = Modifier
+                                                        .fillMaxWidth()
+                                                        .padding(10.dp),
+                                                    enabled = enableButtons
+                                                ) { Text("Load More") }
+                                            }
+                                            else if (userKitchenBookState is Loaded) {
                                                 Text(
                                                     "User has no kitchen book collections yet.",
                                                     color = Color.Gray,
                                                     modifier = Modifier.fillMaxWidth(),
                                                     textAlign = TextAlign.Center
                                                 )
-                                            } else {
-                                                collections.forEach { collection ->
-                                                    CollectionProfileBox(
-                                                        collection = collection,
-                                                        onCollectionRequest = onCollectionRequest,
-                                                        onCollectionDelete = { _ -> },
-                                                        enableButtons = true
-                                                    )
-                                                }
                                             }
                                         }
                                     }
                                 )
-
                                 if (showCreateCollectionDialog) {
                                     CreateCollectionDialog(
-                                        onCollectionCreate = onCollectionCreate,
-                                        onDismiss = {
-                                            if (enableButtons) showCreateCollectionDialog = false
-                                        },
+                                        onCollectionCreate = onUserKitchenBookCollectionCreate,
+                                        onDismiss = { showCreateCollectionDialog = false },
                                         enableButtons = enableButtons
                                     )
                                 }
@@ -316,7 +378,9 @@ fun UserProfileScreen(
                             Text(
                                 text = "This profile is private.",
                                 color = Color.Gray,
-                                modifier = Modifier.fillMaxWidth().padding(5.dp),
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(5.dp),
                                 textAlign = TextAlign.Center
                             )
                         }
@@ -337,7 +401,8 @@ fun UserProfilePreview() {
         privacy = false,
         profilePicture = null,
         followersCount = 100,
-        followingCount = 50
+        followingCount = 50,
+        followingStatus = FollowingStatus.ACCEPTED
     )
 
     val userRecipes = listOf(
@@ -384,24 +449,15 @@ fun UserProfilePreview() {
     )
 
     UserProfileScreen(
-        isAnotherUserProfile = false,
-        isFollower = false,
+        isAnotherUserProfile = true,
         userProfileVisibility = true,
-        apiSuccess(userRecipes),
-        null,
-        apiSuccess(kitchenBookCollections),
-        {},
-        {},
-        {},
-        {},
-        {},
-        {},
-        {},
-        {},
-        {},
-        {},
-        {},
-        apiSuccess(userProfile),
-        true
+        userProfileState = apiSuccess(userProfile),
+        userRecipesState = apiSuccess(userRecipes),
+        userKitchenBookState = apiSuccess(kitchenBookCollections),
+        recipeCollectionsStateBundle = RecipeCollectionsStateBundle(
+            collectionsToAddRecipeState = apiSuccess(emptyList()),
+            collectionsToRemoveRecipeState = apiSuccess(emptyList())
+        ),
+        enableButtons = true
     )
 }

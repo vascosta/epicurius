@@ -1,129 +1,134 @@
 package android.epicurius.ui.screens.user.profile
 
 import android.epicurius.domain.collection.CollectionProfile
-import android.epicurius.domain.recipe.Cuisine
-import android.epicurius.domain.recipe.MealType
-import android.epicurius.domain.recipe.RecipeInfo
-import android.epicurius.domain.user.FollowUser
-import android.epicurius.domain.user.FollowingUser
-import android.epicurius.domain.user.UserProfile
 import android.epicurius.ui.EpicuriusActivity
 import android.epicurius.ui.navigation.Intents
-import android.epicurius.ui.screens.user.follow.FollowActivity
-import android.epicurius.ui.screens.user.settings.SettingsActivity
-import android.epicurius.ui.screens.utils.Idle
-import android.epicurius.ui.screens.utils.LoadState
-import android.epicurius.ui.screens.utils.Loaded
-import android.epicurius.ui.screens.utils.apiSuccess
 import android.epicurius.ui.navigation.navigateTo
+import android.epicurius.ui.screens.collections.CollectionsViewModel
+import android.epicurius.ui.screens.collections.collection.CollectionActivity
+import android.epicurius.ui.screens.collections.recipeCollections.RecipeCollectionsViewModel
+import android.epicurius.ui.screens.collections.recipeCollections.components.RecipeCollectionsStateBundle
+import android.epicurius.ui.screens.recipe.profile.RecipeProfileActivity
+import android.epicurius.ui.screens.user.follow.FollowActivity
+import android.epicurius.ui.screens.utils.Idle
+import android.epicurius.ui.screens.utils.idle
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.collectAsState
 import androidx.lifecycle.lifecycleScope
+import epicurius.domain.collection.CollectionType
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 
 class UserProfileActivity : EpicuriusActivity() {
     override val viewModel: UserProfileViewModel by getViewModel<UserProfileViewModel>()
+    val collectionsViewModel: CollectionsViewModel by getViewModel<CollectionsViewModel>()
+    val recipeCollectionsViewModel: RecipeCollectionsViewModel by getViewModel<RecipeCollectionsViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         lifecycleScope.launch {
-            combine(
-                viewModel.userProfile,
-                viewModel.userRecipes,
-                viewModel.userKitchenBook,
-            ) { userProfile, userRecipes, userKitchenBook ->
-                UserProfileStateBundle(userProfile, userRecipes, userKitchenBook)
-            }.collectLatest { state ->
+            viewModel.userProfile.collectLatest { state ->
                 val userProfileName = intent.getStringExtra(Intents.USERNAME) ?: viewModel.session.getUserName()
-
-
-                if (state.profile is Idle) {
-                    viewModel.getUserProfile(userProfileName)
-                }
-                if (state.profile is Loaded && state.recipes is Idle) viewModel.getUserRecipes()
-                if (state.profile is Loaded && state.kitchenBook is Idle) viewModel.getUserKitchenBook()
-
+                if (state is Idle) viewModel.getUserProfile(userProfileName)
             }
         }
         setContent {
             val userProfile = viewModel.userProfile.collectAsState()
+            val userRecipes = viewModel.userRecipes.collectAsState()
+            val userKitchenBook = viewModel.userKitchenBook.collectAsState()
+            val collectionsToAddRecipeState = recipeCollectionsViewModel.collectionsToAddRecipe.collectAsState(idle())
+            val collectionsToRemoveRecipeState = recipeCollectionsViewModel.collectionsToRemoveRecipe.collectAsState(idle())
             MaterialTheme {
                 UserProfileScreen(
                     isAnotherUserProfile = viewModel.isAnotherUserProfile,
-                    isFollower = true,
                     userProfileVisibility = viewModel.userProfileVisibility,
-                    userRecipes = apiSuccess(listOf(
-                        RecipeInfo(
-                            id = 1,
-                            name = "Spaghetti Carbonara",
-                            authorUsername = "John Doe",
-                            rating = 3.5,
-                            cuisine = Cuisine.ITALIAN,
-                            mealType = MealType.MAIN_COURSE,
-                            preparationTime = 45,
-                            servings = 4,
-                            picture = ""
-                        ),
-                        RecipeInfo(
-                            id = 2,
-                            name = "Chicken Curry",
-                            authorUsername = "John Doe",
-                            rating = 4.0,
-                            cuisine = Cuisine.INDIAN,
-                            mealType = MealType.MAIN_COURSE,
-                            preparationTime = 30,
-                            servings = 2,
-                            picture = ""
-                        )
-                    )),
-                    recipeCollectionsState = null,
-                    kitchenBookCollectionsState = apiSuccess(listOf(
-                        CollectionProfile(1, "Italian Delights"),
-                        CollectionProfile(2, "Quick Meals")
-                    )),
-                    onBackButton = { finish() },
-                    onSettingsButton = { navigateTo<SettingsActivity>() },
-                    onFollowersButton = { navigateToFollowActivity(0, "Test1") },
-                    onFollowingButton = { navigateToFollowActivity(1, "Test1") },
-                    onFollowRequest = {  },
-                    onCollectionRequest = { collectionId ->
-                        viewModel.getKitchenBookCollectionRecipes(collectionId)
-                    },
-                    onCollectionCreate = { },
-                    onUserProfileRefresh = {
-                        val userProfileName = intent.getStringExtra(Intents.USERNAME) ?: error("Missing USERNAME in intent")
-                        viewModel.getUserProfile(userProfileName)
-                    },
-                    onUserRecipesLoadMore = { viewModel.getUserRecipes() },
-                    onUserKitchenBookLoadMore = { viewModel.getUserKitchenBook() },
-                    onUserPictureChange = {},
                     userProfileState = userProfile.value,
-                    enableButtons = viewModel.enableButtons
+                    userRecipesState = userRecipes.value,
+                    userKitchenBookState = userKitchenBook.value,
+                    recipeCollectionsStateBundle = RecipeCollectionsStateBundle(
+                        collectionsToAddRecipeState.value,
+                        collectionsToRemoveRecipeState.value
+                    ),
+                    onBackButton = { finish() },
+                    onUpdateUserProfilePicture = { picture: ByteArray? ->
+                        viewModel.updateUserProfilePicture(picture)
+                    },
+                    onFollow = { username: String -> viewModel.follow(username) },
+                    onUnfollow = { username: String -> viewModel.unfollow(username) },
+                    onCancelFollow = { username: String -> viewModel.cancelFollow(username) },
+                    onUserKitchenBookCollectionCreate = { collectionName: String ->
+                        collectionsViewModel.createCollection(collectionName) {
+                            collectionId: Int -> navigateToCollectionActivity(collectionId, true)
+                        }
+                    },
+                    onUserKitchenBookCollectionDelete = { collectionId: Int ->
+                        collectionsViewModel.deleteCollection(collectionId)
+                    },
+                    onAddRecipeToCollections = {
+                            recipeId: Int,
+                            collectionsToAdd: List<CollectionProfile>
+                        ->
+                        recipeCollectionsViewModel.addRecipeToCollections(
+                            recipeId,
+                            collectionsToAdd
+                        )
+                    },
+                    onRemoveRecipeFromCollections = {
+                            recipeId: Int,
+                            collectionsToRemove: List<CollectionProfile>
+                        ->
+                        recipeCollectionsViewModel.removeRecipeFromCollections(
+                            recipeId,
+                            collectionsToRemove
+                        )
+                    },
+                    onUserRecipesClear = { viewModel.clearUserRecipes() },
+                    onUserKitchenBookClear = { viewModel.clearUserKitchenBook() },
+                    onRecipeCollectionsClear = { recipeCollectionsViewModel.clearRecipeCollections() },
+                    onUserRecipesRequest = { username : String? -> viewModel.getUserRecipes(username) },
+                    onUserKitchenBookRequest = { username: String? -> viewModel.getUserKitchenBook(username) },
+                    onFollowersOrFollowingRequest = ::navigateToFollowActivity,
+                    onUserKitchenBookCollectionRequest = ::navigateToCollectionActivity,
+                    onRecipeCollectionsRequest = { recipeId: Int ->
+                        val collectionType = if (viewModel.isAnotherUserProfile) CollectionType.FAVOURITE
+                        else CollectionType.KITCHEN_BOOK
+                        recipeCollectionsViewModel.getRecipeCollections(recipeId, collectionType)
+                    },
+                    onRecipeRequest = ::navigateToRecipeProfileActivity,
+                    enableButtons = viewModel.enableButtons && collectionsViewModel.enableButtons &&
+                            recipeCollectionsViewModel.enableButtons
                 )
             }
         }
     }
 
-    fun navigateToFollowActivity(selectedTab: Int, username: String) {
+    private fun navigateToFollowActivity(
+        selectedTab: Int,
+        username: String,
+        followersCount: Int,
+        followingCount: Int
+    ) {
         navigateTo<FollowActivity> { intent ->
             intent.putExtra(Intents.FOLLOW_TAB, selectedTab)
             intent.putExtra(Intents.USERNAME, username)
+            intent.putExtra(Intents.FOLLOWERS_COUNT, followersCount)
+            intent.putExtra(Intents.FOLLOWING_COUNT, followingCount)
         }
     }
 
-    private fun navigateToKitchenBookActivity(collectionId: Int) {
-/*        navigateTo<KitchenBookActivity> { intent ->
+    private fun navigateToCollectionActivity(collectionId: Int, isCollectionOwner: Boolean) {
+        navigateTo<CollectionActivity>(finishCurrent = true) { intent ->
+            intent.putExtra(Intents.SOURCE_ACTIVITY, UserProfileActivity::class.java.name)
             intent.putExtra(Intents.COLLECTION_ID, collectionId)
-        }*/
+            intent.putExtra(Intents.IS_COLLECTION_OWNER, isCollectionOwner)
+        }
+    }
+
+    private fun navigateToRecipeProfileActivity(recipeId: Int) {
+        navigateTo<RecipeProfileActivity> { intent ->
+            intent.putExtra(Intents.RECIPE_ID, recipeId)
+        }
     }
 }
-
-data class UserProfileStateBundle(
-    val profile: LoadState<UserProfile>,
-    val recipes: LoadState<List<RecipeInfo>>,
-    val kitchenBook: LoadState<List<CollectionProfile>>
-)

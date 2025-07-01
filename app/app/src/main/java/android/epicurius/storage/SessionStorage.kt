@@ -73,15 +73,10 @@ class SessionDataStore(
 
     override suspend fun updateUserProfilePicture(
         context: Context,
-        profilePictureName: String?,
-        profilePicture: ByteArray?
+        profilePictureName: String,
+        profilePicture: ByteArray
     ) {
-        store.edit {
-            if (profilePictureName != null) {
-                it[USER_PROFILE_PICTURE_NAME_KEY] = profilePictureName
-            }
-        }
-
+        store.edit { it[USER_PROFILE_PICTURE_NAME_KEY] = profilePictureName }
         saveProfilePicture(context, profilePictureName, profilePicture)
 
     }

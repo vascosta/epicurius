@@ -36,12 +36,13 @@ class RecipeService(private val httpService: HttpService) {
 
     suspend fun getUserRecipes(
         token: String,
+        username: String?,
         lastRecipeId: Int?,
         limit: Int
     ): APIResult<GetUserRecipesOutputModel> =
         httpService.get<GetUserRecipesOutputModel>(
             Uris.User.USER_RECIPES,
-            queryParams = mapOf("lastRecipeId" to lastRecipeId, "limit" to limit),
+            queryParams = mapOf("username" to username, "lastRecipeId" to lastRecipeId, "limit" to limit),
             token = token
         )
 
