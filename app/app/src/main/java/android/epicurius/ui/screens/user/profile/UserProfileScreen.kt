@@ -160,6 +160,7 @@ fun UserProfileScreen(
                         UserProfilePicture(
                             profilePicture = selectedImageBytes ?: userProfile.profilePicture,
                             iconSize = 120,
+                            isUserProfile = !isAnotherUserProfile,
                             onClick = {
                                 if (!isAnotherUserProfile && galleryPermissionState.status.isGranted) {
                                     imagePickerLauncher.launch(
@@ -168,6 +169,10 @@ fun UserProfileScreen(
                                 } else if (!isAnotherUserProfile){
                                     galleryPermissionState.launchPermissionRequest()
                                 }
+                            },
+                            onRemoveImage = { imageBytes ->
+                                onUserPictureChange(ByteArray(0))
+                                selectedImageBytes = null
                             },
                             enabled = enableButtons
                         )

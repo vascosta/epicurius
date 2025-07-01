@@ -28,26 +28,20 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.animation.togetherWith
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Button
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import epicurius.domain.collection.CollectionType
 import java.time.LocalDate
 import java.util.Base64
 
 enum class ScreenState {
-    Profile, Ingredients, Preparation
+    PROFILE, INGREDIENTS, PREPARATION
 }
 
 @Composable
@@ -94,7 +88,7 @@ fun RecipeProfileScreen(
     onRecipeCollectionsRequest: (recipeId: Int, collectionType: CollectionType) -> Unit = { _, _ -> },
     enableButtons: Boolean,
 ) {
-    var currentScreen by remember { mutableStateOf(ScreenState.Profile) }
+    var currentScreen by remember { mutableStateOf(ScreenState.PROFILE) }
     var recipeName = getNameFromLoadStateValue(recipeNameState)
 
     Scaffold(
@@ -103,12 +97,12 @@ fun RecipeProfileScreen(
                 titleText = recipeName,
                 backButton = true,
                 onBackButton = when (currentScreen) {
-                    ScreenState.Profile -> onBackButton
-                    ScreenState.Ingredients -> {
-                        { currentScreen = ScreenState.Profile }
+                    ScreenState.PROFILE -> onBackButton
+                    ScreenState.INGREDIENTS -> {
+                        { currentScreen = ScreenState.PROFILE }
                     }
-                    ScreenState.Preparation -> {
-                        { currentScreen = ScreenState.Ingredients }
+                    ScreenState.PREPARATION -> {
+                        { currentScreen = ScreenState.INGREDIENTS }
                     }
                 },
                 enableButtons = enableButtons && recipeState is Loaded
@@ -127,7 +121,7 @@ fun RecipeProfileScreen(
                         }
                     ) { targetState ->
                         when (targetState) {
-                            ScreenState.Profile ->
+                            ScreenState.PROFILE ->
                                 RecipeProfileContent(
                                     recipe = recipe,
                                     usernameState = usernameState,
@@ -137,7 +131,7 @@ fun RecipeProfileScreen(
                                     onEditRecipePictures = onEditRecipePictures,
                                     onEditUserRating = onEditUserRating,
                                     onDeleteRecipe = onDeleteRecipe,
-                                    onMakeRecipe = { currentScreen = ScreenState.Ingredients },
+                                    onMakeRecipe = { currentScreen = ScreenState.INGREDIENTS },
                                     onAddRecipeToCollections = onAddRecipeToCollections,
                                     onRemoveRecipeFromCollections = onRemoveRecipeFromCollections,
                                     onRecipeCollectionsClear = onRecipeCollectionsClear,
@@ -146,22 +140,22 @@ fun RecipeProfileScreen(
                                     enableButtons = enableButtons,
                                     paddingValues = paddingValues
                                 )
-                            ScreenState.Ingredients ->
+                            ScreenState.INGREDIENTS ->
                                 ConfirmIngredientsContent(
                                     recipe = recipe,
                                     substituteIngredientsState = substituteIngredientsState,
                                     onSubstituteIngredients = onSubstituteIngredients,
-                                    onConfirmIngredients = { currentScreen = ScreenState.Preparation },
+                                    onConfirmIngredients = { currentScreen = ScreenState.PREPARATION },
                                     enableButtons = enableButtons,
                                     paddingValues = paddingValues
                                 )
-                            ScreenState.Preparation ->
+                            ScreenState.PREPARATION ->
                                 PreparationContent(
                                     recipe = recipe,
                                     usernameState = usernameState,
                                     userRecipeRatingState = userRecipeRatingState,
                                     onRateRecipe = onRateRecipe,
-                                    onFinishPreparation = { currentScreen = ScreenState.Profile },
+                                    onFinishPreparation = { currentScreen = ScreenState.PROFILE },
                                     enableButtons = enableButtons,
                                     paddingValues = paddingValues,
                                 )

@@ -43,7 +43,9 @@ fun UserBox(
             UserProfilePicture(
                 profilePicture = user.profilePicture,
                 iconSize = 60,
+                isUserProfile = false,
                 onClick = { onUserProfileRequest(user.name) },
+                onRemoveImage = {},
                 enabled = enableButtons
             )
             Spacer(modifier = Modifier.width(70.dp))
