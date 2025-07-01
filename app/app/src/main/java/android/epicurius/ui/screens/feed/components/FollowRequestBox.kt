@@ -50,8 +50,9 @@ fun FollowRequestBox(
                 profilePicture = user.profilePicture,
                 iconSize = 40,
                 isUserProfile = false,
-                onClick = { onUserProfileRequest(user.name) },
+                onUpdateProfilePicture = {},
                 onRemoveImage = {},
+                onUserProfileRequest = { onUserProfileRequest(user.name) },
                 enabled = enableButtons
             )
             Spacer(modifier = Modifier.height(8.dp))

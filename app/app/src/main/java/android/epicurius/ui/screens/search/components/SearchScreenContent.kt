@@ -247,7 +247,8 @@ fun SearchScreenContent(
                 TabComponent(
                     tabs = tabs,
                     selectedTabIndex = selectedTabIndex,
-                    onTabSelected = { selectedTabIndex = it }
+                    onTabSelected = { selectedTabIndex = it },
+                    enabled = enableButtons
                 )
 
                 if (selectedTabIndex == 0) {
