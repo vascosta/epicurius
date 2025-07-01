@@ -7,6 +7,7 @@ import android.epicurius.domain.recipe.Cuisine
 import android.epicurius.domain.recipe.MealType
 import android.epicurius.domain.recipe.RecipeInfo
 import android.epicurius.ui.navigation.BottomBar
+import android.epicurius.ui.navigation.BottomBarState
 import android.epicurius.ui.navigation.TopBar
 import android.epicurius.ui.screens.mealPlanner.daily.components.CaloriesUpdateDialog
 import android.epicurius.ui.screens.mealPlanner.components.MealPlannerComponent
@@ -57,7 +58,12 @@ fun DailyScreen(
                 enableButtons = true
             )
         },
-        bottomBar = { BottomBar(buttonsEnable = true) },
+        bottomBar = {
+            BottomBar(
+                buttonsEnable = true,
+                state = BottomBarState.PLANNER
+            )
+        },
         content = { paddingValues ->
             Column(
                 modifier = Modifier

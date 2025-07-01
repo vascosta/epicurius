@@ -13,6 +13,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.material3.NavigationBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawWithContent
@@ -22,12 +26,38 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 
+enum class BottomBarState {
+    FEED,
+    RECIPE,
+    SEARCH,
+    PLANNER,
+    FRIDGE
+}
+
 @Composable
 fun BottomBar(
-    buttonsEnable: Boolean
+    buttonsEnable: Boolean,
+    state: BottomBarState? = null
 ) {
     val context = LocalContext.current
     val currentActivityClass = context::class.java
+
+    var selectedItem by remember {
+        mutableStateOf(
+            if (state != null) {
+                when (state) {
+                    BottomBarState.FEED -> FeedActivity::class.java
+                    BottomBarState.RECIPE -> CreateRecipeActivity::class.java
+                    BottomBarState.SEARCH -> SearchActivity::class.java
+                    BottomBarState.PLANNER -> CalendarActivity::class.java
+                    BottomBarState.FRIDGE -> FridgeActivity::class.java
+                }
+            } else {
+                currentActivityClass
+            }
+        )
+    }
+
     NavigationBar(containerColor = Color.White) {
         Row(
             modifier = Modifier
@@ -49,37 +79,55 @@ fun BottomBar(
                 onClick = {
                     if (currentActivityClass != FeedActivity::class.java)
                         context.startActivity(Intent(context, FeedActivity::class.java))
+                        selectedItem = FeedActivity::class.java
                 },
                 enabled = buttonsEnable,
                 imageId = R.drawable.home,
-                description = "Home"
+                description = "Home",
+                isSelected = selectedItem == FeedActivity::class.java
             )
             BottomBarButton(
-                onClick = { context.startActivity(Intent(context, CreateRecipeActivity::class.java)) },
+                onClick = {
+                    context.startActivity(Intent(context, CreateRecipeActivity::class.java))
+                    selectedItem = CreateRecipeActivity::class.java
+                },
                 enabled = buttonsEnable && currentActivityClass != CreateRecipeActivity::class.java,
                 imageId = R.drawable.pencil,
-                description = "Pencil"
+                description = "Pencil",
+                isSelected = selectedItem == CreateRecipeActivity::class.java,
             )
             BottomBarButton(
-                onClick = { context.startActivity(Intent(context, SearchActivity::class.java)) },
+                onClick = {
+                    context.startActivity(Intent(context, SearchActivity::class.java))
+                    selectedItem = SearchActivity::class.java
+                },
                 enabled = buttonsEnable && currentActivityClass != SearchActivity::class.java,
                 imageId = R.drawable.magnifier,
                 description = "Magnifier",
-                imageSize = 41
+                imageSize = 41,
+                isSelected = selectedItem == SearchActivity::class.java
             )
             BottomBarButton(
-                onClick = { context.startActivity(Intent(context, CalendarActivity::class.java)) },
+                onClick = {
+                    context.startActivity(Intent(context, CalendarActivity::class.java))
+                    selectedItem = CalendarActivity::class.java
+                },
                 enabled = buttonsEnable && currentActivityClass != CalendarActivity::class.java,
                 imageId = R.drawable.plate,
                 description = "Plate",
-                imageSize = 45
+                imageSize = 45,
+                isSelected = selectedItem == CalendarActivity::class.java
             )
             BottomBarButton(
-                onClick = { context.startActivity(Intent(context, FridgeActivity::class.java)) },
+                onClick = {
+                    context.startActivity(Intent(context, FridgeActivity::class.java))
+                    selectedItem = FridgeActivity::class.java
+                },
                 enabled = buttonsEnable && currentActivityClass != FridgeActivity::class.java,
                 imageId = R.drawable.fridge,
                 description = "Fridge",
-                imageSize = 40
+                imageSize = 40,
+                isSelected = selectedItem == FridgeActivity::class.java
             )
         }
     }

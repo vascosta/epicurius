@@ -8,6 +8,7 @@ import android.epicurius.domain.recipe.MealType
 import android.epicurius.domain.recipe.RecipeInfo
 import android.epicurius.domain.user.UserInfo
 import android.epicurius.ui.navigation.BottomBar
+import android.epicurius.ui.navigation.BottomBarState
 import android.epicurius.ui.navigation.TopBar
 import android.epicurius.ui.screens.recipe.components.RecipeInfoBox
 import android.epicurius.ui.screens.search.components.FiltersDialog
@@ -104,7 +105,12 @@ fun MealPlannerSearchScreen(
                 enableButtons = enableButtons
             )
         },
-        bottomBar = { BottomBar(buttonsEnable = enableButtons) },
+        bottomBar = {
+            BottomBar(
+                buttonsEnable = enableButtons,
+                state = BottomBarState.PLANNER
+            )
+        },
         content = { paddingValues ->
             Column(
                 modifier = Modifier

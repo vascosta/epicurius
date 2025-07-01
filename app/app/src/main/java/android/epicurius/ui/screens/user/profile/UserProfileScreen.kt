@@ -379,7 +379,7 @@ fun UserProfilePreview() {
     )
 
     UserProfileScreen(
-        isAnotherUserProfile = true,
+        isAnotherUserProfile = false,
         isFollower = false,
         userProfileVisibility = true,
         apiSuccess(userRecipes),

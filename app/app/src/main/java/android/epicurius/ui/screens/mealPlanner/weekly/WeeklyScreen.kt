@@ -9,6 +9,7 @@ import android.epicurius.domain.recipe.RecipeInfo
 import android.epicurius.ui.navigation.BottomBar
 import android.epicurius.ui.navigation.TopBar
 import android.epicurius.domain.mealPlanner.utils.getWeek
+import android.epicurius.ui.navigation.BottomBarState
 import android.epicurius.ui.screens.mealPlanner.components.MealPlannerComponent
 import android.epicurius.ui.screens.mealPlanner.components.WeekCalendarRow
 import android.epicurius.ui.screens.mealPlanner.daily.components.CaloriesUpdateDialog
@@ -68,7 +69,12 @@ fun WeeklyScreen(
                 enableButtons = true
             )
         },
-        bottomBar = { BottomBar(buttonsEnable = true) },
+        bottomBar = {
+            BottomBar(
+                buttonsEnable = true,
+                state = BottomBarState.PLANNER
+            )
+        },
         content = { paddingValues ->
             Column(
                 modifier = Modifier

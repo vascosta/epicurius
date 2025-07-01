@@ -5,6 +5,7 @@ import android.epicurius.domain.recipe.Cuisine
 import android.epicurius.domain.recipe.MealType
 import android.epicurius.domain.recipe.RecipeInfo
 import android.epicurius.ui.navigation.BottomBar
+import android.epicurius.ui.navigation.BottomBarState
 import android.epicurius.ui.navigation.TopBar
 import android.epicurius.ui.screens.collections.recipeCollections.components.RecipeCollectionsStateBundle
 import android.epicurius.ui.screens.dailyMenu.components.MenuItemBox
@@ -51,7 +52,12 @@ fun DailyMenuScreen(
             enableButtons = enableButtons,
             onBackButton = onBackButton
         ) },
-        bottomBar = { BottomBar(buttonsEnable = enableButtons && menuState is Loaded) },
+        bottomBar = {
+            BottomBar(
+                buttonsEnable = enableButtons && menuState is Loaded,
+                state = BottomBarState.FEED
+            )
+        },
         content = { paddingValues ->
             LoadStateRenderer(
                 loadState = menuState,
