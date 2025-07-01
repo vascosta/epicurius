@@ -15,12 +15,8 @@ class PreferencesActivity : EpicuriusActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             PreferencesScreen(
-                onSetIntolerances = { intolerances: Set<Intolerance>? ->
-                    viewModel.updatePreferences(intolerances, null)
-                },
-                onSetDiets = { diets: Set<Diet>? ->
-                    viewModel.updatePreferences(null, diets)
-                },
+                onSetIntolerances = { intolerances: Set<Intolerance>? -> viewModel.updatePreferences(intolerances, null) },
+                onSetDiets = { diets: Set<Diet>? -> viewModel.updatePreferences(null, diets) },
                 onDone = { navigateTo<FeedActivity>(finishCurrent = true) },
                 enableButtons = viewModel.enableButtons
             )

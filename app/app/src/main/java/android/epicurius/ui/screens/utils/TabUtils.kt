@@ -12,7 +12,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 @Composable
-fun TabComponent(tabs: List<String>, selectedTabIndex: Int, onTabSelected: (Int) -> Unit) {
+fun TabComponent(tabs: List<String>, selectedTabIndex: Int, onTabSelected: (Int) -> Unit, enabled: Boolean) {
     Column {
         TabRow(
             selectedTabIndex = selectedTabIndex,
@@ -23,7 +23,8 @@ fun TabComponent(tabs: List<String>, selectedTabIndex: Int, onTabSelected: (Int)
                 Tab(
                     selected = selectedTabIndex == index,
                     onClick = { onTabSelected(index) },
-                    modifier = Modifier.padding(15.dp)
+                    modifier = Modifier.padding(15.dp),
+                    enabled = enabled
                 ) {
                     Text(text = name, fontSize = 15.sp)
                 }

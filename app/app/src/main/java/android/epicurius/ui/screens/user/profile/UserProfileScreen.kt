@@ -187,7 +187,7 @@ fun UserProfileScreen(
                             profilePicture = selectedImageBytes ?: userProfile.profilePictureBytes,
                             iconSize = 120,
                             isUserProfile = !isAnotherUserProfile,
-                            onClick = {
+                            onUpdateProfilePicture = {
                                 if (!isAnotherUserProfile && galleryPermissionState.status.isGranted) {
                                     imagePickerLauncher.launch(
                                         PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
@@ -261,6 +261,7 @@ fun UserProfileScreen(
                                 selectedTabIndex = selectedTabIndex,
                                 onRecipesClick = { selectedTabIndex = 0 },
                                 onKitchenBookClick = { selectedTabIndex = 1 },
+                                enabled = enableButtons
                             )
                             Spacer(Modifier.size(10.dp))
                             if (selectedTabIndex == 0) {

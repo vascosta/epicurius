@@ -31,7 +31,7 @@ fun FollowBox(
             .border(width = 1.dp, color = Color.Black, shape = RectangleShape)
             .clickable(
                 enabled = enabled,
-                onClick = { onClick() }
+                onClick = onClick
             ),
     ) {
         Column(

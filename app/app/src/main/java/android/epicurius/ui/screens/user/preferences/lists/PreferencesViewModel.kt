@@ -7,8 +7,6 @@ import android.epicurius.services.EpicuriusService
 import android.epicurius.services.api.user.models.input.UpdateUserInputModel
 import android.epicurius.storage.Session
 import android.epicurius.ui.EpicuriusViewModel
-import android.epicurius.ui.screens.utils.apiSuccess
-import android.epicurius.ui.screens.utils.loading
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 

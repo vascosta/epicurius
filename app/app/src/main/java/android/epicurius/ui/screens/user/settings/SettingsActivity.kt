@@ -22,9 +22,7 @@ class SettingsActivity : EpicuriusActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         lifecycleScope.launch {
-            viewModel.userInfo.collectLatest { state ->
-                if (state is Idle) viewModel.getUserInfo()
-            }
+            viewModel.userInfo.collectLatest { state -> if (state is Idle) viewModel.getUserInfo() }
         }
         setContent {
             val userInfoState = viewModel.userInfo.collectAsState(idle())

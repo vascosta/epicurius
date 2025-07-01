@@ -141,7 +141,8 @@ fun SettingsDialog(
                         ) {
                             Checkbox(
                                 checked = privacy,
-                                onCheckedChange = { privacy = it }
+                                onCheckedChange = { privacy = it },
+                                enabled = enableButtons
                             )
                             Spacer(modifier = Modifier.width(8.dp))
                             Text("Private Profile")

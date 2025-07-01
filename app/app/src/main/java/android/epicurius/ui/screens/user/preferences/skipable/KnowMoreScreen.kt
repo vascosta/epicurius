@@ -59,12 +59,12 @@ fun KnowMoreScreen(
                 Spacer(modifier = Modifier.size(50.dp))
                 Row {
                     TextButton(
-                        onClick = { onSkip() },
+                        onClick = onSkip,
                         enabled = enableButtons
                     ) { Text("Skip") }
                     Spacer(modifier = Modifier.size(16.dp))
                     TextButton(
-                        onClick = { onNext() },
+                        onClick = onNext,
                         enabled = enableButtons
                     ) { Text("Next") }
                 }

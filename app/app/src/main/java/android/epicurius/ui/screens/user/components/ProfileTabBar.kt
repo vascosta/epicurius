@@ -20,7 +20,8 @@ import androidx.compose.ui.unit.dp
 fun ProfileTabBar(
     selectedTabIndex: Int,
     onRecipesClick: () -> Unit,
-    onKitchenBookClick: () -> Unit
+    onKitchenBookClick: () -> Unit,
+    enabled: Boolean
 ) {
     val tabs = listOf("Recipes", "Kitchen Book")
 
@@ -39,7 +40,8 @@ fun ProfileTabBar(
                             1 -> onKitchenBookClick()
                         }
                     },
-                    modifier = Modifier.padding(15.dp)
+                    modifier = Modifier.padding(15.dp),
+                    enabled = enabled
                 ) {
                     Text(name)
                     Spacer(modifier = Modifier.fillMaxHeight(0.05f))

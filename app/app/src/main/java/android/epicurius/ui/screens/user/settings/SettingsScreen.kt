@@ -130,7 +130,8 @@ fun SettingsScreen(
                                 onDeleteConfirmed = {
                                     onDeleteAccount()
                                     showDeleteAccountDialog = false
-                                }
+                                },
+                                enableButtons = enableButtons
                             )
                         }
                     }

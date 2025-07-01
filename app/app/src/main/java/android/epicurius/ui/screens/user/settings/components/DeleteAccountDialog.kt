@@ -9,19 +9,22 @@ import androidx.compose.ui.graphics.Color
 @Composable
 fun DeleteAccountDialog(
     onDismissRequest: () -> Unit = {},
-    onDeleteConfirmed: () -> Unit = {}
+    onDeleteConfirmed: () -> Unit = {},
+    enableButtons: Boolean
 ) {
     AlertDialog(
-        onDismissRequest = { onDismissRequest() },
+        onDismissRequest = { if (enableButtons) onDismissRequest() },
         confirmButton = {
-            TextButton(onClick = { onDeleteConfirmed() }) {
-                Text("Delete", color = Color.Red)
-            }
+            TextButton(
+                onClick = onDeleteConfirmed,
+                enabled = enableButtons
+            ) { Text("Delete", color = Color.Red) }
         },
         dismissButton = {
-            TextButton(onClick = { onDismissRequest() }) {
-                Text("Cancel")
-            }
+            TextButton(
+                onClick = { onDismissRequest() },
+                enabled = enableButtons
+            ) { Text("Cancel") }
         },
         title = { Text("Delete Account") },
         text = { Text("Are you sure you want to delete your account? This action cannot be undone.") }

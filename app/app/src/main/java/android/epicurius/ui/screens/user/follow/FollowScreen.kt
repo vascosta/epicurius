@@ -63,6 +63,7 @@ fun FollowScreen(
                 followingCount = followingCount,
                 onTabSelected = { selectedTabIndex = it },
                 onBackButton = onBackButton,
+                enabled = enableButtons
             )
         },
         bottomBar = { BottomBar(buttonsEnable = enableButtons) },

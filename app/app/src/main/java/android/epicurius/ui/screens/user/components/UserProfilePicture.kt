@@ -32,8 +32,9 @@ fun UserProfilePicture(
     profilePicture: ByteArray?,
     iconSize: Int,
     isUserProfile: Boolean,
-    onClick: () -> Unit,
-    onRemoveImage: (ByteArray) -> Unit,
+    onUpdateProfilePicture: () -> Unit = {},
+    onRemoveImage: (ByteArray) -> Unit = {},
+    onUserProfileRequest: () -> Unit = {},
     enabled: Boolean
 ) {
     var showRemoveIcon by remember { mutableStateOf(false) }
@@ -46,8 +47,11 @@ fun UserProfilePicture(
             .background(Color.LightGray)
             .pointerInput(Unit) {
                 detectTapGestures(
-                    onDoubleTap = { if (enabled) onClick() },
-                    onTap = { if (canShowRemoveIcon) showRemoveIcon = !showRemoveIcon }
+                    onDoubleTap = { if (enabled) onUpdateProfilePicture() },
+                    onTap = {
+                        if (!isUserProfile && enabled) onUserProfileRequest()
+                        else if (canShowRemoveIcon) showRemoveIcon = !showRemoveIcon
+                    }
                 )
             },
         contentAlignment = Alignment.Center
@@ -93,5 +97,5 @@ fun UserProfilePicture(
 @Preview
 @Composable
 fun UserProfilePicturePreview() {
-    UserProfilePicture(null, 120, true, {}, {}, true)
+    UserProfilePicture(null, 120, true, enabled = true)
 }

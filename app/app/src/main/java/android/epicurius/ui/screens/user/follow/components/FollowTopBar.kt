@@ -25,7 +25,8 @@ fun FollowTopBar(
     followersCount: Int,
     followingCount: Int,
     onTabSelected: (tabIndex: Int) -> Unit = {},
-    onBackButton: () -> Unit = {}
+    onBackButton: () -> Unit = {},
+    enabled: Boolean
 ) {
     val tabs = listOf("$followersCount Followers", "$followingCount Following")
 
@@ -37,11 +38,14 @@ fun FollowTopBar(
                     .fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                TabComponent(tabs, selectedTabIndex, onTabSelected)
+                TabComponent(tabs, selectedTabIndex, onTabSelected, enabled)
             }
         },
         navigationIcon = {
-            IconButton(onClick = { onBackButton()}) {
+            IconButton(
+                onClick = { onBackButton()},
+                enabled = enabled
+            ) {
                 Icon(
                     imageVector = Icons.AutoMirrored.Sharp.ArrowBack,
                     contentDescription = "Go Back"
@@ -58,5 +62,5 @@ fun FollowTopBar(
 @Preview
 @Composable
 fun FollowTopBarPreview() {
-    FollowTopBar(100, 200, 0, {}) {}
+    FollowTopBar(100, 200, 0, enabled = true)
 }

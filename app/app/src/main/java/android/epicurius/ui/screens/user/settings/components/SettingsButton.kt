@@ -21,7 +21,7 @@ fun SettingsButton(
     text: String
 ) {
     TextButton(
-        onClick = { onClick() },
+        onClick = onClick,
         modifier = Modifier.padding(start = 15.dp, end = 15.dp),
         enabled = enabled
     ) { Text(text) }
