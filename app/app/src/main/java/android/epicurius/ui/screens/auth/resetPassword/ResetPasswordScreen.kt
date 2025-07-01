@@ -1,11 +1,14 @@
 package android.epicurius.ui.screens.auth.resetPassword
 
+import android.epicurius.R
 import android.epicurius.ui.navigation.TopBar
 import android.epicurius.ui.screens.auth.components.PasswordTextField
 import android.epicurius.ui.screens.utils.LoadingSpinner
 import android.epicurius.ui.screens.utils.TextField
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -22,6 +25,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 
@@ -46,40 +51,47 @@ fun ResetPasswordScreen(
             )
          },
         content = { paddingValues ->
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(paddingValues)
-                    .padding(40.dp)
-                    .background(Color.White),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center
-            ) {
-                TextField(
-                    value = email,
-                    onValueChange = { email = it },
-                    enabled = enableButtons,
-                    label = "Email"
+            Box(modifier = Modifier.fillMaxSize()) {
+                Image(
+                    painter = painterResource(id = R.drawable.background_reset_password),
+                    contentDescription = null,
+                    modifier = Modifier.fillMaxSize(),
+                    contentScale = ContentScale.Crop
                 )
-                PasswordTextField(
-                    value = newPassword,
-                    onValueChange = { newPassword = it },
-                    enabled = enableButtons,
-                    label = "New Password"
-                )
-                PasswordTextField(
-                    value = confirmPassword,
-                    onValueChange = { confirmPassword = it },
-                    enabled = enableButtons,
-                    label = "Confirm New Password"
-                )
-                Spacer(Modifier.size(10.dp))
-                Button(
-                    onClick = { onResetPassword(email, newPassword, confirmPassword) },
-                    enabled = enableButtons
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(paddingValues)
+                        .padding(40.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center
                 ) {
-                    if (enableButtons) Text("Reset Password")
-                    else LoadingSpinner(Modifier.size(30.dp))
+                    TextField(
+                        value = email,
+                        onValueChange = { email = it },
+                        enabled = enableButtons,
+                        label = "Email"
+                    )
+                    PasswordTextField(
+                        value = newPassword,
+                        onValueChange = { newPassword = it },
+                        enabled = enableButtons,
+                        label = "New Password"
+                    )
+                    PasswordTextField(
+                        value = confirmPassword,
+                        onValueChange = { confirmPassword = it },
+                        enabled = enableButtons,
+                        label = "Confirm New Password"
+                    )
+                    Spacer(Modifier.size(10.dp))
+                    Button(
+                        onClick = { onResetPassword(email, newPassword, confirmPassword) },
+                        enabled = enableButtons
+                    ) {
+                        if (enableButtons) Text("Reset Password")
+                        else LoadingSpinner(Modifier.size(30.dp))
+                    }
                 }
             }
         },

@@ -1,11 +1,14 @@
 package android.epicurius.ui.screens.auth.login
 
+import android.epicurius.R
 import android.epicurius.ui.navigation.TopBar
 import android.epicurius.ui.screens.auth.components.AuthButton
 import android.epicurius.ui.screens.auth.components.PasswordTextField
+import android.epicurius.ui.screens.theme.Beige
 import android.epicurius.ui.screens.utils.TextField
-import androidx.compose.foundation.background
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -20,7 +23,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 
@@ -44,58 +48,69 @@ fun LoginScreen(
             )
         },
         content = { paddingValues ->
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(paddingValues)
-                    .padding(40.dp)
-                    .background(Color.Companion.White),
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                TextField(
-                    value = name,
-                    onValueChange = { name = it },
-                    enabled = enableButtons,
-                    label = "Name"
+            Box(modifier = Modifier.fillMaxSize()) {
+                Image(
+                    painter = painterResource(id = R.drawable.background_login),
+                    contentDescription = null,
+                    modifier = Modifier.fillMaxSize(),
+                    contentScale = ContentScale.Crop
                 )
-                TextField(
-                    value = email,
-                    onValueChange = { email = it },
-                    enabled = enableButtons,
-                    label = "Email"
-                )
-                PasswordTextField(
-                    value = password,
-                    onValueChange = { password = it },
-                    enabled = enableButtons,
-                    label = "Password"
-                )
-                Row {
-                    AuthButton(
-                        onClick = onSignUp,
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(paddingValues)
+                        .padding(40.dp),
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    TextField(
+                        value = name,
+                        onValueChange = { name = it },
                         enabled = enableButtons,
-                        text = "SignUp"
+                        label = "Name"
                     )
-                    AuthButton(
-                        onClick = {
-                            onLogin(
-                                if (name.isBlank()) null else name,
-                                if (email.isBlank()) null else email,
-                                password
-                            )
-                        },
+                    TextField(
+                        value = email,
+                        onValueChange = { email = it },
                         enabled = enableButtons,
-                        text = "Login",
+                        label = "Email"
                     )
+                    PasswordTextField(
+                        value = password,
+                        onValueChange = { password = it },
+                        enabled = enableButtons,
+                        label = "Password"
+                    )
+                    Row {
+                        AuthButton(
+                            onClick = onSignUp,
+                            enabled = enableButtons,
+                            text = "SignUp"
+                        )
+                        AuthButton(
+                            onClick = {
+                                onLogin(
+                                    if (name.isBlank()) null else name,
+                                    if (email.isBlank()) null else email,
+                                    password
+                                )
+                            },
+                            enabled = enableButtons,
+                            text = "Login",
+                        )
+                    }
+                    TextButton(
+                        onClick = onForgotPassword,
+                        enabled = enableButtons
+                    ) {
+                        Text(
+                            text = "Forgot your password?",
+                            color = Beige
+                        )
+                    }
                 }
-                TextButton(
-                    onClick = onForgotPassword,
-                    enabled = enableButtons
-                ) { Text("Forgot your password?") }
             }
         },
-        containerColor = Color.White
     )
 }
 

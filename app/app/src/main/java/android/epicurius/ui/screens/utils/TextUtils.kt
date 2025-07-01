@@ -1,5 +1,7 @@
 package android.epicurius.ui.screens.utils
 
+import android.epicurius.ui.screens.theme.Beige
+import android.epicurius.ui.screens.theme.Lilac
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.text.KeyboardOptions
@@ -10,6 +12,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldColors
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -32,6 +35,16 @@ fun TextField(
         enabled = enabled,
         label = { Text(label) },
         singleLine = true,
+        colors = TextFieldDefaults.colors(
+            focusedTextColor = Color.White,
+            unfocusedTextColor = Color.White,
+            focusedIndicatorColor = Lilac,
+            unfocusedIndicatorColor = Lilac,
+            focusedLabelColor = Beige,
+            unfocusedLabelColor = Beige,
+            focusedContainerColor = Color.Transparent,
+            unfocusedContainerColor = Color.Transparent,
+        )
     )
 }
 

@@ -1,5 +1,8 @@
 package android.epicurius.ui.navigation
 
+import android.epicurius.ui.screens.theme.Beige
+import android.epicurius.ui.screens.theme.DarkGreen
+import android.epicurius.ui.screens.theme.Lilac
 import android.epicurius.ui.screens.user.profile.UserProfileActivity
 import android.epicurius.ui.screens.user.settings.SettingsActivity
 import androidx.compose.foundation.layout.Column
@@ -43,7 +46,7 @@ fun TopBar(
             .drawWithContent {
                 drawContent()
                 drawLine(
-                    color = Color.Black,
+                    color = Color(0xFFF1E9DA),
                     start = Offset(0f, size.height),
                     end = Offset(size.width, size.height),
                     strokeWidth = 1.dp.toPx()
@@ -80,9 +83,9 @@ fun TopBar(
             }
         },
         colors = TopAppBarDefaults.topAppBarColors(
-            containerColor = Color.White,
-            navigationIconContentColor = Color.Black,
-            titleContentColor = Color.Black
+            containerColor = DarkGreen,
+            navigationIconContentColor = Beige,
+            titleContentColor = Lilac
         ),
     )
 }
