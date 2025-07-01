@@ -8,6 +8,7 @@ import android.epicurius.ui.screens.recipe.profile.RecipeProfileActivity
 import android.epicurius.ui.screens.utils.Idle
 import android.epicurius.ui.screens.utils.idle
 import android.epicurius.ui.navigation.navigateTo
+import android.epicurius.ui.screens.collections.recipeCollections.RecipeCollectionsViewModel
 import android.epicurius.ui.screens.collections.recipeCollections.components.RecipeCollectionsStateBundle
 import android.os.Bundle
 import androidx.activity.compose.setContent
@@ -19,6 +20,7 @@ import kotlinx.coroutines.launch
 
 class DailyMenuActivity : EpicuriusActivity() {
     override val viewModel: DailyMenuViewModel by getViewModel<DailyMenuViewModel>()
+    val recipeCollectionsViewModel: RecipeCollectionsViewModel by getViewModel<RecipeCollectionsViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,8 +31,8 @@ class DailyMenuActivity : EpicuriusActivity() {
         }
         setContent {
             val menuState = viewModel.dailyMenu.collectAsState(idle())
-            val collectionsToAddRecipeState = viewModel.collectionsToAddRecipe.collectAsState(idle())
-            val collectionsToRemoveRecipeState = viewModel.collectionsToRemoveRecipe.collectAsState(idle())
+            val collectionsToAddRecipeState = recipeCollectionsViewModel.collectionsToAddRecipe.collectAsState(idle())
+            val collectionsToRemoveRecipeState = recipeCollectionsViewModel.collectionsToRemoveRecipe.collectAsState(idle())
             DailyMenuScreen(
                 menuState = menuState.value,
                 recipeCollectionsStateBundle = RecipeCollectionsStateBundle(
@@ -42,7 +44,7 @@ class DailyMenuActivity : EpicuriusActivity() {
                     recipeId: Int,
                     collectionsToAdd: List<CollectionProfile>
                     ->
-                    viewModel.addRecipeToCollections(
+                    recipeCollectionsViewModel.addRecipeToCollections(
                         recipeId,
                         collectionsToAdd
                     )
@@ -51,15 +53,15 @@ class DailyMenuActivity : EpicuriusActivity() {
                     recipeId: Int,
                     collectionsToRemove: List<CollectionProfile>,
                      ->
-                    viewModel.removeRecipeFromCollections(
+                    recipeCollectionsViewModel.removeRecipeFromCollections(
                         recipeId,
                         collectionsToRemove
                     )
                 },
-                onClearRecipeCollections = { viewModel.clearRecipeCollections() },
+                onClearRecipeCollections = { recipeCollectionsViewModel.clearRecipeCollections() },
                 onRecipeRequest = ::navigateToRecipeProfileActivity,
                 onRecipeCollectionsRequest = { recipeId: Int ->
-                    viewModel.getRecipeCollections(recipeId, CollectionType.FAVOURITE)
+                    recipeCollectionsViewModel.getRecipeCollections(recipeId, CollectionType.FAVOURITE)
                 },
                 enableButtons = viewModel.enableButtons
             )

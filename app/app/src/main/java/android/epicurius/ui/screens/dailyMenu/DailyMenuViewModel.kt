@@ -5,6 +5,7 @@ import android.epicurius.domain.recipe.RecipeInfo
 import android.epicurius.services.EpicuriusService
 import android.epicurius.services.api.menu.DailyMenu
 import android.epicurius.storage.Session
+import android.epicurius.ui.EpicuriusViewModel
 import android.epicurius.ui.screens.collections.collection.CollectionViewModel
 import android.epicurius.ui.screens.collections.recipeCollections.RecipeCollectionsViewModel
 import android.epicurius.ui.screens.utils.LoadState
@@ -22,7 +23,7 @@ class DailyMenuViewModel(
     service: EpicuriusService,
     session: Session,
     context: Context
-): RecipeCollectionsViewModel(service, session, context) {
+): EpicuriusViewModel(service, session, context) {
 
     private val dailyMenuFlow = MutableStateFlow<LoadState<Map<String, RecipeInfo?>>>(idle())
     val dailyMenu = dailyMenuFlow.asStateFlow()
