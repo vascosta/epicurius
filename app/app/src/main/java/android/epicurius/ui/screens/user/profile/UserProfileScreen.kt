@@ -13,6 +13,7 @@ import android.epicurius.ui.screens.collections.components.CreateCollectionDialo
 import android.epicurius.ui.screens.collections.recipeCollections.components.RecipeCollectionsStateBundle
 import android.epicurius.ui.screens.recipe.components.RecipeInfoBox
 import android.epicurius.ui.screens.recipe.confirmIngredients.components.InfoDialog
+import android.epicurius.ui.screens.recipe.profile.components.rememberImagePickerLauncher
 import android.epicurius.ui.screens.user.components.FollowBox
 import android.epicurius.ui.screens.user.components.ProfileTabBar
 import android.epicurius.ui.screens.user.components.UserProfilePicture
@@ -118,21 +119,11 @@ fun UserProfileScreen(
     var selectedTabIndex by remember { mutableIntStateOf(0) }
     var selectedImageBytes by remember { mutableStateOf<ByteArray?>(null) }
 
-    val imagePickerLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.PickVisualMedia()
-    ) { uri ->
-        if (uri != null) {
-            val inputStream = context.contentResolver.openInputStream(uri)
-            val bytes = inputStream?.readBytes()
-            inputStream?.close()
-            if (bytes != null) {
-                selectedImageBytes = bytes
-                onUpdateUserProfilePicture(bytes)
-            }
-        } else {
-            Toast.makeText(context, "No image selected", Toast.LENGTH_SHORT).show()
+    val imagePickerLauncher =
+        rememberImagePickerLauncher(context) { bytes ->
+            selectedImageBytes = bytes
+            onUpdateUserProfilePicture(bytes)
         }
-    }
 
     val galleryPermissionState = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
         rememberPermissionState(android.Manifest.permission.READ_MEDIA_IMAGES)
