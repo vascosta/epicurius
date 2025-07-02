@@ -12,6 +12,7 @@ import android.epicurius.ui.screens.collections.components.CollectionProfileBox
 import android.epicurius.ui.screens.collections.components.CreateCollectionDialog
 import android.epicurius.ui.screens.collections.recipeCollections.components.RecipeCollectionsStateBundle
 import android.epicurius.ui.screens.recipe.components.RecipeInfoBox
+import android.epicurius.ui.screens.recipe.confirmIngredients.components.InfoDialog
 import android.epicurius.ui.screens.user.components.FollowBox
 import android.epicurius.ui.screens.user.components.ProfileTabBar
 import android.epicurius.ui.screens.user.components.UserProfilePicture
@@ -41,6 +42,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Button
 import androidx.compose.material3.HorizontalDivider
@@ -111,6 +113,7 @@ fun UserProfileScreen(
     val context = LocalContext.current
 
     var showCreateCollectionDialog by remember { mutableStateOf(false) }
+    var showInfoDialog by remember { mutableStateOf(false) }
 
     var selectedTabIndex by remember { mutableIntStateOf(0) }
     var selectedImageBytes by remember { mutableStateOf<ByteArray?>(null) }
@@ -173,14 +176,38 @@ fun UserProfileScreen(
                             .background(Color.White),
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
-                        Box(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .align(Alignment.End),
-                            contentAlignment = Alignment.CenterEnd
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically
                         ) {
-                            val flagEmoji = getFlagEmoji(userProfile.country)
-                            Text(text = flagEmoji, fontSize = 24.sp)
+                            if (!isAnotherUserProfile) {
+                                IconButton(
+                                    onClick = { showInfoDialog = true },
+                                    enabled = enableButtons
+                                ) {
+                                    Icon(
+                                        imageVector = Icons.Default.Info,
+                                        contentDescription = "Info Icon",
+                                    )
+                                }
+                            }
+
+                            Box(
+                                modifier = Modifier
+                                    .fillMaxWidth(),
+                                    //.align(Alignment.End),
+                                contentAlignment = Alignment.CenterEnd
+                            ) {
+                                val flagEmoji = getFlagEmoji(userProfile.country)
+                                Text(text = flagEmoji, fontSize = 24.sp)
+                            }
+
+                            if (showInfoDialog)
+                                InfoDialog(
+                                    boldText = "Wanna edit your profile picture?",
+                                    normalText = "Double tap on your profile picture to change it or" +
+                                            " tap on it to view delete picture option.",
+                                    onDismissRequest = { showInfoDialog = false }
+                                )
                         }
                         Spacer(modifier = Modifier.fillMaxHeight(0.02f))
                         UserProfilePicture(
@@ -450,7 +477,7 @@ fun UserProfilePreview() {
     )
 
     UserProfileScreen(
-        isAnotherUserProfile = true,
+        isAnotherUserProfile = false,
         userProfileVisibility = true,
         userProfileState = apiSuccess(userProfile),
         userRecipesState = apiSuccess(userRecipes),

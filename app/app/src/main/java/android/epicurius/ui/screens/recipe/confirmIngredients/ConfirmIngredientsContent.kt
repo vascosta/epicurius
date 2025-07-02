@@ -84,7 +84,12 @@ fun ConfirmIngredientsContent(
                 )
             }
         }
-        if (showInfoDialog) InfoDialog { showInfoDialog = false }
+        if (showInfoDialog)
+            InfoDialog(
+                boldText = "You don't have an ingredient?",
+                normalText = "Don't worry, click on it and find out if we have a substitute ingredient for it",
+                onDismissRequest = { showInfoDialog = false }
+            )
         Row(modifier = Modifier.padding(vertical = 4.dp, horizontal = 10.dp)) {
             Text("Name", modifier = Modifier.weight(0.4f), fontWeight = FontWeight.Bold)
             Text("Qty", modifier = Modifier.weight(0.2f), fontWeight = FontWeight.Bold)

@@ -11,7 +11,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 
 @Composable
-fun InfoDialog(onDismissRequest: () -> Unit) {
+fun InfoDialog(boldText: String, normalText: String, onDismissRequest: () -> Unit) {
     AlertDialog(
         onDismissRequest = { onDismissRequest() },
         confirmButton = {
@@ -23,13 +23,13 @@ fun InfoDialog(onDismissRequest: () -> Unit) {
         text = {
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 Text(
-                    text = "You don't have an ingredient?",
+                    text = boldText,
                     fontWeight = FontWeight.Bold,
                     textAlign = TextAlign.Center,
                     style = MaterialTheme.typography.bodyLarge
                 )
                 Text(
-                    text = "Don't worry, click on it and find out if we have a substitute ingredient for it",
+                    text = normalText,
                     textAlign = TextAlign.Center,
                     style = MaterialTheme.typography.bodyMedium
                 )

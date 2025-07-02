@@ -9,6 +9,8 @@ import android.epicurius.ui.notifications.utils.createFridgeNotificationChannel
 import android.epicurius.ui.notifications.utils.notifyProductExpiration
 import android.os.Build
 import androidx.core.content.ContextCompat
+import androidx.work.CoroutineWorker
+import androidx.work.WorkerParameters
 import java.time.LocalDate
 
 class ExpirationCheckWorker(
