@@ -35,7 +35,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.IntOffset
@@ -49,8 +48,9 @@ import java.time.Period
 @Composable
 fun FridgeScreen(
     userFridgeState: LoadState<List<Product>>,
+    productsResultState: LoadState<List<String>>,
     onBackButton: () -> Unit = {},
-    onSearchProduct: (partialName: String) -> List<String>,
+    onSearchProduct: (partialName: String) -> Unit = {},
     onAddProduct: (
         name: String,
         quantity: Int,
@@ -65,16 +65,15 @@ fun FridgeScreen(
         expirationDate: LocalDate?
     ) -> Unit = { _, _, _, _, _ -> },
     onDeleteProduct: (entryNumber: Int) -> Unit = {},
+    onProductsResultClear: () -> Unit = {},
     enableButtons: Boolean
 ) {
     var showAddProductDialog by remember { mutableStateOf(false) }
 
     BoxWithConstraints {
         val maxHeight = constraints.maxHeight.toFloat()
-
         var offsetX by remember { mutableFloatStateOf(0f) }
         var offsetY by remember { mutableFloatStateOf(0f) }
-
         Scaffold(
             topBar = {
                 TopBar(
@@ -141,7 +140,9 @@ fun FridgeScreen(
                     if (showAddProductDialog) {
                         AddProductDialog(
                             onSearchProduct = onSearchProduct,
+                            productsResultState = productsResultState,
                             onAddProduct = onAddProduct,
+                            onProductsResultClear = onProductsResultClear,
                             onDismiss = { showAddProductDialog = false },
                             enableButtons = enableButtons
                         )
@@ -164,9 +165,8 @@ fun PreviewFridgeScreen() {
     )
 
     FridgeScreen(
-        onSearchProduct = { partialName -> listOf("Milk", "Eggs", "Meat", "Cheese", "Yogurt")},
-        onBackButton = {},
         userFridgeState = apiSuccess(sampleProducts),
+        productsResultState = apiSuccess(emptyList()),
         enableButtons = true,
     )
 }

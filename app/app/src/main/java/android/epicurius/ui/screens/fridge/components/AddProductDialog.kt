@@ -1,7 +1,10 @@
 package android.epicurius.ui.screens.fridge.components
 
+import android.epicurius.ui.screens.utils.LoadState
+import android.epicurius.ui.screens.utils.Loaded
 import android.epicurius.ui.screens.utils.TextField
 import android.epicurius.ui.screens.utils.dropdownMenu.SearchDropdownMenuComponent
+import android.epicurius.ui.screens.utils.getOrThrow
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Text
@@ -16,23 +19,23 @@ import java.time.LocalDate
 
 @Composable
 fun AddProductDialog(
-    onSearchProduct: (partialName: String) -> List<String>,
+    productsResultState: LoadState<List<String>>,
+    onSearchProduct: (partialName: String) -> Unit,
     onAddProduct: (
         name: String,
         quantity: Int,
         openDate: LocalDate?,
         expirationDate: LocalDate
     ) -> Unit = { _, _, _, _ -> },
+    onProductsResultClear: () -> Unit = {},
     onDismiss: () -> Unit,
     enableButtons: Boolean
 ) {
+    var isValidProduct by remember { mutableStateOf(false) }
     var name by remember { mutableStateOf("") }
     var quantity by remember { mutableIntStateOf(0) }
     var openDate by remember { mutableStateOf<LocalDate?>(null) }
     var expirationDate by remember { mutableStateOf<LocalDate?>(null) }
-
-    var productList by remember { mutableStateOf(emptyList<String>()) }
-    var selectedProduct by remember { mutableStateOf(false) }
 
     AlertDialog(
         onDismissRequest = { if (enableButtons) onDismiss() },
@@ -42,13 +45,14 @@ fun AddProductDialog(
                     val safeExpiration = expirationDate
                     if (safeExpiration != null) { // other validations are on the enabled parameter
                         onAddProduct(name, quantity, openDate, safeExpiration)
+                        onProductsResultClear()
                         onDismiss()
                     }
                 },
                 enabled =
                     enableButtons &&
                     name.isNotBlank() && quantity > 0 && expirationDate != null &&
-                    selectedProduct
+                    isValidProduct
             ) { Text("Add") }
         },
         dismissButton = {
@@ -61,19 +65,22 @@ fun AddProductDialog(
         text = {
             Column {
                 SearchDropdownMenuComponent(
-                    options = productList,
+                    optionsState = productsResultState,
                     value = name,
                     onValueChange = {
                         name = it
-                        selectedProduct = productList.contains(name)
+                        if (productsResultState is Loaded) {
+                            val productsResult = productsResultState.getOrThrow()
+                            if (productsResult.isNotEmpty()) isValidProduct = productsResult.contains(name)
+                        }
                     },
-                    onIconClick = { productList = onSearchProduct(name) },
+                    onIconClick = { onSearchProduct(name) },
                     enabled = enableButtons
                 )
                 TextField(
                     value = if (quantity == 0) "" else quantity.toString(),
                     onValueChange = { quantity = it.toIntOrNull() ?: 0 },
-                    enabled = true,
+                    enabled = enableButtons,
                     label = "Quantity"
                 )
                 DateField(

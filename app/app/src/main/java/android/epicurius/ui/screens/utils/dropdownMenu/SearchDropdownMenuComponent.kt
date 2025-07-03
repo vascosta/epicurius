@@ -1,7 +1,11 @@
 package android.epicurius.ui.screens.utils.dropdownMenu
 
+import android.epicurius.ui.screens.utils.LoadState
+import android.epicurius.ui.screens.utils.LoadStateRenderer
+import android.epicurius.ui.screens.utils.Loaded
 import android.epicurius.ui.screens.utils.SearchTextField
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -14,11 +18,14 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SearchDropdownMenuComponent(
-    options: List<String>,
+    optionsState: LoadState<List<String>>,
     value: String,
     onValueChange: (String) -> Unit,
     onIconClick: (String) -> Unit,
@@ -48,16 +55,31 @@ fun SearchDropdownMenuComponent(
             expanded = expanded,
             onDismissRequest = { expanded = false }
         ) {
-            options.forEach { option ->
-                DropdownMenuItem(
-                    text = { Text(option) },
-                    onClick = {
-                        onValueChange(option)
-                        expanded = false
-                    },
-                    enabled = enabled
-                )
-            }
+            LoadStateRenderer(
+                loadState = optionsState,
+                content = { options ->
+                    if (options.isNotEmpty()) {
+                        options.forEach { option ->
+                            DropdownMenuItem(
+                                text = { Text(option) },
+                                onClick = {
+                                    onValueChange(option)
+                                    expanded = false
+                                },
+                                enabled = enabled
+                            )
+                        }
+                    }
+                    else if (optionsState is Loaded) {
+                        Text(
+                            text = "No valid products found.",
+                            modifier = Modifier.padding(10.dp),
+                            textAlign = TextAlign.Center,
+                            color = Color.Gray
+                        )
+                    }
+                }
+            )
         }
     }
 }

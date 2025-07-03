@@ -24,10 +24,12 @@ class FridgeActivity : EpicuriusActivity() {
         }
         setContent {
             val userFridgeState = viewModel.userFridge.collectAsState(idle())
+            val productsResultState = viewModel.searchedProducts.collectAsState(idle())
             FridgeScreen(
                 userFridgeState = userFridgeState.value,
+                productsResultState = productsResultState.value,
                 onBackButton = { finish() },
-                onSearchProduct = { partialName -> emptyList() },
+                onSearchProduct = { partialName -> viewModel.searchProducts(partialName) },
                 onAddProduct = {
                     name: String,
                     quantity: Int,
@@ -46,6 +48,7 @@ class FridgeActivity : EpicuriusActivity() {
                     viewModel.updateFridgeProduct(entryNumber, quantity, openDate, duration, expirationDate)
                 },
                 onDeleteProduct = { entryNumber: Int -> viewModel.removeFridgeProduct(entryNumber) },
+                onProductsResultClear = { viewModel.clearSearchedProducts() },
                 enableButtons = viewModel.enableButtons
             )
         }

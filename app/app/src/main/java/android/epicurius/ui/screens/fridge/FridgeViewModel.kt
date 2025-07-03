@@ -1,7 +1,6 @@
 package android.epicurius.ui.screens.fridge
 
 import android.content.Context
-import android.epicurius.domain.fridge.Fridge
 import android.epicurius.domain.fridge.Product
 import android.epicurius.domain.fridge.validateName
 import android.epicurius.domain.fridge.validateQuantity
@@ -28,13 +27,21 @@ class FridgeViewModel(
 ): EpicuriusViewModel(service, session, context) {
 
     private val userFridgeFlow = MutableStateFlow<LoadState<List<Product>>>(idle())
-
     val userFridge = userFridgeFlow.asStateFlow()
+
+    private val searchedProductsFlow = MutableStateFlow<LoadState<List<String>>>(idle())
+    val searchedProducts = searchedProductsFlow.asStateFlow()
 
     fun getUserFridge() {
         disableButtons()
         userFridgeFlow.value = loading()
         viewModelScope.launch { fetchUserFridge() }
+    }
+
+    fun searchProducts(partialName: String) {
+        disableButtons()
+        searchedProductsFlow.value = loading()
+        viewModelScope.launch { fetchProducts(partialName) }
     }
 
     fun addProductToFridge(
@@ -73,6 +80,8 @@ class FridgeViewModel(
         viewModelScope.launch { handleRemoveFridgeProduct(entryNumber) }
     }
 
+    fun clearSearchedProducts() { searchedProductsFlow.value = idle() }
+
     private suspend fun fetchUserFridge() {
         val result = request {
             val token = session.getToken()
@@ -82,6 +91,20 @@ class FridgeViewModel(
             result.isSuccess -> {
                 val fetchedFridge = result.getValueOrThrow().fridge.products
                 userFridgeFlow.value = apiSuccess(fetchedFridge)
+            }
+        }
+        enableButtons()
+    }
+
+    private suspend fun fetchProducts(partialName: String) {
+        val result = request {
+            val token = session.getToken()
+            service.ingredientsService.getIngredients(token, partialName)
+        }
+        when {
+            result.isSuccess -> {
+                val fetchedProducts = result.getValueOrThrow().ingredients
+                searchedProductsFlow.value = apiSuccess(fetchedProducts)
             }
         }
         enableButtons()
