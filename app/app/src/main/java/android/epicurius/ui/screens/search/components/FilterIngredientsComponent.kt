@@ -23,8 +23,8 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun FilterIngredientsComponent(
-    ingredients: List<String>,
-    onIngredientsChange: (List<String>) -> Unit = {},
+    ingredients: Set<String>,
+    onIngredientsChange: (Set<String>) -> Unit = {},
     enableButtons: Boolean
 ) {
     var expandIngredientFields by remember { mutableStateOf(false) }
@@ -45,7 +45,7 @@ fun FilterIngredientsComponent(
                 else "+ Add Ingredients"
             )
             if (ingredients.isEmpty() && expandIngredientFields)
-                onIngredientsChange(ingredients.toMutableList() + "")
+                onIngredientsChange(ingredients + "")
         }
     }
     AnimatedVisibility(visible = expandIngredientFields) {
@@ -65,7 +65,7 @@ fun FilterIngredientsComponent(
                         value = ingredient,
                         onValueChange = { newName ->
                             updatedList[index] = newName
-                            onIngredientsChange(updatedList)
+                            onIngredientsChange(updatedList.toSet())
                         },
                         modifier = Modifier
                             .weight(1f)
@@ -76,7 +76,7 @@ fun FilterIngredientsComponent(
                     DeleteFieldButton(
                         onClick = {
                             updatedList.removeAt(index)
-                            onIngredientsChange(updatedList)
+                            onIngredientsChange(updatedList.toSet())
                         },
                         enabled = enableButtons
                     )
@@ -85,7 +85,7 @@ fun FilterIngredientsComponent(
             AddFieldButton(
                 onClick = {
                     if (!canAddField) return@AddFieldButton
-                    onIngredientsChange(ingredientsList + "")
+                    onIngredientsChange(ingredientsList.toSet() + "")
                 },
                 modifier = Modifier.padding(top = 8.dp),
                 enabled = enableButtons,
