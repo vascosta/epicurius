@@ -54,7 +54,7 @@ class SearchActivity : EpicuriusActivity() {
                     name: String?,
                     cuisine: List<Cuisine>?,
                     mealType: List<MealType>?,
-                    ingredients: List<String>?,
+                    ingredients: Set<String>?,
                     intolerances: List<Intolerance>?,
                     diets: List<Diet>?,
                     servings: Int?,

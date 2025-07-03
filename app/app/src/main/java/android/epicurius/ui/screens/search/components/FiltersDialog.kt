@@ -29,8 +29,8 @@ fun FiltersDialog(
     onCuisineChange: (List<String>) -> Unit,
     mealType: List<String>,
     onMealTypeChange: (List<String>) -> Unit,
-    ingredients: List<String>,
-    onIngredientsChange: (List<String>) -> Unit,
+    ingredients: Set<String>,
+    onIngredientsChange: (Set<String>) -> Unit,
     intolerances: List<String>,
     onIntolerancesChange: (List<String>) -> Unit,
     diets: List<String>,
@@ -211,7 +211,7 @@ fun FiltersDialog(
 fun clearFilters(
     onCuisineChange: (List<String>) -> Unit,
     onMealTypeChange: (List<String>) -> Unit,
-    onIngredientsChange: (List<String>) -> Unit,
+    onIngredientsChange: (Set<String>) -> Unit,
     onIntolerancesChange: (List<String>) -> Unit,
     onDietsChange: (List<String>) -> Unit,
     onServingsChange: (String) -> Unit,
@@ -229,10 +229,9 @@ fun clearFilters(
 ) {
     onCuisineChange(emptyList())
     onMealTypeChange(emptyList())
-    onIngredientsChange(emptyList())
+    onIngredientsChange(emptySet())
     onIntolerancesChange(emptyList())
     onDietsChange(emptyList())
-    onIngredientsChange(emptyList())
     onServingsChange("")
     onMinCaloriesChange("")
     onMaxCaloriesChange("")
@@ -257,7 +256,7 @@ fun FiltersDialogPreview() {
         onCuisineChange = {},
         mealType = emptyList(),
         onMealTypeChange = {},
-        ingredients = emptyList(),
+        ingredients = emptySet(),
         onIngredientsChange = {},
         intolerances = emptyList(),
         onIntolerancesChange = {},

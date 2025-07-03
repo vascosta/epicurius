@@ -38,7 +38,7 @@ fun SearchScreen(
         name: String?,
         cuisine: List<Cuisine>?,
         mealType: List<MealType>?,
-        ingredients: List<String>?,
+        ingredients: Set<String>?,
         intolerances: List<Intolerance>?,
         diets: List<Diet>?,
         servings: Int?,
@@ -75,7 +75,7 @@ fun SearchScreen(
 ) {
     var showCameraScreen by remember { mutableStateOf(false) }
 
-    var ingredients by remember { mutableStateOf(listOf<String>()) }
+    var ingredients by remember { mutableStateOf(setOf<String>()) }
 
     if (showCameraScreen) {
         CameraScreen(
@@ -87,7 +87,7 @@ fun SearchScreen(
                 showCameraScreen = false
             },
             onIngredientsClear = {
-                ingredients = emptyList()
+                ingredients = emptySet()
                 onIngredientsClear()
             },
             enableButtons = enableButtons
@@ -111,7 +111,7 @@ fun SearchScreen(
             onSearchRecipesClear = onSearchRecipesClear,
             onSearchUsersClear = onSearchUsersClear,
             onIngredientsClear = {
-                ingredients = emptyList()
+                ingredients = emptySet()
                 onIngredientsClear()
             },
             onRecipeCollectionsClear = onRecipeCollectionsClear,

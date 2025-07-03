@@ -60,7 +60,7 @@ import kotlin.text.uppercase
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun SearchScreenContent(
-    ingredientsList: List<String>,
+    ingredientsList: Set<String>,
     recipesResultState: LoadState<List<RecipeInfo>>,
     usersResultState: LoadState<List<SearchUser>>,
     ingredientsState: LoadState<List<String>>,
@@ -71,7 +71,7 @@ fun SearchScreenContent(
         name: String?,
         cuisine: List<Cuisine>?,
         mealType: List<MealType>?,
-        ingredients: List<String>?,
+        ingredients: Set<String>?,
         intolerances: List<Intolerance>?,
         diets: List<Diet>?,
         servings: Int?,
@@ -218,7 +218,7 @@ fun SearchScreenContent(
                                 searchQuery,
                                 if (cuisineList.isEmpty()) null else cuisineList,
                                 if (mealTypeList.isEmpty()) null else mealTypeList,
-                                ingredients.map { it.replace(" ", "-") },
+                                ingredients.map { it.replace(" ", "-") }.toSet(),
                                 if (intolerancesList.isEmpty()) null else intolerancesList,
                                 if (dietsList.isEmpty()) null else dietsList,
                                 serving.toIntOrNull(),
@@ -369,7 +369,7 @@ fun SearchScreenContent(
                                             searchRecipesQuery,
                                             if (cuisineList.isEmpty()) null else cuisineList,
                                             if (mealTypeList.isEmpty()) null else mealTypeList,
-                                            ingredients.map { it.replace(" ", "-") },
+                                            ingredients.map { it.replace(" ", "-") }.toSet(),
                                             if (intolerancesList.isEmpty()) null else intolerancesList,
                                             if (dietsList.isEmpty()) null else dietsList,
                                             serving.toIntOrNull(),
