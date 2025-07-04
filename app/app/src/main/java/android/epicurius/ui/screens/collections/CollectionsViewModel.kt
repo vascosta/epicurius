@@ -36,13 +36,13 @@ class CollectionsViewModel(
         viewModelScope.launch { fetchCollections(collectionType) }
     }
 
-    fun createCollection(name: String, onSuccessNavigateTo: (Int) -> Unit) {
+    fun createCollection(name: String, collectionType: CollectionType, onSuccessNavigateTo: (Int) -> Unit) {
         disableButtons()
         if (!validateName(name, ::showToast)) {
             enableButtons()
             return
         }
-        val createCollectionInfo = CreateCollectionInputModel(name, CollectionType.FAVOURITE)
+        val createCollectionInfo = CreateCollectionInputModel(name, collectionType)
         viewModelScope.launch {
             handleCreateCollection(createCollectionInfo, onSuccessNavigateTo)
         }

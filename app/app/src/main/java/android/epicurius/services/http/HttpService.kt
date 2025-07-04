@@ -1,6 +1,7 @@
 package android.epicurius.services.http
 
 import android.epicurius.domain.exceptions.InvalidResponseException
+import android.epicurius.services.http.media.MediaTypes
 import android.epicurius.services.http.media.Problem
 import android.epicurius.services.http.utils.APIResult
 import android.epicurius.services.http.utils.authorizationHeader
@@ -15,6 +16,7 @@ import com.google.gson.stream.JsonReader
 import kotlinx.coroutines.suspendCancellableCoroutine
 import okhttp3.Call
 import okhttp3.Callback
+import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.OkHttpClient
@@ -126,15 +128,21 @@ class HttpService(
         pathParams: Map<String, Any?>? = null,
         token: String? = null
     ): APIResult<T> {
+        val url = baseUrl + endpoint.params(pathParams, emptyMap())
 
-        val multipartBody = if (files != null) getMultipartBody(filePartName, files)
-        else MultipartBody.Builder().setType(MultipartBody.FORM).build()
-
-        val request = Request.Builder()
-            .url(baseUrl + endpoint.params(pathParams, emptyMap()))
+        val requestBuilder = Request.Builder()
+            .url(url)
             .authorizationHeader(token)
-            .patch(multipartBody)
-            .build()
+
+        val body = if (files != null) getMultipartBody(filePartName, files)
+        else {
+            MultipartBody.Builder()
+                .setType(MultipartBody.FORM)
+                .addFormDataPart(filePartName, "", ByteArray(0).toRequestBody("image/png".toMediaTypeOrNull()))
+                .build()
+        }
+
+        val request = requestBuilder.patch(body).build()
 
         return request.getResponseResult()
     }

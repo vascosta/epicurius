@@ -32,7 +32,7 @@ class FavouritesActivity : EpicuriusActivity() {
                 favouritesState = favouritesState.value,
                 onBackButton = { navigateTo<SettingsActivity>(useStack = true) },
                 onCollectionCreate = { collectionName: String ->
-                    viewModel.createCollection(collectionName) { collectionId ->
+                    viewModel.createCollection(collectionName, CollectionType.FAVOURITE) { collectionId ->
                         navigateToFavouritesListActivity(collectionId, true)
                     }
                 },

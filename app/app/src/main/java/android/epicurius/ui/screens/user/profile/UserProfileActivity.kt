@@ -59,7 +59,7 @@ class UserProfileActivity : EpicuriusActivity() {
                     onUnfollow = { username: String -> viewModel.unfollow(username) },
                     onCancelFollow = { username: String -> viewModel.cancelFollow(username) },
                     onUserKitchenBookCollectionCreate = { collectionName: String ->
-                        collectionsViewModel.createCollection(collectionName) {
+                        collectionsViewModel.createCollection(collectionName, CollectionType.KITCHEN_BOOK) {
                             collectionId: Int -> navigateToCollectionActivity(collectionId, true)
                         }
                     },

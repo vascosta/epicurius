@@ -136,7 +136,7 @@ fun UserProfileScreen(
             val username = userProfileState.getOrThrow().name
             if (userProfileVisibility) {
                 onUserRecipesRequest(username)
-                onUserKitchenBookRequest
+                onUserKitchenBookRequest(username)
             }
             else {
                 onUserRecipesClear()
@@ -215,7 +215,7 @@ fun UserProfileScreen(
                                 }
                             },
                             onRemoveImage = { imageBytes ->
-                                onUpdateUserProfilePicture(ByteArray(0))
+                                onUpdateUserProfilePicture(null)
                                 selectedImageBytes = null
                             },
                             enabled = enableButtons
