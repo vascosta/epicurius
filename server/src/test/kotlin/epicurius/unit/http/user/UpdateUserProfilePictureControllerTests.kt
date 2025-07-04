@@ -69,11 +69,11 @@ class UpdateUserProfilePictureControllerTests : UserControllerTest() {
         // given a user (publicTestUser)
 
         // mock
-        whenever(userServiceMock.updateProfilePicture(publicTestUser.user.id, publicTestUser.user.profilePictureName))
+        whenever(userServiceMock.updateProfilePicture(publicTestUser.user.id, publicTestUser.user.profilePictureName, testEmptyPicture))
             .thenReturn(null)
 
         // when removing the profile picture of the user
-        val response = updateUserProfilePicture(publicTestUser, null)
+        val response = updateUserProfilePicture(publicTestUser, testEmptyPicture)
 
         // then the profile picture is removed successfully
         assertEquals(HttpStatus.NO_CONTENT, response.statusCode)
@@ -84,13 +84,13 @@ class UpdateUserProfilePictureControllerTests : UserControllerTest() {
         // given a user (publicTestUser)
 
         // mock
-        whenever(userServiceMock.updateProfilePicture(publicTestUser.user.id, publicTestUser.user.profilePictureName, null))
+        whenever(userServiceMock.updateProfilePicture(publicTestUser.user.id, publicTestUser.user.profilePictureName, testEmptyPicture))
             .thenThrow(PictureNotFound())
 
         // when removing the profile picture of the user
         // then the user profile picture cannot be removed and throws PictureNotFound exception
         assertFailsWith<PictureNotFound> {
-            updateProfilePicture(publicTestUser.user.id, publicTestUser.user.profilePictureName, null)
+            updateProfilePicture(publicTestUser.user.id, publicTestUser.user.profilePictureName, testEmptyPicture)
         }
     }
 }

@@ -74,7 +74,7 @@ class UpdateProfilePictureServiceTests : UserServiceTest() {
             .thenReturn(publicTestUser.copy(profilePictureName = null))
 
         // when removing the profile picture of the user
-        val profilePictureName = updateProfilePicture(publicTestUser.id, publicTestUser.profilePictureName, null)
+        val profilePictureName = updateProfilePicture(publicTestUser.id, publicTestUser.profilePictureName, testEmptyPicture)
 
         // then the profile picture is removed successfully
         verify(pictureRepositoryMock).deletePicture(publicTestUser.profilePictureName!!, PictureDomain.USERS_FOLDER)
@@ -91,7 +91,7 @@ class UpdateProfilePictureServiceTests : UserServiceTest() {
         // when removing the profile picture of the user
         // then the user profile picture cannot be removed and throws PictureNotFound exception
         assertFailsWith<PictureNotFound> {
-            updateProfilePicture(publicTestUser.id, publicTestUser.profilePictureName, null)
+            updateProfilePicture(publicTestUser.id, publicTestUser.profilePictureName, testEmptyPicture)
         }
     }
 }

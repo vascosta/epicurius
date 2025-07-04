@@ -67,5 +67,13 @@ open class EpicuriusTest {
                 "image/jpeg",
                 FileInputStream("src/test/resources/test-tomato.jpeg")
             )
+
+        val testEmptyPicture =
+            MockMultipartFile(
+                "test-picture.jpeg",
+                "test-picture.jpeg",
+                "image/jpeg",
+                ByteArray(0)
+            )
     }
 }

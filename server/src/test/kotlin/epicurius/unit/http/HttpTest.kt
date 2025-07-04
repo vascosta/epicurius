@@ -111,7 +111,7 @@ open class HttpTest : EpicuriusUnitTest() {
 
         fun updateUserProfilePicture(
             authenticatedUser: AuthenticatedUser,
-            profilePicture: MultipartFile?,
+            profilePicture: MultipartFile,
         ) =
             userController.updateUserProfilePicture(authenticatedUser, profilePicture)
 

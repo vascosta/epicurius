@@ -67,7 +67,7 @@ open class ServiceTest : EpicuriusUnitTest() {
         fun updateUser(userId: Int, userUpdate: UpdateUserInputModel) =
             userService.updateUser(userId, userUpdate)
 
-        fun updateProfilePicture(userId: Int, profilePictureName: String? = null, profilePicture: MultipartFile? = null) =
+        fun updateProfilePicture(userId: Int, profilePictureName: String? = null, profilePicture: MultipartFile) =
             userService.updateProfilePicture(userId, profilePictureName, profilePicture)
 
         fun resetPassword(email: String, newPassword: String) =

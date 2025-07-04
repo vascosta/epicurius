@@ -186,12 +186,14 @@ class UserIntegrationTest : EpicuriusIntegrationTest() {
     fun removeUserProfilePicture(
         token: String,
     ) {
-        val multipartBody = MultipartBodyBuilder().build()
+        val multipartBody = MultipartBodyBuilder().apply {
+            part("picture", testEmptyPicture.resource)
+        }.build()
 
         patchMultiPart<UpdateUserProfilePictureOutputModel>(
             client,
             api(Uris.User.USER_PICTURE),
-            BodyInserters.fromMultipartData("picture", multipartBody),
+            BodyInserters.fromMultipartData(multipartBody),
             responseStatus = HttpStatus.NO_CONTENT,
             token = token
         )

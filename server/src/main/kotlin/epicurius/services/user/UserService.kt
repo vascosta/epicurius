@@ -162,10 +162,10 @@ class UserService(
     fun updateProfilePicture(
         userId: Int,
         profilePictureName: String? = null,
-        profilePicture: MultipartFile? = null
+        profilePicture: MultipartFile
     ): String? {
         return when {
-            profilePictureName == null && profilePicture != null -> { // add new profile picture
+            profilePictureName == null && !profilePicture.isEmpty -> { // add new profile picture
                 pictureDomain.validatePicture(profilePicture)
                 val newProfilePictureName = pictureDomain.generatePictureName()
 
@@ -176,14 +176,14 @@ class UserService(
                 newProfilePictureName
             }
 
-            profilePictureName != null && profilePicture != null -> { // update profile picture
+            profilePictureName != null && !profilePicture.isEmpty -> { // update profile picture
                 checkUserProfilePicture(userId, profilePictureName)
                 pictureDomain.validatePicture(profilePicture)
                 cs.pictureRepository.updatePicture(profilePictureName, profilePicture, PictureDomain.USERS_FOLDER)
                 profilePictureName
             }
 
-            profilePictureName != null && profilePicture == null -> { // remove profile picture
+            profilePictureName != null && profilePicture.isEmpty -> { // remove profile picture
                 checkUserProfilePicture(userId, profilePictureName)
                 removeProfilePicture(userId, profilePictureName)
                 null
