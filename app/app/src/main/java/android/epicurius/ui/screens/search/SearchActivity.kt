@@ -123,7 +123,7 @@ class SearchActivity : EpicuriusActivity() {
                 onRecipeCollectionsRequest = { recipeId: Int ->
                     recipeCollectionsViewModel.getRecipeCollections(recipeId, CollectionType.FAVOURITE)
                 },
-                enableButtons = viewModel.enableButtons,
+                enableButtons = viewModel.enableButtons && searchRecipesViewModel.enableButtons
             )
         }
     }
