@@ -23,7 +23,8 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 class SearchActivity : EpicuriusActivity() {
-    override val viewModel: SearchViewModel by getViewModel<SearchViewModel>()
+    override val viewModel: SearchUsersViewModel by getViewModel<SearchUsersViewModel>()
+    val searchRecipesViewModel: SearchRecipesViewModel by getViewModel<SearchRecipesViewModel>()
     val recipeCollectionsViewModel: RecipeCollectionsViewModel by getViewModel<RecipeCollectionsViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -34,9 +35,9 @@ class SearchActivity : EpicuriusActivity() {
             }
         }
         setContent {
-            val recipesResultState = viewModel.searchedRecipes.collectAsState(idle())
+            val recipesResultState = searchRecipesViewModel.searchedRecipes.collectAsState(idle())
             val usersResultState = viewModel.searchedUsers.collectAsState(idle())
-            val ingredientsState = viewModel.ingredients.collectAsState(idle())
+            val ingredientsState = searchRecipesViewModel.ingredients.collectAsState(idle())
             val userInfoState = viewModel.userInfo.collectAsState(idle())
             val collectionsToAddRecipeState = recipeCollectionsViewModel.collectionsToAddRecipe.collectAsState(idle())
             val collectionsToRemoveRecipeState = recipeCollectionsViewModel.collectionsToRemoveRecipe.collectAsState(idle())
@@ -70,7 +71,7 @@ class SearchActivity : EpicuriusActivity() {
                     maxTime: Int?,
                     showAuthorRecipes: Boolean
                     ->
-                    viewModel.searchRecipes(
+                    searchRecipesViewModel.searchRecipes(
                         name,
                         cuisine,
                         mealType,
@@ -93,7 +94,7 @@ class SearchActivity : EpicuriusActivity() {
                 },
                 onSearchUsers = { name: String -> viewModel.searchUsers(name) },
                 onIdentifyIngredientsInPicture = { pictureBytes: ByteArray ->
-                    viewModel.identifyIngredientsInPicture(pictureBytes)
+                    searchRecipesViewModel.identifyIngredientsInPicture(pictureBytes)
                 },
                 onAddRecipeToCollections = {
                         recipeId: Int,
@@ -113,9 +114,9 @@ class SearchActivity : EpicuriusActivity() {
                         collectionsToRemove
                     )
                 },
-                onSearchRecipesClear = { viewModel.clearSearchRecipes() },
+                onSearchRecipesClear = { searchRecipesViewModel.clearSearchRecipes() },
                 onSearchUsersClear = { viewModel.clearSearchUsers() },
-                onIngredientsClear = { viewModel.clearIngredients() },
+                onIngredientsClear = { searchRecipesViewModel.clearIngredients() },
                 onRecipeCollectionsClear = { recipeCollectionsViewModel.clearRecipeCollections() },
                 onRecipeProfileRequest = ::navigateToRecipeProfileActivity,
                 onUserProfileRequest = ::navigateToUserProfileActivity,

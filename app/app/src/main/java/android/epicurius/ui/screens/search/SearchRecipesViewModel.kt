@@ -12,7 +12,6 @@ import android.epicurius.domain.recipe.validateFat
 import android.epicurius.domain.recipe.validateName
 import android.epicurius.domain.recipe.validatePreparationTime
 import android.epicurius.domain.recipe.validateProtein
-import android.epicurius.domain.user.SearchUser
 import android.epicurius.domain.user.UserInfo
 import android.epicurius.services.EpicuriusService
 import android.epicurius.services.http.utils.CachedResult
@@ -28,7 +27,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
-class SearchViewModel(
+class SearchRecipesViewModel(
     service: EpicuriusService,
     session: Session,
     context: Context
@@ -39,11 +38,6 @@ class SearchViewModel(
 
     val searchedRecipes = searchedRecipesFlow.asStateFlow()
     private val cacheSearchedRecipes = cacheSearchedRecipesFlow.asStateFlow()
-
-    private val searchedUsersFlow = MutableStateFlow<LoadState<List<SearchUser>>>(idle())
-    private val cacheSearchedUsersFlow = MutableStateFlow<List<SearchUser>>(emptyList())
-
-    val searchedUsers = searchedUsersFlow.asStateFlow()
 
     private val ingredientsFlow = MutableStateFlow<LoadState<List<String>>>(idle())
     val ingredients = ingredientsFlow.asStateFlow()
@@ -116,12 +110,6 @@ class SearchViewModel(
         }
     }
 
-    fun searchUsers(name: String) {
-        disableButtons()
-        searchedUsersFlow.value = loading(CachedResult(cacheSearchedUsersFlow.value))
-        viewModelScope.launch { fetchUsers(name) }
-    }
-
     fun identifyIngredientsInPicture(pictureBytes: ByteArray) {
         disableButtons()
         ingredientsFlow.value = loading()
@@ -137,11 +125,6 @@ class SearchViewModel(
     fun clearSearchRecipes() {
         searchedRecipesFlow.value = idle()
         cacheSearchedRecipesFlow.value = emptyList()
-    }
-
-    fun clearSearchUsers() {
-        searchedUsersFlow.value = idle()
-        cacheSearchedUsersFlow.value = emptyList()
     }
 
     fun clearIngredients() {
@@ -213,37 +196,6 @@ class SearchViewModel(
 
     private fun handleCachedSearchedRecipes() {
         searchedRecipesFlow.value = cache(cacheSearchedRecipes.value)
-    }
-
-    private suspend fun fetchUsers(name: String) {
-        val result = request {
-            val token = session.getToken()
-            val lastUserId = cacheSearchedUsersFlow.value.lastOrNull()?.id
-            service.userService.searchUsers(
-                token,
-                name,
-                lastUserId,
-                limit
-            )
-        }
-        when {
-            result.isFailure -> handleCachedSearchedUsers()
-            result.isSuccess -> {
-                val fetchedUsers = result.getValueOrThrow().users
-
-                if (fetchedUsers.isNotEmpty()) {
-                    val updatedSearchedUsers = cacheSearchedUsersFlow.value + fetchedUsers
-                    searchedUsersFlow.value = apiSuccess(updatedSearchedUsers)
-                    cacheSearchedUsersFlow.value = updatedSearchedUsers
-                }
-                else handleCachedSearchedUsers()
-            }
-        }
-        enableButtons()
-    }
-
-    private fun handleCachedSearchedUsers() {
-        searchedUsersFlow.value = cache(cacheSearchedUsersFlow.value)
     }
 
     private suspend fun handleIdentifyIngredientsOnPicture(pictureBytes: ByteArray) {
