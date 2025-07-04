@@ -116,9 +116,6 @@ class RecipeProfileActivity : EpicuriusActivity() {
                         rating
                     )
                 },
-                onDeleteUserRecipeRating = {
-                    viewModel.deleteUserRecipeRating(intent.getIntExtra(Intents.RECIPE_ID, -1))
-                },
                 onDeleteRecipe = {
                     viewModel.deleteRecipe(intent.getIntExtra(Intents.RECIPE_ID, -1)) { finish() }
                 },
@@ -142,6 +139,9 @@ class RecipeProfileActivity : EpicuriusActivity() {
                 },
                 onSubstituteIngredients = { ingredientName: String ->
                     viewModel.getSubstituteIngredients(ingredientName)
+                },
+                onRateRecipe = { rating ->
+                    viewModel.rateRecipe(intent.getIntExtra(Intents.RECIPE_ID, -1), rating)
                 },
                 onRecipeCollectionsClear = { recipeCollectionsViewModel.clearRecipeCollections() },
                 onUserProfileRequest = ::navigateToUserProfileActivity,

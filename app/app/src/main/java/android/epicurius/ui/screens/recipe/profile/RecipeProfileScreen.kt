@@ -71,7 +71,6 @@ fun RecipeProfileScreen(
     ) -> Unit = { _, _, _, _, _, _, _, _, _, _, _, _, _, _ -> },
     onEditRecipePictures: (picturesBytes: List<ByteArray>) -> Unit = {},
     onEditUserRating: (rating: Int) -> Unit = {},
-    onDeleteUserRecipeRating: () -> Unit = {},
     onDeleteRecipe: () -> Unit = { },
     onAddRecipeToCollections: (
         recipeId: Int,

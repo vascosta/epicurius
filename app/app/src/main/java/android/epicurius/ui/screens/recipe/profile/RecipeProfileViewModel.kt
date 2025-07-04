@@ -92,6 +92,12 @@ class RecipeProfileViewModel(
         viewModelScope.launch { fetchSubstituteIngredients(ingredientName) }
     }
 
+    fun rateRecipe(id: Int, rating: Int) {
+        disableButtons()
+        val rateRecipeInfo = RateRecipeInputModel(rating)
+        viewModelScope.launch { handleRateRecipe(id, rateRecipeInfo) }
+    }
+
     fun updateRecipe(
         recipeId: Int,
         name: String?,
@@ -214,6 +220,25 @@ class RecipeProfileViewModel(
         }
         when {
             result.isSuccess -> substituteIngredientsFlow.value = apiSuccess(result.getValueOrThrow().ingredients)
+        }
+        enableButtons()
+    }
+
+    private suspend fun handleRateRecipe(id: Int, rateRecipeInfo: RateRecipeInputModel) {
+        val result = request {
+            val token = session.getToken()
+            service.recipeService.rateRecipe(token, id, rateRecipeInfo)
+        }
+        when {
+            result.isSuccess -> {
+                val updatedRecipeRating = result.getValueOrThrow().rating
+                val oldRecipe = recipeFlow.value.getOrThrow()
+                val updatedRecipe = oldRecipe.copy(
+                    rating = updatedRecipeRating
+                )
+                recipeFlow.value = apiSuccess(updatedRecipe)
+                userRecipeRatingFlow.value = apiSuccess(rateRecipeInfo.rating)
+            }
         }
         enableButtons()
     }
