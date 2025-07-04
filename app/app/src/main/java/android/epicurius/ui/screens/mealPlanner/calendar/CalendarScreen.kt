@@ -33,8 +33,8 @@ import java.time.YearMonth
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CalendarScreen(
-    onWeeklyPlanner: () -> Unit = {},
-    onDayClick: (LocalDate) -> Unit = {},
+    onWeeklyMealPlannerRequest: () -> Unit = {},
+    onDailyMealPlannerRequest: (date: LocalDate) -> Unit = {},
 ) {
     val beginDate = LocalDate.of(2025, 6, 2)
     val today = LocalDate.now()
@@ -50,7 +50,6 @@ fun CalendarScreen(
     LaunchedEffect(Unit) {
         state.scrollToMonth(YearMonth.from(today))
     }
-
     Scaffold(
         topBar = { TopBar("Meal Planner", enableButtons = true) },
         bottomBar = { BottomBar(buttonsEnable = true) },
@@ -72,7 +71,7 @@ fun CalendarScreen(
                                     if (day.date == today) Color(0xFFCDFA7D) else Color.Transparent,
                                     shape = CircleShape
                                 )
-                                .clickable { onDayClick(day.date) },
+                                .clickable { onDailyMealPlannerRequest(day.date) },
                             contentAlignment = Alignment.Center
                         ) {
                             Text(text = day.date.dayOfMonth.toString())
@@ -90,16 +89,12 @@ fun CalendarScreen(
                             modifier = Modifier.padding(8.dp),
                             color = Color.Black
                         )
-
                         if (month.yearMonth.month == today.month) {
                             TextButton(
-                                onClick = { onWeeklyPlanner() }
-                            ) {
-                                Text("Weekly Planner")
-                            }
+                                onClick = { onWeeklyMealPlannerRequest() }
+                            ) { Text("Weekly Planner") }
                         }
                     }
-
                     WeekCalendarRow()
                 }
             )
