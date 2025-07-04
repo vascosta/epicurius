@@ -13,7 +13,13 @@ import android.epicurius.ui.navigation.TopBar
 import android.epicurius.ui.screens.recipe.components.RecipeInfoBox
 import android.epicurius.ui.screens.search.components.FiltersDialog
 import android.epicurius.ui.screens.search.components.FiltersIcon
+import android.epicurius.ui.screens.search.components.clearFilters
+import android.epicurius.ui.screens.utils.Idle
+import android.epicurius.ui.screens.utils.LoadState
+import android.epicurius.ui.screens.utils.LoadStateRenderer
+import android.epicurius.ui.screens.utils.Loaded
 import android.epicurius.ui.screens.utils.SearchTextField
+import android.epicurius.ui.screens.utils.apiSuccess
 import android.epicurius.ui.screens.utils.isValidForNumberTextField
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -24,9 +30,12 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Button
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -34,23 +43,25 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import java.time.LocalDate
 
 @Composable
 fun MealPlannerSearchScreen(
-    userInfo: UserInfo,
+    userInfoState: LoadState<UserInfo>,
     date: LocalDate,
     mealTime: MealTime,
-    onBackButton: () -> Unit,
-    onRecipeSearch: (
+    recipesResultState: LoadState<List<RecipeInfo>>,
+    onBackButton: () -> Unit = {},
+    onSearchRecipes: (
         name: String?,
-        mealType: List<MealType>?,
         cuisine: List<Cuisine>?,
+        mealType: List<MealType>?,
+        ingredients: Set<String>?,
         intolerances: List<Intolerance>?,
         diets: List<Diet>?,
-        preparationTime: Int?,
         servings: Int?,
         minCalories: Int?,
         maxCalories: Int?,
@@ -59,28 +70,29 @@ fun MealPlannerSearchScreen(
         minFat: Int?,
         maxFat: Int?,
         minProtein: Int?,
-        maxProtein: Int?
-    ) -> List<RecipeInfo>,
+        maxProtein: Int?,
+        minTime: Int?,
+        maxTime: Int?,
+        showAuthorRecipes: Boolean
+    ) -> Unit = { _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _ -> },
     onAddRecipeToMealPlanner: (
         date: LocalDate,
         recipeId: Int,
         mealTime: MealTime
-    ) -> Unit,
+    ) -> Unit = { _, _, _ -> },
+    onSearchRecipesClear: () -> Unit = {},
     enableButtons: Boolean
 ) {
-    var searchQuery by remember { mutableStateOf("") }
-
     var showFiltersDialog by remember { mutableStateOf(false) }
 
-    var mealType by remember { mutableStateOf(listOf<String>()) }
-    var cuisine by remember { mutableStateOf(listOf<String>()) }
-    var intolerances by remember {
-        mutableStateOf<List<String>>(userInfo.intolerances.map { it.displayName })
-    }
-    var diets by remember {
-        mutableStateOf<List<String>>(userInfo.diets.map { it.displayName })
-    }
+    var searchQuery by remember { mutableStateOf("") }
+    var searchRecipesQuery by remember { mutableStateOf("") }
 
+    var cuisine by remember { mutableStateOf(listOf<String>()) }
+    var mealType by remember { mutableStateOf(listOf<String>()) }
+    var ingredients by remember { mutableStateOf(setOf<String>()) }
+    var intolerances by remember { mutableStateOf(listOf<String>()) }
+    var diets by remember { mutableStateOf(listOf<String>()) }
     var serving by remember { mutableStateOf("") }
     var minCalories by remember { mutableStateOf("") }
     var maxCalories by remember { mutableStateOf("") }
@@ -94,8 +106,13 @@ fun MealPlannerSearchScreen(
     var maxTime by remember { mutableStateOf("") }
     var showAuthorRecipes by remember { mutableStateOf(false) }
 
-    var recipeResults by remember { mutableStateOf<List<RecipeInfo>>(emptyList()) }
-
+    LaunchedEffect(userInfoState) {
+        if (userInfoState is Loaded) {
+            val userInfo = userInfoState.value.getValueOrThrow()
+            intolerances = userInfo.intolerances.map { it.displayName }
+            diets = userInfo.diets.map { it.displayName }
+        }
+    }
     Scaffold(
         topBar = {
             TopBar(
@@ -127,13 +144,26 @@ fun MealPlannerSearchScreen(
                         .padding(horizontal = 8.dp),
                     onSearchQueryChange = { searchQuery = it },
                     onIconClick = {
-                        recipeResults = onRecipeSearch(
+                        val cuisineList = cuisine.map { Cuisine.valueOf(it.uppercase().replace(Regex("[\\s-]"), "_")) }
+                        val mealTypeList = mealType.map { MealType.valueOf(it.uppercase().replace(Regex("[\\s-]"), "_")) }
+                        val intolerancesList =
+                            intolerances.map {
+                                Intolerance.valueOf(
+                                    it.uppercase().replace(Regex("[\\s-]"), "_")
+                                )
+                            }
+                        val dietsList = diets.map { Diet.valueOf(
+                            it.uppercase().replace(Regex("[\\s-]"), "_")
+                        ) }
+
+                        onSearchRecipesClear()
+                        onSearchRecipes(
                             searchQuery,
-                            mealType.map { MealType.valueOf(it) },
-                            cuisine.map { Cuisine.valueOf(it) },
-                            intolerances.map { Intolerance.fromDisplayName(it) },
-                            diets.map { Diet.fromDisplayName(it) },
-                            null,
+                            if (cuisineList.isEmpty()) null else cuisineList,
+                            if (mealTypeList.isEmpty()) null else mealTypeList,
+                            if (ingredients.isEmpty()) null else ingredients.map { it.replace(" ", "-") }.toSet(),
+                            if (intolerancesList.isEmpty()) null else intolerancesList,
+                            if (dietsList.isEmpty()) null else dietsList,
                             serving.toIntOrNull(),
                             minCalories.toIntOrNull(),
                             maxCalories.toIntOrNull(),
@@ -142,31 +172,140 @@ fun MealPlannerSearchScreen(
                             minFat.toIntOrNull(),
                             maxFat.toIntOrNull(),
                             minProtein.toIntOrNull(),
-                            maxProtein.toIntOrNull()
+                            maxProtein.toIntOrNull(),
+                            minTime.toIntOrNull(),
+                            maxTime.toIntOrNull(),
+                            showAuthorRecipes
                         )
+                        searchRecipesQuery = searchQuery
                     },
                     enableButtons = enableButtons
                 )
                 Row(modifier = Modifier.fillMaxWidth()) {
-                    FiltersIcon(onClick = { showFiltersDialog = true }, enableButtons = enableButtons)
-                }
-
-                if (recipeResults.isNotEmpty()) {
-                    recipeResults.forEach { recipe ->
-                        RecipeInfoBox(
-                            collectionId = null,
-                            recipeInfo = recipe,
-                            date = date,
-                            mealTime = mealTime,
-                            onAddRecipeToMealPlanner = onAddRecipeToMealPlanner,
-                            enableButtons = enableButtons,
-                        )
-                        Spacer(Modifier.height(10.dp))
+                    if (recipesResultState is Idle) {
+                        FiltersIcon(onClick = { showFiltersDialog = true }, enableButtons = enableButtons)
+                        TextButton(
+                            onClick = {
+                                onSearchRecipesClear()
+                                clearFilters(
+                                    onCuisineChange = { cuisine = it },
+                                    onMealTypeChange = { mealType = it },
+                                    onIngredientsChange = { ingredients = it },
+                                    onIntolerancesChange = { intolerances = it },
+                                    onDietsChange = { diets = it },
+                                    onServingsChange = { serving = it },
+                                    onMinCaloriesChange = { minCalories = it },
+                                    onMaxCaloriesChange = { maxCalories = it },
+                                    onMinCarbsChange = { minCarbs = it },
+                                    onMaxCarbsChange = { maxCarbs = it },
+                                    onMinFatChange = { minFat = it },
+                                    onMaxFatChange = { maxFat = it },
+                                    onMinProteinChange = { minProtein = it },
+                                    onMaxProteinChange = { maxProtein = it },
+                                    onMinTimeChange = { minTime = it },
+                                    onMaxTimeChange = { maxTime = it },
+                                    onShowAuthorRecipesChange = { showAuthorRecipes = it }
+                                )
+                            },
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(10.dp),
+                            enabled = enableButtons
+                        ) { Text("Clear") }
                     }
-                } else {
-                    Text("No recipes found", color = Color.Gray)
                 }
+                LoadStateRenderer(
+                    loadState = recipesResultState,
+                    content = { recipesResult ->
+                        TextButton(
+                            onClick = {
+                                onSearchRecipesClear()
+                                clearFilters(
+                                    onCuisineChange = { cuisine = it },
+                                    onMealTypeChange = { mealType = it },
+                                    onIngredientsChange = { ingredients = it },
+                                    onIntolerancesChange = { intolerances = it },
+                                    onDietsChange = { diets = it },
+                                    onServingsChange = { serving = it },
+                                    onMinCaloriesChange = { minCalories = it },
+                                    onMaxCaloriesChange = { maxCalories = it },
+                                    onMinCarbsChange = { minCarbs = it },
+                                    onMaxCarbsChange = { maxCarbs = it },
+                                    onMinFatChange = { minFat = it },
+                                    onMaxFatChange = { maxFat = it },
+                                    onMinProteinChange = { minProtein = it },
+                                    onMaxProteinChange = { maxProtein = it },
+                                    onMinTimeChange = { minTime = it },
+                                    onMaxTimeChange = { maxTime = it },
+                                    onShowAuthorRecipesChange = { showAuthorRecipes = it }
+                                )
+                            },
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(10.dp),
+                            enabled = enableButtons
+                        ) { Text("Clear") }
+                        if (recipesResult.isNotEmpty()) {
+                            recipesResult.forEach { recipe ->
+                                RecipeInfoBox(
+                                    recipeInfo = recipe,
+                                    date = date,
+                                    mealTime = mealTime,
+                                    onAddRecipeToMealPlanner = onAddRecipeToMealPlanner,
+                                    enableButtons = enableButtons,
+                                )
+                                Spacer(Modifier.height(10.dp))
+                            }
+                            Button(
+                                onClick = {
+                                    val cuisineList = cuisine.map { Cuisine.valueOf(it.uppercase().replace(Regex("[\\s-]"), "_")) }
+                                    val mealTypeList = mealType.map { MealType.valueOf(it.uppercase().replace(Regex("[\\s-]"), "_")) }
+                                    val intolerancesList =
+                                        intolerances.map {
+                                            Intolerance.valueOf(
+                                                it.uppercase().replace(Regex("[\\s-]"), "_")
+                                            )
+                                        }
+                                    val dietsList = diets.map { Diet.valueOf(
+                                        it.uppercase().replace(Regex("[\\s-]"), "_")
+                                    ) }
 
+                                    onSearchRecipes(
+                                        searchRecipesQuery,
+                                        if (cuisineList.isEmpty()) null else cuisineList,
+                                        if (mealTypeList.isEmpty()) null else mealTypeList,
+                                        if (ingredients.isEmpty()) null else ingredients.map { it.replace(" ", "-") }.toSet(),
+                                        if (intolerancesList.isEmpty()) null else intolerancesList,
+                                        if (dietsList.isEmpty()) null else dietsList,
+                                        serving.toIntOrNull(),
+                                        minCalories.toIntOrNull(),
+                                        maxCalories.toIntOrNull(),
+                                        minCarbs.toIntOrNull(),
+                                        maxCarbs.toIntOrNull(),
+                                        minFat.toIntOrNull(),
+                                        maxFat.toIntOrNull(),
+                                        minProtein.toIntOrNull(),
+                                        maxProtein.toIntOrNull(),
+                                        minTime.toIntOrNull(),
+                                        maxTime.toIntOrNull(),
+                                        showAuthorRecipes
+                                    )
+                                },
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(10.dp),
+                                enabled = enableButtons
+                            ) { Text("Load More") }
+                        } else if (recipesResultState is Loaded) {
+                            Text(
+                                text = "No recipes found.",
+                                modifier = Modifier.padding(10.dp),
+                                textAlign = TextAlign.Center,
+                                color = Color.Gray
+                            )
+                        }
+                    }
+                )
                 if (showFiltersDialog) {
                     FiltersDialog(
                         onDismiss = { showFiltersDialog = false },
@@ -175,8 +314,8 @@ fun MealPlannerSearchScreen(
                         onCuisineChange = { cuisine = it },
                         mealType = mealType,
                         onMealTypeChange = { mealType = it },
-                        ingredients = emptyList(),
-                        onIngredientsChange = { /* No ingredients in meal planner */ },
+                        ingredients = ingredients,
+                        onIngredientsChange = { ingredients = it },
                         intolerances = intolerances,
                         onIntolerancesChange = { intolerances = it },
                         diets = diets,
@@ -253,12 +392,10 @@ fun MealPlannerSearchScreenPreview() {
     )
 
     MealPlannerSearchScreen(
-        userInfo = userInfo,
+        userInfoState = apiSuccess(userInfo),
         date = LocalDate.now(),
         mealTime = MealTime.LUNCH,
-        onBackButton = {  },
-        onRecipeSearch = { _, _, _,_,_,_, _, _, _, _, _, _, _, _, _ -> recipeList },
-        onAddRecipeToMealPlanner = { _, _, _ -> },
+        recipesResultState = apiSuccess(recipeList),
         enableButtons = true
     )
 }

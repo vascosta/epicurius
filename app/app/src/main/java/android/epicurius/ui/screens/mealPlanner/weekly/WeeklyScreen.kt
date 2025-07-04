@@ -13,7 +13,12 @@ import android.epicurius.ui.navigation.BottomBarState
 import android.epicurius.ui.screens.mealPlanner.components.MealPlannerComponent
 import android.epicurius.ui.screens.mealPlanner.components.WeekCalendarRow
 import android.epicurius.ui.screens.mealPlanner.daily.components.CaloriesUpdateDialog
+import android.epicurius.ui.screens.utils.LoadState
+import android.epicurius.ui.screens.utils.LoadStateRenderer
+import android.epicurius.ui.screens.utils.Loaded
 import android.epicurius.ui.screens.utils.MixedText
+import android.epicurius.ui.screens.utils.apiSuccess
+import android.epicurius.ui.screens.utils.getOrThrow
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -28,10 +33,10 @@ import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -49,97 +54,106 @@ import java.time.LocalDate
 @Composable
 fun WeeklyScreen(
     week: List<LocalDate>,
-    mealPlanner: MealPlanner,
-    onBackButton: () -> Unit,
-    onCaloriesUpdate: (Int) -> Unit,
-    onAddRecipe: () -> Unit,
-    onDeleteRecipe: (date: LocalDate, mealtime: MealTime) -> Unit
+    weeklyMealPlannerState: LoadState<List<DailyMealPlanner>>,
+    onBackButton: () -> Unit = {},
+    onUpdateDailyCalories: (calories: Int) -> Unit = {},
+    onDeleteRecipeFromMealPlanner: (date: LocalDate, mealtime: MealTime) -> Unit = { _, _, -> },
+    onAddRecipeToMealPlannerRequest: () -> Unit = {},
+    enableButtons: Boolean
 ) {
+    var showUpdateDailyCaloriesDialog by remember { mutableStateOf(false) }
+
     var selectedDay by remember { mutableStateOf(LocalDate.now()) }
-    val selectMealPlanner = mealPlanner.planner.find { daily -> daily.date == selectedDay }
+    var selectedDailyMealPlanner by remember { mutableStateOf<DailyMealPlanner?>(null) }
 
-    var showDialog by remember { mutableStateOf(false) }
-
+    LaunchedEffect(selectedDay) {
+        if (weeklyMealPlannerState is Loaded) {
+            val mealPlanner = weeklyMealPlannerState.getOrThrow()
+            selectedDailyMealPlanner = mealPlanner.find { daily -> daily.date == selectedDay }
+        }
+    }
     Scaffold(
         topBar = {
             TopBar(
                 titleText = "Weekly Meal Planner",
                 backButton = true,
                 onBackButton = onBackButton,
-                enableButtons = true
+                enableButtons = enableButtons
             )
         },
         bottomBar = {
             BottomBar(
-                buttonsEnable = true,
+                buttonsEnable = enableButtons,
                 state = BottomBarState.PLANNER
             )
         },
         content = { paddingValues ->
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(paddingValues)
-                    .padding(16.dp)
-                    .verticalScroll(rememberScrollState()),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                WeekCalendarRow()
+            LoadStateRenderer(
+                loadState = weeklyMealPlannerState,
+                content = { weeklyMealPlanner ->
+                    Column(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(paddingValues)
+                            .padding(16.dp)
+                            .verticalScroll(rememberScrollState()),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        WeekCalendarRow()
+                        Row(Modifier.fillMaxWidth()) {
+                            week.forEach { date ->
+                                Text(
+                                    text = date.dayOfMonth.toString(),
+                                    modifier = Modifier
+                                        .weight(1f)
+                                        .clip(RoundedCornerShape(8.dp))
+                                        .border(1.dp, Color.LightGray)
+                                        .padding(16.dp)
+                                        .clickable { selectedDay = date },
+                                    textAlign = TextAlign.Center,
+                                    fontWeight = FontWeight.Normal,
+                                    color = if (date == selectedDay) Color(0xFFAC88DC) else Color.Black
+                                )
+                            }
+                        }
 
-                Row(Modifier.fillMaxWidth()) {
-                    week.forEach { date ->
-                        Text(
-                            text = date.dayOfMonth.toString(),
+                        val dailyCalories = selectedDailyMealPlanner?.maxCalories
+                        Box(
                             modifier = Modifier
-                                .weight(1f)
-                                .clip(RoundedCornerShape(8.dp))
-                                .border(1.dp, Color.LightGray)
-                                .padding(16.dp)
-                                .clickable { selectedDay = date },
-                            textAlign = TextAlign.Center,
-                            fontWeight = FontWeight.Normal,
-                            color = if (date == selectedDay) Color(0xFFAC88DC) else Color.Black
+                                .fillMaxWidth()
+                                .wrapContentSize(Alignment.Center)
+                                .padding(top = 16.dp)
+                                .clickable(
+                                    onClick = { showUpdateDailyCaloriesDialog = true },
+                                    enabled = selectedDay == LocalDate.now() ||
+                                            selectedDay.isAfter(LocalDate.now())
+                                )
+                        ) {
+                            MixedText(
+                                boldString = "Max Calories: ",
+                                normalString = dailyCalories?.toString() ?: "Not set"
+                            )
+                        }
+                        if (showUpdateDailyCaloriesDialog) {
+                            CaloriesUpdateDialog(
+                                initialValue = dailyCalories?.toString() ?: "",
+                                onUpdateCalories = onUpdateDailyCalories,
+                                onDismiss = { showUpdateDailyCaloriesDialog = false },
+                                enableButtons = enableButtons
+                            )
+                        }
+
+                        Spacer(Modifier.height(20.dp))
+                        MealPlannerComponent(
+                            dailyPlanner = selectedDailyMealPlanner,
+                            date = selectedDay,
+                            onDeleteRecipeFromMealPlanner = onDeleteRecipeFromMealPlanner,
+                            onAddRecipeToMealPlannerRequest = onAddRecipeToMealPlannerRequest,
+                            enableButtons = enableButtons
                         )
                     }
                 }
-
-                val dailyCalories = selectMealPlanner?.maxCalories
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .wrapContentSize(Alignment.Center)
-                        .padding(top = 16.dp)
-                        .clickable(
-                            onClick = { showDialog = true },
-                            enabled = selectedDay == LocalDate.now() ||
-                                    selectedDay.isAfter(LocalDate.now())
-                        )
-                ) {
-                    MixedText(
-                        boldString = "Max Calories: ",
-                        normalString = dailyCalories?.toString() ?: "Not set"
-                    )
-                }
-
-                if (showDialog) {
-                    CaloriesUpdateDialog(
-                        initialValue = dailyCalories?.toString() ?: "",
-                        onDismiss = { showDialog = false },
-                        onConfirm = {
-                            onCaloriesUpdate(it)
-                            showDialog = false
-                        }
-                    )
-                }
-
-                Spacer(Modifier.height(20.dp))
-                MealPlannerComponent(
-                    dailyPlanner = selectMealPlanner,
-                    date = selectedDay,
-                    onAddRecipe = onAddRecipe,
-                    onDeleteRecipe = onDeleteRecipe
-                )
-            }
+            )
         },
         containerColor = Color.White
     )
@@ -217,10 +231,7 @@ fun WeeklyScreenPreview() {
     )
     WeeklyScreen(
         week = week,
-        mealPlanner = mealPlanner,
-        onBackButton = {},
-        onCaloriesUpdate = {},
-        onAddRecipe = {},
-        onDeleteRecipe = { _, _ -> }
+        weeklyMealPlannerState = apiSuccess(mealPlanner.planner),
+        enableButtons = true
     )
 }

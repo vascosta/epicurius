@@ -31,8 +31,9 @@ fun DailyMealPlannerBox(
     mealTime: MealTime,
     recipe: RecipeInfo?,
     dailyMealPlannerDate: LocalDate,
-    onAddRecipe: () -> Unit,
-    onDeleteRecipe: (date: LocalDate, mealTime: MealTime) -> Unit
+    onDeleteRecipeFromMealPlanner: (date: LocalDate, mealtime: MealTime) -> Unit = { _, _, -> },
+    onAddRecipeToMealPlannerRequest: () -> Unit = {},
+    enableButtons: Boolean
 ) {
     Box(
         modifier = Modifier
@@ -51,13 +52,14 @@ fun DailyMealPlannerBox(
             if (recipe != null) {
                 RecipeInfoBox(
                     recipeInfo = recipe,
-                    enableButtons = true,
+                    enableButtons = enableButtons,
                 )
                 IconButton(
-                    onClick = { onDeleteRecipe(dailyMealPlannerDate, mealTime) },
+                    onClick = { onDeleteRecipeFromMealPlanner(dailyMealPlannerDate, mealTime) },
                     modifier = Modifier
                         .size(24.dp)
-                        .align(Alignment.End)
+                        .align(Alignment.End),
+                    enabled = enableButtons
                 ) {
                     Icon(
                         imageVector = Icons.Default.Delete,
@@ -76,7 +78,8 @@ fun DailyMealPlannerBox(
                         dailyMealPlannerDate.isAfter(LocalDate.now())
                     ) {
                         TextButton(
-                            onClick = { onAddRecipe() }
+                            onClick = { onAddRecipeToMealPlannerRequest() },
+                            enabled = enableButtons
                         ) {
                             Text(
                                 text = "Add Recipe",

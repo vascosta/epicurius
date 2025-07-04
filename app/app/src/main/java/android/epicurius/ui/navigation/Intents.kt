@@ -11,4 +11,7 @@ object Intents {
     const val FOLLOW_TAB = "FollowTabIntent"
     const val FOLLOWERS_COUNT = "FollowCountIntent"
     const val FOLLOWING_COUNT = "FollowingCountIntent"
+
+    const val DAILY_MEAL_PLANNER_MEAL = "DailyMealPlannerMealIntent"
+    const val MEAL_TIME = "MealTimeIntent"
 }

@@ -11,7 +11,10 @@ import android.epicurius.ui.navigation.BottomBarState
 import android.epicurius.ui.navigation.TopBar
 import android.epicurius.ui.screens.mealPlanner.daily.components.CaloriesUpdateDialog
 import android.epicurius.ui.screens.mealPlanner.components.MealPlannerComponent
+import android.epicurius.ui.screens.utils.LoadState
+import android.epicurius.ui.screens.utils.LoadStateRenderer
 import android.epicurius.ui.screens.utils.MixedText
+import android.epicurius.ui.screens.utils.apiSuccess
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -40,14 +43,15 @@ import java.time.LocalDate
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DailyScreen(
+    dailyMealPlannerState: LoadState<DailyMealPlanner?>,
     date: LocalDate,
-    dailyMealPlanner: DailyMealPlanner?,
-    onBackButton: () -> Unit,
-    onCaloriesUpdate: (Int) -> Unit,
-    onAddRecipe: () -> Unit,
-    onDeleteRecipe: (date: LocalDate, mealtime: MealTime) -> Unit
+    onBackButton: () -> Unit = {},
+    onUpdateDailyCalories: (calories: Int) -> Unit = {},
+    onDeleteRecipeFromMealPlanner: (date: LocalDate, mealtime: MealTime) -> Unit = { _, _, -> },
+    onAddRecipeToMealPlannerRequest: () -> Unit = {},
+    enableButtons: Boolean
 ) {
-    var showDialog by remember { mutableStateOf(false) }
+    var showUpdateDailyCaloriesDialog by remember { mutableStateOf(false) }
 
     Scaffold(
         topBar = {
@@ -55,7 +59,7 @@ fun DailyScreen(
                 titleText = "Daily Meal Planner",
                 backButton = true,
                 onBackButton = onBackButton,
-                enableButtons = true
+                enableButtons = enableButtons
             )
         },
         bottomBar = {
@@ -65,59 +69,60 @@ fun DailyScreen(
             )
         },
         content = { paddingValues ->
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .verticalScroll(rememberScrollState())
-                    .padding(paddingValues)
-                    .padding(16.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Text(
-                    text = "Meal Planner for $date",
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .wrapContentSize(Alignment.Center)
-                        .padding(bottom = 16.dp),
-                    color = Color(0xFFAC88DC),
-                    style = MaterialTheme.typography.titleMedium
-                )
-
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .wrapContentSize(Alignment.Center)
-                        .padding(bottom = 16.dp)
-                        .clickable(
-                            onClick = { showDialog = true },
-                            enabled = date == LocalDate.now() ||
-                                    date.isAfter(LocalDate.now())
+            LoadStateRenderer(
+                loadState = dailyMealPlannerState,
+                content = { dailyMealPlanner ->
+                    Column(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .verticalScroll(rememberScrollState())
+                            .padding(paddingValues)
+                            .padding(16.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Text(
+                            text = "Meal Planner for $date",
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .wrapContentSize(Alignment.Center)
+                                .padding(bottom = 16.dp),
+                            color = Color(0xFFAC88DC),
+                            style = MaterialTheme.typography.titleMedium
                         )
-                ) {
-                    MixedText(
-                        boldString = "Max Calories: ",
-                        normalString = dailyMealPlanner?.maxCalories?.toString() ?: "Not set"
-                    )
-                }
-
-                if (showDialog) {
-                    CaloriesUpdateDialog(
-                        initialValue = dailyMealPlanner?.maxCalories?.toString() ?: "",
-                        onDismiss = { showDialog = false },
-                        onConfirm = {
-                            onCaloriesUpdate(it)
-                            showDialog = false
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .wrapContentSize(Alignment.Center)
+                                .padding(bottom = 16.dp)
+                                .clickable(
+                                    onClick = { showUpdateDailyCaloriesDialog = true },
+                                    enabled = enableButtons && (date == LocalDate.now() ||
+                                            date.isAfter(LocalDate.now()))
+                                )
+                        ) {
+                            MixedText(
+                                boldString = "Max Calories: ",
+                                normalString = dailyMealPlanner?.maxCalories?.toString() ?: "Not set"
+                            )
                         }
-                    )
+                        MealPlannerComponent(
+                            dailyPlanner = dailyMealPlanner,
+                            date = date,
+                            onAddRecipeToMealPlannerRequest = onAddRecipeToMealPlannerRequest,
+                            onDeleteRecipeFromMealPlanner = onDeleteRecipeFromMealPlanner,
+                            enableButtons = enableButtons
+                        )
+                        if (showUpdateDailyCaloriesDialog) {
+                            CaloriesUpdateDialog(
+                                initialValue = dailyMealPlanner?.maxCalories?.toString() ?: "",
+                                onDismiss = { showUpdateDailyCaloriesDialog = false },
+                                onUpdateCalories = onUpdateDailyCalories,
+                                enableButtons = enableButtons
+                            )
+                        }
+                    }
                 }
-
-                MealPlannerComponent(
-                    dailyPlanner = dailyMealPlanner,
-                    date = date,
-                    onAddRecipe = onAddRecipe,
-                    onDeleteRecipe = onDeleteRecipe
-                )
-            }
+            )
         },
         containerColor = Color.White
     )
@@ -200,7 +205,7 @@ fun DailyScreenPreview() {
 
     DailyScreen(
         date = LocalDate.now(),
-        dailyMealPlanner = mealPlanner.planner.first(),
+        dailyMealPlannerState = apiSuccess(mealPlanner.planner.first()),
         onBackButton = {},
         onCaloriesUpdate = {},
         onAddRecipe = {},

@@ -23,10 +23,12 @@ class MealPlannerService(private val httpService: HttpService) {
         )
 
     suspend fun getDailyMealPlanner(
-        token: String
+        token: String,
+        date: LocalDate
     ): APIResult<DailyMealPlannerOutputModel> =
         httpService.get<DailyMealPlannerOutputModel>(
             Uris.MealPlanner.MEAL_PLANNER,
+            pathParams = mapOf("date" to date),
             token = token
         )
 

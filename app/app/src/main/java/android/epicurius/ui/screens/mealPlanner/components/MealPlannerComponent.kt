@@ -9,8 +9,9 @@ import java.time.LocalDate
 fun MealPlannerComponent(
     dailyPlanner: DailyMealPlanner?,
     date: LocalDate,
-    onAddRecipe: () -> Unit,
-    onDeleteRecipe: (LocalDate, MealTime) -> Unit
+    onDeleteRecipeFromMealPlanner: (date: LocalDate, mealtime: MealTime) -> Unit = { _, _, -> },
+    onAddRecipeToMealPlannerRequest: () -> Unit = {},
+    enableButtons: Boolean
 ) {
     MealTime.entries.forEach {
         val recipe = dailyPlanner?.meals[it]
@@ -18,8 +19,9 @@ fun MealPlannerComponent(
             mealTime = it,
             recipe = recipe,
             dailyMealPlannerDate = date,
-            onAddRecipe = onAddRecipe,
-            onDeleteRecipe = onDeleteRecipe
+            onAddRecipeToMealPlannerRequest = onAddRecipeToMealPlannerRequest,
+            onDeleteRecipeFromMealPlanner = onDeleteRecipeFromMealPlanner,
+            enableButtons = enableButtons
         )
     }
 }
