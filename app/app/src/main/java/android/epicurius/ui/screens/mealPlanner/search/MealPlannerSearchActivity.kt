@@ -23,6 +23,7 @@ import java.time.LocalDate
 
 class MealPlannerSearchActivity : EpicuriusActivity() {
     override val viewModel: SearchRecipesViewModel by getViewModel<SearchRecipesViewModel>()
+    val mealPlannerSearchViewModel: MealPlannerSearchViewModel by getViewModel<MealPlannerSearchViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,7 +37,7 @@ class MealPlannerSearchActivity : EpicuriusActivity() {
             val userInfoState = viewModel.userInfo.collectAsState(idle())
             MealPlannerSearchScreen(
                 userInfoState = userInfoState.value,
-                date = LocalDate.now(),
+                date = LocalDate.parse(intent.getStringExtra(Intents.DAILY_MEAL_PLANNER_DATE) ?: ""),
                 mealTime = MealTime.valueOf(intent.getStringExtra(Intents.DAILY_MEAL_PLANNER_MEAL) ?: ""),
                 recipesResultState = recipesResultState.value,
                 onBackButton = ::navigateBack,
@@ -81,7 +82,9 @@ class MealPlannerSearchActivity : EpicuriusActivity() {
                         showAuthorRecipes
                     )
                 },
-                onAddRecipeToMealPlanner = { _, _, _ -> },
+                onAddRecipeToMealPlanner = { date: LocalDate, recipeId: Int, mealTime: MealTime ->
+                    mealPlannerSearchViewModel.addRecipeToMealPlanner(date, recipeId, mealTime) { finish() }
+                },
                 onSearchRecipesClear = { viewModel.clearSearchRecipes() },
                 enableButtons = viewModel.enableButtons
             )
@@ -90,8 +93,8 @@ class MealPlannerSearchActivity : EpicuriusActivity() {
 
     private fun navigateBack() {
         val sourceActivity = intent.getStringExtra(Intents.SOURCE_ACTIVITY)
-        if (sourceActivity == WeeklyActivity::class.java.name) navigateTo<WeeklyActivity>()
-        else if (sourceActivity == DailyActivity::class.java.name) navigateTo<DailyActivity>()
+        if (sourceActivity == WeeklyActivity::class.java.name) navigateTo<WeeklyActivity>(finishCurrent = true)
+        else if (sourceActivity == DailyActivity::class.java.name) navigateTo<DailyActivity>(finishCurrent = true)
         else finish()
     }
 }
