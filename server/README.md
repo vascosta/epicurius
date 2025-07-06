@@ -4,7 +4,7 @@ This document contains the backend internal software organization and the data m
 ## Introduction
 The backend server exposes a HTTP API that provides a system for the Epicurius Mobile App.
 
-The __domain__ of the system contains the ``User``, ``Token``, ``Fridge``, ``Recipe``, ``Collection`` and ``Meal Planner`` entities which are described as follows:
+The __domain__ of the system contains the ``User``, ``Token``, ``Fridge``, ``Recipe``, ``Ingredient``, ``Instruction``, ``Collection`` and ``Meal Planner`` entities which are described as follows:
 
 * A __User__ is characterized by an unique number, an unique username, an unique email, an unique token, a password, a country, privacy, intolerance list, diet list and a profile picture;
 
@@ -14,12 +14,16 @@ The __domain__ of the system contains the ``User``, ``Token``, ``Fridge``, ``Rec
 
 * A __Recipe__ is characterized by a unique number, the recipe's name, the id of the author, a description, servings, preparation time, type of cuisine, type of meal, a list of intolerances, a list of diets, the ingredients list, number of calories, proteins, fat, carbohydrates, a map with the instructions and a list of images;
 
+* A __Ingredient__ represents an ingredient needed for the execution of a recipe, characterized by the ingredient name, quantity and unit of measure;
+
+* A __Instruction__ consists on a step essential to prepare a given recipe, consists on the step number and description of the instruction;
+
 * A __Collection__ is characterized by a unique number, the collection's name and type (``Kitchen Book`` or ``Favourites``) and a list of recipes associated to the collection;
 
 * A __Meal Planner__ consists of a list of __Daily Meal Planner__. Each __Daily Meal Planner__ is characterized by a date, the maximum number of calories for the day, and a map where the keys are the meal times, and the values are the recipes associated with those times.
 
 
-The __backend__ was developed using __Kotlin__ technology. In order to  __handle/receive HTTP requests__, the [__Spring MVC__](https://docs.spring.io/spring-framework/reference/web/webmvc.html) library was used. The specific __data__ of the application is __stored__ in a __Postgresql database__, __Firestore database__ and __Cloud Storage__. The __backend__ also interacts with external APIs such as the [__Spoonacular API__](https://spoonacular.com/food-api/docs) and the [__Vision API__](https://cloud.google.com/vision/docs).
+The __backend__ was developed using __Kotlin__ technology. In order to  __handle/receive HTTP requests__, the [__Spring MVC__](https://docs.spring.io/spring-framework/reference/web/webmvc.html) library was used. The specific __data__ of the application is __stored__ in a __Postgresql database__ and __Cloud Storage__. The __backend__ also interacts with external APIs such as the [__Spoonacular API__](https://spoonacular.com/food-api/docs) and the [__Vision API__](https://cloud.google.com/vision/docs).
 
 
 ## Data Model
