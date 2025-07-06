@@ -58,7 +58,7 @@ fun WeeklyScreen(
     onBackButton: () -> Unit = {},
     onUpdateDailyCalories: (calories: Int) -> Unit = {},
     onDeleteRecipeFromMealPlanner: (date: LocalDate, mealtime: MealTime) -> Unit = { _, _, -> },
-    onAddRecipeToMealPlannerRequest: () -> Unit = {},
+    onAddRecipeToMealPlannerRequest: (date: LocalDate, mealTime: MealTime) -> Unit = { _, _, ->},
     enableButtons: Boolean
 ) {
     var showUpdateDailyCaloriesDialog by remember { mutableStateOf(false) }
@@ -125,7 +125,7 @@ fun WeeklyScreen(
                                 .padding(top = 16.dp)
                                 .clickable(
                                     onClick = { showUpdateDailyCaloriesDialog = true },
-                                    enabled = selectedDay == LocalDate.now() ||
+                                    enabled = selectedDay.isEqual(LocalDate.now()) ||
                                             selectedDay.isAfter(LocalDate.now())
                                 )
                         ) {
