@@ -1,20 +1,19 @@
 package android.epicurius.ui.screens.mealPlanner.daily
 
-import android.epicurius.domain.mealPlanner.DailyMealPlanner
 import android.epicurius.domain.mealPlanner.MealTime
-import android.epicurius.domain.recipe.Cuisine
-import android.epicurius.domain.recipe.MealType
-import android.epicurius.domain.recipe.RecipeInfo
 import android.epicurius.ui.EpicuriusActivity
-import android.epicurius.ui.EpicuriusViewModel
 import android.epicurius.ui.navigation.Intents
-import android.epicurius.ui.screens.mealPlanner.calendar.CalendarActivity
 import android.epicurius.ui.navigation.navigateTo
+import android.epicurius.ui.screens.mealPlanner.calendar.CalendarActivity
 import android.epicurius.ui.screens.mealPlanner.search.MealPlannerSearchActivity
 import android.epicurius.ui.screens.mealPlanner.weekly.WeeklyActivity
+import android.epicurius.ui.screens.utils.Idle
 import android.os.Bundle
-import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.runtime.collectAsState
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 import java.time.LocalDate
 
 class DailyActivity : EpicuriusActivity() {
@@ -22,23 +21,37 @@ class DailyActivity : EpicuriusActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        lifecycleScope.launch {
+            viewModel.dailyMealPlanner.collectLatest { state ->
+                if (state is Idle)
+                    viewModel.getDailyMealPlanner(
+                        LocalDate.parse(intent.getStringExtra(Intents.DAILY_MEAL_PLANNER_DATE))
+                    )
+            }
+        }
         setContent {
+            val dailyMealPlannerState = viewModel.dailyMealPlanner.collectAsState()
             DailyScreen(
-                dailyMealPlannerState = ,
-                date = LocalDate.now(),
+                dailyMealPlannerState = dailyMealPlannerState.value,
+                date = LocalDate.parse(intent.getStringExtra(Intents.DAILY_MEAL_PLANNER_DATE)),
                 onBackButton = { navigateTo<CalendarActivity>() },
-                onCaloriesUpdate = {  },
-                onDeleteRecipe = { _, _ -> },
-                onAddRecipeToMealPlannerRequest = { navigateTo<MealPlannerSearchActivity>() },
+                onUpdateDailyCalories = { calories: Int ->
+                    viewModel.updateDailyMealPlannerCalories(calories)
+                },
+                onDeleteRecipeFromMealPlanner = { date: LocalDate, mealtime: MealTime ->
+                    viewModel.deleteRecipeFromDailyMealPlanner(date, mealtime)
+                },
+                onAddRecipeToMealPlannerRequest = ::navigateToMealPlannerSearchActivity,
                 enableButtons = viewModel.enableButtons
             )
         }
     }
 
-    private fun navigateToMealPlannerSearchActivity(mealTime: MealTime) {
+    private fun navigateToMealPlannerSearchActivity(date: LocalDate, mealTime: MealTime) {
         navigateTo<MealPlannerSearchActivity> {
-            intent.putExtra(Intents.SOURCE_ACTIVITY, DailyActivity::class.java.name)
-            intent.putExtra(Intents.MEAL_TIME, mealTime.displayName)
+            intent.putExtra(Intents.SOURCE_ACTIVITY, WeeklyActivity::class.java.name)
+            intent.putExtra(Intents.DAILY_MEAL_PLANNER_DATE, date.toString())
+            intent.putExtra(Intents.DAILY_MEAL_PLANNER_MEAl_TIME, mealTime.displayName)
         }
     }
 }

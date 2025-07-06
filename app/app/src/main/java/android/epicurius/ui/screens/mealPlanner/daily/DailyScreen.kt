@@ -43,12 +43,12 @@ import java.time.LocalDate
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DailyScreen(
-    dailyMealPlannerState: LoadState<DailyMealPlanner?>,
+    dailyMealPlannerState: LoadState<DailyMealPlanner>,
     date: LocalDate,
     onBackButton: () -> Unit = {},
     onUpdateDailyCalories: (calories: Int) -> Unit = {},
     onDeleteRecipeFromMealPlanner: (date: LocalDate, mealtime: MealTime) -> Unit = { _, _, -> },
-    onAddRecipeToMealPlannerRequest: () -> Unit = {},
+    onAddRecipeToMealPlannerRequest: (date: LocalDate, mealTime: MealTime) -> Unit = { _, _, ->},
     enableButtons: Boolean
 ) {
     var showUpdateDailyCaloriesDialog by remember { mutableStateOf(false) }
@@ -102,7 +102,7 @@ fun DailyScreen(
                         ) {
                             MixedText(
                                 boldString = "Max Calories: ",
-                                normalString = dailyMealPlanner?.maxCalories?.toString() ?: "Not set"
+                                normalString = dailyMealPlanner.maxCalories?.toString() ?: "Not set"
                             )
                         }
                         MealPlannerComponent(
@@ -114,7 +114,7 @@ fun DailyScreen(
                         )
                         if (showUpdateDailyCaloriesDialog) {
                             CaloriesUpdateDialog(
-                                initialValue = dailyMealPlanner?.maxCalories?.toString() ?: "",
+                                initialValue = dailyMealPlanner.maxCalories?.toString() ?: "",
                                 onDismiss = { showUpdateDailyCaloriesDialog = false },
                                 onUpdateCalories = onUpdateDailyCalories,
                                 enableButtons = enableButtons
@@ -204,11 +204,8 @@ fun DailyScreenPreview() {
     )
 
     DailyScreen(
-        date = LocalDate.now(),
         dailyMealPlannerState = apiSuccess(mealPlanner.planner.first()),
-        onBackButton = {},
-        onCaloriesUpdate = {},
-        onAddRecipe = {},
-        onDeleteRecipe = { _, _ -> }
+        date = LocalDate.now(),
+        enableButtons = true
     )
 }

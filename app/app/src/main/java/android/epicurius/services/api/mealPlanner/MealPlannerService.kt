@@ -1,7 +1,7 @@
 package android.epicurius.services.api.mealPlanner
 
 import android.epicurius.domain.mealPlanner.MealTime
-import android.epicurius.services.api.mealPlanner.models.input.AddMealPlannerInputModel
+import android.epicurius.services.api.mealPlanner.models.input.AddRecipeToMealPlannerInputModel
 import android.epicurius.services.api.mealPlanner.models.input.CreateMealPlannerInputModel
 import android.epicurius.services.api.mealPlanner.models.input.UpdateDailyCaloriesInputModel
 import android.epicurius.services.api.mealPlanner.models.input.UpdateMealPlannerInputModel
@@ -45,7 +45,7 @@ class MealPlannerService(private val httpService: HttpService) {
     suspend fun addRecipeToDailyMealPlanner(
         token: String,
         date: LocalDate,
-        dailyMealPlannerInfo: AddMealPlannerInputModel
+        dailyMealPlannerInfo: AddRecipeToMealPlannerInputModel
     ): APIResult<DailyMealPlannerOutputModel> =
         httpService.post<DailyMealPlannerOutputModel>(
             Uris.MealPlanner.MEAL_PLANNER,

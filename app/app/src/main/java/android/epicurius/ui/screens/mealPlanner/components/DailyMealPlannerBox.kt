@@ -32,7 +32,7 @@ fun DailyMealPlannerBox(
     recipe: RecipeInfo?,
     dailyMealPlannerDate: LocalDate,
     onDeleteRecipeFromMealPlanner: (date: LocalDate, mealtime: MealTime) -> Unit = { _, _, -> },
-    onAddRecipeToMealPlannerRequest: () -> Unit = {},
+    onAddRecipeToMealPlannerRequest: (date: LocalDate, mealTime: MealTime) -> Unit = {_, _, -> },
     enableButtons: Boolean
 ) {
     Box(
@@ -78,7 +78,7 @@ fun DailyMealPlannerBox(
                         dailyMealPlannerDate.isAfter(LocalDate.now())
                     ) {
                         TextButton(
-                            onClick = { onAddRecipeToMealPlannerRequest() },
+                            onClick = { onAddRecipeToMealPlannerRequest(dailyMealPlannerDate, mealTime) },
                             enabled = enableButtons
                         ) {
                             Text(

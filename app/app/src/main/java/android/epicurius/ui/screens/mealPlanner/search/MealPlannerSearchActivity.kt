@@ -38,7 +38,7 @@ class MealPlannerSearchActivity : EpicuriusActivity() {
             MealPlannerSearchScreen(
                 userInfoState = userInfoState.value,
                 date = LocalDate.parse(intent.getStringExtra(Intents.DAILY_MEAL_PLANNER_DATE) ?: ""),
-                mealTime = MealTime.valueOf(intent.getStringExtra(Intents.DAILY_MEAL_PLANNER_MEAL) ?: ""),
+                mealTime = MealTime.valueOf(intent.getStringExtra(Intents.DAILY_MEAL_PLANNER_MEAl_TIME) ?: ""),
                 recipesResultState = recipesResultState.value,
                 onBackButton = ::navigateBack,
                 onSearchRecipes = {
