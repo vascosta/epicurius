@@ -1,9 +1,7 @@
 package android.epicurius.ui.screens.mealPlanner.calendar
 
-import android.epicurius.domain.mealPlanner.MealTime
 import android.epicurius.ui.navigation.Intents
 import android.epicurius.ui.navigation.navigateTo
-import android.epicurius.ui.screens.mealPlanner.daily.DailyActivity
 import android.epicurius.ui.screens.mealPlanner.search.MealPlannerSearchActivity
 import android.epicurius.ui.screens.mealPlanner.weekly.WeeklyActivity
 import android.os.Bundle

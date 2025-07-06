@@ -138,7 +138,7 @@ The services are organized in the following classes:
 
 #### Repository
 
-The repository package contains the interfaces and implementations that are used to access the PostgreSQL database, using the [JDBI](https://jdbi.org/) library, the Firestore database using the [Firestore API](https://cloud.google.com/firestore/docs/reference/rest), the Cloud Storage using the [Cloud Storage Kotlin Library](https://github.com/googleapis/java-storage?tab=readme-ov-file), the Cloud Function and Spoonacular API using an __HTTP client__.
+The repository package contains the interfaces and implementations that are used to access the PostgreSQL database, using the [JDBI](https://jdbi.org/) library, the Cloud Storage using the [Cloud Storage Kotlin Library](https://github.com/googleapis/java-storage?tab=readme-ov-file), the Cloud Function and Spoonacular API using an __HTTP client__.
 
 The repository is organized in the following classes:
 * [CloudFunctionRepository](./src/main/kotlin/epicurius/repository/cloudFunction/contract/CloudFunctionRepository.kt), which contains the repository related to the __get ingredients from picture__ operation;
@@ -148,7 +148,7 @@ The repository is organized in the following classes:
 * [FridgeRepository](./src/main/kotlin/epicurius/repository/jdbi/fridge/contract/FridgeRepository.kt), which contains the repository related to the `Fridge` entity;
 * [MealPlannerRepository](./src/main/kotlin/epicurius/repository/jdbi/mealPlanner/contract/MealPlannerRepository.kt), which contains the repository related to the `MealPlanner` entity;
 * [RateRecipeRepository](./src/main/kotlin/epicurius/repository/jdbi/rateRecipe/contract/RateRecipeRepository.kt), which contains the repository related to the __rating of a recipe__ operation;
-* [RecipeRepository](./src/main/kotlin/epicurius/repository/jdbi/recipe/contract/RecipeRepository.kt) and [FirestoreRecipeRepository](./src/main/kotlin/epicurius/repository/firestore/recipe/contract/RecipeRepository.kt), which contains the repository related to the `Recipe` entity;
+* [RecipeRepository](./src/main/kotlin/epicurius/repository/jdbi/recipe/contract/RecipeRepository.kt), which contains the repository related to the `Recipe` entity;
 * [TokenRepository](./src/main/kotlin/epicurius/repository/jdbi/token/contract/TokenRepository.kt), which contains the repository related to the `Token` entity;
 * [UserRepository](./src/main/kotlin/epicurius/repository/jdbi/user/contract/UserRepository.kt), which contains the repository related to the `User` entity;
 * [SpoonacularRepository](./src/main/kotlin/epicurius/repository/spoonacular/contract/SpoonacularRepository.kt), which contains the repository related to the __get ingredients__ and __get substitute ingredients__ operations;
@@ -225,17 +225,17 @@ The __routes__ for the __API__ are organized as follow:
 
 | Method  | Route                           | Description                     | Authenticated | 
 |---------|---------------------------------|---------------------------------|:-------------:|
-| GET     | ``/api/recipes``                | Get a recipe                    | Yes           |
-| GET     | ``/api/recipes/{id}``           | Search for recipes              | Yes           |
+| GET     | ``/api/recipes``                | Search for recipes                    | Yes           |
+| GET     | ``/api/recipes/{id}``           | Get a recipe              | Yes           |
 | GET     | ``/api/recipes/{id}/rating``      | Get a recipe's rate             | Yes           |
 | GET     | ``/api/recipes/{id}/rating/self`` | Get the user's recipe's rate    | Yes           |
 | POST    | ``/api/recipes/{id}/rating``      | Rate a recipe                   | Yes           |
 | POST    | ``/api/recipes``                | Create a recipe                 | Yes           |
 | PATCH   | ``/api/recipe``                 | Update a recipe                 | Yes           |
-| PATCH   | ``/api/recipes/{id}/rating``    | Update a rate given to a recipe | Yes           |
-| PATCH   | ``/api/recipes/{id}/pictures``  | Update a rate given to a recipe | Yes           |
+| PATCH   | ``/api/recipes/{id}/rating``    | Update a rating given to a recipe | Yes           |
+| PATCH   | ``/api/recipes/{id}/pictures``  | Update the recipe's pictures | Yes           |
 | DELETE  | ``/api/recipes/{id}``           | Delete a recipe                 | Yes           |
-| DELETE  | ``/api/recipes/{id}/rating``      | Delete a rate given to a recipe | Yes           |
+| DELETE  | ``/api/recipes/{id}/rating``      | Delete a rating given to a recipe | Yes           |
 
 
 #### Ingredients
