@@ -10,7 +10,7 @@ fun MealPlannerComponent(
     dailyPlanner: DailyMealPlanner?,
     date: LocalDate,
     onDeleteRecipeFromMealPlanner: (date: LocalDate, mealtime: MealTime) -> Unit = { _, _, -> },
-    onAddRecipeToMealPlannerRequest: (date: LocalDate, mealTime: MealTime) -> Unit = {},
+    onAddRecipeToMealPlannerRequest: (date: LocalDate, mealTime: MealTime) -> Unit = { _, _, -> },
     enableButtons: Boolean
 ) {
     MealTime.entries.forEach {
