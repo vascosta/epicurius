@@ -1,5 +1,6 @@
 package android.epicurius.ui.screens.recipe.confirmIngredients.components
 
+import android.content.Intent
 import android.epicurius.domain.recipe.Ingredient
 import android.epicurius.domain.recipe.IngredientUnit
 import androidx.compose.foundation.clickable
@@ -8,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ShoppingCart
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -45,6 +47,9 @@ private fun IngredientBulletPoint(
     onIngredientNameClick: () -> Unit = {},
     enableButtons: Boolean
 ) {
+    val context = LocalContext.current
+
+
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -88,7 +93,14 @@ private fun IngredientBulletPoint(
                 .weight(0.1f)
                 .clickable(
                     enabled = enableButtons,
-                    onClick = {}
+                    onClick = {
+                        val intent = Intent(Intent.ACTION_SEND).apply {
+                            type = "text/plain"
+                            putExtra(Intent.EXTRA_TEXT, ingredient.name)
+                        }
+                        val chooser = Intent.createChooser(intent, "Choose your notes app")
+                        context.startActivity(chooser)
+                    }
                 )
         )
     }

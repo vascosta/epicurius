@@ -17,5 +17,4 @@ class ServerOfflineActivity : ComponentActivity() {
 
         setContent { ServerOfflineScreen() }
     }
-
 }
