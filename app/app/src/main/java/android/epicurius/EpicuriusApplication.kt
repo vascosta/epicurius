@@ -38,6 +38,7 @@ class EpicuriusApplication : Application(), Dependencies {
 
     companion object {
         private const val BASE_URL = "http://10.0.2.2:8080/api"
+        // private const val BASE_URL = "http://35.205.65.208:8080/api" GCP VM
     }
 }
 
