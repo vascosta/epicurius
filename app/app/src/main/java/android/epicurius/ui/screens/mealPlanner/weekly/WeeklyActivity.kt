@@ -20,7 +20,6 @@ import java.time.LocalDate
 
 class WeeklyActivity : EpicuriusActivity() {
     override val viewModel: WeeklyMealPlannerViewModel by getViewModel<WeeklyMealPlannerViewModel>()
-    val dailyMealPlannerViewModel: DailyMealPlannerViewModel by getViewModel<DailyMealPlannerViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,10 +35,10 @@ class WeeklyActivity : EpicuriusActivity() {
                 weeklyMealPlannerState = weeklyMealPlannerState.value,
                 onBackButton = { navigateTo<CalendarActivity>(finishCurrent = true) },
                 onUpdateDailyCalories = { calories: Int ->
-                    dailyMealPlannerViewModel.updateDailyMealPlannerCalories(calories)
+                    viewModel.updateDailyMealPlannerCalories(calories)
                 },
                 onDeleteRecipeFromMealPlanner = { date: LocalDate, mealtime: MealTime ->
-                    dailyMealPlannerViewModel.deleteRecipeFromDailyMealPlanner(date, mealtime)
+                    viewModel.deleteRecipeFromDailyMealPlanner(date, mealtime)
                 },
                 onAddRecipeToMealPlannerRequest = ::navigateToMealPlannerSearchActivity,
                 enableButtons = viewModel.enableButtons

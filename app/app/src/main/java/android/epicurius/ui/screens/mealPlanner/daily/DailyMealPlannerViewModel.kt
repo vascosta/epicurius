@@ -38,7 +38,7 @@ class DailyMealPlannerViewModel(
     fun updateDailyMealPlannerCalories(calories: Int) {
         disableButtons()
         val updateDailyMealPlannerCaloriesInfo = UpdateDailyCaloriesInputModel(calories)
-        viewModelScope.launch { handleUpdateDailyMealPlanner(LocalDate.now(), updateDailyMealPlannerCaloriesInfo) }
+        viewModelScope.launch { handleUpdateDailyMealPlannerCalories(LocalDate.now(), updateDailyMealPlannerCaloriesInfo) }
     }
 
     fun deleteRecipeFromDailyMealPlanner(date: LocalDate, mealTime: MealTime) {
@@ -81,7 +81,7 @@ class DailyMealPlannerViewModel(
         enableButtons()
     }
 
-    private suspend fun handleUpdateDailyMealPlanner(
+    private suspend fun handleUpdateDailyMealPlannerCalories(
         date: LocalDate,
         updateDailyMealPlannerCalories: UpdateDailyCaloriesInputModel
     ) {
