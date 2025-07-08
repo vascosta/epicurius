@@ -49,10 +49,10 @@ class WeeklyMealPlannerViewModel(
     private suspend fun handleNotCreatedDailyMealPlanners(fetchedWeeklyMealPlanner: List<DailyMealPlanner>) {
         val week = getWeek(LocalDate.now())
         val newDailyMealPlanners = mutableListOf<DailyMealPlanner>()
-        week.forEach { date ->
+        for (date in week) {
             if (
-                fetchedWeeklyMealPlanner.firstOrNull { it.date == date } == null ||
-                date.isEqual(LocalDate.now()) || date.isAfter(LocalDate.now())
+                fetchedWeeklyMealPlanner.firstOrNull { it.date == date } == null &&
+                (date.isEqual(LocalDate.now()) || date.isAfter(LocalDate.now()))
             ) {
                 val newDailyMealPlanner = handleCreateDailyMealPlanner(CreateMealPlannerInputModel(date, null))
                 if (newDailyMealPlanner != null) newDailyMealPlanners.add(newDailyMealPlanner)
