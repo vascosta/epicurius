@@ -11,6 +11,8 @@ import android.epicurius.ui.navigation.TopBar
 import android.epicurius.ui.screens.feed.components.FollowRequestDialog
 import android.epicurius.ui.screens.collections.recipeCollections.components.RecipeCollectionsStateBundle
 import android.epicurius.ui.screens.recipe.components.RecipeInfoBox
+import android.epicurius.ui.screens.theme.Beige
+import android.epicurius.ui.screens.theme.DarkPurple
 import android.epicurius.ui.screens.utils.LoadState
 import android.epicurius.ui.screens.utils.LoadStateRenderer
 import android.epicurius.ui.screens.utils.Loaded
@@ -26,6 +28,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Mail
 import androidx.compose.material3.Button
@@ -87,7 +91,8 @@ fun FeedScreen(
                     .fillMaxSize()
                     .padding(paddingValues)
                     .padding(16.dp)
-                    .background(Color.White),
+                    .background(Beige)
+                    .verticalScroll(rememberScrollState()),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Row(
@@ -105,7 +110,7 @@ fun FeedScreen(
                             imageVector = Icons.Default.Mail,
                             contentDescription = "Notifications",
                             modifier = Modifier.size(30.dp),
-                            tint = Color(0xFFAC88DC)
+                            tint = DarkPurple
                         )
                     }
                     IconButton(
@@ -169,7 +174,7 @@ fun FeedScreen(
                 }
             }
         },
-        containerColor = Color.White
+        containerColor = Beige
     )
 }
 
