@@ -41,13 +41,13 @@ class RecipeProfileActivity : EpicuriusActivity() {
             }
         }
         lifecycleScope.launch {
-            combine (
-                viewModel.username,
-                viewModel.userRecipeRating
-            ) { usernameState, userRatingState,  -> usernameState to userRatingState }
-            .collectLatest { (usernameState, userRatingState) ->
-                val recipeId = intent.getIntExtra(Intents.RECIPE_ID, -1)
+            viewModel.username.collectLatest { usernameState ->
                 if (usernameState is Idle) viewModel.getUsername()
+            }
+        }
+        lifecycleScope.launch {
+            viewModel.userRecipeRating.collectLatest { userRatingState ->
+                val recipeId = intent.getIntExtra(Intents.RECIPE_ID, -1)
                 if (userRatingState is Idle) viewModel.getUserRecipeRating(recipeId) { finish() }
             }
         }
