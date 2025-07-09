@@ -66,7 +66,6 @@ fun SearchScreenContent(
     ingredientsState: LoadState<List<String>>,
     userInfoState: LoadState<UserInfo>,
     recipeCollectionsStateBundle: RecipeCollectionsStateBundle,
-    onBackButton: () -> Unit = {},
     onSearchRecipes: (
         name: String?,
         cuisine: List<Cuisine>?,
@@ -178,8 +177,7 @@ fun SearchScreenContent(
         topBar = {
             TopBar(
                 titleText = "Search",
-                backButton = true,
-                onBackButton = onBackButton,
+                backButton = false,
                 enableButtons = enableButtons
             )
         },

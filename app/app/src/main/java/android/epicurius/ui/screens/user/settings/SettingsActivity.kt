@@ -29,7 +29,7 @@ class SettingsActivity : EpicuriusActivity() {
             MaterialTheme {
                 SettingsScreen(
                     userInfoState = userInfoState.value,
-                    onBackButton = { navigateTo<UserProfileActivity>(true) },
+                    onBackButton = { navigateTo<UserProfileActivity>(finishCurrent = false) },
                     onFavouritesRequest = { navigateTo<FavouritesActivity>() },
                     onUserUpdate = {
                         name: String?, email: String?, country: String?, password: String?,

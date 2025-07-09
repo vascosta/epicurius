@@ -42,7 +42,7 @@ class FollowActivity : EpicuriusActivity() {
                     followersCount = intent.getIntExtra(Intents.FOLLOWERS_COUNT, -1),
                     followingCount = intent.getIntExtra(Intents.FOLLOWING_COUNT, -1),
                     usersResultState = searchUsersState.value,
-                    onBackButton = { navigateTo<UserProfileActivity>(useStack = true, finishCurrent = true) },
+                    onBackButton = { navigateTo<UserProfileActivity>(finishCurrent = true) },
                     onSearchFollowers = { partialFollowers ->
                         viewModel.getFollowers(
                             intent.getStringExtra(Intents.USERNAME) ?: "",

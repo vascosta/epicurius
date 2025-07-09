@@ -33,7 +33,6 @@ fun SearchScreen(
     ingredientsState: LoadState<List<String>>,
     userInfoState: LoadState<UserInfo>,
     recipeCollectionsStateBundle: RecipeCollectionsStateBundle,
-    onBackButton: () -> Unit = {},
     onSearchRecipes: (
         name: String?,
         cuisine: List<Cuisine>?,
@@ -100,7 +99,6 @@ fun SearchScreen(
             userInfoState = userInfoState,
             recipeCollectionsStateBundle = recipeCollectionsStateBundle,
             ingredientsList = ingredients,
-            onBackButton = onBackButton,
             onSearchRecipes = onSearchRecipes,
             onSearchUsers = onSearchUsers,
             onIdentifyIngredientsInPicture = onIdentifyIngredientsInPicture,

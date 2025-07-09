@@ -2,7 +2,6 @@ package android.epicurius.ui.screens.recipe.createRecipe
 
 import android.epicurius.domain.Diet
 import android.epicurius.domain.Intolerance
-import android.epicurius.domain.Picture
 import android.epicurius.domain.recipe.Cuisine
 import android.epicurius.domain.recipe.Ingredient
 import android.epicurius.domain.recipe.Instructions
@@ -21,7 +20,6 @@ class CreateRecipeActivity : EpicuriusActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             CreateRecipeScreen(
-                onBackButton = { finish() },
                 onCreateRecipe = {
                     name: String,
                     description: String,

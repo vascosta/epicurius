@@ -23,12 +23,12 @@ class LoginActivity : EpicuriusActivity() {
         setContent {
             MaterialTheme {
                 LoginScreen(
-                    onSignUp = { navigateTo<SignUpActivity>(useStack = true) },
+                    onSignUp = { navigateTo<SignUpActivity>() },
                     onLogin = { name: String?, email: String?, password: String ->
                         viewModel.login(name, email, password)
                         { navigateTo<FeedActivity>(finishCurrent = true) }
                     },
-                    onForgotPassword = { navigateTo<ResetPasswordActivity>(useStack = true) },
+                    onForgotPassword = { navigateTo<ResetPasswordActivity>() },
                     enableButtons = viewModel.enableButtons
                 )
             }

@@ -39,7 +39,7 @@ class DailyMenuActivity : EpicuriusActivity() {
                     collectionsToAddRecipeState.value,
                     collectionsToRemoveRecipeState.value
                 ),
-                onBackButton = { navigateTo<FeedActivity>(useStack = true) },
+                onBackButton = { finish() },
                 onAddRecipeToCollections = {
                     recipeId: Int,
                     collectionsToAdd: List<CollectionProfile>

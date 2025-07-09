@@ -49,7 +49,6 @@ import java.time.Period
 fun FridgeScreen(
     userFridgeState: LoadState<List<Product>>,
     productsResultState: LoadState<List<String>>,
-    onBackButton: () -> Unit = {},
     onSearchProduct: (partialName: String) -> Unit = {},
     onAddProduct: (
         name: String,
@@ -78,8 +77,7 @@ fun FridgeScreen(
             topBar = {
                 TopBar(
                     titleText = "Fridge",
-                    backButton = true,
-                    onBackButton = onBackButton,
+                    backButton = false,
                     enableButtons = enableButtons
                 )
             },

@@ -32,7 +32,7 @@ class SignUpActivity : EpicuriusActivity() {
                                 navigateTo<KnowMoreActivity>(finishCurrent = true)
                         }
                     },
-                    onLogin = { navigateTo<LoginActivity>(useStack = true) },
+                    onLogin = { navigateTo<LoginActivity>() },
                     enableButtons = viewModel.enableButtons
                 )
             }

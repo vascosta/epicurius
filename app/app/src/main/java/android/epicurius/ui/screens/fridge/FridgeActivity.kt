@@ -28,7 +28,6 @@ class FridgeActivity : EpicuriusActivity() {
             FridgeScreen(
                 userFridgeState = userFridgeState.value,
                 productsResultState = productsResultState.value,
-                onBackButton = { finish() },
                 onSearchProduct = { partialName -> viewModel.searchProducts(partialName) },
                 onAddProduct = {
                     name: String,

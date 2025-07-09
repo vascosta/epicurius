@@ -79,7 +79,6 @@ data class IngredientComponent(
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun CreateRecipeScreen(
-    onBackButton: () -> Unit,
     onCreateRecipe: (
         name: String,
         description: String,
@@ -145,8 +144,7 @@ fun CreateRecipeScreen(
         topBar = {
             TopBar(
                 titleText = "Create a Recipe",
-                backButton = true,
-                onBackButton = onBackButton,
+                backButton = false,
                 enableButtons = buttonsEnable,
                 icon = Icons.Filled.Person
             )
@@ -344,5 +342,5 @@ fun CreateRecipeScreen(
 @Preview
 @Composable
 fun CreateRecipeScreenPreview() {
-    CreateRecipeScreen({}, { _, _, _, _, _, _, _, _, _, _, _, _, _, _, _ -> }, true)
+    CreateRecipeScreen({ _, _, _, _, _, _, _, _, _, _, _, _, _, _, _ -> }, true)
 }

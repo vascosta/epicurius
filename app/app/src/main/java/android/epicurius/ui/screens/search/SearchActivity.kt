@@ -50,7 +50,6 @@ class SearchActivity : EpicuriusActivity() {
                     collectionsToAddRecipeState.value,
                     collectionsToRemoveRecipeState.value
                 ),
-                onBackButton = { finish() },
                 onSearchRecipes = {
                     name: String?,
                     cuisine: List<Cuisine>?,
