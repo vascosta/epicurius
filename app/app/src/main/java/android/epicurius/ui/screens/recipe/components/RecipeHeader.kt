@@ -5,6 +5,8 @@ import android.epicurius.domain.collection.CollectionProfile
 import android.epicurius.domain.mealPlanner.MealTime
 import android.epicurius.ui.screens.collections.recipeCollections.components.RecipeCollectionsDialog
 import android.epicurius.ui.screens.collections.recipeCollections.components.RecipeCollectionsStateBundle
+import android.epicurius.ui.screens.theme.DarkPurple
+import android.epicurius.ui.screens.theme.Lilac
 import android.epicurius.ui.screens.utils.MixedText
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
@@ -72,6 +74,7 @@ fun RecipeHeader(
     ) {
         Text(
             text = name,
+            color = DarkPurple,
             fontSize = 18.sp,
             fontWeight = FontWeight.Bold,
             overflow = TextOverflow.Ellipsis,
@@ -84,7 +87,7 @@ fun RecipeHeader(
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            MixedText(boldString = "by ", normalString = author)
+            MixedText(boldString = "by ", normalString = author, color = DarkPurple)
             IconButton(
                 onClick = {
                     if (date != null && mealTime != null)

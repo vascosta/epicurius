@@ -13,6 +13,7 @@ import android.epicurius.ui.navigation.BottomBar
 import android.epicurius.ui.navigation.TopBar
 import android.epicurius.ui.screens.collections.recipeCollections.components.RecipeCollectionsStateBundle
 import android.epicurius.ui.screens.recipe.components.RecipeInfoBox
+import android.epicurius.ui.screens.theme.Beige
 import android.epicurius.ui.screens.user.components.UserBox
 import android.epicurius.ui.screens.utils.Idle
 import android.epicurius.ui.screens.utils.LoadState
@@ -121,7 +122,7 @@ fun SearchScreenContent(
 
     var cuisine by remember { mutableStateOf(listOf<String>()) }
     var mealType by remember { mutableStateOf(listOf<String>()) }
-    var ingredients by remember { mutableStateOf(ingredientsList) }
+    var ingredients by remember { mutableStateOf(setOf<String>()) }
     var intolerances by remember { mutableStateOf(listOf<String>()) }
     var diets by remember { mutableStateOf(listOf<String>()) }
     var serving by remember { mutableStateOf("") }
@@ -174,13 +175,7 @@ fun SearchScreenContent(
         }
     }
     Scaffold(
-        topBar = {
-            TopBar(
-                titleText = "Search",
-                backButton = false,
-                enableButtons = enableButtons
-            )
-        },
+        topBar = { TopBar(titleText = "Search", enableButtons = enableButtons) },
         bottomBar = { BottomBar(buttonsEnable = enableButtons) },
         content = { paddingValues ->
             Column(
@@ -508,6 +503,6 @@ fun SearchScreenContent(
                 }
             }
         },
-        containerColor = Color.White
+        containerColor = Beige
     )
 }

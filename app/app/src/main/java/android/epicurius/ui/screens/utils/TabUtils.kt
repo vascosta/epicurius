@@ -1,5 +1,6 @@
 package android.epicurius.ui.screens.utils
 
+import android.epicurius.ui.screens.theme.DarkPurple
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Tab
@@ -12,12 +13,17 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 @Composable
-fun TabComponent(tabs: List<String>, selectedTabIndex: Int, onTabSelected: (Int) -> Unit, enabled: Boolean) {
+fun TabComponent(
+    tabs: List<String>,
+    selectedTabIndex: Int,
+    onTabSelected: (Int) -> Unit,
+    enabled: Boolean
+) {
     Column {
         TabRow(
             selectedTabIndex = selectedTabIndex,
-            containerColor = Color.White,
-            contentColor = Color.Black
+            containerColor = Color.Transparent,
+            contentColor = DarkPurple
         ) {
             tabs.forEachIndexed { index, name ->
                 Tab(

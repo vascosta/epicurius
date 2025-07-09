@@ -8,6 +8,7 @@ import android.epicurius.domain.recipe.MealType
 import android.epicurius.domain.recipe.RecipeInfo
 import android.epicurius.ui.screens.collections.recipeCollections.components.RecipeCollectionsStateBundle
 import android.epicurius.ui.screens.recipe.createRecipe.components.DividerComponent
+import android.epicurius.ui.screens.theme.DarkPurple
 import android.epicurius.ui.screens.utils.generateTestImageByteArray
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -61,9 +62,8 @@ fun RecipeInfoBox(
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .background(Color.White)
             .clip(RoundedCornerShape(20.dp))
-            .border(0.5.dp, Color.Black, RoundedCornerShape(20.dp))
+            .border(0.5.dp, DarkPurple, RoundedCornerShape(20.dp))
             .padding(5.dp)
             .clickable(
                 enabled = enableButtons,
@@ -88,7 +88,7 @@ fun RecipeInfoBox(
                 enableButtons = enableButtons
             )
             RecipeImage(recipeInfo.pictureBytes)
-            DividerComponent()
+            DividerComponent(DarkPurple)
             RecipeDetails(
                 preparationTime = recipeInfo.preparationTime,
                 servings = recipeInfo.servings,

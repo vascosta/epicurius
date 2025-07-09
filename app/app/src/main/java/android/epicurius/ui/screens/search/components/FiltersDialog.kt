@@ -5,6 +5,8 @@ import android.epicurius.domain.Intolerance
 import android.epicurius.domain.recipe.Cuisine
 import android.epicurius.domain.recipe.MealType
 import android.epicurius.ui.screens.recipe.createRecipe.components.DividerComponent
+import android.epicurius.ui.screens.theme.Beige
+import android.epicurius.ui.screens.theme.DarkGreen
 import android.epicurius.ui.screens.utils.dropdownMenu.MultiSelectDropdownMenuComponent
 import android.epicurius.ui.screens.utils.NumberTextField
 import androidx.compose.foundation.layout.Column
@@ -69,7 +71,7 @@ fun FiltersDialog(
         dismissButton = {
             TextButton(onClick = onCancel, enabled = enableButtons) { Text("Cancel") }
         },
-        title = { Text("Filters") },
+        title = { Text(text = "Filters", color = Beige) },
         text = {
             Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
                 MultiSelectDropdownMenuComponent(
@@ -201,10 +203,15 @@ fun FiltersDialog(
                         onCheckedChange = onShowAuthorRecipesChange,
                         enabled = enableButtons
                     )
-                    Text("Show Author Recipes", modifier = Modifier.weight(1f))
+                    Text(
+                        text = "Show Author Recipes",
+                        modifier = Modifier.weight(1f),
+                        color = Beige
+                    )
                 }
             }
-        }
+        },
+        containerColor = DarkGreen
     )
 }
 

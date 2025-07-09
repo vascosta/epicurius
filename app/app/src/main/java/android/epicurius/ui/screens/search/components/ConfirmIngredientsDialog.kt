@@ -1,5 +1,8 @@
 package android.epicurius.ui.screens.search.components
 
+import android.epicurius.ui.screens.theme.Beige
+import android.epicurius.ui.screens.theme.DarkGreen
+import android.epicurius.ui.screens.theme.DarkPurple
 import android.epicurius.ui.screens.utils.LoadState
 import android.epicurius.ui.screens.utils.LoadStateRenderer
 import android.epicurius.ui.screens.utils.Loaded
@@ -55,7 +58,7 @@ fun ConfirmIngredientsDialog(
                 enabled = enableButtons
             ) { Text("OK") }
         },
-        title = { Text("Confirm Ingredients") },
+        title = { Text(text = "Confirm Ingredients", color = Beige) },
         text = {
             LoadStateRenderer(
                 loadState = ingredientsState,
@@ -77,7 +80,8 @@ fun ConfirmIngredientsDialog(
                                     )
                                     Text(
                                         text = ingredient,
-                                        modifier = Modifier.padding(start = 8.dp)
+                                        modifier = Modifier.padding(start = 8.dp),
+                                        color = DarkPurple
                                     )
                                 }
                             }
@@ -111,6 +115,7 @@ fun ConfirmIngredientsDialog(
                     } else if (ingredientsState is Loaded) Text("No ingredients found.")
                 }
             )
-        }
+        },
+        containerColor = DarkGreen
     )
 }
