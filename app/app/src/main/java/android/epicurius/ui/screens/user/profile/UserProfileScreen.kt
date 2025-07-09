@@ -85,7 +85,7 @@ fun UserProfileScreen(
     onFollow: (username: String) -> Unit = {},
     onUnfollow: (username: String) -> Unit = {},
     onCancelFollow: (username: String) -> Unit = {},
-    onUserKitchenBookCollectionCreate: (collectionName: String) -> Unit = {},
+    onUserKitchenBookCollectionCreate: (collectionName: String, username: String) -> Unit = { _, _ -> },
     onUserKitchenBookCollectionDelete: (collectionId: Int) -> Unit = {},
     onAddRecipeToCollections: (
         recipeId: Int,
@@ -106,7 +106,11 @@ fun UserProfileScreen(
         followersCount: Int,
         followingCount: Int
     ) -> Unit = { _, _, _, _ -> },
-    onUserKitchenBookCollectionRequest: (collectionId: Int, isCollectionOwner: Boolean) -> Unit = { _, _ -> },
+    onUserKitchenBookCollectionRequest: (
+        collectionId: Int,
+        isCollectionOwner: Boolean,
+        username: String
+    ) -> Unit = { _, _, _ -> },
     onRecipeCollectionsRequest: (recipeId: Int) -> Unit = {},
     onRecipeRequest: (recipeId: Int) -> Unit = {},
     enableButtons: Boolean
@@ -232,7 +236,7 @@ fun UserProfileScreen(
                                 number = userProfile.followersCount,
                                 onClick = {
                                     onFollowersOrFollowingRequest(
-                                        selectedTabIndex,
+                                        0,
                                         userProfile.name,
                                         userProfile.followersCount,
                                         userProfile.followingCount
@@ -245,7 +249,7 @@ fun UserProfileScreen(
                                 number = userProfile.followingCount,
                                 onClick = {
                                     onFollowersOrFollowingRequest(
-                                        selectedTabIndex,
+                                        1,
                                         userProfile.name,
                                         userProfile.followersCount,
                                         userProfile.followingCount
@@ -357,7 +361,12 @@ fun UserProfileScreen(
                                                         isCollectionOwner = !isAnotherUserProfile,
                                                         collection = collection,
                                                         onCollectionDelete = onUserKitchenBookCollectionDelete,
-                                                        onCollectionRequest = onUserKitchenBookCollectionRequest,
+                                                        onCollectionRequest = {
+                                                            collectionId: Int, isCollectionOwner: Boolean ->
+                                                            onUserKitchenBookCollectionRequest(
+                                                                collectionId, isCollectionOwner, userProfile.name
+                                                            )
+                                                        },
                                                         enableButtons = enableButtons
                                                     )
                                                 }
@@ -382,7 +391,9 @@ fun UserProfileScreen(
                                 )
                                 if (showCreateCollectionDialog) {
                                     CreateCollectionDialog(
-                                        onCollectionCreate = onUserKitchenBookCollectionCreate,
+                                        onCollectionCreate = { collectionName ->
+                                            onUserKitchenBookCollectionCreate(collectionName, userProfile.name)
+                                        },
                                         onDismiss = { showCreateCollectionDialog = false },
                                         enableButtons = enableButtons
                                     )

@@ -108,6 +108,7 @@ class UserProfileViewModel(
                 checkUserProfileVisibility()
             }
         }
+        enableButtons()
     }
 
     private suspend fun fetchUserRecipes(username: String?) {

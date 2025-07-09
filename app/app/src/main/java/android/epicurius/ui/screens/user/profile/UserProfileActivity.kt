@@ -6,8 +6,10 @@ import android.epicurius.ui.navigation.Intents
 import android.epicurius.ui.navigation.navigateTo
 import android.epicurius.ui.screens.collections.CollectionsViewModel
 import android.epicurius.ui.screens.collections.collection.CollectionActivity
+import android.epicurius.ui.screens.collections.favourites.FavouritesActivity
 import android.epicurius.ui.screens.collections.recipeCollections.RecipeCollectionsViewModel
 import android.epicurius.ui.screens.collections.recipeCollections.components.RecipeCollectionsStateBundle
+import android.epicurius.ui.screens.feed.FeedActivity
 import android.epicurius.ui.screens.recipe.profile.RecipeProfileActivity
 import android.epicurius.ui.screens.user.follow.FollowActivity
 import android.epicurius.ui.screens.utils.Idle
@@ -58,9 +60,9 @@ class UserProfileActivity : EpicuriusActivity() {
                     onFollow = { username: String -> viewModel.follow(username) },
                     onUnfollow = { username: String -> viewModel.unfollow(username) },
                     onCancelFollow = { username: String -> viewModel.cancelFollow(username) },
-                    onUserKitchenBookCollectionCreate = { collectionName: String ->
+                    onUserKitchenBookCollectionCreate = { collectionName: String, username: String ->
                         collectionsViewModel.createCollection(collectionName, CollectionType.KITCHEN_BOOK) {
-                            collectionId: Int -> navigateToCollectionActivity(collectionId, true)
+                            collectionId: Int -> navigateToCollectionActivity(collectionId, true, username)
                         }
                     },
                     onUserKitchenBookCollectionDelete = { collectionId: Int ->
@@ -104,6 +106,14 @@ class UserProfileActivity : EpicuriusActivity() {
         }
     }
 
+    override fun onRestart() {
+        super.onRestart()
+        lifecycleScope.launch {
+            val userProfileName = intent.getStringExtra(Intents.USERNAME) ?: viewModel.session.getUserName()
+            viewModel.getUserProfile(userProfileName)
+        }
+    }
+
     private fun navigateToFollowActivity(
         selectedTab: Int,
         username: String,
@@ -118,11 +128,16 @@ class UserProfileActivity : EpicuriusActivity() {
         }
     }
 
-    private fun navigateToCollectionActivity(collectionId: Int, isCollectionOwner: Boolean) {
-        navigateTo<CollectionActivity>(finishCurrent = true) { intent ->
+    private fun navigateToCollectionActivity(
+        collectionId: Int,
+        isCollectionOwner: Boolean,
+        username: String
+    ) {
+        navigateTo<CollectionActivity> { intent ->
             intent.putExtra(Intents.SOURCE_ACTIVITY, UserProfileActivity::class.java.name)
             intent.putExtra(Intents.COLLECTION_ID, collectionId)
             intent.putExtra(Intents.IS_COLLECTION_OWNER, isCollectionOwner)
+            intent.putExtra(Intents.USERNAME, username)
         }
     }
 
