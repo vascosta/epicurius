@@ -78,7 +78,7 @@ open class EpicuriusViewModel(
             result
         } catch (e: Exception) {
             if (e is UserNotLoggedInException) onSessionExpired()
-            if (e is ConnectException || e is InvalidResponseException || e is SocketTimeoutException) {
+            else if (e is ConnectException || e is InvalidResponseException || e is SocketTimeoutException) {
                 disableButtons()
                 context.navigateTo<ServerOfflineActivity>()
             }
