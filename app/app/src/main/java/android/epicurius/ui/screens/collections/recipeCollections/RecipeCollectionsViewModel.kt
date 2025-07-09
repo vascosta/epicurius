@@ -150,14 +150,15 @@ open class RecipeCollectionsViewModel(
         }
         val collectionsIdsAdded = collectionsIds.filterNotNull()
 
-        val collectionsAdded = cacheCollectionsToAddRecipeFlow.value.filter { !collectionsIdsAdded.contains(it.id) }
-        collectionsToAddRecipeFlow.value = apiSuccess(collectionsAdded)
-        cacheCollectionsToAddRecipeFlow.value = collectionsAdded
-
-        val collectionsNotAdded = cacheCollectionsToRemoveRecipeFlow.value +
+        val collectionsAvailableToAdd = cacheCollectionsToAddRecipeFlow.value.filter { !collectionsIdsAdded.contains(it.id) }
+        val updatedCollectionsToRemove = cacheCollectionsToRemoveRecipeFlow.value +
                 cacheCollectionsToAddRecipeFlow.value.filter { collectionsIdsAdded.contains(it.id) }
-        collectionsToRemoveRecipeFlow.value = apiSuccess(collectionsNotAdded)
-        cacheCollectionsToRemoveRecipeFlow.value = collectionsNotAdded
+
+        collectionsToAddRecipeFlow.value = apiSuccess(collectionsAvailableToAdd)
+        cacheCollectionsToAddRecipeFlow.value = collectionsAvailableToAdd
+        
+        collectionsToRemoveRecipeFlow.value = apiSuccess(updatedCollectionsToRemove)
+        cacheCollectionsToRemoveRecipeFlow.value = updatedCollectionsToRemove
 
         enableButtons()
     }
@@ -179,14 +180,16 @@ open class RecipeCollectionsViewModel(
         }
         val collectionsIdsRemoved = collectionsIds.filterNotNull()
 
-        val collectionsRemoved = cacheCollectionsToRemoveRecipeFlow.value.filter { !collectionsIdsRemoved.contains(it.id) }
-        collectionsToRemoveRecipeFlow.value = apiSuccess(collectionsRemoved)
-        cacheCollectionsToRemoveRecipeFlow.value = collectionsRemoved
-
-        val collectionsNotRemoved = cacheCollectionsToAddRecipeFlow.value +
+        val collectionsAvailableToRemove = cacheCollectionsToRemoveRecipeFlow.value.filter { !collectionsIdsRemoved.contains(it.id) }
+        val updatedCollectionsToAdd = cacheCollectionsToAddRecipeFlow.value +
                 cacheCollectionsToRemoveRecipeFlow.value.filter { collectionsIdsRemoved.contains(it.id) }
-        collectionsToAddRecipeFlow.value = apiSuccess(collectionsNotRemoved)
-        cacheCollectionsToAddRecipeFlow.value = collectionsNotRemoved
+
+
+        collectionsToAddRecipeFlow.value = apiSuccess(updatedCollectionsToAdd)
+        cacheCollectionsToAddRecipeFlow.value = updatedCollectionsToAdd
+
+        collectionsToRemoveRecipeFlow.value = apiSuccess(collectionsAvailableToRemove)
+        cacheCollectionsToRemoveRecipeFlow.value = collectionsAvailableToRemove
 
         enableButtons()
     }
