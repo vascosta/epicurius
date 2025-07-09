@@ -13,6 +13,10 @@ import android.epicurius.ui.screens.recipe.createRecipe.components.DividerCompon
 import android.epicurius.ui.screens.recipe.createRecipe.components.IngredientsComponent
 import android.epicurius.ui.screens.recipe.createRecipe.components.InstructionsComponent
 import android.epicurius.ui.screens.recipe.createRecipe.components.NutritionalInfoComponent
+import android.epicurius.ui.screens.theme.Beige
+import android.epicurius.ui.screens.theme.DarkGreen
+import android.epicurius.ui.screens.theme.DarkPurple
+import android.epicurius.ui.screens.theme.LightGreen
 import android.epicurius.ui.screens.utils.dropdownMenu.DropdownMenuComponent
 import android.epicurius.ui.screens.utils.FormTextField
 import android.epicurius.ui.screens.utils.LoadingSpinner
@@ -141,16 +145,9 @@ fun CreateRecipeScreen(
     }
 
     Scaffold(
-        topBar = {
-            TopBar(
-                titleText = "Create a Recipe",
-                backButton = false,
-                enableButtons = buttonsEnable,
-                icon = Icons.Filled.Person
-            )
-        },
+        topBar = { TopBar(titleText = "Create a Recipe", enableButtons = buttonsEnable) },
         bottomBar = { BottomBar(buttonsEnable = buttonsEnable) },
-        containerColor = Color.White,
+        containerColor = DarkGreen,
         content = { paddingValues ->
             Column(
                 modifier = Modifier
@@ -159,12 +156,13 @@ fun CreateRecipeScreen(
                     .padding(paddingValues)
                     .padding(20.dp)
                     .clip(RoundedCornerShape(20.dp))
-                    .border(1.dp, Color.Black, RoundedCornerShape(20.dp)),
+                    .border(1.dp, DarkPurple, RoundedCornerShape(20.dp)),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(
                     text = "Recipe Form",
                     modifier = Modifier.padding(top = 16.dp),
+                    color = LightGreen,
                     style = MaterialTheme.typography.titleMedium
                 )
                 FormTextField(
@@ -246,19 +244,19 @@ fun CreateRecipeScreen(
                     onCarbsChange = { if (isValidForNumberTextField(it)) carbs = it },
                     enableButtons = buttonsEnable
                 )
-                DividerComponent()
+                DividerComponent(DarkPurple)
                 IngredientsComponent(
                     ingredients = ingredients,
                     onIngredientsChange = { ingredients = it },
                     enabled = buttonsEnable
                 )
-                DividerComponent()
+                DividerComponent(DarkPurple)
                 InstructionsComponent(
                     steps = instructions,
                     onStepsChange = { instructions = it },
                     enabled = buttonsEnable
                 )
-                DividerComponent()
+                DividerComponent(DarkPurple)
                 Button(
                     onClick = {
                         if (galleryPermissionState.status.isGranted) {

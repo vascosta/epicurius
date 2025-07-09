@@ -8,7 +8,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun DividerComponent() {
+fun DividerComponent(color: Color = Color.Black) {
     HorizontalDivider(
         modifier = Modifier.padding(
             top = 15.dp,
@@ -17,6 +17,6 @@ fun DividerComponent() {
             end = 15.dp
         ),
         thickness = 1.dp,
-        color = Color.Black
+        color = color
     )
 }

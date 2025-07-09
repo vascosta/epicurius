@@ -2,6 +2,8 @@ package android.epicurius.ui.screens.recipe.createRecipe.components
 
 import android.epicurius.domain.recipe.IngredientUnit
 import android.epicurius.ui.screens.recipe.createRecipe.IngredientComponent
+import android.epicurius.ui.screens.theme.DarkPurple
+import android.epicurius.ui.screens.theme.LightGreen
 import android.epicurius.ui.screens.utils.dropdownMenu.DropdownMenuComponent
 import android.epicurius.ui.screens.utils.NumberLineTextField
 import android.epicurius.ui.screens.utils.TextField
@@ -34,6 +36,7 @@ fun IngredientsComponent(
     ) {
         Text(
             text = "Ingredients",
+            color = LightGreen,
             style = MaterialTheme.typography.titleMedium
         )
         ingredients.forEachIndexed { index, ingredient ->

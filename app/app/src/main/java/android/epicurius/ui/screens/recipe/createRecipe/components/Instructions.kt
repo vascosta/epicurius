@@ -1,12 +1,12 @@
 package android.epicurius.ui.screens.recipe.createRecipe.components
 
+import android.epicurius.ui.screens.theme.LightGreen
 import android.epicurius.ui.screens.utils.TextField
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -27,6 +27,7 @@ fun InstructionsComponent(
     ) {
         Text(
             text = "Instructions",
+            color = LightGreen,
             style = MaterialTheme.typography.titleMedium
         )
         steps.forEachIndexed { index, step ->
