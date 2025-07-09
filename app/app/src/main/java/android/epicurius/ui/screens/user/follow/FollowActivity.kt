@@ -12,23 +12,22 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.collectAsState
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 
 class FollowActivity : EpicuriusActivity() {
     override val viewModel: FollowViewModel by getViewModel<FollowViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        val username = intent.getStringExtra(Intents.USERNAME) ?: "" // never reaches
         lifecycleScope.launch {
-            combine(
-                viewModel.followers,
-                viewModel.following
-            ) { followersState, followingState -> followersState to followingState }
-                .collectLatest { (followersState, followingState) ->
-                    val username = intent.getStringExtra(Intents.USERNAME) ?: ""
-                    if (followersState is Idle) viewModel.getFollowers(username, null)
-                    if (followingState is Idle) viewModel.getFollowing(username, null)
-                }
+            viewModel.followers.collectLatest { state ->
+                if (state is Idle) viewModel.getFollowers(username, null)
+            }
+        }
+        lifecycleScope.launch {
+            viewModel.following.collectLatest { state ->
+                if (state is Idle) viewModel.getFollowing(username, null)
+            }
         }
         super.onCreate(savedInstanceState)
         setContent {
@@ -42,27 +41,17 @@ class FollowActivity : EpicuriusActivity() {
                     followersCount = intent.getIntExtra(Intents.FOLLOWERS_COUNT, -1),
                     followingCount = intent.getIntExtra(Intents.FOLLOWING_COUNT, -1),
                     usersResultState = searchUsersState.value,
-                    onBackButton = { navigateTo<UserProfileActivity>(finishCurrent = true) },
+                    onBackButton = { finish() },
                     onSearchFollowers = { partialFollowers ->
-                        viewModel.getFollowers(
-                            intent.getStringExtra(Intents.USERNAME) ?: "",
-                            partialFollowers
-                        )
+                        viewModel.getFollowers(username, partialFollowers)
                     },
                     onSearchFollowing = { partialFollowing ->
-                        viewModel.getFollowing(
-                            intent.getStringExtra(Intents.USERNAME) ?: "",
-                            partialFollowing
-                        )
+                        viewModel.getFollowing(username, partialFollowing)
                     },
                     onSearchUsersClear = { viewModel.clearSearchUsers() },
                     onUserProfileRequest = ::navigateToUserProfileActivity,
-                    onLoadMoreFollowers = {
-                        viewModel.getFollowers(intent.getStringExtra(Intents.USERNAME) ?: "", null)
-                    },
-                    onLoadMoreFollowing = {
-                        viewModel.getFollowing(intent.getStringExtra(Intents.USERNAME) ?: "", null)
-                    },
+                    onLoadMoreFollowers = { viewModel.getFollowers(username, null) },
+                    onLoadMoreFollowing = { viewModel.getFollowing(username, null) },
                     enableButtons = viewModel.enableButtons
                 )
             }

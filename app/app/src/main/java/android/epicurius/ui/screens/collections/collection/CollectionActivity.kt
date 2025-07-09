@@ -92,10 +92,21 @@ class CollectionActivity : EpicuriusActivity() {
         }
     }
 
+    override fun onRestart() {
+        super.onRestart()
+        lifecycleScope.launch {
+            val collectionId = intent.getIntExtra(Intents.COLLECTION_ID, -1)
+            viewModel.getCollection(collectionId) { navigateBack() }
+        }
+    }
+
     private fun navigateBack() {
         val sourceActivity = intent.getStringExtra(Intents.SOURCE_ACTIVITY)
         if (sourceActivity == FavouritesActivity::class.java.name) navigateTo<FavouritesActivity>()
-        else if (sourceActivity == UserProfileActivity::class.java.name) navigateTo<UserProfileActivity>()
+        else if (sourceActivity == UserProfileActivity::class.java.name) {
+            val username = intent.getStringExtra(Intents.USERNAME) ?: "" // never reaches
+            navigateTo<UserProfileActivity> { intent -> intent.putExtra(Intents.USERNAME, username) }
+        }
         else finish()
     }
 

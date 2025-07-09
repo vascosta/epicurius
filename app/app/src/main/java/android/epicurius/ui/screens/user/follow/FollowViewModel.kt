@@ -26,18 +26,15 @@ class FollowViewModel(
 
     private val followersFlow = MutableStateFlow<LoadState<List<FollowUser>>>(idle())
     private val cacheFollowersFlow = MutableStateFlow<List<FollowUser>>(emptyList())
-    private val lastFetchedFollowerIdFlow = MutableStateFlow<Int?>(null)
 
     private val followingFlow = MutableStateFlow<LoadState<List<FollowingUser>>>(idle())
     private val cacheFollowingFlow = MutableStateFlow<List<FollowUser>>(emptyList())
-    private val lastFetchedFollowingIdFlow = MutableStateFlow<Int?>(null)
 
     val followers = followersFlow.asStateFlow()
     val following = followingFlow.asStateFlow()
 
     private val searchUsersFlow = MutableStateFlow<LoadState<List<SearchUser>>>(idle())
     private val cacheSearchUsersFlow = MutableStateFlow<List<SearchUser>>(emptyList())
-    private val lastFetchedSearchUserIdFlow = MutableStateFlow<Int?>(null)
 
     val searchedUsers = searchUsersFlow.asStateFlow()
 
@@ -61,13 +58,14 @@ class FollowViewModel(
 
     fun clearSearchUsers() {
         searchUsersFlow.value = idle()
-        lastFetchedSearchUserIdFlow.value = null
+        cacheSearchUsersFlow.value = emptyList()
     }
 
     private suspend fun fetchFollowers(username: String, partialFollowerName: String?) {
         val result = request {
             val token = session.getToken()
-            val lastFollowerId = lastFetchedFollowerIdFlow.value
+            val lastFollowerId = if (partialFollowerName != null) cacheSearchUsersFlow.value.lastOrNull()?.id
+                else cacheFollowersFlow.value.lastOrNull()?.id
             service.userService.getUserFollowers(
                 token,
                 username,
@@ -92,7 +90,6 @@ class FollowViewModel(
                         val updatedFollowers = cacheFollowersFlow.value + fetchedFollowers
                         followersFlow.value = apiSuccess(updatedFollowers)
                         cacheFollowersFlow.value = updatedFollowers
-                        lastFetchedFollowerIdFlow.value = fetchedFollowers.last().id
                     }
                     else handleCachedFollowers()
                 }
@@ -106,7 +103,8 @@ class FollowViewModel(
     private suspend fun fetchFollowing(username: String, partialFollowingName: String?) {
         val result = request {
             val token = session.getToken()
-            val lastFollowingId = lastFetchedFollowingIdFlow.value
+            val lastFollowingId = if (partialFollowingName != null) cacheSearchUsersFlow.value.lastOrNull()?.id
+            else cacheFollowingFlow.value.lastOrNull()?.id
             service.userService.getUserFollowing(
                 token,
                 username,
@@ -126,13 +124,13 @@ class FollowViewModel(
                     if (fetchedFollowing.isNotEmpty()) handleSearchUsers(fetchedFollowing)
                     else handleCachedSearchUsers()
                 }
-                if (fetchedFollowing.isNotEmpty()) {
-                    val updatedFollowing = cacheFollowingFlow.value + fetchedFollowing
-                    followingFlow.value = apiSuccess(updatedFollowing)
-                    cacheFollowingFlow.value = updatedFollowing
-                    lastFetchedFollowingIdFlow.value = fetchedFollowing.last().id
+                else {
+                    if (fetchedFollowing.isNotEmpty()) {
+                        val updatedFollowing = cacheFollowingFlow.value + fetchedFollowing
+                        followingFlow.value = apiSuccess(updatedFollowing)
+                        cacheFollowingFlow.value = updatedFollowing
+                    } else handleCachedFollowing()
                 }
-                else handleCachedFollowing()
             }
         }
         enableButtons()
@@ -146,6 +144,5 @@ class FollowViewModel(
         val updatedSearchedUsers = cacheSearchUsersFlow.value + fetchedUsers
         searchUsersFlow.value = apiSuccess(updatedSearchedUsers)
         cacheSearchUsersFlow.value = updatedSearchedUsers
-        lastFetchedSearchUserIdFlow.value = fetchedUsers.last().id
     }
 }

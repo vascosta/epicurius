@@ -82,6 +82,7 @@ fun FollowScreen(
                     onSearchQueryChange = {
                         searchQuery = it
                         showSearchUsersResult = searchQuery.isNotEmpty()
+                        if (!showSearchUsersResult) onSearchUsersClear()
                     },
                     onIconClick = {
                         if (showSearchUsersResult) {
