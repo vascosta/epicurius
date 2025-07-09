@@ -10,8 +10,12 @@ class ProductRepository(
 ) {
 
     suspend fun getUserFridgeProducts(): List<Product> {
-        val token = session.getToken()
-        val response = fridgeService.getFridge(token)
-        return response.getValueOrThrow().fridge.products
+        try {
+            val token = session.getToken()
+            val response = fridgeService.getFridge(token)
+            return response.getValueOrThrow().fridge.products
+        } catch (E: Exception) {
+            return emptyList()
+        }
     }
 }
