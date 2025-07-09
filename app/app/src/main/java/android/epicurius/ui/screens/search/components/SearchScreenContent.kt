@@ -215,7 +215,7 @@ fun SearchScreenContent(
 
                             onSearchRecipesClear()
                             onSearchRecipes(
-                                searchQuery,
+                                if (searchQuery.isEmpty()) null else searchQuery,
                                 if (cuisineList.isEmpty()) null else cuisineList,
                                 if (mealTypeList.isEmpty()) null else mealTypeList,
                                 if (ingredients.isEmpty()) null else ingredients.map { it.replace(" ", "-") }.toSet(),
@@ -366,7 +366,7 @@ fun SearchScreenContent(
                                         ) }
 
                                         onSearchRecipes(
-                                            searchRecipesQuery,
+                                            if (searchRecipesQuery.isEmpty()) null else searchRecipesQuery,
                                             if (cuisineList.isEmpty()) null else cuisineList,
                                             if (mealTypeList.isEmpty()) null else mealTypeList,
                                             if (ingredients.isEmpty()) null else ingredients.map { it.replace(" ", "-") }.toSet(),
