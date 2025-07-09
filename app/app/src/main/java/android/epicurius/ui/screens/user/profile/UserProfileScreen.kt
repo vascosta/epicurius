@@ -257,7 +257,7 @@ fun UserProfileScreen(
                         if (isAnotherUserProfile) {
                             val buttonText = when (userProfile.followingStatus) {
                                 FollowingStatus.ACCEPTED -> "Unfollow"
-                                FollowingStatus.PENDING -> "Cancel Follow"
+                                FollowingStatus.PENDING -> "Cancel Follow Request"
                                 FollowingStatus.NOT_FOLLOWING -> "Follow"
                             }
                             Button(

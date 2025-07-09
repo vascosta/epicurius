@@ -197,8 +197,10 @@ class UserProfileViewModel(
         when {
             result.isSuccess -> {
                 val userProfilePrivacy = userProfileFlow.value.getOrThrow().privacy
-                if (userProfilePrivacy) showToast("Following request sent!")
-                else {
+                if (userProfilePrivacy) {
+                    showToast("Following request sent!")
+                    handleChangeOnFollowingStatus(FollowingStatus.PENDING)
+                } else {
                     handleChangeOnFollowingStatus(FollowingStatus.ACCEPTED)
                     checkUserProfileVisibility()
                 }
@@ -227,15 +229,27 @@ class UserProfileViewModel(
         }
         when {
             result.isSuccess -> {
-                handleChangeOnFollowingStatus(FollowingStatus.NOT_FOLLOWING)
+                handleChangeOnFollowingStatus(FollowingStatus.NOT_FOLLOWING, true)
                 checkUserProfileVisibility()
             }
         }
     }
 
-    private fun handleChangeOnFollowingStatus(followingStatus: FollowingStatus) {
+    private fun handleChangeOnFollowingStatus(
+        followingStatus: FollowingStatus,
+        isCancelFollow: Boolean = false
+    ) {
         val oldUserProfile = userProfileFlow.value.getOrThrow()
-        val updatedUserProfile = oldUserProfile.copy(followingStatus = followingStatus)
+        val updatedFollowersCount =
+            if (followingStatus == FollowingStatus.ACCEPTED)
+                oldUserProfile.followersCount + 1
+            else if (followingStatus == FollowingStatus.NOT_FOLLOWING && !isCancelFollow)
+                oldUserProfile.followersCount - 1
+            else oldUserProfile.followersCount
+        val updatedUserProfile = oldUserProfile.copy(
+            followersCount = updatedFollowersCount,
+            followingStatus = followingStatus
+        )
         userProfileFlow.value = apiSuccess(updatedUserProfile)
     }
 
@@ -246,14 +260,13 @@ class UserProfileViewModel(
 
     // only called after user profile flow is loaded
     private fun checkUserProfileVisibility() {
-        if (!isAnotherUserProfile) userProfileVisibility = true // own profile
-
-        else {
-            if (!userProfileFlow.value.getOrThrow().privacy) userProfileVisibility = true // public profile
-            if (userProfileFlow.value.getOrThrow().followingStatus == FollowingStatus.ACCEPTED) // private profile and following
-                userProfileVisibility = true
-
-            userProfileVisibility = false // private profile and not following
-        }
+        userProfileVisibility =
+            if (!isAnotherUserProfile) true // own profile
+            else {
+                if (!userProfileFlow.value.getOrThrow().privacy) true // public profile
+                else if (userProfileFlow.value.getOrThrow().followingStatus == FollowingStatus.ACCEPTED) // private profile and following
+                    true
+                else false // private profile and not following
+            }
     }
 }
