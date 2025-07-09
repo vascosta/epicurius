@@ -69,8 +69,8 @@ fun TopBar(
             icon?.let {
                 IconButton(
                     onClick = {
-                        if (it == Icons.Filled.Person) { context.navigateTo<UserProfileActivity>() }
-                        else { context.navigateTo<SettingsActivity>() }
+                        if (it == Icons.Filled.Person) { context.navigateTo<UserProfileActivity>(finishCurrent = true) }
+                        else { context.navigateTo<SettingsActivity>(finishCurrent = true) }
                     },
                     enabled = enableButtons
                 ) {
@@ -89,35 +89,6 @@ fun TopBar(
         ),
     )
 }
-
-@Composable
-private fun FollowTab(
-    number: List<Int>,
-    selectedTabIndex: Int,
-    onTabSelected: (Int) -> Unit
-) {
-    val tabs = listOf("Followers", "Following")
-
-    Column {
-        TabRow(
-            selectedTabIndex = selectedTabIndex,
-            containerColor = Color.White,
-            contentColor = Color.Black
-        ) {
-            tabs.forEachIndexed { index, name ->
-                Tab(
-                    selected = selectedTabIndex == index,
-                    onClick = { onTabSelected(index) },
-                    modifier = Modifier.padding(15.dp)
-                ) {
-                    Text(text = "${number[index]} $name", fontSize = 15.sp)
-                }
-            }
-        }
-    }
-}
-
-
 
 @Preview
 @Composable

@@ -77,9 +77,8 @@ fun BottomBar(
         ) {
             BottomBarButton(
                 onClick = {
-                    if (currentActivityClass != FeedActivity::class.java)
-                        context.startActivity(Intent(context, FeedActivity::class.java))
-                        selectedItem = FeedActivity::class.java
+                    context.navigateTo<FeedActivity>()
+                    selectedItem = FeedActivity::class.java
                 },
                 enabled = buttonsEnable,
                 imageId = R.drawable.home,
@@ -88,7 +87,7 @@ fun BottomBar(
             )
             BottomBarButton(
                 onClick = {
-                    context.startActivity(Intent(context, CreateRecipeActivity::class.java))
+                    context.navigateTo<CreateRecipeActivity>()
                     selectedItem = CreateRecipeActivity::class.java
                 },
                 enabled = buttonsEnable && currentActivityClass != CreateRecipeActivity::class.java,
@@ -98,7 +97,7 @@ fun BottomBar(
             )
             BottomBarButton(
                 onClick = {
-                    context.startActivity(Intent(context, SearchActivity::class.java))
+                    context.navigateTo<SearchActivity>()
                     selectedItem = SearchActivity::class.java
                 },
                 enabled = buttonsEnable && currentActivityClass != SearchActivity::class.java,
@@ -109,7 +108,7 @@ fun BottomBar(
             )
             BottomBarButton(
                 onClick = {
-                    context.startActivity(Intent(context, CalendarActivity::class.java))
+                    context.navigateTo<CalendarActivity>()
                     selectedItem = CalendarActivity::class.java
                 },
                 enabled = buttonsEnable && currentActivityClass != CalendarActivity::class.java,
@@ -120,7 +119,7 @@ fun BottomBar(
             )
             BottomBarButton(
                 onClick = {
-                    context.startActivity(Intent(context, FridgeActivity::class.java))
+                    context.navigateTo<FridgeActivity>()
                     selectedItem = FridgeActivity::class.java
                 },
                 enabled = buttonsEnable && currentActivityClass != FridgeActivity::class.java,
