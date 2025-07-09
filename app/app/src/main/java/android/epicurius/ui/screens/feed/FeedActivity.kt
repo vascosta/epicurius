@@ -69,7 +69,7 @@ class FeedActivity : EpicuriusActivity() {
                 onFollowRequests = { viewModel.getUserFollowRequests() },
                 onRecipeRequest = ::navigateToRecipeProfileActivity,
                 onUserProfileRequest = ::navigateToUserProfileActivity,
-                onDailyMenuRequest = { navigateTo<DailyMenuActivity>(finishCurrent = true) },
+                onDailyMenuRequest = { navigateTo<DailyMenuActivity>() },
                 onLoadMoreUserFeed = { viewModel.getUserFeed() },
                 enableButtons = viewModel.enableButtons
             )
