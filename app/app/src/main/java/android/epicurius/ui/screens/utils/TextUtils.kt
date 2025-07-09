@@ -1,6 +1,7 @@
 package android.epicurius.ui.screens.utils
 
 import android.epicurius.ui.screens.theme.Beige
+import android.epicurius.ui.screens.theme.DarkPurple
 import android.epicurius.ui.screens.theme.Lilac
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -49,10 +50,14 @@ fun TextField(
 }
 
 @Composable
-fun MixedText(boldString: String, normalString: String) {
+fun MixedText(
+    boldString: String,
+    normalString: String,
+    color: Color = Color.Black
+) {
     Row {
-        Text(text = boldString, fontWeight = FontWeight.Bold)
-        Text(normalString)
+        Text(text = boldString, color = color, fontWeight = FontWeight.Bold)
+        Text(text = normalString, color = color)
     }
 }
 
@@ -76,11 +81,24 @@ fun SearchTextField(
                 Icon(
                     imageVector = Icons.Default.Search,
                     contentDescription = "Search icon",
+                    tint = DarkPurple
                 )
             }
         },
         singleLine = true,
-        modifier = modifier
+        modifier = modifier,
+        colors = TextFieldDefaults.colors(
+            focusedTextColor = Color.Black,
+            unfocusedTextColor = Color.Black,
+            focusedIndicatorColor = Lilac,
+            unfocusedIndicatorColor = Lilac,
+            focusedLabelColor = Beige,
+            unfocusedLabelColor = Beige,
+            focusedContainerColor = Color.Transparent,
+            unfocusedContainerColor = Color.Transparent,
+            focusedTrailingIconColor = Beige,
+            unfocusedTrailingIconColor = Beige,
+        )
     )
 }
 
@@ -100,9 +118,14 @@ fun FormTextField(
         label = { Text(parameterName) },
         maxLines = 1,
         colors = TextFieldDefaults.colors(
-            focusedContainerColor = Color.White,
-            unfocusedContainerColor = Color.White,
-            disabledContainerColor = Color.Black
+            focusedTextColor = Color.White,
+            unfocusedTextColor = Color.White,
+            focusedIndicatorColor = Lilac,
+            unfocusedIndicatorColor = Lilac,
+            focusedLabelColor = Beige,
+            unfocusedLabelColor = Beige,
+            focusedContainerColor = Color.Transparent,
+            unfocusedContainerColor = Color.Transparent,
         )
     )
 }
@@ -126,9 +149,14 @@ fun NumberLineTextField(
             keyboardType = KeyboardType.Number
         ),
         colors = TextFieldDefaults.colors(
-            focusedContainerColor = Color.White,
-            unfocusedContainerColor = Color.White,
-            disabledContainerColor = Color.Black
+            focusedTextColor = Color.White,
+            unfocusedTextColor = Color.White,
+            focusedIndicatorColor = Lilac,
+            unfocusedIndicatorColor = Lilac,
+            focusedLabelColor = Beige,
+            unfocusedLabelColor = Beige,
+            focusedContainerColor = Color.Transparent,
+            unfocusedContainerColor = Color.Transparent,
         )
     )
 }
@@ -152,6 +180,18 @@ fun NumberTextField(
         singleLine = true,
         keyboardOptions = KeyboardOptions.Default.copy(
             keyboardType = KeyboardType.Number
+        ),
+        colors = TextFieldDefaults.colors(
+            focusedTextColor = Color.White,
+            unfocusedTextColor = Color.White,
+            focusedIndicatorColor = Lilac,
+            unfocusedIndicatorColor = Lilac,
+            focusedLabelColor = Beige,
+            unfocusedLabelColor = Beige,
+            focusedContainerColor = Color.Transparent,
+            unfocusedContainerColor = Color.Transparent,
+            focusedTrailingIconColor = Beige,
+            unfocusedTrailingIconColor = Beige,
         )
     )
 }
