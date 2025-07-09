@@ -112,7 +112,7 @@ class JdbiUserRepository(private val handle: Handle) : UserRepository {
             """
         )
             .bind("user_id", userId)
-            .bind("partialFollowerName", partialFollowerName)
+            .bind("partialFollowerName", "%$partialFollowerName%")
             .bind("status", FollowingStatus.ACCEPTED.ordinal)
             .bind("lastFollowerId", lastFollowerId)
             .bind("limit", limit)
@@ -153,7 +153,7 @@ class JdbiUserRepository(private val handle: Handle) : UserRepository {
             """
         )
             .bind("user_id", userId)
-            .bind("partialFollowingName", partialFollowingName)
+            .bind("partialFollowingName", "%$partialFollowingName%")
             .bind("status", FollowingStatus.ACCEPTED.ordinal)
             .bind("lastFollowingId", lastFollowingId)
             .bind("limit", limit)
