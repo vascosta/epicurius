@@ -1,5 +1,6 @@
 package android.epicurius.ui.screens.collections.collection
 
+import android.epicurius.domain.collection.CollectionProfile
 import android.epicurius.domain.recipe.Cuisine
 import android.epicurius.domain.recipe.MealType
 import android.epicurius.domain.recipe.RecipeInfo
@@ -7,6 +8,7 @@ import android.epicurius.ui.navigation.BottomBar
 import android.epicurius.ui.navigation.TopBar
 import android.epicurius.ui.screens.collections.components.DeleteCollectionDialog
 import android.epicurius.ui.screens.collections.collection.components.EditCollectionDialog
+import android.epicurius.ui.screens.collections.recipeCollections.components.RecipeCollectionsStateBundle
 import android.epicurius.ui.screens.utils.getNameFromLoadStateValue
 import android.epicurius.ui.screens.recipe.components.RecipeInfoBox
 import android.epicurius.ui.screens.utils.LoadState
@@ -45,11 +47,22 @@ fun CollectionScreen(
     collectionId: Int,
     collectionNameState: LoadState<String>,
     collectionRecipesState: LoadState<List<RecipeInfo>>,
+    recipeCollectionsStateBundle: RecipeCollectionsStateBundle,
     onBackButton: () -> Unit = {},
     onCollectionEdit: (collectionId: Int, collectionName: String) -> Unit = { _, _ -> },
     onCollectionDelete: (collectionId: Int) -> Unit = {},
     onRecipeDelete: (collectionId: Int, recipeId: Int) -> Unit = { _, _ -> },
+    onAddRecipeToCollections: (
+        recipeId: Int,
+        collectionsToAdd: List<CollectionProfile>
+    ) -> Unit = { _, _ -> },
+    onRemoveRecipeFromCollections: (
+        recipeId: Int,
+        collectionsToRemove: List<CollectionProfile>
+    ) -> Unit = { _, _ -> },
+    onRecipeCollectionsClear: () -> Unit = {},
     onRecipeRequest: (recipeId: Int) -> Unit = {},
+    onRecipeCollectionsRequest: (recipeId: Int) -> Unit = {},
     enableButtons: Boolean
 ) {
     var collectionListName = getNameFromLoadStateValue(collectionNameState)
@@ -115,13 +128,29 @@ fun CollectionScreen(
                         } else {
                             recipes.forEach {
                                 Row {
-                                    RecipeInfoBox(
-                                        collectionId = collectionId,
-                                        recipeInfo = it,
-                                        onRemoveRecipeFromCollection = onRecipeDelete,
-                                        onRecipeRequest = onRecipeRequest,
-                                        enableButtons = enableButtons
-                                    )
+                                    if (isOwner) {
+                                        RecipeInfoBox(
+                                            collectionId = collectionId,
+                                            recipeInfo = it,
+                                            onRemoveRecipeFromCollection = onRecipeDelete,
+                                            onRecipeRequest = onRecipeRequest,
+                                            enableButtons = enableButtons
+                                        )
+                                    }
+                                    else {
+                                        RecipeInfoBox(
+                                            collectionId = null,
+                                            recipeInfo = it,
+                                            recipeCollectionsStateBundle = recipeCollectionsStateBundle,
+                                            onAddRecipeToCollections = onAddRecipeToCollections,
+                                            onRemoveRecipeFromCollections = onRemoveRecipeFromCollections,
+                                            onRecipeCollectionsClear = onRecipeCollectionsClear,
+                                            onRecipeCollectionsRequest = onRecipeCollectionsRequest,
+                                            onRecipeRequest = onRecipeRequest,
+                                            enableButtons = enableButtons
+                                        )
+                                    }
+
                                     Spacer(modifier = Modifier.height(10.dp))
                                 }
                             }
@@ -172,6 +201,9 @@ fun CollectionScreenPreview() {
             )
         )),
         collectionNameState = apiSuccess("My Favourite Recipes"),
+        recipeCollectionsStateBundle = RecipeCollectionsStateBundle(
+            apiSuccess(emptyList()), apiSuccess(emptyList())
+        ),
         enableButtons = true
     )
 }

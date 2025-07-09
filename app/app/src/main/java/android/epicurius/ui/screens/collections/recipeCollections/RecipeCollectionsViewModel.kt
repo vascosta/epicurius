@@ -156,7 +156,7 @@ open class RecipeCollectionsViewModel(
 
         collectionsToAddRecipeFlow.value = apiSuccess(collectionsAvailableToAdd)
         cacheCollectionsToAddRecipeFlow.value = collectionsAvailableToAdd
-        
+
         collectionsToRemoveRecipeFlow.value = apiSuccess(updatedCollectionsToRemove)
         cacheCollectionsToRemoveRecipeFlow.value = updatedCollectionsToRemove
 

@@ -1,9 +1,12 @@
 package android.epicurius.ui.screens.collections.collection
 
+import android.epicurius.domain.collection.CollectionProfile
 import android.epicurius.ui.EpicuriusActivity
 import android.epicurius.ui.navigation.Intents
 import android.epicurius.ui.navigation.navigateTo
 import android.epicurius.ui.screens.collections.favourites.FavouritesActivity
+import android.epicurius.ui.screens.collections.recipeCollections.RecipeCollectionsViewModel
+import android.epicurius.ui.screens.collections.recipeCollections.components.RecipeCollectionsStateBundle
 import android.epicurius.ui.screens.recipe.profile.RecipeProfileActivity
 import android.epicurius.ui.screens.user.profile.UserProfileActivity
 import android.epicurius.ui.screens.utils.Idle
@@ -12,12 +15,14 @@ import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.compose.runtime.collectAsState
 import androidx.lifecycle.lifecycleScope
+import epicurius.domain.collection.CollectionType
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 
 class CollectionActivity : EpicuriusActivity() {
     override val viewModel: CollectionViewModel by getViewModel<CollectionViewModel>()
+    val recipeCollectionsViewModel: RecipeCollectionsViewModel by getViewModel<RecipeCollectionsViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,11 +41,17 @@ class CollectionActivity : EpicuriusActivity() {
         setContent {
             val collectionNameState = viewModel.collectionName.collectAsState(idle())
             val collectionRecipesState = viewModel.collectionRecipes.collectAsState(idle())
+            val collectionsToAddRecipeState = recipeCollectionsViewModel.collectionsToAddRecipe.collectAsState(idle())
+            val collectionsToRemoveRecipeState = recipeCollectionsViewModel.collectionsToRemoveRecipe.collectAsState(idle())
             CollectionScreen(
                 isOwner = intent.getBooleanExtra(Intents.IS_COLLECTION_OWNER, false),
                 collectionId = intent.getIntExtra(Intents.COLLECTION_ID, -1),
                 collectionNameState = collectionNameState.value,
                 collectionRecipesState = collectionRecipesState.value,
+                recipeCollectionsStateBundle = RecipeCollectionsStateBundle(
+                    collectionsToAddRecipeState.value,
+                    collectionsToRemoveRecipeState.value
+                ),
                 onBackButton = { navigateBack() },
                 onCollectionEdit = { collectionId: Int, collectionName: String ->
                     viewModel.updateCollection(collectionId, collectionName)
@@ -53,8 +64,30 @@ class CollectionActivity : EpicuriusActivity() {
                 onRecipeDelete = { collectionId: Int, recipeId: Int ->
                     viewModel.removeRecipeFromCollection(collectionId, recipeId)
                 },
+                onAddRecipeToCollections = {
+                        recipeId: Int,
+                        collectionsToAdd: List<CollectionProfile>
+                    ->
+                    recipeCollectionsViewModel.addRecipeToCollections(
+                        recipeId,
+                        collectionsToAdd
+                    )
+                },
+                onRemoveRecipeFromCollections = {
+                        recipeId: Int,
+                        collectionsToRemove: List<CollectionProfile>
+                    ->
+                    recipeCollectionsViewModel.removeRecipeFromCollections(
+                        recipeId,
+                        collectionsToRemove
+                    )
+                },
+                onRecipeCollectionsClear = { recipeCollectionsViewModel.clearRecipeCollections() },
                 onRecipeRequest = ::navigateToRecipeProfileActivity,
-                enableButtons = viewModel.enableButtons
+                onRecipeCollectionsRequest = { recipeId: Int ->
+                    recipeCollectionsViewModel.getRecipeCollections(recipeId, CollectionType.FAVOURITE)
+                },
+                enableButtons = viewModel.enableButtons && recipeCollectionsViewModel.enableButtons
             )
         }
     }
