@@ -7,6 +7,7 @@ import android.app.NotificationManager
 import android.content.Context
 import android.epicurius.R
 import android.epicurius.domain.fridge.Product
+import android.util.Log
 import androidx.annotation.RequiresPermission
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
@@ -14,15 +15,19 @@ import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
 fun createFridgeNotificationChannel(context: Context) {
-    val channel = NotificationChannel(
-        "fridge_channel",
-        "Fridge Notifications",
-        NotificationManager.IMPORTANCE_DEFAULT
-    ).apply {
-        description = "Notifications for fridge products"
-    }
     val manager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-    manager.createNotificationChannel(channel)
+    if (manager.getNotificationChannel("fridge_channel") == null) {
+        val channel = NotificationChannel(
+            "fridge_channel",
+            "Fridge Notifications",
+            NotificationManager.IMPORTANCE_DEFAULT
+        ).apply {
+            description = "Notifications for fridge products"
+        }
+        manager.createNotificationChannel(channel)
+    } else {
+        Log.d("NotificationChannel", "Channel already exists")
+    }
 }
 
 @RequiresPermission(Manifest.permission.POST_NOTIFICATIONS)

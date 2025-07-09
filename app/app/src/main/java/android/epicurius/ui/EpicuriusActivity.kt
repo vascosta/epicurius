@@ -18,7 +18,6 @@ abstract class EpicuriusActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        scheduleDailyProductCheck(this)
     }
 
     override fun onStart() {
