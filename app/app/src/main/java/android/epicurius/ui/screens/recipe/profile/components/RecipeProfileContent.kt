@@ -248,7 +248,7 @@ fun RecipeProfileContent(
                                     )) {
                             Row {
                                 Text("Your Rating: ", fontWeight = FontWeight.Bold)
-                                Text("$userRating")
+                                Text("${userRating ?: "not yet rated"}")
                             }
                             if (showEditRatingDialog && userRating != null) {
                                 EditUserRatingDialog(

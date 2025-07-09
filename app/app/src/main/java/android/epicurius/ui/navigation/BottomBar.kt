@@ -1,6 +1,5 @@
 package android.epicurius.ui.navigation
 
-import android.content.Intent
 import android.epicurius.R
 import android.epicurius.ui.screens.feed.FeedActivity
 import android.epicurius.ui.screens.fridge.FridgeActivity

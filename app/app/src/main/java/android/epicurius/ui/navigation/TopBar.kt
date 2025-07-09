@@ -69,8 +69,8 @@ fun TopBar(
             icon?.let {
                 IconButton(
                     onClick = {
-                        if (it == Icons.Filled.Person) { context.navigateTo<UserProfileActivity>(finishCurrent = true) }
-                        else { context.navigateTo<SettingsActivity>(finishCurrent = true) }
+                        if (it == Icons.Filled.Person) { context.navigateTo<UserProfileActivity>() }
+                        else { context.navigateTo<SettingsActivity>() }
                     },
                     enabled = enableButtons
                 ) {
