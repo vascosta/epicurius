@@ -2,7 +2,7 @@ package android.epicurius.ui.screens.mealPlanner.calendar
 
 import android.epicurius.ui.navigation.Intents
 import android.epicurius.ui.navigation.navigateTo
-import android.epicurius.ui.screens.mealPlanner.search.MealPlannerSearchActivity
+import android.epicurius.ui.screens.mealPlanner.daily.DailyActivity
 import android.epicurius.ui.screens.mealPlanner.weekly.WeeklyActivity
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -22,7 +22,7 @@ class CalendarActivity : ComponentActivity() {
     }
 
     private fun navigateToDailyMealPlannerActivity(date: LocalDate) {
-        navigateTo<MealPlannerSearchActivity> {
+        navigateTo<DailyActivity> { intent ->
             intent.putExtra(Intents.SOURCE_ACTIVITY, WeeklyActivity::class.java.name)
             intent.putExtra(Intents.DAILY_MEAL_PLANNER_DATE, date.toString())
         }
