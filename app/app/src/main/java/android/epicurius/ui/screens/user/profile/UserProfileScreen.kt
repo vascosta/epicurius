@@ -37,8 +37,11 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -152,7 +155,7 @@ fun UserProfileScreen(
         topBar = {
             TopBar(
                 titleText = "Profile",
-                backButton = true,
+                backButton = isAnotherUserProfile,
                 onBackButton = onBackButton,
                 enableButtons = true,
                 icon = if (!isAnotherUserProfile) Icons.Filled.Settings else null,
@@ -163,256 +166,266 @@ fun UserProfileScreen(
             LoadStateRenderer(
                 loadState = userProfileState,
                 content = { userProfile ->
-                    Column(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(paddingValues)
-                            .padding(16.dp)
-                            .background(Color.White),
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            if (!isAnotherUserProfile) {
-                                IconButton(
-                                    onClick = { showInfoDialog = true },
-                                    enabled = enableButtons
-                                ) {
-                                    Icon(
-                                        imageVector = Icons.Default.Info,
-                                        contentDescription = "Info Icon",
-                                    )
-                                }
-                            }
-
-                            Box(
+                    LazyColumn {
+                        item {
+                            Column(
                                 modifier = Modifier
-                                    .fillMaxWidth(),
-                                    //.align(Alignment.End),
-                                contentAlignment = Alignment.CenterEnd
+                                    .fillMaxSize()
+                                    .padding(paddingValues)
+                                    .padding(16.dp)
+                                    .background(Color.White),
+                                horizontalAlignment = Alignment.CenterHorizontally
                             ) {
-                                val flagEmoji = getFlagEmoji(userProfile.country)
-                                Text(text = flagEmoji, fontSize = 24.sp)
-                            }
-
-                            if (showInfoDialog)
-                                InfoDialog(
-                                    boldText = "Wanna edit your profile picture?",
-                                    normalText = "Double tap on your profile picture to change it or" +
-                                            " tap on it to view delete picture option.",
-                                    onDismissRequest = { showInfoDialog = false }
-                                )
-                        }
-                        Spacer(modifier = Modifier.fillMaxHeight(0.02f))
-                        UserProfilePicture(
-                            profilePicture = selectedImageBytes ?: userProfile.profilePictureBytes,
-                            iconSize = 120,
-                            isUserProfile = !isAnotherUserProfile,
-                            onUpdateProfilePicture = {
-                                if (!isAnotherUserProfile && galleryPermissionState.status.isGranted) {
-                                    imagePickerLauncher.launch(
-                                        PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
-                                    )
-                                } else if (!isAnotherUserProfile){
-                                    galleryPermissionState.launchPermissionRequest()
-                                }
-                            },
-                            onRemoveImage = { imageBytes ->
-                                onUpdateUserProfilePicture(null)
-                                selectedImageBytes = null
-                            },
-                            enabled = enableButtons
-                        )
-                        Spacer(modifier = Modifier.fillMaxHeight(0.02f))
-                        Text(text = userProfile.name, fontWeight = FontWeight.Bold)
-                        Spacer(modifier = Modifier.fillMaxHeight(0.05f))
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.Center,
-                        ) {
-                            FollowBox(
-                                name = "Followers",
-                                number = userProfile.followersCount,
-                                onClick = {
-                                    onFollowersOrFollowingRequest(
-                                        0,
-                                        userProfile.name,
-                                        userProfile.followersCount,
-                                        userProfile.followingCount
-                                    )
-                                },
-                                enabled = userProfileVisibility
-                            )
-                            FollowBox(
-                                name = "Following",
-                                number = userProfile.followingCount,
-                                onClick = {
-                                    onFollowersOrFollowingRequest(
-                                        1,
-                                        userProfile.name,
-                                        userProfile.followersCount,
-                                        userProfile.followingCount
-                                    )
-                                },
-                                enabled = userProfileVisibility
-                            )
-                        }
-                        if (isAnotherUserProfile) {
-                            val buttonText = when (userProfile.followingStatus) {
-                                FollowingStatus.ACCEPTED -> "Unfollow"
-                                FollowingStatus.PENDING -> "Cancel Follow Request"
-                                FollowingStatus.NOT_FOLLOWING -> "Follow"
-                            }
-                            Button(
-                                onClick = {
-                                    when (userProfile.followingStatus) {
-                                        FollowingStatus.ACCEPTED -> onUnfollow(userProfile.name)
-                                        FollowingStatus.PENDING -> onCancelFollow(userProfile.name)
-                                        FollowingStatus.NOT_FOLLOWING -> onFollow(userProfile.name)
-                                    }
-                                },
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(5.dp),
-                            ) { Text(text = buttonText) }
-                        } else
-                            Spacer(modifier = Modifier.fillMaxHeight(0.05f))
-                        if (userProfileVisibility) {
-                            ProfileTabBar(
-                                selectedTabIndex = selectedTabIndex,
-                                onRecipesClick = { selectedTabIndex = 0 },
-                                onKitchenBookClick = { selectedTabIndex = 1 },
-                                enabled = enableButtons
-                            )
-                            Spacer(Modifier.size(10.dp))
-                            if (selectedTabIndex == 0) {
-                                LoadStateRenderer(
-                                    loadState = userRecipesState,
-                                    content = { recipes ->
-                                        Column(
-                                            modifier = Modifier
-                                                .fillMaxSize()
-                                                .verticalScroll(rememberScrollState()),
-                                            verticalArrangement = Arrangement.spacedBy(16.dp)
-                                        ) {
-                                            if (recipes.isNotEmpty()) {
-                                                recipes.forEach { recipe ->
-                                                    RecipeInfoBox(
-                                                        collectionId = null,
-                                                        recipeInfo = recipe,
-                                                        recipeCollectionsStateBundle = recipeCollectionsStateBundle,
-                                                        onAddRecipeToCollections = onAddRecipeToCollections,
-                                                        onRemoveRecipeFromCollections = onRemoveRecipeFromCollections,
-                                                        onRecipeCollectionsClear = onRecipeCollectionsClear,
-                                                        onRecipeCollectionsRequest = onRecipeCollectionsRequest,
-                                                        onRecipeRequest = onRecipeRequest,
-                                                        enableButtons = enableButtons
-                                                    )
-                                                }
-                                                Button(
-                                                    onClick = { onUserRecipesRequest(userProfile.name) },
-                                                    modifier = Modifier
-                                                        .fillMaxWidth()
-                                                        .padding(10.dp),
-                                                    enabled = enableButtons
-                                                ) { Text("Load More") }
-                                            }
-                                            else if (userRecipesState is Loaded) {
-                                                Text(
-                                                    "User has no recipes yet.",
-                                                    color = Color.Gray,
-                                                    modifier = Modifier.fillMaxWidth(),
-                                                    textAlign = TextAlign.Center
-                                                )
-                                            }
-                                        }
-                                    }
-                                )
-                            } else if (selectedTabIndex == 1) {
-                                if (!isAnotherUserProfile) {
-                                    Row {
-                                        Spacer(Modifier
-                                            .fillMaxWidth()
-                                            .weight(0.9f))
+                                Row(verticalAlignment = Alignment.CenterVertically) {
+                                    if (!isAnotherUserProfile) {
                                         IconButton(
-                                            onClick = { showCreateCollectionDialog = true },
+                                            onClick = { showInfoDialog = true },
                                             enabled = enableButtons
                                         ) {
                                             Icon(
-                                                imageVector = Icons.Default.Add,
-                                                contentDescription = "Create Collection"
+                                                imageVector = Icons.Default.Info,
+                                                contentDescription = "Info Icon",
                                             )
                                         }
                                     }
+
+                                    Box(
+                                        modifier = Modifier.fillMaxWidth(),
+                                        contentAlignment = Alignment.CenterEnd
+                                    ) {
+                                        val flagEmoji = getFlagEmoji(userProfile.country)
+                                        Text(text = flagEmoji, fontSize = 24.sp)
+                                    }
+
+                                    if (showInfoDialog)
+                                        InfoDialog(
+                                            boldText = "Wanna edit your profile picture?",
+                                            normalText = "Double tap on your profile picture to change it or" +
+                                                    " tap on it to view delete picture option.",
+                                            onDismissRequest = { showInfoDialog = false }
+                                        )
                                 }
-                                LoadStateRenderer(
-                                    loadState = userKitchenBookState,
-                                    content = { collections ->
-                                        Column(
-                                            modifier = Modifier
-                                                .fillMaxSize()
-                                                .verticalScroll(rememberScrollState()),
-                                            verticalArrangement = Arrangement.spacedBy(16.dp)
-                                        ) {
-                                            if (collections.isNotEmpty()) {
-                                                collections.forEach { collection ->
-                                                    CollectionProfileBox(
-                                                        isCollectionOwner = !isAnotherUserProfile,
-                                                        collection = collection,
-                                                        onCollectionDelete = onUserKitchenBookCollectionDelete,
-                                                        onCollectionRequest = {
-                                                            collectionId: Int, isCollectionOwner: Boolean ->
-                                                            onUserKitchenBookCollectionRequest(
-                                                                collectionId, isCollectionOwner, userProfile.name
-                                                            )
-                                                        },
-                                                        enableButtons = enableButtons
-                                                    )
-                                                }
-                                                Button(
-                                                    onClick = { onUserKitchenBookRequest(userProfile.name) },
-                                                    modifier = Modifier
-                                                        .fillMaxWidth()
-                                                        .padding(10.dp),
-                                                    enabled = enableButtons
-                                                ) { Text("Load More") }
-                                            }
-                                            else if (userKitchenBookState is Loaded) {
-                                                Text(
-                                                    "User has no kitchen book collections yet.",
-                                                    color = Color.Gray,
-                                                    modifier = Modifier.fillMaxWidth(),
-                                                    textAlign = TextAlign.Center
+                                Spacer(modifier = Modifier.fillMaxHeight(0.02f))
+                                UserProfilePicture(
+                                    profilePicture = selectedImageBytes
+                                        ?: userProfile.profilePictureBytes,
+                                    iconSize = 120,
+                                    isUserProfile = !isAnotherUserProfile,
+                                    onUpdateProfilePicture = {
+                                        if (!isAnotherUserProfile && galleryPermissionState.status.isGranted) {
+                                            imagePickerLauncher.launch(
+                                                PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
+                                            )
+                                        } else if (!isAnotherUserProfile) {
+                                            galleryPermissionState.launchPermissionRequest()
+                                        }
+                                    },
+                                    onRemoveImage = { imageBytes ->
+                                        onUpdateUserProfilePicture(null)
+                                        selectedImageBytes = null
+                                    },
+                                    enabled = enableButtons
+                                )
+                                Spacer(modifier = Modifier.fillMaxHeight(0.02f))
+                                Text(text = userProfile.name, fontWeight = FontWeight.Bold)
+                                Spacer(modifier = Modifier.fillMaxHeight(0.05f))
+                                Row(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    horizontalArrangement = Arrangement.Center,
+                                ) {
+                                    FollowBox(
+                                        name = "Followers",
+                                        number = userProfile.followersCount,
+                                        onClick = {
+                                            onFollowersOrFollowingRequest(
+                                                0,
+                                                userProfile.name,
+                                                userProfile.followersCount,
+                                                userProfile.followingCount
+                                            )
+                                        },
+                                        enabled = userProfileVisibility
+                                    )
+                                    FollowBox(
+                                        name = "Following",
+                                        number = userProfile.followingCount,
+                                        onClick = {
+                                            onFollowersOrFollowingRequest(
+                                                1,
+                                                userProfile.name,
+                                                userProfile.followersCount,
+                                                userProfile.followingCount
+                                            )
+                                        },
+                                        enabled = userProfileVisibility
+                                    )
+                                }
+                                if (isAnotherUserProfile) {
+                                    val buttonText = when (userProfile.followingStatus) {
+                                        FollowingStatus.ACCEPTED -> "Unfollow"
+                                        FollowingStatus.PENDING -> "Cancel Follow Request"
+                                        FollowingStatus.NOT_FOLLOWING -> "Follow"
+                                    }
+                                    Button(
+                                        onClick = {
+                                            when (userProfile.followingStatus) {
+                                                FollowingStatus.ACCEPTED -> onUnfollow(userProfile.name)
+                                                FollowingStatus.PENDING -> onCancelFollow(
+                                                    userProfile.name
+                                                )
+
+                                                FollowingStatus.NOT_FOLLOWING -> onFollow(
+                                                    userProfile.name
                                                 )
                                             }
+                                        },
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .padding(5.dp),
+                                    ) { Text(text = buttonText) }
+                                } else
+                                    Spacer(modifier = Modifier.fillMaxHeight(0.05f))
+                                if (userProfileVisibility) {
+                                    ProfileTabBar(
+                                        selectedTabIndex = selectedTabIndex,
+                                        onRecipesClick = { selectedTabIndex = 0 },
+                                        onKitchenBookClick = { selectedTabIndex = 1 },
+                                        enabled = enableButtons
+                                    )
+                                    Spacer(Modifier.size(10.dp))
+                                    if (selectedTabIndex == 0) {
+                                        LoadStateRenderer(
+                                            loadState = userRecipesState,
+                                            content = { recipes ->
+                                                if (recipes.isNotEmpty()) {
+                                                    recipes.forEach { recipe ->
+                                                        RecipeInfoBox(
+                                                            collectionId = null,
+                                                            recipeInfo = recipe,
+                                                            recipeCollectionsStateBundle = recipeCollectionsStateBundle,
+                                                            onAddRecipeToCollections = onAddRecipeToCollections,
+                                                            onRemoveRecipeFromCollections = onRemoveRecipeFromCollections,
+                                                            onRecipeCollectionsClear = onRecipeCollectionsClear,
+                                                            onRecipeCollectionsRequest = onRecipeCollectionsRequest,
+                                                            onRecipeRequest = onRecipeRequest,
+                                                            enableButtons = enableButtons
+                                                        )
+                                                        Spacer(modifier = Modifier.height(10.dp))
+                                                    }
+                                                    Button(
+                                                        onClick = {
+                                                            onUserRecipesRequest(
+                                                                userProfile.name
+                                                            )
+                                                        },
+                                                        modifier = Modifier
+                                                            .fillMaxWidth()
+                                                            .padding(10.dp),
+                                                        enabled = enableButtons
+                                                    ) { Text("Load More") }
+                                                } else if (userRecipesState is Loaded) {
+                                                    Text(
+                                                        "User has no recipes yet.",
+                                                        color = Color.Gray,
+                                                        modifier = Modifier.fillMaxWidth(),
+                                                        textAlign = TextAlign.Center
+                                                    )
+                                                }
+                                            }
+                                        )
+                                    } else if (selectedTabIndex == 1) {
+                                        if (!isAnotherUserProfile) {
+                                            Row {
+                                                Spacer(
+                                                    Modifier
+                                                        .fillMaxWidth()
+                                                        .weight(0.9f)
+                                                )
+                                                IconButton(
+                                                    onClick = { showCreateCollectionDialog = true },
+                                                    enabled = enableButtons
+                                                ) {
+                                                    Icon(
+                                                        imageVector = Icons.Default.Add,
+                                                        contentDescription = "Create Collection"
+                                                    )
+                                                }
+                                            }
+                                        }
+                                        LoadStateRenderer(
+                                            loadState = userKitchenBookState,
+                                            content = { collections ->
+                                                Column(
+                                                    modifier = Modifier.fillMaxSize(),
+                                                    verticalArrangement = Arrangement.spacedBy(16.dp)
+                                                ) {
+                                                    if (collections.isNotEmpty()) {
+                                                        collections.forEach { collection ->
+                                                            CollectionProfileBox(
+                                                                isCollectionOwner = !isAnotherUserProfile,
+                                                                collection = collection,
+                                                                onCollectionDelete = onUserKitchenBookCollectionDelete,
+                                                                onCollectionRequest = { collectionId: Int, isCollectionOwner: Boolean ->
+                                                                    onUserKitchenBookCollectionRequest(
+                                                                        collectionId,
+                                                                        isCollectionOwner,
+                                                                        userProfile.name
+                                                                    )
+                                                                },
+                                                                enableButtons = enableButtons
+                                                            )
+                                                        }
+                                                        Button(
+                                                            onClick = {
+                                                                onUserKitchenBookRequest(
+                                                                    userProfile.name
+                                                                )
+                                                            },
+                                                            modifier = Modifier
+                                                                .fillMaxWidth()
+                                                                .padding(10.dp),
+                                                            enabled = enableButtons
+                                                        ) { Text("Load More") }
+                                                    } else if (userKitchenBookState is Loaded) {
+                                                        Text(
+                                                            "User has no kitchen book collections yet.",
+                                                            color = Color.Gray,
+                                                            modifier = Modifier.fillMaxWidth(),
+                                                            textAlign = TextAlign.Center
+                                                        )
+                                                    }
+                                                }
+                                            }
+                                        )
+                                        if (showCreateCollectionDialog) {
+                                            CreateCollectionDialog(
+                                                onCollectionCreate = { collectionName ->
+                                                    onUserKitchenBookCollectionCreate(
+                                                        collectionName,
+                                                        userProfile.name
+                                                    )
+                                                },
+                                                onDismiss = { showCreateCollectionDialog = false },
+                                                enableButtons = enableButtons
+                                            )
                                         }
                                     }
-                                )
-                                if (showCreateCollectionDialog) {
-                                    CreateCollectionDialog(
-                                        onCollectionCreate = { collectionName ->
-                                            onUserKitchenBookCollectionCreate(collectionName, userProfile.name)
-                                        },
-                                        onDismiss = { showCreateCollectionDialog = false },
-                                        enableButtons = enableButtons
+                                } else {
+                                    HorizontalDivider(
+                                        modifier = Modifier.padding(vertical = 8.dp),
+                                        thickness = 0.5.dp,
+                                        color = Color.Black
+                                    )
+                                    Text(
+                                        text = "This profile is private.",
+                                        color = Color.Gray,
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .padding(5.dp),
+                                        textAlign = TextAlign.Center
                                     )
                                 }
                             }
-                        } else {
-                            HorizontalDivider(
-                                modifier = Modifier.padding(vertical = 8.dp),
-                                thickness = 0.5.dp,
-                                color = Color.Black
-                            )
-                            Text(
-                                text = "This profile is private.",
-                                color = Color.Gray,
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(5.dp),
-                                textAlign = TextAlign.Center
-                            )
                         }
                     }
                 }
