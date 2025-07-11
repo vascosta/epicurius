@@ -105,7 +105,7 @@ fun SearchScreenContent(
     onRecipeCollectionsClear: () -> Unit = {},
     onRecipeProfileRequest: (recipeId: Int) -> Unit = {},
     onUserProfileRequest: (name: String) -> Unit = {},
-    onRecipeCollectionsRequest: (recipeId: Int) -> Unit = {},
+    onRecipeCollectionsRequest: (recipeId: Int, isRecipeAuthor: Boolean) -> Unit = { _, _ -> },
     enableButtons: Boolean
 ) {
     val context = LocalContext.current
@@ -338,7 +338,9 @@ fun SearchScreenContent(
                                         onAddRecipeToCollections = onAddRecipeToCollections,
                                         onRemoveRecipeFromCollections = onRemoveRecipeFromCollections,
                                         onRecipeCollectionsClear = onRecipeCollectionsClear,
-                                        onRecipeCollectionsRequest = onRecipeCollectionsRequest,
+                                        onRecipeCollectionsRequest = { recipeId ->
+                                            onRecipeCollectionsRequest(recipeId, showAuthorRecipes)
+                                        },
                                         onRecipeRequest = onRecipeProfileRequest,
                                         enableButtons = enableButtons
                                     )

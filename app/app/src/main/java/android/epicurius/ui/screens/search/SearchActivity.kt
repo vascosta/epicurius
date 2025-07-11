@@ -119,8 +119,10 @@ class SearchActivity : EpicuriusActivity() {
                 onRecipeCollectionsClear = { recipeCollectionsViewModel.clearRecipeCollections() },
                 onRecipeProfileRequest = ::navigateToRecipeProfileActivity,
                 onUserProfileRequest = ::navigateToUserProfileActivity,
-                onRecipeCollectionsRequest = { recipeId: Int ->
-                    recipeCollectionsViewModel.getRecipeCollections(recipeId, CollectionType.FAVOURITE)
+                onRecipeCollectionsRequest = { recipeId: Int, isRecipeAuthor ->
+                    val collectionType = if (isRecipeAuthor) CollectionType.KITCHEN_BOOK
+                    else CollectionType.FAVOURITE
+                    recipeCollectionsViewModel.getRecipeCollections(recipeId, collectionType)
                 },
                 enableButtons = viewModel.enableButtons && searchRecipesViewModel.enableButtons
             )

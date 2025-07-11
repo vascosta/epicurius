@@ -69,7 +69,7 @@ fun SearchScreen(
     onRecipeCollectionsClear: () -> Unit = {},
     onUserProfileRequest: (name: String) -> Unit = {},
     onRecipeProfileRequest: (recipeId: Int) -> Unit = {},
-    onRecipeCollectionsRequest: (recipeId: Int) -> Unit = {},
+    onRecipeCollectionsRequest: (recipeId: Int, isRecipeAuthor: Boolean) -> Unit = { _, _ -> },
     enableButtons: Boolean
 ) {
     var showCameraScreen by remember { mutableStateOf(false) }
