@@ -325,9 +325,10 @@ fun CreateRecipeScreen(
                         )
                     },
                     modifier = Modifier.padding(10.dp),
-                    enabled = buttonsEnable && !name.isEmpty() && !description.isEmpty() &&
-                    !preparationTime.isEmpty() && !servings.isEmpty() && !cuisine.isEmpty() &&
-                    !mealType.isEmpty() && !ingredients.isEmpty() && !instructions.isEmpty()
+                    enabled = buttonsEnable && name.isNotEmpty() && description.isNotEmpty() &&
+                    preparationTime.isNotEmpty() && servings.isNotEmpty() && cuisine.isNotEmpty() &&
+                    mealType.isNotEmpty() && ingredients.isNotEmpty() && instructions.isNotEmpty() &&
+                    selectedImageBytesList.isNotEmpty()
                 ) {
                     if (buttonsEnable) Text("Create")
                     else LoadingSpinner(Modifier.size(30.dp))

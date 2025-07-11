@@ -64,6 +64,7 @@ class CreateRecipeActivity : EpicuriusActivity() {
     private fun navigateToRecipeProfileActivity(recipeId: Int) {
         navigateTo<RecipeProfileActivity>(finishCurrent = true) { intent ->
             intent.putExtra(Intents.RECIPE_ID, recipeId)
+            intent.putExtra(Intents.SOURCE_ACTIVITY, CreateRecipeActivity::class.java.name)
         }
     }
 }
