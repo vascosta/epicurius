@@ -4,9 +4,12 @@ import android.epicurius.domain.recipe.IngredientUnit
 import android.epicurius.ui.screens.recipe.createRecipe.IngredientComponent
 import android.epicurius.ui.screens.theme.DarkPurple
 import android.epicurius.ui.screens.theme.LightGreen
+import android.epicurius.ui.screens.utils.Loaded
 import android.epicurius.ui.screens.utils.dropdownMenu.DropdownMenuComponent
 import android.epicurius.ui.screens.utils.NumberLineTextField
 import android.epicurius.ui.screens.utils.TextField
+import android.epicurius.ui.screens.utils.dropdownMenu.SearchDropdownMenuComponent
+import android.epicurius.ui.screens.utils.getOrThrow
 import android.epicurius.ui.screens.utils.isValidForNumberTextField
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -17,6 +20,10 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -28,6 +35,8 @@ fun IngredientsComponent(
     onIngredientsChange: (ingredients: List<IngredientComponent>) -> Unit = {},
     enabled: Boolean
 ) {
+    var isValidProduct by remember { mutableStateOf(false) }
+
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -79,17 +88,23 @@ fun IngredientsComponent(
                     modifier = Modifier.fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    TextField(
+                    SearchDropdownMenuComponent(
+                        optionsState = ingredientsResultState,
                         value = ingredient.name,
                         onValueChange = { newName ->
                             updatedList[index] = updatedList[index].copy(name = newName)
                             onIngredientsChange(updatedList)
+                            if (ingredientsResultState is Loaded) {
+                                val productsResult = ingredientsResultState.getOrThrow()
+                                if (productsResult.isNotEmpty())
+                                    isValidProduct = productsResult.contains(ingredient.name)
+                            }
                         },
+                        onIconClick = { onSearchIngredients(ingredient.name) },
                         modifier = Modifier
                             .weight(1f)
                             .padding(end = 8.dp),
-                        enabled = enabled,
-                        label = "Ingredient"
+                        enabled = enabled
                     )
                     DeleteFieldButton(
                         onClick = {
