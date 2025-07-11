@@ -35,7 +35,7 @@ fun getIngredientQuantityMessage(name: Double) =
     "$name quantity must be greater than $MIN_INGREDIENT_QUANTITY"
 
 fun getInstructionStepMessage(stepIdentifier: String) =
-    "the length of the $stepIdentifier step must be between $MIN_INSTRUCTIONS_STEP_LENGTH and $MAX_INSTRUCTIONS_STEP_LENGTH characters"
+    "the length of the step $stepIdentifier must be between $MIN_INSTRUCTIONS_STEP_LENGTH and $MAX_INSTRUCTIONS_STEP_LENGTH characters"
 
 fun validateName(name: String, showErrorMessage: (message: String) -> Unit): Boolean {
     if (name.length !in MIN_RECIPE_NAME_LENGTH..MAX_RECIPE_NAME_LENGTH) {

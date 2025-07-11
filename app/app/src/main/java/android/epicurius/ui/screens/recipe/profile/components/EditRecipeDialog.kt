@@ -11,6 +11,7 @@ import android.epicurius.ui.screens.recipe.createRecipe.components.DividerCompon
 import android.epicurius.ui.screens.recipe.createRecipe.components.IngredientsComponent
 import android.epicurius.ui.screens.recipe.createRecipe.components.InstructionsComponent
 import android.epicurius.ui.screens.recipe.createRecipe.components.NutritionalInfoComponent
+import android.epicurius.ui.screens.theme.DarkGreen
 import android.epicurius.ui.screens.utils.dropdownMenu.DropdownMenuComponent
 import android.epicurius.ui.screens.utils.FormTextField
 import android.epicurius.ui.screens.utils.dropdownMenu.MultiSelectDropdownMenuComponent
@@ -32,7 +33,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import kotlin.collections.map
 
@@ -60,8 +60,8 @@ fun EditRecipeDialog(
 ) {
     var name by remember { mutableStateOf(recipe.name) }
     var description by remember { mutableStateOf(recipe.description) }
-    var duration by remember { mutableStateOf(recipe.preparationTime.toString()) }
-    var serving by remember { mutableStateOf(recipe.servings.toString()) }
+    var preparationTime by remember { mutableStateOf(recipe.preparationTime.toString()) }
+    var servings by remember { mutableStateOf(recipe.servings.toString()) }
     var mealType by remember { mutableStateOf(recipe.mealType.displayName) }
     var cuisine by remember { mutableStateOf(recipe.cuisine.displayName) }
     var intolerances by remember {
@@ -91,14 +91,14 @@ fun EditRecipeDialog(
                     val ingredientsList = ingredients.map { it.toIngredient() }
 
                     val stepsMap = steps.mapIndexed { index, step ->
-                        "Step ${index + 1}" to step
+                        (index + 1).toString() to step
                     }.toMap()
 
                     onEditRecipe(
                         if (name == recipe.name) null else name,
                         if (description == recipe.description) null else description,
-                        if (serving == recipe.servings.toString()) null else serving.toIntOrNull(),
-                        if (duration == recipe.preparationTime.toString()) null else duration.toIntOrNull(),
+                        if (servings == recipe.servings.toString()) null else servings.toIntOrNull(),
+                        if (preparationTime == recipe.preparationTime.toString()) null else preparationTime.toIntOrNull(),
                         if (cuisine == recipe.cuisine.displayName) null
                         else Cuisine.valueOf(cuisine.uppercase().replace(Regex("[\\s-]"), "_")),
                         if (mealType == recipe.mealType.displayName) null
@@ -120,7 +120,9 @@ fun EditRecipeDialog(
                     )
                     onDismissRequest()
                 },
-                enabled = enableButtons
+                enabled = enableButtons && name.isNotEmpty() && description.isNotEmpty() &&
+                preparationTime.isNotEmpty() && servings.isNotEmpty() && cuisine.isNotEmpty() &&
+                mealType.isNotEmpty() && ingredients.isNotEmpty() && steps.isNotEmpty()
             ) { Text("Confirm") }
         },
         dismissButton = {
@@ -153,14 +155,14 @@ fun EditRecipeDialog(
                 )
                 NumberLineTextField(
                     parameterName = "Duration (min)",
-                    value = duration,
-                    onValueChange = { if (isValidForNumberTextField(it)) duration = it },
+                    value = preparationTime,
+                    onValueChange = { if (isValidForNumberTextField(it)) preparationTime = it },
                     enabled = enableButtons
                 )
                 NumberLineTextField(
                     parameterName = "Serving (px)",
-                    value = serving,
-                    onValueChange = { if (isValidForNumberTextField(it)) serving = it },
+                    value = servings,
+                    onValueChange = { if (isValidForNumberTextField(it)) servings = it },
                     enabled = enableButtons
                 )
                 DropdownMenuComponent(
@@ -228,6 +230,6 @@ fun EditRecipeDialog(
                 )
             }
         },
-        containerColor = Color.White,
+        containerColor = DarkGreen,
     )
 }
