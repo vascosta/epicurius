@@ -6,7 +6,6 @@ import android.epicurius.ui.screens.recipe.confirmIngredients.components.InfoDia
 import android.epicurius.ui.screens.recipe.confirmIngredients.components.IngredientTable
 import android.epicurius.ui.screens.recipe.confirmIngredients.components.SubstituteIngredientsAlertDialog
 import android.epicurius.ui.screens.utils.LoadState
-import android.epicurius.ui.screens.utils.LoadStateRenderer
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -110,15 +109,10 @@ fun ConfirmIngredientsContent(
             enableButtons = enableButtons
         )
         if (showSubstituteIngredientsDialog && selectedIngredient != null) {
-            LoadStateRenderer(
-                loadState = substituteIngredientsState,
-                content = { substituteIngredients ->
-                    SubstituteIngredientsAlertDialog(
-                        substituteIngredients = substituteIngredients,
-                        onDismiss = { showSubstituteIngredientsDialog = false },
-                        enableButtons = enableButtons
-                    )
-                }
+            SubstituteIngredientsAlertDialog(
+                substituteIngredientsState = substituteIngredientsState,
+                onDismiss = { showSubstituteIngredientsDialog = false },
+                enableButtons = enableButtons
             )
         }
         Spacer(modifier = Modifier.weight(1f))

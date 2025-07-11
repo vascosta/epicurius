@@ -1,5 +1,7 @@
 package android.epicurius.ui.screens.recipe.confirmIngredients.components
 
+import android.epicurius.ui.screens.utils.LoadState
+import android.epicurius.ui.screens.utils.LoadStateRenderer
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.AlertDialog
@@ -13,7 +15,7 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun SubstituteIngredientsAlertDialog(
-    substituteIngredients: List<String>,
+    substituteIngredientsState: LoadState<List<String>>,
     onDismiss: () -> Unit = {},
     enableButtons: Boolean
 ) {
@@ -21,23 +23,28 @@ fun SubstituteIngredientsAlertDialog(
         onDismissRequest = { if (enableButtons) onDismiss() },
         title = { Text("Substitute Ingredients") },
         text = {
-            Column {
-                if (substituteIngredients. isNotEmpty()) {
-                    substituteIngredients.forEach {
-                        Text(
-                            text = "• $it",
-                            modifier = Modifier.padding(start = 10.dp, bottom = 10.dp)
-                        )
+            LoadStateRenderer(
+                loadState = substituteIngredientsState,
+                content = { substituteIngredients ->
+                    Column {
+                        if (substituteIngredients. isNotEmpty()) {
+                            substituteIngredients.forEach {
+                                Text(
+                                    text = "• $it",
+                                    modifier = Modifier.padding(start = 10.dp, bottom = 10.dp)
+                                )
+                            }
+                        } else {
+                            Text(
+                                text = "No substitutes available for this ingredient",
+                                modifier = Modifier.padding(horizontal = 10.dp),
+                                fontStyle = FontStyle.Italic,
+                                textAlign = TextAlign.Center
+                            )
+                        }
                     }
-                } else {
-                    Text(
-                        text = "No substitutes available for this ingredient",
-                        modifier = Modifier.padding(horizontal = 10.dp),
-                        fontStyle = FontStyle.Italic,
-                        textAlign = TextAlign.Center
-                    )
                 }
-            }
+            )
         },
         confirmButton = {
             Button(onClick = onDismiss,
