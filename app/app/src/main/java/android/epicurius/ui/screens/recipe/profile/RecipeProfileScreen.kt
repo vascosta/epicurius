@@ -52,6 +52,7 @@ fun RecipeProfileScreen(
     userRecipeRatingState: LoadState<Int?>,
     recipeCollectionsStateBundle: RecipeCollectionsStateBundle,
     substituteIngredientsState: LoadState<List<String>>,
+    backButton: Boolean,
     onBackButton: () -> Unit = { },
     onEditRecipe: (
         name: String?,
@@ -71,6 +72,7 @@ fun RecipeProfileScreen(
     ) -> Unit = { _, _, _, _, _, _, _, _, _, _, _, _, _, _ -> },
     onEditRecipePictures: (picturesBytes: List<ByteArray>) -> Unit = {},
     onEditUserRating: (rating: Int) -> Unit = {},
+    onDeleteUserRecipeRating: (recipeId: Int) -> Unit = {},
     onDeleteRecipe: () -> Unit = { },
     onAddRecipeToCollections: (
         recipeId: Int,
@@ -94,7 +96,7 @@ fun RecipeProfileScreen(
         topBar = {
             TopBar(
                 titleText = recipeName,
-                backButton = true,
+                backButton = backButton,
                 onBackButton = when (currentScreen) {
                     ScreenState.PROFILE -> onBackButton
                     ScreenState.INGREDIENTS -> {
@@ -129,6 +131,7 @@ fun RecipeProfileScreen(
                                     onEditRecipe = onEditRecipe,
                                     onEditRecipePictures = onEditRecipePictures,
                                     onEditUserRating = onEditUserRating,
+                                    onDeleteUserRecipeRating = onDeleteUserRecipeRating,
                                     onDeleteRecipe = onDeleteRecipe,
                                     onMakeRecipe = { currentScreen = ScreenState.INGREDIENTS },
                                     onAddRecipeToCollections = onAddRecipeToCollections,
@@ -224,6 +227,7 @@ fun RecipeProfilePreview(){
             collectionsToRemoveRecipeState = apiSuccess(emptyList())
         ),
         substituteIngredientsState = apiSuccess(emptyList()),
+        backButton = true,
         enableButtons = true,
     )
 }

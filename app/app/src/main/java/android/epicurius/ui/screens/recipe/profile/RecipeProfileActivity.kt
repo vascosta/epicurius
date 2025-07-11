@@ -13,6 +13,7 @@ import android.epicurius.ui.navigation.Intents
 import android.epicurius.ui.navigation.navigateTo
 import android.epicurius.ui.screens.collections.recipeCollections.RecipeCollectionsViewModel
 import android.epicurius.ui.screens.collections.recipeCollections.components.RecipeCollectionsStateBundle
+import android.epicurius.ui.screens.recipe.createRecipe.CreateRecipeActivity
 import android.epicurius.ui.screens.user.profile.UserProfileActivity
 import android.epicurius.ui.screens.utils.Idle
 import android.epicurius.ui.screens.utils.LoadState
@@ -69,6 +70,7 @@ class RecipeProfileActivity : EpicuriusActivity() {
                     collectionsToRemoveRecipeState = collectionsToRemoveRecipeState.value
                 ),
                 substituteIngredientsState = substituteIngredientsState.value,
+                backButton = intent.getStringExtra(Intents.SOURCE_ACTIVITY) != CreateRecipeActivity::class.java.name,
                 onBackButton = { finish() },
                 onEditRecipe = {
                     name: String?,
@@ -115,6 +117,9 @@ class RecipeProfileActivity : EpicuriusActivity() {
                         intent.getIntExtra(Intents.RECIPE_ID, -1),
                         rating
                     )
+                },
+                onDeleteUserRecipeRating = { recipeId: Int ->
+                    viewModel.deleteUserRecipeRating(recipeId)
                 },
                 onDeleteRecipe = {
                     viewModel.deleteRecipe(intent.getIntExtra(Intents.RECIPE_ID, -1)) { finish() }

@@ -90,7 +90,7 @@ fun RecipeProfileContent(
     ) -> Unit = { _, _, _, _, _, _, _, _, _, _, _, _, _, _ -> },
     onEditRecipePictures: (picturesBytes: List<ByteArray>) -> Unit = {},
     onEditUserRating: (rating: Int) -> Unit = {},
-    onDeleteUserRecipeRating: () -> Unit = {},
+    onDeleteUserRecipeRating: (recipeId: Int) -> Unit = {},
     onDeleteRecipe: () -> Unit = {},
     onMakeRecipe: () -> Unit = {},
     onAddRecipeToCollections: (
@@ -254,7 +254,7 @@ fun RecipeProfileContent(
                                 EditUserRatingDialog(
                                     previousRating = userRating,
                                     onEditUserRating = onEditUserRating,
-                                    onDeleteUserRecipeRating = onDeleteUserRecipeRating,
+                                    onDeleteUserRecipeRating = { onDeleteUserRecipeRating(recipe.id) },
                                     onDismissRequest = { showEditRatingDialog = false },
                                     enableButtons = enableButtons
                                 )
