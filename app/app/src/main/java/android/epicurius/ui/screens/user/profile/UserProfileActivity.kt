@@ -111,6 +111,10 @@ class UserProfileActivity : EpicuriusActivity() {
         lifecycleScope.launch {
             val userProfileName = intent.getStringExtra(Intents.USERNAME) ?: viewModel.session.getUserName()
             viewModel.getUserProfile(userProfileName)
+            if (viewModel.userProfileVisibility) {
+                viewModel.getUserRecipes(userProfileName)
+                viewModel.getUserKitchenBook(userProfileName)
+            }
         }
     }
 
