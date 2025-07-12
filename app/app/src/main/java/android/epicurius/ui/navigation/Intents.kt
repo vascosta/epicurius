@@ -13,5 +13,5 @@ object Intents {
     const val FOLLOWING_COUNT = "FollowingCountIntent"
 
     const val DAILY_MEAL_PLANNER_DATE = "DailyMealPlannerDateIntent"
-    const val DAILY_MEAL_PLANNER_MEAl_TIME = "DailyMealPlannerMealTimeIntent"
+    const val DAILY_MEAL_PLANNER_MEAL_TIME = "DailyMealPlannerMealTimeIntent"
 }

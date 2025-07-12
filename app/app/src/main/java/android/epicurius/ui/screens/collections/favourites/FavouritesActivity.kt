@@ -30,15 +30,13 @@ class FavouritesActivity : EpicuriusActivity() {
             val favouritesState = viewModel.collections.collectAsState(idle())
             FavouritesScreen(
                 favouritesState = favouritesState.value,
-                onBackButton = { navigateTo<SettingsActivity>(finishCurrent = true) },
+                onBackButton = { navigateTo<SettingsActivity>() },
                 onCollectionCreate = { collectionName: String ->
                     viewModel.createCollection(collectionName, CollectionType.FAVOURITE) { collectionId ->
                         navigateToFavouritesListActivity(collectionId, true)
                     }
                 },
-                onCollectionDelete = { collectionId: Int ->
-                    viewModel.deleteCollection(collectionId)
-                },
+                onCollectionDelete = { collectionId: Int -> viewModel.deleteCollection(collectionId) },
                 onCollectionRequest = ::navigateToFavouritesListActivity,
                 onLoadMoreFavourites = { viewModel.getCollections(CollectionType.FAVOURITE) },
                 enableButtons = viewModel.enableButtons,
@@ -46,9 +44,13 @@ class FavouritesActivity : EpicuriusActivity() {
         }
     }
 
+    override fun onRestart() {
+        super.onRestart()
+        lifecycleScope.launch { viewModel.clearCollections() }
+    }
+
     private fun navigateToFavouritesListActivity(collectionId: Int, isCollectionOwner: Boolean) {
         navigateTo<CollectionActivity> { intent ->
-            intent.putExtra(Intents.SOURCE_ACTIVITY, FavouritesActivity::class.java.name)
             intent.putExtra(Intents.COLLECTION_ID, collectionId)
             intent.putExtra(Intents.IS_COLLECTION_OWNER, isCollectionOwner)
         }

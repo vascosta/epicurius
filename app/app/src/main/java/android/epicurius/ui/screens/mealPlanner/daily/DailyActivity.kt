@@ -51,7 +51,7 @@ class DailyActivity : EpicuriusActivity() {
         navigateTo<MealPlannerSearchActivity> { intent ->
             intent.putExtra(Intents.SOURCE_ACTIVITY, WeeklyActivity::class.java.name)
             intent.putExtra(Intents.DAILY_MEAL_PLANNER_DATE, date.toString())
-            intent.putExtra(Intents.DAILY_MEAL_PLANNER_MEAl_TIME, mealTime.name)
+            intent.putExtra(Intents.DAILY_MEAL_PLANNER_MEAL_TIME, mealTime.name)
         }
     }
 }
