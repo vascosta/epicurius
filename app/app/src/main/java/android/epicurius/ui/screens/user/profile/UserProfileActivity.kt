@@ -62,7 +62,7 @@ class UserProfileActivity : EpicuriusActivity() {
                     onCancelFollow = { username: String -> viewModel.cancelFollow(username) },
                     onUserKitchenBookCollectionCreate = { collectionName: String, username: String ->
                         collectionsViewModel.createCollection(collectionName, CollectionType.KITCHEN_BOOK) {
-                            collectionId: Int -> navigateToCollectionActivity(collectionId, true, username)
+                            collectionId: Int -> navigateToCollectionActivity(collectionId, true)
                         }
                     },
                     onUserKitchenBookCollectionDelete = { collectionId: Int ->
@@ -112,6 +112,8 @@ class UserProfileActivity : EpicuriusActivity() {
             val userProfileName = intent.getStringExtra(Intents.USERNAME) ?: viewModel.session.getUserName()
             viewModel.getUserProfile(userProfileName)
             if (viewModel.userProfileVisibility) {
+                viewModel.clearUserRecipes()
+                viewModel.clearUserKitchenBook()
                 viewModel.getUserRecipes(userProfileName)
                 viewModel.getUserKitchenBook(userProfileName)
             }
@@ -134,14 +136,11 @@ class UserProfileActivity : EpicuriusActivity() {
 
     private fun navigateToCollectionActivity(
         collectionId: Int,
-        isCollectionOwner: Boolean,
-        username: String
+        isCollectionOwner: Boolean
     ) {
         navigateTo<CollectionActivity> { intent ->
-            intent.putExtra(Intents.SOURCE_ACTIVITY, UserProfileActivity::class.java.name)
             intent.putExtra(Intents.COLLECTION_ID, collectionId)
             intent.putExtra(Intents.IS_COLLECTION_OWNER, isCollectionOwner)
-            intent.putExtra(Intents.USERNAME, username)
         }
     }
 

@@ -199,8 +199,8 @@ class UserProfileViewModel(
             result.isSuccess -> {
                 val userProfilePrivacy = userProfileFlow.value.getOrThrow().privacy
                 if (userProfilePrivacy) {
-                    showToast("Following request sent!")
                     handleChangeOnFollowingStatus(FollowingStatus.PENDING)
+                    showToast("Following request sent!")
                 } else {
                     handleChangeOnFollowingStatus(FollowingStatus.ACCEPTED)
                     checkUserProfileVisibility()

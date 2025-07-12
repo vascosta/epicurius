@@ -37,11 +37,9 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -111,9 +109,8 @@ fun UserProfileScreen(
     ) -> Unit = { _, _, _, _ -> },
     onUserKitchenBookCollectionRequest: (
         collectionId: Int,
-        isCollectionOwner: Boolean,
-        username: String
-    ) -> Unit = { _, _, _ -> },
+        isCollectionOwner: Boolean
+    ) -> Unit = { _, _ -> },
     onRecipeCollectionsRequest: (recipeId: Int) -> Unit = {},
     onRecipeRequest: (recipeId: Int) -> Unit = {},
     enableButtons: Boolean
@@ -155,7 +152,7 @@ fun UserProfileScreen(
         topBar = {
             TopBar(
                 titleText = "Profile",
-                backButton = isAnotherUserProfile,
+                backButton = true,
                 onBackButton = onBackButton,
                 enableButtons = true,
                 icon = if (!isAnotherUserProfile) Icons.Filled.Settings else null,
@@ -207,8 +204,7 @@ fun UserProfileScreen(
                                 }
                                 Spacer(modifier = Modifier.fillMaxHeight(0.02f))
                                 UserProfilePicture(
-                                    profilePicture = selectedImageBytes
-                                        ?: userProfile.profilePictureBytes,
+                                    profilePicture = selectedImageBytes ?: userProfile.profilePictureBytes,
                                     iconSize = 120,
                                     isUserProfile = !isAnotherUserProfile,
                                     onUpdateProfilePicture = {
@@ -270,13 +266,8 @@ fun UserProfileScreen(
                                         onClick = {
                                             when (userProfile.followingStatus) {
                                                 FollowingStatus.ACCEPTED -> onUnfollow(userProfile.name)
-                                                FollowingStatus.PENDING -> onCancelFollow(
-                                                    userProfile.name
-                                                )
-
-                                                FollowingStatus.NOT_FOLLOWING -> onFollow(
-                                                    userProfile.name
-                                                )
+                                                FollowingStatus.PENDING -> onCancelFollow(userProfile.name)
+                                                FollowingStatus.NOT_FOLLOWING -> onFollow(userProfile.name)
                                             }
                                         },
                                         modifier = Modifier
@@ -297,39 +288,40 @@ fun UserProfileScreen(
                                         LoadStateRenderer(
                                             loadState = userRecipesState,
                                             content = { recipes ->
-                                                if (recipes.isNotEmpty()) {
-                                                    recipes.forEach { recipe ->
-                                                        RecipeInfoBox(
-                                                            collectionId = null,
-                                                            recipeInfo = recipe,
-                                                            recipeCollectionsStateBundle = recipeCollectionsStateBundle,
-                                                            onAddRecipeToCollections = onAddRecipeToCollections,
-                                                            onRemoveRecipeFromCollections = onRemoveRecipeFromCollections,
-                                                            onRecipeCollectionsClear = onRecipeCollectionsClear,
-                                                            onRecipeCollectionsRequest = onRecipeCollectionsRequest,
-                                                            onRecipeRequest = onRecipeRequest,
-                                                            enableButtons = enableButtons
-                                                        )
-                                                        Spacer(modifier = Modifier.height(10.dp))
-                                                    }
-                                                    Button(
-                                                        onClick = {
-                                                            onUserRecipesRequest(
-                                                                userProfile.name
+                                                Column(
+                                                    modifier = Modifier.fillMaxSize(),
+                                                    verticalArrangement = Arrangement.spacedBy(16.dp)
+                                                ) {
+                                                    if (recipes.isNotEmpty()) {
+                                                        recipes.forEach { recipe ->
+                                                            RecipeInfoBox(
+                                                                collectionId = null,
+                                                                recipeInfo = recipe,
+                                                                recipeCollectionsStateBundle = recipeCollectionsStateBundle,
+                                                                onAddRecipeToCollections = onAddRecipeToCollections,
+                                                                onRemoveRecipeFromCollections = onRemoveRecipeFromCollections,
+                                                                onRecipeCollectionsClear = onRecipeCollectionsClear,
+                                                                onRecipeCollectionsRequest = onRecipeCollectionsRequest,
+                                                                onRecipeRequest = onRecipeRequest,
+                                                                enableButtons = enableButtons
                                                             )
-                                                        },
-                                                        modifier = Modifier
-                                                            .fillMaxWidth()
-                                                            .padding(10.dp),
-                                                        enabled = enableButtons
-                                                    ) { Text("Load More") }
-                                                } else if (userRecipesState is Loaded) {
-                                                    Text(
-                                                        "User has no recipes yet.",
-                                                        color = Color.Gray,
-                                                        modifier = Modifier.fillMaxWidth(),
-                                                        textAlign = TextAlign.Center
-                                                    )
+                                                        }
+                                                        Button(
+                                                            onClick = { onUserRecipesRequest(userProfile.name) },
+                                                            modifier = Modifier
+                                                                .fillMaxWidth()
+                                                                .padding(10.dp),
+                                                            enabled = enableButtons
+                                                        ) { Text("Load More") }
+                                                    }
+                                                    else if (userRecipesState is Loaded) {
+                                                        Text(
+                                                            "User has no recipes yet.",
+                                                            color = Color.Gray,
+                                                            modifier = Modifier.fillMaxWidth(),
+                                                            textAlign = TextAlign.Center
+                                                        )
+                                                    }
                                                 }
                                             }
                                         )
@@ -356,7 +348,9 @@ fun UserProfileScreen(
                                             loadState = userKitchenBookState,
                                             content = { collections ->
                                                 Column(
-                                                    modifier = Modifier.fillMaxSize(),
+                                                    modifier = Modifier
+                                                        .fillMaxSize()
+                                                        .verticalScroll(rememberScrollState()),
                                                     verticalArrangement = Arrangement.spacedBy(16.dp)
                                                 ) {
                                                     if (collections.isNotEmpty()) {
@@ -365,28 +359,19 @@ fun UserProfileScreen(
                                                                 isCollectionOwner = !isAnotherUserProfile,
                                                                 collection = collection,
                                                                 onCollectionDelete = onUserKitchenBookCollectionDelete,
-                                                                onCollectionRequest = { collectionId: Int, isCollectionOwner: Boolean ->
-                                                                    onUserKitchenBookCollectionRequest(
-                                                                        collectionId,
-                                                                        isCollectionOwner,
-                                                                        userProfile.name
-                                                                    )
-                                                                },
+                                                                onCollectionRequest = onUserKitchenBookCollectionRequest,
                                                                 enableButtons = enableButtons
                                                             )
                                                         }
                                                         Button(
-                                                            onClick = {
-                                                                onUserKitchenBookRequest(
-                                                                    userProfile.name
-                                                                )
-                                                            },
+                                                            onClick = { onUserKitchenBookRequest(userProfile.name) },
                                                             modifier = Modifier
                                                                 .fillMaxWidth()
                                                                 .padding(10.dp),
                                                             enabled = enableButtons
                                                         ) { Text("Load More") }
-                                                    } else if (userKitchenBookState is Loaded) {
+                                                    }
+                                                    else if (userKitchenBookState is Loaded) {
                                                         Text(
                                                             "User has no kitchen book collections yet.",
                                                             color = Color.Gray,
@@ -400,10 +385,7 @@ fun UserProfileScreen(
                                         if (showCreateCollectionDialog) {
                                             CreateCollectionDialog(
                                                 onCollectionCreate = { collectionName ->
-                                                    onUserKitchenBookCollectionCreate(
-                                                        collectionName,
-                                                        userProfile.name
-                                                    )
+                                                    onUserKitchenBookCollectionCreate(collectionName, userProfile.name)
                                                 },
                                                 onDismiss = { showCreateCollectionDialog = false },
                                                 enableButtons = enableButtons
