@@ -72,6 +72,7 @@ fun RecipeProfileContent(
     usernameState: LoadState<String>,
     userRecipeRatingState: LoadState<Int?>,
     recipeCollectionsStateBundle: RecipeCollectionsStateBundle,
+    ingredientsResultState: LoadState<List<String>>,
     onEditRecipe: (
         name: String?,
         description: String?,
@@ -101,6 +102,7 @@ fun RecipeProfileContent(
         recipeId: Int,
         collectionsToRemove: List<CollectionProfile>
     ) -> Unit = { _, _ -> },
+    onSearchIngredients: (partialName: String) -> Unit = {},
     onRecipeCollectionsClear: () -> Unit = {},
     onUserProfileRequest: (name: String) -> Unit = {},
     onRecipeCollectionsRequest: (recipeId: Int, collectionType: CollectionType) -> Unit = { _, _ -> },
@@ -285,8 +287,10 @@ fun RecipeProfileContent(
                 if (showEditRecipeDialog) {
                     EditRecipeDialog(
                         recipe = recipe,
+                        ingredientsResultState = ingredientsResultState,
                         onEditRecipe = onEditRecipe,
                         onDismissRequest = { showEditRecipeDialog = false },
+                        onSearchIngredients = onSearchIngredients,
                         enableButtons = enableButtons
                     )
                 }
@@ -373,6 +377,7 @@ fun RecipeProfileContentPreview(){
             collectionsToAddRecipeState = apiSuccess(emptyList()),
             collectionsToRemoveRecipeState = apiSuccess(emptyList())
         ),
+        ingredientsResultState = apiSuccess(emptyList()),
         enableButtons = true,
         paddingValues = PaddingValues()
     )

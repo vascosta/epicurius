@@ -51,6 +51,7 @@ fun RecipeProfileScreen(
     usernameState: LoadState<String>,
     userRecipeRatingState: LoadState<Int?>,
     recipeCollectionsStateBundle: RecipeCollectionsStateBundle,
+    ingredientsResultState: LoadState<List<String>>,
     substituteIngredientsState: LoadState<List<String>>,
     backButton: Boolean,
     onBackButton: () -> Unit = { },
@@ -82,6 +83,7 @@ fun RecipeProfileScreen(
         recipeId: Int,
         collectionsToRemove: List<CollectionProfile>
     ) -> Unit = { _, _ -> },
+    onSearchIngredients: (partialName: String) -> Unit = {},
     onSubstituteIngredients: (ingredientName: String) -> Unit = {},
     onRateRecipe: (rating: Int) -> Unit = {},
     onRecipeCollectionsClear: () -> Unit = {},
@@ -128,6 +130,7 @@ fun RecipeProfileScreen(
                                     usernameState = usernameState,
                                     userRecipeRatingState = userRecipeRatingState,
                                     recipeCollectionsStateBundle = recipeCollectionsStateBundle,
+                                    ingredientsResultState = ingredientsResultState,
                                     onEditRecipe = onEditRecipe,
                                     onEditRecipePictures = onEditRecipePictures,
                                     onEditUserRating = onEditUserRating,
@@ -136,8 +139,8 @@ fun RecipeProfileScreen(
                                     onMakeRecipe = { currentScreen = ScreenState.INGREDIENTS },
                                     onAddRecipeToCollections = onAddRecipeToCollections,
                                     onRemoveRecipeFromCollections = onRemoveRecipeFromCollections,
+                                    onSearchIngredients = onSearchIngredients,
                                     onRecipeCollectionsClear = onRecipeCollectionsClear,
-                                    onUserProfileRequest = onUserProfileRequest,
                                     onRecipeCollectionsRequest = onRecipeCollectionsRequest,
                                     enableButtons = enableButtons,
                                     paddingValues = paddingValues
@@ -226,6 +229,7 @@ fun RecipeProfilePreview(){
             collectionsToAddRecipeState = apiSuccess(emptyList()),
             collectionsToRemoveRecipeState = apiSuccess(emptyList())
         ),
+        ingredientsResultState = apiSuccess(emptyList()),
         substituteIngredientsState = apiSuccess(emptyList()),
         backButton = true,
         enableButtons = true,

@@ -62,7 +62,6 @@ class CreateRecipeActivity : EpicuriusActivity() {
                     )
                 },
                 onSearchIngredients = { partialName -> viewModel.searchIngredients(partialName) },
-                onIngredientsResultClear = { viewModel.clearSearchedIngredients() },
                 buttonsEnable = viewModel.enableButtons
             )
         }

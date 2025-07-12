@@ -104,7 +104,6 @@ fun CreateRecipeScreen(
         picturesBytes: List<ByteArray>
     ) -> Unit,
     onSearchIngredients: (partialName: String) -> Unit = {},
-    onIngredientsResultClear: () -> Unit = {},
     buttonsEnable: Boolean
 ) {
     val context = LocalContext.current
@@ -255,7 +254,6 @@ fun CreateRecipeScreen(
                     ingredientsResultState = ingredientsResultState,
                     onIngredientsChange = { ingredients = it },
                     onSearchIngredients = onSearchIngredients,
-                    onIngredientsResultClear = onIngredientsResultClear,
                     enabled = buttonsEnable
                 )
                 DividerComponent(DarkPurple)

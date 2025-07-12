@@ -17,6 +17,7 @@ import android.epicurius.ui.screens.recipe.createRecipe.CreateRecipeActivity
 import android.epicurius.ui.screens.user.profile.UserProfileActivity
 import android.epicurius.ui.screens.utils.Idle
 import android.epicurius.ui.screens.utils.LoadState
+import android.epicurius.ui.screens.utils.apiSuccess
 import android.epicurius.ui.screens.utils.idle
 import android.os.Bundle
 import androidx.activity.compose.setContent
@@ -60,6 +61,7 @@ class RecipeProfileActivity : EpicuriusActivity() {
             val collectionsToAddRecipeState = recipeCollectionsViewModel.collectionsToAddRecipe.collectAsState(idle())
             val collectionsToRemoveRecipeState = recipeCollectionsViewModel.collectionsToRemoveRecipe.collectAsState(idle())
             val substituteIngredientsState = viewModel.substituteIngredients.collectAsState(idle())
+            val ingredientsResultState = viewModel.searchedIngredients.collectAsState(idle())
             RecipeProfileScreen(
                 recipeState = recipeState.value,
                 recipeNameState = recipeNameState.value,
@@ -69,6 +71,8 @@ class RecipeProfileActivity : EpicuriusActivity() {
                     collectionsToAddRecipeState = collectionsToAddRecipeState.value,
                     collectionsToRemoveRecipeState = collectionsToRemoveRecipeState.value
                 ),
+
+                ingredientsResultState = ingredientsResultState.value,
                 substituteIngredientsState = substituteIngredientsState.value,
                 backButton = intent.getStringExtra(Intents.SOURCE_ACTIVITY) != CreateRecipeActivity::class.java.name,
                 onBackButton = { finish() },
@@ -142,6 +146,7 @@ class RecipeProfileActivity : EpicuriusActivity() {
                         collectionsToRemove
                     )
                 },
+                onSearchIngredients = { partialName -> viewModel.searchIngredients(partialName) },
                 onSubstituteIngredients = { ingredientName: String ->
                     viewModel.getSubstituteIngredients(ingredientName)
                 },

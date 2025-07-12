@@ -104,8 +104,6 @@ class CreateRecipeViewModel(
         viewModelScope.launch { fetchIngredients(partialName) }
     }
 
-    fun clearSearchedIngredients() { searchedIngredientsFlow.value = idle() }
-
     private suspend fun handleCreateRecipe(
         createRecipeInfo: CreateRecipeInputModel,
         recipePicturesBytes: List<ByteArray>,

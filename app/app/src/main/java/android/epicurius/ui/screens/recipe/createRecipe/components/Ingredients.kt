@@ -37,7 +37,6 @@ fun IngredientsComponent(
     ingredientsResultState: LoadState<List<String>>,
     onIngredientsChange: (ingredients: List<IngredientComponent>) -> Unit = {},
     onSearchIngredients: (partialName: String) -> Unit = {},
-    onIngredientsResultClear: () -> Unit = {},
     enabled: Boolean
 ) {
     var isValidProduct by remember { mutableStateOf(false) }
@@ -133,7 +132,6 @@ fun IngredientsComponent(
             onClick = {
                 if (!canAddField) return@AddFieldButton
                 onIngredientsChange(ingredients + IngredientComponent("", "", ""))
-                onIngredientsResultClear()
             },
             modifier = Modifier.padding(top = 8.dp),
             enabled = enabled,

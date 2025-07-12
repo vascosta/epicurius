@@ -14,6 +14,7 @@ import android.epicurius.ui.screens.recipe.createRecipe.components.NutritionalIn
 import android.epicurius.ui.screens.theme.DarkGreen
 import android.epicurius.ui.screens.utils.dropdownMenu.DropdownMenuComponent
 import android.epicurius.ui.screens.utils.FormTextField
+import android.epicurius.ui.screens.utils.LoadState
 import android.epicurius.ui.screens.utils.dropdownMenu.MultiSelectDropdownMenuComponent
 import android.epicurius.ui.screens.utils.NumberLineTextField
 import android.epicurius.ui.screens.utils.isValidForNumberTextField
@@ -39,6 +40,7 @@ import kotlin.collections.map
 @Composable
 fun EditRecipeDialog(
     recipe: Recipe,
+    ingredientsResultState: LoadState<List<String>>,
     onEditRecipe: (
         name: String?,
         description: String?,
@@ -55,6 +57,7 @@ fun EditRecipeDialog(
         carbs: Int?,
         instructions: Instructions?
     ) -> Unit = { _, _, _, _, _, _, _, _, _, _, _, _, _, _ -> },
+    onSearchIngredients: (partialName: String) -> Unit = {},
     onDismissRequest: () -> Unit = {},
     enableButtons: Boolean
 ) {
@@ -219,7 +222,9 @@ fun EditRecipeDialog(
                 DividerComponent()
                 IngredientsComponent(
                     ingredients = ingredients,
+                    ingredientsResultState = ingredientsResultState,
                     onIngredientsChange = { ingredients = it },
+                    onSearchIngredients = onSearchIngredients,
                     enabled = enableButtons
                 )
                 DividerComponent()
