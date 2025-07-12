@@ -9,6 +9,7 @@ import android.epicurius.ui.navigation.BottomBarState
 import android.epicurius.ui.navigation.TopBar
 import android.epicurius.ui.screens.collections.recipeCollections.components.RecipeCollectionsStateBundle
 import android.epicurius.ui.screens.dailyMenu.components.MenuItemBox
+import android.epicurius.ui.screens.theme.Beige
 import android.epicurius.ui.screens.utils.LoadState
 import android.epicurius.ui.screens.utils.LoadStateRenderer
 import android.epicurius.ui.screens.utils.Loaded
@@ -46,12 +47,14 @@ fun DailyMenuScreen(
     enableButtons: Boolean
 ) {
     Scaffold(
-        topBar = { TopBar(
-            titleText = "Today's Menu",
-            backButton = true,
-            enableButtons = enableButtons,
-            onBackButton = onBackButton
-        ) },
+        topBar = {
+            TopBar(
+                titleText = "Today's Menu",
+                backButton = true,
+                enableButtons = enableButtons,
+                onBackButton = onBackButton
+            )
+        },
         bottomBar = {
             BottomBar(
                 buttonsEnable = enableButtons && menuState is Loaded,
@@ -67,7 +70,7 @@ fun DailyMenuScreen(
                             .fillMaxSize()
                             .padding(paddingValues)
                             .padding(10.dp)
-                            .background(Color.White)
+                            .background(Beige)
                             .verticalScroll(rememberScrollState()),
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
@@ -130,7 +133,7 @@ fun DailyMenuScreen(
                 }
             )
         },
-        containerColor = Color.White
+        containerColor = Beige
     )
 }
 

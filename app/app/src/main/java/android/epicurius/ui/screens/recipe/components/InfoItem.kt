@@ -1,6 +1,8 @@
 package android.epicurius.ui.screens.recipe.components
 
 import android.epicurius.ui.screens.theme.DarkPurple
+import android.epicurius.ui.screens.theme.LightGreen
+import android.epicurius.ui.screens.theme.Lilac
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.size
@@ -18,9 +20,9 @@ import androidx.compose.ui.unit.sp
 @Composable
 fun InfoItem(
     icon: ImageVector,
-    iconColor: Color = DarkPurple,
+    iconColor: Color = LightGreen,
     text: String,
-    textColor: Color = DarkPurple
+    textColor: Color = Lilac
 ) {
     Row(verticalAlignment = Alignment.CenterVertically) {
         Icon(

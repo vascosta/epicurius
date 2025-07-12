@@ -6,6 +6,7 @@ import android.epicurius.domain.recipe.MealType
 import android.epicurius.domain.recipe.RecipeInfo
 import android.epicurius.ui.screens.collections.recipeCollections.components.RecipeCollectionsStateBundle
 import android.epicurius.ui.screens.recipe.components.RecipeInfoBox
+import android.epicurius.ui.screens.theme.DarkPurple
 import android.epicurius.ui.screens.utils.apiSuccess
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -47,7 +48,7 @@ fun MenuItemBox(
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Bold,
                 textAlign = TextAlign.Center,
-                color = Color.Black
+                color = DarkPurple
             )
             if (recipe != null) {
                 RecipeInfoBox(
