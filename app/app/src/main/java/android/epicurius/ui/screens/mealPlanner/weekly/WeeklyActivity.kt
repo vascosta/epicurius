@@ -6,7 +6,6 @@ import android.epicurius.ui.EpicuriusActivity
 import android.epicurius.ui.navigation.Intents
 import android.epicurius.ui.navigation.navigateTo
 import android.epicurius.ui.screens.mealPlanner.calendar.CalendarActivity
-import android.epicurius.ui.screens.mealPlanner.daily.DailyMealPlannerViewModel
 import android.epicurius.ui.screens.mealPlanner.search.MealPlannerSearchActivity
 import android.epicurius.ui.screens.utils.Idle
 import android.epicurius.ui.screens.utils.idle
@@ -46,11 +45,15 @@ class WeeklyActivity : EpicuriusActivity() {
         }
     }
 
+    override fun onRestart() {
+        super.onRestart()
+        lifecycleScope.launch { viewModel.resetWeeklyMealPlanner() }
+    }
+
     private fun navigateToMealPlannerSearchActivity(date: LocalDate, mealTime: MealTime) {
         navigateTo<MealPlannerSearchActivity> { intent ->
-            intent.putExtra(Intents.SOURCE_ACTIVITY, WeeklyActivity::class.java.name)
             intent.putExtra(Intents.DAILY_MEAL_PLANNER_DATE, date.toString())
-            intent.putExtra(Intents.DAILY_MEAL_PLANNER_MEAl_TIME, mealTime.displayName)
+            intent.putExtra(Intents.DAILY_MEAL_PLANNER_MEAL_TIME, mealTime.name)
         }
     }
 }

@@ -64,14 +64,7 @@ fun WeeklyScreen(
     var showUpdateDailyCaloriesDialog by remember { mutableStateOf(false) }
 
     var selectedDay by remember { mutableStateOf(LocalDate.now()) }
-    var selectedDailyMealPlanner by remember { mutableStateOf<DailyMealPlanner?>(null) }
 
-    LaunchedEffect(selectedDay) {
-        if (weeklyMealPlannerState is Loaded) {
-            val mealPlanner = weeklyMealPlannerState.getOrThrow()
-            selectedDailyMealPlanner = mealPlanner.find { daily -> daily.date == selectedDay }
-        }
-    }
     Scaffold(
         topBar = {
             TopBar(
@@ -117,7 +110,8 @@ fun WeeklyScreen(
                             }
                         }
 
-                        val dailyCalories = selectedDailyMealPlanner?.maxCalories
+                        val dailyCalories = weeklyMealPlanner
+                            .find { it.date == selectedDay }?.maxCalories
                         Box(
                             modifier = Modifier
                                 .fillMaxWidth()
@@ -145,7 +139,7 @@ fun WeeklyScreen(
 
                         Spacer(Modifier.height(20.dp))
                         MealPlannerComponent(
-                            dailyPlanner = selectedDailyMealPlanner,
+                            dailyPlanner = weeklyMealPlanner.find { it.date == selectedDay },
                             date = selectedDay,
                             onDeleteRecipeFromMealPlanner = onDeleteRecipeFromMealPlanner,
                             onAddRecipeToMealPlannerRequest = onAddRecipeToMealPlannerRequest,

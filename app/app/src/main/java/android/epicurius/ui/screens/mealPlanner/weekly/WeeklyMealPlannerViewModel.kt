@@ -45,6 +45,8 @@ class WeeklyMealPlannerViewModel(
         viewModelScope.launch { handleDeleteRecipeFromDailyMealPlanner(date, mealTime) }
     }
 
+    fun resetWeeklyMealPlanner() { weeklyMealPlannerFlow.value = idle() }
+
     private suspend fun fetchWeeklyMealPlanner(onErrorNavigateTo: () -> Unit) {
         val result = request {
             val token = session.getToken()
@@ -100,7 +102,7 @@ class WeeklyMealPlannerViewModel(
             result.isSuccess -> {
                 val fetchedDailyMenu = result.getValueOrThrow().daily
                 val oldWeeklyMealPlanner = weeklyMealPlannerFlow.value.getOrThrow()
-                val updatedWeeklyMealPlanner = oldWeeklyMealPlanner.filter { it.date == fetchedDailyMenu.date } + fetchedDailyMenu
+                val updatedWeeklyMealPlanner = oldWeeklyMealPlanner.filter { it.date != fetchedDailyMenu.date } + fetchedDailyMenu
                 weeklyMealPlannerFlow.value = apiSuccess(updatedWeeklyMealPlanner)
             }
         }
@@ -116,7 +118,7 @@ class WeeklyMealPlannerViewModel(
             result.isSuccess -> {
                 val fetchedDailyMenu = result.getValueOrThrow().daily
                 val oldWeeklyMealPlanner = weeklyMealPlannerFlow.value.getOrThrow()
-                val updatedWeeklyMealPlanner = oldWeeklyMealPlanner.filter { it.date == fetchedDailyMenu.date } + fetchedDailyMenu
+                val updatedWeeklyMealPlanner = oldWeeklyMealPlanner.filter { it.date != fetchedDailyMenu.date } + fetchedDailyMenu
                 weeklyMealPlannerFlow.value = apiSuccess(updatedWeeklyMealPlanner)
             }
         }
