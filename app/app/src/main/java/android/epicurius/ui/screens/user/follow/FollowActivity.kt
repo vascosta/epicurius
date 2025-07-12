@@ -38,8 +38,8 @@ class FollowActivity : EpicuriusActivity() {
                 FollowScreen(
                     selectedTab = intent.getIntExtra(Intents.FOLLOW_TAB, 0),
                     followStateBundle = FollowStateBundle(followersState.value, followingState.value),
-                    followersCount = intent.getIntExtra(Intents.FOLLOWERS_COUNT, -1),
-                    followingCount = intent.getIntExtra(Intents.FOLLOWING_COUNT, -1),
+                    followersCount = intent.getIntExtra(Intents.FOLLOWERS_COUNT, -1), // never reaches -1
+                    followingCount = intent.getIntExtra(Intents.FOLLOWING_COUNT, -1), // never reaches -1
                     usersResultState = searchUsersState.value,
                     onBackButton = { finish() },
                     onSearchFollowers = { partialFollowers ->

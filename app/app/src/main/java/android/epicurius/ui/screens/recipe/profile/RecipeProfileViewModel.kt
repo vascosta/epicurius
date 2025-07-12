@@ -59,11 +59,6 @@ class RecipeProfileViewModel(
 
     fun getRecipeProfile(id: Int, onErrorNavigateTo: () -> Unit) {
         disableButtons()
-        if (id == -1) {
-            showToast("Missing RECIPE_ID in intent")
-            onErrorNavigateTo()
-            return
-        }
         recipeFlow.value = loading()
         recipeNameFlow.value = loading()
         viewModelScope.launch { fetchRecipeProfile(id, onErrorNavigateTo) }
@@ -71,11 +66,6 @@ class RecipeProfileViewModel(
 
     fun getUserRecipeRating(id: Int, onErrorNavigateTo: () -> Unit) {
         disableButtons()
-        if (id == -1) {
-            showToast("Missing RECIPE_ID in intent")
-            onErrorNavigateTo()
-            return
-        }
         userRecipeRatingFlow.value = loading()
         viewModelScope.launch { fetchUserRecipeRating(id, onErrorNavigateTo) }
     }

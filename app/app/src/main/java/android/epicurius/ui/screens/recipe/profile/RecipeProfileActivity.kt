@@ -36,7 +36,7 @@ class RecipeProfileActivity : EpicuriusActivity() {
         lifecycleScope.launch {
             viewModel.recipe.collectLatest { recipeState ->
                 if (recipeState is Idle) {
-                    val recipeId = intent.getIntExtra(Intents.RECIPE_ID, -1)
+                    val recipeId = intent.getIntExtra(Intents.RECIPE_ID, -1) // never reaches -1
                     viewModel.getRecipeProfile(recipeId) { finish() }
                 }
             }
@@ -48,7 +48,7 @@ class RecipeProfileActivity : EpicuriusActivity() {
         }
         lifecycleScope.launch {
             viewModel.userRecipeRating.collectLatest { userRatingState ->
-                val recipeId = intent.getIntExtra(Intents.RECIPE_ID, -1)
+                val recipeId = intent.getIntExtra(Intents.RECIPE_ID, -1) // never reaches -1
                 if (userRatingState is Idle) viewModel.getUserRecipeRating(recipeId) { finish() }
             }
         }
@@ -89,7 +89,7 @@ class RecipeProfileActivity : EpicuriusActivity() {
                     instructions: Instructions?
                     ->
                     viewModel.updateRecipe(
-                        intent.getIntExtra(Intents.RECIPE_ID, -1),
+                        intent.getIntExtra(Intents.RECIPE_ID, -1), // never reaches -1
                         name,
                         description,
                         servings,
@@ -108,13 +108,13 @@ class RecipeProfileActivity : EpicuriusActivity() {
                 },
                 onEditRecipePictures = { picturesBytes: List<ByteArray> ->
                     viewModel.updateRecipePictures(
-                        intent.getIntExtra(Intents.RECIPE_ID, -1),
+                        intent.getIntExtra(Intents.RECIPE_ID, -1), // never reaches -1
                         picturesBytes
                     )
                 },
                 onEditUserRating = { rating: Int ->
                     viewModel.updateUserRecipeRating(
-                        intent.getIntExtra(Intents.RECIPE_ID, -1),
+                        intent.getIntExtra(Intents.RECIPE_ID, -1), // never reaches -1
                         rating
                     )
                 },
@@ -122,7 +122,7 @@ class RecipeProfileActivity : EpicuriusActivity() {
                     viewModel.deleteUserRecipeRating(recipeId)
                 },
                 onDeleteRecipe = {
-                    viewModel.deleteRecipe(intent.getIntExtra(Intents.RECIPE_ID, -1)) { finish() }
+                    viewModel.deleteRecipe(intent.getIntExtra(Intents.RECIPE_ID, -1)) { finish() } // never reaches -1
                 },
                 onAddRecipeToCollections = {
                     recipeId: Int,
@@ -146,7 +146,7 @@ class RecipeProfileActivity : EpicuriusActivity() {
                     viewModel.getSubstituteIngredients(ingredientName)
                 },
                 onRateRecipe = { rating ->
-                    viewModel.rateRecipe(intent.getIntExtra(Intents.RECIPE_ID, -1), rating)
+                    viewModel.rateRecipe(intent.getIntExtra(Intents.RECIPE_ID, -1), rating) // never reaches -1
                 },
                 onRecipeCollectionsClear = { recipeCollectionsViewModel.clearRecipeCollections() },
                 onUserProfileRequest = ::navigateToUserProfileActivity,
