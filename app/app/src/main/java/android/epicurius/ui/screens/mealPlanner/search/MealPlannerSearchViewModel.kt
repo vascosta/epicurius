@@ -39,7 +39,10 @@ class MealPlannerSearchViewModel(
             service.mealPlannerService.addRecipeToDailyMealPlanner(token, date, addRecipeToMealPlannerInfo)
         }
         when {
-            result.isSuccess -> onSuccessNavigateTo()
+            result.isSuccess -> {
+                showToast("Recipe added to ${addRecipeToMealPlannerInfo.mealTime.displayName} successfully")
+                onSuccessNavigateTo()
+            }
         }
         enableButtons()
     }
