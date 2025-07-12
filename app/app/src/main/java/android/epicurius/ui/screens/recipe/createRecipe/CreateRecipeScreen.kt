@@ -19,9 +19,11 @@ import android.epicurius.ui.screens.theme.DarkPurple
 import android.epicurius.ui.screens.theme.LightGreen
 import android.epicurius.ui.screens.utils.dropdownMenu.DropdownMenuComponent
 import android.epicurius.ui.screens.utils.FormTextField
+import android.epicurius.ui.screens.utils.LoadState
 import android.epicurius.ui.screens.utils.LoadingSpinner
 import android.epicurius.ui.screens.utils.dropdownMenu.MultiSelectDropdownMenuComponent
 import android.epicurius.ui.screens.utils.NumberLineTextField
+import android.epicurius.ui.screens.utils.apiSuccess
 import android.epicurius.ui.screens.utils.isValidForNumberTextField
 import android.os.Build
 import android.widget.Toast
@@ -83,6 +85,7 @@ data class IngredientComponent(
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun CreateRecipeScreen(
+    ingredientsResultState: LoadState<List<String>>,
     onCreateRecipe: (
         name: String,
         description: String,
@@ -100,6 +103,8 @@ fun CreateRecipeScreen(
         instructions: Instructions,
         picturesBytes: List<ByteArray>
     ) -> Unit,
+    onSearchIngredients: (partialName: String) -> Unit = {},
+    onIngredientsResultClear: () -> Unit = {},
     buttonsEnable: Boolean
 ) {
     val context = LocalContext.current
@@ -247,7 +252,10 @@ fun CreateRecipeScreen(
                 DividerComponent(DarkPurple)
                 IngredientsComponent(
                     ingredients = ingredients,
+                    ingredientsResultState = ingredientsResultState,
                     onIngredientsChange = { ingredients = it },
+                    onSearchIngredients = onSearchIngredients,
+                    onIngredientsResultClear = onIngredientsResultClear,
                     enabled = buttonsEnable
                 )
                 DividerComponent(DarkPurple)
@@ -341,5 +349,5 @@ fun CreateRecipeScreen(
 @Preview
 @Composable
 fun CreateRecipeScreenPreview() {
-    CreateRecipeScreen({ _, _, _, _, _, _, _, _, _, _, _, _, _, _, _ -> }, true)
+    CreateRecipeScreen(apiSuccess(emptyList()), { _, _, _, _, _, _, _, _, _, _, _, _, _, _, _ -> }, buttonsEnable = true)
 }

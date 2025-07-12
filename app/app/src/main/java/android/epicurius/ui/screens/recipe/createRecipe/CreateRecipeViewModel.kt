@@ -22,7 +22,13 @@ import android.epicurius.services.EpicuriusService
 import android.epicurius.services.api.recipe.models.input.CreateRecipeInputModel
 import android.epicurius.storage.Session
 import android.epicurius.ui.EpicuriusViewModel
+import android.epicurius.ui.screens.utils.LoadState
+import android.epicurius.ui.screens.utils.apiSuccess
+import android.epicurius.ui.screens.utils.idle
+import android.epicurius.ui.screens.utils.loading
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 class CreateRecipeViewModel(
@@ -30,6 +36,9 @@ class CreateRecipeViewModel(
     session: Session,
     context: Context
 ): EpicuriusViewModel(service, session, context) {
+
+    private val searchedIngredientsFlow = MutableStateFlow<LoadState<List<String>>>(idle())
+    val searchedIngredients = searchedIngredientsFlow.asStateFlow()
 
     fun createRecipe(
         name: String,
@@ -89,6 +98,14 @@ class CreateRecipeViewModel(
         }
     }
 
+    fun searchIngredients(partialName: String) {
+        disableButtons()
+        searchedIngredientsFlow.value = loading()
+        viewModelScope.launch { fetchIngredients(partialName) }
+    }
+
+    fun clearSearchedIngredients() { searchedIngredientsFlow.value = idle() }
+
     private suspend fun handleCreateRecipe(
         createRecipeInfo: CreateRecipeInputModel,
         recipePicturesBytes: List<ByteArray>,
@@ -99,6 +116,20 @@ class CreateRecipeViewModel(
         }
         when {
             result.isSuccess -> navigateTo(result.getValueOrThrow().recipe.id)
+        }
+        enableButtons()
+    }
+
+    private suspend fun fetchIngredients(partialName: String) {
+        val result = request {
+            val token = session.getToken()
+            service.ingredientsService.getIngredients(token, partialName)
+        }
+        when {
+            result.isSuccess -> {
+                val fetchedProducts = result.getValueOrThrow().ingredients
+                searchedIngredientsFlow.value = apiSuccess(fetchedProducts)
+            }
         }
         enableButtons()
     }

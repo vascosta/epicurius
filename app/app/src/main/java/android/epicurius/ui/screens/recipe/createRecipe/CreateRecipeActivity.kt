@@ -10,8 +10,11 @@ import android.epicurius.ui.EpicuriusActivity
 import android.epicurius.ui.navigation.Intents
 import android.epicurius.ui.navigation.navigateTo
 import android.epicurius.ui.screens.recipe.profile.RecipeProfileActivity
+import android.epicurius.ui.screens.utils.apiSuccess
+import android.epicurius.ui.screens.utils.idle
 import android.os.Bundle
 import androidx.activity.compose.setContent
+import androidx.compose.runtime.collectAsState
 
 class CreateRecipeActivity : EpicuriusActivity() {
     override val viewModel: CreateRecipeViewModel by getViewModel<CreateRecipeViewModel>()
@@ -19,7 +22,9 @@ class CreateRecipeActivity : EpicuriusActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
+            val ingredientsResultState = viewModel.searchedIngredients.collectAsState(idle())
             CreateRecipeScreen(
+                ingredientsResultState = ingredientsResultState.value,
                 onCreateRecipe = {
                     name: String,
                     description: String,
@@ -56,6 +61,8 @@ class CreateRecipeActivity : EpicuriusActivity() {
                         ::navigateToRecipeProfileActivity
                     )
                 },
+                onSearchIngredients = { partialName -> viewModel.searchIngredients(partialName) },
+                onIngredientsResultClear = { viewModel.clearSearchedIngredients() },
                 buttonsEnable = viewModel.enableButtons
             )
         }
