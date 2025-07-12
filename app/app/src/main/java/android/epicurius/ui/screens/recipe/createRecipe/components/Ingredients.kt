@@ -5,6 +5,7 @@ import android.epicurius.ui.screens.recipe.createRecipe.IngredientComponent
 import android.epicurius.ui.screens.recipe.utils.formattedQuantity
 import android.epicurius.ui.screens.theme.DarkPurple
 import android.epicurius.ui.screens.theme.LightGreen
+import android.epicurius.ui.screens.utils.LoadState
 import android.epicurius.ui.screens.utils.Loaded
 import android.epicurius.ui.screens.utils.dropdownMenu.DropdownMenuComponent
 import android.epicurius.ui.screens.utils.NumberLineTextField
@@ -33,7 +34,10 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun IngredientsComponent(
     ingredients: List<IngredientComponent>,
+    ingredientsResultState: LoadState<List<String>>,
     onIngredientsChange: (ingredients: List<IngredientComponent>) -> Unit = {},
+    onSearchIngredients: (partialName: String) -> Unit = {},
+    onIngredientsResultClear: () -> Unit = {},
     enabled: Boolean
 ) {
     var isValidProduct by remember { mutableStateOf(false) }
@@ -63,7 +67,8 @@ fun IngredientsComponent(
                 ) {
                     NumberLineTextField(
                         parameterName = "Quantity",
-                        value = formattedQuantity(ingredient.quantity.toDouble()),
+                        value = if (ingredient.quantity.isEmpty()) ingredient.quantity
+                        else formattedQuantity(ingredient.quantity.toDouble()),
                         onValueChange = { newQuantity ->
                             if (isValidForNumberTextField(newQuantity)) {
                                 val formattedQuantity = formattedQuantity(newQuantity.toDouble())
@@ -128,6 +133,7 @@ fun IngredientsComponent(
             onClick = {
                 if (!canAddField) return@AddFieldButton
                 onIngredientsChange(ingredients + IngredientComponent("", "", ""))
+                onIngredientsResultClear()
             },
             modifier = Modifier.padding(top = 8.dp),
             enabled = enabled,
