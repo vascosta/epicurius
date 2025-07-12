@@ -348,9 +348,7 @@ fun UserProfileScreen(
                                             loadState = userKitchenBookState,
                                             content = { collections ->
                                                 Column(
-                                                    modifier = Modifier
-                                                        .fillMaxSize()
-                                                        .verticalScroll(rememberScrollState()),
+                                                    modifier = Modifier.fillMaxSize(),
                                                     verticalArrangement = Arrangement.spacedBy(16.dp)
                                                 ) {
                                                     if (collections.isNotEmpty()) {

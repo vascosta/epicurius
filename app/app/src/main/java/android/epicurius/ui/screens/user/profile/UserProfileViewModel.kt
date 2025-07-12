@@ -58,11 +58,13 @@ class UserProfileViewModel(
     }
 
     fun getUserRecipes(username: String?) {
+        disableButtons()
         userRecipesFlow.value = loading(CachedResult<List<RecipeInfo>>(cachedUserRecipesFlow.value))
         viewModelScope.launch { fetchUserRecipes(username) }
     }
 
     fun getUserKitchenBook(username: String?) {
+        disableButtons()
         userKitchenBookFlow.value = loading(CachedResult<List<CollectionProfile>>(cachedUserKitchenBookFlow.value))
         viewModelScope.launch { fetchUserKitchenBook(username) }
     }
@@ -160,6 +162,7 @@ class UserProfileViewModel(
                 else handleCachedUserKitchenBook()
             }
         }
+        enableButtons()
     }
 
     private fun handleCachedUserKitchenBook() {
