@@ -46,6 +46,8 @@ class DailyMealPlannerViewModel(
         viewModelScope.launch { handleDeleteRecipeFromDailyMealPlanner(date, mealTime) }
     }
 
+    fun resetDailyMealPlanner() { dailyMealPlannerFlow.value = idle() }
+
     private suspend fun fetchDailyMealPlanner(date: LocalDate) {
         val result = request(showError = false) {
             val token = session.getToken()

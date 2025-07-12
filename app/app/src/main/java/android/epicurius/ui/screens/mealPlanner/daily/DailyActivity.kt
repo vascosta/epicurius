@@ -34,7 +34,7 @@ class DailyActivity : EpicuriusActivity() {
             DailyScreen(
                 dailyMealPlannerState = dailyMealPlannerState.value,
                 date = LocalDate.parse(intent.getStringExtra(Intents.DAILY_MEAL_PLANNER_DATE)),
-                onBackButton = { navigateTo<CalendarActivity>() },
+                onBackButton = { navigateTo<CalendarActivity>(finishCurrent = true) },
                 onUpdateDailyCalories = { calories: Int ->
                     viewModel.updateDailyMealPlannerCalories(calories)
                 },
@@ -47,9 +47,13 @@ class DailyActivity : EpicuriusActivity() {
         }
     }
 
+    override fun onRestart() {
+        super.onRestart()
+        lifecycleScope.launch { viewModel.resetDailyMealPlanner() }
+    }
+
     private fun navigateToMealPlannerSearchActivity(date: LocalDate, mealTime: MealTime) {
         navigateTo<MealPlannerSearchActivity> { intent ->
-            intent.putExtra(Intents.SOURCE_ACTIVITY, WeeklyActivity::class.java.name)
             intent.putExtra(Intents.DAILY_MEAL_PLANNER_DATE, date.toString())
             intent.putExtra(Intents.DAILY_MEAL_PLANNER_MEAL_TIME, mealTime.name)
         }
