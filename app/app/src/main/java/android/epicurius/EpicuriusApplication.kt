@@ -17,6 +17,7 @@ import com.google.gson.JsonSerializer
 import okhttp3.OkHttpClient
 import java.lang.reflect.Type
 import java.time.LocalDate
+import java.time.Period
 
 
 class EpicuriusApplication : Application(), Dependencies {
@@ -26,6 +27,12 @@ class EpicuriusApplication : Application(), Dependencies {
             LocalDate.parse(json.asString)
         })
         .registerTypeAdapter(LocalDate::class.java, JsonSerializer { src: LocalDate, _: Type, _: JsonSerializationContext ->
+            JsonPrimitive(src.toString())
+        })
+        .registerTypeAdapter(Period::class.java, JsonDeserializer { json, _, _ ->
+            Period.parse(json.asString)
+        })
+        .registerTypeAdapter(Period::class.java, JsonSerializer { src: Period, _, _ ->
             JsonPrimitive(src.toString())
         })
         .create()

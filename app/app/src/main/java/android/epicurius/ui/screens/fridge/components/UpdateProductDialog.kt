@@ -60,7 +60,7 @@ fun UpdateProductDialog(
         text = {
             Column {
                 NumberTextField(
-                    value = quantity.toString(),
+                    value = (quantity ?: "").toString(),
                     onValueChange = { if (isValidForNumberTextField(it)) quantity = it.toInt() },
                     enabled = enableButtons && openDate == null,
                     label = "New quantity",

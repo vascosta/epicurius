@@ -47,7 +47,6 @@ class FridgeActivity : EpicuriusActivity() {
                     viewModel.updateFridgeProduct(entryNumber, quantity, openDate, duration, expirationDate)
                 },
                 onDeleteProduct = { entryNumber: Int -> viewModel.removeFridgeProduct(entryNumber) },
-                onProductsResultClear = { viewModel.clearSearchedProducts() },
                 enableButtons = viewModel.enableButtons
             )
         }

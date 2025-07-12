@@ -80,8 +80,6 @@ class FridgeViewModel(
         viewModelScope.launch { handleRemoveFridgeProduct(entryNumber) }
     }
 
-    fun clearSearchedProducts() { searchedProductsFlow.value = idle() }
-
     private suspend fun fetchUserFridge() {
         val result = request {
             val token = session.getToken()

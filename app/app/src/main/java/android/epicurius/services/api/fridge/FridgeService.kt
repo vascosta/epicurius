@@ -46,7 +46,7 @@ class FridgeService(private val httpService: HttpService) {
         token: String,
         entryNumber: Int
     ): APIResult<RemoveProductOutputModel> =
-        httpService.patch<RemoveProductOutputModel>(
+        httpService.delete<RemoveProductOutputModel>(
             Uris.Fridge.PRODUCT,
             pathParams = mapOf("entryNumber" to entryNumber),
             token = token

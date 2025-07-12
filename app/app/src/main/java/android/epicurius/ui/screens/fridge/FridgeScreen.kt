@@ -64,7 +64,6 @@ fun FridgeScreen(
         expirationDate: LocalDate?
     ) -> Unit = { _, _, _, _, _ -> },
     onDeleteProduct: (entryNumber: Int) -> Unit = {},
-    onProductsResultClear: () -> Unit = {},
     enableButtons: Boolean
 ) {
     var showAddProductDialog by remember { mutableStateOf(false) }
@@ -140,7 +139,6 @@ fun FridgeScreen(
                             onSearchProduct = onSearchProduct,
                             productsResultState = productsResultState,
                             onAddProduct = onAddProduct,
-                            onProductsResultClear = onProductsResultClear,
                             onDismiss = { showAddProductDialog = false },
                             enableButtons = enableButtons
                         )

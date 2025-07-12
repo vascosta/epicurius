@@ -27,7 +27,6 @@ fun AddProductDialog(
         openDate: LocalDate?,
         expirationDate: LocalDate
     ) -> Unit = { _, _, _, _ -> },
-    onProductsResultClear: () -> Unit = {},
     onDismiss: () -> Unit,
     enableButtons: Boolean
 ) {
@@ -45,7 +44,6 @@ fun AddProductDialog(
                     val safeExpiration = expirationDate
                     if (safeExpiration != null) { // other validations are on the enabled parameter
                         onAddProduct(name, quantity, openDate, safeExpiration)
-                        onProductsResultClear()
                         onDismiss()
                     }
                 },
