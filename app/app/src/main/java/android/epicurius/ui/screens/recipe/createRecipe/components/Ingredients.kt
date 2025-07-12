@@ -2,6 +2,7 @@ package android.epicurius.ui.screens.recipe.createRecipe.components
 
 import android.epicurius.domain.recipe.IngredientUnit
 import android.epicurius.ui.screens.recipe.createRecipe.IngredientComponent
+import android.epicurius.ui.screens.recipe.utils.formattedQuantity
 import android.epicurius.ui.screens.theme.DarkPurple
 import android.epicurius.ui.screens.theme.LightGreen
 import android.epicurius.ui.screens.utils.Loaded
@@ -62,10 +63,11 @@ fun IngredientsComponent(
                 ) {
                     NumberLineTextField(
                         parameterName = "Quantity",
-                        value = ingredient.quantity,
+                        value = formattedQuantity(ingredient.quantity.toDouble()),
                         onValueChange = { newQuantity ->
                             if (isValidForNumberTextField(newQuantity)) {
-                                updatedList[index] = updatedList[index].copy(quantity = newQuantity)
+                                val formattedQuantity = formattedQuantity(newQuantity.toDouble())
+                                updatedList[index] = updatedList[index].copy(quantity = formattedQuantity)
                                 onIngredientsChange(updatedList)
                             }
                         },

@@ -1,6 +1,7 @@
 package android.epicurius.ui.screens.recipe.profile.components
 
 import android.epicurius.domain.recipe.Recipe
+import android.epicurius.ui.screens.recipe.utils.formattedQuantity
 import android.epicurius.ui.screens.utils.MixedText
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
@@ -46,11 +47,7 @@ fun RecipeInfoComponent(
                 .padding(16.dp)
         ) {
             val ingredients = recipe.ingredients.joinToString("\n") {
-                val formattedQuantity = if (it.quantity % 1.0 == 0.0) {
-                    it.quantity.toInt()
-                } else {
-                    it.quantity
-                }
+                val formattedQuantity = formattedQuantity(it.quantity)
                 val formattedUnit = it.unit.displayName
                 "$formattedQuantity$formattedUnit ${it.name}"
             }
