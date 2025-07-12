@@ -4,11 +4,9 @@ import android.epicurius.domain.collection.CollectionProfile
 import android.epicurius.ui.EpicuriusActivity
 import android.epicurius.ui.navigation.Intents
 import android.epicurius.ui.navigation.navigateTo
-import android.epicurius.ui.screens.collections.favourites.FavouritesActivity
 import android.epicurius.ui.screens.collections.recipeCollections.RecipeCollectionsViewModel
 import android.epicurius.ui.screens.collections.recipeCollections.components.RecipeCollectionsStateBundle
 import android.epicurius.ui.screens.recipe.profile.RecipeProfileActivity
-import android.epicurius.ui.screens.user.profile.UserProfileActivity
 import android.epicurius.ui.screens.utils.Idle
 import android.epicurius.ui.screens.utils.idle
 import android.os.Bundle
@@ -32,9 +30,9 @@ class CollectionActivity : EpicuriusActivity() {
                 viewModel.collectionName
             ) { collectionRecipesState, collectionNameState -> collectionRecipesState to collectionNameState }
                 .collectLatest { (collectionRecipesState, collectionNameState) ->
-                    val collectionId = intent.getIntExtra(Intents.COLLECTION_ID, -1)
+                    val collectionId = intent.getIntExtra(Intents.COLLECTION_ID, -1) // never reaches -1
                     if (collectionRecipesState is Idle || collectionNameState is Idle) {
-                        viewModel.getCollection(collectionId) { navigateBack() }
+                        viewModel.getCollection(collectionId) { finish() }
                     }
                 }
         }
@@ -45,21 +43,20 @@ class CollectionActivity : EpicuriusActivity() {
             val collectionsToRemoveRecipeState = recipeCollectionsViewModel.collectionsToRemoveRecipe.collectAsState(idle())
             CollectionScreen(
                 isOwner = intent.getBooleanExtra(Intents.IS_COLLECTION_OWNER, false),
-                collectionId = intent.getIntExtra(Intents.COLLECTION_ID, -1),
+                collectionId = intent.getIntExtra(Intents.COLLECTION_ID, -1), // never reaches -1
                 collectionNameState = collectionNameState.value,
                 collectionRecipesState = collectionRecipesState.value,
                 recipeCollectionsStateBundle = RecipeCollectionsStateBundle(
                     collectionsToAddRecipeState.value,
                     collectionsToRemoveRecipeState.value
                 ),
-                onBackButton = { navigateBack() },
+                onBackButton = { finish() },
                 onCollectionEdit = { collectionId: Int, collectionName: String ->
                     viewModel.updateCollection(collectionId, collectionName)
-                    { navigateBack() }
                 },
                 onCollectionDelete = { collectionId: Int ->
                     viewModel.deleteCollection(collectionId)
-                    { navigateBack() }
+                    { finish() }
                 },
                 onRecipeDelete = { collectionId: Int, recipeId: Int ->
                     viewModel.removeRecipeFromCollection(collectionId, recipeId)
@@ -94,20 +91,7 @@ class CollectionActivity : EpicuriusActivity() {
 
     override fun onRestart() {
         super.onRestart()
-        lifecycleScope.launch {
-            val collectionId = intent.getIntExtra(Intents.COLLECTION_ID, -1)
-            viewModel.getCollection(collectionId) { navigateBack() }
-        }
-    }
-
-    private fun navigateBack() {
-        val sourceActivity = intent.getStringExtra(Intents.SOURCE_ACTIVITY)
-        if (sourceActivity == FavouritesActivity::class.java.name) navigateTo<FavouritesActivity>()
-        else if (sourceActivity == UserProfileActivity::class.java.name) {
-            val username = intent.getStringExtra(Intents.USERNAME) ?: "" // never reaches
-            navigateTo<UserProfileActivity> { intent -> intent.putExtra(Intents.USERNAME, username) }
-        }
-        else finish()
+        lifecycleScope.launch { viewModel.resetCollection() }
     }
 
     private fun navigateToRecipeProfileActivity(recipeId: Int) {

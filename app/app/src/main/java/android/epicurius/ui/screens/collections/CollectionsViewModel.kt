@@ -53,6 +53,11 @@ class CollectionsViewModel(
         viewModelScope.launch { handleDeleteCollection(id) }
     }
 
+    fun clearCollections() {
+        collectionsFlow.value = idle()
+        cacheCollectionsFlow.value = emptyList()
+    }
+
     private suspend fun fetchCollections(collectionType: CollectionType) {
         val result = request {
             val token = session.getToken()

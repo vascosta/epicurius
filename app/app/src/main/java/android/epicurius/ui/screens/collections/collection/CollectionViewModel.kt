@@ -32,21 +32,11 @@ open class CollectionViewModel(
         disableButtons()
         collectionNameFlow.value = loading()
         collectionRecipesFlow.value = loading()
-        if (id == -1) {
-            showToast("Missing COLLECTION_ID in intent")
-            onErrorNavigateTo()
-            return
-        }
         viewModelScope.launch { fetchCollection(id, onErrorNavigateTo) }
     }
 
-    fun updateCollection(id: Int, name: String, onErrorNavigateTo: () -> Unit) {
+    fun updateCollection(id: Int, name: String) {
         disableButtons()
-        if (id == -1) {
-            showToast("Missing COLLECTION_ID in intent")
-            onErrorNavigateTo()
-            return
-        }
         if (!validateName(name, ::showToast)) {
             enableButtons()
             return
@@ -65,6 +55,11 @@ open class CollectionViewModel(
     fun deleteCollection(id: Int, onSuccessNavigateTo: () -> Unit) {
         disableButtons()
         viewModelScope.launch { handleDeleteCollection(id, onSuccessNavigateTo) }
+    }
+
+    fun resetCollection() {
+        collectionNameFlow.value = idle()
+        collectionRecipesFlow.value = idle()
     }
 
     private suspend fun fetchCollection(id: Int, onErrorNavigateTo: () -> Unit) {
