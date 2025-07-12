@@ -1,5 +1,6 @@
 package android.epicurius.ui.screens.user.preferences.lists
 
+import android.epicurius.R
 import android.epicurius.domain.Diet
 import android.epicurius.domain.Intolerance
 import android.epicurius.ui.navigation.TopBar
@@ -11,7 +12,9 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.animation.togetherWith
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -27,6 +30,8 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 
@@ -78,61 +83,68 @@ fun PreferencesScreen(
             }
         },
         content = { paddingValues ->
-            AnimatedContent(
-                targetState = showFirst,
-                transitionSpec = {
-                    (slideInHorizontally { width -> width } + fadeIn()).togetherWith(
-                        slideOutHorizontally { width -> -width } + fadeOut())
-                }
-            ) { targetState ->
-                Column(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(paddingValues)
-                        .padding(16.dp)
-                        .background(Color.White)
-                        .verticalScroll(rememberScrollState()),
-                ) {
-                    if (targetState) {
-                        PreferencesCheckboxList(
-                            title = "Intolerances",
-                            description = "Select your food intolerances below:",
-                            items = Intolerance.entries,
-                            checkboxStates = intolerancesCheckboxStates,
-                            onCheckedChange = { idx, isChecked ->
-                                intolerancesCheckboxStates =
-                                    intolerancesCheckboxStates.toMutableList().apply {
-                                        this[idx] = isChecked
+            Box(modifier = Modifier.fillMaxSize()) {
+                Image(
+                    painter = painterResource(id = R.drawable.background_preferences),
+                    contentDescription = null,
+                    modifier = Modifier.fillMaxSize(),
+                    contentScale = ContentScale.Crop
+                )
+                AnimatedContent(
+                    targetState = showFirst,
+                    transitionSpec = {
+                        (slideInHorizontally { width -> width } + fadeIn()).togetherWith(
+                            slideOutHorizontally { width -> -width } + fadeOut())
+                    }
+                ) { targetState ->
+                    Column(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(paddingValues)
+                            .padding(16.dp)
+                            .verticalScroll(rememberScrollState()),
+                    ) {
+                        if (targetState) {
+                            PreferencesCheckboxList(
+                                title = "Intolerances",
+                                description = "Select your food intolerances below:",
+                                items = Intolerance.entries,
+                                checkboxStates = intolerancesCheckboxStates,
+                                onCheckedChange = { idx, isChecked ->
+                                    intolerancesCheckboxStates =
+                                        intolerancesCheckboxStates.toMutableList().apply {
+                                            this[idx] = isChecked
+                                        }
+                                    intolerances = if (isChecked) {
+                                        intolerances + Intolerance.entries[idx]
+                                    } else {
+                                        intolerances - Intolerance.entries[idx]
                                     }
-                                intolerances = if (isChecked) {
-                                    intolerances + Intolerance.entries[idx]
-                                } else {
-                                    intolerances - Intolerance.entries[idx]
-                                }
-                            },
-                            enableButtons = enableButtons,
-                            displayName = { it.displayName }
-                        )
-                    } else {
-                        PreferencesCheckboxList(
-                            title = "Diets",
-                            description = "Select your preferred diets below:",
-                            items = Diet.entries,
-                            checkboxStates = dietsCheckboxStates,
-                            onCheckedChange = { idx, isChecked ->
-                                dietsCheckboxStates =
-                                    dietsCheckboxStates.toMutableList().apply {
-                                        this[idx] = isChecked
+                                },
+                                enableButtons = enableButtons,
+                                displayName = { it.displayName }
+                            )
+                        } else {
+                            PreferencesCheckboxList(
+                                title = "Diets",
+                                description = "Select your preferred diets below:",
+                                items = Diet.entries,
+                                checkboxStates = dietsCheckboxStates,
+                                onCheckedChange = { idx, isChecked ->
+                                    dietsCheckboxStates =
+                                        dietsCheckboxStates.toMutableList().apply {
+                                            this[idx] = isChecked
+                                        }
+                                    diets = if (isChecked) {
+                                        diets + Diet.entries[idx]
+                                    } else {
+                                        diets - Diet.entries[idx]
                                     }
-                                diets = if (isChecked) {
-                                    diets + Diet.entries[idx]
-                                } else {
-                                    diets - Diet.entries[idx]
-                                }
-                            },
-                            enableButtons = enableButtons,
-                            displayName = { it.displayName }
-                        )
+                                },
+                                enableButtons = enableButtons,
+                                displayName = { it.displayName }
+                            )
+                        }
                     }
                 }
             }

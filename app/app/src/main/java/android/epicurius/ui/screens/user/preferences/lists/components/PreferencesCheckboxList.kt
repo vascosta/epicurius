@@ -1,5 +1,7 @@
 package android.epicurius.ui.screens.user.preferences.lists.components
 
+import android.epicurius.ui.screens.theme.DarkPurple
+import android.epicurius.ui.screens.theme.Lilac
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Checkbox
@@ -24,12 +26,14 @@ fun <T> PreferencesCheckboxList(
     Text(
         text = title,
         modifier = Modifier.padding(bottom = 8.dp),
+        color = DarkPurple,
         fontWeight = FontWeight.Bold,
         style = MaterialTheme.typography.headlineSmall
     )
     Text(
         text = description,
         modifier = Modifier.padding(bottom = 8.dp),
+        color = Lilac,
         style = MaterialTheme.typography.bodyMedium
     )
     items.forEachIndexed { idx, item ->
