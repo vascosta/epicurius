@@ -1,5 +1,7 @@
 package android.epicurius.ui.screens.fridge.components
 
+import android.epicurius.ui.screens.theme.Beige
+import android.epicurius.ui.screens.theme.DarkGreen
 import android.epicurius.ui.screens.utils.NumberTextField
 import android.epicurius.ui.screens.utils.isValidForNumberTextField
 import androidx.compose.foundation.layout.Column
@@ -56,7 +58,7 @@ fun UpdateProductDialog(
                 enabled = enableButtons
             ) { Text("Cancel") }
         },
-        title = { Text("Update Product") },
+        title = { Text(text = "Update Product", color = Beige) },
         text = {
             Column {
                 NumberTextField(
@@ -89,6 +91,7 @@ fun UpdateProductDialog(
                     label = "Expiration Date",
                 )
             }
-        }
+        },
+        containerColor = DarkGreen
     )
 }
