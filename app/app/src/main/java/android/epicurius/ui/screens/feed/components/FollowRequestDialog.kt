@@ -1,6 +1,9 @@
 package android.epicurius.ui.screens.feed.components
 
 import android.epicurius.domain.user.SearchUser
+import android.epicurius.ui.screens.theme.Beige
+import android.epicurius.ui.screens.theme.DarkGreen
+import android.epicurius.ui.screens.theme.Lilac
 import android.epicurius.ui.screens.utils.Idle
 import android.epicurius.ui.screens.utils.LoadState
 import android.epicurius.ui.screens.utils.LoadStateRenderer
@@ -40,9 +43,15 @@ fun FollowRequestDialog(
                 onClick = { onDismiss() },
                 enabled = enableButtons
             )
-            { Text("Close") }
+            { Text(text = "Close", color = Lilac) }
         },
-        title = { Text(text = "Follow Requests", fontWeight = FontWeight.Bold) },
+        title = {
+            Text(
+                text = "Follow Requests",
+                fontWeight = FontWeight.Bold,
+                color = Beige
+            )
+        },
         text = {
             Column(
                 modifier = Modifier.verticalScroll(rememberScrollState()),
@@ -72,6 +81,6 @@ fun FollowRequestDialog(
                 )
             }
         },
-        containerColor = Color.White
+        containerColor = DarkGreen
     )
 }
