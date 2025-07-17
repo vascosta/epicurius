@@ -4,6 +4,7 @@ import android.epicurius.domain.user.FollowUser
 import android.epicurius.domain.user.FollowingUser
 import android.epicurius.domain.user.SearchUser
 import android.epicurius.ui.navigation.BottomBar
+import android.epicurius.ui.screens.theme.Beige
 import android.epicurius.ui.screens.user.components.UserBox
 import android.epicurius.ui.screens.user.follow.components.FollowStateBundle
 import android.epicurius.ui.screens.user.follow.components.FollowTopBar
@@ -72,8 +73,7 @@ fun FollowScreen(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(paddingValues)
-                    .padding(16.dp)
-                    .background(Color.White),
+                    .padding(16.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 SearchTextField(
@@ -172,7 +172,7 @@ fun FollowScreen(
                 }
             }
         },
-        containerColor = Color.White
+        containerColor = Beige
     )
 }
 
