@@ -11,6 +11,7 @@ import android.epicurius.ui.screens.collections.collection.components.EditCollec
 import android.epicurius.ui.screens.collections.recipeCollections.components.RecipeCollectionsStateBundle
 import android.epicurius.ui.screens.utils.getNameFromLoadStateValue
 import android.epicurius.ui.screens.recipe.components.RecipeInfoBox
+import android.epicurius.ui.screens.theme.Beige
 import android.epicurius.ui.screens.utils.LoadState
 import android.epicurius.ui.screens.utils.LoadStateRenderer
 import android.epicurius.ui.screens.utils.Loaded
@@ -97,7 +98,6 @@ fun CollectionScreen(
                             .fillMaxSize()
                             .padding(paddingValues)
                             .padding(16.dp)
-                            .background(Color.White)
                             .verticalScroll(rememberScrollState()),
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
@@ -177,7 +177,7 @@ fun CollectionScreen(
                 }
             )
         },
-        containerColor = Color.White
+        containerColor = Beige
     )
 }
 

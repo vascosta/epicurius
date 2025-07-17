@@ -5,6 +5,8 @@ import android.epicurius.ui.navigation.BottomBar
 import android.epicurius.ui.navigation.TopBar
 import android.epicurius.ui.screens.collections.components.CollectionProfileBox
 import android.epicurius.ui.screens.collections.components.CreateCollectionDialog
+import android.epicurius.ui.screens.theme.Beige
+import android.epicurius.ui.screens.theme.Lilac
 import android.epicurius.ui.screens.utils.LoadState
 import android.epicurius.ui.screens.utils.LoadStateRenderer
 import android.epicurius.ui.screens.utils.Loaded
@@ -66,7 +68,6 @@ fun FavouritesScreen(
                     .fillMaxSize()
                     .padding(paddingValues)
                     .padding(16.dp)
-                    .background(Color.White)
                     .verticalScroll(rememberScrollState()),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
@@ -78,7 +79,8 @@ fun FavouritesScreen(
                     ) {
                         Icon(
                             imageVector = Icons.Default.Add,
-                            contentDescription = "Create Collection"
+                            contentDescription = "Create Collection",
+                            tint = Lilac
                         )
                     }
                 }
@@ -124,7 +126,7 @@ fun FavouritesScreen(
                 }
             }
         },
-        containerColor = Color.White
+        containerColor = Beige
     )
 }
 

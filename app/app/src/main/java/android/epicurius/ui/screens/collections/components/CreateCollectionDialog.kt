@@ -1,5 +1,9 @@
 package android.epicurius.ui.screens.collections.components
 
+import android.R
+import android.epicurius.ui.screens.theme.Beige
+import android.epicurius.ui.screens.theme.DarkGreen
+import android.epicurius.ui.screens.theme.Lilac
 import android.epicurius.ui.screens.utils.TextField
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -12,6 +16,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextAlign
 
 @Composable
 fun CreateCollectionDialog(
@@ -27,7 +32,7 @@ fun CreateCollectionDialog(
             TextButton(
                 onClick = { onDismiss() },
                 enabled = enableButtons
-            ) { Text("Cancel") }
+            ) { Text(text = "Cancel", color = Lilac) }
             TextButton(
                 onClick = {
                     onCollectionCreate(collectionName)
@@ -35,13 +40,13 @@ fun CreateCollectionDialog(
                 },
                 enabled = enableButtons
             ) {
-                Text("Create")
+                Text(text = "Create", color = Lilac)
             }
         },
-        title = { Text("Create Collection") },
+        title = { Text(text = "Create Collection", color = Beige) },
         text = {
             Column {
-                Text("Enter the name of the new collection:")
+                Text(text = "Enter the name of the new collection:", color = Lilac)
                 TextField(
                     value = collectionName,
                     onValueChange = { collectionName = it },
@@ -50,6 +55,7 @@ fun CreateCollectionDialog(
                     label = "Collection Name"
                 )
             }
-        }
+        },
+        containerColor = DarkGreen
     )
 }

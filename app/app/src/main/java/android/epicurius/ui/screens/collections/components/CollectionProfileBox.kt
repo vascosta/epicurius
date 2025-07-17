@@ -1,6 +1,8 @@
 package android.epicurius.ui.screens.collections.components
 
 import android.epicurius.domain.collection.CollectionProfile
+import android.epicurius.ui.screens.theme.DarkPurple
+import android.epicurius.ui.screens.theme.Lilac
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -43,9 +45,8 @@ fun CollectionProfileBox(
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .background(Color.White)
             .clip(RoundedCornerShape(20.dp))
-            .border(0.5.dp, Color.Black, RoundedCornerShape(20.dp))
+            .border(0.5.dp, DarkPurple, RoundedCornerShape(20.dp))
             .height(60.dp)
             .padding(horizontal = 10.dp)
     ) {
@@ -61,8 +62,9 @@ fun CollectionProfileBox(
         ) {
             Text(
                 text = collection.name,
+                modifier = Modifier.padding(start = 10.dp),
                 fontWeight = FontWeight.Bold,
-                modifier = Modifier.padding(start = 10.dp)
+                color = DarkPurple
             )
             IconButton(onClick = { showDeleteDialog = true }) {
                 Icon(
