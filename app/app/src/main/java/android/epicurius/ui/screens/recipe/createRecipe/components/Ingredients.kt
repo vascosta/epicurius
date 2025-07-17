@@ -3,6 +3,7 @@ package android.epicurius.ui.screens.recipe.createRecipe.components
 import android.epicurius.domain.recipe.IngredientUnit
 import android.epicurius.ui.screens.recipe.createRecipe.IngredientComponent
 import android.epicurius.ui.screens.recipe.utils.formattedQuantity
+import android.epicurius.ui.screens.theme.Beige
 import android.epicurius.ui.screens.theme.DarkPurple
 import android.epicurius.ui.screens.theme.LightGreen
 import android.epicurius.ui.screens.utils.LoadState
@@ -110,6 +111,9 @@ fun IngredientsComponent(
                         modifier = Modifier
                             .weight(1f)
                             .padding(end = 8.dp),
+                        textColor = Beige,
+                        iconColor = Beige,
+                        labelColor = Beige,
                         enabled = enabled
                     )
                     DeleteFieldButton(
