@@ -1,5 +1,6 @@
 package android.epicurius.ui.screens.user.settings.components
 
+import android.epicurius.ui.screens.theme.Lilac
 import android.epicurius.ui.screens.utils.LoadingSpinner
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -24,5 +25,5 @@ fun SettingsButton(
         onClick = onClick,
         modifier = Modifier.padding(start = 15.dp, end = 15.dp),
         enabled = enabled
-    ) { Text(text) }
+    ) { Text(text = text, color = Lilac) }
 }

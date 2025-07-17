@@ -1,5 +1,6 @@
 package android.epicurius.ui.screens.user.settings
 
+import android.epicurius.R
 import android.epicurius.domain.Diet
 import android.epicurius.domain.Intolerance
 import android.epicurius.domain.user.UserInfo
@@ -12,8 +13,10 @@ import android.epicurius.ui.screens.utils.LoadState
 import android.epicurius.ui.screens.utils.LoadStateRenderer
 import android.epicurius.ui.screens.utils.Loaded
 import android.epicurius.ui.screens.utils.apiSuccess
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -30,6 +33,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 
 @Composable
@@ -84,55 +89,62 @@ fun SettingsScreen(
             LoadStateRenderer(
                 loadState = userInfoState,
                 content = { userInfo ->
-                    Column(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(paddingValues)
-                            .background(Color.White)
-                    ) {
-                        Spacer(modifier = Modifier.fillMaxHeight(0.02f))
-                        settingOptions.forEach { (label, onClick) ->
-                            SettingsButton(
-                                onClick = onClick,
-                                enabled = enableButtons,
-                                text = label
-                            )
-                        }
-                        Spacer(modifier = Modifier.weight(1f))
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                            verticalAlignment = Alignment.CenterVertically
+                    Box(modifier = Modifier.fillMaxWidth()) {
+                        Image(
+                            painter = painterResource(id = R.drawable.background_settings),
+                            contentDescription = null,
+                            modifier = Modifier.fillMaxSize(),
+                            contentScale = ContentScale.Crop
+                        )
+                        Column(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .padding(paddingValues)
                         ) {
-                            SettingsButton(
-                                onClick = { showDeleteAccountDialog = true },
-                                enabled = enableButtons,
-                                text = "Delete account",
-                            )
-                            SettingsButton(
-                                onClick = onLogout,
-                                enabled = enableButtons,
-                                text = "Logout",
-                            )
-                        }
-                        if (showSettingsDialog) {
-                            SettingsDialog(
-                                title = dialogTitle,
-                                userInfo = userInfo,
-                                onDismissRequest = { showSettingsDialog = false },
-                                onConfirm = onUserUpdate,
-                                enableButtons = enableButtons
-                            )
-                        }
-                        if (showDeleteAccountDialog) {
-                            DeleteAccountDialog(
-                                onDismissRequest = { showDeleteAccountDialog = false },
-                                onDeleteConfirmed = {
-                                    onDeleteAccount()
-                                    showDeleteAccountDialog = false
-                                },
-                                enableButtons = enableButtons
-                            )
+                            Spacer(modifier = Modifier.fillMaxHeight(0.02f))
+                            settingOptions.forEach { (label, onClick) ->
+                                SettingsButton(
+                                    onClick = onClick,
+                                    enabled = enableButtons,
+                                    text = label
+                                )
+                            }
+                            Spacer(modifier = Modifier.weight(1f))
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.SpaceBetween,
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                SettingsButton(
+                                    onClick = { showDeleteAccountDialog = true },
+                                    enabled = enableButtons,
+                                    text = "Delete account",
+                                )
+                                SettingsButton(
+                                    onClick = onLogout,
+                                    enabled = enableButtons,
+                                    text = "Logout",
+                                )
+                            }
+                            if (showSettingsDialog) {
+                                SettingsDialog(
+                                    title = dialogTitle,
+                                    userInfo = userInfo,
+                                    onDismissRequest = { showSettingsDialog = false },
+                                    onConfirm = onUserUpdate,
+                                    enableButtons = enableButtons
+                                )
+                            }
+                            if (showDeleteAccountDialog) {
+                                DeleteAccountDialog(
+                                    onDismissRequest = { showDeleteAccountDialog = false },
+                                    onDeleteConfirmed = {
+                                        onDeleteAccount()
+                                        showDeleteAccountDialog = false
+                                    },
+                                    enableButtons = enableButtons
+                                )
+                            }
                         }
                     }
                 }
