@@ -1,5 +1,6 @@
 package android.epicurius.ui.screens.dailyMenu
 
+import android.epicurius.R
 import android.epicurius.domain.collection.CollectionProfile
 import android.epicurius.domain.recipe.Cuisine
 import android.epicurius.domain.recipe.MealType
@@ -14,9 +15,12 @@ import android.epicurius.ui.screens.utils.LoadState
 import android.epicurius.ui.screens.utils.LoadStateRenderer
 import android.epicurius.ui.screens.utils.Loaded
 import android.epicurius.ui.screens.utils.apiSuccess
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -25,6 +29,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 
@@ -65,75 +71,81 @@ fun DailyMenuScreen(
             LoadStateRenderer(
                 loadState = menuState,
                 content = { menu ->
-                    Column(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(paddingValues)
-                            .padding(10.dp)
-                            .background(Beige)
-                            .verticalScroll(rememberScrollState()),
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                        MenuItemBox(
-                            title = "Breakfast",
-                            recipe = menu["breakfast"],
-                            recipeCollectionsStateBundle = recipeCollectionsStateBundle,
-                            onAddRecipeToCollections = onAddRecipeToCollections,
-                            onRemoveRecipeFromCollections = onRemoveRecipeFromCollections,
-                            onClearRecipeCollections = onClearRecipeCollections,
-                            onRecipeCollectionsRequest = onRecipeCollectionsRequest,
-                            onRecipeRequest = onRecipeRequest,
-                            enableButtons = enableButtons
+                    Box(modifier = Modifier.fillMaxWidth()) {
+                        Image(
+                            painter = painterResource(id = R.drawable.background_daily_menu),
+                            contentDescription = null,
+                            modifier = Modifier.fillMaxSize(),
+                            contentScale = ContentScale.Crop
                         )
-                        MenuItemBox(
-                            title = "Soup",
-                            recipe = menu["soup"],
-                            recipeCollectionsStateBundle = recipeCollectionsStateBundle,
-                            onAddRecipeToCollections = onAddRecipeToCollections,
-                            onRemoveRecipeFromCollections = onRemoveRecipeFromCollections,
-                            onClearRecipeCollections = onClearRecipeCollections,
-                            onRecipeCollectionsRequest = onRecipeCollectionsRequest,
-                            onRecipeRequest = onRecipeRequest,
-                            enableButtons = enableButtons
-                        )
-                        MenuItemBox(
-                            title = "Lunch",
-                            recipe = menu["lunch"],
-                            recipeCollectionsStateBundle = recipeCollectionsStateBundle,
-                            onAddRecipeToCollections = onAddRecipeToCollections,
-                            onRemoveRecipeFromCollections = onRemoveRecipeFromCollections,
-                            onClearRecipeCollections = onClearRecipeCollections,
-                            onRecipeCollectionsRequest = onRecipeCollectionsRequest,
-                            onRecipeRequest = onRecipeRequest,
-                            enableButtons = enableButtons
-                        )
-                        MenuItemBox(
-                            title = "Dinner",
-                            recipe = menu["dinner"],
-                            recipeCollectionsStateBundle = recipeCollectionsStateBundle,
-                            onAddRecipeToCollections = onAddRecipeToCollections,
-                            onRemoveRecipeFromCollections = onRemoveRecipeFromCollections,
-                            onClearRecipeCollections = onClearRecipeCollections,
-                            onRecipeCollectionsRequest = onRecipeCollectionsRequest,
-                            onRecipeRequest = onRecipeRequest,
-                            enableButtons = enableButtons
-                        )
-                        MenuItemBox(
-                            title = "Dessert",
-                            recipe = menu["dessert"],
-                            recipeCollectionsStateBundle = recipeCollectionsStateBundle,
-                            onAddRecipeToCollections = onAddRecipeToCollections,
-                            onRemoveRecipeFromCollections = onRemoveRecipeFromCollections,
-                            onClearRecipeCollections = onClearRecipeCollections,
-                            onRecipeCollectionsRequest = onRecipeCollectionsRequest,
-                            onRecipeRequest = onRecipeRequest,
-                            enableButtons = enableButtons
-                        )
+                        Column(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .padding(paddingValues)
+                                .padding(10.dp)
+                                .verticalScroll(rememberScrollState()),
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+                            MenuItemBox(
+                                title = "Breakfast",
+                                recipe = menu["breakfast"],
+                                recipeCollectionsStateBundle = recipeCollectionsStateBundle,
+                                onAddRecipeToCollections = onAddRecipeToCollections,
+                                onRemoveRecipeFromCollections = onRemoveRecipeFromCollections,
+                                onClearRecipeCollections = onClearRecipeCollections,
+                                onRecipeCollectionsRequest = onRecipeCollectionsRequest,
+                                onRecipeRequest = onRecipeRequest,
+                                enableButtons = enableButtons
+                            )
+                            MenuItemBox(
+                                title = "Soup",
+                                recipe = menu["soup"],
+                                recipeCollectionsStateBundle = recipeCollectionsStateBundle,
+                                onAddRecipeToCollections = onAddRecipeToCollections,
+                                onRemoveRecipeFromCollections = onRemoveRecipeFromCollections,
+                                onClearRecipeCollections = onClearRecipeCollections,
+                                onRecipeCollectionsRequest = onRecipeCollectionsRequest,
+                                onRecipeRequest = onRecipeRequest,
+                                enableButtons = enableButtons
+                            )
+                            MenuItemBox(
+                                title = "Lunch",
+                                recipe = menu["lunch"],
+                                recipeCollectionsStateBundle = recipeCollectionsStateBundle,
+                                onAddRecipeToCollections = onAddRecipeToCollections,
+                                onRemoveRecipeFromCollections = onRemoveRecipeFromCollections,
+                                onClearRecipeCollections = onClearRecipeCollections,
+                                onRecipeCollectionsRequest = onRecipeCollectionsRequest,
+                                onRecipeRequest = onRecipeRequest,
+                                enableButtons = enableButtons
+                            )
+                            MenuItemBox(
+                                title = "Dinner",
+                                recipe = menu["dinner"],
+                                recipeCollectionsStateBundle = recipeCollectionsStateBundle,
+                                onAddRecipeToCollections = onAddRecipeToCollections,
+                                onRemoveRecipeFromCollections = onRemoveRecipeFromCollections,
+                                onClearRecipeCollections = onClearRecipeCollections,
+                                onRecipeCollectionsRequest = onRecipeCollectionsRequest,
+                                onRecipeRequest = onRecipeRequest,
+                                enableButtons = enableButtons
+                            )
+                            MenuItemBox(
+                                title = "Dessert",
+                                recipe = menu["dessert"],
+                                recipeCollectionsStateBundle = recipeCollectionsStateBundle,
+                                onAddRecipeToCollections = onAddRecipeToCollections,
+                                onRemoveRecipeFromCollections = onRemoveRecipeFromCollections,
+                                onClearRecipeCollections = onClearRecipeCollections,
+                                onRecipeCollectionsRequest = onRecipeCollectionsRequest,
+                                onRecipeRequest = onRecipeRequest,
+                                enableButtons = enableButtons
+                            )
+                        }
                     }
                 }
             )
-        },
-        containerColor = Beige
+        }
     )
 }
 
