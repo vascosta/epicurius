@@ -6,6 +6,7 @@ import android.epicurius.ui.navigation.BottomBar
 import android.epicurius.ui.navigation.TopBar
 import android.epicurius.ui.screens.fridge.components.AddProductDialog
 import android.epicurius.ui.screens.fridge.components.ProductItemCard
+import android.epicurius.ui.screens.theme.Beige
 import android.epicurius.ui.screens.utils.LoadState
 import android.epicurius.ui.screens.utils.LoadStateRenderer
 import android.epicurius.ui.screens.utils.Loaded
@@ -97,7 +98,7 @@ fun FridgeScreen(
                     Icon(Icons.Default.Add, contentDescription = "Add Product")
                 }
             },
-            containerColor = Color.White
+            containerColor = Beige
         ) { paddingValues ->
             LoadStateRenderer(
                 loadState = userFridgeState,
@@ -105,8 +106,7 @@ fun FridgeScreen(
                     if (products.isNotEmpty()) {
                         LazyColumn(
                             modifier = Modifier
-                                .padding(16.dp)
-                                .background(Color.White),
+                                .padding(16.dp),
                             contentPadding = paddingValues
                         ) {
                             items(products) { product ->

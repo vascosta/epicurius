@@ -1,5 +1,6 @@
 package android.epicurius.ui.screens.utils.dropdownMenu
 
+import android.epicurius.ui.screens.theme.DarkPurple
 import android.epicurius.ui.screens.utils.LoadState
 import android.epicurius.ui.screens.utils.LoadStateRenderer
 import android.epicurius.ui.screens.utils.Loaded
@@ -30,6 +31,9 @@ fun SearchDropdownMenuComponent(
     onValueChange: (String) -> Unit,
     onIconClick: (String) -> Unit,
     modifier: Modifier = Modifier,
+    textColor: Color,
+    iconColor: Color,
+    labelColor: Color,
     enabled: Boolean
 ) {
     var expanded by remember { mutableStateOf(false) }
@@ -49,6 +53,9 @@ fun SearchDropdownMenuComponent(
                 expanded = true
                 onIconClick(value)
             },
+            textColor = textColor,
+            iconColor = iconColor,
+            labelColor = labelColor,
             enableButtons = enabled,
         )
         DropdownMenu(

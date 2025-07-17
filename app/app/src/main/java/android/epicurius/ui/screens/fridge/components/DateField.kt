@@ -63,7 +63,8 @@ fun DateField(
             Icon(
                 imageVector = Icons.Default.DateRange,
                 contentDescription = "Pick date",
-                modifier = Modifier.clickable(enabled = enabled) { datePickerDialog.show() }
+                modifier = Modifier.clickable(enabled = enabled) { datePickerDialog.show() },
+                tint = Beige
             )
         },
         colors = TextFieldDefaults.colors(

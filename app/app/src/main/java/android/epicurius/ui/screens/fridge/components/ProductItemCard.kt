@@ -1,6 +1,9 @@
 package android.epicurius.ui.screens.fridge.components
 
 import android.epicurius.domain.fridge.Product
+import android.epicurius.ui.screens.theme.Beige
+import android.epicurius.ui.screens.theme.DarkPurple
+import android.epicurius.ui.screens.theme.LightGreen
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -54,7 +57,7 @@ fun ProductItemCard(
             containerColor = when {
                 expired -> Color(0xFFFFCDD2)
                 isExpiringSoon -> Color(0xFFFFF9C4)
-                else -> Color.White
+                else -> LightGreen
             }
         ),
         elevation = CardDefaults.cardElevation(4.dp)
@@ -74,11 +77,23 @@ fun ProductItemCard(
                 IconButton(
                     onClick = { showUpdateProductDialog = true },
                     enabled = enableButtons
-                ) { Icon(Icons.Default.Edit, contentDescription = "Update Product") }
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Edit,
+                        contentDescription = "Update Product",
+                        tint = DarkPurple
+                    )
+                }
                 IconButton(
                     onClick = { onDeleteProduct(product.entryNumber) },
                     enabled = enableButtons
-                ) { Icon(Icons.Default.Delete, contentDescription = "Delete") }
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Delete,
+                        contentDescription = "Delete",
+                        tint = DarkPurple
+                    )
+                }
             }
 
             if (showUpdateProductDialog) {

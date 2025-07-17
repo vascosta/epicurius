@@ -1,5 +1,8 @@
 package android.epicurius.ui.screens.fridge.components
 
+import android.epicurius.ui.screens.theme.Beige
+import android.epicurius.ui.screens.theme.DarkGreen
+import android.epicurius.ui.screens.theme.Lilac
 import android.epicurius.ui.screens.utils.LoadState
 import android.epicurius.ui.screens.utils.Loaded
 import android.epicurius.ui.screens.utils.TextField
@@ -15,6 +18,7 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.graphics.Color
 import java.time.LocalDate
 
 @Composable
@@ -57,9 +61,9 @@ fun AddProductDialog(
             TextButton(
                 onClick = onDismiss,
                 enabled = enableButtons
-            ) { Text("Cancel") }
+            ) { Text(text = "Cancel", color = Lilac) }
         },
-        title = { Text("Add new product") },
+        title = { Text(text = "Add new product", color = Beige) },
         text = {
             Column {
                 SearchDropdownMenuComponent(
@@ -73,6 +77,9 @@ fun AddProductDialog(
                         }
                     },
                     onIconClick = { onSearchProduct(name) },
+                    textColor = Color.White,
+                    iconColor = Beige,
+                    labelColor = Beige,
                     enabled = enableButtons
                 )
                 TextField(
@@ -94,5 +101,6 @@ fun AddProductDialog(
                 )
             }
         },
+        containerColor = DarkGreen
     )
 }

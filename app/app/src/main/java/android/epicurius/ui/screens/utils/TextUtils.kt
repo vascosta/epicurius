@@ -67,12 +67,15 @@ fun SearchTextField(
     modifier: Modifier = Modifier,
     onSearchQueryChange: (query: String) -> Unit,
     onIconClick: () -> Unit,
+    textColor: Color = DarkPurple,
+    iconColor: Color = DarkPurple,
+    labelColor: Color = DarkPurple,
     enableButtons: Boolean
 ) {
     OutlinedTextField(
         value = text,
         onValueChange = onSearchQueryChange,
-        placeholder = { Text("Search") },
+        placeholder = { Text(text = "Search", color = labelColor) },
         trailingIcon = {
             IconButton(
                 onClick = { onIconClick() },
@@ -81,15 +84,15 @@ fun SearchTextField(
                 Icon(
                     imageVector = Icons.Default.Search,
                     contentDescription = "Search icon",
-                    tint = DarkPurple
+                    tint = iconColor
                 )
             }
         },
         singleLine = true,
         modifier = modifier,
         colors = TextFieldDefaults.colors(
-            focusedTextColor = Color.Black,
-            unfocusedTextColor = Color.Black,
+            focusedTextColor = textColor,
+            unfocusedTextColor = textColor,
             focusedIndicatorColor = Lilac,
             unfocusedIndicatorColor = Lilac,
             focusedLabelColor = Beige,
