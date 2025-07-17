@@ -1,5 +1,8 @@
 package android.epicurius.ui.screens.user.follow.components
 
+import android.epicurius.ui.screens.theme.Beige
+import android.epicurius.ui.screens.theme.DarkGreen
+import android.epicurius.ui.screens.theme.Lilac
 import android.epicurius.ui.screens.utils.TabComponent
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -38,7 +41,13 @@ fun FollowTopBar(
                     .fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                TabComponent(tabs, selectedTabIndex, onTabSelected, enabled)
+                TabComponent(
+                    tabs = tabs,
+                    selectedTabIndex = selectedTabIndex,
+                    onTabSelected = onTabSelected,
+                    colorTittleTab = Lilac,
+                    enabled
+                )
             }
         },
         navigationIcon = {
@@ -48,13 +57,13 @@ fun FollowTopBar(
             ) {
                 Icon(
                     imageVector = Icons.AutoMirrored.Sharp.ArrowBack,
-                    contentDescription = "Go Back"
+                    contentDescription = "Go Back",
+                    tint = Beige
                 )
             }
         },
         colors = TopAppBarDefaults.topAppBarColors(
-            containerColor = Color.White,
-            titleContentColor = Color.Black
+            containerColor = DarkGreen
         )
     )
 }

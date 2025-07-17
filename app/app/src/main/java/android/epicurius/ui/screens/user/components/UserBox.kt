@@ -1,6 +1,7 @@
 package android.epicurius.ui.screens.user.components
 
 import android.epicurius.domain.user.SearchUser
+import android.epicurius.ui.screens.theme.DarkPurple
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
@@ -31,9 +32,8 @@ fun UserBox(
         modifier = Modifier
             .fillMaxWidth()
             .padding(vertical = 10.dp)
-            .background(color = Color.White)
             .clip(RoundedCornerShape(20.dp))
-            .border(width = 1.dp, color = Color.Black, shape = RoundedCornerShape(20.dp))
+            .border(width = 1.dp, color = DarkPurple, shape = RoundedCornerShape(20.dp))
     ) {
         Row(
             modifier = Modifier.height(90.dp),
@@ -50,7 +50,7 @@ fun UserBox(
                 enabled = enableButtons
             )
             Spacer(modifier = Modifier.width(70.dp))
-            Text(user.name)
+            Text(text = user.name, color = DarkPurple)
         }
     }
 }
