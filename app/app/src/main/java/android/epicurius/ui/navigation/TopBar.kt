@@ -46,7 +46,7 @@ fun TopBar(
             .drawWithContent {
                 drawContent()
                 drawLine(
-                    color = Color(0xFFF1E9DA),
+                    color = Beige,
                     start = Offset(0f, size.height),
                     end = Offset(size.width, size.height),
                     strokeWidth = 1.dp.toPx()
@@ -77,7 +77,7 @@ fun TopBar(
                     Icon(
                         imageVector = it,
                         contentDescription = "Navigation",
-                        tint = Color.Black
+                        tint = Beige
                     )
                 }
             }
