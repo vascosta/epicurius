@@ -1,9 +1,14 @@
 package android.epicurius.ui.screens.collections.recipeCollections.components
 
 import android.epicurius.domain.collection.CollectionProfile
+import android.epicurius.ui.screens.theme.Beige
+import android.epicurius.ui.screens.theme.DarkGreen
+import android.epicurius.ui.screens.theme.DarkPurple
+import android.epicurius.ui.screens.theme.Lilac
 import android.epicurius.ui.screens.utils.Idle
 import android.epicurius.ui.screens.utils.LoadStateRenderer
 import android.epicurius.ui.screens.utils.Loaded
+import android.epicurius.ui.screens.utils.TabComponent
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -24,6 +29,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 
 @Composable
@@ -78,19 +84,28 @@ fun RecipeCollectionsDialog(
                 TextButton(
                     onClick = { onDismissRequest() },
                     enabled = enableButtons
-                ) { Text(text = "Cancel") }
+                ) { Text(text = "Cancel", color = Lilac) }
             },
-            title = { Text("Collections") },
+            title = { Text(text = "Collections", color = Beige) },
             text = {
-                Column {
-                    RecipeCollectionsDialogTab(
+                val tabs = listOf("Add", "Remove")
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    TabComponent(
+                        tabs = tabs,
                         selectedTabIndex = selectedTabIndex,
-                        onCollectionsToAdd = { selectedTabIndex = 0 },
-                        onCollectionsToRemove = { selectedTabIndex = 1 },
+                        onTabSelected = { selectedTabIndex = it },
+                        colorTittleTab = Beige,
                         enabled = enableButtons
                     )
+                    Spacer(Modifier.height(5.dp))
                     if (selectedTabIndex == 0) {
-                        Text("Choose the collections to add the recipe")
+                        Text(
+                            text = "Choose the collections to add the recipe",
+                            color = Lilac,
+                            textAlign = TextAlign.Center
+                        )
                         LoadStateRenderer(
                             loadState = recipeCollectionsStateBundle.collectionsToAddRecipeState,
                             content = { collections ->
@@ -123,13 +138,18 @@ fun RecipeCollectionsDialog(
                                     Text(
                                         text = "No collections available to add the recipe",
                                         modifier = Modifier.padding(10.dp),
-                                        color = Color.Gray
+                                        color = Color.Gray,
+                                        textAlign = TextAlign.Center
                                     )
                             }
                         )
                     }
                     else {
-                        Text("Choose a collection to remove the recipes")
+                        Text(
+                            text = "Choose a collection to remove the recipes",
+                            color = Lilac,
+                            textAlign = TextAlign.Center
+                        )
                         LoadStateRenderer(
                             loadState = recipeCollectionsStateBundle.collectionsToRemoveRecipeState,
                             content = { collections ->
@@ -162,13 +182,15 @@ fun RecipeCollectionsDialog(
                                     Text(
                                         text = "No collections available to remove the recipe",
                                         modifier = Modifier.padding(10.dp),
-                                        color = Color.Gray
+                                        color = Color.Gray,
+                                        textAlign = TextAlign.Center
                                     )
                             }
                         )
                     }
                 }
-            }
+            },
+            containerColor = DarkGreen
         )
     }
 }
