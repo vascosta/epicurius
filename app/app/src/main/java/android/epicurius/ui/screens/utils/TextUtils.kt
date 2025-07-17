@@ -178,8 +178,8 @@ fun NumberTextField(
         onValueChange = onValueChange,
         modifier = modifier.fillMaxWidth(),
         enabled = enabled,
-        label = label?.let { { Text(it) } },
-        placeholder = placeholder?.let { { Text(it) } },
+        label = label?.let { { Text(text = it, color = Beige) } },
+        placeholder = placeholder?.let { { Text(text = it, color = Beige) } },
         singleLine = true,
         keyboardOptions = KeyboardOptions.Default.copy(
             keyboardType = KeyboardType.Number

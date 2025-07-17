@@ -11,6 +11,8 @@ import android.epicurius.ui.navigation.BottomBarState
 import android.epicurius.ui.navigation.TopBar
 import android.epicurius.ui.screens.mealPlanner.daily.components.CaloriesUpdateDialog
 import android.epicurius.ui.screens.mealPlanner.components.MealPlannerComponent
+import android.epicurius.ui.screens.theme.Beige
+import android.epicurius.ui.screens.theme.DarkPurple
 import android.epicurius.ui.screens.utils.LoadState
 import android.epicurius.ui.screens.utils.LoadStateRenderer
 import android.epicurius.ui.screens.utils.MixedText
@@ -86,7 +88,7 @@ fun DailyScreen(
                                 .fillMaxWidth()
                                 .wrapContentSize(Alignment.Center)
                                 .padding(bottom = 16.dp),
-                            color = Color(0xFFAC88DC),
+                            color = DarkPurple,
                             style = MaterialTheme.typography.titleMedium
                         )
                         Box(
@@ -124,7 +126,7 @@ fun DailyScreen(
                 }
             )
         },
-        containerColor = Color.White
+        containerColor = Beige
     )
 }
 

@@ -3,6 +3,9 @@ package android.epicurius.ui.screens.mealPlanner.calendar
 import android.epicurius.ui.navigation.BottomBar
 import android.epicurius.ui.navigation.TopBar
 import android.epicurius.ui.screens.mealPlanner.components.WeekCalendarRow
+import android.epicurius.ui.screens.theme.Beige
+import android.epicurius.ui.screens.theme.DarkPurple
+import android.epicurius.ui.screens.theme.LightGreen
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -57,8 +60,7 @@ fun CalendarScreen(
             VerticalCalendar(
                 modifier = Modifier
                     .padding(paddingValues)
-                    .padding(16.dp)
-                    .background(Color.White),
+                    .padding(16.dp),
                 state = state,
                 calendarScrollPaged = true,
                 dayContent = { day ->
@@ -68,7 +70,7 @@ fun CalendarScreen(
                                 .aspectRatio(1f)
                                 .padding(2.dp)
                                 .background(
-                                    if (day.date == today) Color(0xFFCDFA7D) else Color.Transparent,
+                                    color = if (day.date == today) LightGreen else Color.Transparent,
                                     shape = CircleShape
                                 )
                                 .clickable { onDailyMealPlannerRequest(day.date) },
@@ -87,7 +89,7 @@ fun CalendarScreen(
                         Text(
                             text = month.yearMonth.month.name,
                             modifier = Modifier.padding(8.dp),
-                            color = Color.Black
+                            color = DarkPurple
                         )
                         if (month.yearMonth.month == today.month) {
                             TextButton(
@@ -99,7 +101,7 @@ fun CalendarScreen(
                 }
             )
         },
-        containerColor = Color.White
+        containerColor = Beige
     )
 }
 

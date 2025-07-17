@@ -13,6 +13,7 @@ import android.epicurius.ui.navigation.BottomBarState
 import android.epicurius.ui.screens.mealPlanner.components.MealPlannerComponent
 import android.epicurius.ui.screens.mealPlanner.components.WeekCalendarRow
 import android.epicurius.ui.screens.mealPlanner.daily.components.CaloriesUpdateDialog
+import android.epicurius.ui.screens.theme.Beige
 import android.epicurius.ui.screens.utils.LoadState
 import android.epicurius.ui.screens.utils.LoadStateRenderer
 import android.epicurius.ui.screens.utils.Loaded
@@ -149,7 +150,7 @@ fun WeeklyScreen(
                 }
             )
         },
-        containerColor = Color.White
+        containerColor = Beige
     )
 }
 

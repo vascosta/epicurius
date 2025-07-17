@@ -3,6 +3,7 @@ package android.epicurius.ui.screens.mealPlanner.components
 import android.epicurius.domain.mealPlanner.MealTime
 import android.epicurius.domain.recipe.RecipeInfo
 import android.epicurius.ui.screens.recipe.components.RecipeInfoBox
+import android.epicurius.ui.screens.theme.DarkPurple
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -38,7 +39,6 @@ fun DailyMealPlannerBox(
     Box(
         modifier = Modifier
             .padding(horizontal = 5.dp)
-            .background(Color.White)
     ) {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
             Text(
@@ -47,7 +47,7 @@ fun DailyMealPlannerBox(
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Bold,
                 textAlign = TextAlign.Center,
-                color = Color.Black
+                color = DarkPurple
             )
             if (recipe != null) {
                 RecipeInfoBox(

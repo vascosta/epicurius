@@ -1,5 +1,6 @@
 package android.epicurius.ui.screens.mealPlanner.components
 
+import android.epicurius.ui.screens.theme.DarkPurple
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -21,7 +22,8 @@ fun WeekCalendarRow() {
                     .weight(1f)
                     .padding(vertical = 8.dp),
                 textAlign = TextAlign.Center,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
+                color = DarkPurple
             )
         }
     }

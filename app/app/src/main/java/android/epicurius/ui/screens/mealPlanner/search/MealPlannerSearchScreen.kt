@@ -14,6 +14,7 @@ import android.epicurius.ui.screens.recipe.components.RecipeInfoBox
 import android.epicurius.ui.screens.search.components.FiltersDialog
 import android.epicurius.ui.screens.search.components.FiltersIcon
 import android.epicurius.ui.screens.search.components.clearFilters
+import android.epicurius.ui.screens.theme.Beige
 import android.epicurius.ui.screens.utils.Idle
 import android.epicurius.ui.screens.utils.LoadState
 import android.epicurius.ui.screens.utils.LoadStateRenderer
@@ -349,7 +350,7 @@ fun MealPlannerSearchScreen(
                 }
             }
         },
-        containerColor = Color.White
+        containerColor = Beige
     )
 }
 

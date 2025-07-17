@@ -1,5 +1,8 @@
 package android.epicurius.ui.screens.mealPlanner.daily.components
 
+import android.epicurius.ui.screens.theme.Beige
+import android.epicurius.ui.screens.theme.DarkGreen
+import android.epicurius.ui.screens.theme.Lilac
 import android.epicurius.ui.screens.utils.NumberTextField
 import android.epicurius.ui.screens.utils.isValidForNumberTextField
 import androidx.compose.foundation.layout.Column
@@ -36,18 +39,22 @@ fun CaloriesUpdateDialog(
                     onDismiss()
                 },
                 enabled = enableButtons
-            ) { Text("Confirm") }
+            ) { Text(text = "Confirm", color = Lilac) }
         },
         dismissButton = {
             TextButton(
                 onClick = onDismiss,
                 enabled = enableButtons
-            ) { Text("Cancel") }
+            ) { Text(text = "Cancel", color = Lilac) }
         },
-        title = { Text("Update Calories") },
+        title = { Text(text = "Update Calories", color = Beige) },
         text = {
             Column {
-                Text("Insert new maximum calories for the day:", fontWeight = FontWeight.Bold)
+                Text(
+                    text = "Insert new maximum calories for the day:",
+                    fontWeight = FontWeight.Bold,
+                    color = Lilac
+                )
                 Spacer(modifier = Modifier.height(8.dp))
                 NumberTextField(
                     value = textFieldValue,
@@ -56,7 +63,8 @@ fun CaloriesUpdateDialog(
                     placeholder = "e.g.: 2200",
                 )
             }
-        }
+        },
+        containerColor = DarkGreen
     )
 }
 
