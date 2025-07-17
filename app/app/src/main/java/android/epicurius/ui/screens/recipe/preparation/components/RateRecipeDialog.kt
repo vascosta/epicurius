@@ -1,6 +1,9 @@
 package android.epicurius.ui.screens.recipe.preparation.components
 
 import android.epicurius.R
+import android.epicurius.ui.screens.theme.Beige
+import android.epicurius.ui.screens.theme.DarkGreen
+import android.epicurius.ui.screens.theme.Lilac
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -50,10 +53,10 @@ fun RateRecipeDialog(
                 enabled = enableButtons
             ) { Text("Skip") }
         },
-        title = { Text("Rate Recipe") },
+        title = { Text(text = "Rate Recipe", color = Beige) },
         text = {
             Column {
-                Text("Select a rating from 1 to 5:")
+                Text(text = "Select a rating from 1 to 5:", color = Lilac)
                 Spacer(Modifier.size(10.dp))
                 Row(
                     horizontalArrangement = Arrangement.Center,
@@ -78,6 +81,6 @@ fun RateRecipeDialog(
                 }
             }
         },
-        containerColor = Color.White,
+        containerColor = DarkGreen,
     )
 }

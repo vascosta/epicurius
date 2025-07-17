@@ -11,7 +11,9 @@ import android.epicurius.ui.screens.recipe.createRecipe.components.DividerCompon
 import android.epicurius.ui.screens.recipe.createRecipe.components.IngredientsComponent
 import android.epicurius.ui.screens.recipe.createRecipe.components.InstructionsComponent
 import android.epicurius.ui.screens.recipe.createRecipe.components.NutritionalInfoComponent
+import android.epicurius.ui.screens.theme.Beige
 import android.epicurius.ui.screens.theme.DarkGreen
+import android.epicurius.ui.screens.theme.Lilac
 import android.epicurius.ui.screens.utils.dropdownMenu.DropdownMenuComponent
 import android.epicurius.ui.screens.utils.FormTextField
 import android.epicurius.ui.screens.utils.LoadState
@@ -126,15 +128,15 @@ fun EditRecipeDialog(
                 enabled = enableButtons && name.isNotEmpty() && description.isNotEmpty() &&
                 preparationTime.isNotEmpty() && servings.isNotEmpty() && cuisine.isNotEmpty() &&
                 mealType.isNotEmpty() && ingredients.isNotEmpty() && steps.isNotEmpty()
-            ) { Text("Confirm") }
+            ) { Text(text = "Confirm", color = Lilac) }
         },
         dismissButton = {
             TextButton(
                 onClick = { onDismissRequest() },
                 enabled = enableButtons
-            ) { Text("Cancel") }
+            ) { Text(text = "Cancel", color = Lilac) }
         },
-        title = { Text("Edit Recipe") },
+        title = { Text(text = "Edit Recipe", color = Beige) },
         text = {
             Column(
                 modifier = Modifier

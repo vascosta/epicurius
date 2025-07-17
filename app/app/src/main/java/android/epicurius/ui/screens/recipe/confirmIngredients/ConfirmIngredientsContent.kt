@@ -5,6 +5,7 @@ import android.epicurius.domain.recipe.Recipe
 import android.epicurius.ui.screens.recipe.confirmIngredients.components.InfoDialog
 import android.epicurius.ui.screens.recipe.confirmIngredients.components.IngredientTable
 import android.epicurius.ui.screens.recipe.confirmIngredients.components.SubstituteIngredientsAlertDialog
+import android.epicurius.ui.screens.theme.DarkPurple
 import android.epicurius.ui.screens.utils.LoadState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -58,8 +59,7 @@ fun ConfirmIngredientsContent(
             .fillMaxSize()
             .verticalScroll(rememberScrollState())
             .padding(paddingValues)
-            .padding(16.dp)
-            .background(Color.White),
+            .padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Row(
@@ -69,6 +69,7 @@ fun ConfirmIngredientsContent(
         ) {
             Text(
                 text = "Ingredients:",
+                color = DarkPurple,
                 fontSize = 24.sp,
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.padding(bottom = 16.dp)
@@ -90,9 +91,24 @@ fun ConfirmIngredientsContent(
                 onDismissRequest = { showInfoDialog = false }
             )
         Row(modifier = Modifier.padding(vertical = 4.dp, horizontal = 10.dp)) {
-            Text("Name", modifier = Modifier.weight(0.4f), fontWeight = FontWeight.Bold)
-            Text("Qty", modifier = Modifier.weight(0.2f), fontWeight = FontWeight.Bold)
-            Text("Unit", modifier = Modifier.weight(0.2f), fontWeight = FontWeight.Bold)
+            Text(
+                text = "Name",
+                modifier = Modifier.weight(0.4f),
+                color = DarkPurple,
+                fontWeight = FontWeight.Bold
+            )
+            Text(
+                text = "Qty",
+                modifier = Modifier.weight(0.2f),
+                color = DarkPurple,
+                fontWeight = FontWeight.Bold
+            )
+            Text(
+                text = "Unit",
+                modifier = Modifier.weight(0.2f),
+                color = DarkPurple,
+                fontWeight = FontWeight.Bold
+            )
             Spacer(modifier = Modifier.weight(0.2f))
         }
         IngredientTable(

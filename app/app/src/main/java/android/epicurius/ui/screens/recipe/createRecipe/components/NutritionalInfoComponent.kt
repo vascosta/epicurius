@@ -1,5 +1,6 @@
 package android.epicurius.ui.screens.recipe.createRecipe.components
 
+import android.epicurius.ui.screens.theme.Lilac
 import android.epicurius.ui.screens.utils.NumberTextField
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Box
@@ -34,15 +35,15 @@ fun NutritionalInfoComponent(
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            //.align(Alignment.Start)
             .padding(start = 10.dp, top = 10.dp)
     ) {
         TextButton(
             onClick = { expandNutritionalInfo = !expandNutritionalInfo }
         ) {
             Text(
-                if (expandNutritionalInfo) "- Hide nutritional info"
-                else "+ Add nutritional info"
+                text = if (expandNutritionalInfo) "- Hide nutritional info"
+                    else "+ Add nutritional info",
+                color = Lilac
             )
         }
     }

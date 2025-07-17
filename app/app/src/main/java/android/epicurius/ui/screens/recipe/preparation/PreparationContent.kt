@@ -2,6 +2,7 @@ package android.epicurius.ui.screens.recipe.preparation
 
 import android.epicurius.domain.recipe.Recipe
 import android.epicurius.ui.screens.recipe.preparation.components.RateRecipeDialog
+import android.epicurius.ui.screens.theme.DarkPurple
 import android.epicurius.ui.screens.utils.LoadState
 import android.epicurius.ui.screens.utils.LoadStateRenderer
 import android.epicurius.ui.screens.utils.Loaded
@@ -57,15 +58,15 @@ fun PreparationContent(
             .fillMaxSize()
             .verticalScroll(rememberScrollState())
             .padding(paddingValues)
-            .padding(16.dp)
-            .background(Color.White),
+            .padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
             text = "Preparation:",
+            modifier = Modifier.padding(bottom = 16.dp),
+            color = DarkPurple,
             fontSize = 24.sp,
             fontWeight = FontWeight.Bold,
-            modifier = Modifier.padding(bottom = 16.dp)
         )
         recipe.instructions.steps.entries.forEach { (stepNumber, instruction) ->
             val backgroundColor =

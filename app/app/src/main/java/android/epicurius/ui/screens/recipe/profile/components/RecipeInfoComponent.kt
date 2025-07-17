@@ -2,6 +2,7 @@ package android.epicurius.ui.screens.recipe.profile.components
 
 import android.epicurius.domain.recipe.Recipe
 import android.epicurius.ui.screens.recipe.utils.formattedQuantity
+import android.epicurius.ui.screens.theme.DarkPurple
 import android.epicurius.ui.screens.utils.MixedText
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
@@ -29,7 +30,7 @@ fun RecipeInfoComponent(
         modifier = Modifier
             .fillMaxWidth()
             .padding(top = 16.dp, start = 10.dp, end = 10.dp)
-            .border(1.dp, Color.Black, RoundedCornerShape(16.dp)),
+            .border(1.dp, DarkPurple, RoundedCornerShape(16.dp)),
         contentAlignment = Alignment.CenterStart
     ) {
         if (isAuthor) {

@@ -17,6 +17,7 @@ import android.epicurius.ui.screens.recipe.confirmIngredients.ConfirmIngredients
 import android.epicurius.ui.screens.recipe.preparation.PreparationContent
 import android.epicurius.ui.screens.utils.generateTestImageByteArray
 import android.epicurius.ui.screens.recipe.profile.components.RecipeProfileContent
+import android.epicurius.ui.screens.theme.Beige
 import android.epicurius.ui.screens.utils.LoadState
 import android.epicurius.ui.screens.utils.LoadStateRenderer
 import android.epicurius.ui.screens.utils.Loaded
@@ -92,7 +93,7 @@ fun RecipeProfileScreen(
     enableButtons: Boolean,
 ) {
     var currentScreen by remember { mutableStateOf(ScreenState.PROFILE) }
-    var recipeName = getNameFromLoadStateValue(recipeNameState)
+    val recipeName = getNameFromLoadStateValue(recipeNameState)
 
     Scaffold(
         topBar = {
@@ -169,7 +170,7 @@ fun RecipeProfileScreen(
                 }
             )
         },
-        containerColor = Color.White
+        containerColor = Beige
     )
 }
 

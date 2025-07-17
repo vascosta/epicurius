@@ -13,6 +13,8 @@ import android.epicurius.domain.recipe.MealType
 import android.epicurius.domain.recipe.Recipe
 import android.epicurius.ui.screens.collections.recipeCollections.components.RecipeCollectionsDialog
 import android.epicurius.ui.screens.collections.recipeCollections.components.RecipeCollectionsStateBundle
+import android.epicurius.ui.screens.theme.DarkPurple
+import android.epicurius.ui.screens.theme.Lilac
 import android.epicurius.ui.screens.utils.HorizontalPagerIndicator
 import android.epicurius.ui.screens.utils.LoadState
 import android.epicurius.ui.screens.utils.LoadStateRenderer
@@ -166,8 +168,7 @@ fun RecipeProfileContent(
                     .fillMaxSize()
                     .verticalScroll(rememberScrollState())
                     .padding(paddingValues)
-                    .padding(16.dp)
-                    .background(Color.White),
+                    .padding(16.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Row(
@@ -249,7 +250,11 @@ fun RecipeProfileContent(
                                         onClick = { showEditRatingDialog = true }
                                     )) {
                             Row {
-                                Text("Your Rating: ", fontWeight = FontWeight.Bold)
+                                Text(
+                                    text = "Your Rating: ",
+                                    color = DarkPurple,
+                                    fontWeight = FontWeight.Bold
+                                )
                                 Text("${userRating ?: "not yet rated"}")
                             }
                             if (showEditRatingDialog && userRating != null) {
@@ -267,7 +272,13 @@ fun RecipeProfileContent(
                         TextButton(
                             onClick = { onUserProfileRequest(recipe.authorUsername) },
                             enabled = enableButtons
-                        ) { MixedText("by ", recipe.authorUsername) }
+                        ) {
+                            MixedText(
+                                boldString = "by ",
+                                normalString = recipe.authorUsername,
+                                color = DarkPurple
+                            )
+                        }
                     }
                 }
                 RecipeDescription(recipe.description)
