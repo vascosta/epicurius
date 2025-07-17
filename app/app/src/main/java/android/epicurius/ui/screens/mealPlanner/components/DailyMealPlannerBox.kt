@@ -52,6 +52,7 @@ fun DailyMealPlannerBox(
             if (recipe != null) {
                 RecipeInfoBox(
                     recipeInfo = recipe,
+                    enableCollectionsIcon = false,
                     enableButtons = enableButtons,
                 )
                 IconButton(

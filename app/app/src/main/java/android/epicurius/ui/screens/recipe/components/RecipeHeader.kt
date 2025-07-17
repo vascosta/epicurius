@@ -5,7 +5,6 @@ import android.epicurius.domain.collection.CollectionProfile
 import android.epicurius.domain.mealPlanner.MealTime
 import android.epicurius.ui.screens.collections.recipeCollections.components.RecipeCollectionsDialog
 import android.epicurius.ui.screens.collections.recipeCollections.components.RecipeCollectionsStateBundle
-import android.epicurius.ui.screens.theme.DarkPurple
 import android.epicurius.ui.screens.theme.LightGreen
 import android.epicurius.ui.screens.theme.Lilac
 import android.epicurius.ui.screens.utils.MixedText
@@ -25,10 +24,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.painter.ColorPainter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -43,6 +42,7 @@ fun RecipeHeader(
     date: LocalDate? = null,
     mealTime: MealTime? = null,
     recipeCollectionsStateBundle: RecipeCollectionsStateBundle? = null,
+    enableCollectionsIcon: Boolean = true,
     onAddRecipeToCollections: (
         recipeId: Int,
         collectionsToAdd: List<CollectionProfile>
@@ -102,8 +102,12 @@ fun RecipeHeader(
                     if (date != null && mealTime != null) {
                         painterResource(R.drawable.calendar)
                     } else {
-                        if (collectionId != null) painterResource(R.drawable.star)
-                        else painterResource(R.drawable.white_star)
+                        if (enableCollectionsIcon) {
+                            if (collectionId != null) painterResource(R.drawable.star)
+                            else painterResource(R.drawable.white_star)
+                        } else {
+                            ColorPainter(Color.Transparent)
+                        }
                     }
                 Image(
                     painter = painter,

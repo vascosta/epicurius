@@ -10,7 +10,6 @@ import android.epicurius.ui.screens.collections.recipeCollections.components.Rec
 import android.epicurius.ui.screens.recipe.createRecipe.components.DividerComponent
 import android.epicurius.ui.screens.theme.DarkGreen
 import android.epicurius.ui.screens.theme.DarkPurple
-import android.epicurius.ui.screens.theme.LightGreen
 import android.epicurius.ui.screens.theme.Lilac
 import android.epicurius.ui.screens.utils.generateTestImageByteArray
 import androidx.compose.foundation.background
@@ -27,7 +26,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import java.time.LocalDate
@@ -40,6 +38,7 @@ fun RecipeInfoBox(
     date: LocalDate? = null,
     mealTime: MealTime? = null,
     recipeCollectionsStateBundle: RecipeCollectionsStateBundle? = null,
+    enableCollectionsIcon: Boolean = true,
     onAddRecipeToCollections: (
         recipeId: Int,
         collectionsToAdd: List<CollectionProfile>
@@ -82,6 +81,7 @@ fun RecipeInfoBox(
                 author = recipeInfo.authorUsername,
                 date = date,
                 mealTime = mealTime,
+                enableCollectionsIcon = enableCollectionsIcon,
                 recipeCollectionsStateBundle = recipeCollectionsStateBundle,
                 onAddRecipeToCollections = onAddRecipeToCollections,
                 onRemoveRecipeFromCollections = onRemoveRecipeFromCollections,
