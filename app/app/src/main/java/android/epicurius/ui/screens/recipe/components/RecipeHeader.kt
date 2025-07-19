@@ -95,7 +95,7 @@ fun RecipeHeader(
                         if (collectionId != null) onRemoveRecipeFromCollection(collectionId, recipeId)
                         else showCollectionsDialog = true
                 },
-                modifier = Modifier.size(24.dp),
+                modifier = Modifier.size(25.dp),
                 enabled = enableButtons
             ) {
                 val painter =
@@ -137,6 +137,7 @@ fun RecipeHeader(
 @Preview
 @Composable
 fun RecipeHeaderPreview() {
+    /*
     RecipeHeader(
         recipeId = 1,
         name = "Delicious Recipe Name",
@@ -145,6 +146,8 @@ fun RecipeHeaderPreview() {
         mealTime = MealTime.LUNCH,
         enableButtons = true
     )
+
+     */
     RecipeHeader(
         recipeId = 1,
         name = "Delicious Recipe Name",

@@ -120,7 +120,7 @@ fun FeedScreen(
                         Image(
                             painter = painterResource(R.drawable.menu),
                             contentDescription = "Daily Menu",
-                            modifier = Modifier.size(45.dp),
+                            modifier = Modifier.size(50.dp),
                             contentScale = ContentScale.Fit
                         )
                     }

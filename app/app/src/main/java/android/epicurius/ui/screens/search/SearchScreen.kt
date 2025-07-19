@@ -125,32 +125,7 @@ fun SearchScreen(
 @Composable
 fun SearchScreenPreview() {
     SearchScreen(
-        recipesResultState = apiSuccess(
-            listOf(
-                RecipeInfo(
-                    id = 1,
-                    name = "Recipe Name",
-                    authorUsername = "ChefBear",
-                    rating = 4.3,
-                    cuisine = Cuisine.MEDITERRANEAN,
-                    mealType = MealType.SIDE_DISH,
-                    preparationTime = 30,
-                    servings = 4,
-                    picture = Base64.getEncoder().encodeToString(generateTestImageByteArray(R.drawable.test_tomato))
-                ),
-                RecipeInfo(
-                    id = 1,
-                    name = "Recipe Name",
-                    authorUsername = "ChefBear",
-                    rating = 4.3,
-                    cuisine = Cuisine.MEDITERRANEAN,
-                    mealType = MealType.SIDE_DISH,
-                    preparationTime = 30,
-                    servings = 4,
-                    picture = Base64.getEncoder().encodeToString(generateTestImageByteArray(R.drawable.test_tomato))
-                )
-            )
-        ),
+        recipesResultState = Idle,
         usersResultState = apiSuccess(emptyList()),
         userInfoState = apiSuccess(
             UserInfo(
