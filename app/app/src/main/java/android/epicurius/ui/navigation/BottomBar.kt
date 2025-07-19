@@ -6,6 +6,9 @@ import android.epicurius.ui.screens.fridge.FridgeActivity
 import android.epicurius.ui.screens.mealPlanner.calendar.CalendarActivity
 import android.epicurius.ui.screens.recipe.createRecipe.CreateRecipeActivity
 import android.epicurius.ui.screens.search.SearchActivity
+import android.epicurius.ui.screens.theme.Beige
+import android.epicurius.ui.screens.theme.DarkGreen
+import android.epicurius.ui.screens.theme.Lilac
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -57,7 +60,7 @@ fun BottomBar(
         )
     }
 
-    NavigationBar(containerColor = Color.White) {
+    NavigationBar(containerColor = DarkGreen) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -102,7 +105,7 @@ fun BottomBar(
                 enabled = buttonsEnable && currentActivityClass != SearchActivity::class.java,
                 imageId = R.drawable.magnifier,
                 description = "Magnifier",
-                imageSize = 41,
+                imageSize = 45,
                 isSelected = selectedItem == SearchActivity::class.java
             )
             BottomBarButton(
