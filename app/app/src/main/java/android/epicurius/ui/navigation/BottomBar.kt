@@ -68,7 +68,7 @@ fun BottomBar(
                 .drawWithContent {
                     drawContent()
                     drawLine(
-                        color = Color.Black,
+                        color = Beige,
                         start = Offset(0f, 0f),
                         end = Offset(size.width, 0f),
                         strokeWidth = 1.dp.toPx()
@@ -105,7 +105,7 @@ fun BottomBar(
                 enabled = buttonsEnable && currentActivityClass != SearchActivity::class.java,
                 imageId = R.drawable.magnifier,
                 description = "Magnifier",
-                imageSize = 45,
+                imageSize = 35,
                 isSelected = selectedItem == SearchActivity::class.java
             )
             BottomBarButton(
