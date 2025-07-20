@@ -21,11 +21,11 @@ The app features an **interactive feed** where users can **share recipes** and e
 
 Assuming you already __cloned the repository__, follow these steps to run the project:
 
-1. **Frontend**: Open the project in **Android Studio** and run the application on emulator or use the provided APK file in the **demo** folder.
-2. **Backend**: Navigate to the **server** folder and run the __docker-compose file__ to start the backend service. Ensure you have __Docker__ installed and running on your machine.
-
-To run the __backend tests__, we recommend using **IntelliJ IDEA** and run the tests from the IDE. For the **integration tests**, you must have a **PostgreSQL** database running locally and create a environment variable named `DATABASE_URL` with the database URL in the run configuration.
-
+1. **Frontend**: Open the project in **Android Studio** and run the application on emulator or use the provided APK file in the **Releases**.
+2. **Backend**: Before running the jar file in the **Releases**, you must have the following environment variables:
+    * **“DATABASE_URL”** with the PostgreSQL database url
+    * **“GOOGLE_CREDENTIALS”** with your Google credentials file
+    * **“SPOONACULAR_API_KEY”** with your Spoonacular API key
 
 ## Technologies
 ## Frontend
