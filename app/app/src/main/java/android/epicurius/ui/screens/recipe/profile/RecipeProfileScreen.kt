@@ -142,6 +142,7 @@ fun RecipeProfileScreen(
                                     onRemoveRecipeFromCollections = onRemoveRecipeFromCollections,
                                     onSearchIngredients = onSearchIngredients,
                                     onRecipeCollectionsClear = onRecipeCollectionsClear,
+                                    onUserProfileRequest = onUserProfileRequest,
                                     onRecipeCollectionsRequest = onRecipeCollectionsRequest,
                                     enableButtons = enableButtons,
                                     paddingValues = paddingValues
