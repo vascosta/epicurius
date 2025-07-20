@@ -1,5 +1,6 @@
 package android.epicurius.ui.screens.user.components
 
+import android.epicurius.ui.screens.theme.DarkPurple
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -28,8 +29,8 @@ fun ProfileTabBar(
     Column {
         TabRow(
             selectedTabIndex = selectedTabIndex,
-            containerColor = Color.White,
-            contentColor = Color.Black
+            containerColor = Color.Transparent,
+            contentColor = DarkPurple
         ) {
             tabs.forEachIndexed { index, name ->
                 Tab(

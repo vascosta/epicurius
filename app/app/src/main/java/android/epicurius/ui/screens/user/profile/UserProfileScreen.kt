@@ -14,6 +14,7 @@ import android.epicurius.ui.screens.collections.recipeCollections.components.Rec
 import android.epicurius.ui.screens.recipe.components.RecipeInfoBox
 import android.epicurius.ui.screens.recipe.confirmIngredients.components.InfoDialog
 import android.epicurius.ui.screens.recipe.profile.components.rememberImagePickerLauncher
+import android.epicurius.ui.screens.theme.Beige
 import android.epicurius.ui.screens.user.components.FollowBox
 import android.epicurius.ui.screens.user.components.ProfileTabBar
 import android.epicurius.ui.screens.user.components.UserProfilePicture
@@ -169,8 +170,7 @@ fun UserProfileScreen(
                                 modifier = Modifier
                                     .fillMaxSize()
                                     .padding(paddingValues)
-                                    .padding(16.dp)
-                                    .background(Color.White),
+                                    .padding(16.dp),
                                 horizontalAlignment = Alignment.CenterHorizontally
                             ) {
                                 Row(verticalAlignment = Alignment.CenterVertically) {
@@ -411,7 +411,7 @@ fun UserProfileScreen(
                 }
             )
         },
-        containerColor = Color.White
+        containerColor = Beige
     )
 }
 
