@@ -83,7 +83,7 @@ fun ConfirmIngredientsDialog(
                                     Text(
                                         text = ingredient,
                                         modifier = Modifier.padding(start = 8.dp),
-                                        color = DarkPurple
+                                        color = Beige
                                     )
                                 }
                             }
