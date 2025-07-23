@@ -33,7 +33,7 @@ Assuming you already __cloned the repository__, follow these steps to run the pr
 ![](https://skillicons.dev/icons?i=kotlin,androidstudio)
 
 ## Backend
-![](https://skillicons.dev/icons?i=kotlin,spring,postgresql,firebase,gcp)
+![](https://skillicons.dev/icons?i=kotlin,spring,postgresql,gcp)
 
 ## Developers
 
